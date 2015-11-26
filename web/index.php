@@ -20,3 +20,4 @@ $application->run();
 Yii::trace('wskbjfhvk 添加7！');
 Yii::trace('wskbjfhvk 添加4！');
 Yii::trace('wskbjfhvk 添加5！');
+Yii::trace('wskbjfhvk 添加6！');
