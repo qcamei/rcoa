@@ -293,6 +293,7 @@ class BookdetailController extends Controller
 
     /**
      * 获取角色的用户
+     * @param string $roleName 角色
      */
     protected function getRoleToUsers($roleName)
     {
@@ -300,6 +301,12 @@ class BookdetailController extends Controller
         $rbacManager = \Yii::$app->authManager;
         return ArrayHelper::map($rbacManager->getItemUsers($roleName), 'id', 'nickname');
     }
+    
+    /**
+     * 判断当前用户是否属于指定角色
+     * @param string $roleName
+     * @return bool
+     */
     
     protected function isRole($roleName)
     {
