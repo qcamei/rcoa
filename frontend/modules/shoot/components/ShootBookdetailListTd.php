@@ -6,17 +6,20 @@
  * and open the template in the editor.
  */
 namespace frontend\modules\shoot\components;
+
+use yii\bootstrap\Html;
+use yii\grid\DataColumn;
 /**
  * Description of ShootBookdetailListTd
  *
  * @author Administrator
  */
-class ShootBookdetailListTd extends \yii\grid\DataColumn{
+class ShootBookdetailListTd extends DataColumn{
     public function renderDataCell($model, $key, $index) {
         if($index%6 <3)
-            $this->contentOptions['class'] = 'bgcolor-zebra';
+            Html::addCssClass ($this->contentOptions, 'bgcolor-zebra');
         else
-            $this->contentOptions['class'] = '';
+            Html::removeCssClass ($this->contentOptions, 'bgcolor-zebra');
         return parent::renderDataCell($model, $key, $index);
     }
 }

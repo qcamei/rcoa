@@ -2,12 +2,13 @@
 
 namespace frontend\modules\shoot\controllers;
 
-use Yii;
-use common\models\shoot\ShootAppraiseResult;
 use common\models\shoot\searchs\ShootAppraiseResultSearch;
+use common\models\shoot\ShootAppraiseResult;
+use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * AppraiseResultController implements the CRUD actions for ShootAppraiseResult model.
@@ -23,6 +24,15 @@ class AppraiseResultController extends Controller
                     'delete' => ['post'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ]
         ];
     }
 

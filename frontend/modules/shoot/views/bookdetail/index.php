@@ -2,8 +2,11 @@
 
 use common\models\shoot\searchs\ShootBookdetailSearch;
 use common\models\shoot\ShootBookdetail;
+use frontend\modules\shoot\components\ShootAppraiseStar;
 use frontend\modules\shoot\ShootAsset;
 use kartik\widgets\DatePicker;
+use wskeee\rbac\RbacName;
+use wskeee\utils\DateUtil;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -26,14 +29,14 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
             [
                 'class' => 'frontend\modules\shoot\components\ShootBookdetailListWeekTd',
                 'value' => function($model) {
-                    return date('Y/m/d ', $model->book_time) . Yii::t('rcoa', 'Week ' . date('D', $model->book_time));
+                    return date('Y/m/d ', $model->book_time) .Yii::t('rcoa', 'Week ' . date('D', $model->book_time));
                 },
                 'label' => '时间',
                 'contentOptions' =>[
                     'rowspan' => 3, 
                     'style'=>[
                         'vertical-align' => 'middle',
-                        'width' => '140px'
+                        'width' => '95px'
                     ]
                 ] 
             ],
@@ -44,7 +47,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                 'contentOptions' =>[
                    'style'=>[
                         'vertical-align' => 'middle',
-                        'width' => '30px',
+                        'width' => '24px',
                         'padding' => '4px',
                     ]
                 ] 
@@ -58,13 +61,12 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                         'vertical-align' => 'middle',
                         'width' => '29px',
                         'padding' => '4px',
-                    ]
+                    ],
                 ], 
                 'content' => function($model,$key,$index,$e)
                 {
                     /* @var $model ShootBookdetail */
-                    if($model->getIsNew())
-                        return '';
+                    if(!$model->getIsValid())return '';
                     return '<span class="rcoa-icon rcoa-icon-'.($model->shoot_mode == ShootBookdetail::SHOOT_MODE_SD ? 'sd' : 'hd').'"/>' ;
                 }
             ],
@@ -72,12 +74,12 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                 'class' => 'frontend\modules\shoot\components\ShootBookdetailListTd',
                 'attribute' => 'photograph',
                 'label' => '',
-                 'contentOptions' =>[
+                'contentOptions' =>[
                     'style'=>[
                         'vertical-align' => 'middle',
                         'width' => '29px',
                         'padding' => '4px',
-                    ]
+                    ],
                 ], 
                 'content' => function($model,$key,$index,$e)
                 {
@@ -93,7 +95,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                 'content' => function($model,$key,$index,$e)
                 {
                     /* @var $model ShootBookdetail */
-                    if($model->getIsNew())
+                    if(!$model->getIsValid())
                         return '';
                     return '【'.$model->getFwCourse()->name.' x '.$model->lession_time.'】';
                 }
@@ -101,24 +103,33 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
             [
                 'class' => 'frontend\modules\shoot\components\ShootBookdetailListTd',
                 'label' => '【老 师 / 接洽人 / 预约人 / 摄影师】',
-                 'contentOptions' =>[
+                'contentOptions' =>[
                     'style'=> [
-                        'width' => '300px',
-                    ]
+                        'width' => '305px',
+                    ],
                 ], 
                 'content' => function($model,$key,$index,$e)
                 {
+                    if($model->getIsBooking())
+                        return '【'. DateUtil::intToTime($model->getBookTimeRemaining(),2).'】后解锁';
                     /* @var $model ShootBookdetail */
-                    if($model->getIsNew())
+                    if(!$model->getIsValid())
                         return '';
-                    $good = '<span class="rcoa-icon rcoa-icon-crying"></span>';
-                    $good = $model->getAppraiseInfo();
+                    /** 获取评价结果 */
+                    $appInfo = $model->getAppraiseInfo();
+                    //生成【接洽人】【摄影师】评价图标
+                    $contacterGood = $appInfo[RbacName::ROLE_CONTACT]['hasDo'] ? ShootAppraiseStar::widget([
+                        'value'=>$appInfo[RbacName::ROLE_CONTACT]['sum']/$appInfo[RbacName::ROLE_CONTACT]['all']
+                            ]) : "" ;
+                    $shootManGood = $appInfo[RbacName::ROLE_SHOOT_MAN]['hasDo'] ?  ShootAppraiseStar::widget([
+                        'value'=>$appInfo[RbacName::ROLE_SHOOT_MAN]['sum']/$appInfo[RbacName::ROLE_SHOOT_MAN]['all']
+                            ]) : "";
                     /* @var $model ShootBookdetail */
                     $teacherName = isset($model->u_teacher) ? $model->teacher->nickname : '空';
                     $contacterName = isset($model->u_contacter) ? $model->contacter->nickname : '空';
                     $bookerName = isset($model->u_booker) ? $model->booker->nickname : '空';
                     $shootManName = isset($model->u_shoot_man) ? $model->shootMan->nickname : '空';
-                    return '【'.$teacherName.' / '.$contacterName.' / '.$good.$bookerName.' / '.$shootManName.'】';
+                    return '【'.$teacherName.' / '.$contacterGood.$contacterName .' / '.$bookerName.' / '.$shootManGood.$shootManName.'】';
                 }
             ],
             [
@@ -127,14 +138,12 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                 'contentOptions' =>[
                     'style'=> [
                         'width' => '90px',
-                    ]
+                    ],
                 ], 
                 'content' => function($model,$key,$index,$e)
                 {
                     /* @var $model ShootBookdetail */
-                    if($model->getIsNew())
-                        return '';
-                    /* @var $model ShootBookdetail */
+                    if($model->getIsNew())return '';
                     return '【'.$model->getStatusName().'】';
                 }
             ],
@@ -175,11 +184,11 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                 ?>
             </div>
             <?= 
-                Html::a('<label class="glyphicon glyphicon-chevron-left"/>', 
+                Html::a('<', 
                         Url::to(['/shoot/bookdetail','date'=>$prevWeek]),['class'=>'btn btn-default']);
             ?>
              <?= 
-                Html::a('<label class="glyphicon glyphicon-chevron-right"/>', 
+                Html::a('>', 
                         Url::to(['/shoot/bookdetail','date'=>$nextWeek]),['class'=>'btn btn-default']);
             ?>
         </div>

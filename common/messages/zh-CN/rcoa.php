@@ -23,6 +23,7 @@ return [
     'Des' => '描述',
     'Status' => "状态",
     'Index' => '序号',
+    'Back' => '返回',
     'Fw College' => '学院',
     'Fw Project' => '项目',
     'Fw Course' => '课程',

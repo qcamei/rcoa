@@ -2,14 +2,14 @@
 
 namespace wskeee\rbac\controllers;
 
+use wskeee\rbac\models\AuthItem;
+use wskeee\rbac\models\searchs\AuthItemSearch;
 use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\rbac\Item;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-
-use wskeee\rbac\models\AuthItem;
-use wskeee\rbac\models\searchs\AuthItemSearch;
 
 /**
  * RoleController implements the CRUD actions for AuthItem model.
@@ -25,6 +25,15 @@ class RoleController extends Controller
                     'delete' => ['post'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ]
         ];
     }
 

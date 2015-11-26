@@ -1,16 +1,42 @@
 <?php
 
+use common\models\shoot\ShootBookdetail;
+use kartik\widgets\Growl;
+use yii\bootstrap\Html as Html2;
 use yii\helpers\Html;
+use yii\web\View;
 use yii\widgets\ActiveForm;
 
-/* @var $this yii\web\View */
+/* @var $this View */
 /* @var $model frontend\modules\shoot\models\ShootBookdetail */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $form ActiveForm */
+/* @var $model ShootBookdetail */
 ?>
 
 <div class="shoot-bookdetail-form">
 
+    <?php
+        echo Growl::widget([
+            'type' => Growl::TYPE_WARNING,
+            'body' => '锁定时间 2 分钟',
+            'showSeparator' => true,
+            'delay' => 0,
+            'pluginOptions' => [
+                'offset'=> [
+                        'x'=> 0,
+                        'y'=> 0
+                ],
+                'delay' => 2*60*1000,
+                'showProgressbar' => true,
+                'placement' => [
+                    'from' => 'top',
+                    'align' => 'center',
+                ]
+            ]
+        ]);
+    ?>
     <?php $form = ActiveForm::begin([
+        'id'=>'bookdetail-create-form',
         'options'=>['class'=>'form-horizontal'],
         'fieldConfig' => [  
             'template' => "{label}：\n<div class=\"col-lg-10 col-md-10\">{input}</div>\n<div class=\"col-lg-10 col-md-10\">{error}</div>",  
@@ -39,7 +65,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'u_booker')->dropDownList($users,['prompt'=>'请选择...']) ?>
 
-    <?= $form->field($model, 'shoot_mode')->radioList([1=>'高清',2=>'标清'],[
+    <?= $form->field($model, 'shoot_mode')->radioList(ShootBookdetail::$shootModeMap,[
         'separator'=>'',
         'itemOptions'=>[
             'labelOptions'=>[
@@ -56,10 +82,6 @@ use yii\widgets\ActiveForm;
     <?= Html::activeHiddenInput($model, 'index') ?>
     <?= Html::activeHiddenInput($model, 'status') ?>
     
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
-
     <?php ActiveForm::end(); ?>
 
 </div>

@@ -75,4 +75,53 @@ class ShootBookdetailSearch extends ShootBookdetail
 
         return $dataProvider;
     }
+    
+    /**
+     * 
+     * @param type $se array(start=>周起始时间，end=>周结束时间 )
+     * @return array 一周拍摄预约数据
+    */
+   public static function searchWeek($se) {
+        $dataProvider = ShootBookdetailSearch::find()
+                ->where('book_time >= ' . strtotime($se['start']))
+                ->andWhere('book_time <= ' . strtotime($se['end']))
+                ->orderBy('book_time')
+                ->with('teacher')
+                ->with('contacter')
+                ->with('booker')
+                ->with('shootMan')
+                ->with('appraises')
+                ->with('appraiseResults')
+                ->all();
+
+        $indexOffsetTimes = [
+            '9 hours',
+            '14 hours',
+            '18 hours',
+        ];
+        //创建一周空数据
+        $weekdatas = [];
+        for ($i = 0, $len = 7; $i < $len; $i++) {
+            for ($index = 0; $index < 3; $index++) {
+                $weekdatas[] = new ShootBookdetailSearch([
+                    'site_id' => 1,
+                    'book_time' => strtotime($se['start'] . ' +' . ($i) . 'days ' . $indexOffsetTimes[$index]),
+                    'index' => $index,
+                ]);
+            }
+        };
+
+        $startIndex = 0;
+        foreach ($dataProvider as $model) {
+            for ($i = $startIndex, $len = count($weekdatas); $i < $len; $i++) {
+                if ($weekdatas[$i]->book_time == $model->book_time) {
+                    $weekdatas[$i] = $model;
+                    $startIndex = $i + 1;
+                    break;
+                }
+            }
+        }
+        return $weekdatas;
+    }
+
 }

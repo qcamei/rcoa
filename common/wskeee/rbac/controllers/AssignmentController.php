@@ -2,12 +2,17 @@
 
 namespace wskeee\rbac\controllers;
 
-use yii\rbac\Item;
-use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use wskeee\rbac\models\searchs\AssignmentSearch;
+use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
+use yii\rbac\Assignment;
+use yii\rbac\Item;
+use yii\rbac\ManagerInterface;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
-class AssignmentController extends \yii\web\Controller
+class AssignmentController extends Controller
 {
     public $userClassName;
     public $idField = 'id';
@@ -20,7 +25,7 @@ class AssignmentController extends \yii\web\Controller
         parent::init();
         if($this->userClassName === null)
         {
-            $this->userClassName = \Yii::$app->getUser()->identity;
+            $this->userClassName = Yii::$app->getUser()->identity;
             $this->userClassName = $this->userClassName ? : 'common\models\User';
         }
     }
@@ -33,6 +38,15 @@ class AssignmentController extends \yii\web\Controller
                 'actions'=>[
                     'assign'=>['post']
                 ]
+            ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
             ]
         ];
     }
@@ -45,7 +59,7 @@ class AssignmentController extends \yii\web\Controller
         else
             $searchModel = new $this->searchClass();
         
-        $dataProvider = $searchModel->search(\Yii::$app->getRequest()->getQueryParams(), $this->userClassName, $this->usernameField);
+        $dataProvider = $searchModel->search(Yii::$app->getRequest()->getQueryParams(), $this->userClassName, $this->usernameField);
         
         return $this->render('index',[
             'dataProvider'=>$dataProvider,
@@ -57,7 +71,7 @@ class AssignmentController extends \yii\web\Controller
     
     public function actionView($id)
     {
-        \Yii::$app->authManager->getAssignments($id);
+        Yii::$app->authManager->getAssignments($id);
         return $this->render('view',[
             'model'=>$this->findModel($id),
             'idField'=>$this->idField,
@@ -72,10 +86,10 @@ class AssignmentController extends \yii\web\Controller
      */
     public function actionAssign()
     {
-        \Yii::$app->getResponse()->format = 'json';
-        /* @var $authManager  yii\rbac\ManagerInterface */
-        $authManager = \Yii::$app->authManager;
-        $post = \Yii::$app->getRequest()->post();
+        Yii::$app->getResponse()->format = 'json';
+        /* @var $authManager  ManagerInterface */
+        $authManager = Yii::$app->authManager;
+        $post = Yii::$app->getRequest()->post();
         
         $id = $post['id'];
         $action = $post['action'];
@@ -129,9 +143,9 @@ class AssignmentController extends \yii\web\Controller
      */
     public function actionSearch($id,$target,$term)
     {
-        \Yii::$app->getResponse()->format = 'json';
-        /* @var $authManager \yii\rbac\ManagerInterface */
-        $authManager = \Yii::$app->authManager;
+        Yii::$app->getResponse()->format = 'json';
+        /* @var $authManager ManagerInterface */
+        $authManager = Yii::$app->authManager;
         $roles = $authManager->getRoles();
         $permssions = $authManager->getPermissions();
         $avaliable = [
@@ -170,8 +184,8 @@ class AssignmentController extends \yii\web\Controller
     
     /**
      * 合成一个新对象
-     * @param \yii\rbac\Assignment $assignment
-     * @param \yii\rbac\Item $role 对应角色/权限
+     * @param Assignmentnt
+     * @param Item $role 对应角色/权限
      * @return  Objectg Description
      */
     private function getAssignmentObject($assignment,$role)

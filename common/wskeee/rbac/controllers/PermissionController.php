@@ -2,15 +2,16 @@
 
 namespace wskeee\rbac\controllers;
 
-use Yii;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
-
-use yii\rbac\Item;
 use wskeee\rbac\models\AuthItem;
 use wskeee\rbac\models\searchs\AuthItemSearch;
+use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
+use yii\rbac\Item;
+use yii\rbac\Permission;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 /**
  * PremissionController implements the CRUD actions for Permission model.
@@ -26,6 +27,15 @@ class PermissionController extends Controller
                     'delete' => ['post'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ]
         ];
     }
 

@@ -39,4 +39,27 @@ class DateUtil {
             'end' => $now_end,
         ];
     }
+    
+    /**
+     * 时间转换成时间格式
+     * @param int $value
+     * @param int $type 1(hh:mm:ss)2(mm:ss)
+     */
+    public static function intToTime($value,$type=1)
+    {
+        $h = floor($value/3600);
+        $m = floor($value%3600/60);
+        $s = floor($value%60);
+        
+        return ($type != 1 ? "" : self::zeor($h).':').self::zeor($m).':'.self::zeor($s);
+    }
+    
+    /**
+     * 小于9自动在数字前添加0
+     * @param int $value
+     */
+    public static function zeor($value)
+    {
+        return $value > 9 ? "$value" :"0$value";
+    }
 }

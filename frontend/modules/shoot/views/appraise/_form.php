@@ -47,16 +47,16 @@ use yii\widgets\ActiveForm;
                 /* @var $result ShootAppraiseResult */
                 return $result->role_name.'-'.$result->q_id;
             });
+            /* 显示答题情况 */
+            $value_result = $bookdetail->getAppraiseInfo();
             
             foreach($appraises as $role_name => $appraise_arr)
             {
                 $disabled = !(
                         ($bookdetail->u_contacter == $user->id && $role_name != RbacName::ROLE_CONTACT) || 
                         ($bookdetail->u_shoot_man == $user->id && $role_name != RbacName::ROLE_SHOOT_MAN));
-                /* 显示答题情况 */
-                $value_result = getResult($appraise_arr, $results);
-                $has_do = isset($results[getQName($appraise_arr[0])]);
-                $icon = $has_do ? getIcon($value_result['sum'], $value_result['all']) : '';
+                $has_do = $value_result[$role_name]['hasDo'];
+                $icon = $has_do ? $value_result[$role_name]['sum']/$value_result[$role_name]['all'] : '';
                 echo '<h4>'.Html::label($appraise_arr[0]->role->description.$icon).'</h4>';
                 foreach($appraise_arr as $index => $appraise)
                 {
@@ -67,7 +67,7 @@ use yii\widgets\ActiveForm;
                     echo Html::label(($index+1).'、'.$appraise->question->title);
                     echo Html::radioList(
                             "$appraise->role_name-$appraise->q_id", 
-                            isset($results[getQName($appraise)]) ? $results[getQName($appraise)]->value : null, 
+                            getAppraiseResultValue($results,$appraise), 
                             $items,
                             [
                                 'class'=>'form-group',
@@ -85,26 +85,6 @@ use yii\widgets\ActiveForm;
         }
         
         /**
-         * 获取答题 得分和总分
-         * @param array $appraise_arr   答题数据
-         * @param array $resultes       答题记录
-         * @return array(sum,all)
-         */
-        function getResult($appraise_arr,$results)
-        {
-            /* @var $appraise ShootAppraise */
-            $value_sum = 0;
-            $value_all = 0;
-            
-            foreach ($appraise_arr as $index => $appraise)
-            {
-                $value_sum += (isset($results[getQName($appraise)]) ? $results[getQName($appraise)]->value : 0);
-                $value_all += $appraise->value;
-            }
-            return ['sum'=>$value_sum,'all'=>$value_all];
-        }
-        
-        /**
          * 获取题目结果合并名
          * @param ShootAppraise $appraise
          * @return string role_name-q_id
@@ -114,23 +94,9 @@ use yii\widgets\ActiveForm;
             return "$appraise->role_name-$appraise->q_id";
         }
         
-        /**
-         * 
-         * @param int $value_sum    得到总分
-         * @param int $value_all   题目总分
-         */
-        function getIcon($value_sum,$value_all)
+        function getAppraiseResultValue($results,$appraise)
         {
-            $icon = '';
-            if ($value_sum == $value_all)
-                $icon.='happy';
-            else if ($value_sum >= $value_all / 2)
-                $icon.='disappointed';
-            else
-                $icon.='crying';
-            $icon = '<span class="rcoa-icon rcoa-icon-' .$icon . '"/>';
-            
-            return $icon;
+            return isset($results[getQName($appraise)]) ? $results[getQName($appraise)]->value : null;
         }
     ?>
     

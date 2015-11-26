@@ -3,8 +3,6 @@
 namespace frontend\modules\shoot\controllers;
 
 use common\models\shoot\searchs\ShootBookdetailSearch;
-use common\models\shoot\ShootAppraise;
-use common\models\shoot\ShootAppraiseResult;
 use common\models\shoot\ShootAppraiseTemplate;
 use common\models\shoot\ShootAppraiseWork;
 use common\models\shoot\ShootBookdetail;
@@ -15,10 +13,11 @@ use wskeee\utils\DateUtil;
 use Yii;
 use yii\base\Exception;
 use yii\data\ArrayDataProvider;
-use yii\db\Query;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
+use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
 
@@ -36,6 +35,15 @@ class BookdetailController extends Controller
                     'delete' => ['post'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ]
         ];
     }
 
@@ -53,59 +61,11 @@ class BookdetailController extends Controller
         
         //目标周的起始日期
         $se = DateUtil::getWeekSE($date);
-        $dataProvider = ShootBookdetailSearch::find()
-                ->where('book_time >= '.strtotime($se['start']))
-                ->andWhere('book_time <= '.strtotime($se['end']))
-                ->orderBy('book_time')
-                ->with('teacher')
-                ->with('contacter')
-                ->with('booker')
-                ->with('shootMan')
-                ->all();
-        $indexOffsetTimes = [
-            '9 hours',
-            '14 hours',
-            '18 hours',
-        ];
-        //创建一周空数据
-        $weekdatas = [];
-        for($i=0,$len=7;$i<$len;$i++)
-        {
-            for($index=0;$index<3;$index++)
-            {
-                $weekdatas[] = new ShootBookdetailSearch([
-                    'site_id' => 1,
-                    'book_time' => strtotime($se['start'].' +'.($i).'days '.$indexOffsetTimes[$index]),
-                    'index' => $index,
-                ]);
-            }
-        };
-        
-        $startIndex = 0;
-        foreach ($dataProvider as $model)
-        {
-            for($i = $startIndex,$len=count($weekdatas);$i<$len;$i++)
-            {
-                if($weekdatas[$i]->book_time == $model->book_time)
-                {
-                    $weekdatas[$i] = $model;
-                    $startIndex = $i+1;
-                    break;
-                }
-            }
-        }
-        
-        $bids = ArrayHelper::getColumn($dataProvider, 'id');
-        $query = new Query();
-        $row = $query->select('*')
-                ->from(['a'=> ShootAppraiseResult::tableName()])
-                ->where(['b_id'=>$bids])
-                ->all();
-        \Yii::trace($row);
+        $dataProvider = ShootBookdetailSearch::searchWeek($se);
         
         return $this->render('index', [
             'dataProvider' => new ArrayDataProvider([
-                'allModels' => $weekdatas,
+                'allModels' => $dataProvider,
                 'sort' => [
                             'attributes' => ['book_time'],
                         ],
@@ -140,35 +100,52 @@ class BookdetailController extends Controller
      */
     public function actionCreate()
     {
-        if(!Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CREATE))
+        if (!Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CREATE))
             throw new UnauthorizedHttpException('无权操作！');
-        
-        $model = new ShootBookdetail();
-        $model->loadDefaultValues();
+        $post = Yii::$app->getRequest()->getQueryParams();
+        /**
+         * 先查找对应数据（临时预约锁定的数据）
+         * 找不到再新建数据
+         */
+        if (isset($post['book_time']))
+            $model = ShootBookdetail::findOne(['book_time' => $post['book_time']]);
+        if (!isset($model)) {
+            $model = new ShootBookdetail();
+            $model->loadDefaultValues();
+        } else if ($model->getIsBooking() && ($model->create_by && $model->create_by != Yii::$app->user->id)) {
+            throw new NotAcceptableHttpException('非法操作！');
+        } else if ($model->getIsBooking() && $model->create_by && $model->create_by == Yii::$app->user->id) {
+            //清除之前临时预约
+            //            $tempbook = ShootBookdetail::find()
+            //                    ->andWhere('create_by' => Yii::$app->user->id)
+            //                    ->andWhere('status' =>  ShootBookdetail::STATUS_BOOKING)
+                
+        }
+
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            
+
             $this->saveNewBookdetail($model);
-            
-            return $this->redirect([
-                'view', 'id' => $model->id
-                    ]);
+            return $this->redirect([ 'view', 'id' => $model->id]);
         } else {
             $model->status = ShootBookdetail::STATUS_BOOKING;
             $model->u_booker = Yii::$app->user->id;
             $model->u_contacter = Yii::$app->user->id;
-            $post = Yii::$app->getRequest()->getQueryParams();
-            if(isset($post['site_id']))
-                $model->site_id = $post['site_id'];
-            if(isset($post['book_time']))
-                $model->book_time = $post['book_time'];
-            if(isset($post['index']))
-                $model->index = $post['index'];
+            $model->create_by = Yii::$app->user->id;
+
+            !isset($post['site_id']) ? : $model->site_id = $post['site_id'];
+            !isset($post['book_time']) ? : $model->book_time = $post['book_time'];
+            !isset($post['index']) ? : $model->index = $post['index'];
+
+            $model->setScenario(ShootBookdetail::SCENARIO_TEMP_CREATE);
+            $model->save();
+            $model->setScenario(ShootBookdetail::SCENARIO_DEFAULT);
+
             return $this->render('create', [
-                'model' => $model,
-                'users' => $this->getRoleToUsers(RbacName::ROLE_WD),
-                'colleges' => $this->getCollegesForSelect(),
-                'projects' => [],
-                'courses' => [],
+                        'model' => $model,
+                        'users' => $this->getRoleToUsers(RbacName::ROLE_WD),
+                        'colleges' => $this->getCollegesForSelect(),
+                        'projects' => [],
+                        'courses' => [],
             ]);
         }
     }
@@ -197,6 +174,24 @@ class BookdetailController extends Controller
             
             throw new NotFoundHttpException("保存任务失败！".$ex->getMessage()); 
         }
+    }
+    
+    /**
+     * 退出任务创建，清除锁定
+     * @param 退出任务的时间 $date
+     * @param 任务id $b_id
+     */
+    public function actionExitCreate($date,$b_id)
+    {
+        $model = $this->findModel($b_id);
+        if($model != null && $model->getIsBooking() && $model->create_by && $model->create_by == Yii::$app->user->id)
+        {
+            $model->setScenario(ShootBookdetail::SCENARIO_TEMP_CREATE);
+            $model->status = ShootBookdetail::STATUS_DEFAULT;
+            $model->save();
+        }
+        
+        $this->redirect(['index','date'=>$date,'b_id'=>$b_id]);
     }
 
     /**

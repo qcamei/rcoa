@@ -2,16 +2,17 @@
 
 namespace common\models\shoot;
 
-use Yii;
-use yii\helpers\ArrayHelper;
-use yii\behaviors\TimestampBehavior;
-
-use common\models\User;
-use common\models\shoot\ShootBookdetail;
 use common\models\shoot\ShootSite;
-use wskeee\rbac\RbacName;
+use common\models\User;
+use Exception;
 use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\FWItem;
+use wskeee\rbac\RbacName;
+use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
+use yii\web\NotFoundHttpException;
 
 /**
  * This is the model class for table "{{%shoot_bookdetail}}".
@@ -31,6 +32,7 @@ use wskeee\framework\models\FWItem;
  * @property integer $shoot_mode
  * @property integer $photograph
  * @property integer $status
+ * @property integer $create_by 创建者
  * @property integer $created_at
  * @property integer $updated_at
  * @property integer $ver
@@ -49,7 +51,7 @@ use wskeee\framework\models\FWItem;
  * @property array $appraiseResults 评价结束
  * @property array $appraises       评价题目
  */
-class ShootBookdetail extends \yii\db\ActiveRecord
+class ShootBookdetail extends ActiveRecord
 {
     /** 预约超时限制  */
     const BOOKING_TIMEOUT = 2*60;
@@ -82,6 +84,9 @@ class ShootBookdetail extends \yii\db\ActiveRecord
     const TIME_INDEX_AFTERNOON = 1;
     /** 时段 晚上 */
     const TIME_INDEX_NIGHT = 2;
+    
+    /* 临时创建场景 */
+    const SCENARIO_TEMP_CREATE = 'tempCreate';
 
     /** 状态列表 */
     public $statusMap = [
@@ -96,7 +101,7 @@ class ShootBookdetail extends \yii\db\ActiveRecord
     ];
     
     /** 拍摄模式列表 */
-    public $shootModeMap =[
+    public static $shootModeMap =[
         self::SHOOT_MODE_SD => '标清',
         self::SHOOT_MODE_HD => '高清',
     ];
@@ -122,6 +127,19 @@ class ShootBookdetail extends \yii\db\ActiveRecord
         return '{{%shoot_bookdetail}}';
     }
     
+    public function scenarios() {
+        return [
+            self::SCENARIO_DEFAULT => ['site_id','fw_college', 'fw_project', 'fw_course', 
+                'lession_time', 'teacher_name','teacher_phone', 'u_contacter', 
+                'u_booker','u_shoot_man' ,'book_time', 'index', 'shoot_mode',
+                'photograph', 'status', 'created_at', 'updated_at', 'ver','create_by'],
+            self::SCENARIO_TEMP_CREATE => ['site_id', 
+                'lession_time', 'u_contacter', 
+                'u_booker','book_time', 'index', 'shoot_mode',
+                'photograph', 'status', 'created_at', 'updated_at', 'ver','create_by'],
+        ];
+    }
+    
     public function behaviors() {
         return [
             TimestampBehavior::className()
@@ -142,7 +160,7 @@ class ShootBookdetail extends \yii\db\ActiveRecord
                 'site_id',
                 'fw_college', 'fw_project', 'fw_course', 
                 'u_contacter', 'u_booker', 
-                'book_time', 'index','teacher_name','teacher_phone'],'required'],
+                'book_time', 'index','teacher_name','teacher_phone'],'required', 'on'=>[self::SCENARIO_DEFAULT]],
             [['teacher_phone'],'integer'],
             [['teacher_email'],'email'],
         ];
@@ -185,7 +203,9 @@ class ShootBookdetail extends \yii\db\ActiveRecord
     
     public function afterFind() {
         parent::afterFind();
-        if(!$this->isNewRecord)
+        if($this->getIsBooking() && (time() - $this->updated_at > self::BOOKING_TIMEOUT))
+            $this->status = self::STATUS_DEFAULT;
+        if(isset($this->u_teacher))
         {
             $this->teacher_name = $this->teacher->nickname;
             $this->teacher_phone = $this->teacher->phone;
@@ -194,43 +214,47 @@ class ShootBookdetail extends \yii\db\ActiveRecord
     }
     
     public function beforeSave($insert){
-        parent::beforeSave($insert);
-        try
+        if(parent::beforeSave($insert))
         {
-            $user = User::find()
-                    ->orWhere(['username'=>$this->teacher_phone])
-                    ->orWhere(['nickname'=>$this->teacher_name])
-                    ->one();
-            if($user == null)
+            if($this->scenario == self::SCENARIO_TEMP_CREATE) return true;
+            
+            try
             {
-                $user = new User();
-                $user->username = $this->teacher_phone;
-                $user->phone = $this->teacher_phone;
-                $user->nickname = $this->teacher_name;
-                $user->email = $this->teacher_email;
-                $user->password = "123456";
-                $user->auth_key = \Yii::$app->security->generateRandomString();
-                $user->save();
+                $user = User::find()
+                        ->orWhere(['username'=>$this->teacher_phone])
+                        ->orWhere(['nickname'=>$this->teacher_name])
+                        ->one();
+                if($user == null)
+                {
+                    $user = new User();
+                    $user->username = $this->teacher_phone;
+                    $user->phone = $this->teacher_phone;
+                    $user->nickname = $this->teacher_name;
+                    $user->email = $this->teacher_email;
+                    $user->password = "123456";
+                    $user->auth_key = \Yii::$app->security->generateRandomString();
+                    $user->save();
 
-                \Yii::$app->authManager->assign(\Yii::$app->authManager->getRole(RbacName::ROLE_TEACHERS), $user->id);
-            }else
-            {
-                $user->nickname = $this->teacher_name;
-                $user->email = $this->teacher_email;
-                $user->phone = $this->teacher_phone;
-                $user->save();
+                    \Yii::$app->authManager->assign(\Yii::$app->authManager->getRole(RbacName::ROLE_TEACHERS), $user->id);
+                }else
+                {
+                    $user->nickname = $this->teacher_name;
+                    $user->email = $this->teacher_email;
+                    $user->phone = $this->teacher_phone;
+                    $user->save();
+                }
+                $this->u_teacher = $user->id;
+                return true;
+            } catch (Exception $ex) {
+                throw new NotFoundHttpException("创建老师账号出错！".$ex->getMessage());
+                return false;
             }
-            $this->u_teacher = $user->id;
-            return true;
-        } catch (\Exception $ex) {
-            throw new \yii\web\NotFoundHttpException("创建老师账号出错！".$ex->getMessage());
-            return false;
         }
     }
     
     /**
      * 场地
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getSite()
     {
@@ -268,7 +292,7 @@ class ShootBookdetail extends \yii\db\ActiveRecord
     }
     
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getBooker()
     {
@@ -276,14 +300,14 @@ class ShootBookdetail extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getContacter()
     {
         return $this->hasOne(User::className(), ['id' => 'u_contacter']);
     }
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getTeacher()
     {
@@ -292,7 +316,7 @@ class ShootBookdetail extends \yii\db\ActiveRecord
     
     /**
      * 获取摄影师
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getShootMan()
     {
@@ -300,7 +324,7 @@ class ShootBookdetail extends \yii\db\ActiveRecord
     }
     /**
      * 获取所有评价结果
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getAppraiseResults()
     {
@@ -309,7 +333,7 @@ class ShootBookdetail extends \yii\db\ActiveRecord
     
     /**
      * 获取所有评价题目
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getAppraises()
     {
@@ -323,11 +347,31 @@ class ShootBookdetail extends \yii\db\ActiveRecord
      */
     public function getAppraiseInfo()
     {
-        /** 总得分 */
-        $sum = 0;
-        /** 总分 */
-        $all = 0;
+        $result=[
+            RbacName::ROLE_CONTACT=>[
+                'hasDo'=>false,
+                'sum'=>0,
+                'all'=>0,
+            ],
+            RbacName::ROLE_SHOOT_MAN=>[
+                'hasDo'=>false,
+                'sum'=>0,
+                'all'=>0,
+            ],
+        ];
         
+        /* @var $aResult ShootAppraiseResult */
+        foreach ($this->appraiseResults as $aResult)
+        {
+            $result[$aResult->role_name]['sum'] += $aResult->value;
+            if($result[$aResult->role_name]['hasDo'] == false)
+                $result[$aResult->role_name]['hasDo'] = true;
+        }
+        /* @var $appraise ShootAppraise */
+        foreach ($this->appraises as $appraise)
+            $result[$appraise->role_name]['all'] += $appraise->value;
+        
+        return $result;
     }
     
     /**
@@ -349,12 +393,21 @@ class ShootBookdetail extends \yii\db\ActiveRecord
     }
     
     /**
+     * 获取是滞为有效果数据
+     * 新建或者临时创建为无效数据
+     */
+    public function getIsValid()
+    {
+        return $this->status != self::STATUS_DEFAULT && $this->status != self::STATUS_BOOKING;
+    }
+    
+    /**
      * 是否在【预约中】状态
      * @return bool 
      */
     public function getIsBooking()
     {
-        return $this->status == self::STATUS_BOOKING && (time() - $this->updated_at <= BOOKING_TIMEOUT);
+        return $this->status == self::STATUS_BOOKING;
     }
     
     /**
@@ -364,6 +417,19 @@ class ShootBookdetail extends \yii\db\ActiveRecord
     {
         return $this->status == self::STATUS_ASSIGN;
     }
+    
+    /**
+     * 获取预约锁定剩余时间
+     * @return int 秒
+     */
+    public function getBookTimeRemaining()
+    {
+        if($this->getIsBooking())
+            return self::BOOKING_TIMEOUT - (time() - $this->updated_at);
+        else
+            return 0;
+    }
+    
     /**
      * 是否在可以执行指派操作
      */
@@ -402,7 +468,7 @@ class ShootBookdetail extends \yii\db\ActiveRecord
      */
     public function getShootModeName()
     {
-        return $this->shootModeMap[$this->shoot_mode];
+        return self::$shootModeMap[$this->shoot_mode];
     }
     
     /**

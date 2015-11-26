@@ -9,7 +9,6 @@ use common\models\shoot\ShootAppraiseWork;
 use common\models\shoot\ShootBookdetail;
 use wskeee\rbac\RbacName;
 use Yii;
-use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\BadRequestHttpException;

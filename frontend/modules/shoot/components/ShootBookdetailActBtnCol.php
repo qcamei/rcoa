@@ -41,21 +41,28 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
         /* @var $authManager RbacManager*/
         $authManager = Yii::$app->authManager;
         $isNew = $model->getIsNew();
+        $isValid = $model->getIsValid();
         $isAssign = $model->getIsAssign();
         //摄影组长
         if($authManager->isRole(RbacName::ROLE_SHOOT_LEADER, Yii::$app->user->id))
         {
-            $buttonName = $isNew ? '未预约' : ($isAssign ? '指派' : $model->shootMan->nickname);
+            try
+            {
+                $buttonName = !$isValid ? '未预约' : ($isAssign ? '指派' : $model->shootMan->nickname);
+            } catch (\Exception $ex) {
+                echo $model->book_time;
+            }
+            
             $url = 'view';
             $params = [
                 'id' => $model->id
             ];
             $btnClass .= ($isAssign ? ' btn-primary' : ' btn-default');
-            $btnClass .= ($isNew ? ' disabled' : '');
-            
+            $btnClass .= (!$isValid ? ' disabled' : '');
+        //摄影师    
         }else if($authManager->isRole(RbacName::ROLE_SHOOT_MAN, Yii::$app->user->id))
         {
-            $buttonName = $isNew ? '未预约' :($isAssign ? '未指派' : $model->shootMan->nickname);
+            $buttonName = !$isValid ? '未预约' :($isAssign ? '未指派' : $model->shootMan->nickname);
             $url = 'view';
             $params = [
                 'id' => $model->id
@@ -64,19 +71,20 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
             $btnClass .= ($isNew ? ' disabled' : '');
             $isMe = (!$isNew && $model->u_shoot_man && $model->shootMan->id == Yii::$app->user->id);
         }
+        //编导
         else if($authManager->isRole(RbacName::ROLE_WD, Yii::$app->user->id))
         {
             $buttonName = $isNew ? '预约' :$model->booker->nickname;
-            $url = $isNew ? 'create' : 'view';
-            $params = $isNew ? 
+            $url = ($isNew || $model->getIsBooking()) ? 'create' : 'view';
+            $params = ($isNew || $model->getIsBooking()) ? 
                     [
                         'site_id' => $model->site_id,
                         'book_time' => $model->book_time,
                         'index' => $model->index
                     ] : ['id' => $model->id];
-            
-            $btnClass .= ($isNew ? ' btn-primary' : ' btn-default');
             $isMe = !$isNew && $model->booker->id == Yii::$app->user->id;
+            $btnClass .= ($isNew ? ' btn-primary' : ' btn-default');
+            $btnClass .= (!$isMe && $model->getIsBooking()) ? ' disabled' : "";
         }
         $html = '';
         $html .= '<span class="rcoa-icon rcoa-icon-me is-me ' . ($isMe ? '' : 'hide') . '"/>';
