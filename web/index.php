@@ -17,4 +17,4 @@ $config = yii\helpers\ArrayHelper::merge(
 $application = new yii\web\Application($config);
 $application->run();
 
-Yii::trace('wskbjfhvk 添加3！');
+Yii::trace('wskbjfhvk 添加4！');
