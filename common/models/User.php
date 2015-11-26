@@ -2,11 +2,14 @@
 
 namespace common\models;
 
+use wskeee\rbac\RbacManager;
 use Yii;
-use yii\db\ActiveRecord;
-use yii\web\UploadedFile;
-use yii\web\IdentityInterface;
+use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
+use yii\web\UploadedFile;
+use const FILEDATA_PATH;
 
 //use wskeee\rbac\RbacManager;
 
