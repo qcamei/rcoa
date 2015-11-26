@@ -16,3 +16,7 @@ $config = yii\helpers\ArrayHelper::merge(
 
 $application = new yii\web\Application($config);
 $application->run();
+
+/**
+ * 这是新添加内容！
+ */
