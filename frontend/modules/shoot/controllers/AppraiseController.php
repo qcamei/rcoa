@@ -93,6 +93,12 @@ class AppraiseController extends Controller
         ]);
     }
     
+    /**
+     * 添加评价
+     * @return type
+     * @throws NotAcceptableHttpException
+     * @throws BadRequestHttpException
+     */
     public function actionAdd()
     {
         $post = Yii::$app->request->post();
