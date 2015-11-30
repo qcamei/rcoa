@@ -19,7 +19,7 @@ use yii\web\View;
 
 $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
 ?>
-<div class="container shoot-bookdetail-index bookdetail-list">
+<div class="container shoot-bookdetail-index bookdetail-list" style="padding:0;">
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
@@ -57,15 +57,21 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                 'attribute' => 'shoot_mode',
                 'label' => '',
                 'contentOptions' =>[
+                   'class'=>'hidden-xs',
                    'style'=>[
                         'vertical-align' => 'middle',
                         'width' => '29px',
                         'padding' => '4px',
                     ],
-                ], 
+                ],
+                'headerOptions'=>[
+                    'class'=>[
+                        'th'=>'hidden-xs',
+                    ],
+                ],
                 'content' => function($model,$key,$index,$e)
                 {
-                    /* @var $model ShootBookdetail */
+                   /*@var $model ShootBookdetail*/ 
                     if(!$model->getIsValid())return '';
                     return '<span class="rcoa-icon rcoa-icon-'.($model->shoot_mode == ShootBookdetail::SHOOT_MODE_SD ? 'sd' : 'hd').'"/>' ;
                 }
@@ -74,7 +80,13 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                 'class' => 'frontend\modules\shoot\components\ShootBookdetailListTd',
                 'attribute' => 'photograph',
                 'label' => '',
+                'headerOptions'=>[
+                    'class'=>[
+                        'th'=>'hidden-xs',
+                    ],
+                ],
                 'contentOptions' =>[
+                    'class'=>'hidden-xs',
                     'style'=>[
                         'vertical-align' => 'middle',
                         'width' => '29px',
@@ -83,27 +95,40 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                 ], 
                 'content' => function($model,$key,$index,$e)
                 {
-                    return $model->photograph == 1 ? '<span class="rcoa-icon rcoa-icon-camera"/>' : "";
+                   return $model->photograph == 1 ? '<span class="rcoa-icon rcoa-icon-camera"/>' : "";
                 }
             ],
             [
                 'class' => 'frontend\modules\shoot\components\ShootBookdetailListTd',
                 'label' => '【课程名 x 课时】',
                  'contentOptions' =>[
-                   
+                    
                 ], 
                 'content' => function($model,$key,$index,$e)
                 {
                     /* @var $model ShootBookdetail */
                     if(!$model->getIsValid())
                         return '';
-                    return '【'.$model->getFwCourse()->name.' x '.$model->lession_time.'】';
+                        $str = '【'.$model->getFwCourse()->name;
+                        $time = ' x '.$model->lession_time.'】';
+                        /*判断 @var $str字符长度并截取*/
+                        if(strlen($str) > 36){
+                           $str = substr($str,0,36); 
+                           return $str.'...'.$time;
+                        }
+                    return $str.$time;
                 }
             ],
             [
                 'class' => 'frontend\modules\shoot\components\ShootBookdetailListTd',
                 'label' => '【老 师 / 接洽人 / 预约人 / 摄影师】',
+                'headerOptions'=>[
+                    'class'=>[
+                        'th'=>'hidden-xs',
+                    ],
+                ],
                 'contentOptions' =>[
+                    'class'=>'hidden-xs',
                     'style'=> [
                         'width' => '305px',
                     ],
@@ -135,7 +160,13 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
             [
                 'class' => 'frontend\modules\shoot\components\ShootBookdetailListTd',
                 'label' => '【状态】',
+                'headerOptions'=>[
+                    'class'=>[
+                        'th'=>'hidden-xs',
+                    ],
+                ],
                 'contentOptions' =>[
+                    'class'=>'hidden-xs',
                     'style'=> [
                         'width' => '90px',
                     ],
