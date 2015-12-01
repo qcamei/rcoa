@@ -18,7 +18,6 @@ $this->title = Yii::t('rcoa', 'Create Shoot Bookdetail');
     </div>
 </div>
 <div class="container shoot-bookdetail-create has-title">
-
     <?= $this->render('_form', [
         'model' => $model,
         'users' => $users,
@@ -26,6 +25,7 @@ $this->title = Yii::t('rcoa', 'Create Shoot Bookdetail');
         'projects' => $projects,
         'courses' => $courses,
     ]) ?>
+   
 </div>
 <div class="controlbar">
     <div class="container">
