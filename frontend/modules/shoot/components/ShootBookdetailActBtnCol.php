@@ -40,18 +40,16 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
         /* @var $model ShootBookdetail */
         /* @var $authManager RbacManager*/
         $authManager = Yii::$app->authManager;
+        //新建任务
         $isNew = $model->getIsNew();
+        //非新建及锁定任务
         $isValid = $model->getIsValid();
+        //是否在【待指派】任务
         $isAssign = $model->getIsAssign();
         //摄影组长
         if($authManager->isRole(RbacName::ROLE_SHOOT_LEADER, Yii::$app->user->id))
         {
-            try
-            {
-                $buttonName = !$isValid ? '未预约' : ($isAssign ? '指派' : $model->shootMan->nickname);
-            } catch (\Exception $ex) {
-                echo $model->book_time;
-            }
+            $buttonName = !$isValid ? '未预约' : ($isAssign ? '指派' : $model->shootMan->nickname);
             
             $url = 'view';
             $params = [
