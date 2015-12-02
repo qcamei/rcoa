@@ -28,17 +28,22 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
         'columns' => [
             [
                 'class' => 'frontend\modules\shoot\components\ShootBookdetailListWeekTd',
+                'format' => 'raw',
                 'value' => function($model) {
-                    return date('Y/m/d ', $model->book_time) .Yii::t('rcoa', 'Week ' . date('D', $model->book_time));
+                    return date('m/d ', $model->book_time).'</br>' .Yii::t('rcoa', 'Week ' . date('D', $model->book_time));
                 },
                 'label' => '时间',
                 'contentOptions' =>[
                     'rowspan' => 3, 
                     'style'=>[
                         'vertical-align' => 'middle',
-                        'width' => '95px'
                     ]
-                ] 
+                ],
+                'headerOptions' => [
+                     'style'=>[
+                        'width' => '60px'
+                    ]
+                ]
             ],
             [
                 'class' => 'frontend\modules\shoot\components\ShootBookdetailListTd',
@@ -47,10 +52,14 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                 'contentOptions' =>[
                    'style'=>[
                         'vertical-align' => 'middle',
-                        'width' => '24px',
                         'padding' => '4px',
                     ]
-                ] 
+                ],
+                'headerOptions' => [
+                     'style'=>[
+                        'width' => '29px'
+                    ]
+                ]
             ],
             [
                 'class' => 'frontend\modules\shoot\components\ShootBookdetailListTd',
@@ -60,7 +69,6 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                    'class'=>'hidden-xs',
                    'style'=>[
                         'vertical-align' => 'middle',
-                        'width' => '29px',
                         'padding' => '4px',
                     ],
                 ],
@@ -68,6 +76,9 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                     'class'=>[
                         'th'=>'hidden-xs',
                     ],
+                    'style' => [
+                        'width' => '29px',
+                    ]
                 ],
                 'content' => function($model,$key,$index,$e)
                 {
@@ -84,12 +95,14 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                     'class'=>[
                         'th'=>'hidden-xs',
                     ],
+                    'style' => [
+                        'width' => '24px',
+                    ]
                 ],
                 'contentOptions' =>[
                     'class'=>'hidden-xs',
                     'style'=>[
                         'vertical-align' => 'middle',
-                        'width' => '29px',
                         'padding' => '4px',
                     ],
                 ], 
@@ -101,9 +114,14 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
             [
                 'class' => 'frontend\modules\shoot\components\ShootBookdetailListTd',
                 'label' => '【课程名 x 课时】',
-                 'contentOptions' =>[
+                'headerOptions'=>[
+                    'style'=>[
+                       'min-width' => '100px',
+                    ],
+                ],
+                'contentOptions' => [
                     
-                ], 
+                ],
                 'content' => function($model,$key,$index,$e)
                 {
                     /* @var $model ShootBookdetail */
@@ -111,12 +129,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                         return '';
                         $str = '【'.$model->getFwCourse()->name;
                         $time = ' x '.$model->lession_time.'】';
-                        /*判断 @var $str字符长度并截取*/
-                        if(strlen($str) > 36){
-                           $str = substr($str,0,36); 
-                           return $str.'...'.$time;
-                        }
-                    return $str.$time;
+                    return '<p class="course-name">'.$str.$time.'</p>';
                 }
             ],
             [
@@ -126,11 +139,14 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                     'class'=>[
                         'th'=>'hidden-xs',
                     ],
+                    'style'=>[
+                        'width' => '305px',
+                    ]
                 ],
                 'contentOptions' =>[
                     'class'=>'hidden-xs',
                     'style'=> [
-                        'width' => '305px',
+                        'white-space' => 'nowrap',
                     ],
                 ], 
                 'content' => function($model,$key,$index,$e)
@@ -164,11 +180,14 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                     'class'=>[
                         'th'=>'hidden-xs',
                     ],
+                    'style'=> [
+                        'width' => '90px',
+                    ]
                 ],
                 'contentOptions' =>[
                     'class'=>'hidden-xs',
                     'style'=> [
-                        'width' => '90px',
+                        'white-space' => 'nowrap',
                     ],
                 ], 
                 'content' => function($model,$key,$index,$e)
@@ -185,6 +204,11 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                     'style'=> [
                         'width' => '90px',
                         'padding' =>'4px',
+                    ]
+                ],
+                'headerOptions'=>[
+                    'style'=> [
+                        'width' => '90px',
                     ]
                 ],
             ],

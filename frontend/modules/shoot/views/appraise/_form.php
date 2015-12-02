@@ -52,6 +52,8 @@ use yii\widgets\ActiveForm;
             
             foreach($appraises as $role_name => $appraise_arr)
             {
+                if($role_name!= RbacName::ROLE_CONTACT && $role_name != RbacName::ROLE_SHOOT_MAN)
+                    continue;
                 $disabled = !(
                         ($bookdetail->u_contacter == $user->id && $role_name != RbacName::ROLE_CONTACT) || 
                         ($bookdetail->u_shoot_man == $user->id && $role_name != RbacName::ROLE_SHOOT_MAN));
