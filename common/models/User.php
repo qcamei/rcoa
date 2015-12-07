@@ -80,7 +80,7 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             [['password','password2'],'required','on'=>[self::SCENARIO_CREATE]],
             [['username','nickname','email'],'required','on'=>[self::SCENARIO_CREATE,self::SCENARIO_UPDATE]],
-            [['username','email'],'unique'],
+            [['username'],'unique'],
             [['password'],'string', 'min'=>6, 'max'=>20],
             [['username'],'string', 'max'=>32, 'on'=>['create']],
             [['username','nickname', 'password', 'password_reset_token', 'email','avatar','ee','phone'], 'string', 'max' => 255],
