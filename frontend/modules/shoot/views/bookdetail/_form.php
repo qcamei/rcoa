@@ -16,6 +16,7 @@ use yii\widgets\ActiveForm;
 <div class="shoot-bookdetail-form">
 
     <?php
+    //test
     if(!$model->status = 0 ){
         echo Growl::widget([
             'type' => Growl::TYPE_WARNING,
