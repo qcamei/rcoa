@@ -221,7 +221,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
     <div class="container">
         <div class="row ">
             <div class="btn btn-default" style="padding: 0px">
-                <?= Html::dropDownList('site', 0, ['6-5摄']) ?>
+                <?= Html::dropDownList('site', 0, $sites, ['prompt'=>'请选择...'])?>
             </div>
             <div  class="btn btn-default" style="padding: 0px;width: 85px">
                 <?=
