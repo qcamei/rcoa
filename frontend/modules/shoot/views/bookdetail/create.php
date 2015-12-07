@@ -14,7 +14,7 @@ $this->title = Yii::t('rcoa', 'Create Shoot Bookdetail');
 <!-- title 样式 -->
 <div class="title">
     <div class="container">
-        <?php echo '预约操作：【'.$model->site->name.'】'.
+          <?php echo '预约操作：【'.$model->site->name.'】'.
                 date('Y/m/d ',$model->book_time).Yii::t('rcoa', 'Week '.date('D',$model->book_time)).' '.$model->getTimeIndexName() ?>
     </div>
 </div>

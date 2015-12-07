@@ -6,6 +6,7 @@ use common\models\shoot\searchs\ShootBookdetailSearch;
 use common\models\shoot\ShootAppraiseTemplate;
 use common\models\shoot\ShootAppraiseWork;
 use common\models\shoot\ShootBookdetail;
+use common\models\shoot\ShootSite;
 use wskeee\framework\FrameworkManager;
 use wskeee\rbac\RbacManager;
 use wskeee\rbac\RbacName;
@@ -55,7 +56,7 @@ class BookdetailController extends Controller
     {
         /* @var $fwManager FrameworkManager */
         $fwManager = \Yii::$app->get('fwManager');
-        
+      
         $date=  isset(Yii::$app->request->queryParams['date']) ? 
                 date('Y-m-d',strtotime(Yii::$app->request->queryParams['date'])) : date('Y-m-d');
         
@@ -70,10 +71,11 @@ class BookdetailController extends Controller
                             'attributes' => ['book_time'],
                         ],
                         'pagination' => [
-                            'pageSize' => 21,
+                            'pageSize' =>21,
                         ],
                             ]),
             'date' => $date,
+            'sites' => $this->getSiteForSelect(),
             'prevWeek' => DateUtil::getWeekSE($date,-1)['start'],
             'nextWeek' => DateUtil::getWeekSE($date,1)['start'],
         ]);
@@ -279,6 +281,17 @@ class BookdetailController extends Controller
         return ArrayHelper::map($fwManager->getColleges(), 'id', 'name');
     }
     
+    /**
+     * 场地下拉数据
+     */
+    protected  function getSiteForSelect()
+    {
+        $sites = ShootSite::find()
+                ->all();
+        return ArrayHelper::map($sites, 'id', 'name');
+    }
+
+
     /**
      * 获取项目
      * @param int $itemId
