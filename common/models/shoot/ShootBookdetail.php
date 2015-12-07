@@ -50,6 +50,7 @@ use yii\web\NotFoundHttpException;
  * @property ShootSite $site 场地
  * @property array $appraiseResults 评价结束
  * @property array $appraises       评价题目
+ * @property srting $remark     备注
  */
 class ShootBookdetail extends ActiveRecord
 {
@@ -194,7 +195,7 @@ class ShootBookdetail extends ActiveRecord
             'teacher_email' => Yii::t('rcoa', 'Email'),
             'statusName' => Yii::t('rcoa', 'Status'),
             'teacher_email' => Yii::t('rcoa', 'Email'),
-            'remark' => Yii::t('rcoa', 'Remark'),
+            'remark' => Yii::t('rcoa', '备注'),
         ];
     }
     
