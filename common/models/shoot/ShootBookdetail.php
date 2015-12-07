@@ -50,7 +50,6 @@ use yii\web\NotFoundHttpException;
  * @property ShootSite $site 场地
  * @property array $appraiseResults 评价结束
  * @property array $appraises       评价题目
- * @property string $remark 备注
  */
 class ShootBookdetail extends ActiveRecord
 {
@@ -133,7 +132,7 @@ class ShootBookdetail extends ActiveRecord
             self::SCENARIO_DEFAULT => ['site_id','fw_college', 'fw_project', 'fw_course', 
                 'lession_time', 'teacher_name','teacher_phone', 'u_contacter', 
                 'u_booker','u_shoot_man' ,'book_time', 'index', 'shoot_mode',
-                'photograph', 'status', 'created_at', 'updated_at', 'ver','create_by'],
+                'photograph', 'status', 'created_at', 'updated_at', 'ver','create_by','remark'],
             self::SCENARIO_TEMP_CREATE => ['site_id', 
                 'lession_time', 'u_contacter', 
                 'u_booker','book_time', 'index', 'shoot_mode',
@@ -161,7 +160,7 @@ class ShootBookdetail extends ActiveRecord
                 'site_id',
                 'fw_college', 'fw_project', 'fw_course', 
                 'u_contacter', 'u_booker', 
-                'book_time', 'index','teacher_name','teacher_phone'],'required', 'on'=>[self::SCENARIO_DEFAULT]],
+                'book_time', 'index','teacher_name','teacher_phone','remark'],'required', 'on'=>[self::SCENARIO_DEFAULT]],
             [['teacher_phone'],'integer'],
             [['teacher_email'],'email'],
         ];
@@ -195,6 +194,7 @@ class ShootBookdetail extends ActiveRecord
             'teacher_email' => Yii::t('rcoa', 'Email'),
             'statusName' => Yii::t('rcoa', 'Status'),
             'teacher_email' => Yii::t('rcoa', 'Email'),
+            'remark' => Yii::t('rcoa', 'Remark'),
         ];
     }
     

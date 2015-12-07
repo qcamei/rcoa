@@ -84,6 +84,12 @@ use frontend\modules\shoot\ShootAsset;
                 'value' => $isShootManLeader ?
                          Html::activeDropDownList($model, 'u_shoot_man', $shootmans,['prompt'=>'选择摄影师...']) : (isset($model->u_shoot_man) ? $model->shootMan->nickname : "空"),
             ],
+            [
+                'attribute' => 'remark',
+                //'format' => 'raw',
+                'value' =>  $model->remark,
+                
+            ],
         ],
     ]);
     ?>

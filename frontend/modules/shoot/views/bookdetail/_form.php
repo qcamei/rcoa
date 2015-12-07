@@ -16,8 +16,8 @@ use yii\widgets\ActiveForm;
 <div class="shoot-bookdetail-form">
 
     <?php
-    //test
-    if(!$model->status = 0 ){
+    //在设置更新时不显示锁定时间
+    if(!$model->status > 0 ){
         echo Growl::widget([
             'type' => Growl::TYPE_WARNING,
             'body' => '锁定时间 2 分钟',
@@ -35,7 +35,8 @@ use yii\widgets\ActiveForm;
                     'align' => 'center',
                 ]
             ]
-    ]);}
+        ]);
+    }
     ?>
     <?php $form = ActiveForm::begin([
         'id'=>'bookdetail-create-form',
@@ -66,7 +67,9 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'u_contacter')->dropDownList($users,['prompt'=>'请选择...']) ?>
 
     <?= $form->field($model, 'u_booker')->dropDownList($users,['prompt'=>'请选择...']) ?>
-
+    
+    <?= $form->field($model, 'remark')->textarea() ?>
+    
     <?= $form->field($model, 'shoot_mode')->radioList(ShootBookdetail::$shootModeMap,[
         'separator'=>'',
         'itemOptions'=>[
