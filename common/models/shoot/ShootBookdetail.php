@@ -50,6 +50,7 @@ use yii\web\NotFoundHttpException;
  * @property ShootSite $site 场地
  * @property array $appraiseResults 评价结束
  * @property array $appraises       评价题目
+ * @property string $remark 备注
  */
 class ShootBookdetail extends ActiveRecord
 {
