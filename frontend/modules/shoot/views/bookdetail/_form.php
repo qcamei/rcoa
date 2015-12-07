@@ -16,7 +16,7 @@ use yii\widgets\ActiveForm;
 <div class="shoot-bookdetail-form">
 
     <?php
-    if(!$model->status > 0 ){
+    if(!$model->status = 0 ){
         echo Growl::widget([
             'type' => Growl::TYPE_WARNING,
             'body' => '锁定时间 2 分钟',
