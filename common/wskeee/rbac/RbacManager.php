@@ -126,6 +126,7 @@ class RbacManager extends DbManager{
      * 获取拥有该角色或者权限所有用户，<br/>
      * 比如，获取所有【编导】，或者所有能【创建预约】的用户
      * @param string $itemName  角色或者权限 [User]
+     * @return array [User,User]
      */
     public function getItemUsers($itemName)
     {

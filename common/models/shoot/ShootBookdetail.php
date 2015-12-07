@@ -370,7 +370,10 @@ class ShootBookdetail extends ActiveRecord
         }
         /* @var $appraise ShootAppraise */
         foreach ($this->appraises as $appraise)
-            $result[$appraise->role_name]['all'] += $appraise->value;
+        {
+            if(isset($result[$appraise->role_name]))
+                $result[$appraise->role_name]['all'] += $appraise->value;
+        }
         
         return $result;
     }

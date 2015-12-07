@@ -34,7 +34,7 @@ class BookdetailController extends Controller
                 'actions' => [
                     'delete' => ['post'],
                 ],
-            ],
+            ], 
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [

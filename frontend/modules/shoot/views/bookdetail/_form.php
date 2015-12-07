@@ -40,7 +40,7 @@ use yii\widgets\ActiveForm;
         'id'=>'bookdetail-create-form',
         'options'=>['class'=>'form-horizontal'],
         'fieldConfig' => [  
-            'template' => "{label}：\n<div class=\"col-lg-10 col-md-10\">{input}</div>\n<div class=\"col-lg-10 col-md-10\">{error}</div>",  
+            'template' => "{label}\n<div class=\"col-lg-10 col-md-10\">{input}</div>\n<div class=\"col-lg-10 col-md-10\">{error}</div>",  
             'labelOptions' => ['class' => 'col-lg-1 col-md-1 control-label','style'=>['color'=>'#999999','font-weight'=>'normal']],  
         ], 
         ]); ?>
