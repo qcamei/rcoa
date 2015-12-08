@@ -123,9 +123,7 @@ class BookdetailController extends Controller
             //                    ->andWhere('status' =>  ShootBookdetail::STATUS_BOOKING)
                 
         }
-
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-
             $this->saveNewBookdetail($model);
             return $this->redirect([ 'view', 'id' => $model->id]);
         } else {
@@ -133,7 +131,7 @@ class BookdetailController extends Controller
             $model->u_booker = Yii::$app->user->id;
             $model->u_contacter = Yii::$app->user->id;
             $model->create_by = Yii::$app->user->id;
-
+              
             !isset($post['site_id']) ? : $model->site_id = $post['site_id'];
             !isset($post['book_time']) ? : $model->book_time = $post['book_time'];
             !isset($post['index']) ? : $model->index = $post['index'];
@@ -141,7 +139,22 @@ class BookdetailController extends Controller
             $model->setScenario(ShootBookdetail::SCENARIO_TEMP_CREATE);
             $model->save();
             $model->setScenario(ShootBookdetail::SCENARIO_DEFAULT);
-
+            /**判断上下晚预约的默认开始时间*/
+            if($model->index == $model::TIME_INDEX_MORNING)
+            {
+                $model->start_time = $model::START_TIME_MORNING;
+            }
+            
+            else if($model->index == $model::TIME_INDEX_AFTERNOON)
+            {
+                $model->start_time = $model::START_TIME_AFTERNOON;
+            }
+            
+            else if($model->index == $model::TIME_INDEX_NIGHT)
+            {
+                 $model->start_time = $model::START_TIME_NIGHT;
+            }
+            
             return $this->render('create', [
                         'model' => $model,
                         'users' => $this->getRoleToUsers(RbacName::ROLE_WD),
@@ -205,7 +218,6 @@ class BookdetailController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {

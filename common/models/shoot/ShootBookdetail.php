@@ -51,6 +51,7 @@ use yii\web\NotFoundHttpException;
  * @property array $appraiseResults 评价结束
  * @property array $appraises       评价题目
  * @property srting $remark     备注
+ * @property srting $start_time    开始时间
  */
 class ShootBookdetail extends ActiveRecord
 {
@@ -85,7 +86,12 @@ class ShootBookdetail extends ActiveRecord
     const TIME_INDEX_AFTERNOON = 1;
     /** 时段 晚上 */
     const TIME_INDEX_NIGHT = 2;
-    
+    /**默认开始时间 上午*/
+    const START_TIME_MORNING = '09:15';
+    /**默认开始时间 下午午*/
+    const START_TIME_AFTERNOON = '13:45';
+    /**默认开始时间 晚上*/
+    const START_TIME_NIGHT = '19:00';
     /* 临时创建场景 */
     const SCENARIO_TEMP_CREATE = 'tempCreate';
 
@@ -133,7 +139,7 @@ class ShootBookdetail extends ActiveRecord
             self::SCENARIO_DEFAULT => ['site_id','fw_college', 'fw_project', 'fw_course', 
                 'lession_time', 'teacher_name','teacher_phone', 'u_contacter', 
                 'u_booker','u_shoot_man' ,'book_time', 'index', 'shoot_mode',
-                'photograph', 'status', 'created_at', 'updated_at', 'ver','create_by','remark'],
+                'photograph', 'status', 'created_at', 'updated_at', 'ver','create_by','remark','start_time'],
             self::SCENARIO_TEMP_CREATE => ['site_id', 
                 'lession_time', 'u_contacter', 
                 'u_booker','book_time', 'index', 'shoot_mode',
@@ -161,7 +167,7 @@ class ShootBookdetail extends ActiveRecord
                 'site_id',
                 'fw_college', 'fw_project', 'fw_course', 
                 'u_contacter', 'u_booker', 
-                'book_time', 'index','teacher_name','teacher_phone','remark'],'required', 'on'=>[self::SCENARIO_DEFAULT]],
+                'book_time', 'index','teacher_name','teacher_phone','remark','start_time'],'required', 'on'=>[self::SCENARIO_DEFAULT]],
             [['teacher_phone'],'integer'],
             [['teacher_email'],'email'],
         ];
@@ -196,6 +202,7 @@ class ShootBookdetail extends ActiveRecord
             'statusName' => Yii::t('rcoa', 'Status'),
             'teacher_email' => Yii::t('rcoa', 'Email'),
             'remark' => Yii::t('rcoa', '备注'),
+            'start_time' => Yii::t('start_time', '开始时间'),
         ];
     }
     
@@ -422,6 +429,13 @@ class ShootBookdetail extends ActiveRecord
     {
         return $this->status == self::STATUS_ASSIGN;
     }
+    /**
+     *  是否是【已完成】状态
+     */
+    public function getIsOver(){
+        return $this->status == self::STATUS_COMPLETED;
+    }
+
     
     /**
      * 获取预约锁定剩余时间
