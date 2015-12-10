@@ -56,14 +56,14 @@ class BookdetailController extends Controller
     {
         /* @var $fwManager FrameworkManager */
         $fwManager = \Yii::$app->get('fwManager');
-      
+        
         $date=  isset(Yii::$app->request->queryParams['date']) ? 
                 date('Y-m-d',strtotime(Yii::$app->request->queryParams['date'])) : date('Y-m-d');
-        
-        //目标周的起始日期
         $se = DateUtil::getWeekSE($date);
-        $dataProvider = ShootBookdetailSearch::searchWeek($se);
-        
+        $site = !isset(Yii::$app->request->queryParams['site']) ? :
+                Yii::$app->request->queryParams['site'] ;
+        $dataProvider = ShootBookdetailSearch::searchWeek($site, $se);
+
         return $this->render('index', [
             'dataProvider' => new ArrayDataProvider([
                 'allModels' => $dataProvider,
@@ -74,6 +74,7 @@ class BookdetailController extends Controller
                             'pageSize' =>21,
                         ],
                             ]),
+            
             'date' => $date,
             'sites' => $this->getSiteForSelect(),
             'prevWeek' => DateUtil::getWeekSE($date,-1)['start'],
