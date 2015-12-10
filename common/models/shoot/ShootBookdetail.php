@@ -40,9 +40,9 @@ use yii\web\NotFoundHttpException;
  * @property int $teacher_phone 老师电话
  * @property string $teacher_email 老师邮箱
  * 
- * @property FrameworkItem $fwCollege
- * @property FrameworkItem $fwCourse
- * @property FrameworkItem $fwProject
+ * @property FWItem $fwCollege
+ * @property FWItem $fwCourse
+ * @property FWItem $fwProject
  * @property User $booker
  * @property User $contacter
  * @property User $teacher

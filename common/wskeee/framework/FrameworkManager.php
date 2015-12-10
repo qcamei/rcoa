@@ -1,21 +1,20 @@
 <?php
 namespace wskeee\framework;
 
-use yii\caching\Cache;
-use yii\db\Query;
-use yii\di\Instance;
-use yii\db\Connection;
 use linslin\yii2\curl\Curl;
-
 use wskeee\framework\models\FWItem;
-use wskeee\framework\models\Item;
+use Yii;
+use yii\base\Component;
+use yii\base\UserException;
+use yii\caching\Cache;
+use yii\di\Instance;
 
 /**
  * Description of ProjectManager
  *
  * @author wskeee
  */
-class FrameworkManager extends \yii\base\Component 
+class FrameworkManager extends Component 
 {
     /*
      * @var  $time_out 超时时长
@@ -160,14 +159,14 @@ class FrameworkManager extends \yii\base\Component
             return;
         }
         
-        \Yii::trace('【Curl】请求最新项目数据！url='.$this->url, 'framework');
+        Yii::trace('【Curl】请求最新项目数据！url='.$this->url, 'framework');
         $curl = new Curl();
         $response = $curl->setOption(CURLOPT_RETURNTRANSFER,true)->get($this->url);
         
         switch ($curl->responseCode) {
  
             case 'timeout':
-                \Yii::error("加载 framework 数据失败！【timeout】");
+                Yii::error("加载 framework 数据失败！【timeout】");
                 break;
  
             case 200:
@@ -186,8 +185,8 @@ class FrameworkManager extends \yii\base\Component
                 break;
  
             case 404:
-                \Yii::error("加载 framework 数据失败！【404】");
-                throw new \yii\base\UserException("加载 framework 数据失败！【404】");
+                Yii::error("加载 framework 数据失败！【404】");
+                throw new UserException("加载 framework 数据失败！【404】");
                 break;
         }
     }

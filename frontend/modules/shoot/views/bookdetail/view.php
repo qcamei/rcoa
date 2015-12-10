@@ -1,16 +1,12 @@
 <?php
 
+use common\models\shoot\ShootBookdetail;
+use wskeee\rbac\RbacName;
 use yii\helpers\Html;
 use yii\web\View;
-use yii\widgets\DetailView;
 
-use kartik\widgets\AlertBlock;
-use kartik\widgets\Growl;
-
-use wskeee\rbac\RbacName;
-
-/* @var $this yii\web\View */
-/* @var $model common\models\shoot\ShootBookdetail */
+/* @var $this View */
+/* @var $model ShootBookdetail */
 
 $this->title = $model->id;
 ?>
