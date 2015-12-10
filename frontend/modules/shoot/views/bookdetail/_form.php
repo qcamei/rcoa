@@ -17,8 +17,8 @@ use yii\widgets\ActiveForm;
 
     <?php
     //在设置更新时不显示锁定时间
-    if(!$model->status > 0 ){
-        echo Growl::widget([
+   if($model->status == $model::STATUS_BOOKING) {
+         echo Growl::widget([
             'type' => Growl::TYPE_WARNING,
             'body' => '锁定时间 2 分钟',
             'showSeparator' => true,
@@ -37,6 +37,7 @@ use yii\widgets\ActiveForm;
             ]
         ]);
     }
+      
     ?>
     <?php $form = ActiveForm::begin([
         'id'=>'bookdetail-create-form',
@@ -55,6 +56,8 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'fw_course')->dropDownList($courses,['prompt'=>'请选择...']) ?>
 
     <?= $form->field($model, 'lession_time')->textInput() ?>
+   
+    <?= $form->field($model, 'start_time')->textInput(['type'=>'time']) ?>
 
     <h5><b>老师信息：</b></h5>
     <?= $form->field($model, 'teacher_name')->textInput() ?>

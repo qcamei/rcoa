@@ -15,7 +15,19 @@ return [
             // send all mails to a file by default. You have to set
             // 'useFileTransport' to false and configure a transport
             // for the mailer to send real emails.
-            'useFileTransport' => true,
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.163.com',
+                'username' => 'gzedu_reserve@163.com',
+                'password' => '123456/q',
+                'port' => '25',
+                'encryption' => 'tls',
+            ],
+            'messageConfig' => [
+                'charset' => 'UTF-8',
+                'from' => ['gzedu_reserve@163.com' => '资源中心工作平台']
+            ],
+            'useFileTransport' => false,
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
@@ -30,6 +42,7 @@ return [
             'class'=>'wskeee\rbac\RbacManager',
             'cache' => [
                 'class' => 'yii\caching\FileCache',
+                'cachePath' => dirname(dirname(__DIR__)) . '/frontend/runtime/cache'
             ]
         ],
         'fwManager'=>[

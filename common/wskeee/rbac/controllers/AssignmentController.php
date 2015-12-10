@@ -3,6 +3,7 @@
 namespace wskeee\rbac\controllers;
 
 use wskeee\rbac\models\searchs\AssignmentSearch;
+use wskeee\rbac\RbacManager;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -87,7 +88,7 @@ class AssignmentController extends Controller
     public function actionAssign()
     {
         Yii::$app->getResponse()->format = 'json';
-        /* @var $authManager  ManagerInterface */
+        /* @var $authManager  RbacManager */
         $authManager = Yii::$app->authManager;
         $post = Yii::$app->getRequest()->post();
         
@@ -107,6 +108,7 @@ class AssignmentController extends Controller
                     $item = $item ?  : $authManager->getPermission($itemName);
                     
                     $authManager->assign($item, $id);
+                    $authManager->invalidateCache();
                     
                     $errors[] = $item;
                 }
@@ -123,6 +125,7 @@ class AssignmentController extends Controller
                     $item = $item ?  : $authManager->getPermission($itemName);
                     
                     $authManager->revoke($item, $id);
+                    $authManager->invalidateCache();
                 }
             } catch (\Exception $ex) {
                 $errors[] = $ex->getMessage();

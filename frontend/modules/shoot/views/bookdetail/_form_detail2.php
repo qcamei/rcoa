@@ -37,6 +37,10 @@ use frontend\modules\shoot\ShootAsset;
                 'attribute' => 'u_booker',
                 'value' => $model->booker->nickname. '( '.$model->booker->phone.' )',
             ],
+            [
+                'attribute' => 'start_time',
+                'value' => $model->start_time,
+            ],
             
             
             ['label' => '<span class="btn-block viewdetail-th-head">课程信息</span>','value'=>''],

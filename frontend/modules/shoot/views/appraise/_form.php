@@ -11,7 +11,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
-
+use frontend\modules\shoot\components\ShootAppraiseStar;
 /* @var $this View */
 /* @var $model ShootAppraise */
 /* @var $form ActiveForm */
@@ -31,11 +31,12 @@ use yii\widgets\ActiveForm;
     ?>
 
     <?php 
+            
         if(count($appraises) == 0)
         {
             echo "<h2>未找评价题目！</h2>";
         }else
-        {
+        {   
             /* @var $appraise ShootAppraise */
             /* @var $bookdetail ShootBookdetail */
             /* @var $authManager RbacManager */
@@ -50,6 +51,15 @@ use yii\widgets\ActiveForm;
             /* 显示答题情况 */
             $value_result = $bookdetail->getAppraiseInfo();
             
+            /** 获取评价结果 */
+            $appInfo = $value_result;
+            //生成【接洽人】【摄影师】评价图标
+            $contacterGood = $appInfo[RbacName::ROLE_CONTACT]['hasDo'] ? ShootAppraiseStar::widget([
+                'value'=>$appInfo[RbacName::ROLE_CONTACT]['sum']/$appInfo[RbacName::ROLE_CONTACT]['all']
+                    ]) : "" ;
+            $shootManGood = $appInfo[RbacName::ROLE_SHOOT_MAN]['hasDo'] ?  ShootAppraiseStar::widget([
+                'value'=>$appInfo[RbacName::ROLE_SHOOT_MAN]['sum']/$appInfo[RbacName::ROLE_SHOOT_MAN]['all']
+                    ]) : "";
             foreach($appraises as $role_name => $appraise_arr)
             {
                 if($role_name!= RbacName::ROLE_CONTACT && $role_name != RbacName::ROLE_SHOOT_MAN)
@@ -58,7 +68,7 @@ use yii\widgets\ActiveForm;
                         ($bookdetail->u_contacter == $user->id && $role_name != RbacName::ROLE_CONTACT) || 
                         ($bookdetail->u_shoot_man == $user->id && $role_name != RbacName::ROLE_SHOOT_MAN));
                 $has_do = $value_result[$role_name]['hasDo'];
-                $icon = $has_do ? $value_result[$role_name]['sum']/$value_result[$role_name]['all'] : '';
+                $icon = $role_name == RbacName::ROLE_CONTACT ? $contacterGood : $shootManGood ;
                 echo '<h4>'.Html::label($appraise_arr[0]->role->description.$icon).'</h4>';
                 foreach($appraise_arr as $index => $appraise)
                 {

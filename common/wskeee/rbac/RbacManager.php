@@ -57,7 +57,7 @@ class RbacManager extends DbManager{
             list ($this->items, $this->rules, $this->parents,$this->itemToUsers) = $data;
             return;
         }
-
+        
         $query = (new Query)->from($this->itemTable);
         $this->items = [];
         foreach ($query->all($this->db) as $row) {
