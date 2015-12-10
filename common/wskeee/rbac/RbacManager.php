@@ -25,6 +25,7 @@ class RbacManager extends DbManager{
     public function init() 
     {
         parent::init();
+        $this->invalidateCache();
         $this->loadFromCache();
     }
     /*
