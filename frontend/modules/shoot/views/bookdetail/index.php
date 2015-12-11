@@ -254,17 +254,17 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
 </div>
 
 <?php  
-    $reflashUrl = Yii::$app->urlManager->createAbsoluteUrl(['/shoot/bookdetail/','date'=>$date]);
+    $reflashUrl = Yii::$app->urlManager->createAbsoluteUrl(['/shoot/bookdetail/']);
     $js =
 <<<JS
     var reflashUrl = "$reflashUrl";
     function siteDropDownListChange(value)
     {  
-        location.href = reflashUrl+'&site='+value;
+        location.href = reflashUrl+'?site='+value;
     }
     function dateChange(value)
     {
-         location.href = reflashUrl+'&date='+value
+         location.href = reflashUrl+'?date='+value
     }
 JS;
     ShootAsset::register($this);

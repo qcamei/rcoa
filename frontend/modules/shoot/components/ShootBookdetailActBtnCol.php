@@ -72,7 +72,11 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
         //编导
         else if($authManager->isRole(RbacName::ROLE_WD, Yii::$app->user->id))
         {
-            $buttonName = $isNew ? '预约' :$model->booker->nickname;
+            if(date('Y-m-d',$model->book_time) < date('Y-m-d',strtotime("+1 day"))){
+                $buttonName = $isNew ? '未预约' :$model->booker->nickname;
+            }else{
+                $buttonName = $isNew ? '预约' :$model->booker->nickname;
+            }
             $url = ($isNew || $model->getIsBooking()) ? 'create' : 'view';
             $params = ($isNew || $model->getIsBooking()) ? 
                     [
@@ -81,7 +85,11 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
                         'index' => $model->index
                     ] : ['id' => $model->id];
             $isMe = !$isNew && $model->booker->id == Yii::$app->user->id;
-            $btnClass .= ($isNew ? ' btn-primary' : ' btn-default');
+            if(date('Y-m-d',$model->book_time) < date('Y-m-d',strtotime("+1 day"))){
+                $btnClass .= ($isNew ? ' btn-primary disabled' : ' btn-default');
+            }else{
+                $btnClass .= ($isNew ? ' btn-primary' : ' btn-default');
+            }
             $btnClass .= (!$isMe && $model->getIsBooking()) ? ' disabled' : "";
         }
         $html = '';

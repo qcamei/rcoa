@@ -78,7 +78,7 @@ use frontend\modules\shoot\components\ShootAppraiseStar;
                     });
                     echo Html::label(($index+1).'、'.$appraise->question->title);
                     echo Html::radioList(
-                            "$appraise->role_name-$appraise->q_id", 
+                            "$appraise->role_name-$appraise->q_id",
                             getAppraiseResultValue($results,$appraise), 
                             $items,
                             [
@@ -117,4 +117,16 @@ use frontend\modules\shoot\components\ShootAppraiseStar;
     <?php ActiveForm::end(); ?>
 
 </div>
+<?php  
+ $js =   
+<<<JS
+    /**设置radio选中改变颜色*/
+    $("input:radio:checked").parent().css("color","#2E6DA4");  
+    $("input:radio").change(function (){   
+        $("input:radio:not([checked])[name="+this.name+"]").parent().css("color","#000000");  
+        $("input:radio:checked[name="+this.name+"]").parent().css("color","#2E6DA4");  
+    });  
+JS;
+    $this->registerJs($js,  View::POS_READY); 
+?> 
 <?php ShootAsset::register($this) ?>
