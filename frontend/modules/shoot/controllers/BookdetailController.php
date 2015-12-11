@@ -7,7 +7,6 @@ use common\models\shoot\ShootAppraiseTemplate;
 use common\models\shoot\ShootAppraiseWork;
 use common\models\shoot\ShootBookdetail;
 use common\models\shoot\ShootSite;
-use wskeee\ee\EeManager;
 use wskeee\framework\FrameworkManager;
 use wskeee\rbac\RbacManager;
 use wskeee\rbac\RbacName;
@@ -57,14 +56,14 @@ class BookdetailController extends Controller
     {
         /* @var $fwManager FrameworkManager */
         $fwManager = \Yii::$app->get('fwManager');
-      
+        
         $date=  isset(Yii::$app->request->queryParams['date']) ? 
                 date('Y-m-d',strtotime(Yii::$app->request->queryParams['date'])) : date('Y-m-d');
-        
-        //目标周的起始日期
         $se = DateUtil::getWeekSE($date);
-        $dataProvider = ShootBookdetailSearch::searchWeek($se);
-        
+        $site = !isset(Yii::$app->request->queryParams['site']) ? :
+                Yii::$app->request->queryParams['site'] ;
+        $dataProvider = ShootBookdetailSearch::searchWeek($site, $se);
+
         return $this->render('index', [
             'dataProvider' => new ArrayDataProvider([
                 'allModels' => $dataProvider,
@@ -75,6 +74,7 @@ class BookdetailController extends Controller
                             'pageSize' =>21,
                         ],
                             ]),
+            
             'date' => $date,
             'sites' => $this->getSiteForSelect(),
             'prevWeek' => DateUtil::getWeekSE($date,-1)['start'],
@@ -125,11 +125,7 @@ class BookdetailController extends Controller
                 
         }
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-
-            /* 保存，成功后设置通知消息 */
-            if($this->saveNewBookdetail($model))
-                $this->setNewShootNotification ($model);
-            
+            $this->saveNewBookdetail($model);
             return $this->redirect([ 'view', 'id' => $model->id]);
         } else {
             $model->status = ShootBookdetail::STATUS_BOOKING;
@@ -171,7 +167,7 @@ class BookdetailController extends Controller
     }
     
     /**
-     * 保存新预约数据
+     * 
      * @param ShootBookdetail $model
      */
     private function saveNewBookdetail($model)
@@ -189,57 +185,13 @@ class BookdetailController extends Controller
                 throw new Exception(json_encode($model->getErrors()));
             
             $trans->commit();
-            
-            return true;
-            
         } catch (\Exception $ex) {
             $trans ->rollBack();
+            
             throw new NotFoundHttpException("保存任务失败！".$ex->getMessage()); 
-            return false;
         }
     }
     
-    /**
-     * 发送新预约通知
-     * 1、发送通知邮件、EE
-     * 2、设置平台新消息通知
-     * @param ShootBookdetail $model 预约详细数据模型
-     */
-    private function setNewShootNotification($model)
-    {
-        /* @var $authManager RbacManager */
-        $authManager = Yii::$app->authManager;
-        /** 传进模板参数 */
-        $params = [
-                'b_id' => $model->id,
-                'bookerName' => $model->booker->nickname,
-                'bookerPhone' => $model->booker->phone,
-                'siteName' => $model->site->name,
-                'bookTime' => date('Y/m/d ',$model->book_time).Yii::t('rcoa', 'Week '.date('D',$model->book_time)).' '.$model->getTimeIndexName(),
-                'courseName' => $model->fwCourse->name,
-                'remark' => $model->remark,
-            ];
-        /** 主题 */
-        $ubject = "拍摄-新增-".$model->fwCourse->name;
-        /** 所有摄影组长 模型 */
-        $shootLeaders = $authManager->getItemUsers(RbacName::ROLE_SHOOT_LEADER);
-        /** 所有摄影组长的 ee号 */
-        $ees = array_filter(ArrayHelper::getColumn($shootLeaders,"ee"));
-        /** 所有摄影组长的 email号 */
-        $emails = array_filter(ArrayHelper::getColumn($shootLeaders,"email"));
-        
-        
-        /** 发送 ee 通知 */
-        EeManager::sendEeByView('shoot/newShoot-html', $params , $ees ,$ubject);
-        
-        /** 发送 邮件 通知 */
-        $mes = Yii::$app->mailer->compose('shoot/newShoot-html', $params)
-                ->setTo($emails)
-                ->setSubject($ubject)
-                ->send();
-    }
-
-
     /**
      * 退出任务创建，清除锁定
      * @param 退出任务的时间 $date

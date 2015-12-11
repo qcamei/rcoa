@@ -221,7 +221,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
     <div class="container">
         <div class="row ">
             <div class="btn btn-default" style="padding: 0px">
-                <?= Html::dropDownList('site', 0, $sites, ['prompt'=>'请选择...','onchange'=>''])?>
+                <?= Html::dropDownList('site', 0, $sites, ['prompt'=>'请选择...','onchange'=>'siteDropDownListChange($(this).val())'])?> 
             </div>
             <div  class="btn btn-default" style="padding: 0px;width: 85px">
                 <?=
@@ -229,9 +229,12 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                     'name' => 'check_issue_date',
                     'type' => DatePicker::TYPE_INPUT,
                     'value' => date('Y/m'),
-                    'options' => ['placeholder' => 'Select issue date ...'],
+                    'options' => [
+                        'placeholder' => 'Select issue date ...',
+                        'onchange'=>'dateChange($(this).val())',
+                        ],
                     'pluginOptions' => [
-                        'format' => 'yyyy/m',
+                        'format' => 'yyyy/m/d',
                         'todayHighlight' => true,
                         'minViewMode' => 1,
                     ]
@@ -249,6 +252,24 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
         </div>
     </div>
 </div>
+
+<?php  
+    $reflashUrl = Yii::$app->urlManager->createAbsoluteUrl(['/shoot/bookdetail/','date'=>$date]);
+    $js =
+<<<JS
+    var reflashUrl = "$reflashUrl";
+    function siteDropDownListChange(value)
+    {  
+        location.href = reflashUrl+'&site='+value;
+    }
+    function dateChange(value)
+    {
+         location.href = reflashUrl+'&date='+value
+    }
+JS;
+    ShootAsset::register($this);
+    $this->registerJs($js, View::POS_HEAD);
+?> 
 <?php
     ShootAsset::register($this);
 ?>
