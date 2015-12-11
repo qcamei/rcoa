@@ -2,7 +2,7 @@
 
 use common\models\shoot\ShootBookdetail;
 use kartik\widgets\Growl;
-use yii\bootstrap\Html as Html2;
+use kartik\widgets\TouchSpin;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
@@ -50,12 +50,19 @@ use yii\widgets\ActiveForm;
     
     <h5><b>课程信息：</b></h5>
     <?= $form->field($model, 'fw_college')->dropDownList($colleges,['prompt'=>'请选择...','onchange'=>'wx_one(this)',]) ?>
-
+    
     <?= $form->field($model, 'fw_project')->dropDownList($projects,['prompt'=>'请选择...','onchange'=>'wx_two(this)',]) ?>
 
     <?= $form->field($model, 'fw_course')->dropDownList($courses,['prompt'=>'请选择...']) ?>
 
-    <?= $form->field($model, 'lession_time')->textInput() ?>
+    <?= $form->field($model, 'lession_time')->widget(TouchSpin::classname(),  [
+            'readonly' => true,
+            'pluginOptions' => [
+                'placeholder' => '课时 ...',
+                'min' => 1,
+                'max' => 5,
+            ],
+        ])?>
    
     <?= $form->field($model, 'start_time')->textInput(['type'=>'time']) ?>
 
