@@ -64,4 +64,12 @@ return [
     'Photograph' => "是否照相",
     'Shoot Appraises' => '评价题目',
     'Shoot Appraises' => '评价题目',
+    'Remark' => '备注',
+    'Start Time' => '开始时间',
+    
+    //编辑历史
+    'U ID' => '操作者',
+    'History' =>'原因',
+    'Updat Time' =>'时间',
+    
 ];

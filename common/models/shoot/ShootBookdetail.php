@@ -201,8 +201,11 @@ class ShootBookdetail extends ActiveRecord
             'teacher_email' => Yii::t('rcoa', 'Email'),
             'statusName' => Yii::t('rcoa', 'Status'),
             'teacher_email' => Yii::t('rcoa', 'Email'),
-            'remark' => Yii::t('rcoa', '备注'),
-            'start_time' => Yii::t('start_time', '开始时间'),
+            'remark' => Yii::t('rcoa', 'Remark'),
+            'start_time' => Yii::t('rcoa', 'Start Time'),
+            'u_id' => Yii::t('rcoa', 'U ID'),
+            'history' => Yii::t('rcoa', 'History'),
+            'updat_time' => Yii::t('rcoa', 'Updat Time'),
         ];
     }
     
@@ -260,7 +263,14 @@ class ShootBookdetail extends ActiveRecord
             }
         }
     }
-    
+     /**
+     * 获取编辑历史
+     * @return ActiveQuery
+     */
+    public function getHistory()
+    {
+        return $this->hasOne(ShootHistory::className(), ['b_id' => 'id']);
+    }
     /**
      * 场地
      * @return ActiveQuery
@@ -269,7 +279,6 @@ class ShootBookdetail extends ActiveRecord
     {
         return $this->hasOne(ShootSite::className(), ['id' => 'site_id']);
     }
-
     /**
      * @return FWItem
      */
@@ -435,7 +444,8 @@ class ShootBookdetail extends ActiveRecord
     public function getIsOver(){
         return $this->status == self::STATUS_COMPLETED;
     }
-
+    
+    
     
     /**
      * 获取预约锁定剩余时间
@@ -498,4 +508,5 @@ class ShootBookdetail extends ActiveRecord
     {
         return $this->timeIndexMap[$this->index];
     }
+    
 }

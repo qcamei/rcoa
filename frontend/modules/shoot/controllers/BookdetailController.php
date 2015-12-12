@@ -6,6 +6,7 @@ use common\models\shoot\searchs\ShootBookdetailSearch;
 use common\models\shoot\ShootAppraiseTemplate;
 use common\models\shoot\ShootAppraiseWork;
 use common\models\shoot\ShootBookdetail;
+use common\models\shoot\ShootHistory;
 use common\models\shoot\ShootSite;
 use wskeee\framework\FrameworkManager;
 use wskeee\rbac\RbacManager;

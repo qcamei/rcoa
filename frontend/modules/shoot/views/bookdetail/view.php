@@ -1,6 +1,7 @@
 <?php
 
 use common\models\shoot\ShootBookdetail;
+use common\models\shoot\ShootHistory;
 use wskeee\rbac\RbacName;
 use yii\helpers\Html;
 use yii\web\View;
