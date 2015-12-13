@@ -70,6 +70,6 @@ return [
     //编辑历史
     'U ID' => '操作者',
     'History' =>'原因',
-    'Updat Time' =>'时间',
+    'Update Time' =>'时间',
     
 ];

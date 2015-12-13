@@ -220,6 +220,18 @@ class BookdetailController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $post = Yii::$app->getRequest()->getBodyParams();
+        /**
+         * 给$post['ShootHistory'] 里的成员赋值
+         */
+        foreach ($post as $k=>$v)
+        {
+            $post['ShootHistory']['b_id'] = $model->id;
+            $post['ShootHistory']['u_id'] = $model->u_booker;
+            $post['ShootHistory']['type'] = 1;
+            $post['ShootHistory']['update_time'] = time();
+        }
+      
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -304,8 +316,7 @@ class BookdetailController extends Controller
                 ->all();
         return ArrayHelper::map($sites, 'id', 'name');
     }
-
-
+   
     /**
      * 获取项目
      * @param int $itemId

@@ -33,7 +33,7 @@ class ShootHistory extends ActiveRecord
     {
         return [
             [['b_id'], 'required'],
-            [['b_id', 'u_id', 'type', 'updat_at'], 'integer'],
+            [['b_id', 'u_id', 'type', 'update_time'], 'integer'],
             [['history'], 'string', 'max' => 200]
         ];
     }
@@ -49,7 +49,7 @@ class ShootHistory extends ActiveRecord
             'u_id' => Yii::t('rcoa', 'U ID'),
             'type' => Yii::t('rcoa', 'Type'),
             'history' => Yii::t('rcoa', 'History'),
-            'updat_time' => Yii::t('rcoa', 'Updat Time'),
+            'update_time' => Yii::t('rcoa', 'Update Time'),
         ];
     }
 }

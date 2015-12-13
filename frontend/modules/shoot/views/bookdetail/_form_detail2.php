@@ -94,10 +94,11 @@ use frontend\modules\shoot\ShootAsset;
                 'value' =>  $model->remark,
                 
             ],
+            
             ['label' => '<span class="btn-block viewdetail-th-head">编辑历史</span>','value'=>''],
             [
-                'attribute' => 'updat_time',
-                'value' => isset($model->history->b_id) ? date('Y-m-d H:i:s',$model->history->updat_time) : '无',
+                'attribute' => 'update_time',
+                'value' => isset($model->history->b_id) ? date('Y-m-d H:i:s',$model->history->update_time) : '无',
             ],
             [
                 'attribute' => 'u_id', 

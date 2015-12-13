@@ -6,7 +6,7 @@ use kartik\widgets\TouchSpin;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
-
+use common\models\shoot\ShootHistory;
 /* @var $this View */
 /* @var $model frontend\modules\shoot\models\ShootBookdetail */
 /* @var $form ActiveForm */
@@ -79,7 +79,12 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'u_booker')->dropDownList($users,['prompt'=>'请选择...']) ?>
     
     <?= $form->field($model, 'remark')->textarea() ?>
-    
+    <?php $modelHistory = new ShootHistory(); ?>
+    <?= $form->field($modelHistory, 'history')->textInput() ?>
+    <?= Html::activeHiddenInput($modelHistory, 'b_id') ?>
+    <?= Html::activeHiddenInput($modelHistory, 'u_id') ?>
+    <?= Html::activeHiddenInput($modelHistory, 'type') ?>
+    <?= Html::activeHiddenInput($modelHistory, 'update_time') ?>
     <?= $form->field($model, 'shoot_mode')->radioList(ShootBookdetail::$shootModeMap,[
         'separator'=>'',
         'itemOptions'=>[
@@ -90,12 +95,12 @@ use yii\widgets\ActiveForm;
                ]]]) ?>
 
     <?= $form->field($model, 'photograph')->checkbox()->label('') ?>
-    
     <?= Html::activeHiddenInput($model, 'ver') ?>
     <?= Html::activeHiddenInput($model, 'site_id') ?>
     <?= Html::activeHiddenInput($model, 'book_time') ?>
     <?= Html::activeHiddenInput($model, 'index') ?>
     <?= Html::activeHiddenInput($model, 'status') ?>
+   
     
     <?php ActiveForm::end(); ?>
 

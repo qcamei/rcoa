@@ -205,7 +205,7 @@ class ShootBookdetail extends ActiveRecord
             'start_time' => Yii::t('rcoa', 'Start Time'),
             'u_id' => Yii::t('rcoa', 'U ID'),
             'history' => Yii::t('rcoa', 'History'),
-            'updat_time' => Yii::t('rcoa', 'Updat Time'),
+            'update_time' => Yii::t('rcoa', 'Update Time'),
         ];
     }
     
