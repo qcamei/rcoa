@@ -3,6 +3,10 @@
 namespace common\models\shoot;
 
 use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
+use yii\web\User;
+use yii\behaviors\TimestampBehavior;
 
 
 /**
@@ -19,7 +23,7 @@ use Yii;
  * @property User $u
  * @property ShootBookdetail $b
  */
-class ShootHistory extends \yii\db\ActiveRecord
+class ShootHistory extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -35,9 +39,15 @@ class ShootHistory extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['b_id', 'u_id', 'created_at', 'updated_at'], 'required'],
+            [['b_id', 'u_id'], 'required'],
             [['b_id', 'u_id', 'type', 'created_at', 'updated_at'], 'integer'],
             [['history'], 'string', 'max' => 500]
+        ];
+    }
+    
+    public function behaviors() {
+        return [
+            TimestampBehavior::className()
         ];
     }
 
@@ -58,7 +68,7 @@ class ShootHistory extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getU()
     {
@@ -66,7 +76,7 @@ class ShootHistory extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getB()
     {

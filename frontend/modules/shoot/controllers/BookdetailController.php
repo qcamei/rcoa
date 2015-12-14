@@ -226,22 +226,8 @@ class BookdetailController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $post = Yii::$app->getRequest()->getBodyParams();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {            
-            $dbTrans = \Yii::$app->db->beginTransaction();
-            try{ 
-                $history = new ShootHistory();
-                /**编辑原因为空不保存*/
-                if(!empty($post['editreason'])){
-                    $history->b_id = $model->id;
-                    $history->u_id = Yii::$app->user->id;
-                    $history->history = $post['editreason'];
-                    $history->save();
-                    $dbTrans->commit();  
-                }
-            } catch (Exception $ex) {
-                $dbTrans->rollback();     
-            }
+            $this->saveNewHistory($model);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -253,8 +239,30 @@ class BookdetailController extends Controller
             ]);
         }
     }
-
     /**
+     * 历史记录保存
+     * @param type $model
+     */
+    public function saveNewHistory($model)
+    {
+        $post = Yii::$app->getRequest()->getBodyParams();
+        $dbTrans = \Yii::$app->db->beginTransaction();
+        try{ 
+            $history = new ShootHistory();
+            /**编辑原因为空不保存*/
+            if(!empty($post['editreason'])){
+                $history->b_id = $model->id;
+                $history->u_id = Yii::$app->user->id;
+                $history->history = $post['editreason'];
+                $history->save();
+                $dbTrans->commit();  
+            }
+        } catch (Exception $ex) {
+            $dbTrans->rollback();     
+        }
+    }
+
+        /**
      * Deletes an existing ShootBookdetail model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
