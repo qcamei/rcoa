@@ -90,8 +90,14 @@ class BookdetailController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $dataProvider = $model->historys;
+        
         return $this->render('view', [
                     'model' => $this->findModel($id),
+                    'dataProvider' => new ArrayDataProvider([
+                        'allModels' => $dataProvider,
+                    ]),
                     'shootmans' => $this->isRole(RbacName::ROLE_SHOOT_LEADER) ?
                             $this->getRoleToUsers(RbacName::ROLE_SHOOT_MAN) : [],
         ]);
@@ -221,18 +227,21 @@ class BookdetailController extends Controller
     {
         $model = $this->findModel($id);
         $post = Yii::$app->getRequest()->getBodyParams();
-        /**
-         * 给$post['ShootHistory'] 里的成员赋值
-         */
-        foreach ($post as $k=>$v)
-        {
-            $post['ShootHistory']['b_id'] = $model->id;
-            $post['ShootHistory']['u_id'] = $model->u_booker;
-            $post['ShootHistory']['type'] = 1;
-            $post['ShootHistory']['update_time'] = time();
-        }
-      
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {            
+            $dbTrans = \Yii::$app->db->beginTransaction();
+            try{ 
+                $history = new ShootHistory();
+                /**编辑原因为空不保存*/
+                if(!empty($post['editreason'])){
+                    $history->b_id = $model->id;
+                    $history->u_id = Yii::$app->user->id;
+                    $history->history = $post['editreason'];
+                    $history->save();
+                    $dbTrans->commit();  
+                }
+            } catch (Exception $ex) {
+                $dbTrans->rollback();     
+            }
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [

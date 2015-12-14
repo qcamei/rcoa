@@ -79,12 +79,18 @@ use common\models\shoot\ShootHistory;
     <?= $form->field($model, 'u_booker')->dropDownList($users,['prompt'=>'请选择...']) ?>
     
     <?= $form->field($model, 'remark')->textarea() ?>
-    <?php $modelHistory = new ShootHistory(); ?>
-    <?= $form->field($modelHistory, 'history')->textInput() ?>
-    <?= Html::activeHiddenInput($modelHistory, 'b_id') ?>
-    <?= Html::activeHiddenInput($modelHistory, 'u_id') ?>
-    <?= Html::activeHiddenInput($modelHistory, 'type') ?>
-    <?= Html::activeHiddenInput($modelHistory, 'update_time') ?>
+    
+    <?php if($model->IsValid): ?>
+    <div class="form-group field-shootbookdetail-remark required">
+        <label class="col-lg-1 col-md-1 control-label" style="color: #999999; font-weight: normal;" for="shootbookdetail-remark">
+            <?= $model::EDIT_REASON ?>
+        </label>
+        <div class="col-lg-10 col-md-10">
+            <?= Html::textInput('editreason', $value=null, ['class' => 'form-control' ])?>
+        </div>  
+    </div>  
+    <?php endif; ?>
+    
     <?= $form->field($model, 'shoot_mode')->radioList(ShootBookdetail::$shootModeMap,[
         'separator'=>'',
         'itemOptions'=>[

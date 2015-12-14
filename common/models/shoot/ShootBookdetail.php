@@ -52,9 +52,12 @@ use yii\web\NotFoundHttpException;
  * @property array $appraises       评价题目
  * @property srting $remark     备注
  * @property srting $start_time    开始时间
+ * @property srting $historys    编辑历史
  */
 class ShootBookdetail extends ActiveRecord
 {
+    /**编辑原因*/
+    const EDIT_REASON = '编辑原因';
     /** 预约超时限制  */
     const BOOKING_TIMEOUT = 2*60;
     
@@ -203,9 +206,6 @@ class ShootBookdetail extends ActiveRecord
             'teacher_email' => Yii::t('rcoa', 'Email'),
             'remark' => Yii::t('rcoa', 'Remark'),
             'start_time' => Yii::t('rcoa', 'Start Time'),
-            'u_id' => Yii::t('rcoa', 'U ID'),
-            'history' => Yii::t('rcoa', 'History'),
-            'update_time' => Yii::t('rcoa', 'Update Time'),
         ];
     }
     
@@ -267,9 +267,9 @@ class ShootBookdetail extends ActiveRecord
      * 获取编辑历史
      * @return ActiveQuery
      */
-    public function getHistory()
+    public function getHistorys()
     {
-        return $this->hasOne(ShootHistory::className(), ['b_id' => 'id']);
+        return $this->hasMany(ShootHistory::className(), ['b_id' => 'id']);
     }
     /**
      * 场地

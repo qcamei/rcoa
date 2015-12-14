@@ -1,9 +1,9 @@
 <?php
 
 use common\models\shoot\ShootBookdetail;
-use common\models\shoot\ShootHistory;
 use wskeee\rbac\RbacName;
 use yii\helpers\Html;
+use yii\grid\GridView;
 use yii\web\View;
 
 /* @var $this View */
@@ -22,6 +22,7 @@ $this->title = $model->id;
     
     <?= $this->render('_form_detail2', [
         'model' => $model,
+        'dataProvider' => $dataProvider,
         'shootmans' => $shootmans,
     ]) ?>
 </div>

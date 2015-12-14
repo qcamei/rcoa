@@ -1,22 +1,25 @@
 <?php
 
 namespace common\models\shoot;
-use common\models\User;
-use wskeee\rbac\RbacName;
+
 use Yii;
-use yii\db\ActiveQuery;
-use yii\db\ActiveRecord;
+
+
 /**
  * This is the model class for table "{{%shoot_history}}".
  *
  * @property string $id
- * @property integer $b_id     任务ID
- * @property integer $u_id     操作者
- * @property integer $type
- * @property string $history   原因
- * @property integer $updat_at 编辑时间
+ * @property integer $b_id         任务id
+ * @property integer $u_id         操作者 
+ * @property integer $type         类型
+ * @property string $history       历史记录
+ * @property integer $created_at   创建时间
+ * @property integer $updated_at   编辑时间
+ *
+ * @property User $u
+ * @property ShootBookdetail $b
  */
-class ShootHistory extends ActiveRecord
+class ShootHistory extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -32,9 +35,9 @@ class ShootHistory extends ActiveRecord
     public function rules()
     {
         return [
-            [['b_id'], 'required'],
-            [['b_id', 'u_id', 'type', 'update_time'], 'integer'],
-            [['history'], 'string', 'max' => 200]
+            [['b_id', 'u_id', 'created_at', 'updated_at'], 'required'],
+            [['b_id', 'u_id', 'type', 'created_at', 'updated_at'], 'integer'],
+            [['history'], 'string', 'max' => 500]
         ];
     }
 
@@ -44,12 +47,29 @@ class ShootHistory extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('rcoa', 'ID'),
-            'b_id' => Yii::t('rcoa', 'B ID'),
-            'u_id' => Yii::t('rcoa', 'U ID'),
-            'type' => Yii::t('rcoa', 'Type'),
-            'history' => Yii::t('rcoa', 'History'),
-            'update_time' => Yii::t('rcoa', 'Update Time'),
+            'id' => Yii::t('app', 'ID'),
+            'b_id' => Yii::t('app', 'B ID'),
+            'u_id' => Yii::t('app', 'U ID'),
+            'type' => Yii::t('app', 'Type'),
+            'history' => Yii::t('app', 'History'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getU()
+    {
+        return $this->hasOne(User::className(), ['id' => 'u_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getB()
+    {
+        return $this->hasOne(ShootBookdetail::className(), ['id' => 'b_id']);
     }
 }

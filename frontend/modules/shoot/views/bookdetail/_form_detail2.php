@@ -6,7 +6,7 @@ use yii\widgets\ActiveForm;
 
 use wskeee\rbac\RbacManager;
 use wskeee\rbac\RbacName;
-
+use yii\grid\GridView;
 use frontend\modules\shoot\ShootAsset;
 
 /* @var $this yii\web\View */
@@ -92,27 +92,23 @@ use frontend\modules\shoot\ShootAsset;
                 'attribute' => 'remark',
                 //'format' => 'raw',
                 'value' =>  $model->remark,
-                
-            ],
-            
-            ['label' => '<span class="btn-block viewdetail-th-head">编辑历史</span>','value'=>''],
-            [
-                'attribute' => 'update_time',
-                'value' => isset($model->history->b_id) ? date('Y-m-d H:i:s',$model->history->update_time) : '无',
-            ],
-            [
-                'attribute' => 'u_id', 
-                'value' => isset($model->history->b_id) ? $model->history->u_id :'无',
-            ],
-            [
-                'attribute' => 'history',
-                'value' => isset($model->history->b_id) ? $model->history->history  : '无',
-                
             ],
         ],
     ]);
     ?>
     <?php ActiveForm::end(); ?>
+    <?=
+        GridView::widget([
+            'dataProvider' => $dataProvider,
+            'summary' => false,
+            'tableOptions' => ['class' => 'table table-striped'],
+           
+            'columns' => [
+                ['label' => '编辑历史'],
+               
+            ],
+        ]);
+    ?>
 </div>
 <?php
     ShootAsset::register($this);
