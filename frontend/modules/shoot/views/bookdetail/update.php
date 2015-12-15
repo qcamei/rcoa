@@ -38,6 +38,8 @@ $this->title = Yii::t('rcoa', 'Update {modelClass}: ', [
     {
         $('#myModal').modal()
         $("#myModal .modal-footer #save").click(function(){
+            var ed = $("#myModal .modal-body input").val();
+            $('#bookdetail-create-form input[name="editreason"]').val(ed);
             $('#bookdetail-create-form').submit();
         });
         return false;

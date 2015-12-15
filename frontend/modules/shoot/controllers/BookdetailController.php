@@ -270,8 +270,6 @@ class BookdetailController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $post = Yii::$app->getRequest()->getBodyParams();
-        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {            
             $this->NewHistory($model);
             return $this->redirect(['view', 'id' => $model->id]);

@@ -95,6 +95,7 @@ use common\models\shoot\ShootHistory;
     <?= Html::activeHiddenInput($model, 'book_time') ?>
     <?= Html::activeHiddenInput($model, 'index') ?>
     <?= Html::activeHiddenInput($model, 'status') ?>
+    <?= Html::hiddenInput('editreason') ?>
    
     
     <?php ActiveForm::end(); ?>
@@ -109,7 +110,7 @@ use common\models\shoot\ShootHistory;
         <h4 class="modal-title" id="myModalLabel"> <?= $model::EDIT_REASON ?></h4>
       </div>
       <div class="modal-body">
-        <?= Html::textInput('editreason', $value=null, ['class' => 'form-control' ])?>
+        <?= Html::textInput('edit', $value=null, ['class' => 'form-control' ])?>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
