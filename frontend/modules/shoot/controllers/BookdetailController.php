@@ -270,8 +270,10 @@ class BookdetailController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $post = Yii::$app->getRequest()->getBodyParams();
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {            
-            $this->saveNewHistory($model);
+            $this->NewHistory($model);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -287,7 +289,7 @@ class BookdetailController extends Controller
      * 历史记录保存
      * @param type $model
      */
-    public function saveNewHistory($model)
+    public function NewHistory($model)
     {
         $post = Yii::$app->getRequest()->getBodyParams();
         $dbTrans = \Yii::$app->db->beginTransaction();

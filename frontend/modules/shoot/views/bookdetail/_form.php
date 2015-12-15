@@ -80,17 +80,6 @@ use common\models\shoot\ShootHistory;
     
     <?= $form->field($model, 'remark')->textarea() ?>
     
-    <?php if($model->IsValid): ?>
-    <div class="form-group field-shootbookdetail-remark required">
-        <label class="col-lg-1 col-md-1 control-label" style="color: #999999; font-weight: normal;" for="shootbookdetail-remark">
-            <?= $model::EDIT_REASON ?>
-        </label>
-        <div class="col-lg-10 col-md-10">
-            <?= Html::textInput('editreason', $value=null, ['class' => 'form-control' ])?>
-        </div>  
-    </div>  
-    <?php endif; ?>
-    
     <?= $form->field($model, 'shoot_mode')->radioList(ShootBookdetail::$shootModeMap,[
         'separator'=>'',
         'itemOptions'=>[
@@ -111,6 +100,25 @@ use common\models\shoot\ShootHistory;
     <?php ActiveForm::end(); ?>
 
 </div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"> <?= $model::EDIT_REASON ?></h4>
+      </div>
+      <div class="modal-body">
+        <?= Html::textInput('editreason', $value=null, ['class' => 'form-control' ])?>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" id="save">确认</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script type="text/javascript">
 
     function wx_one(e){
