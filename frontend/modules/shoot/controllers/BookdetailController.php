@@ -8,6 +8,7 @@ use common\models\shoot\ShootAppraiseWork;
 use common\models\shoot\ShootBookdetail;
 use common\models\shoot\ShootHistory;
 use common\models\shoot\ShootSite;
+use wskeee\ee\EeManager;
 use wskeee\framework\FrameworkManager;
 use wskeee\rbac\RbacManager;
 use wskeee\rbac\RbacName;
@@ -132,7 +133,10 @@ class BookdetailController extends Controller
                 
         }
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $this->saveNewBookdetail($model);
+            /** 保存预约 */
+            if($this->saveNewBookdetail($model))
+                $this->sendNewShootNotification ($model);
+                
             return $this->redirect([ 'view', 'id' => $model->id]);
         } else {
             $model->status = ShootBookdetail::STATUS_BOOKING;
@@ -192,11 +196,50 @@ class BookdetailController extends Controller
                 throw new Exception(json_encode($model->getErrors()));
             
             $trans->commit();
+            return true;
         } catch (\Exception $ex) {
             $trans ->rollBack();
             
             throw new NotFoundHttpException("保存任务失败！".$ex->getMessage()); 
+            return false;
         }
+    }
+    
+    /**
+     * 成功预约后，发送 邮件、ee 通知
+     * @param ShootBookdetail $model
+     */
+    private function sendNewShootNotification($model)
+    {
+        /* @var $authManager RbacManager */
+        $authManager = Yii::$app->authManager;
+        
+        /** 传进view 模板参数 */
+        $params = [
+            'b_id' => $model->id,
+            'bookerName' =>  $model->booker->nickname,
+            'bookerPhone' => $model->booker->phone,
+            'siteName' => $model->site->name,
+            'bookTime' => date('Y/m/d ',$model->book_time).Yii::t('rcoa', 'Week '.date('D',$model->book_time)).' '.$model->getTimeIndexName(),
+            'courseName' => $model->fwCourse->name,
+            'remark' => $model->remark,
+        ];
+        /** 主题 */
+        $subject = "拍摄-新增-".$model->fwCourse->name;
+        /**  查找所有摄影组长 */
+        $shootLeaders = $authManager->getItemUsers(RbacName::ROLE_SHOOT_LEADER);
+        /**  所有ee */
+        $receivers_ee = ArrayHelper::getColumn($shootLeaders, 'ee');
+        /**  所有邮箱地址 */
+        $receivers_mail = ArrayHelper::getColumn($shootLeaders, 'email');
+        
+        /** 发送ee消息 */
+        EeManager::sendEeByView('shoot/newShoot-html', $params, $receivers_ee, $subject);
+        /** 发送邮件消息 */
+        Yii::$app->mailer->compose('shoot/newShoot-html', $params)
+                ->setTo($receivers_mail)
+                ->setSubject($subject)
+                ->send();
     }
     
     /**
