@@ -221,14 +221,14 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
     <div class="container">
         <div class="row ">
             <div class="btn btn-default" style="padding: 0px">
-                <?= Html::dropDownList('site', 0, $sites, ['prompt'=>'请选择...','onchange'=>'siteDropDownListChange($(this).val())'])?> 
+                <?= Html::dropDownList('site', $site, $sites, ['onchange'=>'siteDropDownListChange($(this).val())'])?> 
             </div>
             <div  class="btn btn-default" style="padding: 0px;width: 85px">
                 <?=
                 DatePicker::widget([
                     'name' => 'check_issue_date',
                     'type' => DatePicker::TYPE_INPUT,
-                    'value' => date('Y/m'),
+                    'value' => date('Y/m',strtotime($date)),
                     'options' => [
                         'placeholder' => 'Select issue date ...',
                         'onchange'=>'dateChange($(this).val())',
@@ -243,11 +243,11 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
             </div>
             <?= 
                 Html::a('<', 
-                        Url::to(['/shoot/bookdetail','date'=>$prevWeek]),['class'=>'btn btn-default']);
+                        Url::to(['/shoot/bookdetail','date'=>$prevWeek, 'site'=>$site]),['class'=>'btn btn-default']);
             ?>
              <?= 
                 Html::a('>', 
-                        Url::to(['/shoot/bookdetail','date'=>$nextWeek]),['class'=>'btn btn-default']);
+                        Url::to(['/shoot/bookdetail','date'=>$nextWeek, 'site'=>$site]),['class'=>'btn btn-default']);
             ?>
         </div>
     </div>
@@ -258,13 +258,15 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
     $js =
 <<<JS
     var reflashUrl = "$reflashUrl";
+    var refdate = "$date";
+    var refsite = "$site";
     function siteDropDownListChange(value)
     {  
-        location.href = reflashUrl+'?site='+value;
+        location.href = reflashUrl+'?date='+refdate+'&site='+value;
     }
     function dateChange(value)
     {
-         location.href = reflashUrl+'?date='+value
+         location.href = reflashUrl+'?date='+value+'&site='+refsite;
     }
 JS;
     ShootAsset::register($this);

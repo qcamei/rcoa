@@ -56,6 +56,7 @@ class BookdetailController extends Controller
      */
     public function actionIndex()
     {
+       
         /* @var $fwManager FrameworkManager */
         $fwManager = \Yii::$app->get('fwManager');
         
@@ -65,7 +66,6 @@ class BookdetailController extends Controller
         $site = !isset(Yii::$app->request->queryParams['site']) ? :
                 Yii::$app->request->queryParams['site'] ;
         $dataProvider = ShootBookdetailSearch::searchWeek($site, $se);
-
         return $this->render('index', [
             'dataProvider' => new ArrayDataProvider([
                 'allModels' => $dataProvider,
@@ -78,6 +78,7 @@ class BookdetailController extends Controller
                             ]),
             
             'date' => $date,
+            'site' => $site,
             'sites' => $this->getSiteForSelect(),
             'prevWeek' => DateUtil::getWeekSE($date,-1)['start'],
             'nextWeek' => DateUtil::getWeekSE($date,1)['start'],
@@ -103,7 +104,7 @@ class BookdetailController extends Controller
                             $this->getRoleToUsers(RbacName::ROLE_SHOOT_MAN) : [],
         ]);
     }
-
+        
     /**
      * Creates a new ShootBookdetail model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -269,22 +270,8 @@ class BookdetailController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $post = Yii::$app->getRequest()->getBodyParams();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {            
-            $dbTrans = \Yii::$app->db->beginTransaction();
-            try{ 
-                $history = new ShootHistory();
-                /**编辑原因为空不保存*/
-                if(!empty($post['editreason'])){
-                    $history->b_id = $model->id;
-                    $history->u_id = Yii::$app->user->id;
-                    $history->history = $post['editreason'];
-                    $history->save();
-                    $dbTrans->commit();  
-                }
-            } catch (Exception $ex) {
-                $dbTrans->rollback();     
-            }
+            $this->saveNewHistory($model);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -296,8 +283,30 @@ class BookdetailController extends Controller
             ]);
         }
     }
-
     /**
+     * 历史记录保存
+     * @param type $model
+     */
+    public function saveNewHistory($model)
+    {
+        $post = Yii::$app->getRequest()->getBodyParams();
+        $dbTrans = \Yii::$app->db->beginTransaction();
+        try{ 
+            $history = new ShootHistory();
+            /**编辑原因为空不保存*/
+            if(!empty($post['editreason'])){
+                $history->b_id = $model->id;
+                $history->u_id = Yii::$app->user->id;
+                $history->history = $post['editreason'];
+                $history->save();
+                $dbTrans->commit();  
+            }
+        } catch (Exception $ex) {
+            $dbTrans->rollback();     
+        }
+    }
+
+        /**
      * Deletes an existing ShootBookdetail model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id

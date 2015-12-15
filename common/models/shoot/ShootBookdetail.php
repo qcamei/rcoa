@@ -438,14 +438,6 @@ class ShootBookdetail extends ActiveRecord
     {
         return $this->status == self::STATUS_ASSIGN;
     }
-    /**
-     *  是否是【已完成】状态
-     */
-    public function getIsOver(){
-        return $this->status == self::STATUS_COMPLETED;
-    }
-    
-    
     
     /**
      * 获取预约锁定剩余时间

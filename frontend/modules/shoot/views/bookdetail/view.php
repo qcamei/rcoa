@@ -49,7 +49,7 @@ $this->title = $model->id;
              * 2、在摄影师指派后，即摄影结束后
              * 3、查看【评价】权限为所有人
              */
-            if($model->canAppraise())
+            if($model->canAppraise() && $model->book_time < time())
                 echo Html::a('评价', ['/shoot/appraise/create', 'b_id' => $model->id], ['class' => 'btn btn-danger']).' ';
         ?>
         
