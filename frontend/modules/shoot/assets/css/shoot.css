@@ -72,6 +72,19 @@
     min-width: 100px;
 }
 
+.edithistory-table
+{
+    padding: 0px !important;
+}
+
+.edithistory-table>tbody>tr>th
+{
+    padding: 8px;
+}
+.edithistory-table>tbody>tr>td
+{
+    padding: 8px;
+}
 
 /**
  * 评价题目样式

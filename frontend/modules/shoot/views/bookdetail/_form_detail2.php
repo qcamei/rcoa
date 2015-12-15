@@ -1,16 +1,18 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\DetailView;
-use yii\widgets\ActiveForm;
-
+use common\models\shoot\ShootBookdetail;
+use common\models\shoot\ShootHistory;
+use frontend\modules\shoot\components\EditHistoryList;
+use frontend\modules\shoot\ShootAsset;
 use wskeee\rbac\RbacManager;
 use wskeee\rbac\RbacName;
-use yii\grid\GridView;
-use frontend\modules\shoot\ShootAsset;
+use yii\helpers\Html;
+use yii\web\View;
+use yii\widgets\ActiveForm;
+use yii\widgets\DetailView;
 
-/* @var $this yii\web\View */
-/* @var $model common\models\shoot\ShootBookdetail */
+/* @var $this View */
+/* @var $model ShootBookdetail */
 
 ?>
 <div class="auth-item-view">
@@ -97,17 +99,31 @@ use frontend\modules\shoot\ShootAsset;
     ]);
     ?>
     <?php ActiveForm::end(); ?>
+    <h5><b>编辑历史</b></h5>
     <?=
-        GridView::widget([
-            'dataProvider' => $dataProvider,
-            'summary' => false,
-            'tableOptions' => ['class' => 'table table-striped'],
-           
-            'columns' => [
-                ['label' => '编辑历史'],
-               
+    EditHistoryList::widget([
+        'dataProvider' => $model->historys,
+        'template' => '<tr><th class="viewdetail-th">{label}：</th><td class="viewdetail-td">{value}</td></tr>',
+        'tableOptions' => ['class' => 'edithistory-table list-group-item'],
+        'attributes' => [
+            [
+                'attribute' => 'created_at',
+                'label' => '时间',
+                'value' => function($model){
+                    /* @var $model ShootHistory */
+                    return date('Y/m/d H:i:s',$model->created_at);
+                }
             ],
-        ]);
+            [
+                'attribute' => 'u_id',
+                'value' => function($model){
+                    /* @var $model ShootHistory */
+                    return $model->u->nickname;
+                }
+            ],
+            'history',
+        ],
+    ]);
     ?>
 </div>
 <?php

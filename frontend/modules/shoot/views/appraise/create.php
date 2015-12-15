@@ -44,7 +44,6 @@ use yii\web\View;
              /* @var $authManager RbacManager */
             $authManager = Yii::$app->authManager;
             
-            Yii::trace(count(ShootAppraiseResult::findAll(['b_id'=>$bookdetail->id,'u_id'=>Yii::$app->user->id])));
             if(Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_OWN_APPRAISE,['job'=>$bookdetail])
                     && count(ShootAppraiseResult::findAll(['b_id'=>$bookdetail->id,'u_id'=>Yii::$app->user->id]))==0)
                 echo Html::a('提交', 'javascript:;', ['id'=>'submit', 'class' => 'btn btn-danger']).' ';

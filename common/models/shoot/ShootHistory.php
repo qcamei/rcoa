@@ -5,7 +5,7 @@ namespace common\models\shoot;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
-use yii\web\User;
+use common\models\User;
 use yii\behaviors\TimestampBehavior;
 
 
@@ -57,13 +57,13 @@ class ShootHistory extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'b_id' => Yii::t('app', 'B ID'),
-            'u_id' => Yii::t('app', 'U ID'),
-            'type' => Yii::t('app', 'Type'),
-            'history' => Yii::t('app', 'History'),
-            'created_at' => Yii::t('app', 'Created At'),
-            'updated_at' => Yii::t('app', 'Updated At'),
+            'id' => Yii::t('rcoa', 'ID'),
+            'b_id' => Yii::t('rcoa', 'B ID'),
+            'u_id' => Yii::t('rcoa', 'U ID'),
+            'type' => Yii::t('rcoa', 'Type'),
+            'history' => Yii::t('rcoa', 'History'),
+            'created_at' => Yii::t('rcoa', 'Created At'),
+            'updated_at' => Yii::t('rcoa', 'Updated At'),
         ];
     }
 
