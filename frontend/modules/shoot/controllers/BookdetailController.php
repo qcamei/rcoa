@@ -55,6 +55,7 @@ class BookdetailController extends Controller
      */
     public function actionIndex()
     {
+       
         /* @var $fwManager FrameworkManager */
         $fwManager = \Yii::$app->get('fwManager');
         
@@ -64,7 +65,6 @@ class BookdetailController extends Controller
         $site = !isset(Yii::$app->request->queryParams['site']) ? :
                 Yii::$app->request->queryParams['site'] ;
         $dataProvider = ShootBookdetailSearch::searchWeek($site, $se);
-
         return $this->render('index', [
             'dataProvider' => new ArrayDataProvider([
                 'allModels' => $dataProvider,
@@ -77,6 +77,7 @@ class BookdetailController extends Controller
                             ]),
             
             'date' => $date,
+            'site' => $site,
             'sites' => $this->getSiteForSelect(),
             'prevWeek' => DateUtil::getWeekSE($date,-1)['start'],
             'nextWeek' => DateUtil::getWeekSE($date,1)['start'],
@@ -102,7 +103,7 @@ class BookdetailController extends Controller
                             $this->getRoleToUsers(RbacName::ROLE_SHOOT_MAN) : [],
         ]);
     }
-
+        
     /**
      * Creates a new ShootBookdetail model.
      * If creation is successful, the browser will be redirected to the 'view' page.

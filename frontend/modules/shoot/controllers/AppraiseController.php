@@ -127,6 +127,9 @@ class AppraiseController extends Controller
                 'u_id' => $u_id,
             ])->execute();
             
+            $count = ShootAppraiseResult::find()
+                    ->where(['b_id'=>$b_id])
+                    ->count();
             /** 添加新记录 */
             \Yii::$app->db->createCommand()->batchInsert(ShootAppraiseResult::tableName(), 
             [
@@ -136,6 +139,14 @@ class AppraiseController extends Controller
                 'q_id',
                 'value',
             ], $values)->execute();
+
+            /**设置【接洽人】【摄影师】都评价后【状态】为【已完成】*/
+            if($count>0)
+            {
+                $bookdetail = $this->findBookdetail($b_id);
+                $bookdetail->status = ShootBookdetail::STATUS_COMPLETED;
+                $bookdetail->save();
+            }
             $tran->commit();
         } catch (\Exception $ex) {
             $tran->rollBack();
