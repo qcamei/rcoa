@@ -229,10 +229,11 @@ class BookdetailController extends Controller
         $subject = "拍摄-新增-".$model->fwCourse->name;
         /**  查找所有摄影组长 */
         $shootLeaders = $authManager->getItemUsers(RbacName::ROLE_SHOOT_LEADER);
+        
         /**  所有ee */
-        $receivers_ee = ArrayHelper::getColumn($shootLeaders, 'ee');
+        $receivers_ee = array_filter(ArrayHelper::getColumn($shootLeaders, 'ee'));
         /**  所有邮箱地址 */
-        $receivers_mail = ArrayHelper::getColumn($shootLeaders, 'email');
+        $receivers_mail = array_filter(ArrayHelper::getColumn($shootLeaders, 'email'));
         
         /** 发送ee消息 */
         EeManager::sendEeByView('shoot/newShoot-html', $params, $receivers_ee, $subject);
