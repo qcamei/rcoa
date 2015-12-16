@@ -25,6 +25,9 @@ $this->title = $model->id;
         'dataProvider' => $dataProvider,
         'shootmans' => $shootmans,
     ]) ?>
+    <?= $this->render('_form_model',[
+         'model' => $model,
+        ])?>
 </div>
 <div class="controlbar">
     <div class="container">
@@ -59,10 +62,20 @@ $this->title = $model->id;
 <?php
     $js = 
  <<<JS
+    var uShootMan = "$model->u_shoot_man";
     $('#submit').click(function()
-            {
-                $('#form-assign-shoot_man').submit();
-            });
+        {
+            if(uShootMan > 0){
+                $('#myModal').modal()
+                $("#myModal .modal-footer #save").click(function(){
+                    var ed = $("#myModal .modal-body input").val();
+                    $('#form-assign-shoot_man input[name="editreason"]').val(ed);
+                    $('#form-assign-shoot_man').submit();
+                });
+                return false;
+            }
+            $('#form-assign-shoot_man').submit();
+        });
     
 JS;
 $this->registerJs($js,  View::POS_READY);

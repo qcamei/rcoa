@@ -98,6 +98,7 @@ use yii\widgets\DetailView;
         ],
     ]);
     ?>
+    <?= Html::hiddenInput('editreason') ?>
     <?php ActiveForm::end(); ?>
     <h5><b>编辑历史</b></h5>
     <?=

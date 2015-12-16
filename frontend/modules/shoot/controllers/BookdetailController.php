@@ -300,7 +300,7 @@ class BookdetailController extends Controller
                 $history->history = $post['editreason'];
                 $history->save();
                 $dbTrans->commit();  
-            }
+            } 
         } catch (Exception $ex) {
             $dbTrans->rollback();     
         }
@@ -334,6 +334,7 @@ class BookdetailController extends Controller
                 $model->status = $model->u_shoot_man == null ? ShootBookdetail::STATUS_ASSIGN : ShootBookdetail::STATUS_SHOOTING;
                 $model->save();
                 Yii::$app->getSession()->setFlash('success','操作成功！');
+                $this->NewHistory($model);
             }
         } catch (\Exception $ex) {
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());

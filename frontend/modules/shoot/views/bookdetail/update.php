@@ -9,7 +9,14 @@ $this->title = Yii::t('rcoa', 'Update {modelClass}: ', [
     'modelClass' => 'Shoot Bookdetail',
 ]) . ' ' . $model->id;
 ?>
-<div class="shoot-bookdetail-update">
+<!-- title 样式 -->
+<div class="title">
+    <div class="container">
+          <?php echo '预约操作：【'.$model->site->name.'】'.
+                date('Y/m/d ',$model->book_time).Yii::t('rcoa', 'Week '.date('D',$model->book_time)).' '.$model->getTimeIndexName() ?>
+    </div>
+</div>
+<div class="container shoot-bookdetail-update has-title">
     <?= $this->render('_form', [
         'model' => $model,
         'users' => $users,
@@ -17,6 +24,9 @@ $this->title = Yii::t('rcoa', 'Update {modelClass}: ', [
         'projects' => $projects,
         'courses' => $courses,
     ]) ?>
+    <?= $this->render('_form_model',[
+         'model' => $model,
+        ])?>
 </div>
 <!-- 添加 controlbar 等同标题样式，位置 固定到页面底部 -->
 <div class="controlbar">
