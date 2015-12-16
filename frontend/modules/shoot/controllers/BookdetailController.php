@@ -220,7 +220,11 @@ class BookdetailController extends Controller
             'b_id' => $model->id,
             'bookerName' =>  $model->booker->nickname,
             'bookerPhone' => $model->booker->phone,
+            'shootMan' => $model->shootman->nickname,
+            'shootPhone' => $model->shootman->phone,
+            'teacherNmae' => $model->teacher->teacher_name,
             'siteName' => $model->site->name,
+            'siteDes' => $model->site->des,
             'bookTime' => date('Y/m/d ',$model->book_time).Yii::t('rcoa', 'Week '.date('D',$model->book_time)).' '.$model->getTimeIndexName(),
             'courseName' => $model->fwCourse->name,
             'remark' => $model->remark,
@@ -229,7 +233,6 @@ class BookdetailController extends Controller
         $subject = "拍摄-新增-".$model->fwCourse->name;
         /**  查找所有摄影组长 */
         $shootLeaders = $authManager->getItemUsers(RbacName::ROLE_SHOOT_LEADER);
-        
         /**  所有ee */
         $receivers_ee = array_filter(ArrayHelper::getColumn($shootLeaders, 'ee'));
         /**  所有邮箱地址 */
@@ -272,7 +275,7 @@ class BookdetailController extends Controller
     {
         $model = $this->findModel($id);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {            
-            $this->NewHistory($model);
+            $this->saveNewHistory($model);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -288,7 +291,7 @@ class BookdetailController extends Controller
      * 历史记录保存
      * @param type $model
      */
-    public function NewHistory($model)
+    public function saveNewHistory($model)
     {
         $post = Yii::$app->getRequest()->getBodyParams();
         $dbTrans = \Yii::$app->db->beginTransaction();
@@ -335,7 +338,7 @@ class BookdetailController extends Controller
                 $model->status = $model->u_shoot_man == null ? ShootBookdetail::STATUS_ASSIGN : ShootBookdetail::STATUS_SHOOTING;
                 $model->save();
                 Yii::$app->getSession()->setFlash('success','操作成功！');
-                $this->NewHistory($model);
+                $this->saveNewHistory($model);
             }
         } catch (\Exception $ex) {
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
