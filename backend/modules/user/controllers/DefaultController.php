@@ -23,10 +23,6 @@ class DefaultController extends Controller
     
     public function actionCreate()
     {
-        if(!Yii::$app->user->can('shoot_index'))
-        {
-            //throw new \yii\web\ForbiddenHttpException('无权访问!'.Yii::$app->user->id);
-        }
         $model = new User();
         $model->scenario = User::SCENARIO_CREATE;
         
@@ -38,6 +34,7 @@ class DefaultController extends Controller
             }
                 
         }
+        $model->loadDefaultValues();
         return $this->render('create',['model'=>$model]);
     }
     

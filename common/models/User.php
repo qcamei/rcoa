@@ -20,15 +20,16 @@ use const FILEDATA_PATH;
  * @property integer $id
  * @property string $username   用户名
  * @property string $nickname   昵称
- * @property string $auth_key
- * @property string password
- * @property string $password_reset_token
- * @property string $email
+ * @property integer $sex       性别
+ * @property string $auth_key   验证
+ * @property string password    密码
+ * @property string $password_reset_token   重置密码令牌
+ * @property string $email      邮箱
  * @property string $ee         ee号
  * @property string $phone      手机
  * @property string $avatar     头像
- * @property integer $status
- * @property integer $created_at
+ * @property integer $status    状态 10 启用
+ * @property integer $created_at    
  * @property integer $updated_at
  */
 class User extends ActiveRecord implements IdentityInterface
@@ -42,6 +43,10 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_DELETED = 0;
     //活动账号
     const STATUS_ACTIVE = 10;
+    /** 性别 男 */
+    const SEX_MALE = 1;
+    /** 性别 女 */
+    const SEX_WOMAN = 2;
     
     /* 重复密码验证 */
     public $password2;
@@ -56,8 +61,8 @@ class User extends ActiveRecord implements IdentityInterface
     public function scenarios() 
     {
         return [
-            self::SCENARIO_CREATE => ['username','nickname','email','password','password2','email','ee','phone','avatar'],
-            self::SCENARIO_UPDATE => ['username','nickname','email','password','password2','email','ee','phone','avatar'],
+            self::SCENARIO_CREATE => ['username','nickname','sex','email','password','password2','email','ee','phone','avatar'],
+            self::SCENARIO_UPDATE => ['username','nickname','sex','email','password','password2','email','ee','phone','avatar'],
             self::SCENARIO_DEFAULT => ['username','nickname']
         ];
     }
@@ -82,8 +87,9 @@ class User extends ActiveRecord implements IdentityInterface
             [['username','nickname','email'],'required','on'=>[self::SCENARIO_CREATE,self::SCENARIO_UPDATE]],
             [['username'],'unique'],
             [['password'],'string', 'min'=>6, 'max'=>20],
-            [['username'],'string', 'max'=>32, 'on'=>['create']],
+            [['username'],'string', 'max'=>32, 'on'=>[self::SCENARIO_CREATE]],
             [['username','nickname', 'password', 'password_reset_token', 'email','avatar','ee','phone'], 'string', 'max' => 255],
+            [['sex'], 'integer'],
             [['auth_key'], 'string', 'max' => 255],
             [['password_reset_token'], 'unique'],
             [['email'], 'email'],
@@ -101,6 +107,7 @@ class User extends ActiveRecord implements IdentityInterface
             'id' => 'ID',
             'username' => '用户名',
             'nickname' => '昵称',
+            'sex' => '性别',
             'auth_key' => '授权码',
             'password' => '密码',
             'password2'=>'确认密码',

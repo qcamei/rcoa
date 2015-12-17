@@ -1,11 +1,13 @@
 <?php
 
+use common\models\User;
 use yii\helpers\Html;
+use yii\web\View;
 use yii\widgets\ActiveForm;
 
-/* @var $this yii\web\View */
-/* @var $model common\models\User */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $this View */
+/* @var $model User */
+/* @var $form ActiveForm */
 
 ?>
 
@@ -19,6 +21,7 @@ use yii\widgets\ActiveForm;
     <?php echo $form->field($model, 'nickname')->textInput(['maxlength'=>32]); ?>
     <?php echo $form->field($model, 'password')->passwordInput(['minlength'=>6,'maxlength'=>20]); ?>
     <?php echo $form->field($model, 'password2')->passwordInput(['minlength'=>6,'maxlength'=>20]); ?>
+    <?php echo $form->field($model, 'sex')->radioList([User::SEX_MALE => '男',  User::SEX_WOMAN => '女']); ?>
     <?php echo $form->field($model, 'ee')->textInput(['minlength'=>6,'maxlength'=>20]); ?>
     <?php echo $form->field($model, 'phone')->textInput(['minlength'=>6,'maxlength'=>20]); ?>
     <?php echo $form->field($model, 'email')->textInput(['maxlength' => 200]) ?>
