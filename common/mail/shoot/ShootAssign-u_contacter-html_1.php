@@ -24,7 +24,7 @@ use common\models\shoot\ShootBookdetail;
     
     <p><b>原因</b>：<?= Html::encode($model->historys->historys) ?></p>
 
-    <p><b>预约时间</b>：【<?= Html::encode($model->site->name) ?>】 <?= Html::encode($bookTime) ?></p>
+    <p><b>预约时间</b>：【<?= Html::encode($model->site->name) ?>】 <?= Html::encode($bookTime) ?> <?= Html::encode($model->start_time) ?></p>
     
     <p><b>摄影师</b>： <b><?= Html::encode($model->shootMan->nickname) ?></b>(<?= Html::encode($model->shootMan->phone) ?>)</p>
     

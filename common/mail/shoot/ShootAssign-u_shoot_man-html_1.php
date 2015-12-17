@@ -19,7 +19,7 @@ use common\models\shoot\ShootBookdetail;
     
     <p>您好！您在<b>【<?= Html::encode($model->fwCourse->name) ?>】</b>拍摄预约任务的指派已经被取消。</p>
 
-    <p><b>预约时间</b>：【<?= Html::encode($model->site->name) ?>】 <?= Html::encode($bookTime) ?></p>
+    <p><b>预约时间</b>：【<?= Html::encode($model->site->name) ?>】 <?= Html::encode($bookTime) ?> <?= Html::encode($model->start_time) ?></p>
     
     <p><b>备注</b>：<?= Html::encode($model->remark) ?></p>
     

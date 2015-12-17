@@ -422,8 +422,7 @@ class BookdetailController extends Controller
                 $model->save();
                 Yii::$app->getSession()->setFlash('success','操作成功！');
                 $this->sendNewShootNotification ($model, '指派');
-                if($this->saveNewHistory($model))
-                    $this->sendNewShootNotification ($model, '更改指派');;
+                $this->saveNewHistory($model);
             }
         } catch (\Exception $ex) {
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());

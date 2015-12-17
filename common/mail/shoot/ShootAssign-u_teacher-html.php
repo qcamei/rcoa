@@ -16,7 +16,7 @@ use common\models\shoot\ShootBookdetail;
     
     <p>您好！我是负责您<b><?= Html::encode($model->fwCourse->name)?></b>的教学编导<b><?= Html::encode($model->booker->nickname) ?></b>，现与您确定课程拍摄时间为 </p>
 
-    <p><b><?= Html::encode($bookTime) ?></b>，地点为<b><?= Html::encode($model->site->des) ?></b>，</p>
+    <p><b><?= Html::encode($bookTime) ?> <?= Html::encode($model->start_time) ?></b>，地点为<b><?= Html::encode($model->site->des) ?></b>，</p>
     
     <p>届时请到6号楼6楼前台找我，再一同前往拍摄，如有变动，请提前一天以上通知我改约时间。 </p>
     

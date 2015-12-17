@@ -20,7 +20,7 @@ use common\models\shoot\ShootBookdetail;
     
     <p>您好！您已经被指派为<b>【<?= Html::encode($model->fwCourse->name) ?>】</b>拍摄预约任务的摄影师。</p>
 
-    <p><b>预约时间</b>：【<?= Html::encode($model->site->name) ?>】 <?= Html::encode($bookTime) ?></p>
+    <p><b>预约时间</b>：【<?= Html::encode($model->site->name) ?>】 <?= Html::encode($bookTime) ?> <?= Html::encode($model->start_time) ?></p>
     
     <p><b>接洽人</b>： <b><?= Html::encode($model->contacter->nickname) ?></b>(<?= Html::encode($model->contacter->phone) ?>)</p>
     
