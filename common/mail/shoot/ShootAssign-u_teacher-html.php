@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
-
+use common\models\shoot\ShootBookdetail;
 /* 
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -12,11 +12,11 @@ use yii\helpers\Url;
  */
 ?>
 <div class="mail-new-shoot">
-    <p><?= Html::encode($teacherNmae) ?>老师</p>：
+    <p><?= Html::encode($model->teacher->nickname)?>老师：</p>
     
-    <p>您好！我是负责您课程建设的教学编导{<b><?= Html::encode($bookerName) ?></b>，现与您确定课程拍摄时间为 </p>
+    <p>您好！我是负责您<b><?= Html::encode($model->fwCourse->name)?></b>的教学编导<b><?= Html::encode($model->booker->nickname) ?></b>，现与您确定课程拍摄时间为 </p>
 
-    <p><b><?= Html::encode($bookTime) ?></b>，地点为<b><?= Html::encode($siteDes) ?></b>，</p>
+    <p><b><?= Html::encode($bookTime) ?></b>，地点为<b><?= Html::encode($model->site->des) ?></b>，</p>
     
     <p>届时请到6号楼6楼前台找我，再一同前往拍摄，如有变动，请提前一天以上通知我改约时间。 </p>
     
@@ -28,6 +28,6 @@ use yii\helpers\Url;
     
     <p>以上着装，如觉穿着不舒服，可以带来现场替换，拍摄完毕再换回普通衣服。 </p>
     
-    <p>如果问题，请与我联系，谢谢！联系电话：<b><?= Html::encode($bookerPhone) ?></b></p>
+    <p>如果问题，请与我联系，谢谢！联系电话：<b><?= Html::encode($model->booker->phone) ?></b></p>
     
 </div>

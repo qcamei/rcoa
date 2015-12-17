@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
+use common\models\shoot\ShootBookdetail;
 
 /* 
  * To change this license header, choose License Headers in Project Properties.
@@ -18,13 +19,13 @@ use yii\helpers\Url;
 ?>
 <div class="mail-new-shoot">
     
-    <p>您好！<b>【<?= Html::encode($courseName) ?>】</b>拍摄预约任务已经安排了摄影师。</p>
+    <p>您好！<b>【<?= Html::encode($model->fwCourse->name) ?>】</b>拍摄预约任务已经安排了摄影师。</p>
 
-    <p><b>预约时间</b>：【<?= Html::encode($siteName) ?>】 <?= Html::encode($bookTime) ?></p>
+    <p><b>预约时间</b>：【<?= Html::encode($model->site->name) ?>】 <?= Html::encode($bookTime) ?></p>
     
-    <p><b>摄影师</b>： <b><?= Html::encode($shootMan) ?></b>(<?= Html::encode($shootPhone) ?>)</p>
+    <p><b>摄影师</b>： <b><?= Html::encode($model->shootMan->nickname) ?></b>(<?= Html::encode($model->shootMan->phone) ?>)</p>
     
-    <p><b>备注</b>：<?= Html::encode($remark) ?></p>
+    <p><b>备注</b>：<?= Html::encode($model->remark) ?></p>
     
     <?= Html::a('马上查看', 
             Yii::$app->urlManager->createAbsoluteUrl(['/shoot/bookdetail/view','id'=>$b_id]), 
