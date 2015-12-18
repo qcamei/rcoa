@@ -206,8 +206,9 @@ class BookdetailController extends Controller
     }
     
     /**
-     * 发送 邮件、ee 通知
-     * @param ShootBookdetail $model
+     * 创建成功 发送 邮件、ee 通知
+     * @param type $model
+     * @param type $mode  标题
      */
     private function sendNewShootNotification($model, $mode)
     {       
@@ -220,28 +221,23 @@ class BookdetailController extends Controller
          /** 主题 */
         $subject = "拍摄-".$mode."-".$model->fwCourse->name;
         if(empty($model->u_shoot_man)){
-            //发送给编导通知
-            $this->sendShootLeadersNotification($model,$params,$subject);
+            $this->sendShootLeadersNotification($model, $params, $subject);
         }else{
-            //发送给编导通知
-           $this->sendBookerNotificationBooker($model, $params, $subject);
-           //发送给老师通知
-           $this->sendTeacherNotification($model, $params, $subject);
-            //发送给接洽人通知
-           $this->sendContacterNotification($model, $params, $subject);
-            //发送给摄影师通知
-           $this->sendShootManNotification($model, $params, $subject);
-        }
+            $this->sendBookerNotification($model, $params, $subject);
+            $this->sendContacterNotification($model, $params, $subject);
+            $this->sendShootManNotification($model, $params, $subject);
+            $this->sendTeacherNotification($model, $params, $subject);
+        }    
     }
-    
+
     /**
      * 给所有摄影组长 发送 ee通知 email
      * @param type $model
      * @param type $params
      * @param type $subject
      */
-    public function sendShootLeadersNotification($model,$params,$subject){
-         /* @var $authManager RbacManager */
+    public function sendShootLeadersNotification($model, $params, $subject){
+        /* @var $authManager RbacManager */
         $authManager = Yii::$app->authManager;
         /**  查找所有摄影组长 */
         $shootLeaders = $authManager->getItemUsers(RbacName::ROLE_SHOOT_LEADER);
@@ -264,7 +260,7 @@ class BookdetailController extends Controller
      * @param type $params
      * @param type $subject
      */
-    public function sendBookerNotificationBooker($model,$params,$subject){
+    public function sendBookerNotification($model, $params, $subject){
          /**  查找编导ee和mail */
         $shootBooker_ee = $model->booker->ee;
         $shootBooker_mail = $model->booker->email;
@@ -276,49 +272,73 @@ class BookdetailController extends Controller
             ->setSubject($subject)
             ->send();
     }
+    
     /**
      * 给接洽人 发送 ee通知 email
      * @param type $model
      * @param type $params
      * @param type $subject
      */
-    public function sendContacterNotification($model,$params,$subject){
+    public function sendContacterNotification($model, $params, $subject){
         /**  查找接洽人ee和mail */
         $shootContacter_ee = $model->contacter->ee;
         $shootContacter_mail = $model->contacter->email;
-        /** 发送ee消息 */
-        EeManager::sendEeByView( 'shoot\ShootAssign-u_contacter-html', $params,$shootContacter_ee, $subject);
-        /** 发送邮件消息 */
-        Yii::$app->mailer->compose( 'shoot\ShootAssign-u_contacter-html', $params)
-            ->setTo($shootContacter_mail)
-            ->setSubject($subject)
-            ->send();
+        if(!$model->getOldAttribute('u_shoot_man')){
+            /** 发送ee消息 */
+            EeManager::sendEeByView('shoot\ShootAssign-u_contacter-html', $params,$shootContacter_ee, $subject);
+            /** 发送邮件消息 */
+            Yii::$app->mailer->compose('shoot\ShootAssign-u_contacter-html', $params)
+                ->setTo($shootContacter_mail)
+                ->setSubject($subject)
+                ->send();
+        }else{
+            /** 发送ee消息 */
+            EeManager::sendEeByView('shoot\ShootAssign-u_contacter-html_1', $params,$shootContacter_ee, $subject);
+            /** 发送邮件消息 */
+            Yii::$app->mailer->compose('shoot\ShootAssign-u_contacter-html_1', $params)
+                ->setTo($shootContacter_mail)
+                ->setSubject($subject)
+                ->send();
+        }
     }
+    
     /**
      * 给摄影师 发送 ee通知 email
      * @param type $model
      * @param type $params
      * @param type $subject
      */
-    public function sendShootManNotification($model,$params,$subject) {
+    public function sendShootManNotification($model, $params, $subject) {
         /**  查找摄影师ee和mail */
         $shootMan_ee = $model->shootMan->ee;
         $shootMan_mail = $model->shootMan->email;
-        /** 发送ee消息 */
-        EeManager::sendEeByView('shoot\ShootAssign-u_shoot_man-html', $params,$shootMan_ee, $subject);
-        /** 发送邮件消息 */
-         Yii::$app->mailer->compose( 'shoot\ShootAssign-u_shoot_man-html', $params)
-            ->setTo($shootMan_mail)
-            ->setSubject($subject)
-            ->send();
+        if(!$model->getOldAttribute('u_shoot_man')){
+            var_dump($model->getOldAttribute('u_shoot_man'));
+            /** 发送ee消息 */
+            EeManager::sendEeByView('shoot\ShootAssign-u_shoot_man-html', $params,$shootMan_ee, $subject);
+            /** 发送邮件消息 */
+             Yii::$app->mailer->compose('shoot\ShootAssign-u_shoot_man-html', $params)
+                ->setTo($shootMan_mail)
+                ->setSubject($subject)
+                ->send();
+        }  else {
+             /** 发送ee消息 */
+            EeManager::sendEeByView('shoot\ShootAssign-u_shoot_man-html_1', $params,$shootMan_ee, $subject);
+            /** 发送邮件消息 */
+             Yii::$app->mailer->compose('shoot\ShootAssign-u_shoot_man-html_1', $params)
+                ->setTo($shootMan_mail)
+                ->setSubject($subject)
+                ->send();
+        }    
     }
+    
     /**
      * 给老师 发送 ee通知 email
      * @param type $model
      * @param type $params
      * @param type $subject
      */
-    public function sendTeacherNotification($model,$params,$subject){
+    public function sendTeacherNotification($model, $params, $subject){
          /**  查找老师ee和mail */
         $shootTeacher_ee = $model->teacher->ee;
         $shootTeacher_mail = $model->teacher->email;
@@ -330,6 +350,7 @@ class BookdetailController extends Controller
             ->setSubject($subject)
             ->send();
     }
+    
     /**
      * 退出任务创建，清除锁定
      * @param 退出任务的时间 $date
@@ -415,16 +436,22 @@ class BookdetailController extends Controller
     {
         $model = $this->findModel($id);
         try
-        {
+        {   
+           
             if($model->load(\Yii::$app->getRequest()->post()) && $model->validate());
             {
+                if($model->status !== $model::STATUS_SHOOTING){
+                    $this->sendNewShootNotification($model, '指派');
+                }else{
+                    $this->sendNewShootNotification($model, '更改指派');
+                }
                 $model->status = $model->u_shoot_man == null ? ShootBookdetail::STATUS_ASSIGN : ShootBookdetail::STATUS_SHOOTING;
                 $model->save();
                 Yii::$app->getSession()->setFlash('success','操作成功！');
-                $this->sendNewShootNotification ($model, '指派');
                 $this->saveNewHistory($model);
             }
         } catch (\Exception $ex) {
+            var_dump($ex->getMessage());exit;
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
         
