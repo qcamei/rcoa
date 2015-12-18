@@ -21,7 +21,7 @@ use common\models\shoot\ShootBookdetail;
     
     <p>您好！<b><?= Html::encode($model->booker->nickname) ?></b>(<?= Html::encode($model->booker->phone) ?>)已经申请了拍摄预约任务。</p>
 
-    <p><b>预约时间</b>：【<?= Html::encode($model->site->name) ?>】 <?= Html::encode($bookTime) ?></p>
+    <p><b>预约时间</b>：【<?= Html::encode($model->site->name) ?>】 <?= Html::encode($bookTime) ?> <?= Html::encode($model->start_time) ?></p>
     
     <p><b>课程名</b>： <?= Html::encode($model->fwCourse->name) ?> </p>
     

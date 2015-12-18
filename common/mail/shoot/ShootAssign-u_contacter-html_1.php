@@ -17,12 +17,13 @@ use common\models\shoot\ShootBookdetail;
  
      马上查看(连接到任务详细页) 
  */
+$his = new common\models\shoot\ShootHistory()
 ?>
 <div class="mail-new-shoot">
     
     <p>您好！<b>【<?= Html::encode($model->fwCourse->name) ?>】</b>拍摄预约任务已经重新安排了摄影师。</p>
     
-    <p><b>原因</b>：</p>
+    <p><b>原因</b>：<?= $history?></p>
 
     <p><b>预约时间</b>：【<?= Html::encode($model->site->name) ?>】 <?= Html::encode($bookTime) ?> <?= Html::encode($model->start_time) ?></p>
     
