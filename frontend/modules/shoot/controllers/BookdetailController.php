@@ -206,7 +206,7 @@ class BookdetailController extends Controller
     }
     
     /**
-     * 创建成功 发送 邮件、ee 通知
+     * 发送 邮件、ee 通知
      * @param type $model
      * @param type $mode  标题
      */
@@ -222,12 +222,15 @@ class BookdetailController extends Controller
         $subject = "拍摄-".$mode."-".$model->fwCourse->name;
         if(empty($model->u_shoot_man)){
             $this->sendShootLeadersNotification($model, $params, $subject);
-        }else{
+        }else if($model->status == $model::STATUS_ASSIGN){
             $this->sendBookerNotification($model, $params, $subject);
-            $this->sendContacterNotification($model, $params, $subject);
-            $this->sendShootManNotification($model, $params, $subject);
             $this->sendTeacherNotification($model, $params, $subject);
-        }    
+            $this->sendShootManNotification($model, $params, $subject);
+            $this->sendContacterNotification($model, $params, $subject);
+        } else { 
+            $this->sendShootManNotification($model, $params, $subject);
+            $this->sendContacterNotification($model, $params, $subject);
+        }
     }
 
     /**
@@ -312,16 +315,14 @@ class BookdetailController extends Controller
         /**  查找摄影师ee和mail */
         $shootMan_ee = $model->shootMan->ee;
         $shootMan_mail = $model->shootMan->email;
-        if(!$model->getOldAttribute('u_shoot_man')){
-            var_dump($model->getOldAttribute('u_shoot_man'));
-            /** 发送ee消息 */
-            EeManager::sendEeByView('shoot\ShootAssign-u_shoot_man-html', $params,$shootMan_ee, $subject);
-            /** 发送邮件消息 */
-             Yii::$app->mailer->compose('shoot\ShootAssign-u_shoot_man-html', $params)
-                ->setTo($shootMan_mail)
-                ->setSubject($subject)
-                ->send();
-        }  else {
+        /** 发送ee消息 */
+        EeManager::sendEeByView('shoot\ShootAssign-u_shoot_man-html', $params,$shootMan_ee, $subject);
+        /** 发送邮件消息 */
+         Yii::$app->mailer->compose('shoot\ShootAssign-u_shoot_man-html', $params)
+            ->setTo($shootMan_mail)
+            ->setSubject($subject)
+            ->send();
+        if($model->getOldAttribute('u_shoot_man')){
              /** 发送ee消息 */
             EeManager::sendEeByView('shoot\ShootAssign-u_shoot_man-html_1', $params,$shootMan_ee, $subject);
             /** 发送邮件消息 */
@@ -329,7 +330,7 @@ class BookdetailController extends Controller
                 ->setTo($shootMan_mail)
                 ->setSubject($subject)
                 ->send();
-        }    
+        }
     }
     
     /**
