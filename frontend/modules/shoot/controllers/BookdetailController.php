@@ -452,7 +452,6 @@ class BookdetailController extends Controller
                 $this->saveNewHistory($model);
             }
         } catch (\Exception $ex) {
-            var_dump($ex->getMessage());exit;
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
         
