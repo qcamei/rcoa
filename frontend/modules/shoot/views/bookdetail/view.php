@@ -69,8 +69,12 @@ $this->title = $model->id;
                 $('#myModal').modal()
                 $("#myModal .modal-footer #save").click(function(){
                     var ed = $("#myModal .modal-body input").val();
-                    $('#form-assign-shoot_man input[name="editreason"]').val(ed);
-                    $('#form-assign-shoot_man').submit();
+                    if(ed != ''){
+                        $('#form-assign-shoot_man input[name="editreason"]').val(ed);
+                        $('#form-assign-shoot_man').submit();
+                    }else{
+                        alert('编辑原因不能为空');
+                    }    
                 });
                 return false;
             }
