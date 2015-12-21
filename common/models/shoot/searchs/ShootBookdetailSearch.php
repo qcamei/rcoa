@@ -112,7 +112,7 @@ class ShootBookdetailSearch extends ShootBookdetail
         $startIndex = 0;
         foreach ($dataProvider as $model) {
             for ($i = $startIndex, $len = count($weekdatas); $i < $len; $i++) {
-                if ($weekdatas[$i]->book_time == $model->book_time) {
+                if (date('Y/m/d',$weekdatas[$i]->book_time) == date('Y/m/d',$model->book_time) && $weekdatas[$i]->index == $model->index) {
                     $weekdatas[$i] = $model;
                     $startIndex = $i + 1;
                     break;
