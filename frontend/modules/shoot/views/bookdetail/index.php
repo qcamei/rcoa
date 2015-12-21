@@ -227,12 +227,13 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                     'name' => 'check_issue_date',
                     'type' => DatePicker::TYPE_INPUT,
                     'value' => date('Y/m',strtotime($date)),
+                    'readonly' => true,
                     'options' => [
                         'placeholder' => 'Select issue date ...',
                         'onchange'=>'dateChange($(this).val())',
                         ],
                     'pluginOptions' => [
-                        'format' => 'yyyy/m/d',
+                        'format' => 'yyyy/m',
                         'todayHighlight' => true,
                         'minViewMode' => 1,
                     ]
@@ -264,6 +265,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
     }
     function dateChange(value)
     {
+         value += '/01';
          location.href = reflashUrl+'?date='+value+'&site='+refsite;
     }
 JS;
