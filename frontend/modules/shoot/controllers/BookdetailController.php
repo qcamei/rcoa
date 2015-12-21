@@ -148,7 +148,6 @@ class BookdetailController extends Controller
             !isset($post['site_id']) ? : $model->site_id = $post['site_id'];
             !isset($post['book_time']) ? : $model->book_time = $post['book_time'];
             !isset($post['index']) ? : $model->index = $post['index'];
-
             $model->setScenario(ShootBookdetail::SCENARIO_TEMP_CREATE);
             $model->save();
             $model->setScenario(ShootBookdetail::SCENARIO_DEFAULT);
@@ -353,7 +352,7 @@ class BookdetailController extends Controller
             $model->save();
         }
         
-        $this->redirect(['index','date'=>$date,'b_id'=>$b_id]);
+        $this->redirect(['index','date'=>$date,'b_id'=>$b_id, 'site'=>$model->site_id]);
     }
 
     /**

@@ -35,7 +35,7 @@ $this->title = Yii::t('rcoa', 'Update {modelClass}: ', [
                 !$model->getIsValid() ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'),
                 'javascript:;', 
                 ['id'=>'submit','class' => (!$model->getIsValid()) ? 'btn btn-success' : 'btn btn-primary', 'data-toggle'=>'modal', 'data-target'=>'#myModal']) ?>
-        <?= Html::a(Yii::t('rcoa', 'Back'),['exit-create',   'date' => date('Y-m-d', $model->book_time), 'b_id' => $model->id], ['class' => 'btn btn-default']) ?>
+        <?= Html::a(Yii::t('rcoa', 'Back'),['exit-create',   'date' => date('Y-m-d', $model->book_time), 'b_id' => $model->id, 'site'=> $model->site_id], ['class' => 'btn btn-default']) ?>
     </div>
 </div>
 <?php

@@ -56,7 +56,7 @@ $this->title = $model->id;
                 echo Html::a('评价', ['/shoot/appraise/create', 'b_id' => $model->id], ['class' => 'btn btn-danger']).' ';
         ?>
         
-        <?= Html::a('返回', ['index','date'=>  date('Y-m-d',$model->book_time)], ['class' => 'btn btn-default']) ?>
+        <?= Html::a('返回', ['index','date'=>  date('Y-m-d',$model->book_time), 'site'=>$model->site_id], ['class' => 'btn btn-default']) ?>
     </div>
 </div>
 <?php
