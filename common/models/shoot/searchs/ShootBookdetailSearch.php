@@ -93,7 +93,7 @@ class ShootBookdetailSearch extends ShootBookdetail
                 ->with('appraises')
                 ->with('appraiseResults')
                 ->all();
-
+        
         $indexOffsetTimes = [
             '9 hours',
             '14 hours',
@@ -110,7 +110,7 @@ class ShootBookdetailSearch extends ShootBookdetail
                 ]);
             }
         };
-
+        
         $startIndex = 0;
         foreach ($dataProvider as $model) {
             for ($i = $startIndex, $len = count($weekdatas); $i < $len; $i++) {

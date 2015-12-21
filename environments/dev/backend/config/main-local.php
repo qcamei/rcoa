@@ -17,6 +17,9 @@ $config = [
         'user' => [
             'class' => 'backend\modules\user\Module',
         ],
+        'expert' => [
+            'class' => 'backend\modules\expert\Module',
+        ],
     ],
 ];
 

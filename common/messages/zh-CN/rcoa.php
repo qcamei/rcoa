@@ -9,6 +9,8 @@ return [
     //公共
     'Type' => '类型',
     'Title' => '标题',
+    'Username' => "用户名",
+    'Nickname' => "昵称",
     'Name' => "名称",
     'Phone' => "电话",
     'Email' => "邮箱",
@@ -16,6 +18,9 @@ return [
     'Value' => '值',
     'User' => '用户',
     'Role' => '角色',
+    'Sex' => '性别',
+    'Avatar' => '头像',
+    'Birth' => '出生年月',
     'Create' => '创建',
     'Update' => '更新',
     'Created At' => '创建于',
@@ -68,8 +73,16 @@ return [
     'Start Time' => '开始时间',
     
     //编辑历史
-    'U ID' => '操作者',
     'History' =>'原因',
-    'Update Time' =>'时间',
+    
+    //专家库
+    'Experts' => '所有专家',
+    'Create Expert' => '创建专家',
+    'Personal Image' => '头像',
+    'Job Title' => '头衔',
+    'Job Name' => '职称',
+    'Level' => '等级',
+    'Employer' => '单位',
+    'Attainment' => '成就',
     
 ];

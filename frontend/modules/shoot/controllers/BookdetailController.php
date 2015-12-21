@@ -217,17 +217,7 @@ class BookdetailController extends Controller
         
         /** 传进view 模板参数 */
         $params = [
-            'b_id' => $model->id,
-            'bookerName' =>  $model->booker->nickname,
-            'bookerPhone' => $model->booker->phone,
-            'shootMan' => $model->shootman->nickname,
-            'shootPhone' => $model->shootman->phone,
-            'teacherNmae' => $model->teacher->teacher_name,
-            'siteName' => $model->site->name,
-            'siteDes' => $model->site->des,
-            'bookTime' => date('Y/m/d ',$model->book_time).Yii::t('rcoa', 'Week '.date('D',$model->book_time)).' '.$model->getTimeIndexName(),
-            'courseName' => $model->fwCourse->name,
-            'remark' => $model->remark,
+            'model' =>$model,
         ];
         /** 主题 */
         $subject = "拍摄-新增-".$model->fwCourse->name;
