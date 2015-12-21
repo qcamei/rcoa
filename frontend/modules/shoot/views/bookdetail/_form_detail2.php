@@ -117,6 +117,7 @@ use yii\widgets\DetailView;
             ],
             [
                 'attribute' => 'u_id',
+                'label' => '操作者',
                 'value' => function($model){
                     /* @var $model ShootHistory */
                     return $model->u->nickname;
