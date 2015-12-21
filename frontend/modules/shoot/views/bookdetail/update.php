@@ -49,8 +49,12 @@ $this->title = Yii::t('rcoa', 'Update {modelClass}: ', [
         $('#myModal').modal()
         $("#myModal .modal-footer #save").click(function(){
             var ed = $("#myModal .modal-body input").val();
-            $('#bookdetail-create-form input[name="editreason"]').val(ed);
-            $('#bookdetail-create-form').submit();
+            if(ed != ''){
+                $('#bookdetail-create-form input[name="editreason"]').val(ed);
+                $('#bookdetail-create-form').submit();
+            }else{
+                alert('编辑原因不能为空');
+            }
         });
         return false;
     });

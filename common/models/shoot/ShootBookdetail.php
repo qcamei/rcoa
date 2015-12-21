@@ -53,6 +53,7 @@ use yii\web\NotFoundHttpException;
  * @property srting $remark     备注
  * @property srting $start_time    开始时间
  * @property srting $historys    编辑历史
+ * @property srting $history    获取单条编辑历史
  */
 class ShootBookdetail extends ActiveRecord
 {
@@ -263,7 +264,18 @@ class ShootBookdetail extends ActiveRecord
             }
         }
     }
-     /**
+    
+    /**
+     * 获取单条编辑历史
+     * @return ActiveQuery
+     */
+    public function getHistory()
+    {
+        return $this->hasOne(ShootHistory::className(), ['b_id' => 'id'])
+                ->orderBy('id DESC');
+    }
+    
+    /**
      * 获取编辑历史
      * @return ActiveQuery
      */
@@ -271,6 +283,7 @@ class ShootBookdetail extends ActiveRecord
     {
         return $this->hasMany(ShootHistory::className(), ['b_id' => 'id']);
     }
+    
     /**
      * 场地
      * @return ActiveQuery
@@ -279,6 +292,7 @@ class ShootBookdetail extends ActiveRecord
     {
         return $this->hasOne(ShootSite::className(), ['id' => 'site_id']);
     }
+    
     /**
      * @return FWItem
      */

@@ -2,10 +2,9 @@
 
 namespace common\models\shoot\searchs;
 
-use Yii;
+use common\models\shoot\ShootBookdetail;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\shoot\ShootBookdetail;
 
 /**
  * ShootBookdetailSearch represents the model behind the search form about `common\models\shoot\ShootBookdetail`.
@@ -110,7 +109,6 @@ class ShootBookdetailSearch extends ShootBookdetail
                 ]);
             }
         };
-        
         $startIndex = 0;
         foreach ($dataProvider as $model) {
             for ($i = $startIndex, $len = count($weekdatas); $i < $len; $i++) {

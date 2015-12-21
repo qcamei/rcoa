@@ -119,9 +119,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                        'min-width' => '100px',
                     ],
                 ],
-                'contentOptions' => [
-                    
-                ],
+                
                 'content' => function($model,$key,$index,$e)
                 {
                     /* @var $model ShootBookdetail */
