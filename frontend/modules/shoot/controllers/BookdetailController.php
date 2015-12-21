@@ -136,6 +136,7 @@ class BookdetailController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             /** 保存预约 */
             if($this->saveNewBookdetail($model))
+                /** 创建新增 */
                 $this->sendNewShootNotification ($model, '新增');
             return $this->redirect([ 'view', 'id' => $model->id]);
         } else {
@@ -208,8 +209,8 @@ class BookdetailController extends Controller
     /**
      * 创建/指派/更改指派 成功 发送 邮件、ee 通知
      * @param type $model
-     * @param type $mode  标题
-     * @param type $type  操作 null 表示创建 1 表示指派 2 表示更改指派
+     * @param type $mode  标题模式
+     * @param type $type  操作 null表示创建 1表示指派 2表示更改指派
      */
     private function sendNewShootNotification($model, $mode, $type=null)
     {       
@@ -238,8 +239,8 @@ class BookdetailController extends Controller
     /**
      * 给所有摄影组长 发送 ee通知 email
      * @param type $model
-     * @param type $params
-     * @param type $subject
+     * @param type $params      模版参数
+     * @param type $subject     主题
      */
     public function sendShootLeadersNotification($params, $subject){
         /* @var $authManager RbacManager */
@@ -262,8 +263,8 @@ class BookdetailController extends Controller
     /**
      * 给编导 发送 ee通知 email
      * @param type $model
-     * @param type $params
-     * @param type $subject
+    * @param type $params      模版参数
+     * @param type $subject     主题
      */
     public function sendBookerNotification($model, $params, $subject){
          /**  查找编导ee和mail */
@@ -281,8 +282,9 @@ class BookdetailController extends Controller
     /**
      * 给接洽人 发送 ee通知 email
      * @param type $model
-     * @param type $params
-     * @param type $subject
+     * @param type $params      模版参数
+     * @param type $subject     主题
+     * @param type $views       视图
      */
     public function sendContacterNotification($model, $params, $subject, $views){
         /**  查找接洽人ee和mail */
@@ -300,8 +302,9 @@ class BookdetailController extends Controller
     /**
      * 给摄影师 发送 ee通知 email
      * @param type $model
-     * @param type $params
-     * @param type $subject
+     * @param type $params      模版参数
+     * @param type $subject     主题
+     * @param type $views       视图
      */
     public function sendShootManNotification($model, $params, $subject, $views) {
         /**  查找摄影师ee和mail */
@@ -319,8 +322,8 @@ class BookdetailController extends Controller
     /**
      * 给老师 发送 ee通知 email
      * @param type $model
-     * @param type $params
-     * @param type $subject
+     * @param type $params      模版参数
+     * @param type $subject     主题
      */
     public function sendTeacherNotification($model, $params, $subject){
          /**  查找老师ee和mail */
@@ -421,14 +424,15 @@ class BookdetailController extends Controller
         $model = $this->findModel($id);
         try
         {   
-            $OldShootMan = $model->u_shoot_man;
+            $oldShootMan = $model->u_shoot_man;
             if($model->load(\Yii::$app->getRequest()->post()) && $model->validate());
             {
                 $model->status = $model->u_shoot_man == null ? ShootBookdetail::STATUS_ASSIGN : ShootBookdetail::STATUS_SHOOTING;
                 $model->save();
                 Yii::$app->getSession()->setFlash('success','操作成功！');
                 $this->saveNewHistory($model);
-                if($OldShootMan != null){
+                /** oldShootMan 非空为‘更改指派’*/
+                if($oldShootMan != null){
                     $this->sendNewShootNotification($model, '更改指派', 2);
                 }  else {
                     $this->sendNewShootNotification($model, '指派', 1);
