@@ -92,7 +92,7 @@ class ShootBookdetailSearch extends ShootBookdetail
                 ->with('appraises')
                 ->with('appraiseResults')
                 ->all();
-        
+
         $indexOffsetTimes = [
             '9 hours',
             '14 hours',
