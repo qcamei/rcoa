@@ -73,6 +73,7 @@ return [
     'Start Time' => '开始时间',
     
     //编辑历史
+    'U ID' => '操作者',
     'History' =>'原因',
     
     //专家库
