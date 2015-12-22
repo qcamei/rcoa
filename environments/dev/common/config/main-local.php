@@ -1,5 +1,6 @@
 <?php
 return [
+    'timeZone' => 'PRC',
     'components' => [
         'db' => [
             'class' => 'yii\db\Connection',

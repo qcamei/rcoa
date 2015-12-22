@@ -115,12 +115,17 @@ class BookdetailController extends Controller
         if (!Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CREATE))
             throw new UnauthorizedHttpException('无权操作！');
         $post = Yii::$app->getRequest()->getQueryParams();
+        $body = Yii::$app->getRequest()->getBodyParams();
+        /** 全并且get参数与post参数 */
+        $post = ArrayHelper::merge($post, $body);
         /**
          * 先查找对应数据（临时预约锁定的数据）
          * 找不到再新建数据
          */
-        if (isset($post['book_time']))
-            $model = ShootBookdetail::findOne(['book_time' => $post['book_time']]);
+        
+
+        if (isset($post['b_id']))
+            $model = ShootBookdetail::findOne($post['b_id']);
         if (!isset($model)) {
             $model = new ShootBookdetail();
             $model->loadDefaultValues();
@@ -148,6 +153,7 @@ class BookdetailController extends Controller
             !isset($post['site_id']) ? : $model->site_id = $post['site_id'];
             !isset($post['book_time']) ? : $model->book_time = $post['book_time'];
             !isset($post['index']) ? : $model->index = $post['index'];
+
             $model->setScenario(ShootBookdetail::SCENARIO_TEMP_CREATE);
             $model->save();
             $model->setScenario(ShootBookdetail::SCENARIO_DEFAULT);
@@ -352,7 +358,7 @@ class BookdetailController extends Controller
             $model->save();
         }
         
-        $this->redirect(['index','date'=>$date,'b_id'=>$b_id, 'site'=>$model->site_id]);
+        $this->redirect(['index','date'=>$date,'b_id'=>$b_id]);
     }
 
     /**
@@ -453,9 +459,7 @@ class BookdetailController extends Controller
      */
     protected function findModel($id)
     {
-        $model = ShootBookdetail::find()
-                ->where(['id'=>$id])
-                ->one();
+        $model = ShootBookdetail::findOne($id);
         if ($model !== null) {
             return $model;
         } else {

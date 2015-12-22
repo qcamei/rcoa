@@ -47,8 +47,7 @@ use yii\widgets\ActiveForm;
         ]
     ]);
     ?>
-    echo $form->field($model, 'date_1')->
-
+    
     <?= $form->field($model, 'job_title')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'job_name')->textInput(['maxlength' => true]) ?>

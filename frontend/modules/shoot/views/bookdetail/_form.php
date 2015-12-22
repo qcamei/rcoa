@@ -96,6 +96,7 @@ use common\models\shoot\ShootHistory;
     <?= Html::activeHiddenInput($model, 'index') ?>
     <?= Html::activeHiddenInput($model, 'status') ?>
     <?= Html::hiddenInput('editreason') ?>
+    <?= Html::hiddenInput('b_id',$model->id) ?>
    
     
     <?php ActiveForm::end(); ?>
