@@ -157,7 +157,7 @@ class BookdetailController extends Controller
             $model->setScenario(ShootBookdetail::SCENARIO_TEMP_CREATE);
             $model->save();
             $model->setScenario(ShootBookdetail::SCENARIO_DEFAULT);
-            /**判断上下晚预约的默认开始时间*/
+            /** 设置上下晚预约的默认开始时间 */
             if($model->index == $model::TIME_INDEX_MORNING)
             {
                 $model->start_time = $model::START_TIME_MORNING;
@@ -358,7 +358,7 @@ class BookdetailController extends Controller
             $model->save();
         }
         
-        $this->redirect(['index','date'=>$date,'b_id'=>$b_id]);
+        $this->redirect(['index','date'=>$date,'b_id'=>$b_id, 'site'=>$model->site_id]);
     }
 
     /**
