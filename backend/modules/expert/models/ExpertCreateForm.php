@@ -67,6 +67,9 @@ class ExpertCreateForm extends Model {
     /** 成就 */
     public $attainment;
     
+    public $isNew = true;
+
+
     /**
      * @inheritdoc
      */
@@ -90,19 +93,22 @@ class ExpertCreateForm extends Model {
      */
     public function username_unique()
     {
-        $value = $this->username;
-        $count = User::find()
-                ->where(['username'=>$value])
-                ->count();
-        
-        if($count>0)
+        if($this->getIsNewRecord())
         {
-            $message = Yii::t('yii', '{attribute}"{value}" has already been taken.');
-            $params = [
-                'attribute'=>$this->getAttributeLabel('username'),
-                'value'=>$value
-            ];
-            $this->addError('username', Yii::$app->getI18n()->format($message, $params, Yii::$app->language));
+            $value = $this->username;
+            $count = User::find()
+                    ->where(['username'=>$value])
+                    ->count();
+
+            if($count>0)
+            {
+                $message = Yii::t('yii', '{attribute}"{value}" has already been taken.');
+                $params = [
+                    'attribute'=>$this->getAttributeLabel('username'),
+                    'value'=>$value
+                ];
+                $this->addError('username', Yii::$app->getI18n()->format($message, $params, Yii::$app->language));
+            }
         }
     }
 
@@ -128,13 +134,48 @@ class ExpertCreateForm extends Model {
             'attainment' => Yii::t('rcoa', 'Attainment'),
         ];
     }
-    
+    /**
+     * 生成 一个合成的专家模型
+     * @param int $id
+     */
+    public static function find($id)
+    {
+        try
+        {
+            $user = User::findOne($id);
+            $expert = Expert::findOne($id);
+
+            $model = new ExpertCreateForm();
+
+            $model->u_id = $user->id;
+            $model->username = $user->username;
+            $model->nickname = $user->nickname;
+            $model->sex = $user->sex;
+            $model->email = $user->email;
+            $model->phone = $user->phone;
+
+            $model->personal_image = $expert->personal_image;
+            $model->type = $expert->type;
+            $model->birth = $expert->birth;
+            $model->job_title = $expert->job_title;
+            $model->job_name = $expert->job_name;
+            $model->level = $expert->level;
+            $model->employer = $expert->employer;
+            $model->attainment = $expert->attainment;
+
+            $model->isNew = false;
+
+            return $model;
+        } catch (\Exception $ex) {
+            throw new \yii\web\NotFoundHttpException("没有找到对应的专家数据！".$ex->getMessage());
+        }
+    }
     /**
      * @return bool
      */
     public function getIsNewRecord()
     {
-        return $this->username === null;
+        return $this->isNew;
     }
     
     public function save()
@@ -154,8 +195,8 @@ class ExpertCreateForm extends Model {
 
                 $trans = Yii::$app->db->beginTransaction();
                 /** 创建系统用户 */    
-                $user = new User();
-                $user->scenario = User::SCENARIO_CREATE;
+                $user = ($this->isNew || User::findOne(['username'=>$this->username])) ? new User() : User::findOne($this->u_id);
+                $user->scenario = $this->isNew ? User::SCENARIO_CREATE : User::SCENARIO_UPDATE;
                 $user->username = $this->username;
                 $user->nickname = $this->nickname;
                 $user->sex = $this->sex;
@@ -166,7 +207,7 @@ class ExpertCreateForm extends Model {
                 $user->save();
                 
                 /** 创建专家数据 */    
-                $expert = new Expert();
+                $expert = $this->isNew ? new Expert() : Expert::findOne($this->u_id);
                 $expert->u_id = $user->primaryKey;
                 $expert->personal_image = $this->personal_image;
                 $expert->type = $this->type;
@@ -182,6 +223,8 @@ class ExpertCreateForm extends Model {
                 \Yii::$app->authManager->assign(\Yii::$app->authManager->getRole(RbacName::ROLE_TEACHERS), $user->id);
                 
                 $trans -> commit();
+                
+                $this->isNew = false;
                 return true;
             } catch (Exception $ex) {
                 $trans ->rollBack();

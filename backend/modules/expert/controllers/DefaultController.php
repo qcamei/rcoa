@@ -64,7 +64,6 @@ class DefaultController extends Controller
         $model = new ExpertCreateForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model = $this->findModel($model->u_id);
             return $this->redirect(['view', 'id' => $model->u_id]);
         } else {
             return $this->render('create', [
@@ -81,7 +80,7 @@ class DefaultController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $model = ExpertCreateForm::find($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->u_id]);

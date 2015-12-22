@@ -80,6 +80,7 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
             $url = ($isNew || $model->getIsBooking()) ? 'create' : 'view';
             $params = ($isNew || $model->getIsBooking()) ? 
                     [
+                        'b_id' => $model->id,
                         'site_id' => $model->site_id,
                         'book_time' => $model->book_time,
                         'index' => $model->index
