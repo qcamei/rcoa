@@ -12,9 +12,9 @@ use common\models\shoot\ShootBookdetail;
  */
 ?>
 <div class="mail-new-shoot">
-    <p><?= Html::encode($model->teacher->nickname)?>老师：</p>
+    <p><b><?= Html::encode($model->teacher->nickname)?></b>老师：</p>
     
-    <p>您好！我是负责您<b><?= Html::encode($model->fwCourse->name)?></b>的教学编导<b><?= Html::encode($model->booker->nickname) ?></b>，现与您确定课程拍摄时间为 </p>
+    <p>您好！我是负责您<b>【<?= Html::encode($model->fwCourse->name)?>】</b>的教学编导<b><?= Html::encode($model->booker->nickname) ?></b>，现与您确定课程拍摄时间为 </p>
 
     <p><b><?= Html::encode($bookTime) ?> <?= Html::encode($model->start_time) ?></b>，地点为<b><?= Html::encode($model->site->des) ?></b>，</p>
     

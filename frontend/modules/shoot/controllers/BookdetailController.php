@@ -228,15 +228,23 @@ class BookdetailController extends Controller
          /** 主题 */
         $subject = "拍摄-".$mode."-".$model->fwCourse->name;
         if(!isset($type)){
+            //创建--给所有摄影组长发送通知
             $this->sendShootLeadersNotification($params, $subject);
         }else if($type == 1) {
+            //指派--给编导发送通知
             $this->sendBookerNotification($model, $params, $subject);
+            //指派--给接洽人发送通知
             $this->sendContacterNotification($model, $params, $subject, 'shoot\ShootAssign-u_contacter-html');
+            //指派--给摄影师发送通知
             $this->sendShootManNotification($model, $params, $subject, 'shoot\ShootAssign-u_shoot_man-html');
+            //指派--给老师发送通知
             $this->sendTeacherNotification($model, $params, $subject);
         }else if($type == 2) {
-            $this->sendContacterNotification($model, $params, $subject, 'shoot\ShootAssign-u_contacter-html_1');
-            $this->sendShootManNotification($model, $params, $subject, 'shoot\ShootAssign-u_shoot_man-html_1');
+            //更改指派--给接洽人发送通知
+            $this->sendContacterNotification($model, $params, $subject, 'shoot\ShootEditAssign-u_contacter-html');
+            //更改指派--给旧摄影师发送通知
+            $this->sendShootManNotification($model, $params, $subject, 'shoot\ShootEditAssign-u_shoot_man-html');
+            //更改指派--给新摄影师发送通知
             $this->sendShootManNotification($model, $params, $subject, 'shoot\ShootAssign-u_shoot_man-html');
         }
     }
@@ -337,7 +345,7 @@ class BookdetailController extends Controller
         /** 发送ee消息 */
         EeManager::sendEeByView('shoot\ShootAssign-u_teacher-html', $params, $shootTeacher_ee, $subject);
         /** 发送邮件消息 */
-        Yii::$app->mailer->compose( 'shoot\ShootAssign-u_teacher-html', $params)
+        Yii::$app->mailer->compose('shoot\ShootAssign-u_teacher-html', $params)
             ->setTo($shootTeacher_mail)
             ->setSubject($subject)
             ->send();
