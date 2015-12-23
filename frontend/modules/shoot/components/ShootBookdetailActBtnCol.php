@@ -72,10 +72,17 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
         //编导
         else if($authManager->isRole(RbacName::ROLE_WD, Yii::$app->user->id))
         {
-            if(date('Y-m-d',$model->book_time) < date('Y-m-d',strtotime("+1 day"))){
-                $buttonName = $isNew ? '未预约' :$model->booker->nickname;
-            }else{
+            //预约任务时间
+            $bookTime = date('Y-m-d H:i:s',$model->book_time);
+            //date('d')+1 明天预约时间
+            $dayTomorrow = date('Y-m-d H:i:s',mktime(10,0,0,date('m'),date('d')+1,date('y')));
+            //30天后预约时间
+            $dayEnd = date('Y-m-d H:i:s',mktime(10,0,0,date('m'),date('d')+31,date('y')));
+            if($dayTomorrow < $bookTime && $bookTime < $dayEnd){
                 $buttonName = $isNew ? '预约' :$model->booker->nickname;
+            }else{
+                $buttonName = $isNew ? '未预约' :$model->booker->nickname;
+                
             }
             $url = ($isNew || $model->getIsBooking()) ? 'create' : 'view';
             $params = ($isNew || $model->getIsBooking()) ? 
@@ -86,10 +93,10 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
                         'index' => $model->index
                     ] : ['id' => $model->id];
             $isMe = !$isNew && $model->booker->id == Yii::$app->user->id;
-            if(date('Y-m-d',$model->book_time) < date('Y-m-d',strtotime("+1 day"))){
-                $btnClass .= ($isNew ? ' btn-primary disabled' : ' btn-default');
-            }else{
+            if($dayTomorrow < $bookTime && $bookTime < $dayEnd){
                 $btnClass .= ($isNew ? ' btn-primary' : ' btn-default');
+            }else{
+                $btnClass .= ($isNew ? ' btn-primary disabled' : ' btn-default');
             }
             $btnClass .= (!$isMe && $model->getIsBooking()) ? ' disabled' : "";
         }
