@@ -122,6 +122,8 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                 
                 'content' => function($model,$key,$index,$e)
                 {
+                    if($model->getIsBooking())
+                        return '【'. DateUtil::intToTime($model->getBookTimeRemaining(),2).'】后解锁';
                     /* @var $model ShootBookdetail */
                     if(!$model->getIsValid())
                         return '';
@@ -149,8 +151,6 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                 ], 
                 'content' => function($model,$key,$index,$e)
                 {
-                    if($model->getIsBooking())
-                        return '【'. DateUtil::intToTime($model->getBookTimeRemaining(),2).'】后解锁';
                     /* @var $model ShootBookdetail */
                     if(!$model->getIsValid())
                         return '';

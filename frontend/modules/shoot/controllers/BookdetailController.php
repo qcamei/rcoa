@@ -143,7 +143,7 @@ class BookdetailController extends Controller
             if($this->saveNewBookdetail($model))
                 /** 创建新增 */
                 $this->sendNewShootNotification ($model, '新增');
-            return $this->redirect([ 'view', 'id' => $model->id]);
+            return $this->redirect([ 'index', 'date' => date('Y-m-d', $model->book_time), 'b_id' => $model->id, 'site'=> $model->site_id]);
         } else {
             $model->status = ShootBookdetail::STATUS_BOOKING;
             $model->u_booker = Yii::$app->user->id;
@@ -455,7 +455,7 @@ class BookdetailController extends Controller
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
         
-        $this->redirect(['view', 'id' => $id]);
+        $this->redirect(['index', 'date' => date('Y-m-d', $model->book_time), 'b_id' => $model->id, 'site'=> $model->site_id]);
     }
 
     /**
