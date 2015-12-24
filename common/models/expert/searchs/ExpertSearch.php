@@ -44,7 +44,8 @@ class ExpertSearch extends Expert
     public function search($params)
     {
         $query = Expert::find();
-        $query->joinWith(['user']);
+        $query->joinWith(['user'])
+            ->with('expertType');
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -78,7 +79,7 @@ class ExpertSearch extends Expert
             ->andFilterWhere(['like', 'level', $this->level])
             ->andFilterWhere(['like', 'employer', $this->employer])
             ->andFilterWhere(['like', 'attainment', $this->attainment])
-            ->andFilterWhere(['like', 'user.nickname', $this->name]);
+            ->andFilterWhere(['like', 'nickname', $this->name]);
 
         return $dataProvider;
     }

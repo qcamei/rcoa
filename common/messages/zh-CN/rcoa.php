@@ -71,6 +71,7 @@ return [
     'Shoot Appraises' => '评价题目',
     'Remark' => '备注',
     'Start Time' => '开始时间',
+    'End Time' => '结束时间',
     
     //编辑历史
     'History' =>'原因',
@@ -84,5 +85,8 @@ return [
     'Level' => '等级',
     'Employer' => '单位',
     'Attainment' => '成就',
+    'Cost' => '费用报酬',
+    'Compatibility' => '合作融洽度',
+    'ProjectName' => '项目名称',
     
 ];

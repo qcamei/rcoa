@@ -194,9 +194,12 @@ class ExpertCreateForm extends Model {
                 }
 
                 $trans = Yii::$app->db->beginTransaction();
-                /** 创建系统用户 */    
-                $user = ($this->isNew || User::findOne(['username'=>$this->username])) ? new User() : User::findOne($this->u_id);
-                $user->scenario = $this->isNew ? User::SCENARIO_CREATE : User::SCENARIO_UPDATE;
+                /**  创建系统用户 */
+                /* @var $user User */    
+                $user = User::findOne(['username'=>$this->username]);
+                if($user == null)
+                    $user = $this->isNew ? new User() : User::findOne($this->u_id);
+                $user->scenario = $user->getIsNewRecord() ? User::SCENARIO_CREATE : User::SCENARIO_UPDATE;
                 $user->username = $this->username;
                 $user->nickname = $this->nickname;
                 $user->sex = $this->sex;
@@ -208,8 +211,9 @@ class ExpertCreateForm extends Model {
                 
                 /** 创建专家数据 */    
                 $expert = $this->isNew ? new Expert() : Expert::findOne($this->u_id);
-                $expert->u_id = $user->primaryKey;
-                $expert->personal_image = $this->personal_image;
+                $expert->u_id = ($this->isNew ? $user->primaryKey : $user->id);
+                if($upload!=null)
+                    $expert->personal_image = $this->personal_image;
                 $expert->type = $this->type;
                 $expert->birth = $this->birth;
                 $expert->job_title = $this->job_title;
@@ -218,9 +222,15 @@ class ExpertCreateForm extends Model {
                 $expert->employer = $this->employer;
                 $expert->attainment = $this->attainment;
                 $expert->save();
-
-                /** 添加专家到【老师】角色 */    
-                \Yii::$app->authManager->assign(\Yii::$app->authManager->getRole(RbacName::ROLE_TEACHERS), $user->id);
+                
+                
+                $this->u_id = $expert->u_id;
+                
+                if($this->isNew)
+                {
+                    /** 添加专家到【老师】角色 */    
+                    \Yii::$app->authManager->assign(\Yii::$app->authManager->getRole(RbacName::ROLE_TEACHERS), $user->id);
+                }
                 
                 $trans -> commit();
                 

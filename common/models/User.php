@@ -47,6 +47,14 @@ class User extends ActiveRecord implements IdentityInterface
     const SEX_MALE = 1;
     /** 性别 女 */
     const SEX_WOMAN = 2;
+    /**
+     * 性别
+     * @var array 
+     */
+    public static $sexName = [
+        self::SEX_MALE => '男',
+        self::SEX_WOMAN => '女',
+    ];
     
     /* 重复密码验证 */
     public $password2;

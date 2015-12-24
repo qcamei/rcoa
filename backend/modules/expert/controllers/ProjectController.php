@@ -2,12 +2,14 @@
 
 namespace backend\modules\expert\controllers;
 
-use Yii;
 use common\models\expert\ExpertProject;
 use common\models\shoot\searchs\ExpertProjectSearch;
+use wskeee\framework\FrameworkManager;
+use Yii;
+use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * ProjectController implements the CRUD actions for ExpertProject model.
@@ -48,6 +50,7 @@ class ProjectController extends Controller
      */
     public function actionView($id)
     {
+        throw new NotFoundHttpException("找不到页面！");
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -60,13 +63,18 @@ class ProjectController extends Controller
      */
     public function actionCreate()
     {
-        $model = new ExpertProject();
-
+        /* @var $fwManager FrameworkManager */
+        $fwManager = \Yii::$app->fwManager;
+        
+        $model = new ExpertProject(\Yii::$app->getRequest()->getQueryParams());
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            
+            return $this->redirect(['/expert/default/view', 'id' => $model->expert_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'projects' => ArrayHelper::map($fwManager->getProjects(), 'id', 'name'),
             ]);
         }
     }
@@ -80,12 +88,14 @@ class ProjectController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        /* @var $fwManager FrameworkManager */
+        $fwManager = \Yii::$app->fwManager;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['/expert/default/view', 'id' => $model->expert_id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'projects' => ArrayHelper::map($fwManager->getProjects(), 'id', 'name'),
             ]);
         }
     }
@@ -98,9 +108,10 @@ class ProjectController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        $model = $this->findModel($id);
+        $expert_id = $model->expert_id;
+        $model->delete();
+        return $this->redirect(['/expert/default/view','id'=>$expert_id]);
     }
 
     /**
