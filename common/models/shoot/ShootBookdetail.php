@@ -467,6 +467,13 @@ class ShootBookdetail extends ActiveRecord
     {
         return $this->status == self::STATUS_BREAK_PROMISE;
     }
+    /**
+     * 是否在【已取消】状态
+     */
+    public function getIsStatusCancel()
+    {
+        return $this->status == self::STATUS_CANCEL;
+    }
 
 
     /**

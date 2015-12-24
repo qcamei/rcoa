@@ -60,8 +60,9 @@ $this->title = $model->id;
              * 取消 按钮显示必须满足以下条件：
              * 1、拥有【取消】权限（编导自己和管理员）
              * 2、必须是在24小时之前
+             * 3、不是为【已取消】状态
              */
-            if(Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model])){
+            if(Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model]) && !$model->getIsStatusCancel()){
                 echo Html::a('取消', ['cancel','id' => $model->id], ['id'=>'cancel', 'class' => 'btn btn-warning', 'data' => [  'method' => 'post']]).' ';
             }
         ?>
