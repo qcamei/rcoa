@@ -16,7 +16,7 @@ use yii\widgets\ActiveForm;
 
 <div class="expert-form">
 
-    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
+    <?php $form = ActiveForm::begin(['options' => ['class'=>'form-horizontal','enctype' => 'multipart/form-data']]); ?>
     
     <?php if($model->isNewRecord): ?>
     <?php echo $form->field($model, 'username')->textInput(['maxlength'=>32]); ?>
@@ -28,7 +28,7 @@ use yii\widgets\ActiveForm;
     
     <?= $form->field($model, 'type')->dropDownList(ArrayHelper::map(ExpertType::find()->all(),'id','name'),['prompt' => '请选择...']) ?>
     
-    <?= $form->field($model, 'sex')->radioList([User::SEX_MALE => '男',  User::SEX_WOMAN => '女']); ?>
+    <?= $form->field($model, 'sex')->radioList(User::$sexName); ?>
     
     <?= $form->field($model, 'phone')->textInput(['minlength'=>6,'maxlength'=>20]); ?>
     

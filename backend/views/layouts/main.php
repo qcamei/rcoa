@@ -56,6 +56,12 @@ AppAsset::register($this);
         $menuItems[] = ['label' => '多媒体制作','url' => '#'];
         $menuItems[] = ['label' => '评优','url' => '#'];
         $menuItems[] = [
+            'label' => '专家库',
+            'items' => [
+                 ['label' => '专家管理', 'url' => '/expert/default/'],
+            ]
+        ];
+        $menuItems[] = [
             'label' => '用户',
             'items' => [
                  ['label' => '用户', 'url' => '/user'],

@@ -18,6 +18,6 @@ class ShootOwnRule extends \yii\rbac\Rule {
     //put your code here
     public function execute($user, $item, $params) {
         
-        return isset($params['model']) ? $params['model']->u_booker == $user : false;
+        return isset($params['job']) ? $params['job']->u_booker == $user : false;
     }
 }

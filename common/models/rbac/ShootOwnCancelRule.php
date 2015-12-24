@@ -9,7 +9,9 @@
 namespace common\models\rbac;
 
 /**
- * Description of ShootOwnCancel
+ * 取消自己的任务
+ * 1、必须是自己的任务
+ * 2、必须提前24小时取消
  *
  * @author Administrator
  */
@@ -20,6 +22,6 @@ class ShootOwnCancelRule extends ShootOwnRule
     public function execute($user, $item, $params)
     {
         $isOwn = parent::execute($user, $item, $params);
-        return $isOwn && (isset($params['job']) ? $params['job']->booktime - time()>=24*60*60*1000 : false);
+        return $isOwn && (isset($params['job']) ? $params['job']->book_time - time()>=24*60*60 : false);
     }
 }
