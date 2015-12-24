@@ -82,12 +82,14 @@ use common\models\shoot\ShootHistory;
     
     <?= $form->field($model, 'shoot_mode')->radioList(ShootBookdetail::$shootModeMap,[
         'separator'=>'',
-        'itemOptions'=>[
+         'itemOptions'=>[
             'labelOptions'=>[
                 'style'=>[
                      'margin-right'=>'50px'
                 ]
-               ]]]) ?>
+            ]
+        ],
+    ]) ?>
 
     <?= $form->field($model, 'photograph')->checkbox()->label('') ?>
     <?= Html::activeHiddenInput($model, 'ver') ?>
@@ -102,9 +104,14 @@ use common\models\shoot\ShootHistory;
     <?php ActiveForm::end(); ?>
 
 </div>
-
+<?php  
+ $js =   
+<<<JS
+   $("input:radio").eq(1).attr("checked",true);
+JS;
+    $this->registerJs($js,  View::POS_READY); 
+?> 
 <script type="text/javascript">
-
     function wx_one(e){
         console.log($(e).val());
 	$("#shootbookdetail-fw_course").html("");

@@ -122,6 +122,8 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                 
                 'content' => function($model,$key,$index,$e)
                 {
+                    if($model->getIsBooking())
+                        return '【'. DateUtil::intToTime($model->getBookTimeRemaining(),2).'】后解锁';
                     /* @var $model ShootBookdetail */
                     if(!$model->getIsValid())
                         return '';
@@ -149,8 +151,6 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                 ], 
                 'content' => function($model,$key,$index,$e)
                 {
-                    if($model->getIsBooking())
-                        return '【'. DateUtil::intToTime($model->getBookTimeRemaining(),2).'】后解锁';
                     /* @var $model ShootBookdetail */
                     if(!$model->getIsValid())
                         return '';
@@ -192,6 +192,11 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                 {
                     /* @var $model ShootBookdetail */
                     if($model->getIsNew())return '';
+                    /** 设置评价时间限制　*/
+                    if($model->getIsStausShootIng() && (time() - $model->book_time > $model::STATUS_BREAK_PROMISE_TIMEOUT)){
+                            $model->status = $model::STATUS_BREAK_PROMISE;
+                            $model->save();
+                    }
                     return '【'.$model->getStatusName().'】';
                 }
             ],

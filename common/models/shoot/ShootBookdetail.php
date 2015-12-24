@@ -61,6 +61,8 @@ class ShootBookdetail extends ActiveRecord
     const EDIT_REASON = '编辑原因';
     /** 预约超时限制  */
     const BOOKING_TIMEOUT = 2*60;
+    /** 失约超时 */
+    const STATUS_BREAK_PROMISE_TIMEOUT = 72*60*60;
     
     /** 默认状态 未预约 */
     const STATUS_DEFAULT = 0;
@@ -454,6 +456,15 @@ class ShootBookdetail extends ActiveRecord
     }
     
     /**
+     * 是否在【待评价】状态
+     */
+    public function getIsStausShootIng()
+    {
+        return $this->status == self::STATUS_SHOOTING;
+    }
+
+
+    /**
      * 获取预约锁定剩余时间
      * @return int 秒
      */
@@ -464,6 +475,7 @@ class ShootBookdetail extends ActiveRecord
         else
             return 0;
     }
+    
     
     /**
      * 是否在可以执行指派操作
