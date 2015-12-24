@@ -57,8 +57,6 @@ use yii\web\NotFoundHttpException;
  */
 class ShootBookdetail extends ActiveRecord
 {
-    /**编辑原因*/
-    const EDIT_REASON = '编辑原因';
     /** 预约超时限制  */
     const BOOKING_TIMEOUT = 2*60;
     /** 失约超时 */
@@ -461,6 +459,13 @@ class ShootBookdetail extends ActiveRecord
     public function getIsStausShootIng()
     {
         return $this->status == self::STATUS_SHOOTING;
+    }
+    /**
+     * 是否在【已失约】状态
+     */
+    public function getIsStatusBreakPromise()
+    {
+        return $this->status == self::STATUS_BREAK_PROMISE;
     }
 
 

@@ -47,13 +47,22 @@ $this->title = Yii::t('rcoa', 'Update {modelClass}: ', [
     $('#submit').click(function()
     {
         $('#myModal').modal()
+         /**close关闭模态款的*/
+        $("#myModal .modal-header .close").click(function(){
+            window.location.reload();
+        });
+        /**关闭模态框后重新加载页面*/
+        $("#myModal .modal-footer #close").click(function(){
+            window.location.reload();
+        });
         $("#myModal .modal-footer #save").click(function(){
             var ed = $("#myModal .modal-body input").val();
             if(ed != ''){
                 $('#bookdetail-create-form input[name="editreason"]').val(ed);
                 $('#bookdetail-create-form').submit();
             }else{
-                alert('编辑原因不能为空');
+                $('#myModal .modal-body').html('<b style="font-size:18px;">编辑原因不能为空</ b>');     //设置内容
+                $("#myModal .modal-footer #save").remove();   //移出确定
             }
         });
         return false;

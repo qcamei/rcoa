@@ -51,17 +51,35 @@ $this->title = $model->id;
              * 1、拥有【评价】权限(编导和摄影师都有权限)
              * 2、在摄影师指派后，即摄影结束后
              * 3、查看【评价】权限为所有人
+             * 4、不是为【已失约】状态
+             * 5、预约时间要大于当前时间
              */
-            if($model->canAppraise() && $model->book_time < time())
+            if($model->canAppraise() && !$model->getIsStatusBreakPromise() && $model->book_time < time())
                 echo Html::a('评价', ['/shoot/appraise/create', 'b_id' => $model->id], ['class' => 'btn btn-danger']).' ';
+            /**
+             * 取消 按钮显示必须满足以下条件：
+             * 1、拥有【取消】权限（编导自己和管理员）
+             * 2、必须是在24小时之前
+             */
+            if(Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model])){
+                echo Html::a('取消', ['cancel','id' => $model->id], ['id'=>'cancel', 'class' => 'btn btn-warning', 'data' => [  'method' => 'post']]).' ';
+            }
         ?>
-        
         <?= Html::a('返回', ['index','date'=>  date('Y-m-d',$model->book_time), 'site'=>$model->site_id], ['class' => 'btn btn-default']) ?>
     </div>
 </div>
 <?php
+    $reflashUrl = Yii::$app->urlManager->createAbsoluteUrl(['/shoot/bookdetail/cancel', 'id' => $model->id]);
     $js = 
  <<<JS
+    /**close关闭模态款的*/
+    $("#myModal .modal-header .close").click(function(){
+        window.location.reload();
+    });
+    /**关闭模态框后重新加载页面*/
+    $("#myModal .modal-footer #close").click(function(){
+        window.location.reload();
+    });
     var uShootMan = "$model->u_shoot_man";
     $('#submit').click(function()
         {
@@ -69,17 +87,44 @@ $this->title = $model->id;
                 $('#myModal').modal()
                 $("#myModal .modal-footer #save").click(function(){
                     var ed = $("#myModal .modal-body input").val();
-                    if(ed != ''){
+                    var se = $(".table #shootbookdetail-u_shoot_man option:selected").val();
+                    if(uShootMan == se)
+                    {
+                        $('#myModal .modal-body').html('<b style="font-size:18px;">请选择摄影师</ b>'); //设置内容
+                        $("#myModal .modal-footer #save").remove();   //移出确定
+                    }
+                    else if(ed != '')
+                    {
                         $('#form-assign-shoot_man input[name="editreason"]').val(ed);
                         $('#form-assign-shoot_man').submit();
-                    }else{
-                        alert('编辑原因不能为空');
-                    }    
+                    }
+                    else
+                    {
+                        $('#myModal .modal-body').html('<b style="font-size:18px;">编辑原因不能为空</ b>');     //设置内容
+                        $("#myModal .modal-footer #save").remove();   //移出确定
+                    }
                 });
                 return false;
             }
             $('#form-assign-shoot_man').submit();
         });
+    var reflashUrl = "$reflashUrl";
+    $('#cancel').click(function(){
+        $('#myModal').modal()
+        $('#myModal .modal-header h4').text("是否取消");    //更改模态标题
+        $("#myModal .modal-body input").attr("name","editreason");
+        $("#myModal .modal-body input").attr("placeholder","请输入取消原因...");
+        $("#myModal .modal-footer #save").click(function(){
+            var ed = $("#myModal .modal-body input").val();
+            if(ed != ''){
+                location.href = reflashUrl;
+            }else{
+                $('#myModal .modal-body').html('<b style="font-size:18px;">取消原因不能为空</ b>');     //设置内容
+                $("#myModal .modal-footer #save").remove();   //移出确定
+            }
+        });
+        return false;
+    });
     
 JS;
 $this->registerJs($js,  View::POS_READY);

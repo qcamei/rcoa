@@ -29,6 +29,7 @@ use yii\web\UnauthorizedHttpException;
  */
 class BookdetailController extends Controller
 {
+    /** 设置delete方法的传值方式 */ 
     public function behaviors()
     {
         return [
@@ -401,7 +402,7 @@ class BookdetailController extends Controller
         $dbTrans = \Yii::$app->db->beginTransaction();
         try{ 
             $history = new ShootHistory();
-            /**编辑原因为空不保存*/
+            /**历史记录为空不保存*/
             if(!empty($post['editreason'])){
                 $history->b_id = $model->id;
                 $history->u_id = Yii::$app->user->id;
@@ -413,8 +414,31 @@ class BookdetailController extends Controller
             $dbTrans->rollback();     
         }
     }
+    /**
+     * 取消任务改变状态
+     * @param type $id
+     */
+    public function actionCancel($id)
+    {   
+        $model = $this->findModel($id);
+        try
+        {   
+            if(Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model])){
+                if($model->load(Yii::$app->request->post()) && $model->save()){
+                    $model->status = $model::STATUS_CANCEL;
+                    $model->save();
+                    Yii::$app->getSession()->setFlash('success','操作成功！');
+                    $this->saveNewHistory($model);
+                }
+            }
+        }catch (\Exception $ex) {
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
+        }    
+        return $this->redirect(['index']);
+    }
 
-        /**
+
+    /**
      * Deletes an existing ShootBookdetail model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id

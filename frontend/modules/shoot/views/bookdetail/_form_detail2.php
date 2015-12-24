@@ -100,7 +100,7 @@ use yii\widgets\DetailView;
     ?>
     <?= Html::hiddenInput('editreason') ?>
     <?php ActiveForm::end(); ?>
-    <h5><b>编辑历史</b></h5>
+    <h5><b>历史记录</b></h5>
     <?=
     EditHistoryList::widget([
         'dataProvider' => $model->historys,
