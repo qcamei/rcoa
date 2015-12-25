@@ -467,7 +467,14 @@ class ShootBookdetail extends ActiveRecord
     {
         return $this->status == self::STATUS_BREAK_PROMISE;
     }
-
+    
+    /**
+     * 是否在【已失约】状态
+     */
+    public function getIsStatusCancel()
+    {
+        return $this->status == self::STATUS_CANCEL;
+    }
 
     /**
      * 获取预约锁定剩余时间

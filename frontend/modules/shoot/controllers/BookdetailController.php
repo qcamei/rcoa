@@ -422,18 +422,17 @@ class BookdetailController extends Controller
     {   
         $model = $this->findModel($id);
         try
-        {   
-            if(Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model])){
-                if($model->load(Yii::$app->request->post()) && $model->save()){
-                    $model->status = $model::STATUS_CANCEL;
-                    $model->save();
-                    Yii::$app->getSession()->setFlash('success','操作成功！');
-                    $this->saveNewHistory($model);
-                }
+        {  
+            if(Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model]) && !$model->getIsStatusCancel())
+            {
+                $model->status = $model::STATUS_CANCEL;
+                $model->save();
+                Yii::$app->getSession()->setFlash('success','操作成功！');
+                $this->saveNewHistory($model);
             }
-        }catch (\Exception $ex) {
+         } catch (\Exception $ex) {
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
-        }    
+        }
         return $this->redirect(['index']);
     }
 

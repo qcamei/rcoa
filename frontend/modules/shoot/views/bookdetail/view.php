@@ -60,16 +60,15 @@ $this->title = $model->id;
              * 取消 按钮显示必须满足以下条件：
              * 1、拥有【取消】权限（编导自己和管理员）
              * 2、必须是在24小时之前
+             * 3、不是为【已取消】状态
              */
-            if(Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model])){
-                echo Html::a('取消', ['cancel','id' => $model->id], ['id'=>'cancel', 'class' => 'btn btn-warning', 'data' => [  'method' => 'post']]).' ';
-            }
+            if(Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model]) && !$model->getIsStatusCancel())
+                echo Html::a('取消', 'javascript::', ['id'=>'cancel', 'class' => 'btn btn-warning']).' ';
         ?>
         <?= Html::a('返回', ['index','date'=>  date('Y-m-d',$model->book_time), 'site'=>$model->site_id], ['class' => 'btn btn-default']) ?>
     </div>
 </div>
 <?php
-    $reflashUrl = Yii::$app->urlManager->createAbsoluteUrl(['/shoot/bookdetail/cancel', 'id' => $model->id]);
     $js = 
  <<<JS
     /**close关闭模态款的*/
@@ -108,16 +107,17 @@ $this->title = $model->id;
             }
             $('#form-assign-shoot_man').submit();
         });
-    var reflashUrl = "$reflashUrl";
+            
     $('#cancel').click(function(){
         $('#myModal').modal()
         $('#myModal .modal-header h4').text("是否取消");    //更改模态标题
-        $("#myModal .modal-body input").attr("name","editreason");
         $("#myModal .modal-body input").attr("placeholder","请输入取消原因...");
         $("#myModal .modal-footer #save").click(function(){
             var ed = $("#myModal .modal-body input").val();
             if(ed != ''){
-                location.href = reflashUrl;
+                $('#form-assign-shoot_man input[name="editreason"]').val(ed);
+                $('#form-assign-shoot_man').attr("action","cancel?id="+"$model->id").submit();
+              
             }else{
                 $('#myModal .modal-body').html('<b style="font-size:18px;">取消原因不能为空</ b>');     //设置内容
                 $("#myModal .modal-footer #save").remove();   //移出确定
