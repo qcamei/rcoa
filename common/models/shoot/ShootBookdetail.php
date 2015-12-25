@@ -433,7 +433,7 @@ class ShootBookdetail extends ActiveRecord
      */
     public function getIsValid()
     {
-        return $this->status != self::STATUS_DEFAULT && $this->status != self::STATUS_BOOKING;
+        return $this->status != self::STATUS_DEFAULT && $this->status != self::STATUS_BOOKING && $this->status != self::STATUS_CANCEL;
     }
     
     /**

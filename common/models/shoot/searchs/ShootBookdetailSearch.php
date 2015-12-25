@@ -84,6 +84,7 @@ class ShootBookdetailSearch extends ShootBookdetail
                 ->where('book_time >= ' . strtotime($se['start']))
                 ->andWhere('book_time <= ' . strtotime($se['end']))
                 ->andWhere('site_id = ' . $site)
+                ->andWhere('status != ' . ShootBookdetail::STATUS_CANCEL)
                 ->orderBy('book_time')
                 ->with('teacher')
                 ->with('contacter')

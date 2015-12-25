@@ -79,6 +79,7 @@ $this->title = $model->id;
     $("#myModal .modal-footer #close").click(function(){
         window.location.reload();
     });
+    /** 指派操作*/
     var uShootMan = "$model->u_shoot_man";
     $('#submit').click(function()
         {
@@ -100,14 +101,14 @@ $this->title = $model->id;
                     else
                     {
                         $('#myModal .modal-body').html('<b style="font-size:18px;">编辑原因不能为空</ b>');     //设置内容
-                        $("#myModal .modal-footer #save").remove();   //移出确定
+                        $("#myModal .modal-footer #save").remove();   //移除确定
                     }
                 });
                 return false;
             }
             $('#form-assign-shoot_man').submit();
         });
-            
+    /** 取消操作 */        
     $('#cancel').click(function(){
         $('#myModal').modal()
         $('#myModal .modal-header h4').text("是否取消");    //更改模态标题
@@ -120,7 +121,7 @@ $this->title = $model->id;
               
             }else{
                 $('#myModal .modal-body').html('<b style="font-size:18px;">取消原因不能为空</ b>');     //设置内容
-                $("#myModal .modal-footer #save").remove();   //移出确定
+                $("#myModal .modal-footer #save").remove();   //移除确定
             }
         });
         return false;

@@ -62,7 +62,7 @@ $this->title = Yii::t('rcoa', 'Update {modelClass}: ', [
                 $('#bookdetail-create-form').submit();
             }else{
                 $('#myModal .modal-body').html('<b style="font-size:18px;">编辑原因不能为空</ b>');     //设置内容
-                $("#myModal .modal-footer #save").remove();   //移出确定
+                $("#myModal .modal-footer #save").remove();   //移除确定
             }
         });
         return false;
