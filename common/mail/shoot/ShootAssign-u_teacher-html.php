@@ -28,6 +28,6 @@ use common\models\shoot\ShootBookdetail;
     
     <p>以上着装，如觉穿着不舒服，可以带来现场替换，拍摄完毕再换回普通衣服。 </p>
     
-    <p>如果问题，请与我联系，谢谢！联系电话：<b><?= Html::encode($model->booker->phone) ?></b></p>
+    <p>如果有问题，请与我联系，谢谢！联系电话：<b><?= Html::encode($model->booker->phone) ?></b></p>
     
 </div>

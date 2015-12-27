@@ -469,7 +469,15 @@ class ShootBookdetail extends ActiveRecord
     }
     
     /**
-     * 是否在【已失约】状态
+     * 是否在【已完成】状态
+     */
+    public function getIsStatusCompleted()
+    {
+        return $this->status == self::STATUS_COMPLETED;
+    }
+    
+    /**
+     * 是否在【已取消】状态
      */
     public function getIsStatusCancel()
     {

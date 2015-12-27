@@ -154,7 +154,7 @@ class AppraiseController extends Controller
             throw new BadRequestHttpException('评价失败!请联系管理员！<br/>'.$ex->getMessage());
         }
         
-        return $this->redirect(['create','b_id'=>$b_id]);
+        return $this->redirect(['bookdetail/index','date' => date('Y-m-d', $bookdetail->book_time), 'b_id' => $bookdetail->id, 'site'=> $bookdetail->site_id]);
     }
 
     /**
