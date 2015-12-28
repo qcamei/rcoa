@@ -90,7 +90,7 @@ $this->title = $model->id;
                     var se = $(".table #shootbookdetail-u_shoot_man option:selected").val();
                     if(uShootMan == se)
                     {
-                        $('#myModal .modal-body').html('<b style="font-size:18px;">请选择摄影师</ b>'); //设置内容
+                        $('#myModal .modal-body').html('<b style="font-size:18px;">请重新选择摄影师</ b>'); //设置内容
                         $("#myModal .modal-footer #save").remove();   //移出确定
                     }
                     else if(ed != '')

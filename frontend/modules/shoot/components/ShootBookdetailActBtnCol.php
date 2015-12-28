@@ -45,7 +45,7 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
         //非新建及锁定任务
         $isValid = $model->getIsValid();
         //是否在【待指派】任务
-        $isAssign = $model->getIsAssign();
+        $isAssign = $model->u_shoot_man == null;
         //摄影组长
         if($authManager->isRole(RbacName::ROLE_SHOOT_LEADER, Yii::$app->user->id))
         {
@@ -55,8 +55,8 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
             $params = [
                 'id' => $model->id
             ];
-            $btnClass .= ($isAssign ? ' btn-primary' : ' btn-default');
-            $btnClass .= (!$isValid ? ' disabled' : '');
+            $btnClass .= (($isAssign && $isValid) ? ' btn-primary' : ' btn-default');
+            $btnClass .= ((!$isValid || $model->getIsStatusBreakPromise()) ? ' disabled' : '');
         //摄影师    
         }else if($authManager->isRole(RbacName::ROLE_SHOOT_MAN, Yii::$app->user->id))
         {

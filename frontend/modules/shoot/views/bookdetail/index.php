@@ -192,8 +192,8 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                 {
                     /* @var $model ShootBookdetail */
                     if($model->getIsNew())return '';
-                    /** 设置评价时间限制　*/
-                    if($model->getIsStausShootIng() && (time() - $model->book_time > $model::STATUS_BREAK_PROMISE_TIMEOUT)){
+                    /** 设置时间限制　*/
+                    if(!$model->getIsStatusCompleted() && (time() - $model->book_time > $model::STATUS_BREAK_PROMISE_TIMEOUT)){
                             $model->status = $model::STATUS_BREAK_PROMISE;
                             $model->save();
                     }
