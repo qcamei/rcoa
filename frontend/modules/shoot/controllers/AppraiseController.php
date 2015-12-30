@@ -79,6 +79,9 @@ class AppraiseController extends Controller
     public function actionCreate()
     {
         $b_id = Yii::$app->getRequest()->getQueryParam('b_id');
+        $bookdetail = $this->findBookdetail($b_id);
+        if($bookdetail->book_time > time())
+            throw new NotAcceptableHttpException("无权限操作！");
         $work = new ShootAppraiseWork(['b_id'=>$b_id ]);
         
         $bookdetail = $this->findBookdetail($b_id);
@@ -106,7 +109,7 @@ class AppraiseController extends Controller
         $b_id = $post['b_id'];
         /** 用户id */
         $u_id = \Yii::$app->user->id;
-        
+
         if(!Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_APPRAISE,['job'=>$this->findBookdetail($b_id)]))
             throw new NotAcceptableHttpException("无权限操作！");
         $tran = \Yii::$app->db->beginTransaction();
@@ -138,7 +141,9 @@ class AppraiseController extends Controller
                 'q_id',
                 'value',
             ], $values)->execute();
+            
             $bookdetail = $this->findBookdetail($b_id);
+            
             /**设置【接洽人】【摄影师】都评价后【状态】为【已完成】*/
             if($count>0)
             {

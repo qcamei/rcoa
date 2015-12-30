@@ -89,7 +89,6 @@ use frontend\modules\shoot\components\ShootAppraiseStar;
                                     ],
                                     'disabled' => ($disabled || $has_do),
                                 ],
-                                
                             ]);
                 }
                 
@@ -120,12 +119,18 @@ use frontend\modules\shoot\components\ShootAppraiseStar;
 <?php  
  $js =   
 <<<JS
-    /**设置radio选中改变颜色*/
-    $("input:radio:checked").parent().css("color","#2E6DA4");  
+    $('input:radio').each(function(i){
+        if(!$(this).attr("disabled")){
+         $(this).eq(i%3).prop("checked","checked");
+       }
+    });
+  
+   /**设置radio选中改变颜色*/
+    $("input:radio:checked").parent().css("color","#2E6DA4");
     $("input:radio").change(function (){   
         $("input:radio:not([checked])[name="+this.name+"]").parent().css("color","#000000");  
         $("input:radio:checked[name="+this.name+"]").parent().css("color","#2E6DA4");  
-    });  
+    });
 JS;
     $this->registerJs($js,  View::POS_READY); 
 ?> 

@@ -59,6 +59,7 @@ use yii\web\View;
             {
                 $('#shoot-appraise-form').submit();
             });
+
     
 JS;
 $this->registerJs($js,  View::POS_READY);
