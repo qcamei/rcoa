@@ -164,7 +164,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                         'value'=>$appInfo[RbacName::ROLE_SHOOT_MAN]['sum']/$appInfo[RbacName::ROLE_SHOOT_MAN]['all']
                             ]) : "";
                     /* @var $model ShootBookdetail */
-                    $teacherName = isset($model->u_teacher) ? $model->teacher->nickname : '空';
+                    $teacherName = isset($model->u_teacher) ? $model->teacher->user->nickname : '空';
                     $contacterName = isset($model->u_contacter) ? $model->contacter->nickname : '空';
                     $bookerName = isset($model->u_booker) ? $model->booker->nickname : '空';
                     $shootManName = isset($model->u_shoot_man) ? $model->shootMan->nickname : '空';

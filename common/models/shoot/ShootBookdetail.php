@@ -2,6 +2,7 @@
 
 namespace common\models\shoot;
 
+use common\models\expert\Expert;
 use common\models\shoot\ShootSite;
 use common\models\User;
 use Exception;
@@ -45,7 +46,7 @@ use yii\web\NotFoundHttpException;
  * @property FWItem $fwProject
  * @property User $booker
  * @property User $contacter
- * @property User $teacher
+ * @property Expert $teacher    专家库->老师
  * @property User $shootMan     摄影师
  * @property ShootSite $site 场地
  * @property array $appraiseResults 评价结束
@@ -141,7 +142,7 @@ class ShootBookdetail extends ActiveRecord
     public function scenarios() {
         return [
             self::SCENARIO_DEFAULT => ['site_id','fw_college', 'fw_project', 'fw_course', 
-                'lession_time', 'teacher_name','teacher_phone', 'u_contacter', 
+                'lession_time', 'u_teacher', 'u_contacter', 
                 'u_booker','u_shoot_man' ,'book_time', 'index', 'shoot_mode',
                 'photograph', 'status', 'created_at', 'updated_at', 'ver','create_by','remark','start_time'],
             self::SCENARIO_TEMP_CREATE => ['site_id', 
@@ -218,12 +219,7 @@ class ShootBookdetail extends ActiveRecord
         
         if($this->getIsBooking() && (time() - $this->updated_at > self::BOOKING_TIMEOUT))
             $this->status = self::STATUS_DEFAULT;
-        if(isset($this->u_teacher))
-        {
-            $this->teacher_name = $this->teacher->nickname;
-            $this->teacher_phone = $this->teacher->phone;
-            $this->teacher_email = $this->teacher->email;
-        }
+       
          /*　超过3天未评价和未指派为【失约】状态　*/
         if(time() - $this->book_time > self::STATUS_BREAK_PROMISE_TIMEOUT){ 
             $count = ShootAppraiseResult::find()
@@ -269,44 +265,6 @@ class ShootBookdetail extends ActiveRecord
         parent::afterFind();
     }
     
-    public function beforeSave($insert){
-        if(parent::beforeSave($insert))
-        {
-            if($this->scenario == self::SCENARIO_TEMP_CREATE) return true;
-            
-            try
-            {
-                $user = User::find()
-                        ->orWhere(['username'=>$this->teacher_phone])
-                        ->orWhere(['nickname'=>$this->teacher_name])
-                        ->one();
-                if($user == null)
-                {
-                    $user = new User();
-                    $user->username = $this->teacher_phone;
-                    $user->phone = $this->teacher_phone;
-                    $user->nickname = $this->teacher_name;
-                    $user->email = $this->teacher_email;
-                    $user->password = "123456";
-                    $user->auth_key = \Yii::$app->security->generateRandomString();
-                    $user->save();
-
-                    \Yii::$app->authManager->assign(\Yii::$app->authManager->getRole(RbacName::ROLE_TEACHERS), $user->id);
-                }else
-                {
-                    $user->nickname = $this->teacher_name;
-                    $user->email = $this->teacher_email;
-                    $user->phone = $this->teacher_phone;
-                    $user->save();
-                }
-                $this->u_teacher = $user->id;
-                return true;
-            } catch (Exception $ex) {
-                throw new NotFoundHttpException("创建老师账号出错！".$ex->getMessage());
-                return false;
-            }
-        }
-    }
     
     /**
      * 获取单条历史记录
@@ -386,7 +344,7 @@ class ShootBookdetail extends ActiveRecord
      */
     public function getTeacher()
     {
-        return $this->hasOne(User::className(), ['id' => 'u_teacher']);
+        return $this->hasOne(Expert::className(), ['u_id' => 'u_teacher']);
     }
     
     /**

@@ -67,11 +67,11 @@ use common\models\shoot\ShootHistory;
     <?= $form->field($model, 'start_time')->textInput(['type'=>'time']) ?>
 
     <h5><b>老师信息：</b></h5>
-    <?= $form->field($model, 'teacher_name')->textInput() ?>
+    <?= $form->field($model, 'teacher_name')->dropDownList($teacherName, ['prompt'=>'请选择...']) ?>
     
-    <?= $form->field($model, 'teacher_phone')->textInput() ?>
+    <?= $form->field($model, 'teacher_phone')->dropDownList(['prompt'=>'请选择...']) ?>
     
-    <?= $form->field($model, 'teacher_email')->textInput() ?>
+    <?= $form->field($model, 'teacher_email')->dropDownList(['prompt'=>'请选择...']) ?>
 
     <h5><b>其它信息：</b></h5>
     <?= $form->field($model, 'u_contacter')->dropDownList($users,['prompt'=>'请选择...']) ?>

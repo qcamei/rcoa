@@ -2,11 +2,11 @@
 
 namespace frontend\modules\shoot\controllers;
 
+use common\models\expert\Expert;
 use common\models\shoot\searchs\ShootBookdetailSearch;
 use common\models\shoot\ShootAppraiseTemplate;
 use common\models\shoot\ShootAppraiseWork;
 use common\models\shoot\ShootBookdetail;
-use common\models\shoot\sendNewShootNotification;
 use common\models\shoot\ShootHistory;
 use common\models\shoot\ShootSite;
 use wskeee\ee\EeManager;
@@ -179,6 +179,7 @@ class BookdetailController extends Controller
             return $this->render('create', [
                         'model' => $model,
                         'users' => $this->getRoleToUsers(RbacName::ROLE_WD),
+                        'teacherName' => $this->getExpert(),
                         'colleges' => $this->getCollegesForSelect(),
                         'projects' => [],
                         'courses' => [],
@@ -544,7 +545,17 @@ class BookdetailController extends Controller
                 ->all();
         return ArrayHelper::map($sites, 'id', 'name');
     }
-   
+    /**
+     * 获取专家库
+     * @return type
+     */
+    protected function getExpert(){
+        $expert = Expert::find()
+                ->with('user') 
+                ->all();
+         return ArrayHelper::map($expert, 'u_id','user.nickname');
+    }
+
     /**
      * 获取项目
      * @param int $itemId
@@ -554,8 +565,7 @@ class BookdetailController extends Controller
         /* @var $fwManager FrameworkManager */
         $fwManager = \Yii::$app->get('fwManager');
         return ArrayHelper::map($fwManager->getChildren($itemId), 'id', 'name');
-    }
-
+    }  
 
     /**
      * 获取角色的用户
