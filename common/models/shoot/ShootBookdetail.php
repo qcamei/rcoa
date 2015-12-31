@@ -215,7 +215,7 @@ class ShootBookdetail extends ActiveRecord
     }
     
     public function afterFind() {
-        parent::afterFind();
+        
         if($this->getIsBooking() && (time() - $this->updated_at > self::BOOKING_TIMEOUT))
             $this->status = self::STATUS_DEFAULT;
         if(isset($this->u_teacher))
@@ -224,6 +224,49 @@ class ShootBookdetail extends ActiveRecord
             $this->teacher_phone = $this->teacher->phone;
             $this->teacher_email = $this->teacher->email;
         }
+         /*　超过3天未评价和未指派为【失约】状态　*/
+        if(time() - $this->book_time > self::STATUS_BREAK_PROMISE_TIMEOUT){ 
+            $count = ShootAppraiseResult::find()
+                    ->where(['b_id'=>$this->id])
+                    ->count();
+            /** 设置只有一个人评价超过3天自动为另一个人评价 */
+            if($count > 0){
+                $values = [];  
+                $info = $this->getAppraiseInfo();  
+                $unAppRole = $info[RbacName::ROLE_SHOOT_MAN]['hasDo'] == false ? RbacName::ROLE_SHOOT_MAN : RbacName::ROLE_CONTACT;
+                $unUserId = $unAppRole == RbacName::ROLE_SHOOT_MAN ? $this->u_shoot_man : $this->u_contacter;
+                
+                foreach($this->appraises as $appraise)  
+                {  
+                    if($appraise->role_name == $unAppRole)
+                        $values[] = [$this->id,$unUserId,$unAppRole,$appraise->q_id,$appraise->value];
+                }
+
+                $trans = Yii::$app->db->beginTransaction();
+                
+                try
+                {
+                    \Yii::$app->db->createCommand()->batchInsert(ShootAppraiseResult::tableName(), 
+                        ['b_id','u_id','role_name','q_id','value', ], $values)->execute();
+
+                    $this->status = $this::STATUS_COMPLETED;
+                    $this->save();
+                    
+                    $trans->commit();
+                    
+                    unset($this->appraiseResults);
+                    
+                } catch (Exception $ex) {
+                     $trans->rollBack();
+                }   
+            }
+           if(!$this->getIsStatusCompleted()){
+                $this->status = $this::STATUS_BREAK_PROMISE;
+                $this->save();
+           }
+        }
+   
+        parent::afterFind();
     }
     
     public function beforeSave($insert){
