@@ -18,8 +18,8 @@ $this->title = $model->id;
                 date('Y/m/d ',$model->book_time).Yii::t('rcoa', 'Week '.date('D',$model->book_time)).' '.$model->getTimeIndexName() ?>
     </div>
 </div>
+
 <div class="container has-title shoot-bookdetail-view">
-    
     <?= $this->render('_form_detail2', [
         'model' => $model,
         'dataProvider' => $dataProvider,

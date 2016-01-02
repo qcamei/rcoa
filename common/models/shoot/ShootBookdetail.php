@@ -52,8 +52,8 @@ use yii\web\NotFoundHttpException;
  * @property array $appraises       评价题目
  * @property srting $remark     备注
  * @property srting $start_time    开始时间
- * @property srting $historys    编辑历史
- * @property srting $history    获取单条编辑历史
+ * @property srting $historys    历史记录
+ * @property srting $history    获取单条历史记录
  */
 class ShootBookdetail extends ActiveRecord
 {
@@ -266,7 +266,7 @@ class ShootBookdetail extends ActiveRecord
     }
     
     /**
-     * 获取单条编辑历史
+     * 获取单条历史记录
      * @return ActiveQuery
      */
     public function getHistory()
@@ -276,7 +276,7 @@ class ShootBookdetail extends ActiveRecord
     }
     
     /**
-     * 获取编辑历史
+     * 获取历史记录
      * @return ActiveQuery
      */
     public function getHistorys()

@@ -109,7 +109,6 @@ class AppraiseController extends Controller
         
         if(!Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_APPRAISE,['job'=>$this->findBookdetail($b_id)]))
             throw new NotAcceptableHttpException("无权限操作！");
-        
         $tran = \Yii::$app->db->beginTransaction();
         $values = [];
         foreach($post as $key => $value)
