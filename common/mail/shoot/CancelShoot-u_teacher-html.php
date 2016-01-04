@@ -12,7 +12,7 @@ use common\models\shoot\ShootBookdetail;
  */
 ?>
 <div class="mail-new-shoot">
-    <p><b><?= Html::encode($model->teacher->nickname)?></b>老师：</p>
+    <p><b><?= Html::encode($model->teacher->user->nickname)?></b>老师：</p>
     
     <p>您好！原计划<b><?= Html::encode($bookTime) ?> <?= Html::encode($model->start_time) ?> 【<?= Html::encode($model->fwCourse->name)?>】</b>的拍摄任务已经取消。</p>
 

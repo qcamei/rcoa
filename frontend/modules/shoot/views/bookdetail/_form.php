@@ -67,11 +67,19 @@ use common\models\shoot\ShootHistory;
     <?= $form->field($model, 'start_time')->textInput(['type'=>'time']) ?>
 
     <h5><b>老师信息：</b></h5>
-    <?= $form->field($model, 'teacher_name')->dropDownList($teacherName, ['prompt'=>'请选择...']) ?>
+    <?= $form->field($model, 'u_teacher')->dropDownList($teacherName, ['prompt'=>'请选择...', 'onchange'=>'wx_three(this)',]) ?>
     
-    <?= $form->field($model, 'teacher_phone')->dropDownList(['prompt'=>'请选择...']) ?>
+    <?= Html::img($model->isNewRecord || !$model->getIsAssign() ? null : $model->teacher->personal_image,[
+        'width' => '128',
+    ])?>
+   
+    <?= Html::textInput('shootbookdetail-teacher_phone', $model->isNewRecord || !$model->getIsAssign() ? null : $model->teacher->user->phone, [
+        'class' => 'form-control',
+    ]) ?>
     
-    <?= $form->field($model, 'teacher_email')->dropDownList(['prompt'=>'请选择...']) ?>
+    <?= Html::textInput('shootbookdetail-teacher_email', $model->isNewRecord || !$model->getIsAssign() ? null : $model->teacher->user->email, [
+        'class' => 'form-control',
+    ]) ?>
 
     <h5><b>其它信息：</b></h5>
     <?= $form->field($model, 'u_contacter')->dropDownList($users,['prompt'=>'请选择...']) ?>
@@ -107,6 +115,17 @@ use common\models\shoot\ShootHistory;
 <?php  
  $js =   
 <<<JS
+   $(document).ready(function(){ 
+        var htmlImg = '<div class="form-group"><label class="col-lg-1 col-md-1 control-label" style="color: #999999; font-weight: normal;">形象</label><div class="col-lg-10 col-md-10" id="img"></div></div>';
+        var htmlPhone = '<div class="form-group"><label class="col-lg-1 col-md-1 control-label" style="color: #999999; font-weight: normal;">电话</label><div class="col-lg-10 col-md-10" id="phone"></div></div>';
+        var htmlEmail = '<div class="form-group"><label class="col-lg-1 col-md-1 control-label" style="color: #999999; font-weight: normal;">邮箱</label><div class="col-lg-10 col-md-10" id="emali"></div></div>';
+        $('#bookdetail-create-form img').before(htmlImg);
+        $('#bookdetail-create-form img').appendTo('#img');
+        $('input[name="shootbookdetail-teacher_phone"]').before(htmlPhone);
+        $('input[name="shootbookdetail-teacher_phone"]').appendTo('#phone');
+        $('input[name="shootbookdetail-teacher_email"]').before(htmlEmail);
+        $('input[name="shootbookdetail-teacher_email"]').appendTo('#emali');
+   }); 
    $("input:radio").eq(1).attr("checked",true);
 JS;
     $this->registerJs($js,  View::POS_READY); 
@@ -135,5 +154,14 @@ JS;
                 $('<option>').val(this['id']).text(this['name']).appendTo($("#shootbookdetail-fw_course"));
             });
         });
+    }
+    function wx_three(e){
+        console.log($(e).val());
+	$.post("/expert/default/search?id="+$(e).val(),function(data)
+        {
+            $('input[name="shootbookdetail-teacher_phone"]').val(data.data.phone);
+            $('input[name="shootbookdetail-teacher_email"]').val(data.data.email);
+            $('#bookdetail-create-form img').attr('src',data.data.img);
+	});
     }
 </script>

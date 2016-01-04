@@ -60,7 +60,7 @@ return [
     'Create Shoot Bookdetail' => '创建预约',
     'Lession Time' => '课时',
     'Lession Time' => '课时',
-    'Tearcher' => "老师",
+    'Tearcher' => "名称",
     'Contacter' => "接洽人",
     'Booker' => "预约人",
     'Shoot Man' => "摄影师",

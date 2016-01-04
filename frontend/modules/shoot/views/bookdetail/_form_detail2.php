@@ -66,7 +66,7 @@ use yii\widgets\DetailView;
             
             ['label' => '<span class="btn-block viewdetail-th-head">老师信息</span>','value'=>''],
             [
-                'attribute' => 'teacher_name',
+                'attribute' => 'u_teacher',
                 'value' => $model->teacher->user->nickname.'('. $model->teacher->user->phone .')',
             ],
             [

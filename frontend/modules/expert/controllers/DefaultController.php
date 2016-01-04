@@ -12,7 +12,7 @@ class DefaultController extends Controller
         return $this->render('index');
     }
     
-    public function actionSearch($u_id)
+    public function actionSearch($id)
     {
         \Yii::$app->getResponse()->format = 'json';
         
