@@ -89,4 +89,13 @@ return [
     'Compatibility' => '合作融洽度',
     'ProjectName' => '项目名称',
     
+    //System
+    'System ID' => '系统ID',
+    'Job ID' => '任务ID',
+    'Subject' => '主题',
+    'Content' => '内容',
+    'Link' => '连接',
+    'Progress' => '进度',
+    'Status' => '状态',
+    
 ];

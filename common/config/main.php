@@ -12,7 +12,8 @@ return [
                     'class' => 'yii\i18n\PhpMessageSource',
                     'basePath' => '@common/messages',
                     'fileMap' => [
-                        'rcoa' => 'rcoa.php'
+                        'rcoa' => 'rcoa.php',
+                        'rcoa/system' => 'system.php'
                     ],
                 ],
                

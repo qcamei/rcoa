@@ -51,7 +51,7 @@ class BookdetailController extends Controller
             ]
         ];
     }
-
+    
     /**
      * Lists all ShootBookdetail models.
      * @return mixed

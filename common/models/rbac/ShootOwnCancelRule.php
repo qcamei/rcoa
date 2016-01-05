@@ -22,6 +22,6 @@ class ShootOwnCancelRule extends ShootOwnRule
     public function execute($user, $item, $params)
     {
         $isOwn = parent::execute($user, $item, $params);
-        return $isOwn && (isset($params['job']) ? $params['job']->book_time - time()>=24*60*60 : false);
+        return $isOwn && (($params!=null && isset($params['job'])) ? ($params['job']->book_time - time())>=24*60*60 : false);
     }
 }

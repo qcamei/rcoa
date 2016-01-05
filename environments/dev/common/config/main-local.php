@@ -61,5 +61,8 @@ return [
         'framework' => [
             'class' => 'wskeee\framework\Module'
         ],
+        'job' => [
+            'class' => 'common\wskeee\job\Module',
+        ],
     ],
 ];
