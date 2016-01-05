@@ -61,6 +61,8 @@ return [
         'framework' => [
             'class' => 'wskeee\framework\Module'
         ],
+        'expert' => [
+            'class' => 'frontend\modules\expert\Module'
         'job' => [
             'class' => 'common\wskeee\job\Module',
         ],

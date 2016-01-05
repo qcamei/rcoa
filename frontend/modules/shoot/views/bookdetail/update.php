@@ -20,6 +20,7 @@ $this->title = Yii::t('rcoa', 'Update {modelClass}: ', [
     <?= $this->render('_form', [
         'model' => $model,
         'users' => $users,
+        'teacherName' =>$teacherName,
         'colleges' => $colleges,
         'projects' => $projects,
         'courses' => $courses,

@@ -2,11 +2,11 @@
 
 namespace frontend\modules\shoot\controllers;
 
+use common\models\expert\Expert;
 use common\models\shoot\searchs\ShootBookdetailSearch;
 use common\models\shoot\ShootAppraiseTemplate;
 use common\models\shoot\ShootAppraiseWork;
 use common\models\shoot\ShootBookdetail;
-use common\models\shoot\sendNewShootNotification;
 use common\models\shoot\ShootHistory;
 use common\models\shoot\ShootSite;
 use wskeee\ee\EeManager;
@@ -118,14 +118,15 @@ class BookdetailController extends Controller
             throw new UnauthorizedHttpException('无权操作！');
         $post = Yii::$app->getRequest()->getQueryParams();
         $body = Yii::$app->getRequest()->getBodyParams();
+        
         /** 全并且get参数与post参数 */
         $post = ArrayHelper::merge($post, $body);
+        
         /**
          * 先查找对应数据（临时预约锁定的数据）
          * 找不到再新建数据
          */
         
-
         if (isset($post['b_id']))
             $model = ShootBookdetail::findOne($post['b_id']);
         if (!isset($model)) {
@@ -140,7 +141,12 @@ class BookdetailController extends Controller
             //                    ->andWhere('status' =>  ShootBookdetail::STATUS_BOOKING)
                 
         }
+        
+        
+        
+        
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            
             /** 保存预约 */
             if($this->saveNewBookdetail($model))
                //创建--给所有摄影组长发送通知
@@ -152,11 +158,11 @@ class BookdetailController extends Controller
             $model->u_booker = Yii::$app->user->id;
             $model->u_contacter = Yii::$app->user->id;
             $model->create_by = Yii::$app->user->id;
-              
+            
             !isset($post['site_id']) ? : $model->site_id = $post['site_id'];
             !isset($post['book_time']) ? : $model->book_time = $post['book_time'];
             !isset($post['index']) ? : $model->index = $post['index'];
-
+            
             $model->setScenario(ShootBookdetail::SCENARIO_TEMP_CREATE);
             $model->save();
             $model->setScenario(ShootBookdetail::SCENARIO_DEFAULT);
@@ -179,6 +185,7 @@ class BookdetailController extends Controller
             return $this->render('create', [
                         'model' => $model,
                         'users' => $this->getRoleToUsers(RbacName::ROLE_WD),
+                        'teacherName' => $this->getExpert(),
                         'colleges' => $this->getCollegesForSelect(),
                         'projects' => [],
                         'courses' => [],
@@ -204,6 +211,7 @@ class BookdetailController extends Controller
             if(!$work->save(ShootAppraiseTemplate::find()->asArray()->all()))
                 throw new Exception(json_encode($model->getErrors()));
             
+
             $trans->commit();
             return true;
         } catch (\Exception $ex) {
@@ -343,8 +351,8 @@ class BookdetailController extends Controller
          /** 主题 */
         $subject = "拍摄-".$mode."-".$model->fwCourse->name;
          /**  查找老师ee和mail */
-        $shootTeacher_ee = $model->teacher->ee;
-        $shootTeacher_mail = $model->teacher->email;
+        $shootTeacher_ee = $model->teacher->user->ee;
+        $shootTeacher_mail = $model->teacher->user->email;
         /** 发送ee消息 */
         EeManager::sendEeByView($views, $params, $shootTeacher_ee, $subject);
         /** 发送邮件消息 */
@@ -388,6 +396,7 @@ class BookdetailController extends Controller
             return $this->render('update', [
                 'model' => $model,
                 'users' => $this->getRoleToUsers(RbacName::ROLE_WD),
+                'teacherName' => $this->getExpert(),
                 'colleges' => $this->getCollegesForSelect(),
                 'projects' => $this->getFwItemForSelect($model->fw_college),
                 'courses' => $this->getFwItemForSelect($model->fw_project),
@@ -544,7 +553,17 @@ class BookdetailController extends Controller
                 ->all();
         return ArrayHelper::map($sites, 'id', 'name');
     }
-   
+    /**
+     * 获取专家库
+     * @return type
+     */
+    protected function getExpert(){
+        $expert = Expert::find()
+                ->with('user') 
+                ->all();
+         return ArrayHelper::map($expert, 'u_id','user.nickname');
+    }
+
     /**
      * 获取项目
      * @param int $itemId
@@ -554,8 +573,7 @@ class BookdetailController extends Controller
         /* @var $fwManager FrameworkManager */
         $fwManager = \Yii::$app->get('fwManager');
         return ArrayHelper::map($fwManager->getChildren($itemId), 'id', 'name');
-    }
-
+    }  
 
     /**
      * 获取角色的用户
