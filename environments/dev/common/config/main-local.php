@@ -63,8 +63,6 @@ return [
         ],
         'expert' => [
             'class' => 'frontend\modules\expert\Module'
-        'job' => [
-            'class' => 'common\wskeee\job\Module',
         ],
     ],
 ];
