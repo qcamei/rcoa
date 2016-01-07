@@ -1,12 +1,54 @@
-<div class="expert-default-index">
-    <h1><?= $this->context->action->uniqueId ?></h1>
-    <p>
-        This is the view content for action "<?= $this->context->action->id ?>".
-        The action belongs to the controller "<?= get_class($this->context) ?>"
-        in the "<?= $this->context->module->id ?>" module.
-    </p>
-    <p>
-        You may customize this page by editing the following file:<br>
-        <code><?= __FILE__ ?></code>
-    </p>
+<?php
+
+use common\models\expert\searchs\ExpertSearch;
+use yii\data\ActiveDataProvider;
+use yii\grid\GridView;
+use yii\helpers\Html;
+use yii\web\View;
+
+/* @var $this View */
+/* @var $searchModel ExpertSearch */
+/* @var $dataProvider ActiveDataProvider */
+
+$this->title = 'Experts';
+$this->params['breadcrumbs'][] = $this->title;
+?>
+<div class="container expert-index" style="padding:0;">
+    <?= Html::img('http://rcoa.gzedu.net/filedata/expert/personalImage/u183.jpg', [
+        'id' => 'img',
+        'class' => 'col-sm-12 col-md-12 col-xs-12 ',
+        'height' => '360',
+        'style' => 'padding:1.5%;'
+    ])?>
+    <?php foreach ($model as $modelBtn){
+        echo Html::a($modelBtn['name'], ['type', 'id' => $modelBtn['id']], [
+                'class' => 'btn btn-default btn-lg dropdown-toggle',
+                'style' => 'width:30%; line-height:60px; font-size:14px ;margin:0 0 2% 2.5%; padding-left:5%'
+            ]);
+    } ?>
 </div>
+
+<div class="controlbar">
+    <div class="container">
+        <div class="row ">
+            <div class="col-sm-10 col-md-11 col-xs-9">
+                <?= Html::textInput('s', '', ['class' => 'form-control', 'placeholder' => '请输入关键字...',]) ?>
+            </div>
+            <?= Html::a('搜索', '#', ['class' => 'glyphicon glyphicon-search btn btn-default',]) ?>
+        </div>
+    </div>
+</div>
+
+
+<?php  
+ $js =   
+<<<JS
+   $(document).ready(function(){ 
+        var width = $(window).width(); //浏览器当前窗口可视区域宽度
+        if(width < 768){
+            $("#img").attr("height","200px");
+        }
+   }); 
+JS;
+    $this->registerJs($js,  View::POS_READY); 
+?> 

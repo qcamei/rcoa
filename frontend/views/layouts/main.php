@@ -42,6 +42,7 @@ AppAsset::register($this);
         $menuItems[] = ['label' => '登录', 'url' => ['/site/login']];
     } else {
         $menuItems[] = ['label' => '拍摄', 'url' => ['/shoot/bookdetail']];
+        $menuItems[] = ['label' => '专家库', 'url' => ['/expert/default']];
         $menuItems[] = ['label' => '多媒体制作','url' => '#'];
         $menuItems[] = ['label' => '评优','url' => '#'];
         $menuItems[] = [

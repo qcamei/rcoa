@@ -3,9 +3,9 @@
 use common\models\expert\Expert;
 use common\models\expert\ExpertProject;
 use common\models\User;
+use yii\data\ArrayDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\web\View;
 use yii\widgets\DetailView;
 
@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
     
     <?= GridView::widget([
-        'dataProvider' => new \yii\data\ArrayDataProvider([
+        'dataProvider' => new ArrayDataProvider([
             'allModels' => $model->expertProjects,
         ]),
         'columns' =>[
@@ -68,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => '费用报酬',
                 'value' => function($model){
                     /* @var $model ExpertProject */
-                    return Yii::$app->formatter->asCurrency($model->cost, '￥');
+                    return Yii::$app->formatter->asCurrency($model->cost);
                 }
             ],
             [
