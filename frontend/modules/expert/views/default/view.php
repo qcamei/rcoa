@@ -49,12 +49,12 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
     
-    <h5><b>合作项目</b></h5>、
+    <h5><b>合作项目</b></h5>
     
     <?php foreach ($expertProjects as $keyProject): ?>
         <?= DetailView::widget([
         'model' => $keyProject,
-        'options' => ['class' => 'table table-striped table-bordered detail-view'],
+        'options' => ['class' => 'table ees table-striped table-bordered detail-view'],
         'attributes' => [
             [
                 'label' => '项目名称',
