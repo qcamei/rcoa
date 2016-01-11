@@ -71,7 +71,22 @@ class DefaultController extends Controller
             'expertProjects' => $expertProjects,
         ]);
     }
-
+    
+    /**
+     * 搜索关键字.
+     * @param string  $key
+     * @return mixed
+     */
+    public function actionCategories($key)
+    {
+        $key = Yii::$app->request->queryParams['key'];
+        $model = $this->findCategories($key);
+        return $this->render('categories', [
+            'categories' => $key,
+            'modelKey' => $model,
+        ]);
+    }
+    
     /**
      * Creates a new Expert model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -173,6 +188,29 @@ class DefaultController extends Controller
                 ->all();
         if ($modelExpert !== null) {
             return $modelExpert;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+    /**
+     * 关键字搜索
+     * @param type $key
+     * @return type
+     * @throws NotFoundHttpException
+     */
+    protected function findCategories($key){
+        $categories = Expert::find();
+        $categories->joinWith(['user'])
+            ->joinWith(['expertType']);
+        $categories->orFilterWhere(['like', 'job_title', $key])
+                ->orFilterWhere(['like', 'job_name', $key])
+                ->orFilterWhere(['like', 'employer', $key])
+                ->orFilterWhere(['like', 'attainment', $key])
+                ->orFilterWhere(['like', 'nickname', $key])
+                ->orFilterWhere(['like', 'name', $key]);
+        $data = $categories -> all();
+        if ($data !== null) {
+            return $data;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }

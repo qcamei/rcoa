@@ -2,9 +2,9 @@
 
 use common\models\expert\searchs\ExpertSearch;
 use yii\data\ActiveDataProvider;
-use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\web\View;
+use yii\widgets\ActiveForm;
 
 /* @var $this View */
 /* @var $searchModel ExpertSearch */
@@ -32,9 +32,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="container">
         <div class="row ">
             <div class="col-sm-10 col-md-11 col-xs-9">
-                <?= Html::textInput('s', '', ['class' => 'form-control', 'placeholder' => '请输入关键字...',]) ?>
+                <?php $form = ActiveForm::begin(['action' => ['categories'],'method' => 'get', 'id' => 'form-assign-key']); ?>
+                <?= Html::textInput('key', '', ['class' => 'form-control', 'placeholder' => '请输入关键字...',]) ?>
+                <?php ActiveForm::end(); ?>
             </div>
-            <?= Html::a('搜索', '#', ['class' => 'glyphicon glyphicon-search btn btn-default',]) ?>
+            <?= Html::a('搜索', 'javascript:;', ['id'=>'submit', 'class' => 'glyphicon glyphicon-search btn btn-default',]) ?>
         </div>
     </div>
 </div>
@@ -49,6 +51,9 @@ $this->params['breadcrumbs'][] = $this->title;
             $("#img").attr("height","200px");
         }
    }); 
+   $('#submit').click(function(){
+       $('#form-assign-key').submit();
+   });
 JS;
     $this->registerJs($js,  View::POS_READY); 
 ?> 

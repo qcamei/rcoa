@@ -8,6 +8,18 @@ and open the template in the editor.
     Author     : Kiwi°
 */
 
+
+.expert-type a {
+    color: #000 !important;
+    display: block !important; 
+}
+
+ .expert-type a:hover{
+    text-decoration: none !important;
+    background-color:  #eee !important;
+}
+
+
 /**
  * 专家库列表描述列
  * 为不同屏幕设置不同宽度

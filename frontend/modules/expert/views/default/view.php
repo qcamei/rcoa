@@ -6,6 +6,7 @@ use common\models\User;
 use frontend\modules\expert\ExpertAsset;
 use yii\helpers\Html;
 use yii\web\View;
+use yii\widgets\ActiveForm;
 use yii\widgets\DetailView;
 
 /* @var $this View */
@@ -82,13 +83,26 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="container">
         <div class="row ">
             <div class="col-sm-9 col-md-10 col-xs-7">
-                <?= Html::textInput('s', '', [ 'class' => 'form-control', 'placeholder' => '请输入关键字...',]) ?>
+                <?php $form = ActiveForm::begin(['action' => ['categories'],'method' => 'get', 'id' => 'form-assign-key']); ?>
+                <?= Html::textInput('key', '', ['class' => 'form-control', 'placeholder' => '请输入关键字...',]) ?>
+                <?php ActiveForm::end(); ?>
             </div>
-            <?= Html::a('搜索', '#', ['class' => 'glyphicon glyphicon-search btn btn-default',]) ?>
+            <?= Html::a('搜索', 'javascript:;', ['id'=>'submit', 'class' => 'glyphicon glyphicon-search btn btn-default',]) ?>
             <?= Html::a('返回', ['type', 'id' => $model->type], ['class' => 'btn btn-default',]) ?>
         </div>
     </div>
 </div>
+
+<?php  
+ $js =   
+<<<JS
+   $('#submit').click(function(){
+       $('#form-assign-key').submit();
+   });
+JS;
+    $this->registerJs($js,  View::POS_READY); 
+?> 
+
 <?php
     ExpertAsset::register($this);
 ?>
