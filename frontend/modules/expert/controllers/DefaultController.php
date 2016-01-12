@@ -64,8 +64,11 @@ class DefaultController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $expertProjects = $model->expertProjects;
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'expertProjects' => $expertProjects,
         ]);
     }
 

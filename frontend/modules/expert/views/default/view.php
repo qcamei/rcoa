@@ -4,8 +4,6 @@ use common\models\expert\Expert;
 use common\models\expert\ExpertProject;
 use common\models\User;
 use frontend\modules\expert\ExpertAsset;
-use yii\data\ArrayDataProvider;
-use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\DetailView;
@@ -51,7 +49,32 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
     
-   
+    <h5><b>合作项目</b></h5>、
+    
+    <?php foreach ($expertProjects as $keyProject): ?>
+        <?= DetailView::widget([
+        'model' => $keyProject,
+        'options' => ['class' => 'table table-striped table-bordered detail-view'],
+        'attributes' => [
+            [
+                'label' => '项目名称',
+                'value'=> $keyProject->project->name,
+            ],
+            [
+                'label' => '合作时间',
+                'value'=> $keyProject->start_time.  '—'  .( $keyProject->end_time != null ? $keyProject->end_time : "至今"),
+            ],
+            [
+                'label' => '费用报酬',
+                'value'=> Yii::$app->formatter->asCurrency($keyProject->cost),
+            ],
+            [
+                'label' => '合作融洽度',
+                'value'=> ExpertProject::$compatibilityMap[$keyProject->compatibility],
+            ],
+        ],
+    ]) ?>
+    <?php endforeach;?>
     
 </div>
 
