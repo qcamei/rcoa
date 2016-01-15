@@ -3,12 +3,13 @@
 namespace frontend\modules\expert\controllers;
 
 use common\models\expert\Expert;
-use common\models\expert\ExpertProject;
 use common\models\expert\ExpertType;
 use Yii;
+use yii\data\ArrayDataProvider;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\UnauthorizedHttpException;
 
 /**
  * DefaultController implements the CRUD actions for Expert model.
@@ -40,21 +41,41 @@ class DefaultController extends Controller
     }
 
     /**
-     * Displays a single Expert model.
+     * 显示专家类型.
      * @param integer $id
      * @return mixed
      */
     public function actionType($id)
-    {       
-        $model = $this->findModel(['type' => $id]);
-        $modelExpert = $this->findExpert(['type' => $id]);
-        //var_dump($model);exit;
-        
-        return $this->render('type', [
-            'model' => $model,
-            'modelExpert' => $modelExpert,
+    {   
+        /** 是否为ajax请求 */
+        if(isset($_SERVER['HTTP_X_REQUESTED_WITH'])){
+            \Yii::$app->getResponse()->format = 'json';
+            $post = Yii::$app->getRequest()->post();
+            $page = $post['page'];          //当前页
+            $pageNum = $post['pageNum'];    //每页显示数量
+            $modelExpert = $this->findExpert(['type' => $id],$page, $pageNum);
+            return [
+                'result' => 1,      //是否请求正常 1:为正常请求
+                'data' => [
+                    'page' => $page,
+                    'pageNum' => $pageNum,
+                    'modelExpert' =>$modelExpert,
+                ],
+            ];
+        }  else {
+            /** 数据总数 */
+            $pageCount = Expert::find()
+                ->where(['type' => $id])
+                ->count();
             
-        ]);
+            return $this->render('type', [
+                'model' => $this->findModel(['type' => $id]),
+                'pageCount' => $pageCount,   
+                'modelExpert' => $this->findExpert(['type' => $id], 0, 15),
+            ]);
+        }
+        
+        
     }
     
     /**
@@ -81,6 +102,9 @@ class DefaultController extends Controller
     {
         $key = Yii::$app->request->queryParams['key'];
         $model = $this->findCategories($key);
+        if($key == '' && $key == null)
+            throw new UnauthorizedHttpException('无权操作！');
+        
         return $this->render('categories', [
             'categories' => $key,
             'modelKey' => $model,
@@ -173,18 +197,24 @@ class DefaultController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-    
+
     /**
      * Finds the Expert model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $cons
+     * @param integer $cons     条件
+     * @param integer $page     当前分页数
+     * @param integer $pageNum  每页显示数量
      * @return Expert the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findExpert($cons)
+    protected function findExpert($cons, $page, $pageNum)
     {
         $modelExpert = Expert::find()
                 ->where($cons)
+                ->offset($page*$pageNum)
+                ->limit($pageNum)
+                ->with('user')
+                ->asArray()
                 ->all();
         if ($modelExpert !== null) {
             return $modelExpert;

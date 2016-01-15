@@ -52,7 +52,10 @@ $this->params['breadcrumbs'][] = $this->title;
         }
    }); 
    $('#submit').click(function(){
-       $('#form-assign-key').submit();
+        if($('#form-assign-key input[name="key"]').val() == '')
+           alert("请输入关键字");
+        else
+           $('#form-assign-key').submit();
    });
 JS;
     $this->registerJs($js,  View::POS_READY); 

@@ -19,10 +19,15 @@ $this->title = 'Search';
 </div>
 
 <div class="container expert-type bookdetail-list has-title">
+    <?php 
+        if(count($modelKey) == 0)
+            echo '<h2>未找到有关【'. $categories .'】的数据！</h2>';
+    ?>
+    
     <?php foreach ($modelKey as $key): ?>
-    <a href="http://rcoa.gzedu.net/expert/default/view?id=<?= $key['u_id']; ?>"><div style="height: 74px; border:1px solid #CCC;">
+    <a href="http://rcoa.gzedu.net/expert/default/view?id=<?= $key->u_id; ?>"><div style="height: 74px; border:1px solid #CCC;">
         <div style="float: left; ">
-        <?= Html::img($key['personal_image'], [
+        <?= Html::img($key->personal_image, [
             'class' => 'img-rounded',
             'style' => 'margin:5px',
             'width' => '60',
@@ -30,9 +35,9 @@ $this->title = 'Search';
         ])?>
         </div>
         <div>
-            <span style="margin-top:0.5%; display: block;"><b><?= $key['user']['nickname'] ?>(<?= $key['job_title'] ?>)</b></span>
-            <p style="margin:0;"><span>职称：</span><?= $key['job_name'] ?></p>
-            <p class="course-name" ><span>描述：</span><?= $key['attainment'] ?></p>
+            <span style="margin-top:0.5%; display: block;"><b><?= $key->user->nickname ?>(<?= $key->job_title ?>)</b></span>
+            <p style="margin:0;"><span>职称：</span><?= $key->job_name ?></p>
+            <p class="course-name" ><span>描述：</span><?= $key->attainment ?></p>
         </div>
     </div></a>
     <?php endforeach;?>
@@ -56,8 +61,12 @@ $this->title = 'Search';
  $js =   
 <<<JS
    $('#submit').click(function(){
-       $('#form-assign-key').submit();
+        if($('#form-assign-key input[name="key"]').val() == '')
+           alert("请输入关键字");
+        else
+           $('#form-assign-key').submit();
    });
+   
 JS;
     $this->registerJs($js,  View::POS_READY); 
 ?> 
