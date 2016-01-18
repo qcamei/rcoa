@@ -60,7 +60,8 @@ $this->title = 'Search';
 <?php  
  $js =   
 <<<JS
-   $('#submit').click(function(){
+    /** 提交搜索 */     
+    $('#submit').click(function(){
         if($('#form-assign-key input[name="key"]').val() == '')
            alert("请输入关键字");
         else

@@ -16,7 +16,7 @@ class ExpertAsset extends AssetBundle
        'css/expert.css'
     ];
     public $js = [
-        'js/iscroll.js'
+
     ];
     public $depends = [
         'yii\web\YiiAsset'

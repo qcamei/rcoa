@@ -47,37 +47,15 @@ class DefaultController extends Controller
      */
     public function actionType($id)
     {   
-        /** 是否为ajax请求 */
-        if(isset($_SERVER['HTTP_X_REQUESTED_WITH'])){
-            \Yii::$app->getResponse()->format = 'json';
-            $post = Yii::$app->getRequest()->post();
-            $page = $post['page'];          //当前页
-            $pageNum = $post['pageNum'];    //每页显示数量
-            $modelExpert = $this->findExpert(['type' => $id],$page, $pageNum);
-            return [
-                'result' => 1,      //是否请求正常 1:为正常请求
-                'data' => [
-                    'page' => $page,
-                    'pageNum' => $pageNum,
-                    'modelExpert' =>$modelExpert,
-                ],
-            ];
-        }  else {
-            /** 数据总数 */
-            $pageCount = Expert::find()
-                ->where(['type' => $id])
-                ->count();
-            
-            return $this->render('type', [
-                'model' => $this->findModel(['type' => $id]),
-                'pageCount' => $pageCount,   
-                'modelExpert' => $this->findExpert(['type' => $id], 0, 15),
-            ]);
-        }
-        
-        
+        return $this->render('type', [
+            'model' => $this->findModel(['type' => $id]),
+            'pageCount' => $this->ExpertCount(['type' => $id]),   
+            'modelExpert' => $this->findExpert(['type' => $id], 0, 15),
+        ]);
+               
     }
     
+
     /**
      * Displays a single Expert model.
      * @param integer $id
@@ -160,7 +138,33 @@ class DefaultController extends Controller
 
         return $this->redirect(['index']);
     }
-
+    
+    /**
+     * ajax下拉加载更多
+     * @param integer $page    当前页
+     * @param integer $showNum 每页显示数量
+     * @return type json
+     */
+    public function actionDropdown()
+    {
+        $id = Yii::$app->getRequest()->getBodyParams();
+        
+        \Yii::$app->getResponse()->format = 'json';
+        $post = Yii::$app->getRequest()->post();
+        $page = $post['page'];          
+        $showNum = $post['showNum'];    
+        $modelExpert = $this->findExpert(['type' => $id],$page, $showNum);
+       
+        return [
+            'result' => 0,      //是否请求正常 0:为不正常请求
+            'data' => [
+                'page' => $page,
+                'showNum' => $showNum,
+                'modelExpert' =>$modelExpert,
+            ],
+        ];
+    }
+    
     /**
      * 用ajax调用专家库 
      * @param type $id
@@ -202,17 +206,17 @@ class DefaultController extends Controller
      * Finds the Expert model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $cons     条件
-     * @param integer $page     当前分页数
-     * @param integer $pageNum  每页显示数量
+     * @param integer $jump     从第几条数据开始查询
+     * @param integer $showNum  显示多少条数据
      * @return Expert the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findExpert($cons, $page, $pageNum)
+    protected function findExpert($cons, $jump, $showNum)
     {
         $modelExpert = Expert::find()
                 ->where($cons)
-                ->offset($page*$pageNum)
-                ->limit($pageNum)
+                ->offset($jump*$showNum)
+                ->limit($showNum)
                 ->with('user')
                 ->asArray()
                 ->all();
@@ -222,6 +226,20 @@ class DefaultController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+    
+    /**
+     * 计算Expert数据总数
+     * @param type $id
+     * @return type
+     */
+    protected function ExpertCount($cons)
+    {
+        $pageCount = Expert::find()
+            ->where($cons)
+            ->count();
+        return $pageCount;
+    }
+
     /**
      * 关键字搜索
      * @param type $key
