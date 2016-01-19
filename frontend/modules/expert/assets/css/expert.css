@@ -1,0 +1,80 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2016-1-7, 10:39:02
+    Author     : Kiwi°
+*/
+
+
+.expert-type a {
+    color: #000 !important;
+    display: block !important; 
+}
+
+ .expert-type a:hover{
+    text-decoration: none !important;
+    background-color:  #eee !important;
+}
+
+
+/**
+ * 专家库列表描述列
+ * 为不同屏幕设置不同宽度
+ */
+.bookdetail-list .course-name
+{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+/*
+@media (min-width: 480px) {
+  .bookdetail-list .course-name{
+    width: 100%;
+  }
+}
+@media (min-width: 768px) {
+  .bookdetail-list .course-name{
+    width: 200px;
+  }
+}
+@media (min-width: 992px) {
+  .bookdetail-list .course-name{
+    width: 350px;
+  }
+}
+@media (min-width: 1200px) {
+  .bookdetail-list .course-name{
+    width: 300px;
+  }
+}
+*/
+.container {
+    padding-right: 0px !important;
+    padding-left: 0px !important;
+    margin-right: auto;
+    margin-left: auto;
+}
+.ees{
+    table-layout: fixed;
+}
+.ees > tbody > tr:nth-of-type(odd){
+    background-color: #ffffff !important;
+}
+.ees > tbody > tr >th{
+    width: 100px;
+    min-width: 100px;
+}
+.ees > tbody > tr >td{
+   
+    min-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ees > tbody > tr:nth-of-type(1){
+    background-color: #f9f9f9 !important;
+}

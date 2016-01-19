@@ -75,10 +75,12 @@ use common\models\shoot\ShootHistory;
    
     <?= Html::textInput('shootbookdetail-teacher_phone', $model->isNewRecord || !$model->getIsAssign() ? null : $model->teacher->user->phone, [
         'class' => 'form-control',
+        'disabled' => 'disabled',
     ]) ?>
     
     <?= Html::textInput('shootbookdetail-teacher_email', $model->isNewRecord || !$model->getIsAssign() ? null : $model->teacher->user->email, [
         'class' => 'form-control',
+        'disabled' => 'disabled',
     ]) ?>
 
     <h5><b>其它信息：</b></h5>
@@ -116,7 +118,7 @@ use common\models\shoot\ShootHistory;
  $js =   
 <<<JS
    $(document).ready(function(){ 
-        var htmlImg = '<div class="form-group"><label class="col-lg-1 col-md-1 control-label" style="color: #999999; font-weight: normal;">形象</label><div class="col-lg-10 col-md-10" id="img"></div></div>';
+        var htmlImg = '<div class="form-group"><label class="col-lg-1 col-md-1 control-label" style="color: #999999; font-weight: normal;">形象</label><div class="col-lg-10 col-md-10"><div id="img" style="border:2px solid #999999; width:140px; padding:4px;"></div></div></div>';
         var htmlPhone = '<div class="form-group"><label class="col-lg-1 col-md-1 control-label" style="color: #999999; font-weight: normal;">电话</label><div class="col-lg-10 col-md-10" id="phone"></div></div>';
         var htmlEmail = '<div class="form-group"><label class="col-lg-1 col-md-1 control-label" style="color: #999999; font-weight: normal;">邮箱</label><div class="col-lg-10 col-md-10" id="emali"></div></div>';
         $('#bookdetail-create-form img').before(htmlImg);
