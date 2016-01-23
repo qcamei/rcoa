@@ -67,7 +67,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'label' => '费用报酬',
-                'value'=> Yii::$app->formatter->asCurrency($keyProject->cost),
+                'value'=> Yii::$app->formatter->asCurrency($keyProject->cost,"￥"),
             ],
             [
                 'label' => '合作融洽度',

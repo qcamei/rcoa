@@ -68,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => '费用报酬',
                 'value' => function($model){
                     /* @var $model ExpertProject */
-                    return Yii::$app->formatter->asCurrency($model->cost);
+                    return Yii::$app->formatter->asCurrency($model->cost,"￥");
                 }
             ],
             [

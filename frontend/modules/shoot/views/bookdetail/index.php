@@ -127,8 +127,8 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                     /* @var $model ShootBookdetail */
                     if(!$model->getIsValid())
                         return '';
-                        $str = '【'.$model->getFwCourse()->name;
-                        $time = ' x '.$model->lession_time.'】';
+                    $str = '【'.($model->getFwCourse() ? $model->getFwCourse()->name : 'NULL');
+                    $time = ' x '.$model->lession_time.'】';
                     return '<p class="course-name">'.$str.$time.'</p>';
                 }
             ],

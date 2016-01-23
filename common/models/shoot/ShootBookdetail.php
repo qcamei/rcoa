@@ -221,7 +221,7 @@ class ShootBookdetail extends ActiveRecord
             $this->status = self::STATUS_DEFAULT;
        
          /*　超过3天未评价和未指派为【失约】状态　*/
-        if(time() - $this->book_time > self::STATUS_BREAK_PROMISE_TIMEOUT){ 
+        if(time() - $this->book_time > self::STATUS_BREAK_PROMISE_TIMEOUT && $this->getIsValid()){ 
             $count = ShootAppraiseResult::find()
                     ->where(['b_id'=>$this->id])
                     ->count();

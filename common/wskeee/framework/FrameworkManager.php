@@ -71,7 +71,10 @@ class FrameworkManager extends Component
      */
     public function getItemById($itemId)
     {
-        return $this->items[$itemId];
+        if(isset($this->items[$itemId]))
+            return $this->items[$itemId];
+        else
+            return null;
     }
     
     /**
