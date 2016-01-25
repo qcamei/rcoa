@@ -39,7 +39,7 @@ AppAsset::register($this);
         [
             'label' => '首页', 
             'items' => [
-                 ['label' => '新闻事件', 'url' => '#']
+                 ['label' => '新闻事件', 'url' => '/news/index']
             ]
         ]
     ];

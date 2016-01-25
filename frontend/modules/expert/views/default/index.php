@@ -1,6 +1,7 @@
 <?php
 
 use common\models\expert\searchs\ExpertSearch;
+use frontend\modules\expert\ExpertAsset;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\web\View;
@@ -45,12 +46,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php  
  $js =   
 <<<JS
-   $(document).ready(function(){ 
-        var width = $(window).width(); //浏览器当前窗口可视区域宽度
-        if(width < 768){
-            $("#img").attr("height","200px");
-        }
-   }); 
    $('#submit').click(function(){
         if($('#form-assign-key input[name="key"]').val() == '')
            alert("请输入关键字");
@@ -60,3 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
 JS;
     $this->registerJs($js,  View::POS_READY); 
 ?> 
+
+<?php
+    ExpertAsset::register($this);
+?>

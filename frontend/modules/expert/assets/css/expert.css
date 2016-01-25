@@ -30,28 +30,35 @@ and open the template in the editor.
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-/*
+
+@media (min-width: 320px) {
+  #img{
+    height: 200px !important;
+  }
+}
 @media (min-width: 480px) {
-  .bookdetail-list .course-name{
-    width: 100%;
+  #img{
+    height: 200px !important;
   }
 }
+
 @media (min-width: 768px) {
-  .bookdetail-list .course-name{
-    width: 200px;
+  #img{
+    height: 360px !important;
   }
 }
+
 @media (min-width: 992px) {
-  .bookdetail-list .course-name{
-    width: 350px;
+  #img{
+    height: 360px;
   }
 }
 @media (min-width: 1200px) {
-  .bookdetail-list .course-name{
-    width: 300px;
+  #img{
+    height: 360px;
   }
 }
-*/
+
 .container {
     padding-right: 0px !important;
     padding-left: 0px !important;
