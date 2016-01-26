@@ -1,5 +1,6 @@
 <?php
 
+use common\models\expert\Expert;
 use common\models\expert\searchs\ExpertSearch;
 use frontend\modules\expert\ExpertAsset;
 use yii\data\ActiveDataProvider;
@@ -21,12 +22,20 @@ $this->params['breadcrumbs'][] = $this->title;
         'height' => '360',
         'style' => 'padding:1.5%;'
     ])?>
-    <?php foreach ($model as $modelBtn){
-        echo Html::a($modelBtn['name'], ['type', 'id' => $modelBtn['id']], [
-                'class' => 'btn btn-default btn-lg dropdown-toggle',
-                'style' => 'width:30%; line-height:60px; font-size:14px ;margin:0 0 2% 2.5%; padding-left:5%'
-            ]);
-    } ?>
+    <?php foreach ($modelType as $modelBtn):?>
+    <a class="btn btn-default btn-lg dropdown-toggle" href="http://rcoa.gzedu.net/expert/default/type?id=<?=$modelBtn->id?>">
+        <?= $modelBtn->name?>(
+            <?php 
+                echo Expert::find()
+                        ->where(['type' => $modelBtn->id])
+                        ->count();
+            ?>)
+    </a>
+    <?php endforeach;?>
+    <b style="float: right;">专家总数：<?php 
+        echo Expert::find()
+            ->count();
+    ?></b>
 </div>
 
 <div class="controlbar">

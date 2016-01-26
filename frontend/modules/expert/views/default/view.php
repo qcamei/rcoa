@@ -51,9 +51,13 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
     
     <h5><b>合作项目</b></h5>
-    
+    <?php if($expertProjects == null){
+        echo '无';
+    } ?>
+    <ol>
     <?php foreach ($expertProjects as $keyProject): ?>
-        <?= DetailView::widget([
+    
+    <li><?= DetailView::widget([
         'model' => $keyProject,
         'options' => ['class' => 'table ees table-striped table-bordered detail-view'],
         'attributes' => [
@@ -67,15 +71,16 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'label' => '费用报酬',
-                'value'=> Yii::$app->formatter->asCurrency($keyProject->cost,"￥"),
+                'value'=> Yii::$app->formatter->asCurrency($keyProject->cost),
             ],
             [
                 'label' => '合作融洽度',
                 'value'=> ExpertProject::$compatibilityMap[$keyProject->compatibility],
             ],
         ],
-    ]) ?>
+    ]) ?></li>
     <?php endforeach;?>
+    </ol>
     
 </div>
 

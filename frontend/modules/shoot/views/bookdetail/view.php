@@ -44,7 +44,7 @@ $this->title = $model->id;
              * 1、拥有【编辑】权限(管理员或者任务的发起者)
              * 2、在摄影师指派前
              */
-            if($model->canEdit() && Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_UPDATE,['model'=>$model]))
+            if($model->canEdit() && Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_UPDATE,['job'=>$model]) && $model->u_contacter)
                 echo Html::a('编辑', ['update', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
             /**
              * 评价 按钮显示必须满足以下条件：

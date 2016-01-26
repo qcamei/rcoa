@@ -34,9 +34,9 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
-        $model = ExpertType::find()->all();
+        $modelType = ExpertType::find()->all();
         return $this->render('index', [
-            'model' => $model,
+            'modelType' => $modelType,
         ]);
     }
 
@@ -234,10 +234,10 @@ class DefaultController extends Controller
      */
     protected function ExpertCount($cons)
     {
-        $pageCount = Expert::find()
+        $count = Expert::find()
             ->where($cons)
             ->count();
-        return $pageCount;
+        return $count;
     }
 
     /**

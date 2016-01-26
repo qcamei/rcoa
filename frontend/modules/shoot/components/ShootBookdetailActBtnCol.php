@@ -49,7 +49,7 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
         //摄影组长
         if($authManager->isRole(RbacName::ROLE_SHOOT_LEADER, Yii::$app->user->id))
         {
-            $buttonName = !$isValid ? '未预约' : ($isAssign ? '指派' : $model->shootMan->nickname);
+            $buttonName = !$isValid ? '未预约' : ($isAssign ? $model->getStatusName() : $model->getStatusName() );
             
             $url = 'view';
             $params = [
@@ -60,7 +60,7 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
         //摄影师    
         }else if($authManager->isRole(RbacName::ROLE_SHOOT_MAN, Yii::$app->user->id))
         {
-            $buttonName = !$isValid ? '未预约' :($isAssign ? '未指派' : $model->shootMan->nickname);
+            $buttonName = !$isValid ? '未预约' :($isAssign ? $model->getStatusName() : $model->getStatusName());
             $url = 'view';
             $params = [
                 'id' => $model->id
@@ -79,9 +79,9 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
             //30天后预约时间
             $dayEnd = date('Y-m-d H:i:s',mktime(10,0,0,date('m'),date('d')+31,date('y')));
             if($dayTomorrow < $bookTime && $bookTime < $dayEnd){
-                $buttonName = $isNew ? '预约' :$model->booker->nickname;
+                $buttonName = $isNew  ? '预约' : (!$isValid ? '无' : $model->getStatusName());
             }else{
-                $buttonName = $isNew ? '未预约' :$model->booker->nickname;
+                $buttonName = $isNew ? '未预约' :(!$isValid ? '无' : $model->getStatusName());
                 
             }
             $url = ($isNew || $model->getIsBooking()) ? 'create' : 'view';

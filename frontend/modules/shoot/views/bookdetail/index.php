@@ -171,30 +171,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                     return '【'.$teacherName.' / '.$contacterGood.$contacterName .' / '.$bookerName.' / '.$shootManGood.$shootManName.'】';
                 }
             ],
-            [
-                'class' => 'frontend\modules\shoot\components\ShootBookdetailListTd',
-                'label' => '【状态】',
-                'headerOptions'=>[
-                    'class'=>[
-                        'th'=>'hidden-xs',
-                    ],
-                    'style'=> [
-                        'width' => '90px',
-                    ]
-                ],
-                'contentOptions' =>[
-                    'class'=>'hidden-xs',
-                    'style'=> [
-                        'white-space' => 'nowrap',
-                    ],
-                ], 
-                'content' => function($model,$key,$index,$e)
-                {
-                    /* @var $model ShootBookdetail */
-                    if($model->getIsNew())return '';
-                    return '【'.$model->getStatusName().'】';
-                }
-            ],
+            
             [
                 'class' => 'frontend\modules\shoot\components\ShootBookdetailActBtnCol',
                 'label' => '操作',

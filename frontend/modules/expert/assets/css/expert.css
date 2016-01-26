@@ -59,6 +59,14 @@ and open the template in the editor.
   }
 }
 
+.expert-index a{
+    width:30%; 
+    line-height:60px; 
+    font-size:14px ;
+    margin:0 0 2% 2.5%; 
+    padding-left:5%
+}
+
 .container {
     padding-right: 0px !important;
     padding-left: 0px !important;

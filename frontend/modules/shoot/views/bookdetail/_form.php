@@ -84,9 +84,10 @@ use common\models\shoot\ShootHistory;
     ]) ?>
 
     <h5><b>其它信息：</b></h5>
-    <?= $form->field($model, 'u_contacter')->dropDownList($users,['prompt'=>'请选择...']) ?>
-
+    
     <?= $form->field($model, 'u_booker')->dropDownList($users,['prompt'=>'请选择...']) ?>
+    
+    <?= $form->field($model, 'u_contacter')->dropDownList($users,['prompt'=>'请选择...']) ?>
     
     <?= $form->field($model, 'remark')->textarea() ?>
     
