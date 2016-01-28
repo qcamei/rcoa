@@ -42,19 +42,36 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="container">
         <div class="row ">
             <div class="col-sm-10 col-md-11 col-xs-9">
-                <?php $form = ActiveForm::begin(['action' => ['categories'],'method' => 'get', 'id' => 'form-assign-key']); ?>
-                <?= Html::textInput('key', '', ['class' => 'form-control', 'placeholder' => '请输入关键字...',]) ?>
-                <?php ActiveForm::end(); ?>
+                <form id="form-assign-key" action="http://rcoa.gzedu.net/expert/default/categories" method="get">
+                    <div id="radio">
+                        <input type="radio" name="fieldName" value="all" checked/><label>全部</label>
+                        <input type="radio" name="fieldName" value="job_title"/><label>头衔</label>
+                        <input type="radio" name="fieldName" value="job_name"/><label>职称</label>
+                        <input type="radio" name="fieldName" value="nickname"/><label>专家名称</label>
+                        <input type="radio" name="fieldName" value="name"/><label>专家类型</label>
+                        <input type="radio" name="fieldName" value="employer"/><label>单位信息</label>
+                        <input type="radio" name="fieldName" value="attainment"/><label>主要成就</label>
+                    </div>
+                    <input type="text" name="key" class="form-control" placeholder="请输入关键字...">
+                </form>
             </div>
             <?= Html::a('搜索', 'javascript:;', ['id'=>'submit', 'class' => 'glyphicon glyphicon-search btn btn-default',]) ?>
         </div>
     </div>
 </div>
 
-
 <?php  
  $js =   
 <<<JS
+   /** 单击显示搜索字段 */
+   $('#form-assign-key input[name = "key"]').click(function(){
+       $('#radio').css("display","block");
+   });
+    /** 失去焦点移出搜索字段 */
+   /*$('#form-assign-key input[name = "key"]').blur(function(){
+       $('#radio').css("display","none");
+   });*/
+   
    $('#submit').click(function(){
         if($('#form-assign-key input[name="key"]').val() == '')
            alert("请输入关键字");

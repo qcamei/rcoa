@@ -76,10 +76,11 @@ class DefaultController extends Controller
      * @param string  $key
      * @return mixed
      */
-    public function actionCategories($key)
+    public function actionCategories()
     {
+        $fieldName = Yii::$app->request->queryParams['fieldName'];
         $key = Yii::$app->request->queryParams['key'];
-        $model = $this->findCategories($key);
+        $model = $this->findCategories(($fieldName != 'all' ? $fieldName : $fieldName = null ), $key);
         if($key == '' && $key == null)
             throw new UnauthorizedHttpException('无权操作！');
         
@@ -242,20 +243,26 @@ class DefaultController extends Controller
 
     /**
      * 关键字搜索
-     * @param type $key
+     
+     * @param type $fieldName 字段名
+     * @param type $key 搜索关键字
      * @return type
      * @throws NotFoundHttpException
      */
-    protected function findCategories($key){
+    protected function findCategories($fieldName = null, $key){
         $categories = Expert::find();
         $categories->joinWith(['user'])
             ->joinWith(['expertType']);
-        $categories->orFilterWhere(['like', 'job_title', $key])
-                ->orFilterWhere(['like', 'job_name', $key])
-                ->orFilterWhere(['like', 'employer', $key])
-                ->orFilterWhere(['like', 'attainment', $key])
-                ->orFilterWhere(['like', 'nickname', $key])
-                ->orFilterWhere(['like', 'name', $key]);
+        if($fieldName != null){
+           $categories->FilterWhere(['like', $fieldName, $key]); 
+        }else{
+            $categories->orFilterWhere(['like', 'job_title', $key])
+                        ->orFilterWhere(['like', 'job_name', $key])
+                        ->orFilterWhere(['like', 'nickname', $key])
+                        ->orFilterWhere(['like', 'name', $key])
+                        ->orFilterWhere(['like', 'employer', $key])
+                        ->orFilterWhere(['like', 'attainment', $key]);
+        }
         $data = $categories -> all();
         if ($data !== null) {
             return $data;
