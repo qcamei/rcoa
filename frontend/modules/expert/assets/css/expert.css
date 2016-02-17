@@ -94,15 +94,57 @@ and open the template in the editor.
     background-color: #f9f9f9 !important;
 }
 
-#radio{
-    position: absolute !important;
-    width: 95.5%;
-    top:  -52px;
-    border: 1px solid #ccc; 
-    background-color: #fff; 
-    height: 50px; 
-    display: none;
+.clearfix:after {
+	content:".";
+	display:block;
+	height:0;
+	clear:both;
+	visibility:hidden;
 }
-#radio label{
-    color: #000 !important;
+.clearfix {
+	display:inline-table;
+}/* Hides from IE-mac */
+*html .clearfix {
+	height:1%;
+}
+.clearfix {
+	display:block;
+}/* End hide from IE-mac */
+*+html .clearfix {
+	min-height:1%;
+}
+.searchinfo li .text {
+	width:356px;
+	height:22px;
+	padding:4px 7px;
+	padding:6px 7px 2px9;
+	font:16px arial;
+	border:1px solid #cdcdcd;
+	border-color:#9a9a9a #cdcdcd #cdcdcd #9a9a9a;
+	vertical-align:top;
+	outline:none;
+	margin:0 5px 0 0;
+}
+.dropdown {
+	width:100px;
+	padding:6px 5px;
+	border:solid 1px #ddd;
+	background:#efefef;
+	position:absolute  !important;
+	left:55px;
+	top:-237px;
+}
+
+.dropdown li {
+	float:left;
+	width:175px;
+	padding:0 0 0 5px;
+	font-size:14px;
+	line-height:32px;
+	height:32px;
+        list-style: none;
+}
+.dropdown li label {
+        color: #000;
+	cursor:pointer;
 }

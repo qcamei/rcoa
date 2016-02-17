@@ -4,6 +4,7 @@ use common\models\shoot\ShootBookdetail;
 use common\models\shoot\ShootHistory;
 use frontend\modules\shoot\components\EditHistoryList;
 use frontend\modules\shoot\ShootAsset;
+use kartik\widgets\Select2;
 use wskeee\rbac\RbacManager;
 use wskeee\rbac\RbacName;
 use yii\helpers\Html;
@@ -32,12 +33,14 @@ use yii\widgets\DetailView;
                 'value' => $model->getStatusName(),
             ],
             [
-                'attribute' => 'u_contacter',
-                'value' => $model->contacter->nickname. '( '.$model->contacter->phone.' )',
-            ],
-            [
                 'attribute' => 'u_booker',
                 'value' => $model->booker->nickname. '( '.$model->booker->phone.' )',
+            ],
+            [
+                'attribute' => 'u_contacter',
+                'format' => 'raw',
+                'value' => (isset($model->u_contacter) ? implode(',',$roleContacts) : "空"),
+                //'value' => $model->contacter->nickname. '( '.$model->contacter->phone.' )',
             ],
             [
                 'attribute' => 'start_time',
@@ -88,7 +91,14 @@ use yii\widgets\DetailView;
                 'attribute' => 'u_shoot_man', 
                 'format' => 'raw',
                 'value' => $isShootManLeader ?
-                         Html::activeDropDownList($model, 'u_shoot_man', $shootmans,['prompt'=>'选择摄影师...']) : (isset($model->u_shoot_man) ? $model->shootMan->nickname : "空"),
+                            Select2::widget([
+                                'name' => 'shoot_man',
+                                'data' => $shootmans,
+                                'options' => [
+                                    'placeholder' => '选择摄影师...',
+                                    'multiple' => true
+                                ],
+                            ]): (isset($model->u_shoot_man) ? implode(',',$roleShootMans) : "空"),
             ],
             [
                 'attribute' => 'remark',
@@ -98,7 +108,10 @@ use yii\widgets\DetailView;
         ],
     ]);
     ?>
+    <?= Html::hiddenInput('b_id',$model->id) ?>
+    
     <?= Html::hiddenInput('editreason') ?>
+    
     <?php ActiveForm::end(); ?>
     <h5><b>历史记录</b></h5>
     <?=

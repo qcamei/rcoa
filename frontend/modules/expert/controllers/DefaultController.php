@@ -5,7 +5,6 @@ namespace frontend\modules\expert\controllers;
 use common\models\expert\Expert;
 use common\models\expert\ExpertType;
 use Yii;
-use yii\data\ArrayDataProvider;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -151,6 +150,7 @@ class DefaultController extends Controller
         $id = Yii::$app->getRequest()->getBodyParams();
         
         \Yii::$app->getResponse()->format = 'json';
+        $url = Yii::$app->request->hostInfo;
         $post = Yii::$app->getRequest()->post();
         $page = $post['page'];          
         $showNum = $post['showNum'];    
@@ -159,6 +159,7 @@ class DefaultController extends Controller
         return [
             'result' => 0,      //是否请求正常 0:为不正常请求
             'data' => [
+                'url' => $url,
                 'page' => $page,
                 'showNum' => $showNum,
                 'modelExpert' =>$modelExpert,

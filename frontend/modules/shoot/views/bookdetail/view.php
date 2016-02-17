@@ -24,6 +24,8 @@ $this->title = $model->id;
         'model' => $model,
         'dataProvider' => $dataProvider,
         'shootmans' => $shootmans,
+        'roleShootMans' => $roleShootMans,
+        'roleContacts' => $roleContacts,
     ]) ?>
     <?= $this->render('_form_model',[
          'model' => $model,
@@ -44,7 +46,7 @@ $this->title = $model->id;
              * 1、拥有【编辑】权限(管理员或者任务的发起者)
              * 2、在摄影师指派前
              */
-            if($model->canEdit() && Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_UPDATE,['job'=>$model]) && $model->u_contacter)
+            if($model->canEdit() && Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_UPDATE,['job'=>$model]) && $model->u_booker)
                 echo Html::a('编辑', ['update', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
             /**
              * 评价 按钮显示必须满足以下条件：

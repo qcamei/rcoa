@@ -2,11 +2,11 @@
 
 use common\models\shoot\ShootBookdetail;
 use kartik\widgets\Growl;
+use kartik\widgets\Select2;
 use kartik\widgets\TouchSpin;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
-use common\models\shoot\ShootHistory;
 /* @var $this View */
 /* @var $model frontend\modules\shoot\models\ShootBookdetail */
 /* @var $form ActiveForm */
@@ -85,9 +85,23 @@ use common\models\shoot\ShootHistory;
 
     <h5><b>其它信息：</b></h5>
     
-    <?= $form->field($model, 'u_booker')->dropDownList($users,['prompt'=>'请选择...']) ?>
+    <?= $form->field($model, 'u_booker')->dropDownList($roleWe, ['prompt'=>'请选择...']) ?>
     
-    <?= $form->field($model, 'u_contacter')->dropDownList($users,['prompt'=>'请选择...']) ?>
+    <div class="form-group field-shootbookdetail-u_contacter required">
+        <label class="col-lg-1 col-md-1 control-label" style="color: #999999; font-weight: normal;" for="shootbookdetail-u_contacter">
+            接洽人
+        </label>
+        <div class="col-lg-10 col-md-10">
+        <?php echo Select2::widget([
+                    'name' => 'ShootBookdetail[u_contacter]',
+                    'data' => $roleContact,
+                    'options' => [
+                        'placeholder' => '选择接洽人...',
+                        'multiple' => true
+                    ],
+                ]); ?>
+        </div>
+    </div>
     
     <?= $form->field($model, 'remark')->textarea() ?>
     

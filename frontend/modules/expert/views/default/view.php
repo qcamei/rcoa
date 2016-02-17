@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'personal_image',
                 'format'=>'raw',
-                'value'=> Html::a(Html::img($model->personal_image,['width'=>'128px']), $model->personal_image),
+                'value'=> Html::a(Html::img(Yii::$app->request->hostInfo.$model->personal_image,['width'=>'128px']), $model->personal_image),
             ],
             'u_id',
             'user.username',
@@ -88,7 +88,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="container">
         <div class="row ">
             <div class="col-sm-9 col-md-10 col-xs-7">
-                <form id="form-assign-key" action="http://rcoa.gzedu.net/expert/default/categories" method="get">
+                <form id="form-assign-key" action="<?= Yii::$app->request->hostInfo?>/expert/default/categories" method="get">
                     <div id="radio">
                         <input type="radio" name="fieldName" value="all" checked/><label>全部</label>
                         <input type="radio" name="fieldName" value="job_title"/><label>头衔</label>

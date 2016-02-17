@@ -21,7 +21,7 @@ $this->title = 'My Yii Application';
             </ol>
             <div class="carousel-inner">
                 <div class="item active">
-                    <img alt="" src="http://rcoa.gzedu.net/filedata/avatars/1.jpg" />
+                    <img alt="" src="<?=Yii::$app->request->hostInfo?>/filedata/avatars/1.jpg" />
                     <div class="carousel-caption">
                             <h4>棒球</h4>
                             <p class="course-name">
@@ -30,7 +30,7 @@ $this->title = 'My Yii Application';
                     </div>
                 </div>
                 <div class="item">
-                    <img alt="" src="http://rcoa.gzedu.net/filedata/avatars/2.jpg" />
+                    <img alt="" src="<?=Yii::$app->request->hostInfo?>/filedata/avatars/2.jpg" />
                     <div class="carousel-caption">
                             <h4>
                                     冲浪
@@ -41,7 +41,7 @@ $this->title = 'My Yii Application';
                     </div>
                </div>
                 <div class="item">
-                    <video id="video1" src="http://rcoa.gzedu.net/filedata/movies/jgpearslogo.mp4">
+                    <video id="video1" src="<?=Yii::$app->request->hostInfo?>/filedata/movies/jgpearslogo.mp4">
                         您的浏览器不支持 video 标签。
                     </video>
                 </div>
@@ -55,7 +55,7 @@ $this->title = 'My Yii Application';
         <div class="row">
             <?php foreach ($model as $module):?>
             <div class="col-sm-4">
-                <a href="<?= $module->module_link ?>"><p><?= Html::img($module->module_image,[
+                <a href="<?= Yii::$app->request->hostInfo.$module->module_link ?>"><p><?= Html::img(Yii::$app->request->hostInfo.$module->module_image,[
                     'class' => 'center-block',
                     'width' => '224',
                     'height' => '124',

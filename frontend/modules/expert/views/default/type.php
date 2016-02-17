@@ -21,10 +21,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="container expert-type bookdetail-list has-title" id="expert-type">
     <?php foreach ($modelExpert as $expert): ?>
-    <a href="http://rcoa.gzedu.net/expert/default/view?id=<?= $expert['u_id']; ?>" id="thelist">
+    <a href="<?= Yii::$app->request->hostInfo?>/expert/default/view?id=<?= $expert['u_id']; ?>" id="thelist">
         <div style="height: 74px; border:1px solid #CCC;">
             <div style="float: left; ">
-                <?= Html::img($expert['personal_image'], [
+                <?= Html::img(Yii::$app->request->hostInfo.$expert['personal_image'], [
                     'class' => 'img-rounded',
                     'style' => 'margin:5px',
                     'width' => '60',
@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="container">
         <div class="row ">
             <div class="col-sm-9 col-md-10 col-xs-7">
-                <form id="form-assign-key" action="http://rcoa.gzedu.net/expert/default/categories" method="get">
+                <form id="form-assign-key" action="<?= Yii::$app->request->hostInfo?>/expert/default/categories" method="get">
                     <div id="radio">
                         <input type="radio" name="fieldName" value="all" checked/><label>全部</label>
                         <input type="radio" name="fieldName" value="job_title"/><label>头衔</label>
@@ -129,7 +129,7 @@ function typeAjax(pagenum){
             var strHtml = "";
             var modelExpert = data.data.modelExpert;
             for(var i in modelExpert){
-                strHtml += '<a href="http://rcoa.gzedu.net/expert/default/view?id='+modelExpert[i].u_id+'">';
+                strHtml += '<a href="'+data.data.url+'/expert/default/view?id='+modelExpert[i].u_id+'">';
                 strHtml += '<div style="height: 74px; border:1px solid #CCC;">';
                 strHtml += '<div style="float: left; "><img src="'+modelExpert[i].personal_image+'" class="img-rounded" width="60" height="60" style="margin:5px"/></div>';
                 strHtml += '<div>';

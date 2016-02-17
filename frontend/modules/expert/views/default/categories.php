@@ -25,9 +25,9 @@ $this->title = 'Search';
     ?>
     
     <?php foreach ($modelKey as $key): ?>
-    <a href="http://rcoa.gzedu.net/expert/default/view?id=<?= $key->u_id; ?>"><div style="height: 74px; border:1px solid #CCC;">
+    <a href="<?= Yii::$app->request->hostInfo?>/expert/default/view?id=<?= $key->u_id; ?>"><div style="height: 74px; border:1px solid #CCC;">
         <div style="float: left; ">
-        <?= Html::img($key->personal_image, [
+        <?= Html::img(Yii::$app->request->hostInfo.$key->personal_image, [
             'class' => 'img-rounded',
             'style' => 'margin:5px',
             'width' => '60',
@@ -47,7 +47,7 @@ $this->title = 'Search';
     <div class="container">
         <div class="row ">
             <div class="col-sm-9 col-md-10 col-xs-7">
-                <form id="form-assign-key" action="http://rcoa.gzedu.net/expert/default/categories" method="get">
+                <form id="form-assign-key" action="<?= Yii::$app->request->hostInfo?>/expert/default/categories" method="get">
                     <div id="radio">
                         <input type="radio" name="fieldName" value="all" checked/><label>全部</label>
                         <input type="radio" name="fieldName" value="job_title"/><label>头衔</label>
