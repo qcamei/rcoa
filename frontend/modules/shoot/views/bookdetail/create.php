@@ -24,6 +24,7 @@ $this->title = Yii::t('rcoa', 'Create Shoot Bookdetail');
         'model' => $model,
         'roleWe' => $roleWe,
         'roleContact' => $roleContact,
+        'contacts' => $contacts,
         'teacherName'=>$teacherName,
         'colleges' => $colleges,
         'projects' => $projects,

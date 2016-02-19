@@ -4,6 +4,7 @@ use common\models\shoot\ShootBookdetail;
 use kartik\widgets\Growl;
 use kartik\widgets\Select2;
 use kartik\widgets\TouchSpin;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
@@ -94,7 +95,7 @@ use yii\widgets\ActiveForm;
         <div class="col-lg-10 col-md-10">
         <?php echo Select2::widget([
                     'name' => 'ShootBookdetail[u_contacter]',
-                    'data' => $roleContact,
+                    'data' => !$model->getIsValid() ? $roleContact : ArrayHelper::merge($contacts, $roleContact),
                     'options' => [
                         'placeholder' => '选择接洽人...',
                         'multiple' => true
@@ -129,7 +130,9 @@ use yii\widgets\ActiveForm;
     <?php ActiveForm::end(); ?>
 
 </div>
-<?php  
+<?php
+   $isValid = $model->getIsValid() ? 0 : 1 ;
+   $contacts = json_encode($contacts);
  $js =   
 <<<JS
    $(document).ready(function(){ 
@@ -144,6 +147,18 @@ use yii\widgets\ActiveForm;
         $('input[name="shootbookdetail-teacher_email"]').appendTo('#emali');
    }); 
    $("input:radio").eq(1).attr("checked",true);
+    
+    var contactObj = $isValid  ?  '' : $contacts;
+    if(contactObj != ''){
+        for(var i in contactObj){
+            var li = '<li class="select2-selection__choice" title="'+contactObj[i]+'"><span class="select2-selection__choice__remove" role="presentation">×</span>'+contactObj[i]+'</li>';
+            //console.log(contactObj[i]);
+            $(li).insertBefore(".select2-search");
+        }
+        $(".select2-search__field").attr("placeholder","");
+        $(".select2-search__field").attr("style","width:0.75em");
+    }
+   
 JS;
     $this->registerJs($js,  View::POS_READY); 
 ?> 

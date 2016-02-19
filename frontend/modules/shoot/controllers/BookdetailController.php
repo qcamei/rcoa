@@ -29,8 +29,10 @@ use yii\web\UnauthorizedHttpException;
 /**
  * BookdetailController implements the CRUD actions for ShootBookdetail model.
  */
+
 class BookdetailController extends Controller
 {
+    
     /** 设置delete方法的传值方式 */ 
     public function behaviors()
     {
@@ -52,8 +54,6 @@ class BookdetailController extends Controller
             ]
         ];
     }
-    
-  
     
     /**
      * Lists all ShootBookdetail models.
@@ -192,6 +192,7 @@ class BookdetailController extends Controller
                 'model' => $model,
                 'roleWe' => $this->getRoleToUsers(RbacName::ROLE_WD),   //编导
                 'roleContact' => array_diff($roleContactsArrayAll,$roleContactsArray), //接洽人
+                'contacts' => $this->getShootBookdetailRoleName($model->id),
                 'teacherName' => $this->getExpert(),
                 'colleges' => $this->getCollegesForSelect(),
                 'projects' => [],
@@ -424,12 +425,15 @@ class BookdetailController extends Controller
             $this->saveNewHistory($model);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
+            
             $roleContactsArray = $this->getRoleNames(RbacName::ROLE_CONTACT,$model->book_time,$model->index); //被指派了的接洽人
             $roleContactsArrayAll = $this->getRoleToUsers(RbacName::ROLE_CONTACT); //所有接洽人
+            
             return $this->render('update', [
                 'model' => $model,
                 'roleWe' => $this->getRoleToUsers(RbacName::ROLE_WD),   //编导
                 'roleContact' => array_diff($roleContactsArrayAll,$roleContactsArray), //接洽人
+                'contacts' => $this->getShootBookdetailRoleName($id),
                 'teacherName' => $this->getExpert(),
                 'colleges' => $this->getCollegesForSelect(),
                 'projects' => $this->getFwItemForSelect($model->fw_college),
@@ -628,8 +632,9 @@ class BookdetailController extends Controller
       * @param type $b_id 任务id
       * @return type
       */
-    protected function getShootBookdetailRoleName(){
+    protected function getShootBookdetailRoleName($b_id){
         $roleName = ShootBookdetailRoleName::find()
+                ->where(['b_id' => $b_id])
                 ->with('u') 
                 ->all();
         return ArrayHelper::map($roleName, 'u_id','u.nickname');
