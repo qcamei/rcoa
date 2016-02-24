@@ -172,7 +172,7 @@ class ShootBookdetail extends ActiveRecord
                 'site_id',
                 'fw_college', 'fw_project', 'fw_course', 
                 'u_contacter', 'u_booker', 
-                'book_time', 'index','teacher_name','teacher_phone','remark','start_time'],'required', 'on'=>[self::SCENARIO_DEFAULT]],
+                'book_time', 'index','u_teacher','teacher_phone','remark','start_time'],'required', 'on'=>[self::SCENARIO_DEFAULT]],
             [['teacher_phone'],'integer'],
             [['teacher_email'],'email'],
         ];
@@ -455,6 +455,14 @@ class ShootBookdetail extends ActiveRecord
     }
     
     /**
+     * 是否在【评价中】状态
+     */
+    public function getIsAppraise()
+    {
+        return $this->status == self::STATUS_APPRAISE;
+    }
+    
+    /**
      * 是否在【待评价】状态
      */
     public function getIsStausShootIng()
@@ -512,14 +520,6 @@ class ShootBookdetail extends ActiveRecord
     public function canEdit()
     {
         return $this->status < self::STATUS_SHOOTING;
-    }
-    
-    /**
-     * 是否在【评价中】状态
-     */
-    public function getIsAppraise()
-    {
-        return $this->status == self::STATUS_APPRAISE;
     }
     
     /**

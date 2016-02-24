@@ -134,7 +134,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
             ],
             [
                 'class' => 'frontend\modules\shoot\components\ShootBookdetailListTd',
-                'label' => '【老 师 / 接洽人 / 预约人 / 摄影师】',
+                'label' => '【老 师 / 接洽人 / 摄影师】',
                 'headerOptions'=>[
                     'class'=>[
                         'th'=>'hidden-xs',
@@ -168,7 +168,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
                     $contacterName = isset($model->u_contacter) ? $model->contacter->nickname : '空';
                     $bookerName = isset($model->u_booker) ? $model->booker->nickname : '空';
                     $shootManName = isset($model->u_shoot_man) ? $model->shootMan->nickname : '空';
-                    return '【'.$teacherName.' / '.$contacterGood.$contacterName .' / '.$bookerName.' / '.$shootManGood.$shootManName.'】';
+                    return '【'.$teacherName.' / '.$contacterGood.$contacterName .' / '.$shootManGood.$shootManName.'】';
                 }
             ],
             

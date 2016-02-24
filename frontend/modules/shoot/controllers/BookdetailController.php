@@ -213,12 +213,30 @@ class BookdetailController extends Controller
     public function actionAssign($id)
     {
         $model = $this->findModel($id);
-        //状态为【待评价】时清空数据
+        $oldShootMan = $model->u_shoot_man;
+        /** 状态为【待评价】时清空数据*/
         if($model->getIsStausShootIng()){ 
             ShootBookdetailRoleName::deleteAll(['and', 'b_id ='.$id, 'role_name ="'.RbacName::ROLE_SHOOT_MAN.'"']);
         }
         $this->saveShootBookdetailRoleName($model, RbacName::ROLE_SHOOT_MAN);
-        $model->save();
+        $this->saveNewHistory($model);
+        if($oldShootMan != null){
+            //更改指派--给接洽人发通知
+            $this->sendContacterNotification($model, '更改指派', 'shoot\ShootEditAssign-u_contacter-html');
+            //更改指派--给旧摄影师发通知
+            $this->sendShootManNotification($model, '更改指派', 'shoot\ShootEditAssign-u_shoot_man-html');
+            //更改指派--给新摄影师发通知
+            $this->sendShootManNotification($model, '更改指派', 'shoot\ShootAssign-u_shoot_man-html');
+        }else{
+            //指派--给编导发通知
+            $this->sendBookerNotification($model, '指派', 'shoot\ShootAssign-u_contacter-html');
+            //指派--给接茬人发通知
+            $this->sendContacterNotification($model, '指派', 'shoot\ShootAssign-u_contacter-html');
+            //指派--给摄影师发通知
+            $this->sendShootManNotification($model, '指派', 'shoot\ShootAssign-u_shoot_man-html');
+            //指派--给老师发通知
+            $this->sendTeacherNotification($model, '指派', 'shoot\ShootAssign-u_teacher-html');
+        }
         $this->redirect(['index',
             'date' => date('Y-m-d', $model->book_time), 
             'b_id' => $model->id, 
@@ -317,7 +335,7 @@ class BookdetailController extends Controller
     }
     
      /**
-     * 保存数据
+     * 保存数据到Bookdetail表里面
      * @param ShootBookdetail $model
      */
     private function saveNewBookdetail($model)
@@ -351,11 +369,13 @@ class BookdetailController extends Controller
      * @param type $role 角色
      */
     public function saveShootBookdetailRoleName($model, $role){
-        
+        //$role为接洽人角色时读取_from.php提交的数据
         $role == RbacName::ROLE_CONTACT ? $body = Yii::$app->getRequest()->getBodyParams() : $post = Yii::$app->request->post();
         $values = [];
+        //$role为接洽人角色时读取_from.php提交的数据
         $shootRoleName = $role == RbacName::ROLE_CONTACT ? $body['ShootBookdetail']['u_contacter'] : $post['shoot_man'];
         $bid = $role == RbacName::ROLE_CONTACT  ? $body['b_id'] : $post['b_id'];
+        /** 重组提交的数据为$values数组 */
         foreach($shootRoleName as $key => $value)
         {
             $values[] = [
@@ -369,6 +389,7 @@ class BookdetailController extends Controller
         {   
             if($model->load(\Yii::$app->getRequest()->post()));
             {
+                /** 添加$values数组到ShootBookdetailRoleName表里 */
                 \Yii::$app->db->createCommand()->batchInsert(ShootBookdetailRoleName::tableName(), 
                 [
                     'b_id',
@@ -377,6 +398,7 @@ class BookdetailController extends Controller
                     'primary_foreign'
                 ], $values)->execute();
                 $roleName = $this->findShootBookdetailRoleName($model->id, $role);
+                /** 为接洽人时设置u_contacter 否则为u_shoot_man */
                 if($role == RbacName::ROLE_CONTACT ){
                     $model->u_contacter = ($roleName->role_name == $role && $roleName->primary_foreign == 1) ? 
                         $roleName->u_id : Yii::$app->user->id;
@@ -579,7 +601,7 @@ class BookdetailController extends Controller
         $shootMan_ee = $model->shootMan->ee;
         $shootMan_mail = $model->shootMan->email;
         /** 发送ee消息 */
-        EeManager::sendEeByView($views, $params,$shootMan_ee, $subject);
+        EeManager::sendEeByView($views, $params, $shootMan_ee, $subject);
         /** 发送邮件消息 */
          Yii::$app->mailer->compose($views, $params)
             ->setTo($shootMan_mail)
