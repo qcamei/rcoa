@@ -7,6 +7,7 @@ use frontend\modules\shoot\ShootAsset;
 use kartik\widgets\Select2;
 use wskeee\rbac\RbacManager;
 use wskeee\rbac\RbacName;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
@@ -93,7 +94,8 @@ use yii\widgets\DetailView;
                 'value' => $isShootManLeader ?
                             Select2::widget([
                                 'name' => 'shoot_man',
-                                'data' => $shootmans,
+                                'value' => !$model->getIsStausShootIng() ? '' : $shootmansKey,
+                                'data' => !$model->getIsStausShootIng() ? $shootmans : ArrayHelper::merge($shootMans, $shootmans),
                                 'options' => [
                                     'placeholder' => '选择摄影师...',
                                     'multiple' => true

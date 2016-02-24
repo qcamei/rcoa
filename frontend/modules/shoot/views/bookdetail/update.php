@@ -22,6 +22,7 @@ $this->title = Yii::t('rcoa', 'Update {modelClass}: ', [
         'roleWe' => $roleWe,
         'roleContact' => $roleContact,
         'contacts' => $contacts,
+        'contactsKey' => $contactsKey,
         'teacherName' =>$teacherName,
         'colleges' => $colleges,
         'projects' => $projects,

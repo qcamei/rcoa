@@ -25,6 +25,8 @@ $this->title = $model->id;
         'dataProvider' => $dataProvider,
         'shootmans' => $shootmans,
         'roleShootMans' => $roleShootMans,
+        'shootMans' => $shootMans,
+        'shootmansKey' => $shootmansKey,
         'roleContacts' => $roleContacts,
     ]) ?>
     <?= $this->render('_form_model',[

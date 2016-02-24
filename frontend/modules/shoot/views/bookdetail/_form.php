@@ -93,8 +93,10 @@ use yii\widgets\ActiveForm;
             接洽人
         </label>
         <div class="col-lg-10 col-md-10">
+        
         <?php echo Select2::widget([
                     'name' => 'ShootBookdetail[u_contacter]',
+                    'value' => !$model->getIsValid() ? '' : $contactsKey,
                     'data' => !$model->getIsValid() ? $roleContact : ArrayHelper::merge($contacts, $roleContact),
                     'options' => [
                         'placeholder' => '选择接洽人...',
@@ -131,8 +133,7 @@ use yii\widgets\ActiveForm;
 
 </div>
 <?php
-   $isValid = $model->getIsValid() ? 0 : 1 ;
-   $contacts = json_encode($contacts);
+  
  $js =   
 <<<JS
    $(document).ready(function(){ 
@@ -147,18 +148,7 @@ use yii\widgets\ActiveForm;
         $('input[name="shootbookdetail-teacher_email"]').appendTo('#emali');
    }); 
    $("input:radio").eq(1).attr("checked",true);
-    
-    var contactObj = $isValid  ?  '' : $contacts;
-    if(contactObj != ''){
-        for(var i in contactObj){
-            var li = '<li class="select2-selection__choice" title="'+contactObj[i]+'"><span class="select2-selection__choice__remove" role="presentation">×</span>'+contactObj[i]+'</li>';
-            //console.log(contactObj[i]);
-            $(li).insertBefore(".select2-search");
-        }
-        $(".select2-search__field").attr("placeholder","");
-        $(".select2-search__field").attr("style","width:0.75em");
-    }
-   
+
 JS;
     $this->registerJs($js,  View::POS_READY); 
 ?> 
