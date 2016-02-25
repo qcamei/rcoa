@@ -187,21 +187,22 @@ class BookdetailController extends Controller
         
         $shootMansArray = $this->getRoleNames(RbacName::ROLE_SHOOT_MAN,$model->book_time,$model->index); //被指派了的摄影师
         $shootMansArrayAll = $this->getRoleToUsers(RbacName::ROLE_SHOOT_MAN); //所有摄影师
+        /** 修改时设置value值*/
         $shootMans = $this->getShootBookdetailRoleName($id, RbacName::ROLE_SHOOT_MAN);
         foreach ($shootMans as $key => $value){
             $shootmansKey[] = $key;
         }
         return $this->render('view', [
-                    'model' => $this->findModel($id),
-                    'dataProvider' => new ArrayDataProvider([
-                        'allModels' => $dataProvider,
-                    ]),
-                    'roleShootMans' =>$this->getShootBookdetailRoleNames($id, RbacName::ROLE_SHOOT_MAN),
-                    'roleContacts' =>$this->getShootBookdetailRoleNames($id, RbacName::ROLE_CONTACT),
-                    'shootMans' => $shootMans,
-                    'shootmansKey' => !$model->getIsStausShootIng() ? [] : $shootmansKey,
-                    'shootmans' => $this->isRole(RbacName::ROLE_SHOOT_LEADER) ?
-                            array_diff($shootMansArrayAll, $shootMansArray) : [],
+            'model' => $this->findModel($id),
+            'dataProvider' => new ArrayDataProvider([
+                'allModels' => $dataProvider,
+            ]),
+            'roleShootMans' =>$this->getShootBookdetailRoleNames($id, RbacName::ROLE_SHOOT_MAN),
+            'roleContacts' =>$this->getShootBookdetailRoleNames($id, RbacName::ROLE_CONTACT),
+            'shootMans' => $shootMans,
+            'shootmansKey' => $shootmansKey,
+            'shootmans' => $this->isRole(RbacName::ROLE_SHOOT_LEADER) ?
+                    array_diff($shootMansArrayAll, $shootMansArray) : [],
         ]);
     }
     
@@ -264,7 +265,7 @@ class BookdetailController extends Controller
             
             $roleContactsArray = $this->getRoleNames(RbacName::ROLE_CONTACT,$model->book_time,$model->index); //被指派了的接洽人
             $roleContactsArrayAll = $this->getRoleToUsers(RbacName::ROLE_CONTACT); //所有接洽人
-            
+            /** 修改时设置value值*/
             $contacts = $this->getShootBookdetailRoleName($id, RbacName::ROLE_CONTACT);
             foreach ($contacts as $key => $value){
                 $contactsKey[] = $key;

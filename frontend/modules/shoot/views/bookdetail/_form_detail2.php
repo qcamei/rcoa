@@ -94,8 +94,8 @@ use yii\widgets\DetailView;
                 'value' => $isShootManLeader ?
                             Select2::widget([
                                 'name' => 'shoot_man',
-                                'value' => !$model->getIsStausShootIng() ? '' : $shootmansKey,
-                                'data' => !$model->getIsStausShootIng() ? $shootmans : ArrayHelper::merge($shootMans, $shootmans),
+                                'value' => empty($model->u_shoot_man) ?  '' : $shootmansKey,
+                                'data' => empty($model->u_shoot_man) ? $shootmans : ArrayHelper::merge($shootMans, $shootmans),
                                 'options' => [
                                     'placeholder' => '选择摄影师...',
                                     'multiple' => true
