@@ -12,11 +12,11 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="system-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1>创建</h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create System', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('创建', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([

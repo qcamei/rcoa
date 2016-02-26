@@ -32,7 +32,7 @@ class System extends \yii\db\ActiveRecord
     {
         return [
             [['name'], 'string', 'max' => 64],
-            [['module_image', 'modules_link', 'des'], 'string', 'max' => 255]
+            [['module_image', 'module_link', 'des'], 'string', 'max' => 255]
         ];
     }
 
@@ -42,11 +42,11 @@ class System extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'name' => Yii::t('app', 'Name'),
-            'module_image' => Yii::t('app', 'Module Image'),
-            'modules_link' => Yii::t('app', 'Modules Link'),
-            'des' => Yii::t('app', 'Des'),
+            'id' => Yii::t('rcoa', 'ID'),
+            'name' => Yii::t('rcoa', 'Name'),
+            'module_image' => Yii::t('rcoa', 'Module Image'),
+            'module_link' => Yii::t('rcoa', 'Module Link'),
+            'des' => Yii::t('rcoa', 'Des'),
         ];
     }
 
