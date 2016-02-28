@@ -50,7 +50,7 @@ use yii\widgets\ActiveForm;
         ]); ?>
     
     <h5><b>课程信息：</b></h5>
-    <?= $form->field($model, 'fw_college')->dropDownList($colleges,['prompt'=>'请选择...',]) ?>
+    <?= $form->field($model, 'business_id')->dropDownList($business,['prompt'=>'请选择...',]) ?>
     
     <?= $form->field($model, 'fw_college')->dropDownList($colleges,['prompt'=>'请选择...','onchange'=>'wx_one(this)',]) ?>
     
@@ -99,13 +99,15 @@ use yii\widgets\ActiveForm;
         <?php echo Select2::widget([
                     'name' => 'ShootBookdetail[u_contacter]',
                     'value' => !$model->getIsValid() ? '' : $contactsKey,
-                    
                     'data' => !$model->getIsValid() ? $roleContact : ArrayHelper::merge($contacts, $roleContact),
                     'options' => [
                         'placeholder' => '选择接洽人...',
                         'multiple' => true,
-                        'maintainOrder' => true,
                     ],
+                     'pluginOptions' => [
+                        'multiple' => true,
+                        'maintainOrder' => true,
+                    ]  
                 ]); ?>
         </div>
     </div>

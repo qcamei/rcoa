@@ -27,6 +27,7 @@ $this->title = Yii::t('rcoa', 'Update {modelClass}: ', [
         'colleges' => $colleges,
         'projects' => $projects,
         'courses' => $courses,
+        'business' => $business,
     ]) ?>
     <?= $this->render('_form_model',[
          'model' => $model,

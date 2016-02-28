@@ -3,6 +3,7 @@
 namespace common\models\shoot;
 
 use common\models\expert\Expert;
+use common\models\RmsSysData;
 use common\models\shoot\ShootSite;
 use common\models\User;
 use Exception;
@@ -13,48 +14,47 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
-use yii\web\NotFoundHttpException;
-
 /**
  * This is the model class for table "{{%shoot_bookdetail}}".
  *
  * @property integer $id
- * @property integer $site_id 场地id
- * @property integer $fw_college
- * @property integer $fw_project
- * @property integer $fw_course
- * @property integer $lession_time
- * @property integer $u_teacher
- * @property integer $u_contacter
- * @property integer $u_booker
- * @property integer $u_shoot_man 摄影师
- * @property integer $book_time
- * @property integer $index
- * @property integer $shoot_mode
+ * @property integer $site_id   场地ID
+ * @property string $fw_college 项目
+ * @property string $fw_project 子项目
+ * @property string $fw_course  课程
+ * @property integer $lession_time  时长
+ * @property integer $u_teacher     老师
+ * @property integer $u_contacter   接洽人
+ * @property integer $u_booker      预约人
+ * @property integer $u_shoot_man   摄影师
+ * @property integer $book_time     拍摄时间
+ * @property integer $index         拍摄时段
+ * @property integer $shoot_mode    
  * @property integer $photograph
- * @property integer $status
- * @property integer $create_by 创建者
- * @property integer $created_at
- * @property integer $updated_at
+ * @property integer $status        状态
+ * @property integer $create_by     创建者
+ * @property integer $created_at    创建时间
+ * @property integer $updated_at    修改时间
  * @property integer $ver
- * @property string $teacher_name 老师名称
- * @property int $teacher_phone 老师电话
- * @property string $teacher_email 老师邮箱
- * 
- * @property FWItem $fwCollege
- * @property FWItem $fwCourse
- * @property FWItem $fwProject
- * @property User $booker
- * @property User $contacter
- * @property Expert $teacher    专家库->老师
- * @property User $shootMan     摄影师
- * @property ShootSite $site 场地
- * @property array $appraiseResults 评价结束
- * @property array $appraises       评价题目
- * @property srting $remark     备注
- * @property srting $start_time    开始时间
- * @property srting $historys    历史记录
- * @property srting $history    获取单条历史记录
+ * @property string $remark         备注
+ * @property string $start_time     开始时间
+ * @property string $business_id    学历ID
+ *
+ * @property ShootAppraise[] $shootAppraises  评价题目
+ * @property ShootAppraiseResult[] $shootAppraiseResults    评价结束
+ * @property RmsRmsSysData $business    获取学历
+ * @property User $booker      获取预约人
+ * @property RmsRmsProjectSysData $fwCollege    获取项目
+ * @property User $contacter   获取接洽人
+ * @property RmsRmsProjectSysData $fwCourse     获取课程
+ * @property User $createBy     
+ * @property RmsRmsProjectSysData $fwProject    获取子项目
+ * @property User $shootMan        获取摄影师
+ * @property ShootSite $site        获取场地
+ * @property Expert $teacher        获取老师
+ * @property ShootBookdetailRoleName[] $shootBookdetailRoleNames    获取被指派的角色名
+ * @property ShootHistory $history    获取单条历史记录
+ * @property ShootHistory[] $histories     获取历史记录
  */
 class ShootBookdetail extends ActiveRecord
 {
@@ -79,7 +79,7 @@ class ShootBookdetail extends ActiveRecord
     const STATUS_BREAK_PROMISE = 20;
     /** 已取消,因客观原因需要改期或者取消原定的拍摄任务，需要提前2天操作 */
     const STATUS_CANCEL = 99;
-    
+
     /** 拍摄模式-标清 */
     const SHOOT_MODE_SD = 1;
     /** 拍摄模式-高清 */
@@ -131,20 +131,22 @@ class ShootBookdetail extends ActiveRecord
     public $teacher_phone;
     /** 老师邮箱 */
     public $teacher_email;
+    
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
         return '{{%shoot_bookdetail}}';
+       
     }
-    
+
     public function scenarios() {
         return [
             self::SCENARIO_DEFAULT => ['site_id','fw_college', 'fw_project', 'fw_course', 
                 'lession_time', 'u_teacher', 'u_contacter', 
                 'u_booker','u_shoot_man' ,'book_time', 'index', 'shoot_mode',
-                'photograph', 'status', 'created_at', 'updated_at', 'ver','create_by','remark','start_time'],
+                'photograph', 'status', 'created_at', 'updated_at', 'ver','create_by','remark','start_time', 'business_id'],
             self::SCENARIO_TEMP_CREATE => ['site_id', 
                 'lession_time', 'u_contacter', 
                 'u_booker','book_time', 'index', 'shoot_mode',
@@ -164,17 +166,10 @@ class ShootBookdetail extends ActiveRecord
     public function rules()
     {
         return [
-            [['site_id', 
-                'lession_time', 'u_teacher', 'u_contacter', 
-                'u_booker','u_shoot_man' ,'book_time', 'index', 'shoot_mode',
-                'photograph', 'status', 'created_at', 'updated_at', 'ver'], 'integer'],
-            [[
-                'site_id',
-                'fw_college', 'fw_project', 'fw_course', 
-                'u_contacter', 'u_booker', 
-                'book_time', 'index','u_teacher','teacher_phone','remark','start_time'],'required', 'on'=>[self::SCENARIO_DEFAULT]],
-            [['teacher_phone'],'integer'],
-            [['teacher_email'],'email'],
+            [['site_id', 'lession_time', 'u_teacher', 'u_contacter', 'u_booker', 'u_shoot_man', 'book_time', 'index', 'shoot_mode', 'photograph', 'status', 'create_by', 'created_at', 'updated_at', 'ver'], 'integer'],
+            [['fw_college', 'fw_project', 'fw_course', 'business_id'], 'string', 'max' => 32],
+            [['remark'], 'string', 'max' => 100],
+            [['start_time'], 'string', 'max' => 20]
         ];
     }
 
@@ -185,7 +180,7 @@ class ShootBookdetail extends ActiveRecord
     {
         return [
             'id' => Yii::t('rcoa', 'ID'),
-            'site_id' => Yii::t('rcoa', 'Site'),
+            'site_id' => Yii::t('rcoa', 'Site ID'),
             'fw_college' => Yii::t('rcoa', 'Fw College'),
             'fw_project' => Yii::t('rcoa', 'Fw Project'),
             'fw_course' => Yii::t('rcoa', 'Fw Course'),
@@ -199,23 +194,21 @@ class ShootBookdetail extends ActiveRecord
             'shoot_mode' => Yii::t('rcoa', 'Shoot Mode'),
             'photograph' => Yii::t('rcoa', 'Photograph'),
             'status' => Yii::t('rcoa', 'Status'),
+            'create_by' => Yii::t('rcoa', 'Create By'),
             'created_at' => Yii::t('rcoa', 'Created At'),
             'updated_at' => Yii::t('rcoa', 'Updated At'),
-            //'teacher_name' => Yii::t('rcoa', 'Name'),
-            'teacher_phone' => Yii::t('rcoa', 'Phone'),
-            'teacher_email' => Yii::t('rcoa', 'Email'),
-            'statusName' => Yii::t('rcoa', 'Status'),
-            'teacher_email' => Yii::t('rcoa', 'Email'),
+            'ver' => Yii::t('rcoa', 'Ver'),
             'remark' => Yii::t('rcoa', 'Remark'),
             'start_time' => Yii::t('rcoa', 'Start Time'),
+            'business_id' => Yii::t('rcoa', 'Business'),
         ];
     }
-    
-    public function optimisticLock() {
+
+     public function optimisticLock() {
         return 'ver';
     }
     
-    public function afterFind() {
+     public function afterFind() {
         
         if($this->getIsBooking() && (time() - $this->updated_at > self::BOOKING_TIMEOUT))
             $this->status = self::STATUS_DEFAULT;
@@ -265,7 +258,6 @@ class ShootBookdetail extends ActiveRecord
         parent::afterFind();
     }
     
-    
     /**
      * 获取单条历史记录
      * @return ActiveQuery
@@ -277,7 +269,7 @@ class ShootBookdetail extends ActiveRecord
     }
     
     /**
-     * 获取历史记录
+     * 获取所有历史记录
      * @return ActiveQuery
      */
     public function getHistorys()
@@ -285,8 +277,18 @@ class ShootBookdetail extends ActiveRecord
         return $this->hasMany(ShootHistory::className(), ['b_id' => 'id']);
     }
     
+    
     /**
-     * 场地
+     * @return ActiveQuery
+     */
+    public function getBusiness()
+    {
+        return $this->hasOne(RmsSysData::className(), ['SYS_DATA_ID' => 'business_id']);
+    }
+
+    
+    /**
+     * 获取场地
      * @return ActiveQuery
      */
     public function getSite()
@@ -295,6 +297,7 @@ class ShootBookdetail extends ActiveRecord
     }
     
     /**
+     * 获取课程
      * @return FWItem
      */
     public function getFwCourse()
@@ -305,6 +308,7 @@ class ShootBookdetail extends ActiveRecord
     }
 
     /**
+     * 获取子项目
      * @return FWItem
      */
     public function getFwProject()
@@ -315,6 +319,7 @@ class ShootBookdetail extends ActiveRecord
     }
     
     /**
+     * 获取项目
      * @return FWItem
      */
     public function getFwCollege()
@@ -325,6 +330,7 @@ class ShootBookdetail extends ActiveRecord
     }
     
     /**
+     * 获取预约人
      * @return ActiveQuery
      */
     public function getBooker()
@@ -333,6 +339,7 @@ class ShootBookdetail extends ActiveRecord
     }
 
     /**
+     * 获取接洽人
      * @return ActiveQuery
      */
     public function getContacter()
@@ -340,6 +347,7 @@ class ShootBookdetail extends ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'u_contacter']);
     }
     /**
+     * 获取老师
      * @return ActiveQuery
      */
     public function getTeacher()
@@ -438,7 +446,7 @@ class ShootBookdetail extends ActiveRecord
     }
     
     /**
-     * 是否在【预约中】状态
+     * 获取是否在【预约中】状态
      * @return bool 
      */
     public function getIsBooking()
@@ -447,7 +455,7 @@ class ShootBookdetail extends ActiveRecord
     }
     
     /**
-     * 是否在【待指派】状态
+     * 获取是否在【待指派】状态
      */
     public function getIsAssign()
     {
@@ -455,7 +463,7 @@ class ShootBookdetail extends ActiveRecord
     }
     
     /**
-     * 是否在【评价中】状态
+     * 获取是否在【评价中】状态
      */
     public function getIsAppraise()
     {
@@ -463,14 +471,14 @@ class ShootBookdetail extends ActiveRecord
     }
     
     /**
-     * 是否在【待评价】状态
+     * 获取是否在【待评价】状态
      */
     public function getIsStausShootIng()
     {
         return $this->status == self::STATUS_SHOOTING;
     }
     /**
-     * 是否在【已失约】状态
+     * 获取是否在【已失约】状态
      */
     public function getIsStatusBreakPromise()
     {
@@ -478,7 +486,7 @@ class ShootBookdetail extends ActiveRecord
     }
     
     /**
-     * 是否在【已完成】状态
+     * 获取是否在【已完成】状态
      */
     public function getIsStatusCompleted()
     {
@@ -486,7 +494,7 @@ class ShootBookdetail extends ActiveRecord
     }
     
     /**
-     * 是否在【已取消】状态
+     * 获取是否在【已取消】状态
      */
     public function getIsStatusCancel()
     {
@@ -507,7 +515,7 @@ class ShootBookdetail extends ActiveRecord
     
     
     /**
-     * 是否在可以执行指派操作
+     * 获取是否在可以执行指派操作
      */
     public function canAssign()
     {
@@ -515,7 +523,7 @@ class ShootBookdetail extends ActiveRecord
     }
     
     /**
-     * 是否可以执行更新操作
+     * 获取是否可以执行更新操作
      */
     public function canEdit()
     {
@@ -523,7 +531,7 @@ class ShootBookdetail extends ActiveRecord
     }
     
     /**
-     * 是否可以执行/查看【评价】操作
+     * 获取是否可以执行/查看【评价】操作
      */
     public function canAppraise()
     {

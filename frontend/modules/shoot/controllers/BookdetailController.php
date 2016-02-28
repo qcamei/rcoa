@@ -3,6 +3,7 @@
 namespace frontend\modules\shoot\controllers;
 
 use common\models\expert\Expert;
+use common\models\RmsSysData;
 use common\models\shoot\searchs\ShootBookdetailSearch;
 use common\models\shoot\ShootAppraiseTemplate;
 use common\models\shoot\ShootAppraiseWork;
@@ -171,6 +172,7 @@ class BookdetailController extends Controller
                 'colleges' => $this->getCollegesForSelect(),
                 'projects' => [],
                 'courses' => [],
+                'business' => $this->getBusiness(),
             ]);
         }
     }
@@ -282,6 +284,7 @@ class BookdetailController extends Controller
                 'colleges' => $this->getCollegesForSelect(),
                 'projects' => $this->getFwItemForSelect($model->fw_college),
                 'courses' => $this->getFwItemForSelect($model->fw_project),
+                'business' => $this->getBusiness(),
             ]);
         }
     }
@@ -497,8 +500,7 @@ class BookdetailController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-    
-    
+   
     /**
      * 给所有摄影组长 发送 ee通知 email
      * @param type $model
@@ -665,8 +667,18 @@ class BookdetailController extends Controller
                 ->all();
          return ArrayHelper::map($expert, 'u_id','user.nickname');
     }
-    
-     /**
+    /**
+     * 获取学历
+     * @return type
+     */
+    protected function getBusiness(){
+        $business = RmsSysData::find()
+                  ->where(['TYPE_CODE'=> 'RMS_BUSINESS_CODE'])
+                  ->all();
+        return ArrayHelper::map($business, 'SYS_DATA_ID','NAME');
+    }
+
+        /**
       * 获取拍摄任务角色
       * @param type $b_id 任务id
       * @return type

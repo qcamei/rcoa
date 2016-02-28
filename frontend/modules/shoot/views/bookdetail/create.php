@@ -28,6 +28,7 @@ $this->title = Yii::t('rcoa', 'Create Shoot Bookdetail');
         'colleges' => $colleges,
         'projects' => $projects,
         'courses' => $courses,
+        'business' => $business,
     ]) ?>
    
 </div>
