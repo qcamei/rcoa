@@ -186,6 +186,8 @@ class ShootBookdetail extends ActiveRecord
             'fw_course' => Yii::t('rcoa', 'Fw Course'),
             'lession_time' => Yii::t('rcoa', 'Lession Time'),
             'u_teacher' => Yii::t('rcoa', 'Tearcher'),
+            'teacher_phone' => Yii::t('rcoa', 'Phone'),
+            'teacher_email' => Yii::t('rcoa', 'Email'),
             'u_contacter' => Yii::t('rcoa', 'Contacter'),
             'u_booker' => Yii::t('rcoa', 'Booker'),
             'u_shoot_man' => Yii::t('rcoa', 'Shoot Man'),
@@ -279,6 +281,7 @@ class ShootBookdetail extends ActiveRecord
     
     
     /**
+     * 获取学历
      * @return ActiveQuery
      */
     public function getBusiness()
