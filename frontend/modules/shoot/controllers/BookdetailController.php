@@ -189,6 +189,7 @@ class BookdetailController extends Controller
         $shootMansArrayAll = $this->getRoleToUsers(RbacName::ROLE_SHOOT_MAN); //所有摄影师
         /** 修改时设置value值*/
         $shootMans = $this->getShootBookdetailRoleName($id, RbacName::ROLE_SHOOT_MAN);
+        $shootmansKey = [];
         foreach ($shootMans as $key => $value){
             $shootmansKey[] = $key;
         }
@@ -267,6 +268,7 @@ class BookdetailController extends Controller
             $roleContactsArrayAll = $this->getRoleToUsers(RbacName::ROLE_CONTACT); //所有接洽人
             /** 修改时设置value值*/
             $contacts = $this->getShootBookdetailRoleName($id, RbacName::ROLE_CONTACT);
+            $contactsKey = [];
             foreach ($contacts as $key => $value){
                 $contactsKey[] = $key;
             }

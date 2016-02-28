@@ -19,7 +19,7 @@ class FrameworkManager extends Component
     /*
      * @var  $time_out 超时时长
      */
-    const TIME_OUT = 30*60;
+    const TIME_OUT = 10*60;
     
     public $url = '';
     /**
@@ -60,7 +60,6 @@ class FrameworkManager extends Component
         if ($this->cache !== null) {
             $this->cache = Instance::ensure($this->cache, Cache::className());
         }
-        
         $this->loadFromCache();
     }
     
@@ -81,7 +80,7 @@ class FrameworkManager extends Component
      * return array 所有学院数据
      */
     public function getColleges()
-    {
+    {   
         $items = [];
         foreach($this->items as $id => $item)
         {
@@ -113,7 +112,6 @@ class FrameworkManager extends Component
     public function getCourses()
     {
         $items = [];
-        
         foreach($this->items as $id => $item)
         {
             if($item->level == FWItem::LEVEL_COURSE)
@@ -132,6 +130,17 @@ class FrameworkManager extends Component
         return $this->childs[$itemId];
     }
     
+    /**
+     * 获取rms.rms_project_sys_data项目
+     * @return type
+     */
+    private function getRmsDb(){
+        $rmsdb = Yii::$app->rmsdb
+                ->createCommand('select PROJECT_SYS_DATA_ID as id, DATA_NAME as `name`, PARENT_ID as parent_id, DATA_TYPE as `level`, CREATE_DATE as created_at from rms.rms_project_sys_data')
+               ->queryAll();
+        return $rmsdb;
+    }
+   
     /**
      * 取消缓存
      */
@@ -162,10 +171,26 @@ class FrameworkManager extends Component
             return;
         }
         
+        $this->items = [];
+        $datas = $this->getRmsDb();
+        foreach ($datas as $item)
+            $this->items[$item["id"]] = $this->populateItem($item);
+
+        $this->childs = [];
+        foreach($this->items as $id => $item)
+        {
+            if($item->parent_id !== null)
+                $this->childs[$item->parent_id][] = $item;
+        }
+        $this->cache->set($this->cacheKey, [$this->items,$this->childs,  time()]);
+        
+        return;
+        
+        /** json 请求时执行 */
         Yii::trace('【Curl】请求最新项目数据！url='.$this->url, 'framework');
         $curl = new Curl();
         $response = $curl->setOption(CURLOPT_RETURNTRANSFER,true)->get($this->url);
-        
+       
         switch ($curl->responseCode) {
  
             case 'timeout':
@@ -175,9 +200,10 @@ class FrameworkManager extends Component
             case 200:
                 $this->items = [];
                 $datas = json_decode($response,true);
+                
                 foreach ($datas["data"] as $item)
                     $this->items[$item["id"]] = $this->populateItem($item);
-                
+                    
                 $this->childs = [];
                 foreach($this->items as $id => $item)
                 {

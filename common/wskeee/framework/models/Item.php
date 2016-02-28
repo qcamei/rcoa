@@ -75,6 +75,7 @@ class Item extends ActiveRecord
     }
     
     /**
+     * 获取父级ID信息
      * @return \yii\db\ActiveQuery
      */
     public function getParent()
@@ -83,6 +84,7 @@ class Item extends ActiveRecord
     }
 
     /**
+     * 获取子级ID信息
      * @return \yii\db\ActiveQuery
      */
     public function getProjects()

@@ -164,7 +164,7 @@ class ShootBookdetail extends ActiveRecord
     public function rules()
     {
         return [
-            [['site_id','fw_college', 'fw_project', 'fw_course', 
+            [['site_id', 
                 'lession_time', 'u_teacher', 'u_contacter', 
                 'u_booker','u_shoot_man' ,'book_time', 'index', 'shoot_mode',
                 'photograph', 'status', 'created_at', 'updated_at', 'ver'], 'integer'],
