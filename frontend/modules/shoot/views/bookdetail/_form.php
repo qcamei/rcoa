@@ -100,14 +100,24 @@ use yii\widgets\ActiveForm;
                     'name' => 'ShootBookdetail[u_contacter]',
                     'value' => !$model->getIsValid() ? '' : $contactsKey,
                     'data' => !$model->getIsValid() ? $roleContact : ArrayHelper::merge($contacts, $roleContact),
+                    'maintainOrder' => true,
                     'options' => [
                         'placeholder' => '选择接洽人...',
                         'multiple' => true,
                     ],
-                     'pluginOptions' => [
-                        'multiple' => true,
-                        'maintainOrder' => true,
-                    ]  
+                    'toggleAllSettings' => [
+                        'selectLabel' => '<i class="glyphicon glyphicon-ok-circle"></i> 添加全部',
+                        'unselectLabel' => '<i class="glyphicon glyphicon-remove-circle"></i> 取消全部',
+                        'selectOptions' => ['class' => 'text-success'],
+                        'unselectOptions' => ['class' => 'text-danger'],
+                    ],
+                    'pluginOptions' => [
+                        'tags' => true,
+                        'maximumInputLength' => 10
+                    ],
+                    'pluginEvents' => [
+                        'change' => 'function(){ select2Log();}'
+                    ]
                 ]); ?>
         </div>
     </div>
@@ -154,7 +164,9 @@ use yii\widgets\ActiveForm;
         $('input[name="shootbookdetail-teacher_email"]').appendTo('#emali');
    }); 
    $("input:radio").eq(1).attr("checked",true);
-
+         
+   $(".select2-selection__rendered li").prev(".select2-selection__choice").eq(0).css({border:"1px solid #F00"});
+    
 JS;
     $this->registerJs($js,  View::POS_READY); 
 ?> 
@@ -192,4 +204,8 @@ JS;
             $('#bookdetail-create-form img').attr('src',data.data.img);
 	});
     }
+    function select2Log(){
+        $(".select2-selection__rendered li").prev(".select2-selection__choice").eq(0).css({border:"1px solid #F00"});
+    } 
+    
 </script>

@@ -101,10 +101,24 @@ use yii\widgets\DetailView;
                                 'name' => 'shoot_man',
                                 'value' => empty($model->u_shoot_man) ?  '' : $shootmansKey,
                                 'data' => empty($model->u_shoot_man) ? $shootmans : ArrayHelper::merge($shootMans, $shootmans),
+                                'maintainOrder' => true,
                                 'options' => [
                                     'placeholder' => '选择摄影师...',
                                     'multiple' => true
                                 ],
+                                'toggleAllSettings' => [
+                                    'selectLabel' => '<i class="glyphicon glyphicon-ok-circle"></i> 添加全部',
+                                    'unselectLabel' => '<i class="glyphicon glyphicon-remove-circle"></i> 取消全部',
+                                    'selectOptions' => ['class' => 'text-success'],
+                                    'unselectOptions' => ['class' => 'text-danger'],
+                                ],
+                                'pluginOptions' => [
+                                    'tags' => true,
+                                    'maximumInputLength' => 10
+                                ],
+                                'pluginEvents' => [
+                                    'change' => 'function(){ select2Log();}'
+                                ]
                             ]): (isset($model->u_shoot_man) ? implode(',',$roleShootMans) : "空"),
             ],
             [

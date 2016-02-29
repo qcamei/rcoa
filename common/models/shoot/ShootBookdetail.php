@@ -42,17 +42,16 @@ use yii\db\ActiveRecord;
  *
  * @property ShootAppraise[] $shootAppraises  评价题目
  * @property ShootAppraiseResult[] $shootAppraiseResults    评价结束
- * @property RmsRmsSysData $business    获取学历
+ * @property RmsSysData $business    获取学历
  * @property User $booker      获取预约人
- * @property RmsRmsProjectSysData $fwCollege    获取项目
+ * @property RmsProjectSysData $fwCollege    获取项目
  * @property User $contacter   获取接洽人
- * @property RmsRmsProjectSysData $fwCourse     获取课程
+ * @property RmsProjectSysData $fwCourse     获取课程
  * @property User $createBy     
- * @property RmsRmsProjectSysData $fwProject    获取子项目
+ * @property RmsProjectSysData $fwProject    获取子项目
  * @property User $shootMan        获取摄影师
  * @property ShootSite $site        获取场地
  * @property Expert $teacher        获取老师
- * @property ShootBookdetailRoleName[] $shootBookdetailRoleNames    获取被指派的角色名
  * @property ShootHistory $history    获取单条历史记录
  * @property ShootHistory[] $histories     获取历史记录
  */
