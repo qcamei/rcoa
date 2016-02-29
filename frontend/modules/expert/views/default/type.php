@@ -91,9 +91,11 @@ $(document).ready(function(){
         var scrollHeight = $(document).height();
         var windowHeight = $(this).height();
         if (scrollTop + windowHeight == scrollHeight) {
+            $("#expert-type a").last().html('<center style="margin-top:20px;"><b>加载中...<b/></center>');
             setTimeout(function () {
+                $("#expert-type a").last().html("");
                 typeAjax(page);
-            }, 1500);
+            }, 2000);
         }
     });
 });   
@@ -120,7 +122,10 @@ JS;
     var pageCount = <?=$pageCount?>; //总页数
     var maxPage = pageCount/showNum; //最大页数
 function typeAjax(pagenum){
-    if(pagenum+1 > Math.ceil(maxPage))return;    // 当前页数是否大于最大页数
+    if(pagenum+1 > Math.ceil(maxPage)){
+        $("#expert-type a").last().html('<center style="margin-top:20px;"><b>无数据...<b/></center>');
+        return;    // 当前页数是否大于最大页数
+    }
     isPost = true;
     //var _url = location.href;
     $.ajax({
