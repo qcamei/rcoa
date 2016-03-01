@@ -12,7 +12,7 @@ use common\models\User;
  * This is the model class for table "{{%shoot_bookdetail_role_name}}".
  *
  * @property integer $b_id  拍摄任务id
- * @property integer $u_id  用户角色id 
+ * @property string $u_id  用户角色id 
  * @property string $role_name  角色
  * @property integer $primary_foreign 主从关系
  *

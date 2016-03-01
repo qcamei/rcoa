@@ -32,7 +32,7 @@ return [
     'Fw College' => '项目',
     'Fw Project' => '子项目',
     'Fw Course' => '课程',
-    'Business' => '学历',
+    'Business' => '类别',
     'Week Mon' => '星期一',
     'Week Tue' => '星期二',
     'Week Wed' => '星期三',

@@ -17,7 +17,7 @@ use const FILEDATA_PATH;
 /**
  * This is the model class for table "{{%user}}".
  *
- * @property integer $id
+ * @property string $id
  * @property string $username   用户名
  * @property string $nickname   昵称
  * @property integer $sex       性别

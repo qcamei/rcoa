@@ -12,7 +12,7 @@ use yii\db\ActiveRecord;
  * This is the model class for table "{{%expert_project}}".
  *
  * @property integer $id
- * @property integer $expert_id
+ * @property string $expert_id
  * @property integer $project_id
  * @property integer $start_time
  * @property integer $end_time

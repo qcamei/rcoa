@@ -23,16 +23,16 @@ use yii\db\ActiveRecord;
  * @property string $fw_project 子项目
  * @property string $fw_course  课程
  * @property integer $lession_time  时长
- * @property integer $u_teacher     老师
- * @property integer $u_contacter   接洽人
- * @property integer $u_booker      预约人
- * @property integer $u_shoot_man   摄影师
+ * @property string $u_teacher     老师
+ * @property string $u_contacter   接洽人
+ * @property string $u_booker      预约人
+ * @property string $u_shoot_man   摄影师
  * @property integer $book_time     拍摄时间
  * @property integer $index         拍摄时段
  * @property integer $shoot_mode    
  * @property integer $photograph
  * @property integer $status        状态
- * @property integer $create_by     创建者
+ * @property string $create_by     创建者
  * @property integer $created_at    创建时间
  * @property integer $updated_at    修改时间
  * @property integer $ver

@@ -13,7 +13,7 @@ use yii\web\User;
  * This is the model class for table "{{%shoot_appraise_result}}".
  *
  * @property integer $b_id
- * @property integer $u_id
+ * @property string $u_id
  * @property integer $q_id
  * @property string $role_name
  * @property integer $value

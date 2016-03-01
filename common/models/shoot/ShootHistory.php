@@ -14,7 +14,7 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property string $id
  * @property integer $b_id         任务id
- * @property integer $u_id         操作者 
+ * @property string $u_id         操作者 
  * @property integer $type         类型
  * @property string $history       历史记录
  * @property integer $created_at   创建时间

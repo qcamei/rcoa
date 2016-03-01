@@ -10,7 +10,7 @@ use yii\db\ActiveRecord;
 /**
  * This is the model class for table "{{%expert}}".
  *
- * @property integer $u_id
+ * @property string $u_id
  * @property integer $type
  * @property string $birth
  * @property string $personal_image     个人形象
