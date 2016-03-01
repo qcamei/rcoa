@@ -161,7 +161,7 @@ class BookdetailController extends Controller
                  $model->start_time = $model::START_TIME_NIGHT;
             }
             
-            $roleContactsArray = $this->getRoleNames(RbacName::ROLE_CONTACT,$model->book_time,$model->index); //被指派了的接洽人
+            $roleContactsArray = $this->getRoleNames(RbacName::ROLE_CONTACT,date('Y-m-d',$model->book_time), date('Y-m-d',strtotime("+1 days",$model->book_time)), $model->index); //被指派了的接洽人
             $roleContactsArrayAll = $this->getRoleToUsers(RbacName::ROLE_CONTACT); //所有接洽人
            
             return $this->render('create', [
@@ -187,7 +187,7 @@ class BookdetailController extends Controller
         $model = $this->findModel($id);
         $dataProvider = $model->historys;
         
-        $shootMansArray = $this->getRoleNames(RbacName::ROLE_SHOOT_MAN,$model->book_time,$model->index); //被指派了的摄影师
+        $shootMansArray = $this->getRoleNames(RbacName::ROLE_SHOOT_MAN,date('Y-m-d',$model->book_time), date('Y-m-d',strtotime("+1 days",$model->book_time)),$model->index); //被指派了的摄影师
         $shootMansArrayAll = $this->getRoleToUsers(RbacName::ROLE_SHOOT_MAN); //所有摄影师
         /** 修改时设置value值*/
         $shootMans = $this->getShootBookdetailRoleName($id, RbacName::ROLE_SHOOT_MAN);
@@ -266,7 +266,7 @@ class BookdetailController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             
-            $roleContactsArray = $this->getRoleNames(RbacName::ROLE_CONTACT,$model->book_time,$model->index); //被指派了的接洽人
+            $roleContactsArray = $this->getRoleNames(RbacName::ROLE_CONTACT,date('Y-m-d',$model->book_time), date('Y-m-d',strtotime("+1 days",$model->book_time)),$model->index); //被指派了的接洽人
             $roleContactsArrayAll = $this->getRoleToUsers(RbacName::ROLE_CONTACT); //所有接洽人
             /** 修改时设置value值*/
             $contacts = $this->getShootBookdetailRoleName($id, RbacName::ROLE_CONTACT);
@@ -719,12 +719,11 @@ class BookdetailController extends Controller
      * @param type $index      顺序
      * @return type
      */
-    protected function getRoleNames($roleNames,$bookTime, $index){
+    protected function getRoleNames($roleNames,$bookTime, $bookTimeBig, $index){
         $models = ShootBookdetail::find()
-                ->where([
-                    'book_time'=> $bookTime,
-                    'index'=>$index
-                ])
+                ->where('book_time >=' . strtotime($bookTime))
+                ->andWhere('book_time <=' . strtotime($bookTimeBig))
+                ->andWhere( '`index` =' . $index)  
                 ->all();
         $roleName = ShootBookdetailRoleName::find()
                 ->where([
