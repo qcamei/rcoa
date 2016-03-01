@@ -91,7 +91,7 @@ $(document).ready(function(){
         var scrollHeight = $(document).height();
         var windowHeight = $(this).height();
         if (scrollTop + windowHeight == scrollHeight) {
-            $("#expert-type a").last().html('<center style="margin-top:20px;"><b>加载中...<b/></center>');
+            $("#expert-type a").last().html('<center style="margin-top:10px;"><b>加载中...<b/></center>');
             setTimeout(function () {
                 $("#expert-type a").last().html("");
                 typeAjax(page);
@@ -123,7 +123,7 @@ JS;
     var maxPage = pageCount/showNum; //最大页数
 function typeAjax(pagenum){
     if(pagenum+1 > Math.ceil(maxPage)){
-        $("#expert-type a").last().html('<center style="margin-top:20px;"><b>无数据...<b/></center>');
+        $("#expert-type a").last().html('<center style="margin-top:10px;"><b>无数据...<b/></center>');
         return;    // 当前页数是否大于最大页数
     }
     isPost = true;

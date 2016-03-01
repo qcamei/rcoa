@@ -49,7 +49,8 @@ class ExpertProject extends ActiveRecord
     {
         return [
             [['expert_id', 'project_id', 'start_time'], 'required'],
-            [['expert_id', 'cost', 'compatibility'], 'integer'],
+            [['expert_id',], 'string', 'max' => 36],
+            [['cost', 'compatibility'], 'integer'],
             [['end_time'], 'checkEndTime'],
         ];
     }

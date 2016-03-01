@@ -40,7 +40,7 @@ use yii\widgets\DetailView;
             [
                 'attribute' => 'u_contacter',
                 'format' => 'raw',
-                'value' => (isset($model->u_contacter) ? implode(',',$roleContacts) : "空"),
+                'value' => (isset($model->u_contacter) ? implode(',', $roleContacts) : "空"),
                 //'value' => $model->contacter->nickname. '( '.$model->contacter->phone.' )',
             ],
             [
@@ -119,7 +119,7 @@ use yii\widgets\DetailView;
                                 'pluginEvents' => [
                                     'change' => 'function(){ select2Log();}'
                                 ]
-                            ]): (isset($model->u_shoot_man) ? implode(',',$roleShootMans) : "空"),
+                            ]): (isset($model->u_shoot_man) ? implode(',', $roleShootMans) : "空"),
             ],
             [
                 'attribute' => 'remark',

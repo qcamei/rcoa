@@ -40,7 +40,8 @@ class ShootHistory extends ActiveRecord
     {
         return [
             [['b_id', 'u_id'], 'required'],
-            [['b_id', 'u_id', 'type', 'created_at', 'updated_at'], 'integer'],
+            [['b_id', 'type', 'created_at', 'updated_at'], 'integer'],
+            [['u_id',], 'string', 'max' => 36],
             [['history'], 'string', 'max' => 500]
         ];
     }

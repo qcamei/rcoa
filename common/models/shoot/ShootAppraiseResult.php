@@ -40,7 +40,8 @@ class ShootAppraiseResult extends ActiveRecord
     {
         return [
             [['b_id', 'u_id','q_id'], 'required'],
-            [['b_id', 'u_id','q_id', 'value'], 'integer'],
+            [['b_id','q_id', 'value'], 'integer'],
+            [['u_id',], 'string', 'max' => 36],
             [['role_name'], 'string', 'max' => 64],
             [['data'], 'string', 'max' => 255]
         ];

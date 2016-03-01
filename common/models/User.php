@@ -69,8 +69,10 @@ class User extends ActiveRecord implements IdentityInterface
     public function scenarios() 
     {
         return [
-            self::SCENARIO_CREATE => ['username','nickname','sex','email','password','password2','email','ee','phone','avatar'],
-            self::SCENARIO_UPDATE => ['username','nickname','sex','email','password','password2','email','ee','phone','avatar'],
+            self::SCENARIO_CREATE => 
+                ['username','nickname','sex','email','password','password2','email','ee','phone','avatar'],
+            self::SCENARIO_UPDATE => 
+                ['username','nickname','sex','email','password','password2','email','ee','phone','avatar'],
             self::SCENARIO_DEFAULT => ['username','nickname']
         ];
     }
@@ -80,10 +82,13 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function behaviors() 
     {
+        $this->id = md5(rand(1,10000) + time());    //自动生成用户ID
         return [
             TimestampBehavior::className()
         ];
     }
+    
+    
 
     /**
      * @inheritdoc
@@ -94,9 +99,10 @@ class User extends ActiveRecord implements IdentityInterface
             [['password','password2'],'required','on'=>[self::SCENARIO_CREATE]],
             [['username','nickname','email'],'required','on'=>[self::SCENARIO_CREATE,self::SCENARIO_UPDATE]],
             [['username'],'unique'],
-            [['password'],'string', 'min'=>6, 'max'=>20],
-            [['username'],'string', 'max'=>32, 'on'=>[self::SCENARIO_CREATE]],
-            [['username','nickname', 'password', 'password_reset_token', 'email','avatar','ee','phone'], 'string', 'max' => 255],
+            [['password'],'string', 'min'=>6, 'max'=>64],
+            [['username'],'string', 'max'=>36, 'on'=>[self::SCENARIO_CREATE]],
+            [['id','username','nickname', 'password', 'password_reset_token', 'email','avatar','ee','phone'], 'string', 'max' => 
+255],
             [['sex'], 'integer'],
             [['auth_key'], 'string', 'max' => 255],
             [['password_reset_token'], 'unique'],
@@ -247,7 +253,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function setPassword($password)
     {
-        $this->password = \Yii::$app->security->generatePasswordHash($password);
+        $this->password = md5($password);
     }
     
     /**
@@ -257,7 +263,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function validatePassword($password)
     {
-        return \Yii::$app->security->validatePassword($password, $this->password);
+        return md5($password, $this->password);
     }
     
     /**

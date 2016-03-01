@@ -40,7 +40,8 @@ class Expert extends ActiveRecord
     public function rules()
     {
         return [
-            [['u_id', 'type'], 'integer'],
+            [['type'], 'integer'],
+            [['u_id',], 'string', 'max' => 36],
             [['attainment','birth'], 'string'],
             [['job_title', 'job_name', 'level', 'employer'], 'string', 'max' => 64]
         ];

@@ -705,8 +705,8 @@ class BookdetailController extends Controller
                     ])->all();
         $roleNames = [];
         foreach ($roleName as $roleNameValue){
-            $roleNames[] = $roleNameValue->primary_foreign == 1? 
-                           $roleNameValue->u->nickname.'<span style="color:red">(主)</span>'.'( '.$roleNameValue->u->phone.' )': 
+            $roleNames[] = $roleNameValue->primary_foreign == 1 ? 
+                           '<span style="color:red;">' . $roleNameValue->u->nickname . '( '.$roleNameValue->u->phone.' )</span>' :   //设置主角色
                            $roleNameValue->u->nickname;
         }
         return $roleNames;

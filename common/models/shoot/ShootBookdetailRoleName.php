@@ -37,7 +37,8 @@ class ShootBookdetailRoleName extends ActiveRecord
     {
         return [
             [['b_id', 'u_id', 'role_name'], 'required'],
-            [['b_id', 'u_id', 'primary_foreign'], 'integer'],
+            [['b_id',  'primary_foreign'], 'integer'],
+            [['u_id',], 'string', 'max' => 36],
             [['role_name'], 'string', 'max' => 64]
         ];
     }
