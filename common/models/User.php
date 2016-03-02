@@ -253,7 +253,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function setPassword($password)
     {
-        $this->password = md5($password);
+        $this->password = strtoupper(md5($password));
     }
     
     /**
@@ -263,7 +263,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function validatePassword($password)
     {
-        return md5($password, $this->password);
+        return strtoupper(md5($password)) == $this->password;
     }
     
     /**
@@ -295,9 +295,11 @@ class User extends ActiveRecord implements IdentityInterface
             {
                 $string = $upload->name;
                 $array = explode('.',$string);
+                //获取后缀名，默认为 jpg 
+                $ext = count($array) == 0 ? 'jpg' : $array[count($array)-1];
                 $uploadpath = $this->fileExists(Yii::getAlias('@filedata').'/avatars/');
-                $upload->saveAs($uploadpath.$this->username.'.'.$array[1]);
-                $this->avatar = '/avatars/'.$this->username.'.'.$array[1];
+                $upload->saveAs($uploadpath.$this->username.'.'.$ext);
+                $this->avatar = '/avatars/'.$this->username.'.'.$ext;
             }
             
             
