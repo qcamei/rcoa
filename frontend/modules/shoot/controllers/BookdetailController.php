@@ -127,6 +127,8 @@ class BookdetailController extends Controller
         }
         
         if ($model->load(Yii::$app->request->post())) {
+            $model->u_contacter = $post['ShootBookdetail']['u_contacter'][0];
+            $model->status = ShootBookdetail::STATUS_ASSIGN ;
             /** 保存预约 */
             if($this->saveNewBookdetail($model))
                //创建--给所有摄影组长发送通知
@@ -145,23 +147,13 @@ class BookdetailController extends Controller
             $model->setScenario(ShootBookdetail::SCENARIO_TEMP_CREATE);
             $model->save();
             $model->setScenario(ShootBookdetail::SCENARIO_DEFAULT);
+            
             /** 设置上下晚预约的默认开始时间 */
-            if($model->index == $model::TIME_INDEX_MORNING)
-            {
-                $model->start_time = $model::START_TIME_MORNING;
-            }
-            
-            else if($model->index == $model::TIME_INDEX_AFTERNOON)
-            {
-                $model->start_time = $model::START_TIME_AFTERNOON;
-            }
-            
-            else if($model->index == $model::TIME_INDEX_NIGHT)
-            {
-                 $model->start_time = $model::START_TIME_NIGHT;
-            }
-            
-            $roleContactsArray = $this->getRoleNames(RbacName::ROLE_CONTACT,date('Y-m-d',$model->book_time), date('Y-m-d',strtotime("+1 days",$model->book_time)), $model->index); //被指派了的接洽人
+            $model->index == $model::TIME_INDEX_MORNING ? $model->start_time = $model::START_TIME_MORNING :'';
+            $model->index == $model::TIME_INDEX_AFTERNOON ? $model->start_time = $model::START_TIME_AFTERNOON : '';
+            $model->index == $model::TIME_INDEX_NIGHT ? $model->start_time = $model::START_TIME_NIGHT : '';
+           
+            $roleContactsArray = $this->isRoleNames(RbacName::ROLE_CONTACT,date('Y-m-d',$model->book_time), date('Y-m-d',strtotime("+1 days",$model->book_time)), $model->index); //已指派了的接洽人
             $roleContactsArrayAll = $this->getRoleToUsers(RbacName::ROLE_CONTACT); //所有接洽人
            
             return $this->render('create', [
@@ -187,7 +179,7 @@ class BookdetailController extends Controller
         $model = $this->findModel($id);
         $dataProvider = $model->historys;
         
-        $shootMansArray = $this->getRoleNames(RbacName::ROLE_SHOOT_MAN,date('Y-m-d',$model->book_time), date('Y-m-d',strtotime("+1 days",$model->book_time)),$model->index); //被指派了的摄影师
+        $shootMansArray = $this->isRoleNames(RbacName::ROLE_SHOOT_MAN,date('Y-m-d',$model->book_time), date('Y-m-d',strtotime("+1 days",$model->book_time)),$model->index); //被指派了的摄影师
         $shootMansArrayAll = $this->getRoleToUsers(RbacName::ROLE_SHOOT_MAN); //所有摄影师
         /** 修改时设置value值*/
         $shootMans = $this->getShootBookdetailRoleName($id, RbacName::ROLE_SHOOT_MAN);
@@ -216,14 +208,22 @@ class BookdetailController extends Controller
      */
     public function actionAssign($id)
     {
+        $post = Yii::$app->getRequest()->getBodyParams();
         $model = $this->findModel($id);
         $oldShootMan = $model->u_shoot_man;
+        $model->u_shoot_man = $post['shoot_man'][0];
+        /**摄影师非空的时候状态为【待评价】*/
+        if(!empty($model->u_shoot_man))
+            $model->status = ShootBookdetail::STATUS_SHOOTING;
+        $model->save();
         /** 状态为【待评价】时清空数据*/
         if($model->getIsStausShootIng()){ 
             ShootBookdetailRoleName::deleteAll(['and', 'b_id ='.$id, 'role_name ="'.RbacName::ROLE_SHOOT_MAN.'"']);
         }
-        $this->saveShootBookdetailRoleName($model, RbacName::ROLE_SHOOT_MAN);
-        $this->saveNewHistory($model);
+        $this->saveShootBookdetailRoleName($model, RbacName::ROLE_SHOOT_MAN);   //保存【已经指派摄影师】
+        $this->saveNewHistory($model);  //保存编辑信息
+        
+        /** 摄影师非null的时候为【更改指派】 */
         if($oldShootMan != null){
             //更改指派--给接洽人发通知
             $this->sendContacterNotification($model, '更改指派', 'shoot\ShootEditAssign-u_contacter-html');
@@ -256,17 +256,19 @@ class BookdetailController extends Controller
      */
     public function actionUpdate($id)
     {
+        $post = Yii::$app->getRequest()->getBodyParams();
         $model = $this->findModel($id);
         if ($model->load(Yii::$app->request->post())) {
-            ShootBookdetailRoleName::deleteAll(['and', 'b_id ='.$id, 'role_name ="'.RbacName::ROLE_CONTACT.'"']);//清空数据
-            
-            $this->saveShootBookdetailRoleName($model, RbacName::ROLE_CONTACT);
-            $this->saveNewHistory($model);
+            $model->u_contacter = $post['ShootBookdetail']['u_contacter'][0];
+            $model->status = ShootBookdetail::STATUS_ASSIGN ;
             $model->save();
+            ShootBookdetailRoleName::deleteAll(['and', 'b_id ='.$id, 'role_name ="'.RbacName::ROLE_CONTACT.'"']);//清空【已指派接洽人】数据
+            $this->saveShootBookdetailRoleName($model, RbacName::ROLE_CONTACT); //保存【已指派接洽人】
+            $this->saveNewHistory($model);  //保存编辑信息
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             
-            $roleContactsArray = $this->getRoleNames(RbacName::ROLE_CONTACT,date('Y-m-d',$model->book_time), date('Y-m-d',strtotime("+1 days",$model->book_time)),$model->index); //被指派了的接洽人
+            $roleContactsArray = $this->isRoleNames(RbacName::ROLE_CONTACT,date('Y-m-d',$model->book_time), date('Y-m-d',strtotime("+1 days",$model->book_time)),$model->index); //被指派了的接洽人
             $roleContactsArrayAll = $this->getRoleToUsers(RbacName::ROLE_CONTACT); //所有接洽人
             /** 修改时设置value值*/
             $contacts = $this->getShootBookdetailRoleName($id, RbacName::ROLE_CONTACT);
@@ -296,6 +298,7 @@ class BookdetailController extends Controller
     public function actionCancel($id)
     {   
         $model = $this->findModel($id);
+        $trans = \Yii::$app->db->beginTransaction();
         try
         {  
             if(Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model]))
@@ -303,8 +306,10 @@ class BookdetailController extends Controller
                 if(!$model->getIsStatusCancel() && !$model->getIsStatusCompleted()){
                     $model->status =  $model::STATUS_CANCEL;
                     $model->save();
+                    if($model->save())
+                        ShootBookdetailRoleName::updateAll(['iscancel' => 'Y'],'b_id = '.$id); //拍摄任务取消时修改iscancel字段
+                    $this->saveNewHistory($model);  //保存编辑信息
                     Yii::$app->getSession()->setFlash('success','操作成功！');
-                    $this->saveNewHistory($model);
                     //取消--给所有摄影组长发通知
                     $this->sendShootLeadersNotification($model, '取消', 'shoot\CancelShoot-html');
                     /** 非编导自己取消任务才发送 */
@@ -320,8 +325,10 @@ class BookdetailController extends Controller
                         $this->sendTeacherNotification($model, '取消', 'shoot\CancelShoot-u_teacher-html');
                     }
                 }
+                $trans->commit();
             }
          } catch (\Exception $ex) {
+            $trans ->rollBack();
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
         return $this->redirect(['index', 'date' => date('Y-m-d', $model->book_time), 'b_id' => $model->id, 'site'=> $model->site_id]);
@@ -346,14 +353,15 @@ class BookdetailController extends Controller
      */
     private function saveNewBookdetail($model)
     {
-        //保存接洽人到ShootBookdetailRoleName表里
-        $this->saveShootBookdetailRoleName($model, RbacName::ROLE_CONTACT);
         
         $trans = \Yii::$app->db->beginTransaction();
         try
         {
             if(!$model->save())
                 throw new Exception(json_encode($model->getErrors()));
+            //保存接洽人到ShootBookdetailRoleName表里  
+            if($model->save())
+               $this->saveShootBookdetailRoleName($model, RbacName::ROLE_CONTACT);    
             
             $work = new ShootAppraiseWork(['b_id'=>$model->id]);
             if(!$work->save(ShootAppraiseTemplate::find()->asArray()->all()))
@@ -375,12 +383,11 @@ class BookdetailController extends Controller
      * @param type $role 角色
      */
     public function saveShootBookdetailRoleName($model, $role){
-        //$role为接洽人角色时读取_from.php提交的数据
-        $role == RbacName::ROLE_CONTACT ? $body = Yii::$app->getRequest()->getBodyParams() : $post = Yii::$app->request->post();
+        $post = Yii::$app->getRequest()->getBodyParams();
         $values = [];
-        //$role为接洽人角色时读取_from.php提交的数据
-        $shootRoleName = $role == RbacName::ROLE_CONTACT ? $body['ShootBookdetail']['u_contacter'] : $post['shoot_man'];
-        $bid = $role == RbacName::ROLE_CONTACT  ? $body['b_id'] : $post['b_id'];
+        //$role为【接洽人角色】时读取u_contacter
+        $shootRoleName = $role == RbacName::ROLE_CONTACT ? $post['ShootBookdetail']['u_contacter'] : $post['shoot_man'];
+        $bid = $post['b_id'];
         /** 重组提交的数据为$values数组 */
         foreach($shootRoleName as $key => $value)
         {
@@ -391,36 +398,14 @@ class BookdetailController extends Controller
                 'primary_foreign' => $key == 0 ? 1 : 0,
             ];
         }
-        try
-        {   
-            if($model->load(\Yii::$app->getRequest()->post()));
-            {
-                /** 添加$values数组到ShootBookdetailRoleName表里 */
-                \Yii::$app->db->createCommand()->batchInsert(ShootBookdetailRoleName::tableName(), 
-                [
-                    'b_id',
-                    'u_id',
-                    'role_name',
-                    'primary_foreign'
-                ], $values)->execute();
-                $roleName = $this->findShootBookdetailRoleName($model->id, $role);
-                /** 为接洽人时设置u_contacter 否则为u_shoot_man */
-                if($role == RbacName::ROLE_CONTACT ){
-                    $model->u_contacter = ($roleName->role_name == $role && $roleName->primary_foreign == 1) ? 
-                        $roleName->u_id : Yii::$app->user->id;
-                    $model->status = ShootBookdetail::STATUS_ASSIGN ;
-                }else{
-                    $model->u_shoot_man = ($roleName->role_name == $role && $roleName->primary_foreign == 1) ? 
-                        $roleName->u_id : Yii::$app->user->id;
-                    if(!empty($model->u_shoot_man)){
-                        $model->status = ShootBookdetail::STATUS_SHOOTING;
-                    }
-                    $model->save();
-                }
-            }
-        } catch (\Exception $ex) {
-            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
-        }
+        /** 添加$values数组到ShootBookdetailRoleName表里 */
+        \Yii::$app->db->createCommand()->batchInsert(ShootBookdetailRoleName::tableName(), 
+        [
+            'b_id',
+            'u_id',
+            'role_name',
+            'primary_foreign'
+        ], $values)->execute();
     }
     
      /**
@@ -482,18 +467,13 @@ class BookdetailController extends Controller
     }
     
     /**
-     * 读取拍摄任务角色数据
+     * 读取拍摄任务已指派的角色数据
      * @param type $b_id    拍摄任务id
-     * @param type $role_name 角色名
      * @return type
      * @throws NotFoundHttpException
      */
-    protected function findShootBookdetailRoleName($b_id, $role_name){
-        $roleName = ShootBookdetailRoleName::find()
-                    ->where([
-                       'b_id' => $b_id,
-                       'role_name' => $role_name,
-                    ])->one();
+    protected function findShootBookdetailRoleName($b_id){
+        $roleName = ShootBookdetailRoleName::findOne($b_id);
         if ($roleName !== null) {
             return $roleName;
         } else {
@@ -668,7 +648,7 @@ class BookdetailController extends Controller
          return ArrayHelper::map($expert, 'u_id','user.nickname');
     }
     /**
-     * 获取学历
+     * 获取类别
      * @return type
      */
     protected function getBusiness(){
@@ -679,30 +659,30 @@ class BookdetailController extends Controller
     }
 
         /**
-      * 获取拍摄任务角色
+      * 获取拍摄任务已指派角色
       * @param type $b_id 任务id
       * @return type
       */
     protected function getShootBookdetailRoleName($b_id, $role_name){
         $roleName = ShootBookdetailRoleName::find()
                 ->where(['b_id' => $b_id, 'role_name' => $role_name])
+                ->orderBy('primary_foreign DESC')
                 ->with('u') 
                 ->all();
         return ArrayHelper::map($roleName, 'u_id','u.nickname');
     }
     
     /**
-     * 获取拍摄任务所有主角色信息
+     * 获取拍摄任务所有已指派的(主)角色信息
      * @param type $b_id
      * @param type $role_name 角色名
      * @return type
      */
     protected function getShootBookdetailRoleNames($b_id, $role_name){
         $roleName = ShootBookdetailRoleName::find()
-                    ->where([
-                        'b_id'=> $b_id,
-                        'role_name' => $role_name,
-                    ])->all();
+                    ->where(['b_id'=> $b_id, 'role_name' => $role_name,])
+                    ->orderBy('primary_foreign DESC')
+                    ->all();
         $roleNames = [];
         foreach ($roleName as $roleNameValue){
             $roleNames[] = $roleNameValue->primary_foreign == 1 ? 
@@ -713,23 +693,24 @@ class BookdetailController extends Controller
     }
     
     /**
-     * 获取拍摄任务被指派的角色
+     * 同一时间段的拍摄任务是否存在已被指派过的角色
      * @param type $roleNames  角色
      * @param type $bookTime   任务时间
      * @param type $index      顺序
      * @return type
      */
-    protected function getRoleNames($roleNames,$bookTime, $bookTimeBig, $index){
+    protected function isRoleNames($roleNames,$bookTime, $bookTimeBig, $index){
         $models = ShootBookdetail::find()
                 ->where('book_time >=' . strtotime($bookTime))
                 ->andWhere('book_time <=' . strtotime($bookTimeBig))
-                ->andWhere( '`index` =' . $index)  
+                ->andWhere( '`index` =' . $index)
                 ->all();
         $roleName = ShootBookdetailRoleName::find()
                 ->where([
                     'b_id'=> ArrayHelper::getColumn($models, 'id'), 
                     'role_name' => $roleNames
                 ])
+                ->andWhere("iscancel != 'Y'")
                 ->all();
         return ArrayHelper::map($roleName, 'u_id', 'u.nickname');
     }
