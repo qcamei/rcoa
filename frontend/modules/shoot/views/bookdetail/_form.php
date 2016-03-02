@@ -136,6 +136,10 @@ use yii\widgets\ActiveForm;
     ]) ?>
 
     <?= $form->field($model, 'photograph')->checkbox()->label('') ?>
+    
+    <!--<?= $form->field($model, 'photograph')->checkboxList($model->timeIndexMap)->label('') ?>-->
+    
+    <!--隐藏的字段属性-->
     <?= Html::activeHiddenInput($model, 'ver') ?>
     <?= Html::activeHiddenInput($model, 'site_id') ?>
     <?= Html::activeHiddenInput($model, 'book_time') ?>

@@ -293,10 +293,13 @@ class User extends ActiveRecord implements IdentityInterface
             $upload = UploadedFile::getInstance($this, 'avatar');
             if($upload != null)
             {
+                $string = $upload->name;
+                $array = explode('.',$string);
                 $uploadpath = $this->fileExists(Yii::getAlias('@filedata').'/avatars/');
-                $upload->saveAs($uploadpath.$this->username.'.jpg');
-                $this->avatar = FILEDATA_PATH.'avatars/'.$this->username.'.jpg';
+                $upload->saveAs($uploadpath.$this->username.'.'.$array[1]);
+                $this->avatar = '/avatars/'.$this->username.'.'.$array[1];
             }
+            
             
             if($this->scenario == self::SCENARIO_CREATE)
             {

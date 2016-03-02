@@ -60,9 +60,12 @@ class DefaultController extends Controller
         $model = $this->findModel($id);
         $model->scenario = User::SCENARIO_UPDATE;
         
-        if($model->load(Yii::$app->getRequest()->post()) && $model->save())
+        if($model->load(Yii::$app->getRequest()->post()))
         {
-            return $this->redirect(['index']);
+            if($model->save())
+                return $this->redirect(['index']);
+            else
+                Yii::error ($model->errors);
         }else
         {
             $model->password = '';

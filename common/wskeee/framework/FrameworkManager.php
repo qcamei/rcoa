@@ -135,8 +135,8 @@ class FrameworkManager extends Component
      * @return type
      */
     private function getRmsDb(){
-        $rmsdb = Yii::$app->rmsdb
-                ->createCommand('select PROJECT_SYS_DATA_ID as id, DATA_NAME as `name`, PARENT_ID as parent_id, DATA_TYPE as `level`, CREATE_DATE as created_at from rms.rms_project_sys_data')
+        $rmsdb = Yii::$app->db
+                ->createCommand('select PROJECT_SYS_DATA_ID as id, DATA_NAME as `name`, PARENT_ID as parent_id, DATA_TYPE as `level`, CREATE_DATE as created_at from rms_project_sys_data')
                ->queryAll();
         return $rmsdb;
     }
