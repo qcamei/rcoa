@@ -75,9 +75,9 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
             //预约任务时间
             $bookTime = date('Y-m-d H:i:s',$model->book_time);
             //date('d')+1 明天预约时间
-            $dayTomorrow = date('Y-m-d H:i:s',mktime(10,0,0,date('m'),date('d')+1,date('y')));
+            $dayTomorrow = date('Y-m-d H:i:s',strtotime("+1 days"));
             //30天后预约时间
-            $dayEnd = date('Y-m-d H:i:s',mktime(10,0,0,date('m'),date('d')+31,date('y')));
+            $dayEnd = date('Y-m-d H:i:s',strtotime("+31 days"));
             if($dayTomorrow < $bookTime && $bookTime < $dayEnd){
                 $buttonName = $isNew  ? '预约' : (!$isValid ? '无' : $model->getStatusName());
             }else{
