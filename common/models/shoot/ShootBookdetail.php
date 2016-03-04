@@ -228,9 +228,9 @@ class ShootBookdetail extends ActiveRecord
                     $values = [];  
                     $info = $this->getAppraiseInfo();  
                     $unAppRole = $info[RbacName::ROLE_SHOOT_MAN]['hasDo'] == false ? RbacName::ROLE_SHOOT_MAN : RbacName::ROLE_CONTACT;
-                    $unUserId = $unAppRole == RbacName::ROLE_SHOOT_MAN ? $this->u_shoot_man : $this->u_contacter;
+                    $unUserId =  $info[RbacName::ROLE_SHOOT_MAN]['hasDo'] == false ? $this->u_contacter : $this->u_shoot_man;
 
-                    foreach($this->appraises as $appraise)  
+                    foreach($this->appraises as $appraise)
                     {  
                         if($appraise->role_name == $unAppRole)
                             $values[] = [$this->id,$unUserId,$unAppRole,$appraise->q_id,$appraise->value];
@@ -242,15 +242,11 @@ class ShootBookdetail extends ActiveRecord
                 }  else {
                     $this->status = self::STATUS_BREAK_PROMISE;
                 }
-                $this->save();
-                Yii::error("aaaaaa");
+                $this->save(false,['status']);
                 $trans->commit();
                 unset($this->appraiseResults);
             } catch (Exception $ex) {
-                
-                Yii::error($values);
-                Yii::error($ex);
-                 $trans->rollBack();
+                $trans->rollBack();
             }  
         }
    
