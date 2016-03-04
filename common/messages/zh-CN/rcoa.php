@@ -41,9 +41,10 @@ return [
     'Week Sat' => '星期六',
     'Week Sun' => '星期日',
     
-    //新闻时间
+    //新闻事件
     'Module Image' => '模块图片',
     'Module Link' => '模块链接',
+    'Jump' => '是否跳转页面',
     
     //题目
     'Create Question' => '创建题目',

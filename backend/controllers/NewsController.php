@@ -61,8 +61,13 @@ class NewsController extends Controller
     public function actionCreate()
     {
         $model = new System();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $post = Yii::$app->request->post();
+        
+        //var_dump($post);exit;
+        //$model->isjump = $post['System']['isjump'] == 1 ? 'Y' : 'N';
+        if ($model->load(Yii::$app->request->post())) {
+            $model->isjump = $post['System']['isjump'];
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [

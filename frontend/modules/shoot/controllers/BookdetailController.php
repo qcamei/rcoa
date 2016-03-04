@@ -212,41 +212,49 @@ class BookdetailController extends Controller
         $model = $this->findModel($id);
         $oldShootMan = $model->u_shoot_man;
         $model->u_shoot_man = $post['shoot_man'][0];
-        /**摄影师非空的时候状态为【待评价】*/
         if(!empty($model->u_shoot_man))
-            $model->status = ShootBookdetail::STATUS_SHOOTING;
-        $model->save();
-        /** 状态为【待评价】时清空数据*/
-        if($model->getIsStausShootIng()){ 
-            ShootBookdetailRoleName::deleteAll(['and', 'b_id ='.$id, 'role_name ="'.RbacName::ROLE_SHOOT_MAN.'"']);
+           $model->status = ShootBookdetail::STATUS_SHOOTING;
+        /** 开启事务 */
+        $trans = \Yii::$app->db->beginTransaction();
+        try
+        {
+            if($model->save()) {
+                $this->emptyShootBookdetailRoleName($id, RbacName::ROLE_SHOOT_MAN);    //清空数据
+                $this->saveShootBookdetailRoleName(RbacName::ROLE_SHOOT_MAN); //保存【已指派接洽人】
+                $this->saveNewHistory($model);  //保存编辑信息
+                 /** 摄影师非null的时候为【更改指派】 */
+                if($oldShootMan != null){
+                    //更改指派--给接洽人发通知
+                    $this->sendContacterNotification($model, '更改指派', 'shoot\ShootEditAssign-u_contacter-html');
+                    //更改指派--给旧摄影师发通知
+                    $this->sendShootManNotification($model, '更改指派', 'shoot\ShootEditAssign-u_shoot_man-html');
+                    //更改指派--给新摄影师发通知
+                    $this->sendShootManNotification($model, '更改指派', 'shoot\ShootAssign-u_shoot_man-html');
+                }else{
+                    //指派--给编导发通知
+                    $this->sendBookerNotification($model, '指派', 'shoot\ShootAssign-u_contacter-html');
+                    //指派--给接茬人发通知
+                    $this->sendContacterNotification($model, '指派', 'shoot\ShootAssign-u_contacter-html');
+                    //指派--给摄影师发通知
+                    $this->sendShootManNotification($model, '指派', 'shoot\ShootAssign-u_shoot_man-html');
+                    //指派--给老师发通知
+                    $this->sendTeacherNotification($model, '指派', 'shoot\ShootAssign-u_teacher-html');
+                }
+            }
+            $trans->commit();
+            Yii::$app->getSession()->setFlash('success','操作成功！');   
+        } catch (\Exception $ex) {
+            $trans ->rollBack();
+            throw new NotFoundHttpException("保存任务失败！".$ex->getMessage()); 
         }
-        $this->saveShootBookdetailRoleName($model, RbacName::ROLE_SHOOT_MAN);   //保存【已经指派摄影师】
-        $this->saveNewHistory($model);  //保存编辑信息
-        
-        /** 摄影师非null的时候为【更改指派】 */
-        if($oldShootMan != null){
-            //更改指派--给接洽人发通知
-            $this->sendContacterNotification($model, '更改指派', 'shoot\ShootEditAssign-u_contacter-html');
-            //更改指派--给旧摄影师发通知
-            $this->sendShootManNotification($model, '更改指派', 'shoot\ShootEditAssign-u_shoot_man-html');
-            //更改指派--给新摄影师发通知
-            $this->sendShootManNotification($model, '更改指派', 'shoot\ShootAssign-u_shoot_man-html');
-        }else{
-            //指派--给编导发通知
-            $this->sendBookerNotification($model, '指派', 'shoot\ShootAssign-u_contacter-html');
-            //指派--给接茬人发通知
-            $this->sendContacterNotification($model, '指派', 'shoot\ShootAssign-u_contacter-html');
-            //指派--给摄影师发通知
-            $this->sendShootManNotification($model, '指派', 'shoot\ShootAssign-u_shoot_man-html');
-            //指派--给老师发通知
-            $this->sendTeacherNotification($model, '指派', 'shoot\ShootAssign-u_teacher-html');
-        }
+       
         $this->redirect(['index',
             'date' => date('Y-m-d', $model->book_time), 
             'b_id' => $model->id, 
             'site'=> $model->site_id
         ]);
     }
+  
 
     /**
      * Updates an existing ShootBookdetail model.
@@ -261,14 +269,26 @@ class BookdetailController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $model->u_contacter = $post['ShootBookdetail']['u_contacter'][0];
             $model->status = ShootBookdetail::STATUS_ASSIGN ;
-            $model->save();
-            ShootBookdetailRoleName::deleteAll(['and', 'b_id ='.$id, 'role_name ="'.RbacName::ROLE_CONTACT.'"']);//清空【已指派接洽人】数据
-            $this->saveShootBookdetailRoleName($model, RbacName::ROLE_CONTACT); //保存【已指派接洽人】
-            $this->saveNewHistory($model);  //保存编辑信息
+            /** 开启事务 */
+            $trans = \Yii::$app->db->beginTransaction();
+            try
+            {
+                if($model->save()) {
+                    $this->emptyShootBookdetailRoleName($id, RbacName::ROLE_CONTACT);    //清空数据
+                    $this->saveShootBookdetailRoleName(RbacName::ROLE_CONTACT); //保存【已指派接洽人】
+                    $this->saveNewHistory($model);  //保存编辑信息
+                }
+                $trans->commit();
+                Yii::$app->getSession()->setFlash('success','操作成功！');
+            } catch (\Exception $ex) {
+                $trans ->rollBack();
+                throw new NotFoundHttpException("保存任务失败！".$ex->getMessage()); 
+            }
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            
-            $roleContactsArray = $this->isRoleNames(RbacName::ROLE_CONTACT,date('Y-m-d',$model->book_time), date('Y-m-d',strtotime("+1 days",$model->book_time)),$model->index); //被指派了的接洽人
+            $book_time = date('Y-m-d',$model->book_time);   //拍摄任务时间
+            $book_time_big = date('Y-m-d',strtotime("+1 days",$model->book_time));  //大于拍摄任务时间
+            $roleContactsArray = $this->isRoleNames(RbacName::ROLE_CONTACT,$book_time,$book_time_big ,$model->index); //被指派了的接洽人
             $roleContactsArrayAll = $this->getRoleToUsers(RbacName::ROLE_CONTACT); //所有接洽人
             /** 修改时设置value值*/
             $contacts = $this->getShootBookdetailRoleName($id, RbacName::ROLE_CONTACT);
@@ -292,44 +312,45 @@ class BookdetailController extends Controller
     }
     
     /**
-     * 取消任务改变状态
+     * 取消任务
      * @param type $id
      */
     public function actionCancel($id)
     {   
         $model = $this->findModel($id);
-        $trans = \Yii::$app->db->beginTransaction();
-        try
-        {  
-            if(Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model]))
-            {
-                if(!$model->getIsStatusCancel() && !$model->getIsStatusCompleted()){
-                    $model->status =  $model::STATUS_CANCEL;
-                    $model->save();
-                    if($model->save())
+        if(Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model]))
+        {
+            if(!$model->getIsStatusCancel() && !$model->getIsStatusCompleted()){
+                $model->status =  $model::STATUS_CANCEL;
+                /** 开启事务 */
+                $trans = \Yii::$app->db->beginTransaction();
+                try
+                {  
+                    if($model->save()){
                         ShootBookdetailRoleName::updateAll(['iscancel' => 'Y'],'b_id = '.$id); //拍摄任务取消时修改iscancel字段
-                    $this->saveNewHistory($model);  //保存编辑信息
-                    Yii::$app->getSession()->setFlash('success','操作成功！');
-                    //取消--给所有摄影组长发通知
-                    $this->sendShootLeadersNotification($model, '取消', 'shoot\CancelShoot-html');
-                    /** 非编导自己取消任务才发送 */
-                    if(!$model->u_booker)  
-                        $this->sendBookerNotification($model, '取消', 'shoot\CancelShoot-html');
-                    /** 摄影师非空才发送 */
-                    if(!empty($model->u_shoot_man)){
-                        //取消--给接洽人发通知
-                        $this->sendContacterNotification($model, '取消', 'shoot\CancelShoot-html');
-                        //取消--给摄影师发通知
-                        $this->sendShootManNotification($model, '取消', 'shoot\CancelShoot-html');
-                        //取消--给老师发通知
-                        $this->sendTeacherNotification($model, '取消', 'shoot\CancelShoot-u_teacher-html');
+                        $this->saveNewHistory($model);  //保存编辑信息
+                        //取消--给所有摄影组长发通知
+                        $this->sendShootLeadersNotification($model, '取消', 'shoot\CancelShoot-html');
+                        /** 非编导自己取消任务才发送 */
+                        if(!$model->u_booker)  
+                            $this->sendBookerNotification($model, '取消', 'shoot\CancelShoot-html');
+                        /** 摄影师非空才发送 */
+                        if(!empty($model->u_shoot_man)){
+                            //取消--给接洽人发通知
+                            $this->sendContacterNotification($model, '取消', 'shoot\CancelShoot-html');
+                            //取消--给摄影师发通知
+                            $this->sendShootManNotification($model, '取消', 'shoot\CancelShoot-html');
+                            //取消--给老师发通知
+                            $this->sendTeacherNotification($model, '取消', 'shoot\CancelShoot-u_teacher-html');
+                        }
                     }
+                    $trans->commit();
+                    Yii::$app->getSession()->setFlash('success','操作成功！');
+                }catch (\Exception $ex) {
+                    $trans ->rollBack();
+                    Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
                 }
-                $trans->commit();
-            }
-         } catch (\Exception $ex) {
-            $trans ->rollBack();
-            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
+            } 
         }
         return $this->redirect(['index', 'date' => date('Y-m-d', $model->book_time), 'b_id' => $model->id, 'site'=> $model->site_id]);
     }
@@ -361,7 +382,7 @@ class BookdetailController extends Controller
                 throw new Exception(json_encode($model->getErrors()));
             //保存接洽人到ShootBookdetailRoleName表里  
             if($model->save())
-               $this->saveShootBookdetailRoleName($model, RbacName::ROLE_CONTACT);    
+               $this->saveShootBookdetailRoleName(RbacName::ROLE_CONTACT);    
             
             $work = new ShootAppraiseWork(['b_id'=>$model->id]);
             if(!$work->save(ShootAppraiseTemplate::find()->asArray()->all()))
@@ -379,14 +400,13 @@ class BookdetailController extends Controller
     
     /**
      * 保存数据到ShootBookdetailRoleName表里
-     * @param type $model 
      * @param type $role 角色
      */
-    public function saveShootBookdetailRoleName($model, $role){
+    public function saveShootBookdetailRoleName($roleName){
         $post = Yii::$app->getRequest()->getBodyParams();
         $values = [];
         //$role为【接洽人角色】时读取u_contacter
-        $shootRoleName = $role == RbacName::ROLE_CONTACT ? $post['ShootBookdetail']['u_contacter'] : $post['shoot_man'];
+        $shootRoleName = $roleName == RbacName::ROLE_CONTACT ? $post['ShootBookdetail']['u_contacter'] : $post['shoot_man'];
         $bid = $post['b_id'];
         /** 重组提交的数据为$values数组 */
         foreach($shootRoleName as $key => $value)
@@ -394,7 +414,7 @@ class BookdetailController extends Controller
             $values[] = [
                 'b_id' => $bid,
                 'u_id' => $value,
-                'role_name' => $role,
+                'role_name' => $roleName,
                 'primary_foreign' => $key == 0 ? 1 : 0,
             ];
         }
@@ -415,20 +435,15 @@ class BookdetailController extends Controller
     public function saveNewHistory($model)
     {
         $post = Yii::$app->getRequest()->getBodyParams();
-        $dbTrans = \Yii::$app->db->beginTransaction();
-        try{ 
-            $history = new ShootHistory();
-            /**历史记录为空不保存*/
-            if(!empty($post['editreason'])){
-                $history->b_id = $model->id;
-                $history->u_id = Yii::$app->user->id;
-                $history->history = $post['editreason'];
-                $history->save();
-                $dbTrans->commit();  
-            } 
-        } catch (Exception $ex) {
-            $dbTrans->rollback();     
-        }
+        $history = new ShootHistory();
+        /**历史记录非空保存*/
+        if(!empty($post['editreason'])){
+            $history->b_id = $model->id;
+            $history->u_id = Yii::$app->user->id;
+            $history->history = $post['editreason'];
+            $history->save();
+        } 
+        
     }
     
     /**
@@ -447,6 +462,19 @@ class BookdetailController extends Controller
         }
         
         $this->redirect(['index','date'=>$date,'b_id'=>$b_id, 'site'=>$model->site_id]);
+    }
+    
+    /**
+     * 清空【已指派角色】数据
+     * @param type $b_id  任务ID
+     * @param type $roleNmae 角色
+     */
+    public function emptyShootBookdetailRoleName($b_id, $roleName){
+        return ShootBookdetailRoleName::deleteAll([
+                'and', 
+                'b_id ='.$b_id, 
+                'role_name ="'.$roleName.'"'
+            ]);
     }
     
     /**

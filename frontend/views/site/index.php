@@ -2,6 +2,7 @@
 
 use frontend\views\SiteAsset;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\View;
 
 /* @var $this View */
@@ -40,11 +41,11 @@ $this->title = 'My Yii Application';
                             </p>
                     </div>
                </div>
-                <div class="item">
+                <!--<div class="item">
                     <video id="video1" src="<?=Yii::$app->request->hostInfo?>/filedata/movies/jgpearslogo.mp4">
                         您的浏览器不支持 video 标签。
                     </video>
-                </div>
+                </div>-->
             </div>
             <a data-slide="prev" href="#carousel-451276" class="left carousel-control">‹</a> 
             <a data-slide="next" href="#carousel-451276" class="right carousel-control">›</a>
@@ -53,16 +54,23 @@ $this->title = 'My Yii Application';
 
     <div class="body-content">
         <div class="row">
-            <?php foreach ($model as $module):?>
-            <div class="col-sm-4">
-                <a href="<?= Yii::$app->request->hostInfo.$module->module_link ?>"><p><?= Html::img(Yii::$app->request->hostInfo.$module->module_image,[
-                    'class' => 'center-block',
-                    'width' => '224',
-                    'height' => '124',
-                    'alt' => $module->des,
-                ])?></p></a>
-            </div>
-            <?php endforeach;?>
+            <?php foreach ($model as $module){
+                echo '<div class="col-sm-3">';
+
+                echo Html::a(Html::img($module->module_image,[
+                        'class' => 'center-block',
+                        'width' => '224',
+                        'height' => '124',
+                        'style' => 'margin:10px;',
+                        'alt' => $module->des,
+                    ]), $module->isjump == 0  ? $module->module_link : 
+                        (!\Yii::$app->user->isGuest ? 
+                            $module->module_link.'?userId='.$user->id.'&userName='.$user->username.'&timeStamp='.(time()*1000).'&sign='.strtoupper(md5($user->id.$user->username.(time()*1000).$user->LOGIN_KEY)) : 
+                            $module->module_link),
+                        $module->isjump == 0 ? '': ['target'=>"_black"]);
+                           
+                echo '</div>';
+            }?>
         </div>
     </div>
 </div>
@@ -82,12 +90,12 @@ $this->title = 'My Yii Application';
         } 
         myVid.onended = function(){
             $('.carousel').carousel({
-                interval: 2000
+                interval: 5000
             });
         }
     }else{
         $('.carousel').carousel({
-            interval: 2000
+            interval: 5000
         });
         $('#carousel-451276').on('slid.bs.carousel', function () {
             var myVid = document.getElementById("video1");

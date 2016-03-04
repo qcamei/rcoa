@@ -3,6 +3,7 @@ namespace frontend\controllers;
 
 use common\models\LoginForm;
 use common\models\System;
+use common\models\User;
 use frontend\models\ContactForm;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
@@ -75,8 +76,10 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $model = System::find()->all();
+        $user = User::findOne(Yii::$app->user->id);
         return $this->render('index',[
             'model' => $model,
+            'user' => $user,
         ]);
     }
 
