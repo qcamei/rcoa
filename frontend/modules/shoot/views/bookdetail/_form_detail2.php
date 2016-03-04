@@ -40,7 +40,7 @@ use yii\widgets\DetailView;
             [
                 'attribute' => 'u_contacter',
                 'format' => 'raw',
-                'value' => (isset($model->u_contacter) ? implode(',', $roleContacts) : "空"),
+                'value' => (isset($model->u_contacter) ? implode(',', $reloadContacts) : "空"),
                 //'value' => $model->contacter->nickname. '( '.$model->contacter->phone.' )',
             ],
             [
@@ -96,11 +96,11 @@ use yii\widgets\DetailView;
             [
                 'attribute' => 'u_shoot_man', 
                 'format' => 'raw',
-                'value' => $isShootManLeader ?
+                'value' => $isShootManLeader && ($model->getIsAssign() || $model->getIsStausShootIng())?
                             Select2::widget([
                                 'name' => 'shoot_man',
-                                'value' => empty($model->u_shoot_man) ?  '' : $shootmansKey,
-                                'data' => empty($model->u_shoot_man) ? $shootmans : ArrayHelper::merge($shootMans, $shootmans),
+                                'value' => empty($model->u_shoot_man) ?  '' : $shootMansKey,
+                                'data' => empty($model->u_shoot_man) ? $shootmans : ArrayHelper::merge($assignedShootMans, $shootmans),
                                 'maintainOrder' => true,
                                 'options' => [
                                     'placeholder' => '选择摄影师...',
@@ -119,7 +119,7 @@ use yii\widgets\DetailView;
                                 'pluginEvents' => [
                                     'change' => 'function(){ select2Log();}'
                                 ]
-                            ]): (isset($model->u_shoot_man) ? implode(',', $roleShootMans) : "空"),
+                            ]): (isset($model->u_shoot_man) ? implode(',', $reloadShootMans) : "空"),
             ],
             [
                 'attribute' => 'remark',

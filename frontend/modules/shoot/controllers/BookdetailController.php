@@ -153,14 +153,16 @@ class BookdetailController extends Controller
             $model->index == $model::TIME_INDEX_AFTERNOON ? $model->start_time = $model::START_TIME_AFTERNOON : '';
             $model->index == $model::TIME_INDEX_NIGHT ? $model->start_time = $model::START_TIME_NIGHT : '';
            
-            $roleContactsArray = $this->isRoleNames(RbacName::ROLE_CONTACT,date('Y-m-d',$model->book_time), date('Y-m-d',strtotime("+1 days",$model->book_time)), $model->index); //已指派了的接洽人
-            $roleContactsArrayAll = $this->getRoleToUsers(RbacName::ROLE_CONTACT); //所有接洽人
+            $bookTime =  date('Y-m-d',$model->book_time);   //拍摄预约时间
+            $bigBookTime = date('Y-m-d',strtotime("+1 days",$model->book_time));    //大于拍摄预约时间
+            $alreadyContactsArray = $this->getIsRoleNames(RbacName::ROLE_CONTACT, $bookTime, $bigBookTime, $model->index); //已指派了的接洽人
+            $allContactsArray = $this->getRoleToUsers(RbacName::ROLE_CONTACT); //所有接洽人
            
             return $this->render('create', [
                 'model' => $model,
-                'roleWe' => $this->getRoleToUsers(RbacName::ROLE_WD),   //编导
-                'roleContact' => array_diff($roleContactsArrayAll,$roleContactsArray), //接洽人
-                'teacherName' => $this->getExpert(),
+                'bookers' => $this->getRoleToUsers(RbacName::ROLE_WD),   //编导
+                'contacts' => array_diff($allContactsArray, $alreadyContactsArray), //接洽人
+                'teachers' => $this->getExpert(),
                 'colleges' => $this->getCollegesForSelect(),
                 'projects' => [],
                 'courses' => [],
@@ -177,27 +179,24 @@ class BookdetailController extends Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
-        $dataProvider = $model->historys;
-        
-        $shootMansArray = $this->isRoleNames(RbacName::ROLE_SHOOT_MAN,date('Y-m-d',$model->book_time), date('Y-m-d',strtotime("+1 days",$model->book_time)),$model->index); //被指派了的摄影师
-        $shootMansArrayAll = $this->getRoleToUsers(RbacName::ROLE_SHOOT_MAN); //所有摄影师
-        /** 修改时设置value值*/
-        $shootMans = $this->getShootBookdetailRoleName($id, RbacName::ROLE_SHOOT_MAN);
-        $shootmansKey = [];
-        foreach ($shootMans as $key => $value){
-            $shootmansKey[] = $key;
+        $bookTime =  date('Y-m-d',$model->book_time);   //拍摄预约时间
+        $bigBookTime = date('Y-m-d',strtotime("+1 days",$model->book_time));    //大于拍摄预约时间
+        $alreadyShootMansArray = $this->getIsRoleNames(RbacName::ROLE_SHOOT_MAN, $bookTime, $bigBookTime, $model->index); //被指派了的摄影师
+        $allShootMansArray = $this->getRoleToUsers(RbacName::ROLE_SHOOT_MAN); //所有摄影师
+        /** 修改时设置Select2 value值*/
+        $assignedShootMans = $this->getShootBookdetailRoleNames($id, RbacName::ROLE_SHOOT_MAN);     //已经被指派的摄影师
+        $shootMansKey = [];
+        foreach ($assignedShootMans as $key => $value){
+            $shootMansKey[] = $key;
         }
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'dataProvider' => new ArrayDataProvider([
-                'allModels' => $dataProvider,
-            ]),
-            'roleShootMans' =>$this->getShootBookdetailRoleNames($id, RbacName::ROLE_SHOOT_MAN),
-            'roleContacts' =>$this->getShootBookdetailRoleNames($id, RbacName::ROLE_CONTACT),
-            'shootMans' => $shootMans,
-            'shootmansKey' => $shootmansKey,
+            'reloadShootMans' =>$this->getReloadRoleNames($id, RbacName::ROLE_SHOOT_MAN),
+            'reloadContacts' =>$this->getReloadRoleNames($id, RbacName::ROLE_CONTACT),
+            'assignedShootMans' => $assignedShootMans,
+            'shootMansKey' => $shootMansKey,
             'shootmans' => $this->isRole(RbacName::ROLE_SHOOT_LEADER) ?
-                    array_diff($shootMansArrayAll, $shootMansArray) : [],
+                    array_diff($allShootMansArray, $alreadyShootMansArray) : [],
         ]);
     }
     
@@ -286,23 +285,23 @@ class BookdetailController extends Controller
             }
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            $book_time = date('Y-m-d',$model->book_time);   //拍摄任务时间
-            $book_time_big = date('Y-m-d',strtotime("+1 days",$model->book_time));  //大于拍摄任务时间
-            $roleContactsArray = $this->isRoleNames(RbacName::ROLE_CONTACT,$book_time,$book_time_big ,$model->index); //被指派了的接洽人
-            $roleContactsArrayAll = $this->getRoleToUsers(RbacName::ROLE_CONTACT); //所有接洽人
-            /** 修改时设置value值*/
-            $contacts = $this->getShootBookdetailRoleName($id, RbacName::ROLE_CONTACT);
+            $bookTime =  date('Y-m-d',$model->book_time);   //拍摄预约时间
+            $bigBookTime = date('Y-m-d',strtotime("+1 days",$model->book_time));    //大于拍摄预约时间
+            $alreadyContactsArray = $this->getIsRoleNames(RbacName::ROLE_CONTACT, $bookTime, $bigBookTime, $model->index); //已指派了的接洽人
+            $allContactsArray = $this->getRoleToUsers(RbacName::ROLE_CONTACT); //所有接洽人
+            /** 修改时设置Select2 value值*/
+            $alreadyContacts = $this->getShootBookdetailRoleNames($id, RbacName::ROLE_CONTACT);
             $contactsKey = [];
-            foreach ($contacts as $key => $value){
+            foreach ($alreadyContacts as $key => $value){
                 $contactsKey[] = $key;
             }
             return $this->render('update', [
                 'model' => $model,
-                'roleWe' => $this->getRoleToUsers(RbacName::ROLE_WD),   //编导
-                'roleContact' => array_diff($roleContactsArrayAll,$roleContactsArray), //接洽人
-                'contacts' => $contacts,
+                'bookers' => $this->getRoleToUsers(RbacName::ROLE_WD),   //编导
+                'contacts' => array_diff($allContactsArray,$alreadyContactsArray), //接洽人
+                'alreadyContacts' => $alreadyContacts,
                 'contactsKey' => $contactsKey,
-                'teacherName' => $this->getExpert(),
+                'teachers' => $this->getExpert(),
                 'colleges' => $this->getCollegesForSelect(),
                 'projects' => $this->getFwItemForSelect($model->fw_college),
                 'courses' => $this->getFwItemForSelect($model->fw_project),
@@ -691,56 +690,57 @@ class BookdetailController extends Controller
       * @param type $b_id 任务id
       * @return type
       */
-    protected function getShootBookdetailRoleName($b_id, $role_name){
-        $roleName = ShootBookdetailRoleName::find()
-                ->where(['b_id' => $b_id, 'role_name' => $role_name])
+    protected function getShootBookdetailRoleNames($b_id, $roleName){
+        $roleNames = ShootBookdetailRoleName::find()
+                ->where(['b_id' => $b_id, 'role_name' => $roleName])
                 ->orderBy('primary_foreign DESC')
                 ->with('u') 
                 ->all();
-        return ArrayHelper::map($roleName, 'u_id','u.nickname');
+        return ArrayHelper::map($roleNames, 'u_id','u.nickname');
     }
     
     /**
      * 获取拍摄任务所有已指派的(主)角色信息
+     * 重组角色为一个新的数组
      * @param type $b_id
-     * @param type $role_name 角色名
-     * @return type
+     * @param type $roleName 角色名
      */
-    protected function getShootBookdetailRoleNames($b_id, $role_name){
-        $roleName = ShootBookdetailRoleName::find()
-                    ->where(['b_id'=> $b_id, 'role_name' => $role_name,])
+    protected function getReloadRoleNames($b_id, $roleName){
+        $roleNames = ShootBookdetailRoleName::find()
+                    ->where(['b_id'=> $b_id, 'role_name' => $roleName,])
                     ->orderBy('primary_foreign DESC')
                     ->all();
-        $roleNames = [];
-        foreach ($roleName as $roleNameValue){
-            $roleNames[] = $roleNameValue->primary_foreign == 1 ? 
-                           '<span style="color:red;">' . $roleNameValue->u->nickname . '( '.$roleNameValue->u->phone.' )</span>' :   //设置主角色
-                           $roleNameValue->u->nickname;
+        $newRoleNames = [];
+        foreach ($roleNames as $roleNamesValue){
+            $newRoleNames[] = $roleNamesValue->primary_foreign == 1 ? 
+                           '<span style="color:red;">' . $roleNamesValue->u->nickname . '( '.$roleNamesValue->u->phone.' )</span>' :   //设置主角色
+                           $roleNamesValue->u->nickname;
         }
-        return $roleNames;
+        return $newRoleNames;
     }
     
     /**
      * 同一时间段的拍摄任务是否存在已被指派过的角色
-     * @param type $roleNames  角色
-     * @param type $bookTime   任务时间
+     * @param type $roleName  角色
+     * @param type $bookTime   拍摄任务时间
+     * @param type $bigBookTime   大于拍摄任务时间
      * @param type $index      顺序
      * @return type
      */
-    protected function isRoleNames($roleNames,$bookTime, $bookTimeBig, $index){
+    protected function getIsRoleNames($roleName,$bookTime, $bigBookTime, $index){
         $models = ShootBookdetail::find()
                 ->where('book_time >=' . strtotime($bookTime))
-                ->andWhere('book_time <=' . strtotime($bookTimeBig))
+                ->andWhere('book_time <=' . strtotime($bigBookTime))
                 ->andWhere( '`index` =' . $index)
                 ->all();
-        $roleName = ShootBookdetailRoleName::find()
+        $roleNames = ShootBookdetailRoleName::find()
                 ->where([
                     'b_id'=> ArrayHelper::getColumn($models, 'id'), 
-                    'role_name' => $roleNames
+                    'role_name' => $roleName
                 ])
                 ->andWhere("iscancel != 'Y'")
                 ->all();
-        return ArrayHelper::map($roleName, 'u_id', 'u.nickname');
+        return ArrayHelper::map($roleNames, 'u_id', 'u.nickname');
     }
     
     /**
