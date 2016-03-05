@@ -130,12 +130,12 @@ $this->title = $model->id;
         return false;
     });
             
-    $(".select2-selection__rendered li").prev(".select2-selection__choice").eq(0).css({border:"1px solid #F00"});
+    $(".select2-selection__rendered li").prev(".select2-selection__choice").eq(0).css({border:"1px solid blue"});
 JS;
 $this->registerJs($js,  View::POS_READY);
 ?>
 <script type="text/javascript">
     function select2Log(){
-        $(".select2-selection__rendered li").prev(".select2-selection__choice").eq(0).css({border:"1px solid #F00"});
+        $(".select2-selection__rendered li").prev(".select2-selection__choice").eq(0).css({border:"1px solid blue"});
     } 
 </script>

@@ -113,7 +113,7 @@ use yii\widgets\DetailView;
                                     'unselectOptions' => ['class' => 'text-danger'],
                                 ],
                                 'pluginOptions' => [
-                                    'tags' => true,
+                                    'tags' => false,
                                     'maximumInputLength' => 10
                                 ],
                                 'pluginEvents' => [

@@ -112,7 +112,7 @@ use yii\widgets\ActiveForm;
                         'unselectOptions' => ['class' => 'text-danger'],
                     ],
                     'pluginOptions' => [
-                        'tags' => true,
+                        'tags' => false,
                         'maximumInputLength' => 10
                     ],
                     'pluginEvents' => [
@@ -169,7 +169,7 @@ use yii\widgets\ActiveForm;
    }); 
    $("input:radio").eq(1).attr("checked",true);
          
-   $(".select2-selection__rendered li").prev(".select2-selection__choice").eq(0).css({border:"1px solid #F00"});
+   $(".select2-selection__rendered li").prev(".select2-selection__choice").eq(0).css({border:"1px solid blue"});
     
 JS;
     $this->registerJs($js,  View::POS_READY); 
@@ -209,7 +209,7 @@ JS;
 	});
     }
     function select2Log(){
-        $(".select2-selection__rendered li").prev(".select2-selection__choice").eq(0).css({border:"1px solid #F00"});
+        $(".select2-selection__rendered li").prev(".select2-selection__choice").eq(0).css({border:"1px solid blue"});
     } 
     
 </script>

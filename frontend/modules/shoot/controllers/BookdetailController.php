@@ -130,10 +130,7 @@ class BookdetailController extends Controller
             $model->u_contacter = $post['ShootBookdetail']['u_contacter'][0];
             $model->status = ShootBookdetail::STATUS_ASSIGN ;
             /** 保存预约 */
-            if($this->saveNewBookdetail($model))
-               //创建--给所有摄影组长发送通知
-               $this->sendShootLeadersNotification($model, '新增', 'shoot\newShoot-html');
-                
+            $this->saveNewBookdetail($model);
             return $this->redirect([ 'index', 'date' => date('Y-m-d', $model->book_time), 'b_id' => $model->id, 'site'=> $model->site_id]);
         } else {
             $model->status = ShootBookdetail::STATUS_BOOKING;
@@ -213,11 +210,12 @@ class BookdetailController extends Controller
         $model->u_shoot_man = $post['shoot_man'][0];
         if(!empty($model->u_shoot_man))
            $model->status = ShootBookdetail::STATUS_SHOOTING;
+        $isIntersection = $this->isTwoArrayIntersection($model, RbacName::ROLE_SHOOT_MAN);
         /** 开启事务 */
         $trans = \Yii::$app->db->beginTransaction();
         try
         {
-            if($model->save()) {
+            if(!$isIntersection && $model->save()) {
                 $this->emptyShootBookdetailRoleName($id, RbacName::ROLE_SHOOT_MAN);    //清空数据
                 $this->saveShootBookdetailRoleName(RbacName::ROLE_SHOOT_MAN); //保存【已指派接洽人】
                 $this->saveNewHistory($model);  //保存编辑信息
@@ -239,12 +237,12 @@ class BookdetailController extends Controller
                     //指派--给老师发通知
                     $this->sendTeacherNotification($model, '指派', 'shoot\ShootAssign-u_teacher-html');
                 }
-            }
+            } else{ throw new Exception(json_encode($model->getErrors()));}
             $trans->commit();
-            Yii::$app->getSession()->setFlash('success','操作成功！');   
+            Yii::$app->getSession()->setFlash('success','操作成功！'); 
         } catch (\Exception $ex) {
             $trans ->rollBack();
-            throw new NotFoundHttpException("保存任务失败！".$ex->getMessage()); 
+            throw new NotFoundHttpException("保存任务失败！".$ex->getMessage());
         }
        
         $this->redirect(['index',
@@ -268,11 +266,12 @@ class BookdetailController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $model->u_contacter = $post['ShootBookdetail']['u_contacter'][0];
             $model->status = ShootBookdetail::STATUS_ASSIGN ;
+            $isIntersection = $this->isTwoArrayIntersection($model, RbacName::ROLE_CONTACT);
             /** 开启事务 */
             $trans = \Yii::$app->db->beginTransaction();
             try
             {
-                if($model->save()) {
+                if(!$isIntersection && $model->save()) {
                     $this->emptyShootBookdetailRoleName($id, RbacName::ROLE_CONTACT);    //清空数据
                     $this->saveShootBookdetailRoleName(RbacName::ROLE_CONTACT); //保存【已指派接洽人】
                     $this->saveNewHistory($model);  //保存编辑信息
@@ -373,25 +372,25 @@ class BookdetailController extends Controller
      */
     private function saveNewBookdetail($model)
     {
-        
         $trans = \Yii::$app->db->beginTransaction();
+        $isIntersection = $this->isTwoArrayIntersection($model, RbacName::ROLE_CONTACT);    //是否存在
         try
         {
-            if(!$model->save())
-                throw new Exception(json_encode($model->getErrors()));
-            //保存接洽人到ShootBookdetailRoleName表里  
-            if($model->save())
-               $this->saveShootBookdetailRoleName(RbacName::ROLE_CONTACT);    
-            
+            if(!$isIntersection && $model->save()){
+                $this->saveShootBookdetailRoleName(RbacName::ROLE_CONTACT); //保存接洽人到ShootBookdetailRoleName表里 
+                //创建--给所有摄影组长发送通知
+                $this->sendShootLeadersNotification($model, '新增', 'shoot\newShoot-html');
+            }
+            else{ throw new Exception(json_encode($model->getErrors()));}
+               
             $work = new ShootAppraiseWork(['b_id'=>$model->id]);
             if(!$work->save(ShootAppraiseTemplate::find()->asArray()->all()))
                 throw new Exception(json_encode($model->getErrors()));
-            
             $trans->commit();
+            Yii::$app->getSession()->setFlash('success','操作成功！');
             return true;
         } catch (\Exception $ex) {
             $trans ->rollBack();
-            
             throw new NotFoundHttpException("保存任务失败！".$ex->getMessage()); 
             return false;
         }
@@ -713,7 +712,7 @@ class BookdetailController extends Controller
         $newRoleNames = [];
         foreach ($roleNames as $roleNamesValue){
             $newRoleNames[] = $roleNamesValue->primary_foreign == 1 ? 
-                           '<span style="color:red;">' . $roleNamesValue->u->nickname . '( '.$roleNamesValue->u->phone.' )</span>' :   //设置主角色
+                           '<span style="color:blue;">' . $roleNamesValue->u->nickname . '( '.$roleNamesValue->u->phone.' )</span>' :   //设置主角色
                            $roleNamesValue->u->nickname;
         }
         return $newRoleNames;
@@ -763,6 +762,37 @@ class BookdetailController extends Controller
         /* @var $rbacManager RbacManager */
         $rbacManager = \Yii::$app->authManager;
         return ArrayHelper::map($rbacManager->getItemUsers($roleName), 'id', 'nickname');
+    }
+    
+    /**
+     * 判断两个数组是否有交集
+     * @param type $model
+     * @param type $roleName    角色名
+     * @return boolean  true为存在
+     */
+    protected function isTwoArrayIntersection($model, $roleName)
+    {
+        $post = Yii::$app->getRequest()->getBodyParams();
+        //角色为【接洽人】时为创建拍摄任务,否则为指派【摄影师】
+        $roleNames = $roleName == RbacName::ROLE_CONTACT ? $post['ShootBookdetail']['u_contacter'] : $post['shoot_man'];    
+        $bookTime =  date('Y-m-d',$model->book_time);   //拍摄预约时间
+        $bigBookTime = date('Y-m-d',strtotime("+1 days",$model->book_time));    //大于拍摄预约时间
+        $alreadyRoleNames = $this->getIsRoleNames($roleName, $bookTime, $bigBookTime, $model->index);
+        /** $roleNames & $alreadyRoleNames非设置非空非数组 return false*/
+        if(!isset($roleNames) || !isset($alreadyRoleNames) || !is_array($roleNames) || !is_array($alreadyRoleNames) || empty($alreadyRoleNames) || empty($alreadyRoleNames))
+            return false;
+        /** 为$roleNames 的value转换成int*/
+        $roleNamesKey = [];
+        foreach ($roleNames as $key => $value) 
+            $roleNamesKey[] = (int)$value;
+        /** 是否有交集 */
+        foreach (array_values($roleNamesKey) as $temp){
+            if(in_array($temp,array_keys($alreadyRoleNames))){
+                return true;
+            }
+        }
+        unset($roleNames,$alreadyRoleNames,$temp);
+        return false;
     }
     
     /**
