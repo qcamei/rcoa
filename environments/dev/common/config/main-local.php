@@ -55,8 +55,8 @@ return [
             ]
         ],
         'fwManager'=>[
-            'class'=>'wskeee\framework\frameworkManager',
-            'url'=>'http://rcoaadmin.gzedu.net/framework/api/list',
+            'class'=>'wskeee\framework\FrameworkManager',
+            'url'=>'http://rcoaadmin.tt.gzedu.net/framework/api/list',
             'cache' => [
                 'class' => 'yii\caching\FileCache',
             ]
