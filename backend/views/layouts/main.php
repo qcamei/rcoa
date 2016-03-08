@@ -91,7 +91,7 @@ AppAsset::register($this);
             'linkOptions' => ['data-method' => 'post']
         ];
         
-        $menuItems[] = '<li><img class=".img-responsive"  src="'.Yii::$app->request->hostInfo.Yii::$app->user->identity->avatar.'" width="30" height="30"  ></li>';
+        $menuItems[] = '<li><img class=".img-responsive"  src="'.FILEDATA_PATH.Yii::$app->user->identity->avatar.'" width="30" height="30"  ></li>';
     }
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],

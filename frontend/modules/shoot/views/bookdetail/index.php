@@ -196,7 +196,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetails');
     <div class="container">
         <div class="row ">
             <div class="btn btn-default" style="padding: 0px">
-                <?= Html::dropDownList('site', $site, $sites, ['onchange'=>'siteDropDownListChange($(this).val())'])?> 
+                <?= Html::dropDownList('site', $site, $sites, ['class'=>'form-control','onchange'=>'siteDropDownListChange($(this).val())'])?> 
             </div>
             <div  class="btn btn-default" style="padding: 0px;width: 85px">
                 <?=

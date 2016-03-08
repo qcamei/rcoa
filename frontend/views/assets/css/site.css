@@ -17,8 +17,8 @@ and open the template in the editor.
 
 @media (min-width: 320px) {
   .jumbotron{
-      padding: 10px 0  0 0 !important;
-      margin: 0 0 30px 0 !important;
+      padding:0 !important;
+      margin: 0 !important;
   }
   .jumbotron .carousel .carousel-indicators{
         position: absolute !important;
@@ -43,8 +43,8 @@ and open the template in the editor.
 
 @media (min-width: 480px) {
   .jumbotron{
-      padding: 10px 0  0 0 !important;
-      margin: 0 0 30px 0 !important;
+      padding:0 !important;
+      margin: 0 !important;
   }
   .jumbotron .carousel .carousel-indicators{
         position: absolute !important;
@@ -69,8 +69,8 @@ and open the template in the editor.
 
 @media (min-width: 768px) {
     .jumbotron{
-      padding: 20px 0 0 0 !important;
-      margin: 0 0 30px 0 !important;
+      padding:0 !important;
+      margin: 0 !important;
   }
   .jumbotron .carousel .carousel-indicators{
         position: absolute !important;
@@ -95,8 +95,8 @@ and open the template in the editor.
 
 @media (min-width: 992px) {
   .jumbotron{
-      padding: 2% 5% 0 5% !important;
-      margin: 0 0 5% 0 !important;
+      padding:0 !important;
+      margin: 0 !important;
   }
   .jumbotron .carousel .carousel-indicators{
         position: absolute !important;
@@ -121,8 +121,8 @@ and open the template in the editor.
 
 @media (min-width: 1200px) {
   .jumbotron{
-      padding: 2% 5% 0 5% !important;
-      margin: 0 0 5% 0 !important;
+      padding:0 !important;
+      margin: 0 !important;
   }
   .jumbotron .carousel .carousel-indicators{
         position: absolute !important;

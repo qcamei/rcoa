@@ -81,9 +81,9 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
             //30天后预约时间
             $dayEnd = date('Y-m-d H:i:s',strtotime("+31 days"));
             if($dayTomorrow < $bookTime && $bookTime < $dayEnd){
-                $buttonName = $isNew  ? '预约' : (!$isValid ? '无' : $model->getStatusName());
+                $buttonName = $isNew  ? '预约' : (!$isValid ? '预约中' : $model->getStatusName());
             }else{
-                $buttonName = $isNew ? '未预约' :(!$isValid ? '无' : $model->getStatusName());
+                $buttonName = $isNew ? '未预约' :(!$isValid ? '预约中' : $model->getStatusName());
                 
             }
             $url = ($isNew || $model->getIsBooking()) ? 'create' : 'view';
@@ -94,7 +94,7 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
                         'book_time' => $model->book_time,
                         'index' => $model->index
                     ] : ['id' => $model->id];
-            $isMe = !$isNew && $model->booker->id == Yii::$app->user->id;
+            $isMe = !$isNew && ($model->booker->id || $model->contacter->id) == Yii::$app->user->id;
             if($dayTomorrow < $bookTime && $bookTime < $dayEnd){
                 $btnClass .= ($isBreakPromise ? ' btn-danger' : ($isNew ? ' btn-primary' : ' btn-default'));
             }else{

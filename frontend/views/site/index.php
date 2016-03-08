@@ -10,71 +10,38 @@ use yii\web\View;
 $this->title = 'My Yii Application';
 ?>
 <div class="container site-index bookdetail-list">
-    <div class="jumbotron">
-        <div class="carousel slide" id="carousel-451276">
-            <ol class="carousel-indicators">
-                    <li class="active" data-slide-to="0" data-target="#carousel-451276">
-                    </li>
-                    <li data-slide-to="1" data-target="#carousel-451276">
-                    </li>
-                    <li data-slide-to="2" data-target="#carousel-451276">
-                    </li>
-            </ol>
-            <div class="carousel-inner">
-                <div class="item active">
-                    <img alt="" src="<?=Yii::$app->request->hostInfo?>/filedata/avatars/1.jpg" />
-                    <div class="carousel-caption">
-                            <h4>棒球</h4>
-                            <p class="course-name">
-                                棒球运动是一种以棒打球为主要特点，集体性、对抗性很强的球类运动项目，在美国、日本尤为盛行。
-                            </p>
-                    </div>
-                </div>
-                <div class="item">
-                    <img alt="" src="<?=Yii::$app->request->hostInfo?>/filedata/avatars/2.jpg" />
-                    <div class="carousel-caption">
-                            <h4>
-                                    冲浪
-                            </h4>
-                            <p class="course-name">
-                                    冲浪是以海浪为动力，利用自身的高超技巧和平衡能力，搏击海浪的一项运动。运动员站立在冲浪板上，或利用腹板、跪板、充气的橡皮垫、划艇、皮艇等驾驭海浪的一项水上运动。
-                            </p>
-                    </div>
-               </div>
-                <!--<div class="item">
-                    <video id="video1" src="<?=Yii::$app->request->hostInfo?>/filedata/movies/jgpearslogo.mp4">
-                        您的浏览器不支持 video 标签。
-                    </video>
-                </div>-->
-            </div>
-            <a data-slide="prev" href="#carousel-451276" class="left carousel-control">‹</a> 
-            <a data-slide="next" href="#carousel-451276" class="right carousel-control">›</a>
-        </div>
+  <div class="jumbotron">
+        <?= Html::img('filedata/system/banner.jpg',[
+                'class' => 'center-block',
+                'width' => '100%',
+                'style' => 'margin-top:15px;',
+            ])
+        ?>
     </div>
-
     <div class="body-content">
-        <div class="row">
-            <?php foreach ($model as $module){
-                echo '<div class="col-sm-3">';
+        <div class="jumbotron">
+           <div style="background-color:#ccc;margin-top:25px;">
+                <div class="row">
+                <?php foreach ($model as $module){
+                    echo '<div class="col-sm-3">';
+                    echo Html::a(Html::img($module->module_image,[
+                            'class' => 'center-block',
+                            'width' => '272',
+                            'height' => '166',
+                            'alt' => $module->des,
+                        ]), $module->isjump == 0  ? $module->module_link : 
+                            (!\Yii::$app->user->isGuest ? 
+                                $module->module_link.'?userId='.$user->id.'&userName='.$user->username.'&timeStamp='.(time()*1000).'&sign='.strtoupper(md5($user->id.$user->username.(time()*1000).'eeent888888rms999999')) : 
+                                $module->module_link),
+                            $module->isjump == 0 ? '': ['target'=>"_black"]);
 
-                echo Html::a(Html::img($module->module_image,[
-                        'class' => 'center-block',
-                        'width' => '224',
-                        'height' => '124',
-                        'style' => 'margin:10px;',
-                        'alt' => $module->des,
-                    ]), $module->isjump == 0  ? $module->module_link : 
-                        (!\Yii::$app->user->isGuest ? 
-                            $module->module_link.'?userId='.$user->id.'&userName='.$user->username.'&timeStamp='.(time()*1000).'&sign='.strtoupper(md5($user->id.$user->username.(time()*1000).$user->LOGIN_KEY)) : 
-                            $module->module_link),
-                        $module->isjump == 0 ? '': ['target'=>"_black"]);
-                           
-                echo '</div>';
-            }?>
+                    echo '</div>';
+                }?>
+               </div>
+            </div>
         </div>
     </div>
 </div>
-
 <?php  
  $js =   
 <<<JS

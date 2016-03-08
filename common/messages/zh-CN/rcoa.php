@@ -85,7 +85,7 @@ return [
     //专家库
     'Experts' => '所有专家',
     'Create Expert' => '创建专家',
-    'Personal Image' => '头像',
+    'Personal Image' => '形象',
     'Job Title' => '头衔',
     'Job Name' => '职称',
     'Level' => '等级',

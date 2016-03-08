@@ -186,6 +186,7 @@ class ShootBookdetail extends ActiveRecord
             'fw_project' => Yii::t('rcoa', 'Fw Project'),
             'fw_course' => Yii::t('rcoa', 'Fw Course'),
             'lession_time' => Yii::t('rcoa', 'Lession Time'),
+            'personal_image' => Yii::t('rcoa', 'Personal Image'),
             'u_teacher' => Yii::t('rcoa', 'Tearcher'),
             'teacher_phone' => Yii::t('rcoa', 'Phone'),
             'teacher_email' => Yii::t('rcoa', 'Email'),

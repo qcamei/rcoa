@@ -41,7 +41,6 @@ use yii\widgets\DetailView;
                 'attribute' => 'u_contacter',
                 'format' => 'raw',
                 'value' => (isset($model->u_contacter) ? implode(',', $reloadContacts) : "空"),
-                //'value' => $model->contacter->nickname. '( '.$model->contacter->phone.' )',
             ],
             [
                 'attribute' => 'start_time',
@@ -74,6 +73,14 @@ use yii\widgets\DetailView;
             
             
             ['label' => '<span class="btn-block viewdetail-th-head">老师信息</span>','value'=>''],
+            [
+                'attribute' => 'personal_image',
+                'format' => 'raw',
+                'value' => Html::img($model->teacher->personal_image,[
+                    'width' => '140',
+                    'height' => '140',
+                ]),
+            ],
             [
                 'attribute' => 'u_teacher',
                 'value' => $model->teacher->user->nickname.'('. $model->teacher->user->phone .')',

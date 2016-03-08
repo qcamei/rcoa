@@ -210,14 +210,14 @@ class BookdetailController extends Controller
         $model->u_shoot_man = $post['shoot_man'][0];
         if(!empty($model->u_shoot_man))
            $model->status = ShootBookdetail::STATUS_SHOOTING;
-        $isIntersection = $this->isTwoArrayIntersection($model, RbacName::ROLE_SHOOT_MAN);
+        $isIntersection = $this->isTwoArrayIntersection($model, RbacName::ROLE_SHOOT_MAN);  //是否存在交集
         /** 开启事务 */
         $trans = \Yii::$app->db->beginTransaction();
         try
         {
-            if(!$isIntersection && $model->save()) {
+            if($model->save()) {
                 $this->emptyShootBookdetailRoleName($id, RbacName::ROLE_SHOOT_MAN);    //清空数据
-                $this->saveShootBookdetailRoleName(RbacName::ROLE_SHOOT_MAN); //保存【已指派接洽人】
+                $this->saveShootBookdetailRoleName(RbacName::ROLE_SHOOT_MAN); //保存【已指派摄影师】
                 $this->saveNewHistory($model);  //保存编辑信息
                  /** 摄影师非null的时候为【更改指派】 */
                 if($oldShootMan != null){
@@ -271,7 +271,7 @@ class BookdetailController extends Controller
             $trans = \Yii::$app->db->beginTransaction();
             try
             {
-                if(!$isIntersection && $model->save()) {
+                if($model->save()) {
                     $this->emptyShootBookdetailRoleName($id, RbacName::ROLE_CONTACT);    //清空数据
                     $this->saveShootBookdetailRoleName(RbacName::ROLE_CONTACT); //保存【已指派接洽人】
                     $this->saveNewHistory($model);  //保存编辑信息
