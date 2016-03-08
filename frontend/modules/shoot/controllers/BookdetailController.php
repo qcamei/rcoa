@@ -222,20 +222,20 @@ class BookdetailController extends Controller
                  /** 摄影师非null的时候为【更改指派】 */
                 if($oldShootMan != null){
                     //更改指派--给接洽人发通知
-                    $this->sendContacterNotification($model, '更改指派', 'shoot\ShootEditAssign-u_contacter-html');
+                    $this->sendContacterNotification($model, '更改指派', 'shoot/ShootEditAssign-u_contacter-html');
                     //更改指派--给旧摄影师发通知
-                    $this->sendShootManNotification($model, '更改指派', 'shoot\ShootEditAssign-u_shoot_man-html');
+                    $this->sendShootManNotification($model, '更改指派', 'shoot/ShootEditAssign-u_shoot_man-html');
                     //更改指派--给新摄影师发通知
-                    $this->sendShootManNotification($model, '更改指派', 'shoot\ShootAssign-u_shoot_man-html');
+                    $this->sendShootManNotification($model, '更改指派', 'shoot/ShootAssign-u_shoot_man-html');
                 }else{
                     //指派--给编导发通知
-                    $this->sendBookerNotification($model, '指派', 'shoot\ShootAssign-u_contacter-html');
+                    $this->sendBookerNotification($model, '指派', 'shoot/ShootAssign-u_contacter-html');
                     //指派--给接茬人发通知
-                    $this->sendContacterNotification($model, '指派', 'shoot\ShootAssign-u_contacter-html');
+                    $this->sendContacterNotification($model, '指派', 'shoot/ShootAssign-u_contacter-html');
                     //指派--给摄影师发通知
-                    $this->sendShootManNotification($model, '指派', 'shoot\ShootAssign-u_shoot_man-html');
+                    $this->sendShootManNotification($model, '指派', 'shoot/ShootAssign-u_shoot_man-html');
                     //指派--给老师发通知
-                    $this->sendTeacherNotification($model, '指派', 'shoot\ShootAssign-u_teacher-html');
+                    $this->sendTeacherNotification($model, '指派', 'shoot/ShootAssign-u_teacher-html');
                 }
             } else{ throw new Exception(json_encode($model->getErrors()));}
             $trans->commit();
@@ -328,18 +328,18 @@ class BookdetailController extends Controller
                         ShootBookdetailRoleName::updateAll(['iscancel' => 'Y'],'b_id = '.$id); //拍摄任务取消时修改iscancel字段
                         $this->saveNewHistory($model);  //保存编辑信息
                         //取消--给所有摄影组长发通知
-                        $this->sendShootLeadersNotification($model, '取消', 'shoot\CancelShoot-html');
+                        $this->sendShootLeadersNotification($model, '取消', 'shoot/CancelShoot-html');
                         /** 非编导自己取消任务才发送 */
                         if(!$model->u_booker)  
-                            $this->sendBookerNotification($model, '取消', 'shoot\CancelShoot-html');
+                            $this->sendBookerNotification($model, '取消', 'shoot/CancelShoot-html');
                         /** 摄影师非空才发送 */
                         if(!empty($model->u_shoot_man)){
                             //取消--给接洽人发通知
-                            $this->sendContacterNotification($model, '取消', 'shoot\CancelShoot-html');
+                            $this->sendContacterNotification($model, '取消', 'shoot/CancelShoot-html');
                             //取消--给摄影师发通知
-                            $this->sendShootManNotification($model, '取消', 'shoot\CancelShoot-html');
+                            $this->sendShootManNotification($model, '取消', 'shoot/CancelShoot-html');
                             //取消--给老师发通知
-                            $this->sendTeacherNotification($model, '取消', 'shoot\CancelShoot-u_teacher-html');
+                            $this->sendTeacherNotification($model, '取消', 'shoot/CancelShoot-u_teacher-html');
                         }
                     }
                     $trans->commit();
@@ -379,7 +379,7 @@ class BookdetailController extends Controller
             if(!$isIntersection && $model->save()){
                 $this->saveShootBookdetailRoleName(RbacName::ROLE_CONTACT); //保存接洽人到ShootBookdetailRoleName表里 
                 //创建--给所有摄影组长发送通知
-                $this->sendShootLeadersNotification($model, '新增', 'shoot\newShoot-html');
+                $this->sendShootLeadersNotification($model, '新增', 'shoot/newShoot-html');
             }
             else{ throw new Exception(json_encode($model->getErrors()));}
                
@@ -778,6 +778,8 @@ class BookdetailController extends Controller
         $bookTimeStart =  date('Y-m-d',$model->book_time);   //拍摄预约时间
         $bookTimeEnd = date('Y-m-d',strtotime("+1 days",$model->book_time));    //大于拍摄预约时间
         $alreadyRoleNames = $this->getIsRoleNames($roleName, $bookTimeStart, $bookTimeEnd, $model->index);
+        //$a  = $this->getShootBookdetailRoleNames($model->id, $roleName);
+        //var_dump($a);exit;
         /** $roleNames & $alreadyRoleNames非设置非空非数组 return false*/
         if(empty($roleNames) || empty($alreadyRoleNames))
             return false;
