@@ -150,9 +150,9 @@ class BookdetailController extends Controller
             $model->index == $model::TIME_INDEX_AFTERNOON ? $model->start_time = $model::START_TIME_AFTERNOON : '';
             $model->index == $model::TIME_INDEX_NIGHT ? $model->start_time = $model::START_TIME_NIGHT : '';
            
-            $bookTime =  date('Y-m-d',$model->book_time);   //拍摄预约时间
-            $bigBookTime = date('Y-m-d',strtotime("+1 days",$model->book_time));    //大于拍摄预约时间
-            $alreadyContactsArray = $this->getIsRoleNames(RbacName::ROLE_CONTACT, $bookTime, $bigBookTime, $model->index); //已指派了的接洽人
+            $bookTimeStart =  date('Y-m-d',$model->book_time);   //拍摄预约时间
+            $bookTimeEnd = date('Y-m-d',strtotime("+1 days",$model->book_time));    //大于拍摄预约时间
+            $alreadyContactsArray = $this->getIsRoleNames(RbacName::ROLE_CONTACT, $bookTimeStart, $bookTimeEnd, $model->index); //已指派了的接洽人
             $allContactsArray = $this->getRoleToUsers(RbacName::ROLE_CONTACT); //所有接洽人
            
             return $this->render('create', [
@@ -176,9 +176,9 @@ class BookdetailController extends Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
-        $bookTime =  date('Y-m-d',$model->book_time);   //拍摄预约时间
-        $bigBookTime = date('Y-m-d',strtotime("+1 days",$model->book_time));    //大于拍摄预约时间
-        $alreadyShootMansArray = $this->getIsRoleNames(RbacName::ROLE_SHOOT_MAN, $bookTime, $bigBookTime, $model->index); //被指派了的摄影师
+        $bookTimeStart =  date('Y-m-d',$model->book_time);   //拍摄预约时间
+        $bookTimeEnd = date('Y-m-d',strtotime("+1 days",$model->book_time));    //大于拍摄预约时间
+        $alreadyShootMansArray = $this->getIsRoleNames(RbacName::ROLE_SHOOT_MAN, $bookTimeStart, $bookTimeEnd, $model->index); //被指派了的摄影师
         $allShootMansArray = $this->getRoleToUsers(RbacName::ROLE_SHOOT_MAN); //所有摄影师
         /** 修改时设置Select2 value值*/
         $assignedShootMans = $this->getShootBookdetailRoleNames($id, RbacName::ROLE_SHOOT_MAN);     //已经被指派的摄影师
@@ -215,7 +215,7 @@ class BookdetailController extends Controller
         $trans = \Yii::$app->db->beginTransaction();
         try
         {
-            if($model->save()) {
+            if(!$isIntersection && $model->save()) {
                 $this->emptyShootBookdetailRoleName($id, RbacName::ROLE_SHOOT_MAN);    //清空数据
                 $this->saveShootBookdetailRoleName(RbacName::ROLE_SHOOT_MAN); //保存【已指派摄影师】
                 $this->saveNewHistory($model);  //保存编辑信息
@@ -284,9 +284,9 @@ class BookdetailController extends Controller
             }
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            $bookTime =  date('Y-m-d',$model->book_time);   //拍摄预约时间
-            $bigBookTime = date('Y-m-d',strtotime("+1 days",$model->book_time));    //大于拍摄预约时间
-            $alreadyContactsArray = $this->getIsRoleNames(RbacName::ROLE_CONTACT, $bookTime, $bigBookTime, $model->index); //已指派了的接洽人
+            $bookTimeStart =  date('Y-m-d',$model->book_time);   //拍摄预约时间
+            $bookTimeEnd = date('Y-m-d',strtotime("+1 days",$model->book_time));    //大于拍摄预约时间
+            $alreadyContactsArray = $this->getIsRoleNames(RbacName::ROLE_CONTACT, $bookTimeStart, $bookTimeEnd, $model->index); //已指派了的接洽人
             $allContactsArray = $this->getRoleToUsers(RbacName::ROLE_CONTACT); //所有接洽人
             /** 修改时设置Select2 value值*/
             $alreadyContacts = $this->getShootBookdetailRoleNames($id, RbacName::ROLE_CONTACT);
@@ -721,15 +721,15 @@ class BookdetailController extends Controller
     /**
      * 同一时间段的拍摄任务是否存在已被指派过的角色
      * @param type $roleName  角色
-     * @param type $bookTime   拍摄任务时间
-     * @param type $bigBookTime   大于拍摄任务时间
+     * @param type $bookTimeStart   拍摄任务时间
+     * @param type $bookTimeEnd   大于拍摄任务时间
      * @param type $index      顺序
      * @return type
      */
-    protected function getIsRoleNames($roleName,$bookTime, $bigBookTime, $index){
+    protected function getIsRoleNames($roleName,$bookTimeStart, $bookTimeEnd, $index){
         $models = ShootBookdetail::find()
-                ->where('book_time >=' . strtotime($bookTime))
-                ->andWhere('book_time <=' . strtotime($bigBookTime))
+                ->where('book_time >=' . strtotime($bookTimeStart))
+                ->andWhere('book_time <=' . strtotime($bookTimeEnd))
                 ->andWhere( '`index` =' . $index)
                 ->all();
         $roleNames = ShootBookdetailRoleName::find()
@@ -775,18 +775,14 @@ class BookdetailController extends Controller
         $post = Yii::$app->getRequest()->getBodyParams();
         //角色为【接洽人】时为创建拍摄任务,否则为指派【摄影师】
         $roleNames = $roleName == RbacName::ROLE_CONTACT ? $post['ShootBookdetail']['u_contacter'] : $post['shoot_man'];    
-        $bookTime =  date('Y-m-d',$model->book_time);   //拍摄预约时间
-        $bigBookTime = date('Y-m-d',strtotime("+1 days",$model->book_time));    //大于拍摄预约时间
-        $alreadyRoleNames = $this->getIsRoleNames($roleName, $bookTime, $bigBookTime, $model->index);
+        $bookTimeStart =  date('Y-m-d',$model->book_time);   //拍摄预约时间
+        $bookTimeEnd = date('Y-m-d',strtotime("+1 days",$model->book_time));    //大于拍摄预约时间
+        $alreadyRoleNames = $this->getIsRoleNames($roleName, $bookTimeStart, $bookTimeEnd, $model->index);
         /** $roleNames & $alreadyRoleNames非设置非空非数组 return false*/
-        if(!isset($roleNames) || !isset($alreadyRoleNames) || !is_array($roleNames) || !is_array($alreadyRoleNames) || empty($alreadyRoleNames) || empty($alreadyRoleNames))
+        if(empty($roleNames) || empty($alreadyRoleNames))
             return false;
-        /** 为$roleNames 的value转换成int*/
-        $roleNamesKey = [];
-        foreach ($roleNames as $key => $value) 
-            $roleNamesKey[] = (int)$value;
         /** 是否有交集 */
-        foreach (array_values($roleNamesKey) as $temp){
+        foreach (array_values($roleNames) as $temp){
             if(in_array($temp,array_keys($alreadyRoleNames))){
                 return true;
             }
