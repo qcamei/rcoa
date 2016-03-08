@@ -28,7 +28,8 @@ use const FILEDATA_PATH;
  * @property string $ee         ee号
  * @property string $phone      手机
  * @property string $avatar     头像
- * @property integer $status    状态 10 启用
+ * @property string $status    状态
+ * @property string $STOP       是否停用，0停用，1正常
  * @property integer $created_at    
  * @property integer $updated_at
  */
@@ -39,10 +40,10 @@ class User extends ActiveRecord implements IdentityInterface
     /** 更新场景 */
     const SCENARIO_UPDATE = 'update';
     
-    //已删除账号
-    const STATUS_DELETED = 0;
+    //已停账号
+    const STATUS_STOP = "0";
     //活动账号
-    const STATUS_ACTIVE = 10;
+    const STATUS_ACTIVE = "1";
     /** 性别 男 */
     const SEX_MALE = 1;
     /** 性别 女 */
@@ -82,7 +83,6 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function behaviors() 
     {
-        $this->id = md5(rand(1,10000) + time());    //自动生成用户ID
         return [
             TimestampBehavior::className()
         ];
@@ -130,6 +130,7 @@ class User extends ActiveRecord implements IdentityInterface
             'ee' => 'EE',
             'phone' => '手机',
             'status' => '状态',
+            'stop'=>'停止',
             'avatar' => '头像',
             'created_at' => '创建于',
             'updated_at' => '更新于',
@@ -143,7 +144,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return self::findOne(['id'=>$id,'status'=>  self::STATUS_ACTIVE]);
+        return self::findOne(['id'=>$id,'STOP'=>  self::STATUS_ACTIVE]);
     }
     
     /**
@@ -162,7 +163,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findByUsername($username)
     {
-        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
+        return static::findOne(['username' => $username, 'STOP' => self::STATUS_ACTIVE]);
     }
     
     /**
@@ -179,7 +180,7 @@ class User extends ActiveRecord implements IdentityInterface
 
         return static::findOne([
             'password_reset_token' => $token,
-            'status' => self::STATUS_ACTIVE,
+            'STOP' => self::STATUS_ACTIVE,
         ]);
     }
     
@@ -290,6 +291,8 @@ class User extends ActiveRecord implements IdentityInterface
     {
         if(parent::beforeSave($insert))
         {
+            if(!$this->id)
+                $this->id = md5(rand(1,10000) + time());    //自动生成用户ID
             $upload = UploadedFile::getInstance($this, 'avatar');
             if($upload != null)
             {
