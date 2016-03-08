@@ -1,0 +1,11 @@
+1、php
+	4.5+
+	开始curl
+2、ngix
+	路径定向http://www.yiibai.com/yii2/installation.html
+3、文件权限
+	runtime
+	assets
+	filedatas
+	
+	
