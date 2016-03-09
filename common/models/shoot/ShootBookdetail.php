@@ -214,47 +214,44 @@ class ShootBookdetail extends ActiveRecord
         
         if($this->getIsBooking() && (time() - $this->updated_at > self::BOOKING_TIMEOUT))
             $this->status = self::STATUS_DEFAULT;
-       
+        
          /*　超过3天未评价和未指派为【失约】状态　*/
-        if(time() - $this->book_time > self::STATUS_BREAK_PROMISE_TIMEOUT && $this->getIsValid()){ 
+        if(($this->getIsAssign() || $this->getIsStausShootIng()) && ((time() - $this->book_time) > self::STATUS_BREAK_PROMISE_TIMEOUT) && $this->getIsValid()){ 
             $count = ShootAppraiseResult::find()
                     ->where(['b_id'=>$this->id])
                     ->count();
-            /** 设置只有一个人评价超过3天自动为另一个人评价 */
-            if($count > 0){
-                $values = [];  
-                $info = $this->getAppraiseInfo();  
-                $unAppRole = $info[RbacName::ROLE_SHOOT_MAN]['hasDo'] == false ? RbacName::ROLE_SHOOT_MAN : RbacName::ROLE_CONTACT;
-                $unUserId = $unAppRole == RbacName::ROLE_SHOOT_MAN ? $this->u_shoot_man : $this->u_contacter;
-                
-                foreach($this->appraises as $appraise)  
-                {  
-                    if($appraise->role_name == $unAppRole)
-                        $values[] = [$this->id,$unUserId,$unAppRole,$appraise->q_id,$appraise->value];
-                }
+            $trans = Yii::$app->db->beginTransaction();
+            try
+            {
+                /** 设置只有一个人评价超过3天自动为另一个人评价 */
+                if($count > 0){
+                    $values = [];  
+                    $info = $this->getAppraiseInfo();  
+                    $unAppRole = $info[RbacName::ROLE_SHOOT_MAN]['hasDo'] == false ? RbacName::ROLE_SHOOT_MAN : RbacName::ROLE_CONTACT;
+                    $unUserId = $unAppRole == RbacName::ROLE_SHOOT_MAN ? $this->u_shoot_man : $this->u_contacter;
 
-                $trans = Yii::$app->db->beginTransaction();
-                
-                try
-                {
+                    foreach($this->appraises as $appraise)  
+                    {  
+                        if($appraise->role_name == $unAppRole)
+                            $values[] = [$this->id,$unUserId,$unAppRole,$appraise->q_id,$appraise->value];
+                    }
+                    $this->status = self::STATUS_COMPLETED;
                     \Yii::$app->db->createCommand()->batchInsert(ShootAppraiseResult::tableName(), 
-                        ['b_id','u_id','role_name','q_id','value', ], $values)->execute();
-
-                    $this->status = $this::STATUS_COMPLETED;
-                    $this->save();
+                            ['b_id','u_id','role_name','q_id','value'], $values)->execute();
                     
-                    $trans->commit();
-                    
-                    unset($this->appraiseResults);
-                    
-                } catch (Exception $ex) {
-                     $trans->rollBack();
-                }   
-            }
-           if(!$this->getIsStatusCompleted()){
-                $this->status = $this::STATUS_BREAK_PROMISE;
+                }  else {
+                    $this->status = self::STATUS_BREAK_PROMISE;
+                }
                 $this->save();
-           }
+                Yii::error("aaaaaa");
+                $trans->commit();
+                unset($this->appraiseResults);
+            } catch (Exception $ex) {
+                
+                Yii::error($values);
+                Yii::error($ex);
+                 $trans->rollBack();
+            }  
         }
    
         parent::afterFind();
