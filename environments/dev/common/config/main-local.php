@@ -4,9 +4,9 @@ return [
     'components' => [
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=172.16.146.83;dbname=ccoa',
-            'username' => 'ccoa',
-            'password' => '789987',
+            'dsn' => 'mysql:host=172.16.163.111;dbname=ccoa',
+            'username' => 'wskeee',
+            'password' => '1234',
             'charset' => 'utf8',
             'tablePrefix' => 'ccoa_'   //加入前缀名称fc_
         ],

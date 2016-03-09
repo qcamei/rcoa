@@ -210,32 +210,33 @@ class BookdetailController extends Controller
         $model->u_shoot_man = $post['shoot_man'][0];
         if(!empty($model->u_shoot_man))
            $model->status = ShootBookdetail::STATUS_SHOOTING;
-        $isIntersection = $this->isTwoArrayIntersection($model, RbacName::ROLE_SHOOT_MAN);  //是否存在交集
         /** 开启事务 */
         $trans = \Yii::$app->db->beginTransaction();
         try
         {
-            if(!$isIntersection && $model->save()) {
+            if($model->save())
                 $this->emptyShootBookdetailRoleName($id, RbacName::ROLE_SHOOT_MAN);    //清空数据
+            $isIntersection = $this->isTwoArrayIntersection($model, RbacName::ROLE_SHOOT_MAN);
+            if(!$isIntersection) {
                 $this->saveShootBookdetailRoleName(RbacName::ROLE_SHOOT_MAN); //保存【已指派摄影师】
                 $this->saveNewHistory($model);  //保存编辑信息
-                 /** 摄影师非null的时候为【更改指派】 */
+                /** 摄影师非null的时候为【更改指派】 */
                 if($oldShootMan != null){
                     //更改指派--给接洽人发通知
-                    $this->sendContacterNotification($model, '更改指派', 'shoot/ShootEditAssign-u_contacter-html');
+                    $this->sendContacterNotification($model, '更改指派', 'shoot\ShootEditAssign-u_contacter-html');
                     //更改指派--给旧摄影师发通知
-                    $this->sendShootManNotification($model, '更改指派', 'shoot/ShootEditAssign-u_shoot_man-html');
+                    $this->sendShootManNotification($model, '更改指派', 'shoot\ShootEditAssign-u_shoot_man-html');
                     //更改指派--给新摄影师发通知
-                    $this->sendShootManNotification($model, '更改指派', 'shoot/ShootAssign-u_shoot_man-html');
+                    $this->sendShootManNotification($model, '更改指派', 'shoot\ShootAssign-u_shoot_man-html');
                 }else{
                     //指派--给编导发通知
-                    $this->sendBookerNotification($model, '指派', 'shoot/ShootAssign-u_contacter-html');
+                    $this->sendBookerNotification($model, '指派', 'shoot\ShootAssign-u_contacter-html');
                     //指派--给接茬人发通知
-                    $this->sendContacterNotification($model, '指派', 'shoot/ShootAssign-u_contacter-html');
+                    $this->sendContacterNotification($model, '指派', 'shoot\ShootAssign-u_contacter-html');
                     //指派--给摄影师发通知
-                    $this->sendShootManNotification($model, '指派', 'shoot/ShootAssign-u_shoot_man-html');
+                    $this->sendShootManNotification($model, '指派', 'shoot\ShootAssign-u_shoot_man-html');
                     //指派--给老师发通知
-                    $this->sendTeacherNotification($model, '指派', 'shoot/ShootAssign-u_teacher-html');
+                    $this->sendTeacherNotification($model, '指派', 'shoot\ShootAssign-u_teacher-html');
                 }
             } else{ throw new Exception(json_encode($model->getErrors()));}
             $trans->commit();
@@ -266,16 +267,18 @@ class BookdetailController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $model->u_contacter = $post['ShootBookdetail']['u_contacter'][0];
             $model->status = ShootBookdetail::STATUS_ASSIGN ;
-            $isIntersection = $this->isTwoArrayIntersection($model, RbacName::ROLE_CONTACT);
+           
             /** 开启事务 */
             $trans = \Yii::$app->db->beginTransaction();
             try
             {
-                if($model->save()) {
+                if($model->save())
                     $this->emptyShootBookdetailRoleName($id, RbacName::ROLE_CONTACT);    //清空数据
+                $isIntersection = $this->isTwoArrayIntersection($model, RbacName::ROLE_CONTACT);
+                if(!$isIntersection) {
                     $this->saveShootBookdetailRoleName(RbacName::ROLE_CONTACT); //保存【已指派接洽人】
                     $this->saveNewHistory($model);  //保存编辑信息
-                }
+                }else{ throw new Exception(json_encode($model->getErrors()));}
                 $trans->commit();
                 Yii::$app->getSession()->setFlash('success','操作成功！');
             } catch (\Exception $ex) {
@@ -328,18 +331,18 @@ class BookdetailController extends Controller
                         ShootBookdetailRoleName::updateAll(['iscancel' => 'Y'],'b_id = '.$id); //拍摄任务取消时修改iscancel字段
                         $this->saveNewHistory($model);  //保存编辑信息
                         //取消--给所有摄影组长发通知
-                        $this->sendShootLeadersNotification($model, '取消', 'shoot/CancelShoot-html');
+                        $this->sendShootLeadersNotification($model, '取消', 'shoot\CancelShoot-html');
                         /** 非编导自己取消任务才发送 */
                         if(!$model->u_booker)  
-                            $this->sendBookerNotification($model, '取消', 'shoot/CancelShoot-html');
+                            $this->sendBookerNotification($model, '取消', 'shoot\CancelShoot-html');
                         /** 摄影师非空才发送 */
                         if(!empty($model->u_shoot_man)){
                             //取消--给接洽人发通知
-                            $this->sendContacterNotification($model, '取消', 'shoot/CancelShoot-html');
+                            $this->sendContacterNotification($model, '取消', 'shoot\CancelShoot-html');
                             //取消--给摄影师发通知
-                            $this->sendShootManNotification($model, '取消', 'shoot/CancelShoot-html');
+                            $this->sendShootManNotification($model, '取消', 'shoot\CancelShoot-html');
                             //取消--给老师发通知
-                            $this->sendTeacherNotification($model, '取消', 'shoot/CancelShoot-u_teacher-html');
+                            $this->sendTeacherNotification($model, '取消', 'shoot\CancelShoot-u_teacher-html');
                         }
                     }
                     $trans->commit();
@@ -379,7 +382,7 @@ class BookdetailController extends Controller
             if(!$isIntersection && $model->save()){
                 $this->saveShootBookdetailRoleName(RbacName::ROLE_CONTACT); //保存接洽人到ShootBookdetailRoleName表里 
                 //创建--给所有摄影组长发送通知
-                $this->sendShootLeadersNotification($model, '新增', 'shoot/newShoot-html');
+                $this->sendShootLeadersNotification($model, '新增', 'shoot\newShoot-html');
             }
             else{ throw new Exception(json_encode($model->getErrors()));}
                
@@ -503,7 +506,7 @@ class BookdetailController extends Controller
         if ($roleName !== null) {
             return $roleName;
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            throw new NotFoundHttpException('请求的页面不存在');
         }
     }
    
@@ -699,7 +702,7 @@ class BookdetailController extends Controller
     }
     
     /**
-     * 获取拍摄任务所有已指派的(主)角色信息
+     * 获取拍摄任务所有已指派的角色信息
      * 重组角色为一个新的数组
      * @param type $b_id
      * @param type $roleName 角色名
@@ -774,21 +777,22 @@ class BookdetailController extends Controller
     {
         $post = Yii::$app->getRequest()->getBodyParams();
         //角色为【接洽人】时为创建拍摄任务,否则为指派【摄影师】
-        $roleNames = $roleName == RbacName::ROLE_CONTACT ? $post['ShootBookdetail']['u_contacter'] : $post['shoot_man'];    
+        $roleNames = $roleName == RbacName::ROLE_CONTACT ? $post['ShootBookdetail']['u_contacter'] : $post['shoot_man'];
         $bookTimeStart =  date('Y-m-d',$model->book_time);   //拍摄预约时间
         $bookTimeEnd = date('Y-m-d',strtotime("+1 days",$model->book_time));    //大于拍摄预约时间
         $alreadyRoleNames = $this->getIsRoleNames($roleName, $bookTimeStart, $bookTimeEnd, $model->index);
-        //$a  = $this->getShootBookdetailRoleNames($model->id, $roleName);
-        //var_dump($a);exit;
-        /** $roleNames & $alreadyRoleNames非设置非空非数组 return false*/
+       
+        /** $roleNames || $alreadyRoleNames || $roleNameBid为空 return false*/
         if(empty($roleNames) || empty($alreadyRoleNames))
             return false;
+        
         /** 是否有交集 */
         foreach (array_values($roleNames) as $temp){
-            if(in_array($temp,array_keys($alreadyRoleNames))){
-                return true;
+           if(in_array($temp,array_keys($alreadyRoleNames))){
+               return true;
             }
         }
+        
         unset($roleNames,$alreadyRoleNames,$temp);
         return false;
     }
