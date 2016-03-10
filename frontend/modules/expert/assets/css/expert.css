@@ -113,7 +113,7 @@ and open the template in the editor.
 *+html .clearfix {
 	min-height:1%;
 }
-.searchinfo li .text {
+/*.searchinfo li .text {
 	width:356px;
 	height:22px;
 	padding:4px 7px;
@@ -124,8 +124,8 @@ and open the template in the editor.
 	vertical-align:top;
 	outline:none;
 	margin:0 5px 0 0;
-}
-.dropdown {
+}*/
+#form-assign-key .dropdown {
 	width:100px;
 	padding:6px 5px;
 	border:solid 1px #ddd;
@@ -135,7 +135,7 @@ and open the template in the editor.
 	top:-237px;
 }
 
-.dropdown li {
+#form-assign-key .dropdown li {
 	float:left;
 	width:175px;
 	padding:0 0 0 5px;
@@ -144,7 +144,7 @@ and open the template in the editor.
 	height:32px;
         list-style: none;
 }
-.dropdown li label {
+#form-assign-key .dropdown li label {
         color: #000;
 	cursor:pointer;
 }

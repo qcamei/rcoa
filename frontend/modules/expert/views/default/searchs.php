@@ -9,19 +9,19 @@ use yii\widgets\ActiveForm;
 /* @var $this View */
 /* @var $model ExpertSearch */
 /* @var $form ActiveForm */
-$this->title = 'Search';
+$this->title =  Yii::t('rcoa', 'Expert Search') . ' : ' .$categories;
 ?>
 <!-- title 样式 -->
 <div class="title">
     <div class="container">
-        <?php echo '<b>'. $categories  .'</b>　 所有结果'; ?>
+        <?=$this->title;?>
     </div>
 </div>
 
 <div class="container expert-type bookdetail-list has-title">
     <?php 
         if(count($modelKey) == 0)
-            echo '<h2>未找到有关【'. $categories .'】的数据！</h2>';
+            echo '<h2>未找到有关<span style="color:blue"> '. $categories .' </span>的专家资源！</h2>';
     ?>
     
     <?php foreach ($modelKey as $key): ?>
@@ -47,7 +47,7 @@ $this->title = 'Search';
     <div class="container">
         <div class="row ">
             <div class="col-sm-9 col-md-10 col-xs-7">
-               <form id="form-assign-key" action="<?= Yii::$app->request->hostInfo?>/expert/default/categories" method="get">
+               <form id="form-assign-key" action="<?= Yii::$app->request->hostInfo?>/expert/default/searchs" method="get">
                     <ul class="dropdown clearfix" style="display:none;">
                         <li><input type="radio" id="all" name="fieldName" value="all" checked/><label for="all"><strong>全部</strong></label></li>
                         <li><input type="radio" id="job_title" name="fieldName" value="job_title"/><label for="job_title"><strong>头衔</strong></label></li>
@@ -65,8 +65,8 @@ $this->title = 'Search';
                     </ul>
                 </form>
             </div>
-            <?= Html::a('搜索', 'javascript:;', ['id'=>'submit', 'class' => 'glyphicon glyphicon-search btn btn-default',]) ?>
-            <?= Html::a('返回', '', ['class' => 'btn btn-default', 'onclick'=>'history.go(-1)']) ?>
+            <?= Html::a(Yii::t('rcoa', 'Search'), 'javascript:;', ['id'=>'submit', 'class' => 'glyphicon glyphicon-search btn btn-default',]) ?>
+            <?= Html::a(Yii::t('rcoa', 'Back'), '', ['class' => 'btn btn-default', 'onclick'=>'history.go(-1)']) ?>
         </div>
     </div>
 </div>

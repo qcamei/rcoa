@@ -9,13 +9,13 @@ use yii\widgets\ActiveForm;
 
 /* @var $this View */
 /* @var $model Expert */
-$this->title = 'ExpertsType';
+$this->title = Yii::t('rcoa', 'Experts Type').' : '. $model->expertType->name;
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <!-- title 样式 -->
 <div class="title">
     <div class="container">
-        <?= $model->expertType->name; ?>
+        <?= $this->title?>
     </div>
 </div>
 
@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="container">
         <div class="row ">
             <div class="col-sm-9 col-md-10 col-xs-7">
-                <form id="form-assign-key" action="<?= Yii::$app->request->hostInfo?>/expert/default/categories" method="get">
+                <form id="form-assign-key" action="<?= Yii::$app->request->hostInfo?>/expert/default/searchs" method="get">
                     <ul class="dropdown clearfix" style="display:none;">
                         <li><input type="radio" id="all" name="fieldName" value="all" checked/><label for="all"><strong>全部</strong></label></li>
                         <li><input type="radio" id="job_title" name="fieldName" value="job_title"/><label for="job_title"><strong>头衔</strong></label></li>
@@ -64,8 +64,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     </ul>
                 </form>
             </div>
-            <?= Html::a('搜索', 'javascript:;', ['id'=>'submit', 'class' => 'glyphicon glyphicon-search btn btn-default',]) ?>
-            <?= Html::a('返回', ['index'], ['class' => 'btn btn-default',]) ?>
+            <?= Html::a(Yii::t('rcoa', 'Search'), 'javascript:;', ['id'=>'submit', 'class' => 'glyphicon glyphicon-search btn btn-default',]) ?>
+            <?= Html::a(Yii::t('rcoa', 'Back'), ['index'], ['class' => 'btn btn-default']) ?>
         </div>
     </div>
 </div>

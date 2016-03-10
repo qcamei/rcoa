@@ -16,8 +16,7 @@ use yii\web\View;
 /* @var $this View */
 /* @var $searchModel ShootBookdetailSearch */
 /* @var $dataProvider ActiveDataProvider */
-
-$this->title = Yii::t('rcoa', 'Shoot Bookdetails');
+$this->title = Yii::t('rcoa', 'Shoot Bookdetail');
 ?>
 <div class="container shoot-bookdetail-index bookdetail-list" style="padding:0;">
     <?=

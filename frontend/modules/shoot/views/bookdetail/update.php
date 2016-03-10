@@ -5,9 +5,7 @@ use yii\web\View;
 /* @var $this yii\web\View */
 /* @var $model common\models\shoot\ShootBookdetail */
 
-$this->title = Yii::t('rcoa', 'Update {modelClass}: ', [
-    'modelClass' => 'Shoot Bookdetail',
-]) . ' ' . $model->id;
+$this->title = Yii::t('rcoa', 'Update Shoot Bookdetail') .' : '. $model->id;
 ?>
 <!-- title 样式 -->
 <div class="title">

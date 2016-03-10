@@ -9,7 +9,7 @@ use yii\web\View;
 /* @var $this View */
 /* @var $model ShootBookdetail */
 
-$this->title = $model->id;
+$this->title = Yii::t('rcoa', 'Shoot Bookdetail Details') . ' : ' . $model->id;
 ?>
 
 <div class="title">

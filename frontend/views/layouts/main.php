@@ -33,16 +33,10 @@ AppAsset::register($this);
         'brandLabel' => '课程中心工作平台',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
-            'style' => 'float:left !important;',
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $menuItems = [
-        [
-            'label' => '首页', 
-            'url' => ['/site/index'],
-        ],
-    ];
+    $menuItems = [['label' => '首页','url' => ['/site/index'],],];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = [
             'label' => '登录', 
@@ -55,7 +49,7 @@ AppAsset::register($this);
             $menuItems[] = [
                 'label' => $value->name, 
                 'url' => 
-                    $value->isjump == 0  ? $value->module_link : 
+                    $value->isjump == 0  ? [$value->module_link] : 
                     $value->module_link.'?userId='.$user->id.'&userName='.$user->username.'&timeStamp='.(time()*1000).'&sign='.strtoupper(md5($user->id.$user->username.(time()*1000).'eeent888888rms999999')),
                 'linkOptions' => [
                     'target'=> $value->isjump == 0 ? '': "_black",
@@ -65,17 +59,19 @@ AppAsset::register($this);
         }
         $menuItems[] = '<li><img class=".img-responsive"  src="'.Yii::$app->user->identity->avatar.'" width="30" height="30" style="margin-top:10px;"></li>';
         $menuItems[] = [
-            'label' => '登出 (' . Yii::$app->user->identity->username . ')',
-            'url' => ['/site/logout'],
-            'linkOptions' => ['data-method' => 'post'],
-            'options' => [
-                'style' => 'margin-left:-12px;'
+            'label' => Yii::$app->user->identity->username,
+            'items' => [
+                ['label' => '我的属性',  'url' => '#'],
+                ['label' => '登出', 'url' => ['/site/logout'], 'linkOptions' => ['data-method' => 'post'],
+                ],
             ],
         ];
     }
+    $bar_route = Yii::$app->controller->getUniqueId();
     echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
+        'options' => ['class' => 'navbar-nav navbar-left'],
         'items' => $menuItems,
+        'route' => $bar_route == 'site' ? Yii::$app->controller->getRoute() : $bar_route,
     ]);
     NavBar::end();
     ?>

@@ -75,7 +75,7 @@ class DefaultController extends Controller
      * @param string  $key
      * @return mixed
      */
-    public function actionCategories()
+    public function actionSearchs()
     {
         $fieldName = Yii::$app->request->queryParams['fieldName'];
         $key = Yii::$app->request->queryParams['key'];
@@ -83,7 +83,7 @@ class DefaultController extends Controller
         if($key == '' && $key == null)
             throw new UnauthorizedHttpException('无权操作！');
         
-        return $this->render('categories', [
+        return $this->render('searchs', [
             'categories' => $key,
             'modelKey' => $model,
         ]);

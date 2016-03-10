@@ -11,7 +11,7 @@ use yii\web\View;
 /* @var $searchModel ExpertSearch */
 /* @var $dataProvider ActiveDataProvider */
 
-$this->title = 'Experts';
+$this->title = Yii::t('rcoa', 'Experts');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container expert-index" style="padding:0;">
@@ -37,15 +37,11 @@ $this->params['breadcrumbs'][] = $this->title;
     ?></b>
 </div>
 
-
-
-
-
 <div class="controlbar">
     <div class="container">
         <div class="row ">
             <div class="col-sm-10 col-md-11 col-xs-9">
-                <form id="form-assign-key" action="<?= Yii::$app->request->hostInfo?>/expert/default/categories" method="get">
+                <form id="form-assign-key" action="<?= Yii::$app->request->hostInfo?>/expert/default/searchs" method="get">
                     <ul class="dropdown clearfix" style="display:none;">
                         <li><input type="radio" id="all" name="fieldName" value="all" checked/><label for="all"><strong>全部</strong></label></li>
                         <li><input type="radio" id="job_title" name="fieldName" value="job_title"/><label for="job_title"><strong>头衔</strong></label></li>
@@ -63,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </ul>
                 </form>
             </div>
-            <?= Html::a('搜索', 'javascript:;', ['id'=>'submit', 'class' => 'glyphicon glyphicon-search btn btn-default',]) ?>
+            <?= Html::a(Yii::t('rcoa', 'Search'), 'javascript:;', ['id'=>'submit', 'class' => 'glyphicon glyphicon-search btn btn-default',]) ?>
         </div>
     </div>
 </div>
