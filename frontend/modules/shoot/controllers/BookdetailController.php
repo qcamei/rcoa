@@ -111,13 +111,30 @@ class BookdetailController extends Controller
          * 找不到再新建数据
          */
         
-        if (isset($post['b_id']))
+        if (isset($post['b_id'])){
             $model = ShootBookdetail::findOne($post['b_id']);
+        } else  
+        {  
+            $bookTimeStart =  date('Y-m-d',$post['book_time']);   //拍摄预约时间  
+            $bookTimeEnd = date('Y-m-d',strtotime("+1 days",$post['book_time']));    //大于拍摄预约时间  
+            $query = ShootBookdetail::find()
+                    ->where([
+                        'site_id'=>$post['site_id'],  
+                        'index'=>$post['index'],  
+                        'status'=>ShootBookdetail::STATUS_BOOKING,
+                    ])
+                    ->andWhere('book_time >=' . strtotime($bookTimeStart))  
+                    ->andWhere('book_time <=' . strtotime($bookTimeEnd))  
+                    ->all();  
+            if(count ($query) > 0)  
+                throw new NotAcceptableHttpException('正在预约中！');  
+        } 
+
         if (!isset($model)) {
             $model = new ShootBookdetail();
             $model->loadDefaultValues();
         } else if ($model->getIsBooking() && ($model->create_by && $model->create_by != Yii::$app->user->id)) {
-            throw new NotAcceptableHttpException('非法操作！');
+            throw new NotAcceptableHttpException('正在预约中！');
         } else if ($model->getIsBooking() && $model->create_by && $model->create_by == Yii::$app->user->id) {
             //清除之前临时预约
             //            $tempbook = ShootBookdetail::find()
@@ -243,7 +260,7 @@ class BookdetailController extends Controller
             Yii::$app->getSession()->setFlash('success','操作成功！'); 
         } catch (\Exception $ex) {
             $trans ->rollBack();
-            throw new NotFoundHttpException("保存任务失败！".$ex->getMessage());
+            throw new NotFoundHttpException("保存任务失败，有摄影师存在被指派了！".$ex->getMessage());
         }
        
         $this->redirect(['index',
@@ -283,7 +300,7 @@ class BookdetailController extends Controller
                 Yii::$app->getSession()->setFlash('success','操作成功！');
             } catch (\Exception $ex) {
                 $trans ->rollBack();
-                throw new NotFoundHttpException("保存任务失败！".$ex->getMessage()); 
+                throw new NotFoundHttpException("保存任务失败，有接洽人存在被指派了！".$ex->getMessage()); 
             }
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -394,7 +411,7 @@ class BookdetailController extends Controller
             return true;
         } catch (\Exception $ex) {
             $trans ->rollBack();
-            throw new NotFoundHttpException("保存任务失败！".$ex->getMessage()); 
+            throw new NotFoundHttpException("保存任务失败，有接洽人存在被指派了！".$ex->getMessage()); 
             return false;
         }
     }
@@ -491,7 +508,7 @@ class BookdetailController extends Controller
         if ($model !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            throw new NotFoundHttpException('请求的页面不存在。');
         }
     }
     

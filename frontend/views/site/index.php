@@ -7,7 +7,7 @@ use yii\web\View;
 
 /* @var $this View */
 
-$this->title = 'My Yii Application';
+$this->title = '课程中心工作平台';
 ?>
 <div class="container site-index bookdetail-list">
   <div class="jumbotron">
@@ -22,19 +22,21 @@ $this->title = 'My Yii Application';
         <div class="jumbotron">
            <div style="background-color:#ccc;margin-top:25px;">
                 <div class="row">
-                <?php foreach ($model as $module){
+                <?php foreach ($system as $value){
                     echo '<div class="col-sm-3">';
-                    echo Html::a(Html::img($module->module_image,[
+                    echo Html::a(Html::img($value->module_image,[
                             'class' => 'center-block',
                             'width' => '272',
                             'height' => '166',
-                            'alt' => $module->des,
-                        ]), $module->isjump == 0  ? $module->module_link : 
+                            'alt' => $value->des,
+                        ]), $value->isjump == 0  ? $value->module_link : 
                             (!\Yii::$app->user->isGuest ? 
-                                $module->module_link.'?userId='.$user->id.'&userName='.$user->username.'&timeStamp='.(time()*1000).'&sign='.strtoupper(md5($user->id.$user->username.(time()*1000).'eeent888888rms999999')) : 
-                                $module->module_link),
-                            $module->isjump == 0 ? '': ['target'=>"_black"]);
-
+                                $value->module_link.'?userId='.$user->id.'&userName='.$user->username.'&timeStamp='.(time()*1000).'&sign='.strtoupper(md5($user->id.$user->username.(time()*1000).'eeent888888rms999999')) : 
+                                $value->module_link),
+                            [
+                                'target'=> $value->isjump == 0 ? '' : "_black",
+                                'title' => $value->module_link != '#' ? $value->name : '即将上线',
+                            ]);
                     echo '</div>';
                 }?>
                </div>

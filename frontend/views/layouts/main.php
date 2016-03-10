@@ -1,15 +1,16 @@
 <?php
 
-/* @var $this \yii\web\View */
+/* @var $this View */
 /* @var $content string */
 
-use yii\helpers\Html;
+use common\models\System;
+use common\models\User;
+use frontend\assets\AppAsset;
+use kartik\widgets\AlertBlock;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
-use frontend\assets\AppAsset;
-use common\widgets\Alert;
-use kartik\widgets\AlertBlock;
+use yii\helpers\Html;
+use yii\web\View;
 
 AppAsset::register($this);
 ?>
@@ -29,29 +30,48 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'RCOA',
+        'brandLabel' => '课程中心工作平台',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
+            'style' => 'float:left !important;',
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
     $menuItems = [
-        ['label' => '首页', 'url' => ['/site/index']],
+        [
+            'label' => '首页', 
+            'url' => ['/site/index'],
+        ],
     ];
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => '登录', 'url' => ['/site/login']];
+        $menuItems[] = [
+            'label' => '登录', 
+            'url' => ['/site/login'], 
+        ];
     } else {
-        $menuItems[] = ['label' => '拍摄', 'url' => ['/shoot/bookdetail']];
-        $menuItems[] = ['label' => '专家库', 'url' => ['/expert/default']];
-        $menuItems[] = ['label' => '多媒体制作','url' => '#'];
-        $menuItems[] = ['label' => '评优','url' => '#'];
+        $system = System::find()->all();
+        $user = User::findOne(Yii::$app->user->id);
+        foreach ($system as $key => $value) {
+            $menuItems[] = [
+                'label' => $value->name, 
+                'url' => 
+                    $value->isjump == 0  ? $value->module_link : 
+                    $value->module_link.'?userId='.$user->id.'&userName='.$user->username.'&timeStamp='.(time()*1000).'&sign='.strtoupper(md5($user->id.$user->username.(time()*1000).'eeent888888rms999999')),
+                'linkOptions' => [
+                    'target'=> $value->isjump == 0 ? '': "_black",
+                    'title' => $value->module_link != '#' ? $value->name : '即将上线',
+                ]
+            ];
+        }
+        $menuItems[] = '<li><img class=".img-responsive"  src="'.Yii::$app->user->identity->avatar.'" width="30" height="30" style="margin-top:10px;"></li>';
         $menuItems[] = [
             'label' => '登出 (' . Yii::$app->user->identity->username . ')',
             'url' => ['/site/logout'],
-            'linkOptions' => ['data-method' => 'post']
+            'linkOptions' => ['data-method' => 'post'],
+            'options' => [
+                'style' => 'margin-left:-12px;'
+            ],
         ];
-        
-        $menuItems[] = '<li><img class=".img-responsive"  src="'.Yii::$app->user->identity->avatar.'" width="30" height="30"  ></li>';
     }
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
@@ -59,6 +79,7 @@ AppAsset::register($this);
     ]);
     NavBar::end();
     ?>
+    
     <div class="content">
         <?php
             echo AlertBlock::widget([
@@ -79,9 +100,9 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        <p class="pull-left">&copy; 广州远程教育中心有限公司 </p>
 
-        <p class="pull-right"><?= Yii::powered() ?></p>
+       
     </div>
 </footer>
 
