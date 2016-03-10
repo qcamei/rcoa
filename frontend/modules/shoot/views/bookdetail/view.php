@@ -22,12 +22,11 @@ $this->title = $model->id;
 <div class="container has-title shoot-bookdetail-view">
     <?= $this->render('_form_detail2', [
         'model' => $model,
-        'dataProvider' => $dataProvider,
         'shootmans' => $shootmans,
-        'roleShootMans' => $roleShootMans,
-        'shootMans' => $shootMans,
-        'shootmansKey' => $shootmansKey,
-        'roleContacts' => $roleContacts,
+        'reloadShootMans' => $reloadShootMans,
+        'assignedShootMans' => $assignedShootMans,
+        'shootMansKey' => $shootMansKey,
+        'reloadContacts' => $reloadContacts,
     ]) ?>
     <?= $this->render('_form_model',[
          'model' => $model,

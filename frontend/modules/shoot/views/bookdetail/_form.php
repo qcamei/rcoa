@@ -70,7 +70,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'start_time')->textInput(['type'=>'time']) ?>
 
     <h5><b>老师信息：</b></h5>
-    <?= $form->field($model, 'u_teacher')->dropDownList($teacherName, ['prompt'=>'请选择...', 'onchange'=>'wx_three(this)',]) ?>
+    <?= $form->field($model, 'u_teacher')->dropDownList($teachers, ['prompt'=>'请选择...', 'onchange'=>'wx_three(this)',]) ?>
     
     <?= Html::img($model->isNewRecord || !$model->getIsAssign() ? null : $model->teacher->personal_image,[
         'width' => '128',
@@ -88,7 +88,7 @@ use yii\widgets\ActiveForm;
 
     <h5><b>其它信息：</b></h5>
     
-    <?= $form->field($model, 'u_booker')->dropDownList($roleWe, ['prompt'=>'请选择...']) ?>
+    <?= $form->field($model, 'u_booker')->dropDownList($bookers, ['prompt'=>'请选择...']) ?>
     
     <div class="form-group field-shootbookdetail-u_contacter required">
         <label class="col-lg-1 col-md-1 control-label" style="color: #999999; font-weight: normal;" for="shootbookdetail-u_contacter">
@@ -99,7 +99,7 @@ use yii\widgets\ActiveForm;
         <?php echo Select2::widget([
                     'name' => 'ShootBookdetail[u_contacter]',
                     'value' => !$model->getIsValid() ? '' : $contactsKey,
-                    'data' => !$model->getIsValid() ? $roleContact : ArrayHelper::merge($contacts, $roleContact),
+                    'data' => !$model->getIsValid() ? $contacts : ArrayHelper::merge($alreadyContacts, $contacts),
                     'maintainOrder' => true,
                     'options' => [
                         'placeholder' => '选择接洽人...',
