@@ -46,6 +46,8 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
         $isValid = $model->getIsValid();
         //是否在【待指派】任务
         $isAssign = $model->u_shoot_man == null;
+        //是否失约
+        $isBreakPromise = $model->getIsStatusBreakPromise();
         //摄影组长
         if($authManager->isRole(RbacName::ROLE_SHOOT_LEADER, Yii::$app->user->id))
         {
@@ -55,8 +57,8 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
             $params = [
                 'id' => $model->id
             ];
-            $btnClass .= (($isAssign && $isValid) ? ' btn-primary' : ' btn-default');
-            $btnClass .= ((!$isValid || $model->getIsStatusBreakPromise()) ? ' disabled' : '');
+            $btnClass .= ($isBreakPromise ? ' btn-danger' : (($isAssign && $isValid) ? ' btn-primary' : ' btn-default'));
+            $btnClass .= (!$isValid ? ' disabled' : '');
         //摄影师    
         }else if($authManager->isRole(RbacName::ROLE_SHOOT_MAN, Yii::$app->user->id))
         {
@@ -65,7 +67,7 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
             $params = [
                 'id' => $model->id
             ];
-            $btnClass .= ' btn-default';
+            $btnClass .= $isBreakPromise ? ' btn-danger' : ' btn-default';
             $btnClass .= ($isNew ? ' disabled' : '');
             $isMe = (!$isNew && $model->u_shoot_man && $model->shootMan->id == Yii::$app->user->id);
         }
@@ -94,16 +96,17 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
                     ] : ['id' => $model->id];
             $isMe = !$isNew && $model->booker->id == Yii::$app->user->id;
             if($dayTomorrow < $bookTime && $bookTime < $dayEnd){
-                $btnClass .= ($isNew ? ' btn-primary' : ' btn-default');
+                $btnClass .= ($isBreakPromise ? ' btn-danger' : ($isNew ? ' btn-primary' : ' btn-default'));
             }else{
-                $btnClass .= ($isNew ? ' btn-primary disabled' : ' btn-default');
+                $btnClass .= ($isBreakPromise ? ' btn-danger' : ($isNew ? ' btn-primary disabled' : ' btn-default'));
             }
             $btnClass .= (!$isMe && $model->getIsBooking()) ? ' disabled' : "";
         }
         $html = '';
         $html .= '<span class="rcoa-icon rcoa-icon-me is-me ' . ($isMe ? '' : 'hide') . '"/>';
-        return $html . Html::a($buttonName, Url::to(
-                                ArrayHelper::merge([$url], $params,$this->params)), 
+        return $html . Html::a($buttonName, 
+                                //如果出现  disabled 样式则删除href 属性,主要是禁用ie浏览器点击
+                                strpos($btnClass,' disabled') ? null : Url::to(ArrayHelper::merge([$url], $params,$this->params)), 
                                 ['class' => $btnClass, 'role' => "button"]) . '';
     }
 }
