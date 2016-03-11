@@ -101,12 +101,12 @@ class User extends ActiveRecord implements IdentityInterface
             [['username'],'unique'],
             [['password'],'string', 'min'=>6, 'max'=>64],
             [['username'],'string', 'max'=>36, 'on'=>[self::SCENARIO_CREATE]],
-            [['id','username','nickname', 'password', 'password_reset_token', 'email','avatar','ee','phone'], 'string', 'max' => 
-255],
+            [['id','username','nickname', 'password', 'password_reset_token', 'email','avatar',], 'string', 'max' => 255],
             [['sex'], 'integer'],
             [['auth_key'], 'string', 'max' => 255],
             [['password_reset_token'], 'unique'],
             [['email'], 'email'],
+            [['avatar'], 'image'],
             [['password2'],'compare','compareAttribute'=>'password'],
             [['avatar'], 'file', 'extensions' => 'jpg, png', 'mimeTypes' => 'image/jpeg, image/png']
         ];

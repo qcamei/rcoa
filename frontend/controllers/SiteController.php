@@ -218,4 +218,28 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+    
+    /**
+     * 修改我的属性
+     *
+     * @return mixed
+     */
+    public function actionResetInfo()
+    {
+        $model = User::findOne(Yii::$app->user->id);
+        $model->scenario = User::SCENARIO_UPDATE;
+        if($model->load(Yii::$app->getRequest()->post()))
+        {
+            if($model->save())
+                return $this->redirect(['index']);
+            else
+                Yii::error ($model->errors);
+        }else
+        {
+            $model->password = '';
+            return $this->render('resetInfo',[
+                'model' => $model,
+            ]);
+        }
+    }
 }

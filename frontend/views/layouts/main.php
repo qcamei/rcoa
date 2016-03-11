@@ -57,11 +57,11 @@ AppAsset::register($this);
                 ]
             ];
         }
-        $menuItems[] = '<li><img class=".img-responsive"  src="'.Yii::$app->user->identity->avatar.'" width="30" height="30" style="margin-top:10px;"></li>';
+        $menuItems[] = '<li><a style="margin:-10px -15px 0 0; "><img class=".img-responsive"  src="'.Yii::$app->user->identity->avatar.'" width="30" height="30" style="border: 1px solid #ccc;"></a></li>';
         $menuItems[] = [
             'label' => Yii::$app->user->identity->username,
             'items' => [
-                ['label' => '我的属性',  'url' => '#'],
+                ['label' => '我的属性',  'url' => '/site/reset-info'],
                 ['label' => '登出', 'url' => ['/site/logout'], 'linkOptions' => ['data-method' => 'post'],
                 ],
             ],
