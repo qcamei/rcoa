@@ -18,7 +18,17 @@ and open the template in the editor.
     text-decoration: none !important;
     background-color:  #eee !important;
 }
-
+.expert-type .expert{
+    height: 74px;
+    border:1px solid #CCC;
+}
+.expert .personal-image{
+    float: left;
+}
+.expert .nickname{
+    margin-top:0.5%; 
+    display: block;
+}
 
 /**
  * 专家库列表描述列
@@ -29,6 +39,7 @@ and open the template in the editor.
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    margin:0;
 }
 
 @media (min-width: 320px) {

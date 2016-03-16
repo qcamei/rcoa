@@ -20,25 +20,20 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <div class="container expert-type bookdetail-list has-title" id="expert-type">
-    <?php foreach ($modelExpert as $expert): ?>
-    <a href="<?= Yii::$app->request->hostInfo?>/expert/default/view?id=<?= $expert['u_id']; ?>" id="thelist">
-        <div style="height: 74px; border:1px solid #CCC;">
-            <div style="float: left; ">
-                <?= Html::img(Yii::$app->request->hostInfo.$expert['personal_image'], [
-                    'class' => 'img-rounded',
-                    'style' => 'margin:5px',
-                    'width' => '60',
-                    'height' => '60',
-                ])?>
-            </div>
-            <div>
-                <span style="margin-top:0.5%; display: block;"><b><?= $expert['user']['nickname'] ?>(<?= $expert['job_title'] ?>)</b></span>
-                <p class="course-name"  style="margin:0;"><span>职称：</span><?= $expert['job_name'] ?></p>
-                <p class="course-name" ><span>描述：</span><?= $expert['attainment'] ?></p>
-            </div>
-        </div>
-    </a>
-    <?php endforeach;?>
+    <?php foreach ($modelExpert as $expert){
+        echo Html::a('<div class="expert"><div class="personal-image">'
+                    .Html::img($expert['personal_image'], [
+                        'class' => 'img-rounded',
+                        'style' => 'margin:5px; border:1px solid #CCC',
+                        'width' => '60',
+                        'height' => '60',
+                    ]). '</div>'
+                    . '<div><span class="nickname"><b>'.$expert['user']['nickname'].'('.$expert['job_title'].')</b></span>'
+                    . '<p class="course-name"><span>职称：</span>'.$expert['job_name'].'</p>'
+                    . '<p class="course-name" ><span>描述：</span>'.$expert['attainment'].'</p></div></div>', 
+             ['view','id'=> $expert['u_id']], ['id' => 'thelist']);
+        }
+    ?>
 </div>    
 
 

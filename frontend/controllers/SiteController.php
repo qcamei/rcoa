@@ -75,9 +75,13 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        $query = new \yii\db\Query();
+        $banner = $query->from('ccoa_banner')->all();
         $system = System::find()->all();
         $user = User::findOne(Yii::$app->user->id);
         return $this->render('index',[
+            'banner' => $banner,
+            'video' => $video = ['ogg','mpeg4','mp4','webm'],
             'system' => $system,
             'user' => $user,
         ]);

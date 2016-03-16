@@ -1,6 +1,7 @@
 <?php
 
 use common\models\User;
+use kartik\widgets\FileInput;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
@@ -22,7 +23,7 @@ use yii\widgets\ActiveForm;
             'labelOptions' => ['class' => 'col-lg-2 col-md-2 control-label','style'=>['color'=>'#999999','font-weight'=>'normal','padding-left' => '0']],  
         ], 
     ]); ?>
-    <div class="col-lg-8 col-md-8">
+    <div class="col-lg-7 col-md-7">
         <?= $form->field($model, 'username')->textInput(['readonly'=>'']); ?>
 
         <?= $form->field($model, 'nickname')->textInput(['readonly'=>'']); ?>
@@ -38,16 +39,21 @@ use yii\widgets\ActiveForm;
         <?= $form->field($model, 'email')->textInput(['maxlength' => 200, 'value'=>'']) ?>
     </div>
     
-    <div class="col-lg-4 col-md-4" >
-        <div class="form-group required">
-            <label class="col-lg-2 col-md-2 control-label" style="color: #999999; font-weight: normal; padding-left: 0;">头像</label>
-            <div id="pic_path" class="col-lg-10 col-md-10" style=" width:250px; height: 250px; border: 2px solid #ccc;padding:2px;">
-                <?= Html::img($model->avatar, ['width' => '242', 'height' => '242']) ?>
-            </div>
-            <div class="col-lg-7 col-md-7"><div class="help-block"></div></div>
-        </div>
-        
-    <?= $form->field($model, 'avatar')->fileInput(['value'=>'','id'=>'avatar','onchange'=>'javascript:setImagePreviews()'])->label('') ?>
+    <div class="col-lg-5 col-md-5" >
+    <?=  $form->field($model, 'avatar')->widget(FileInput::classname(), [
+        'options' => [
+            'accept' => 'image/*',
+            'multiple'=>true,
+        ],
+        'pluginOptions' => [
+            'resizeImages' => true,
+            'initialPreview'=>[
+                    Html::img($model->avatar, ['class'=>'file-preview-image','width'=>'213']),
+                ],
+            //'initialCaption'=>"The Moon and the Earth",
+            'overwriteInitial'=>true
+        ]
+     ]); ?>
     </div>
     
     <div class="col-lg-10 col-md-10 form-group">
@@ -58,7 +64,7 @@ use yii\widgets\ActiveForm;
     
 </div>
 <script type="text/javascript">
-    //图片上传预览插件
+   /* //图片上传预览插件
     function setImagePreviews(avalue) {
         var fielObj = document.getElementById("avatar");     //获取input:fiel id
         var pic_path = document.getElementById("pic_path");      //获取div id 
@@ -99,7 +105,7 @@ use yii\widgets\ActiveForm;
             }
         }  
         return true;
-    }
+    }*/
 
 
 </script>

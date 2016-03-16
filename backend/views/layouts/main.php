@@ -39,7 +39,8 @@ AppAsset::register($this);
         [
             'label' => '首页', 
             'items' => [
-                 ['label' => '新闻事件', 'url' => '/news/index']
+                ['label' => '新闻事件', 'url' => '/news/index'],
+                ['label' => 'banner', 'url' => '/banner/index']
             ]
         ]
     ];

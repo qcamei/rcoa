@@ -63,8 +63,6 @@ class NewsController extends Controller
         $model = new System();
         $post = Yii::$app->request->post();
         
-        //var_dump($post);exit;
-        //$model->isjump = $post['System']['isjump'] == 1 ? 'Y' : 'N';
         if ($model->load(Yii::$app->request->post())) {
             $model->isjump = $post['System']['isjump'];
             $model->save();

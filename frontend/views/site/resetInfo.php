@@ -9,9 +9,8 @@
 $this->title = '我的属性';
 ?>
 
-<h2 style="margin-left: 40px;">我的属性修改</h2>
-
-<div class="container has-title" style="margin-top: -30px;">
+<div class="container has-title" style="padding: 0">
+    <h2 style="margin:25px 0 20px -5px;">我的属性修改</h2>
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>
