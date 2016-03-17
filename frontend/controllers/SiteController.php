@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use common\models\Banner;
 use common\models\LoginForm;
 use common\models\System;
 use common\models\User;
@@ -75,8 +76,10 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $query = new \yii\db\Query();
-        $banner = $query->from('ccoa_banner')->all();
+        $banner = Banner::find()
+                ->where(['isdisplay' => Banner::DISPLAY])
+                ->orderBy('index ASC')
+                ->all();
         $system = System::find()->all();
         $user = User::findOne(Yii::$app->user->id);
         return $this->render('index',[

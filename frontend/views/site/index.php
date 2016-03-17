@@ -26,11 +26,11 @@ $this->title = '课程中心工作平台';
                         echo '<div class="item active">';
                     else
                         echo '<div class="item">';
-                    $fileSuffix = pathinfo($value['path'], PATHINFO_EXTENSION);
+                    $fileSuffix = pathinfo($value->path, PATHINFO_EXTENSION);
                     if(in_array(strtolower($fileSuffix),$video))
-                        echo '<video width="100%" src="'.$value['path'].'">您的浏览器不支持 video 标签。</video>';
+                        echo '<video src="'.$value->path.'" width="100%">您的浏览器不支持 video 标签。</video>';
                     else
-                        echo '<img class="center-block" alt="" src="'.$value['path'].'"  width = "100%"/>';
+                        echo '<img class="center-block" alt="" src="'.$value->path.'"  width = "100%"/>';
                     echo '</div>';
                 }?>
             </div>
@@ -67,8 +67,20 @@ $this->title = '课程中心工作平台';
  $js =   
 <<<JS
     $('.carousel').carousel({
-        interval: 4000
+       interval: 3000
     });
+    var item = $('.carousel .item')[0];
+    if(item.firstChild.localName == 'video'){
+        $('video').attr('autoplay','autoplay');
+        item.lastChild.onplaying = function(){
+            $('.carousel').carousel('pause');
+        }
+        item.lastChild.onended = function(){
+            $('.carousel').carousel({
+                interval: 2000
+            });
+        }
+    }
     $('#carousel-451276').on('slid.bs.carousel', function () {
         $(".item").each(function(i,item) {
             $("video").each(function(i,video) {

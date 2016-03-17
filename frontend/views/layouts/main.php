@@ -57,9 +57,10 @@ AppAsset::register($this);
                 ]
             ];
         }
+        $menuItems[] = '<li><a style="margin-right:333px; display:block"></a></li>';
         $menuItems[] = '<li><a style="margin:-10px -15px 0 0; "><img class=".img-responsive"  src="'.Yii::$app->user->identity->avatar.'" width="30" height="30" style="border: 1px solid #ccc;"></a></li>';
         $menuItems[] = [
-            'label' => Yii::$app->user->identity->username,
+            'label' => Yii::$app->user->identity->nickname,
             'items' => [
                 ['label' => '我的属性',  'url' => '/site/reset-info'],
                 ['label' => '登出', 'url' => ['/site/logout'], 'linkOptions' => ['data-method' => 'post'],
@@ -69,7 +70,7 @@ AppAsset::register($this);
     }
     $bar_route = Yii::$app->controller->getUniqueId();
     echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-left'],
+        'options' => Yii::$app->user->isGuest ? ['class' => 'navbar-nav navbar-right'] : ['class' => 'navbar-nav navbar-left'],
         'items' => $menuItems,
         'route' => $bar_route == 'site' ? Yii::$app->controller->getRoute() : $bar_route,
     ]);

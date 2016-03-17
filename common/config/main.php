@@ -13,7 +13,8 @@ return [
                     'basePath' => '@common/messages',
                     'fileMap' => [
                         'rcoa' => 'rcoa.php',
-                        'rcoa/system' => 'system.php'
+                        'rcoa/system' => 'system.php',
+                        'rcoa/banner' => 'banner.php',
                     ],
                 ],
                

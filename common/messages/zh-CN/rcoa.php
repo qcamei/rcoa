@@ -21,9 +21,10 @@ return [
     'Sex' => '性别',
     'Avatar' => '头像',
     'Des' => '描述',
+    'Index' => '序号',
     'Birth' => '出生年月',
     'Content' => '内容',
-    'Link' => '连接',
+    'Link' => '链接',
     'Progress' => '进度',
     'Status' => '状态',
     'Created At' => '创建于',
@@ -41,6 +42,7 @@ return [
     'Login Out' => '登出',
     'Create' => '创建',
     'Update' => '更新',
+    'Delete' => '删除',
     'Search' => '搜索',
     'Back' => '返回',
     
@@ -53,7 +55,6 @@ return [
     //拍摄预约-字段
     'Lession Time' => '课时',
     'Lession Time' => '课时',
-    'Index' => '序号',
     'Fw College' => '项目',
     'Fw Project' => '子项目',
     'Fw Course' => '课程',
