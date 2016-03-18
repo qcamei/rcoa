@@ -32,11 +32,11 @@ use yii\widgets\ActiveForm;
 
         <?= $form->field($model, 'password2')->passwordInput(['minlength'=>6, 'maxlength'=>20, 'value'=>'']); ?>
 
-        <?= $form->field($model, 'ee')->textInput(['minlength'=>6,'maxlength'=>20, 'value'=>'']); ?>
+        <?= $form->field($model, 'ee')->textInput(['minlength'=>6,'maxlength'=>20]); ?>
 
-        <?= $form->field($model, 'phone')->textInput(['minlength'=>11,'maxlength'=>11, 'value'=>'']); ?>
+        <?= $form->field($model, 'phone')->textInput(['minlength'=>11,'maxlength'=>11]); ?>
 
-        <?= $form->field($model, 'email')->textInput(['maxlength' => 200, 'value'=>'']) ?>
+        <?= $form->field($model, 'email')->textInput(['maxlength' => 200]) ?>
     </div>
     
     <div class="col-lg-5 col-md-5" >

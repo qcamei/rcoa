@@ -6,6 +6,7 @@
 use common\models\System;
 use common\models\User;
 use frontend\assets\AppAsset;
+use kartik\dropdown\DropdownX;
 use kartik\widgets\AlertBlock;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
@@ -57,26 +58,37 @@ AppAsset::register($this);
                 ]
             ];
         }
-        $menuItems[] = '<li><a style="margin-right:333px; display:block"></a></li>';
-        $menuItems[] = '<li><a style="margin:-10px -15px 0 0; "><img class=".img-responsive"  src="'.Yii::$app->user->identity->avatar.'" width="30" height="30" style="border: 1px solid #ccc;"></a></li>';
-        $menuItems[] = [
-            'label' => Yii::$app->user->identity->nickname,
-            'items' => [
-                ['label' => '我的属性',  'url' => '/site/reset-info'],
-                ['label' => '登出', 'url' => ['/site/logout'], 'linkOptions' => ['data-method' => 'post'],
-                ],
-            ],
-        ];
+       
+        
     }
+    
     $bar_route = Yii::$app->controller->getUniqueId();
     echo Nav::widget([
-        'options' => Yii::$app->user->isGuest ? ['class' => 'navbar-nav navbar-right'] : ['class' => 'navbar-nav navbar-left'],
+        'options' => Yii::$app->user->isGuest ? ['class' =>'navbar-nav navbar-right'] : ['class' => 'navbar-nav navbar-left'],
         'items' => $menuItems,
         'route' => $bar_route == 'site' ? Yii::$app->controller->getRoute() : $bar_route,
     ]);
+    if(!Yii::$app->user->isGuest){
+        echo Html::beginTag('ul', ['class'=>'navbar-nav navbar-right nav']);
+        echo '<li class="dropdown">'.Html::a(Html::img(Yii::$app->user->identity->avatar,[
+            'width'=> '30', 
+            'height' => '30',
+            'style' => 'border: 1px solid #ccc;margin-top:-13px; margin-right:5px;',
+            ]).Yii::$app->user->identity->nickname.'<b class="caret"></b>','',[
+                'class'=>'dropdown-toggle',
+                'data-toggle' => 'dropdown',
+                'aria-expanded' => 'false',
+            ]).DropdownX::widget([
+                'options'=>['class'=>'dropdown-menu'], // for a right aligned dropdown menu
+                'items' => [
+                    ['label' => '我的属性', 'url' => '/site/reset-info'],
+                    ['label' => '登出', 'url' => ['/site/logout'], 'linkOptions' => ['data-method' => 'post']],
+                ],
+            ]).'</li>'; 
+        echo Html::endTag('ul');
+    }
     NavBar::end();
     ?>
-    
     <div class="content">
         <?php
             echo AlertBlock::widget([

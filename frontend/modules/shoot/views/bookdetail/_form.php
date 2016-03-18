@@ -72,55 +72,40 @@ use yii\widgets\ActiveForm;
     <h5><b>老师信息：</b></h5>
     <?= $form->field($model, 'u_teacher')->dropDownList($teachers, ['prompt'=>'请选择...', 'onchange'=>'wx_three(this)',]) ?>
     
-    <?= Html::img($model->isNewRecord || !$model->getIsAssign() ? null : $model->teacher->personal_image,[
-        'width' => '128',
-    ])?>
-   
-    <?= Html::textInput('shootbookdetail-teacher_phone', $model->isNewRecord || !$model->getIsAssign() ? null : $model->teacher->user->phone, [
-        'class' => 'form-control',
-        'disabled' => 'disabled',
-    ]) ?>
+    <?= Html::img($model->isNewRecord || !$model->getIsAssign() ? null : $model->teacher->personal_image,['width' => '128',])?>
     
-    <?= Html::textInput('shootbookdetail-teacher_email', $model->isNewRecord || !$model->getIsAssign() ? null : $model->teacher->user->email, [
-        'class' => 'form-control',
-        'disabled' => 'disabled',
-    ]) ?>
-
+    <?= $form->field($model, 'teacher_phone')->textInput(['disabled' => 'disabled',]) ?>
+    
+    <?= $form->field($model, 'teacher_email')->textInput(['disabled' => 'disabled',]) ?>
+    
     <h5><b>其它信息：</b></h5>
     
     <?= $form->field($model, 'u_booker')->dropDownList($bookers, ['prompt'=>'请选择...']) ?>
     
-    <div class="form-group field-shootbookdetail-u_contacter required">
-        <label class="col-lg-1 col-md-1 control-label" style="color: #999999; font-weight: normal;" for="shootbookdetail-u_contacter">
-            接洽人
-        </label>
-        <div class="col-lg-10 col-md-10">
-        
-        <?php echo Select2::widget([
-                    'name' => 'ShootBookdetail[u_contacter]',
-                    'value' => !$model->getIsValid() ? '' : $contactsKey,
-                    'data' => !$model->getIsValid() ? $contacts : ArrayHelper::merge($alreadyContacts, $contacts),
-                    'maintainOrder' => true,
-                    'options' => [
-                        'placeholder' => '选择接洽人...',
-                        'multiple' => true,
-                    ],
-                    'toggleAllSettings' => [
-                        'selectLabel' => '<i class="glyphicon glyphicon-ok-circle"></i> 添加全部',
-                        'unselectLabel' => '<i class="glyphicon glyphicon-remove-circle"></i> 取消全部',
-                        'selectOptions' => ['class' => 'text-success'],
-                        'unselectOptions' => ['class' => 'text-danger'],
-                    ],
-                    'pluginOptions' => [
-                        'tags' => false,
-                        'maximumInputLength' => 10
-                    ],
-                    'pluginEvents' => [
-                        'change' => 'function(){ select2Log();}'
-                    ]
-                ]); ?>
-        </div>
-    </div>
+    <?= $form->field($model, 'u_contacter')->widget(Select2::classname(), [
+        'value' => !$model->getIsValid() ? '' : $contactsKey,
+        'data' => !$model->getIsValid() ? $contacts : ArrayHelper::merge($alreadyContacts, $contacts),
+        'size' => 'lg',
+        'maintainOrder' => true,
+        'options' => [
+            'placeholder' => '选择接洽人...',
+            'multiple' => true,
+        ],
+        'toggleAllSettings' => [
+            'selectLabel' => '<i class="glyphicon glyphicon-ok-circle"></i> 添加全部',
+            'unselectLabel' => '<i class="glyphicon glyphicon-remove-circle"></i> 取消全部',
+            'selectOptions' => ['class' => 'text-success'],
+            'unselectOptions' => ['class' => 'text-danger'],
+        ],
+        'pluginOptions' => [
+            'tags' => false,
+            'maximumInputLength' => 10,
+        ],
+        'pluginEvents' => [
+            'change' => 'function(){ select2Log();}'
+        ]
+    ])?>
+    
     
     <?= $form->field($model, 'remark')->textarea() ?>
     
@@ -158,14 +143,8 @@ use yii\widgets\ActiveForm;
 <<<JS
    $(document).ready(function(){ 
         var htmlImg = '<div class="form-group"><label class="col-lg-1 col-md-1 control-label" style="color: #999999; font-weight: normal;">形象</label><div class="col-lg-10 col-md-10"><div id="img" style="border:2px solid #999999; width:140px; padding:4px;"></div></div></div>';
-        var htmlPhone = '<div class="form-group"><label class="col-lg-1 col-md-1 control-label" style="color: #999999; font-weight: normal;">电话</label><div class="col-lg-10 col-md-10" id="phone"></div></div>';
-        var htmlEmail = '<div class="form-group"><label class="col-lg-1 col-md-1 control-label" style="color: #999999; font-weight: normal;">邮箱</label><div class="col-lg-10 col-md-10" id="emali"></div></div>';
         $('#bookdetail-create-form img').before(htmlImg);
         $('#bookdetail-create-form img').appendTo('#img');
-        $('input[name="shootbookdetail-teacher_phone"]').before(htmlPhone);
-        $('input[name="shootbookdetail-teacher_phone"]').appendTo('#phone');
-        $('input[name="shootbookdetail-teacher_email"]').before(htmlEmail);
-        $('input[name="shootbookdetail-teacher_email"]').appendTo('#emali');
    }); 
    $("input:radio").eq(1).attr("checked",true);
          
@@ -203,8 +182,8 @@ JS;
         console.log($(e).val());
 	$.post("/expert/default/search?id="+$(e).val(),function(data)
         {
-            $('input[name="shootbookdetail-teacher_phone"]').val(data.data.phone);
-            $('input[name="shootbookdetail-teacher_email"]').val(data.data.email);
+            $('#shootbookdetail-teacher_phone').val(data.data.phone);
+            $('#shootbookdetail-teacher_email').val(data.data.email);
             $('#bookdetail-create-form img').attr('src',data.data.img);
 	});
     }

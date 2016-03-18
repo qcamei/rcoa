@@ -28,7 +28,7 @@ $this->title = '课程中心工作平台';
                         echo '<div class="item">';
                     $fileSuffix = pathinfo($value->path, PATHINFO_EXTENSION);
                     if(in_array(strtolower($fileSuffix),$video))
-                        echo '<video src="'.$value->path.'" width="100%">您的浏览器不支持 video 标签。</video>';
+                        echo '<video src="'.$value->path.'" type="video/mp4" width="100%">您的浏览器不支持 video 标签。</video>';
                     else
                         echo '<img class="center-block" alt="" src="'.$value->path.'"  width = "100%"/>';
                     echo '</div>';
@@ -67,11 +67,11 @@ $this->title = '课程中心工作平台';
  $js =   
 <<<JS
     $('.carousel').carousel({
-       interval: 3000
+        interval: 3000
     });
     var item = $('.carousel .item')[0];
     if(item.firstChild.localName == 'video'){
-        $('video').attr('autoplay','autoplay');
+        item.firstChild.play();
         item.lastChild.onplaying = function(){
             $('.carousel').carousel('pause');
         }
@@ -82,20 +82,19 @@ $this->title = '课程中心工作平台';
         }
     }
     $('#carousel-451276').on('slid.bs.carousel', function () {
+       var item = $('.carousel .item');
         $(".item").each(function(i,item) {
-            $("video").each(function(i,video) {
-                if(video != "" && item.className == 'item active' ){
-                    video.play();
-                    video.onplaying = function(){
-                        $('.carousel').carousel('pause');
-                    }
-                    video.onended = function(){
-                        $('.carousel').carousel({
-                            interval: 2000
-                        });
-                    }
+            if(item.firstChild.localName == "video" && item.className == 'item active' ){
+                item.firstChild.play();
+                item.firstChild.onplaying = function(){
+                    $('.carousel').carousel('pause');
                 }
-            });
+                item.firstChild.onended = function(){
+                    $('.carousel').carousel({
+                        interval: 2000
+                    });
+                }
+            }
         });
     });
 JS;
