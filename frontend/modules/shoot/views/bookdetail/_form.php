@@ -52,11 +52,17 @@ use yii\widgets\ActiveForm;
     <h5><b>课程信息：</b></h5>
     <?= $form->field($model, 'business_id')->dropDownList($business,['prompt'=>'请选择...',]) ?>
     
-    <?= $form->field($model, 'fw_college')->dropDownList($colleges,['prompt'=>'请选择...','onchange'=>'wx_one(this)',]) ?>
+    <?= $form->field($model, 'fw_college')->widget(Select2::classname(), [
+        'data' => $colleges, 'options' => ['placeholder' => '请选择...', 'onchange'=>'wx_one(this)']
+    ]) ?>
     
-    <?= $form->field($model, 'fw_project')->dropDownList($projects,['prompt'=>'请选择...','onchange'=>'wx_two(this)',]) ?>
+    <?= $form->field($model, 'fw_project')->widget(Select2::classname(), [
+        'data' => $projects, 'options' => ['placeholder' => '请选择...', 'onchange'=>'wx_two(this)']
+    ]) ?>
 
-    <?= $form->field($model, 'fw_course')->dropDownList($courses,['prompt'=>'请选择...']) ?>
+    <?= $form->field($model, 'fw_course')->widget(Select2::classname(), [
+        'data' => $courses, 'options' => ['placeholder' => '请选择...',]
+    ])?>
 
     <?= $form->field($model, 'lession_time')->widget(TouchSpin::classname(),  [
             'readonly' => true,
@@ -70,13 +76,21 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'start_time')->textInput(['type'=>'time']) ?>
 
     <h5><b>老师信息：</b></h5>
-    <?= $form->field($model, 'u_teacher')->dropDownList($teachers, ['prompt'=>'请选择...', 'onchange'=>'wx_three(this)',]) ?>
+    <?= $form->field($model, 'u_teacher')->widget(Select2::classname(), [
+        'data' => $teachers, 'options' => ['placeholder' => '请选择...','onchange'=>'wx_three(this)']
+    ])?>
     
-    <?= Html::img($model->isNewRecord || !$model->getIsAssign() ? null : $model->teacher->personal_image,['width' => '128',])?>
+    <?= Html::img($model->isNewRecord || !$model->getIsAssign() ? null : $model->teacher->personal_image, ['width' => '128',])?>
     
-    <?= $form->field($model, 'teacher_phone')->textInput(['disabled' => 'disabled',]) ?>
+    <?= $form->field($model, 'teacher_phone')->textInput([
+        'value' => $model->isNewRecord || !$model->getIsAssign() ? null : $model->teacher->user->phone, 
+        'disabled' => 'disabled'
+    ]) ?>
     
-    <?= $form->field($model, 'teacher_email')->textInput(['disabled' => 'disabled',]) ?>
+    <?= $form->field($model, 'teacher_email')->textInput([
+        'value' => $model->isNewRecord || !$model->getIsAssign() ? null : $model->teacher->user->email , 
+        'disabled' => 'disabled'
+    ]) ?>
     
     <h5><b>其它信息：</b></h5>
     
@@ -87,9 +101,10 @@ use yii\widgets\ActiveForm;
         'data' => !$model->getIsValid() ? $contacts : ArrayHelper::merge($alreadyContacts, $contacts),
         'size' => 'lg',
         'maintainOrder' => true,
+        'hideSearch' => true,
         'options' => [
             'placeholder' => '选择接洽人...',
-            'multiple' => true,
+            'multiple' => true,     //设置多选
         ],
         'toggleAllSettings' => [
             'selectLabel' => '<i class="glyphicon glyphicon-ok-circle"></i> 添加全部',
@@ -100,6 +115,7 @@ use yii\widgets\ActiveForm;
         'pluginOptions' => [
             'tags' => false,
             'maximumInputLength' => 10,
+            'allowClear' => true,
         ],
         'pluginEvents' => [
             'change' => 'function(){ select2Log();}'
