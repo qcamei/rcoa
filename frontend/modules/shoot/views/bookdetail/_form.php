@@ -98,7 +98,7 @@ use yii\widgets\ActiveForm;
     
     <?= $form->field($model, 'u_contacter')->widget(Select2::classname(), [
         'value' => !$model->getIsValid() ? '' : $contactsKey,
-        'data' => !$model->getIsValid() ? $contacts : ArrayHelper::merge($alreadyContacts, $contacts),
+        'data' => !$model->getIsValid() ? $contacts : ArrayHelper::merge($alreadyContacts, $contacts), //合并两个数组
         'size' => 'lg',
         'maintainOrder' => true,
         'hideSearch' => true,
@@ -121,7 +121,6 @@ use yii\widgets\ActiveForm;
             'change' => 'function(){ select2Log();}'
         ]
     ])?>
-    
     
     <?= $form->field($model, 'remark')->textarea() ?>
     
