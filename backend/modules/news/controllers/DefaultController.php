@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\controllers;
+namespace backend\modules\news\controllers;
 
 use Yii;
 use common\models\System;
@@ -12,7 +12,7 @@ use yii\filters\VerbFilter;
 /**
  * NewsController implements the CRUD actions for System model.
  */
-class NewsController extends Controller
+class DefaultController extends Controller
 {
     public function behaviors()
     {

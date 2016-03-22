@@ -23,6 +23,9 @@ $config = [
         'banner' => [
             'class' => 'backend\modules\banner\Module'
         ],
+        'news' => [
+            'class' => 'backend\modules\news\Module'
+        ],
     ],
 ];
 
