@@ -1,11 +1,14 @@
 1、php
 	4.5+
-	开始curl
+	开启curl
 2、ngix
-	路径定向http://www.yiibai.com/yii2/installation.html
+	路径定向http://www.yiibai.com/yii2/installation.html(### 推荐使用的 Nginx 配置)
 3、文件权限
 	runtime
 	assets
 	filedatas
 	
 	
+4、数据库字符集：utf8 -- UTF-8 Unicode
+
+5、数据库排序规则：utf8_general_ci
