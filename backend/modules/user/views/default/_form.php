@@ -48,16 +48,23 @@ use yii\widgets\ActiveForm;
         <?php echo $form->field($model, 'avatar')->widget(FileInput::classname(), [
         'options' => [
             'accept' => 'image/*',
-            'multiple'=>true,
-        ],
+            'multiple'=>false,
+        ], 
         'pluginOptions' => [
             'resizeImages' => true,
+            'showCaption' => false,
+            'showRemove' => false,
+            'showUpload' => false,
+            'browseClass' => 'btn btn-primary btn-block',
+            'browseIcon' => '<i class="glyphicon glyphicon-camera"></i> ',
+            'browseLabel' =>  '选择上传图像...',
             'initialPreview'=>[
-                    $model->isNewRecord ? '' : Html::img(FILEDATA_PATH . $model->avatar, ['class'=>'file-preview-image','width'=>'213']),
+                $model->isNewRecord ? 
+                       Html::img(FILEDATA_PATH . '/filedata/avatars/timg.jpg',['class'=>'file-preview-image','width'=>'213']) : 
+                       Html::img(FILEDATA_PATH . $model->avatar, ['class'=>'file-preview-image','width'=>'213']),
             ],
-            //'initialCaption'=>"The Moon and the Earth",
-            'overwriteInitial'=>true
-        ]
+            'overwriteInitial'=>true,
+        ],
      ]); ?>
     </div>
     
@@ -65,7 +72,6 @@ use yii\widgets\ActiveForm;
         <?= Html::submitButton($model->isNewRecord ? '增加用户' : '编辑用户', 
             ['class'=>$model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?> 
     </div>
-    <?= $form->errorSummary($model) ?>
     <?php $form->end(); ?>
 </div>
 

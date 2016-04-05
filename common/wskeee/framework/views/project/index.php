@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             [
                 'attribute' => 'parent.name',
-                'label' => '所属学院',
+                'label' => '所属项目',
                 'headerOptions' => ['class'=>'col-lg-4']
             ],
 

@@ -126,14 +126,16 @@ class CourseController extends Controller
         }
     }
     
+    
     /**
-     * 获取所有学院数据
+     * 获取所有子项目数据
      */
     protected function getParents()
     {
-        $searchModel = new ItemSearch(['level' => Item::LEVEL_PROJECT]);
+        $searchModel = new ItemSearch(['level' => Item::LEVEL_COLLEGE]);
         $results = $searchModel->search([])->models;
         $parents = ArrayHelper::map($results, 'id', 'name');
         return $parents;
     }
+    
 }

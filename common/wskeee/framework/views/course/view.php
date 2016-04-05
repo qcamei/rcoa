@@ -20,8 +20,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'des',
             [
+                'attribute'=> 'parent.parent.name',
+                'label' => '所属项目',                
+            ],
+            [
                 'attribute'=> 'parent.name',
-                'label' => '所属学院,',                
+                'label' => '所属子项目',                
             ],
             [
                 'attribute' => 'created_at',

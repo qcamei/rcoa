@@ -26,6 +26,16 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'name',
+            [
+                'attribute' => 'parent.parent.name',
+                'label' => '所属项目',
+                'headerOptions' => ['class'=>'col-lg-4']
+            ],
+            [
+                'attribute' => 'parent.name',
+                'label' => '所属子项目',
+                'headerOptions' => ['class'=>'col-lg-4']
+            ],
             'des',
 
             ['class' => 'yii\grid\ActionColumn'],
