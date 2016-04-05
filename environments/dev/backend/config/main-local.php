@@ -20,11 +20,11 @@ $config = [
         'expert' => [
             'class' => 'backend\modules\expert\Module',
         ],
-        'banner' => [
-            'class' => 'backend\modules\banner\Module'
-        ],
         'news' => [
             'class' => 'backend\modules\news\Module'
+        ],
+        'banner' => [
+            'class' => 'backend\modules\banner\Module'
         ],
     ],
 ];

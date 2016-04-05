@@ -1,14 +1,16 @@
 <?php
 
-/* @var $this \yii\web\View */
+/* @var $this View */
 /* @var $content string */
 
 use backend\assets\AppAsset;
-use yii\helpers\Html;
+use common\widgets\Alert;
+use kartik\dropdown\DropdownX;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
+use yii\helpers\Html;
+use yii\web\View;
 use yii\widgets\Breadcrumbs;
-use common\widgets\Alert;
 
 AppAsset::register($this);
 
@@ -39,7 +41,7 @@ AppAsset::register($this);
         [
             'label' => '首页', 
             'items' => [
-                ['label' => '新闻事件', 'url' => '/news/index'],
+                ['label' => '新闻事件', 'url' => '/news/default'],
                 ['label' => '宣传栏', 'url' => '/banner/default']
             ]
         ]
@@ -86,18 +88,37 @@ AppAsset::register($this);
             ]
         ];
 
-    $menuItems[] = [
+    /*$menuItems[] = [
             'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
             'url' => ['/site/logout'],
             'linkOptions' => ['data-method' => 'post']
         ];
         
-        $menuItems[] = '<li><img class=".img-responsive"  src="'.FILEDATA_PATH.Yii::$app->user->identity->avatar.'" width="30" height="30"  ></li>';
+        //$menuItems[] = '<li><img class=".img-responsive"  src="'.FILEDATA_PATH.Yii::$app->user->identity->avatar.'" width="30" height="30"  ></li>';*/
     }
     echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
+        'options' =>Yii::$app->user->isGuest ? ['class' =>'navbar-nav navbar-right'] : ['class' => 'navbar-nav navbar-left'],
         'items' => $menuItems,
     ]);
+    if(!Yii::$app->user->isGuest){
+        echo Html::beginTag('ul', ['class'=>'navbar-nav navbar-right nav']);
+        echo '<li class="dropdown">'.Html::a(Html::img(FILEDATA_PATH . Yii::$app->user->identity->avatar,[
+            'width'=> '30', 
+            'height' => '30',
+            'style' => 'border: 1px solid #ccc;margin-top:-13px; margin-right:5px;',
+            ]).Yii::$app->user->identity->nickname.'<b class="caret"></b>','',[
+                'class'=>'dropdown-toggle',
+                'data-toggle' => 'dropdown',
+                'aria-expanded' => 'false',
+            ]).DropdownX::widget([
+                'options'=>['class'=>'dropdown-menu'], // for a right aligned dropdown menu
+                'items' => [
+                    //['label' => '我的属性', 'url' => '/site/reset-info'],
+                    ['label' => '登出', 'url' => ['/site/logout'], 'linkOptions' => ['data-method' => 'post']],
+                ],
+            ]).'</li>'; 
+        echo Html::endTag('ul');
+    }
     NavBar::end();
     ?>
 
@@ -112,9 +133,8 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        <p class="pull-left">&copy; 广州远程教育中心有限公司</p>
 
-        <p class="pull-right"><?= Yii::powered() ?></p>
     </div>
 </footer>
 

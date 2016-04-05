@@ -108,6 +108,7 @@ use yii\widgets\DetailView;
                                 'name' => 'shoot_man',
                                 'value' => empty($model->u_shoot_man) ?  '' : $shootMansKey,
                                 'data' => empty($model->u_shoot_man) ? $shootmans : ArrayHelper::merge($assignedShootMans, $shootmans),
+                                'size' => 'lg',
                                 'maintainOrder' => true,
                                 'options' => [
                                     'placeholder' => '选择摄影师...',
