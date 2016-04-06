@@ -21,6 +21,18 @@ class DefaultController extends Controller
         ]);
     }
     
+     /**
+     * Displays a single User model.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionView($id)
+    {
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
+    }
+    
     public function actionCreate()
     {
         $model = new User();

@@ -39,7 +39,7 @@ $this->title = '管理用户';
                             'aria-label' => Yii::t('yii', 'View'),
                             'data-pjax' => '0',
                         ];
-                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['/rbac/assignment/view','id'=>$key], $options);
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['view','id'=>$key], $options);
                     }
                         ]
                     ]
