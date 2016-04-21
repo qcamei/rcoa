@@ -202,7 +202,20 @@ class JobManager {
      */
     public function getUnReadyNotification($user)
     {
-        
+        $notification = JobNotification::find()
+                        ->where([
+                            'u_id'=>$user,
+                            'status'=> JobNotification::STATUS_INIT
+                        ])
+                        ->all();
+        $unReadyNotification = [];
+        foreach ($notification as $key => $value) {
+            $unReadyNotification[] = Job::find()
+                       ->where(['id'=>$value->job_id])
+                       ->all();
+            
+        }
+        return $unReadyNotification;
     }
     
     /**

@@ -437,7 +437,7 @@ class BookdetailController extends Controller
         $shootLeadersId = array_filter(ArrayHelper::getColumn($shootLeaders, 'id'));
         $jobUsers = ArrayHelper::merge($u_contacter, $shootLeadersId);
         //创建job表任务
-        $jobManager->createJob(2, $model->id, $model->fwCourse->name, '/view?id='.$model->id, $model->getStatusName()); 
+        $jobManager->createJob(2, $model->id, $model->fwCourse->name, '/shoot/bookdetail/view?id='.$model->id, $model->getStatusName()); 
         //添加通知
         $jobManager->addNotification(2, $model->id, $jobUsers);
     }
