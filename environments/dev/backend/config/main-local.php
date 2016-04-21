@@ -26,6 +26,9 @@ $config = [
         'banner' => [
             'class' => 'backend\modules\banner\Module'
         ],
+        'resource' => [
+            'class' => 'backend\modules\resource\Module',
+        ],
     ],
 ];
 

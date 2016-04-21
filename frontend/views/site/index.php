@@ -40,7 +40,7 @@ $this->title = '课程中心工作平台';
     </div>
     
     <div class="body-content">
-        <div class="jumbotron"  style="padding:0;margin: 0;">
+        <div class="jumbotron">
             <div class="row" style="margin:25px 0 0 0; background-color:#ccc;">
              <?php foreach ($system as $value){
                  echo '<div class="col-lg-3 col-sm-6" style=" padding:0px;">';

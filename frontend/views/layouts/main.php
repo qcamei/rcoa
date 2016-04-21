@@ -70,10 +70,20 @@ AppAsset::register($this);
     ]);
     if(!Yii::$app->user->isGuest){
         echo Html::beginTag('ul', ['class'=>'navbar-nav navbar-right nav']);
+        echo '<li class="dropdown">'.Html::a(Html::img('/filedata/image/u23.png',[
+                'width'=>'20',
+                'height'=>'20'
+            ]), '', ['class'=>'dropdown-toggle', 'style'=>'height:50px', 'data-toggle'=>'dropdown'])
+            .$this->render('_tasks_in').'</li>';
+        echo '<li class="dropdown">'.Html::a(Html::img('/filedata/image/u21.png',[
+                'width'=>'20',
+                'height'=>'20'
+            ]), '', ['class'=>'dropdown-toggle', 'style'=>'height:50px', 'data-toggle'=>'dropdown'])
+            .$this->render('_notification').'</li>';
         echo '<li class="dropdown">'.Html::a(Html::img(Yii::$app->user->identity->avatar,[
-            'width'=> '30', 
-            'height' => '30',
-            'style' => 'border: 1px solid #ccc;margin-top:-13px; margin-right:5px;',
+            'width'=> '25', 
+            'height' => '25',
+            'style' => 'border: 1px solid #ccc;margin-top:-7px; margin-right:5px;',
             ]).Yii::$app->user->identity->nickname.'<b class="caret"></b>','',[
                 'class'=>'dropdown-toggle',
                 'data-toggle' => 'dropdown',

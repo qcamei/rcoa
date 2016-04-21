@@ -42,7 +42,7 @@ AppAsset::register($this);
             'label' => '首页', 
             'items' => [
                 ['label' => '新闻事件', 'url' => '/news/default'],
-                ['label' => '宣传栏', 'url' => '/banner/default']
+                ['label' => '宣传栏', 'url' => '/banner/default'],
             ]
         ]
     ];
@@ -86,6 +86,12 @@ AppAsset::register($this);
             'items' => [
                 ['label' => '题目管理', 'url' => '/question'],
             ]
+        ];
+        $menuItems[] = [
+            'label' => '资源展示',
+            'items' => [
+                 ['label' => '资源管理', 'url' => '/resource/default'],
+            ],
         ];
 
     /*$menuItems[] = [

@@ -110,6 +110,7 @@ use yii\widgets\DetailView;
                                 'data' => empty($model->u_shoot_man) ? $shootmans : ArrayHelper::merge($assignedShootMans, $shootmans),
                                 'size' => 'lg',
                                 'maintainOrder' => true,
+                                'hideSearch' => true,
                                 'options' => [
                                     'placeholder' => '选择摄影师...',
                                     'multiple' => true
@@ -122,7 +123,8 @@ use yii\widgets\DetailView;
                                 ],
                                 'pluginOptions' => [
                                     'tags' => false,
-                                    'maximumInputLength' => 10
+                                    'maximumInputLength' => 10,
+                                    'allowClear' => true,
                                 ],
                                 'pluginEvents' => [
                                     'change' => 'function(){ select2Log();}'

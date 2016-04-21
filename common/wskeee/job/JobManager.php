@@ -32,7 +32,7 @@ class JobManager {
     
     /**
      * 创建任务
-     * @param string $systemId    系统id
+     * @param int $systemId    系统id
      * @param int $relateId       关联任务id
      * @param string $subject     主题/名称
      * @param string $link        联接，默认连接为对应任务的详细页
@@ -58,11 +58,13 @@ class JobManager {
         $job->status = $status;
         $job->progress = $progress;
         $job->content = $content;
-        return $job->save();
+       
+        return  $job->save();
     }
     
     /**
      * 更新任务
+     * updateJob($systemId,$relateId,['subject'=>$subject, 'link'=>$link, 'content'=>$content, 'progress'=>$progress, 'status'=>$status])
      * @param string $systemId
      * @param int $relateId
      * @param array $params  =[subject, link, content, progress, status]

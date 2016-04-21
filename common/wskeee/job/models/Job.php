@@ -11,7 +11,7 @@ use yii\db\ActiveRecord;
  * This is the model class for table "{{%job}}".
  *
  * @property integer $id
- * @property string $system_id
+ * @property integer $system_id
  * @property integer $relate_id
  * @property string $subject
  * @property string $content
@@ -40,7 +40,8 @@ class Job extends ActiveRecord
             [['system_id', 'relate_id'], 'required'],
             [['relate_id', 'progress'], 'integer'],
             [['content'], 'string'],
-            [['system_id', 'status'], 'string', 'max' => 64],
+            [['system_id'], 'integer', 'max' => 11],
+            [['status'], 'string', 'max' => 64],
             [['subject', 'link'], 'string', 'max' => 255]
         ];
     }

@@ -30,7 +30,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail Details') . ' : ' . $model->id;
     ]) ?>
     <?= $this->render('_form_model',[
          'model' => $model,
-        ])?>
+    ])?>
 </div>
 <div class="controlbar">
     <div class="container">
@@ -87,7 +87,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail Details') . ' : ' . $model->id;
     $('#submit').click(function()
         {
             if(uShootMan > 0){
-                $('#myModal').modal()
+                $('#myModal').modal();
                 $("#myModal .modal-footer #save").click(function(){
                     var ed = $("#myModal .modal-body input").val();
                     var se = $(".table #shootbookdetail-u_shoot_man option:selected").val();

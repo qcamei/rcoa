@@ -53,6 +53,13 @@ return [
                 'class' => 'yii\caching\FileCache',
             ]
         ],
+        'jobManager'=>[
+            'class'=>'common\wskeee\job\JobManager',
+            //'url'=>'http://rcoaadmin.tt.gzedu.net/framework/api/list',
+            'cache' => [
+                'class' => 'yii\caching\FileCache',
+            ]
+        ],
     ],
     'modules' => [
         'rbac' => [
@@ -61,8 +68,14 @@ return [
         'framework' => [
             'class' => 'wskeee\framework\Module'
         ],
+        'job' => [
+            'class' => 'common\wskeee\job\Module'
+        ],
         'expert' => [
             'class' => 'frontend\modules\expert\Module'
+        ],
+        'resource' => [
+            'class' => 'frontend\modules\resource\Module',
         ],
     ],
 ];

@@ -147,7 +147,7 @@ class BookdetailController extends Controller
             $model->u_contacter = $post['ShootBookdetail']['u_contacter'][0];
             $model->status = ShootBookdetail::STATUS_ASSIGN ;
             /** 保存预约 */
-            $this->saveNewBookdetail($model);
+            $this->saveNewBookdetail($model, $post);
             return $this->redirect([ 'index', 'date' => date('Y-m-d', $model->book_time), 'b_id' => $model->id, 'site'=> $model->site_id]);
         } else {
             $model->status = ShootBookdetail::STATUS_BOOKING;
@@ -227,6 +227,7 @@ class BookdetailController extends Controller
         $model->u_shoot_man = $post['shoot_man'][0];
         if(!empty($model->u_shoot_man))
            $model->status = ShootBookdetail::STATUS_SHOOTING;
+        $jobManager = Yii::$app->get('jobManager');
         /** 开启事务 */
         $trans = \Yii::$app->db->beginTransaction();
         try
@@ -236,6 +237,7 @@ class BookdetailController extends Controller
             $isIntersection = $this->isTwoArrayIntersection($model, RbacName::ROLE_SHOOT_MAN);
             if(!$isIntersection) {
                 $this->saveShootBookdetailRoleName(RbacName::ROLE_SHOOT_MAN); //保存【已指派摄影师】
+                $jobManager->updateJob(2, $id, ['status' => $model->getStatusName()]); //更新任务通知表
                 $this->saveNewHistory($model);  //保存编辑信息
                 /** 摄影师非null的时候为【更改指派】 */
                 if($oldShootMan != null){
@@ -284,7 +286,7 @@ class BookdetailController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $model->u_contacter = $post['ShootBookdetail']['u_contacter'][0];
             $model->status = ShootBookdetail::STATUS_ASSIGN ;
-           
+            $jobManager = Yii::$app->get('jobManager');
             /** 开启事务 */
             $trans = \Yii::$app->db->beginTransaction();
             try
@@ -294,6 +296,8 @@ class BookdetailController extends Controller
                 $isIntersection = $this->isTwoArrayIntersection($model, RbacName::ROLE_CONTACT);
                 if(!$isIntersection) {
                     $this->saveShootBookdetailRoleName(RbacName::ROLE_CONTACT); //保存【已指派接洽人】
+                    $jobManager->updateJob(2, $id, ['subject' => $model->fwCourse->name]); //更新任务通知表
+                    //$jobManager->removeNotification(2, $model->id);
                     $this->saveNewHistory($model);  //保存编辑信息
                 }else{ throw new Exception(json_encode($model->getErrors()));}
                 $trans->commit();
@@ -314,6 +318,7 @@ class BookdetailController extends Controller
             foreach ($alreadyContacts as $key => $value){
                 $contactsKey[] = $key;
             }
+            $model->u_contacter = $contactsKey;
             return $this->render('update', [
                 'model' => $model,
                 'bookers' => $this->getRoleToUsers(RbacName::ROLE_WD),   //编导
@@ -390,14 +395,17 @@ class BookdetailController extends Controller
      * 保存数据到Bookdetail表里面
      * @param ShootBookdetail $model
      */
-    private function saveNewBookdetail($model)
+    private function saveNewBookdetail($model, $post)
     {
         $trans = \Yii::$app->db->beginTransaction();
         $isIntersection = $this->isTwoArrayIntersection($model, RbacName::ROLE_CONTACT);    //是否存在
         try
         {
             if(!$isIntersection && $model->save()){
-                $this->saveShootBookdetailRoleName(RbacName::ROLE_CONTACT); //保存接洽人到ShootBookdetailRoleName表里 
+                //保存接洽人到ShootBookdetailRoleName表里 
+                $this->saveShootBookdetailRoleName(RbacName::ROLE_CONTACT); 
+                //添加任务管理
+                $this->saveJobManager($model, $post);
                 //创建--给所有摄影组长发送通知
                 $this->sendShootLeadersNotification($model, '新增', 'shoot\newShoot-html');
             }
@@ -416,6 +424,24 @@ class BookdetailController extends Controller
         }
     }
     
+    /**
+     * jobManager任务管理
+     * @param type $model
+     * @param type $post
+     */
+    public function saveJobManager($model, $post){
+        $jobManager = Yii::$app->get('jobManager');
+        $authManager = Yii::$app->authManager;
+        $u_contacter = $post['ShootBookdetail']['u_contacter'];
+        $shootLeaders = $authManager->getItemUsers(RbacName::ROLE_SHOOT_LEADER);
+        $shootLeadersId = array_filter(ArrayHelper::getColumn($shootLeaders, 'id'));
+        $jobUsers = ArrayHelper::merge($u_contacter, $shootLeadersId);
+        //创建job表任务
+        $jobManager->createJob(2, $model->id, $model->fwCourse->name, '/view?id='.$model->id, $model->getStatusName()); 
+        //添加通知
+        $jobManager->addNotification(2, $model->id, $jobUsers);
+    }
+
     /**
      * 保存数据到ShootBookdetailRoleName表里
      * @param type $role 角色
