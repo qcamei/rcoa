@@ -16,6 +16,8 @@ use common\wskeee\job\models\Job;
 use common\wskeee\job\models\JobNotification;
 use Yii;
 use yii\db\Exception;
+use yii\helpers\ArrayHelper;
+use yii\web\NotFoundHttpException;
 
 /**
  * Description of JobManager
@@ -74,7 +76,7 @@ class JobManager {
         $job = Job::findOne(['system_id'=>$systemId,'relate_id'=>$relateId]);
         if($job == null)
         {
-            throw new \yii\web\NotFoundHttpException("找不到对应任务！system_id：$systemId, relate_id：$relateId");
+            throw new NotFoundHttpException("找不到对应任务！system_id：$systemId, relate_id：$relateId");
             return;
         }
         
@@ -112,7 +114,7 @@ class JobManager {
             $rows = [];
             if($job)
             {
-                if(is_numeric($user))
+                if(!is_array($user))
                     $users = [$user];
                 else if(is_array($user))
                     $users = $user;
@@ -125,7 +127,7 @@ class JobManager {
                 {
                     foreach($users as $user)
                         $rows [] = [$job->id,$user];
-                    echo json_encode($rows);
+                    //echo json_encode($rows);
                 }
                 Yii::$app->db->createCommand()->batchInsert(JobNotification::tableName(), ['job_id','u_id'], $rows)->execute();
             }else
@@ -148,17 +150,25 @@ class JobManager {
     {
         /* @var $job Job */
         $job;
+      
         try {
             $job = Job::findOne(['system_id' => $systemId,'relate_id'=> $relateId]);
             $users;
             $conditions = ['job_id'=>$job->id];
+          
             if($job)
             {
-                if($user!=null && $user instanceof int)
+                if($user!=null)
                     $users = [$user];
-                if(isset($users) && count($users)>0)
-                    $conditions = ['u_id'=>$users];
-                Yii::$app->db->createCommand()->update(JobNotification::tableName(), ['status'=>  JobNotification::STATUS_END], $conditions);
+                if(isset($users) && count($users)>0){
+                    foreach ($users as $key => $value) {
+                         $conditions['u_id'] = $value;
+                    }
+                }
+                else
+                    throw new Exception ("$user 不能为空！");
+                $v = Yii::$app->db->createCommand()->update(JobNotification::tableName(), ['status'=>  JobNotification::STATUS_END], $conditions)->execute();
+                return true;
             }else
                 throw new Exception ("找不到对应通知：systme_id:$systemId,relate_id:$relateId, user:$user");
             
@@ -188,7 +198,7 @@ class JobManager {
             else
                 $conditions = ['job_id'=>$job->id,'u_id'=>$user];
             
-            Yii::$app->db->createCommand()->update(JobNotification::tableName(), ['status'=>  JobNotification::STATUS_NORMAL], $conditions);
+            Yii::$app->db->createCommand()->update(JobNotification::tableName(), ['status'=>  JobNotification::STATUS_NORMAL], $conditions)->execute();
             
         } catch (Exception $ex) {
             Yii::error("删除通知关联失败！<br/>".$ex->getMessage(), __METHOD__);
@@ -203,18 +213,13 @@ class JobManager {
     public function getUnReadyNotification($user)
     {
         $notification = JobNotification::find()
-                        ->where([
-                            'u_id'=>$user,
-                            'status'=> JobNotification::STATUS_INIT
-                        ])
+                        ->where(['u_id'=>$user,'status'=> JobNotification::STATUS_INIT])
                         ->all();
-        $unReadyNotification = [];
-        foreach ($notification as $key => $value) {
-            $unReadyNotification[] = Job::find()
-                       ->where(['id'=>$value->job_id])
-                       ->all();
-            
-        }
+        $unReadyNotification = Job::find()
+             ->where(['status'=>  Job::STATUS_ASSIGN])
+             ->orWhere(['status'=> Job::STATUS_SHOOTING])
+             ->andWhere(['id'=>ArrayHelper::getColumn($notification, 'job_id')])
+             ->all();
         return $unReadyNotification;
     }
     

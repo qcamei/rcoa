@@ -33,6 +33,16 @@ class DefaultController extends Controller
         return $this->render('index');
     }
     
+    public function actionRemoveNotification()
+    {
+        /** @var $jobManager JobManager */
+        $jobManager = new JobManager();
+        /** 更新任务 */
+        $jobManager->addNotification(2, 1284, ['13','15','16','17']);
+        exit;
+        return $this->render('index');
+    }
+    
     public function actionAddNotification()
     {
         $jobManager = new JobManager();

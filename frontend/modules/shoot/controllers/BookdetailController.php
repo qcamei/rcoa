@@ -11,6 +11,7 @@ use common\models\shoot\ShootBookdetail;
 use common\models\shoot\ShootBookdetailRoleName;
 use common\models\shoot\ShootHistory;
 use common\models\shoot\ShootSite;
+use common\wskeee\job\JobManager;
 use wskeee\ee\EeManager;
 use wskeee\framework\FrameworkManager;
 use wskeee\rbac\RbacManager;
@@ -192,6 +193,9 @@ class BookdetailController extends Controller
      */
     public function actionView($id)
     {
+        $jobManager = Yii::$app->get('jobManager');
+        $jobManager->setNotificationHasReady(2,Yii::$app->user->id,$id);
+        
         $model = $this->findModel($id);
         $bookTimeStart =  date('Y-m-d',$model->book_time);   //拍摄预约时间
         $bookTimeEnd = date('Y-m-d',strtotime("+1 days",$model->book_time));    //大于拍摄预约时间
@@ -283,10 +287,18 @@ class BookdetailController extends Controller
     {
         $post = Yii::$app->getRequest()->getBodyParams();
         $model = $this->findModel($id);
+        /* @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
+       
+        /** 修改时设置Select2 value值*/
+        $alreadyContacts = $this->getShootBookdetailRoleNames($id, RbacName::ROLE_CONTACT);
+        $contacts = [];
+        foreach ($alreadyContacts as $key => $value)
+            $contacts[] = (string)$key;
+        
         if ($model->load(Yii::$app->request->post())) {
             $model->u_contacter = $post['ShootBookdetail']['u_contacter'][0];
             $model->status = ShootBookdetail::STATUS_ASSIGN ;
-            $jobManager = Yii::$app->get('jobManager');
             /** 开启事务 */
             $trans = \Yii::$app->db->beginTransaction();
             try
@@ -297,7 +309,9 @@ class BookdetailController extends Controller
                 if(!$isIntersection) {
                     $this->saveShootBookdetailRoleName(RbacName::ROLE_CONTACT); //保存【已指派接洽人】
                     $jobManager->updateJob(2, $id, ['subject' => $model->fwCourse->name]); //更新任务通知表
-                    //$jobManager->removeNotification(2, $model->id);
+
+                    $jobManager->removeNotification(2, $id,$contacts);
+                    //$jobManager->addNotification(2, $id, $post['ShootBookdetail']['u_contacter']);
                     $this->saveNewHistory($model);  //保存编辑信息
                 }else{ throw new Exception(json_encode($model->getErrors()));}
                 $trans->commit();
@@ -312,12 +326,9 @@ class BookdetailController extends Controller
             $bookTimeEnd = date('Y-m-d',strtotime("+1 days",$model->book_time));    //大于拍摄预约时间
             $alreadyContactsArray = $this->getIsRoleNames(RbacName::ROLE_CONTACT, $bookTimeStart, $bookTimeEnd, $model->index); //已指派了的接洽人
             $allContactsArray = $this->getRoleToUsers(RbacName::ROLE_CONTACT); //所有接洽人
-            /** 修改时设置Select2 value值*/
-            $alreadyContacts = $this->getShootBookdetailRoleNames($id, RbacName::ROLE_CONTACT);
             $contactsKey = [];
-            foreach ($alreadyContacts as $key => $value){
+            foreach ($alreadyContacts as $key => $value)
                 $contactsKey[] = $key;
-            }
             $model->u_contacter = $contactsKey;
             return $this->render('update', [
                 'model' => $model,

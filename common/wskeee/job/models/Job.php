@@ -23,6 +23,16 @@ use yii\db\ActiveRecord;
  */
 class Job extends ActiveRecord
 {
+    const STATUS_DEFAULT = '未预约';
+    const STATUS_BOOKING = '预约中';
+    const STATUS_ASSIGN = '待指派';
+    const STATUS_SHOOTING = '待评价';
+    const STATUS_APPRAISE = '评价中';
+    const STATUS_COMPLETED = '已完成';
+    const STATUS_BREAK_PROMISE = '已失约';
+    const STATUS_CANCEL = '已取消';
+    
+    
     /**
      * @inheritdoc
      */

@@ -1,5 +1,6 @@
 <?php
 
+use common\wskeee\job\models\Job;
 use yii\helpers\Html;
 
 /* 
@@ -9,24 +10,25 @@ use yii\helpers\Html;
  */
 $jobManager = Yii::$app->get('jobManager');
 $unReadyNotice = $jobManager->getUnReadyNotification(Yii::$app->user->id);
+
+
 ?>
-<span class="badge badge-warning">7</span>
+<span class="badge badge-warning"><?php echo count($unReadyNotice)?></span>
 <ul class="dropdown-menu extended notification">
     <li>
-        <p id="text">你总有7个通知</p>
+        <p id="text">你总有<?php echo count($unReadyNotice)?>个通知</p>
     </li>
     <li>
         <p>【拍摄】</p>
     </li>
     <?php 
-        foreach ($unReadyNotice as $unReadyNoticeKey=>$unReadyNoticeValue) {
-            if($unReadyNoticeKey > 1) continue;
-            foreach ($unReadyNoticeValue as $value) {
-                echo '<li>';
-                echo Html::a('<span>【'.$value->status.'】</span>'.$value->subject, [$value->link]);
-                echo '</li>';
-            }
+        foreach ($unReadyNotice as $key=>$value) {
+            if($key > 1 ||  $value->system_id != 2) continue;
+            echo '<li>';
+            echo Html::a('<span>【'.$value->status.'】</span>'.$value->subject, [$value->link]);
+            echo '</li>';
         }
+        
     ?>
     
     <li>

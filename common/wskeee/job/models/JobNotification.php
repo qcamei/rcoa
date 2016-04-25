@@ -7,7 +7,7 @@ use Yii;
 /**
  * This is the model class for table "{{%job_notification}}".
  *
- * @property integer $mes_id
+ * @property integer $job_id
  * @property integer $u_id
  * @property integer $status
  *
@@ -45,8 +45,8 @@ class JobNotification extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['mes_id', 'u_id'], 'required'],
-            [['mes_id', 'u_id', 'status'], 'integer']
+            [['job_id', 'u_id'], 'required'],
+            [['job_id', 'u_id', 'status'], 'integer']
         ];
     }
 
@@ -56,7 +56,7 @@ class JobNotification extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'mes_id' => Yii::t('rcoa', 'Mes ID'),
+            'job_id' => Yii::t('rcoa', 'JOB ID'),
             'u_id' => Yii::t('rcoa', 'U ID'),
             'status' => Yii::t('rcoa', 'Status'),
         ];
@@ -73,8 +73,8 @@ class JobNotification extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getMes()
+    public function getJob()
     {
-        return $this->hasOne(Job::className(), ['id' => 'mes_id']);
+        return $this->hasOne(Job::className(), ['id' => 'job_id']);
     }
 }
