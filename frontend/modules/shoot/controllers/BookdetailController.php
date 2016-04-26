@@ -231,7 +231,7 @@ class BookdetailController extends Controller
         $model->u_shoot_man = $post['shoot_man'][0];
         if(!empty($model->u_shoot_man))
            $model->status = ShootBookdetail::STATUS_SHOOTING;
-        $jobManager = Yii::$app->get('jobManager');
+        
         /** 开启事务 */
         $trans = \Yii::$app->db->beginTransaction();
         try
@@ -240,9 +240,12 @@ class BookdetailController extends Controller
                 $this->emptyShootBookdetailRoleName($id, RbacName::ROLE_SHOOT_MAN);    //清空数据
             $isIntersection = $this->isTwoArrayIntersection($model, RbacName::ROLE_SHOOT_MAN);
             if(!$isIntersection) {
-                $this->saveShootBookdetailRoleName(RbacName::ROLE_SHOOT_MAN); //保存【已指派摄影师】
-                $jobManager->updateJob(2, $id, ['status' => $model->getStatusName()]); //更新任务通知表
-                $this->saveNewHistory($model);  //保存编辑信息
+                //保存【已指派摄影师】
+                $this->saveShootBookdetailRoleName(RbacName::ROLE_SHOOT_MAN); 
+                //设置指派摄影师用户任务通知关联
+                $this->setAssignNotification($model, $oldShootMan, $post);
+                //保存编辑信息
+                $this->saveNewHistory($model);  
                 /** 摄影师非null的时候为【更改指派】 */
                 if($oldShootMan != null){
                     //更改指派--给接洽人发通知
@@ -268,15 +271,13 @@ class BookdetailController extends Controller
             $trans ->rollBack();
             throw new NotFoundHttpException("保存任务失败，有摄影师存在被指派了！".$ex->getMessage());
         }
-       
         $this->redirect(['index',
             'date' => date('Y-m-d', $model->book_time), 
             'b_id' => $model->id, 
             'site'=> $model->site_id
         ]);
     }
-  
-
+    
     /**
      * Updates an existing ShootBookdetail model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -311,7 +312,9 @@ class BookdetailController extends Controller
                     $jobManager->updateJob(2, $id, ['subject' => $model->fwCourse->name]); //更新任务通知表
 
                     $jobManager->removeNotification(2, $id,$contacts);
-                    //$jobManager->addNotification(2, $id, $post['ShootBookdetail']['u_contacter']);
+                    
+                    $jobManager->addNotification(2, $id, $post['ShootBookdetail']['u_contacter']);
+                    
                     $this->saveNewHistory($model);  //保存编辑信息
                 }else{ throw new Exception(json_encode($model->getErrors()));}
                 $trans->commit();
@@ -436,11 +439,12 @@ class BookdetailController extends Controller
     }
     
     /**
-     * jobManager任务管理
+     * jobManager 添加用户任务通知关联
      * @param type $model
      * @param type $post
      */
     public function saveJobManager($model, $post){
+         /** @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
         $authManager = Yii::$app->authManager;
         $u_contacter = $post['ShootBookdetail']['u_contacter'];
@@ -451,6 +455,56 @@ class BookdetailController extends Controller
         $jobManager->createJob(2, $model->id, $model->fwCourse->name, '/shoot/bookdetail/view?id='.$model->id, $model->getStatusName()); 
         //添加通知
         $jobManager->addNotification(2, $model->id, $jobUsers);
+    }
+    
+    
+    /**
+     * 设置指派摄影师用户任务通知关联
+     * @param type $model
+     * @param type $oldShootMan 旧摄影师
+     * @param type $post
+     */
+    public function setAssignNotification($model,$oldShootMan,$post){
+        /** @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
+        $authManager = Yii::$app->authManager;
+        $shootLeaders = $authManager->getItemUsers(RbacName::ROLE_SHOOT_LEADER);
+        $shootLeadersId = array_filter(ArrayHelper::getColumn($shootLeaders, 'id'));
+        if($oldShootMan != null){
+            //已经被指派的摄影师
+            $assignedShootMans = $this->getShootBookdetailRoleNames($model->id, RbacName::ROLE_SHOOT_MAN);   
+            $shootMans = [];
+            foreach ($assignedShootMans as $key => $value)
+                $shootMans[] = (string)$key;
+        }
+        //更新任务通知表
+        $jobManager->updateJob(2, $model->id, ['status' => $model->getStatusName()]); 
+        //清空用户任务通知关联
+        $jobManager->removeNotification(2,$model->id,($oldShootMan != null ? $shootMans : $shootLeadersId));
+        //添加用户任务通知关联
+        $jobManager->addNotification(2,$model->id,$post['shoot_man']);
+    }
+
+    
+    /**
+     * jobManager 取消用户任务通知关联
+     * @param type $model
+     * @param type $post
+     */
+    public function cancelJobManager($model){
+         /** @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
+        $authManager = Yii::$app->authManager;
+        $u_contacter = $this->getShootBookdetailRoleNames($model->id, RbacName::ROLE_CONTACT);
+        $u_shoot_man = $this->getShootBookdetailRoleNames($model->id, RbacName::ROLE_SHOOT_MAN);
+        $shootLeaders = $authManager->getItemUsers(RbacName::ROLE_SHOOT_LEADER);
+        $shootLeadersId = array_filter(ArrayHelper::getColumn($shootLeaders, 'id'));
+        $jobUsers = ArrayHelper::merge($u_contacter, $shootLeadersId);
+        $jobUserAll = ArrayHelper::merge($u_shoot_man, $jobUsers);
+        //修改job表任务
+        $jobManager->updateJob(2,$model->id,['status'=>$model->getStatusName()]); 
+        //修改通知
+        $jobManager->cancelNotification(2, $model->id, $jobUserAll);
     }
 
     /**

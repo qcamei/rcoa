@@ -129,7 +129,9 @@ class JobManager {
                         $rows [] = [$job->id,$user];
                     //echo json_encode($rows);
                 }
+                
                 Yii::$app->db->createCommand()->batchInsert(JobNotification::tableName(), ['job_id','u_id'], $rows)->execute();
+                
             }else
                 throw new Exception ("找不到对应通知：systme_id:$systemId,relate_id:$relateId");
             return true;
@@ -139,14 +141,62 @@ class JobManager {
         }
     }
     
+     //---------------------------------------------------------------------------------
+    //
+    // 通知
+    //
+    //---------------------------------------------------------------------------------
+   /**
+    * 清空用户与任务通知关联
+    * @param type $systemId     系统id
+    * @param type $relateId        任务id
+    * @param type $user         int|array    目标用户
+    * @return bool 成功/失败
+    * 
+    * @see getNotification()
+    * @see getUnReadyNotification()
+    */
+    public function removeNotification($systemId,$relateId,$user)
+    {
+        /* @var $job Job */
+        $job;
+        try {
+            $job = Job::findOne(['system_id' => $systemId,'relate_id'=> $relateId]);
+            
+            if($job)
+            {
+                if(!is_array($user))
+                    $users = [$user];
+                else if(is_array($user))
+                    $users = $user;
+                else
+                    throw new Exception ("不能识别的user：systme_id:$systemId,relate_id:$relateId, user:$user");
+                
+                if(count($users)==0)
+                    throw new Exception ("用户不能为空：systme_id:$systemId,relate_id:$relateId");
+                else
+                {
+                    foreach($users as $user)
+                       JobNotification::deleteAll(['and','job_id='.$job->id,'u_id="'.$user.'"']);
+                    //echo json_encode($rows);
+                }
+            }else
+                throw new Exception ("找不到对应通知：systme_id:$systemId,relate_id:$relateId");
+            return true;
+        } catch (Exception $ex) {
+            Yii::error("删除通知关联失败！<br/>".$ex->getMessage(), __METHOD__);
+            return false;
+        }
+    }
+    
     /**
-     * 删除用户与任务通知的关联
+     * 取消用户与任务通知的关联
      * @param type $systemId       系统id
      * @param type $relateId       关联任务id
      * @param type $user        int|array    单个目标用户、多个目标用户，传空值删除该任务的所有通知关联
      * @return bool 成功/失败
      */
-    public function removeNotification($systemId,$relateId,$user=null)
+    public function cancelNotification($systemId,$relateId,$user=null)
     {
         /* @var $job Job */
         $job;
@@ -167,13 +217,14 @@ class JobManager {
                 }
                 else
                     throw new Exception ("$user 不能为空！");
-                $v = Yii::$app->db->createCommand()->update(JobNotification::tableName(), ['status'=>  JobNotification::STATUS_END], $conditions)->execute();
+                
+                Yii::$app->db->createCommand()->update(JobNotification::tableName(), ['status'=>  JobNotification::STATUS_END], $conditions)->execute();
                 return true;
             }else
                 throw new Exception ("找不到对应通知：systme_id:$systemId,relate_id:$relateId, user:$user");
             
         } catch (Exception $ex) {
-            Yii::error("删除通知关联失败！<br/>".$ex->getMessage(), __METHOD__);
+            Yii::error("取消通知关联失败！<br/>".$ex->getMessage(), __METHOD__);
             return false;
         }
     }

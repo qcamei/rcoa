@@ -36,10 +36,12 @@ class DefaultController extends Controller
     public function actionRemoveNotification()
     {
         /** @var $jobManager JobManager */
-        $jobManager = new JobManager();
-        /** 更新任务 */
-        $jobManager->addNotification(2, 1284, ['13','15','16','17']);
-        exit;
+        $jobManager = Yii::$app->get('jobManager');
+        //修改job表任务
+        $jobManager->updateJob(2,1295,['status' => '已取消']); 
+        //修改通知
+        $jobManager->cancelNotification(2, 1295,['117','12','13','74']);
+       
         return $this->render('index');
     }
     
