@@ -365,6 +365,7 @@ class BookdetailController extends Controller
                 {  
                     if($model->save()){
                         ShootBookdetailRoleName::updateAll(['iscancel' => 'Y'],'b_id = '.$id); //拍摄任务取消时修改iscancel字段
+                        $this->cancelJobManager($model);
                         $this->saveNewHistory($model);  //保存编辑信息
                         //取消--给所有摄影组长发通知
                         $this->sendShootLeadersNotification($model, '取消', 'shoot\CancelShoot-html');
@@ -492,15 +493,22 @@ class BookdetailController extends Controller
      * @param type $post
      */
     public function cancelJobManager($model){
-         /** @var $jobManager JobManager */
+        /** @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
         $authManager = Yii::$app->authManager;
         $u_contacter = $this->getShootBookdetailRoleNames($model->id, RbacName::ROLE_CONTACT);
         $u_shoot_man = $this->getShootBookdetailRoleNames($model->id, RbacName::ROLE_SHOOT_MAN);
         $shootLeaders = $authManager->getItemUsers(RbacName::ROLE_SHOOT_LEADER);
         $shootLeadersId = array_filter(ArrayHelper::getColumn($shootLeaders, 'id'));
-        $jobUsers = ArrayHelper::merge($u_contacter, $shootLeadersId);
-        $jobUserAll = ArrayHelper::merge($u_shoot_man, $jobUsers);
+        $contacts = [];
+        foreach ($u_contacter as $key => $value)
+            $contacts[] = (string)$key;
+        $shootMan = [];
+        foreach ($u_shoot_man as $key => $value)
+            $shootMan[] = (string)$key;
+        $jobUsers = ArrayHelper::merge($contacts, $shootLeadersId);
+        $jobUserAll = ArrayHelper::merge($shootMan, $jobUsers);
+        
         //修改job表任务
         $jobManager->updateJob(2,$model->id,['status'=>$model->getStatusName()]); 
         //修改通知
