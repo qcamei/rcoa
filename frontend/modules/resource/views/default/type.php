@@ -28,12 +28,12 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <div class="container resource-type bookdetail-list has-title body-content" id="resource-type">
-    <div class="row">
+    <div class="row row-type">
     <?php foreach ($resource as $value){
-        $img = ResourcePath::findOne(['r_id' => $value->id]);
+        //$img = ResourcePath::findOne(['r_id' => $value->id]);
         echo '<div class="col-md-3 col-sm-4 col-xs-6">';
         echo Html::a('<div class="resource-type-relative">'.
-             Html::img([$img->path], ['class'=>'img-responsive center-block']).
+             Html::img([$value->image], ['class'=>'img-responsive center-block']).
                 '<div class="resource-type-absolute">'.
                 '<p class="resource-type-text">'.$value->name.'</p>'.
                 '</div></div>',
@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <div id="myModal" class="fade modal" role="dialog" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg" style="width: 1280px;height: 720px;">
         <div class="modal-content">
             
         </div>
@@ -74,24 +74,81 @@ $js =
         $("#myModal").modal({remote:urlf});
         return false;
     });    
+    window.onresize = function(){
+        fix();
+    }
+    function fix(){
+        var width = $('#myModal .modal-lg').width();
+        var height = $('#myModal .modal-lg').height();
+        var stageWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        var stageHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight; 
+        var targetWidth = stageWidth,
+            targetHeight = stageHeight;
+        var scaleW = targetWidth/width;
+        var scaleH = targetHeight/height;  
+        var scale = Math.min(scaleW,scaleH);  
+	width = width*scale;
+	height = height*scale;
+        $('#myModal .modal-lg').css('width',width+"px");
+        $('#myModal .modal-lg').css('height',height+"px");
+        $('#myModal .modal-lg').css('margin',"0px");
+        $('#myModal .modal-lg').css('top',(stageHeight - height >> 1)+"px");
+        $('#myModal .modal-lg').css('left',(stageWidth - width >> 1)+"px");
+    }
     /** 从远端的数据源加载完数据之后触发该事件。 */
     $('#myModal').on('loaded.bs.modal', function () {
         $('.carousel').carousel('pause');
+        $('#carousel-731952').on('slid.bs.carousel', function () {
+            //var item = $('.carousel .item');
+            //console.log(item);
+             $(".item").each(function(i,item) {
+                $(this).find("video").each(function(){
+                    this.pause();
+                });
+             });
+         });
+        fix();
+        //鼠标移上显示控制按钮
+        var leftRightHideDelayID;
+        $("#carousel-731952").hover(
+            function () {
+                $('#carousel-731952 .carousel-indicators').fadeIn();
+                $('#carousel-731952 .left').fadeIn();
+                $('#carousel-731952 .right').fadeIn();
+                $('#carousel-731952 .display').fadeIn();
+                clearTimeout(leftRightHideDelayID);
+            },
+            function () {
+                //开定时器
+                leftRightHideDelayID = setTimeout(function () {
+                    $('#carousel-731952 .carousel-indicators').fadeOut();
+                    $('#carousel-731952 .left').fadeOut();
+                    $('#carousel-731952 .right').fadeOut();
+                    $('#carousel-731952 .display').fadeOut();
+                }, 1000);
+            }
+        );
         $("#myModal .modal-header .close").click(function(){
             window.location.reload();
         });
-        $(".show").click(function(){
+        $(".display").click(function(){
             var noShow =  $(".carousel-caption").css("display");
             if(noShow == 'none'){
-                $(".carousel-caption").css("display","block");
+                $(".carousel-caption").fadeIn();    //渐显效果
                 $(this).attr("src","/css/imgs/u466.png");
             }else{
-               $(".carousel-caption").css("display","none");
-               $(this).attr("src","/css/imgs/u462.png"); 
+               $(".carousel-caption").fadeOut();
+               $(this).attr("src","/css/imgs/u462.png");
             }
         });
     })
-     
+    /** 隐藏之后触发该事件*/
+    $('#myModal').on('hidden.bs.modal', function () {
+        var myVideo = document.getElementById("myVideo");
+        if(myVideo != null)
+            myVideo.pause();
+        window.location.reload();
+    });
     $('#submit').click(function(){
         if($('#form-assign-key input[name="key"]').val() == '')
             alert("请输入关键字");

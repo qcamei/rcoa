@@ -13,11 +13,11 @@ and open the template in the editor.
 {
      padding-left: 0px !important;
      padding-right: 0px !important;
+    
 }
 
-.row{
-    margin-left: 0px !important;
-    margin-right: 0px !important;
+.row-type{
+    margin-right: -5px !important;
 }
 .col-xs-6{
     padding-left: 2px !important;
@@ -27,14 +27,16 @@ and open the template in the editor.
 .resource-index-a{
     color:#ccc !important;
     float: left; 
-    margin: 0 40px 20px 35px; 
+    margin: 10px auto;
     
 }
 
 .resource-type-a{
     color:#ccc !important; 
     float: left; 
-    margin-bottom:25px;
+    margin-top: 10px;
+    margin-bottom:10px;
+    margin-left: 10px;
 }
 
 .resource-type-relative{
@@ -78,7 +80,7 @@ and open the template in the editor.
     padding: 0px;
 }
 
-.content .show{
+.content .display{
     width: 48px !important;
     height: 48px !important;
     position:absolute !important; 
@@ -86,13 +88,12 @@ and open the template in the editor.
     right:  0px !important;
 }
 
-.content .show:hover{
+.content .display:hover{
    cursor:pointer;
 }
 
 .content .carousel-inner .item img{
     width: 100% !important;
-    height: 544px !important;
     padding: 0px !important;
     margin: 0px !important;
 }
@@ -179,11 +180,20 @@ and open the template in the editor.
 }
 .carousel-caption p{
     text-align: left !important;
-    font-size: 14.5px !important;
+    font-size: 10px !important;
     color: #ffffff !important;
     line-height: 20px !important;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif !important;
+    margin-right:30px !important;
     margin-bottom:0 !important;
 }
-
+@media screen and (min-width: 992px){
+.container .jumbotron {
+    padding-right: 0px !important;;
+    padding-left: 56px !important;
+}
+.row-type{
+    margin-left: 35px !important;
+}
+}
 

@@ -32,10 +32,10 @@ use yii\web\View;
             else
                 echo '<div class="item">';
             if($value->type == 1)
-                echo '<video src="'.$value->path.'" type="video/mp4" width="100%" height="542">您的浏览器不支持 video 标签。</video>';
+                echo '<video id="myVideo" class="img-responsive center-block" src="'.$value->path.'" type="video/mp4" controls>您的浏览器不支持 video 标签。</video>';
             else{
-                echo '<img class="center-block" alt="" src="'.$value->path.'"  width = "100%" height="544"/>';
-                echo '<div class="carousel-caption" style="display:none"><h4></h4><p>'.$value->des.'</p></div>';
+                echo '<img class="center-block img-responsive center-block" alt="" src="'.$value->path.'" />';
+                echo '<div class="carousel-caption" style="display:none"><p>'.$value->des.'</p></div>';
             }
             echo '</div>';
         }?>
@@ -43,7 +43,7 @@ use yii\web\View;
     </div> 
     <a data-slide="prev" href="#carousel-731952" class="left carousel-control">‹</a> 
     <a data-slide="next" href="#carousel-731952" class="right carousel-control">›</a>
-    <img class="show" alt="" src="/css/imgs/u462.png" width="48" heihgt="48" />
+    <img class="display" alt="" src="/css/imgs/u462.png" width="48" heihgt="48" />
 </div>
 
         

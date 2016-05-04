@@ -15,17 +15,15 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container resource-index" style="padding:0;">
     <?= Html::img(['/filedata/system/u236_b.png'], [
-        'id' => 'img',
-        'class' => 'col-sm-12 col-md-12 col-xs-12 ',
-        'height' => '360',
-
+        'class' => 'col-sm-12 col-md-12 col-xs-12 img-responsive center-block',
+        'style' => 'padding:0px;'
     ])?>
-    <div class="jumbotron" style="padding:0;margin: 0;">
-    <div class="row">
+    <div class="jumbotron">
+        <div class="row" style="margin: 0px">
     <?php foreach ($model as $value){
-        echo '<div class="col-lg-3 col-sm-6" style=" padding:0px;">';
+        echo '<div class="col-lg-3 col-sm-4 col-xs-6" style=" padding:0px;">';
         echo Html::a('<div class="resource-type-relative">'.
-                Html::img([$value->image],['width' => '210', 'height' => '118']).
+                Html::img([$value->image],['class'=>'img-responsive center-block']).
                 '<div class="resource-type-absolute">'.
                 '<span class="resource-type-text">'.$value->name.'</span><span class="resource-type-text-right">'.
                     Resource::find()
