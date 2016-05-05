@@ -1,10 +1,12 @@
 <?php
 
-use yii\helpers\Html;
+use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
+use yii\helpers\Html;
+use yii\web\View;
 
-/* @var $this yii\web\View */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $this View */
+/* @var $dataProvider ActiveDataProvider */
 
 $this->title = Yii::t('rcoa/resource', 'Resources');
 $this->params['breadcrumbs'][] = $this->title;
@@ -14,17 +16,24 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
+        <?= Html::a(Yii::t('rcoa/resource', 'Resource Type'), ['type/index'], ['class' => 'btn btn-primary']) ?>
         <?= Html::a(Yii::t('rcoa/resource', 'Create Resource'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            
 
             'id',
             'name',
-            'type',
+            [
+                'attribute' => 'type',
+                
+                'value' => function($model){
+                    return $model->resourceType->name;
+                },
+            ],
             'des',
 
             ['class' => 'yii\grid\ActionColumn'],

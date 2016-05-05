@@ -32,7 +32,7 @@ class Resource extends \yii\db\ActiveRecord
     {
         return [
             [['type'], 'integer'],
-            [['name', 'des'], 'string', 'max' => 255]
+            [['name', 'des', 'image'], 'string', 'max' => 255]
         ];
     }
 
@@ -45,6 +45,7 @@ class Resource extends \yii\db\ActiveRecord
             'id' => Yii::t('rcoa', 'ID'),
             'name' => Yii::t('rcoa', 'Name'),
             'type' => Yii::t('rcoa', 'Type'),
+            'image' => Yii::t('rcoa/resource', 'Image'),
             'des' => Yii::t('rcoa', 'Des'),
         ];
     }

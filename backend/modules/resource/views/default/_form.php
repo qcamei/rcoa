@@ -15,6 +15,8 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'type')->textInput() ?>
+    
+    <?= $form->field($model, 'image')->textInput() ?>
 
     <?= $form->field($model, 'des')->textInput(['maxlength' => true]) ?>
 
