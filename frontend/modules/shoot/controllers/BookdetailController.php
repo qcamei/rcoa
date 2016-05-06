@@ -197,6 +197,8 @@ class BookdetailController extends Controller
         $jobManager->setNotificationHasReady(2,Yii::$app->user->id,$id);
         
         $model = $this->findModel($id);
+        if($model->status == $model::STATUS_COMPLETED || $model->status == $model::STATUS_BREAK_PROMISE)
+            $jobManager->cancelNotification(2, $model->id, Yii::$app->user->id);
         $bookTimeStart =  date('Y-m-d',$model->book_time);   //拍摄预约时间
         $bookTimeEnd = date('Y-m-d',strtotime("+1 days",$model->book_time));    //大于拍摄预约时间
         $alreadyShootMansArray = $this->getIsRoleNames(RbacName::ROLE_SHOOT_MAN, $bookTimeStart, $bookTimeEnd, $model->index); //被指派了的摄影师
@@ -803,7 +805,7 @@ class BookdetailController extends Controller
         return ArrayHelper::map($business, 'SYS_DATA_ID','NAME');
     }
 
-        /**
+    /**
       * 获取拍摄任务已指派角色
       * @param type $b_id 任务id
       * @return type

@@ -109,7 +109,7 @@ class AppraiseController extends Controller
         $b_id = $post['b_id'];
         /** 用户id */
         $u_id = \Yii::$app->user->id;
-
+        $jobManager = Yii::$app->get('jobManager');
         if(!Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_APPRAISE,['job'=>$this->findBookdetail($b_id)]))
             throw new NotAcceptableHttpException("无权限操作！");
         $tran = \Yii::$app->db->beginTransaction();
@@ -148,8 +148,9 @@ class AppraiseController extends Controller
             if($count>0)
             {
                 $bookdetail->status = ShootBookdetail::STATUS_COMPLETED;
+                $jobManager->updateJob(2,$b_id,['status'=>$bookdetail->getStatusName()]); 
                 $bookdetail->save();
-            }
+            }            
             $tran->commit();
         } catch (\Exception $ex) {
             $tran->rollBack();

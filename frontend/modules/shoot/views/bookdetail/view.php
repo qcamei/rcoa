@@ -65,7 +65,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail Details') . ' : ' . $model->id;
              * 2、必须是在24小时之前
              * 3、不是为【已取消】【已完成】状态
              */
-            if(Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model]) && !$model->getIsStatusCancel() && !$model->getIsStatusCompleted())
+            if(Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model]) && !$model->getIsStatusCancel() && !$model->getIsStatusCompleted() && !$model->getIsStatusBreakPromise())
                 echo Html::a('取消', 'javascript::', ['id'=>'cancel', 'class' => 'btn btn-warning']).' ';
         ?>
         <?= Html::a('返回', ['index','date'=>  date('Y-m-d',$model->book_time), 'site'=>$model->site_id], ['class' => 'btn btn-default']) ?>
