@@ -280,6 +280,12 @@ class JobManager {
      */
     public function getNotification($user)
     {
-        
+        $notification = JobNotification::find()
+                        ->where(['u_id'=>$user,'status'=> JobNotification::STATUS_NORMAL])
+                        ->all();
+        $haveReadNotification = Job::find()
+             ->where(['id'=>ArrayHelper::getColumn($notification, 'job_id')])
+             ->all();
+        return $haveReadNotification;
     }
 }

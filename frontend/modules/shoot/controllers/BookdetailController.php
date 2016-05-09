@@ -455,7 +455,7 @@ class BookdetailController extends Controller
         $shootLeadersId = array_filter(ArrayHelper::getColumn($shootLeaders, 'id'));
         $jobUsers = ArrayHelper::merge($u_contacter, $shootLeadersId);
         //创建job表任务
-        $jobManager->createJob(2, $model->id, $model->fwCourse->name, '/shoot/bookdetail/view?id='.$model->id, $model->getStatusName()); 
+        $jobManager->createJob(2, $model->id, $model->fwCourse->name, '/shoot/bookdetail/view?id='.$model->id, $model->getStatusName(),35); 
         //添加通知
         $jobManager->addNotification(2, $model->id, $jobUsers);
     }
@@ -481,7 +481,7 @@ class BookdetailController extends Controller
                 $shootMans[] = (string)$key;
         }
         //更新任务通知表
-        $jobManager->updateJob(2, $model->id, ['status' => $model->getStatusName()]); 
+        $jobManager->updateJob(2, $model->id, ['progress'=> 70, 'status' => $model->getStatusName()]); 
         //清空用户任务通知关联
         $jobManager->removeNotification(2,$model->id,($oldShootMan != null ? $shootMans : $shootLeadersId));
         //添加用户任务通知关联
@@ -512,7 +512,7 @@ class BookdetailController extends Controller
         $jobUserAll = ArrayHelper::merge($shootMan, $jobUsers);
         
         //修改job表任务
-        $jobManager->updateJob(2,$model->id,['status'=>$model->getStatusName()]); 
+        $jobManager->updateJob(2,$model->id,['progress'=> 100, 'status'=>$model->getStatusName()]); 
         //修改通知
         $jobManager->cancelNotification(2, $model->id, $jobUserAll);
     }

@@ -148,7 +148,7 @@ class AppraiseController extends Controller
             if($count>0)
             {
                 $bookdetail->status = ShootBookdetail::STATUS_COMPLETED;
-                $jobManager->updateJob(2,$b_id,['status'=>$bookdetail->getStatusName()]); 
+                $jobManager->updateJob(2,$b_id,['progress'=> 100, 'status'=>$bookdetail->getStatusName()]); 
                 $bookdetail->save();
             }            
             $tran->commit();

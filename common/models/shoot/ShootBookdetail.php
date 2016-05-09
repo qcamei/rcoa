@@ -242,10 +242,10 @@ class ShootBookdetail extends ActiveRecord
                     $this->status = self::STATUS_COMPLETED;
                     \Yii::$app->db->createCommand()->batchInsert(ShootAppraiseResult::tableName(), 
                             ['b_id','u_id','role_name','q_id','value'], $values)->execute();
-                    $jobManager->updateJob(2,$this->id,['status'=>$this->getStatusName()]); 
+                    $jobManager->updateJob(2,$this->id,['progress'=> 100, 'status'=>$this->getStatusName()]); 
                 }  else {
                     $this->status = self::STATUS_BREAK_PROMISE;
-                    $jobManager->updateJob(2,$this->id,['status'=>$this->getStatusName()]); 
+                    $jobManager->updateJob(2,$this->id,['progress'=> 100, 'status'=>$this->getStatusName()]); 
                 }
                 $this->save(false,['status']);
                 $trans->commit();
