@@ -1,7 +1,8 @@
 <?php
 
-use common\wskeee\job\models\Job;
+use common\config\AppGlobalVariables;
 use yii\helpers\Html;
+use yii\web\View;
 
 /* 
  * To change this license header, choose License Headers in Project Properties.
@@ -47,6 +48,40 @@ $unReadyNotice = $jobManager->getUnReadyNotification(Yii::$app->user->id);
     ?>
     
     <li>
-        <a href="#" style="text-align: center">全部清除</a>
+        
+        <?= Html::a('全部清除','', ['id'=>'allRemove','style'=>'text-align: center'])?>
+        
     </li>
 </ul>
+
+<?php  
+ $js =   
+<<<JS
+    $("#allRemove").click(function(){
+       hasReday();  
+    });
+JS;
+    $this->registerJs($js,  View::POS_READY); 
+?> 
+
+<script type="text/javascript">
+function hasReday(){
+     $.ajax({
+        url:'/job/default/has-ready',
+        data:{systemId:"<?= AppGlobalVariables::$system_id ?>"},
+        type:"post",
+        dataType:"json",
+        async:false,
+        success:function(data){
+            /** 是否正常请求 */
+            if(data["result"] != 0)
+            {
+                console.warn("请求失败...！");
+                return;
+            }
+            
+            //console.log(data); //在console页面打印数据 
+        }
+    });
+}
+</script>

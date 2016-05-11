@@ -3,6 +3,7 @@
 /* @var $this View */
 /* @var $content string */
 
+use common\config\AppGlobalVariables;
 use common\models\System;
 use common\models\User;
 use frontend\assets\AppAsset;
@@ -68,6 +69,14 @@ AppAsset::register($this);
         'items' => $menuItems,
         'route' => $bar_route == 'site' ? Yii::$app->controller->getRoute() : $bar_route,
     ]);
+    if($bar_route != 'site'){
+        AppGlobalVariables::$system_aliases = Yii::$app->controller->module->id;
+        $system_id = System::find()->where(['aliases'=>AppGlobalVariables::$system_aliases])->one();
+        AppGlobalVariables::$system_id = $system_id->id;
+    }  else {
+        Yii::$app->controller->getRoute();
+    }
+    
     if(!Yii::$app->user->isGuest){
         echo Html::beginTag('ul', ['class'=>'navbar-nav navbar-right nav']);
         echo '<li class="dropdown">'.Html::a(Html::img('/filedata/image/u23.png',[

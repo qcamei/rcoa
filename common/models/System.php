@@ -33,7 +33,7 @@ class System extends \yii\db\ActiveRecord
     {
         return [
             [['name'], 'string', 'max' => 64],
-            [['module_image', 'module_link', 'des','isjump'], 'string', 'max' => 255]
+            [['module_image', 'module_link', 'des','isjump','aliase'], 'string', 'max' => 255]
         ];
     }
 
