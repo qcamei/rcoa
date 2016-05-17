@@ -60,6 +60,20 @@ return [
                 'class' => 'yii\caching\FileCache',
             ]
         ],
+        'bookdetailTool'=>[
+            'class'=>'frontend\modules\shoot\BookdetailTool',
+            //'url'=>'http://rcoaadmin.tt.gzedu.net/framework/api/list',
+            'cache' => [
+                'class' => 'yii\caching\FileCache',
+            ]
+        ],
+        'bdNoticeTool'=>[
+            'class'=>'frontend\modules\shoot\BookdetailNoticeTool',
+            //'url'=>'http://rcoaadmin.tt.gzedu.net/framework/api/list',
+            'cache' => [
+                'class' => 'yii\caching\FileCache',
+            ]
+        ],
     ],
     'modules' => [
         'rbac' => [
