@@ -100,8 +100,8 @@ AppAsset::register($this);
             ]).DropdownX::widget([
                 'options'=>['class'=>'dropdown-menu'], // for a right aligned dropdown menu
                 'items' => [
-                    ['label' => '我的属性', 'url' => '/site/reset-info'],
-                    ['label' => '登出', 'url' => ['/site/logout'], 'linkOptions' => ['data-method' => 'post']],
+                    ['label' => '我的属性', 'url' => '/site/reset-info', 'linkOptions'=>['class'=>'glyphicon glyphicon-user','style'=>'padding-left:5px;']],
+                    ['label' => '登出', 'url' => ['/site/logout'], 'linkOptions' => ['data-method' => 'post','class'=>'glyphicon glyphicon-log-out','style'=>'padding-left:5px;']],
                 ],
             ]).'</li>'; 
         echo Html::endTag('ul');

@@ -1,6 +1,9 @@
 <?php
 
 use common\config\AppGlobalVariables;
+use common\models\System;
+use common\wskeee\job\models\Job;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
 
@@ -10,48 +13,37 @@ use yii\web\View;
  * and open the template in the editor.
  */
 $jobManager = Yii::$app->get('jobManager');
-$unReadyNotice = $jobManager->getUnReadyNotification(Yii::$app->user->id);
-
+$notification = $jobManager->getUnReadyNotification(Yii::$app->user->id);
+$system = System::find()->all();
 
 ?>
-<span class="badge badge-warning"><?php echo count($unReadyNotice)?></span>
+<span class="badge badge-warning"><?php echo count($notification)?></span>
 <ul class="dropdown-menu extended notification">
     <li>
-        <p id="text">你总有<?php echo count($unReadyNotice)?>个通知</p>
+        <p id="text">你总有<?php echo count($notification)?>个通知</p>
     </li>
-    <li>
-        <p>【拍摄】</p>
-    </li>
-    
     <?php 
-        foreach ($unReadyNotice as $key=>$value) {
-            if($key > 1 ||  $value->system_id != 2) continue;
+        foreach ($system as $value) {
+            $unReadyNotice = Job::find()
+             ->where(['status'=>  Job::STATUS_ASSIGN])
+             ->orWhere(['status'=> Job::STATUS_SHOOTING])
+             ->andWhere(['id'=>ArrayHelper::getColumn($notification, 'job_id'),'system_id' => $value->id])->limit(2)->all();
+            if(empty($unReadyNotice)) continue;
             echo '<li>';
-            echo Html::a('<span>【'.$value->status.'】</span>'.$value->subject, [$value->link]);
+            echo '<p>【'.$value->name.'】</p>';   
             echo '</li>';
+            foreach ($unReadyNotice as $values) {
+                echo '<li>';
+                echo Html::a('<span>【'.$values->status.'】</span>'.$values->subject, [$values->link]);
+                echo '</li>';
+            }
         }
         
+        echo '<li>';
+        echo Html::a('全部清除','', ['id'=>'allRemove','style'=>'text-align: center']);
+        echo '</li>';
     ?>
     
-    <li>
-        <p>【多媒体制作】</p>
-    </li>
-    
-    <?php 
-        foreach ($unReadyNotice as $key=>$value) {
-            if($key > 2 ||  $value->system_id != 3) continue;
-            echo '<li>';
-            echo Html::a('<span>【'.$value->status.'】</span>'.$value->subject, [$value->link]);
-            echo '</li>';
-        }
-        
-    ?>
-    
-    <li>
-        
-        <?= Html::a('全部清除','', ['id'=>'allRemove','style'=>'text-align: center'])?>
-        
-    </li>
 </ul>
 
 <?php  

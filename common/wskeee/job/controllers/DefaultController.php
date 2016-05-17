@@ -21,7 +21,7 @@ class DefaultController extends Controller
     
     public function actionUpdate()
     {
-        
+        return $this->render('index');
     }
     
    

@@ -266,12 +266,7 @@ class JobManager {
         $notification = JobNotification::find()
                         ->where(['u_id'=>$user,'status'=> JobNotification::STATUS_INIT])
                         ->all();
-        $unReadyNotification = Job::find()
-             ->where(['status'=>  Job::STATUS_ASSIGN])
-             ->orWhere(['status'=> Job::STATUS_SHOOTING])
-             ->andWhere(['id'=>ArrayHelper::getColumn($notification, 'job_id')])
-             ->all();
-        return $unReadyNotification;
+        return $notification;
     }
     
     /**
@@ -283,9 +278,6 @@ class JobManager {
         $notification = JobNotification::find()
                         ->where(['u_id'=>$user,'status'=> JobNotification::STATUS_NORMAL])
                         ->all();
-        $haveReadNotification = Job::find()
-             ->where(['id'=>ArrayHelper::getColumn($notification, 'job_id')])
-             ->all();
-        return $haveReadNotification;
+        return $notification;
     }
 }

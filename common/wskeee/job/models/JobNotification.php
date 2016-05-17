@@ -12,7 +12,8 @@ use Yii;
  * @property integer $status
  *
  * @property User $u
- * @property Job $mes
+ * @property Job $job
+ * @property Job $jobs
  */
 class JobNotification extends \yii\db\ActiveRecord
 {
@@ -76,5 +77,13 @@ class JobNotification extends \yii\db\ActiveRecord
     public function getJob()
     {
         return $this->hasOne(Job::className(), ['id' => 'job_id']);
+    }
+    
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getJobs()
+    {
+        return $this->hasMany(Job::className(), ['id' => 'job_id']);
     }
 }
