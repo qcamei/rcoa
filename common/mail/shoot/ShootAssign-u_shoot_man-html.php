@@ -18,7 +18,7 @@ use common\models\shoot\ShootBookdetail;
 ?>
 <div class="mail-new-shoot">
     
-    <p>您好！您已经被指派为<b>【<?= Html::encode($model->fwCourse->name) ?>】</b>拍摄预约任务的摄影师。</p>
+    <p><b><?= Html::encode($model->shootMan->nickname) ?></b> 您好！您已经被指派为<b>【<?= Html::encode($model->fwCourse->name) ?>】</b>拍摄预约任务的摄影师。</p>
 
     <p><b>预约时间</b>：【<?= Html::encode($model->site->name) ?>】 <?= Html::encode($bookTime) ?> <?= Html::encode($model->start_time) ?></p>
     

@@ -108,13 +108,16 @@ class BookdetailNoticeTool {
      * @param type $model
      * @param type $mode  标题模式
      * @param type $views       视图
+     * @param type $oldShootMan   旧摄影师
      */
-    public  function sendShootManNotification($model, $mode, $views) {
+    public  function sendShootManNotification($model, $mode, $views, $oldShootMan = null) {
+        
         /** 传进view 模板参数 */
          $params = [
             'b_id' => $model->id,
             'model' => $model,
             'bookTime' => date('Y/m/d ',$model->book_time).Yii::t('rcoa', 'Week '.date('D',$model->book_time)).' '.$model->getTimeIndexName(),
+            'u_shoot_man' => $oldShootMan,
         ];
         //主题
         $subject = "拍摄-".$mode."-".$model->fwCourse->name;
@@ -168,10 +171,9 @@ class BookdetailNoticeTool {
         $jobManager = Yii::$app->get('jobManager');
         /* @var $authManager RbacManager */
         $authManager = Yii::$app->authManager;
-        $u_contacter = $post['ShootBookdetail']['u_contacter'];
         $shootLeaders = $authManager->getItemUsers(RbacName::ROLE_SHOOT_LEADER);
         $shootLeadersId = array_filter(ArrayHelper::getColumn($shootLeaders, 'id'));
-        $jobUsers = ArrayHelper::merge($u_contacter, $shootLeadersId);
+        $jobUsers = ArrayHelper::merge($post, $shootLeadersId);
         
         //创建job表任务
         $jobManager->createJob(2, $model->id, $model->fwCourse->name, '/shoot/bookdetail/view?id='.$model->id, $model->getStatusName(),35); 
@@ -182,53 +184,50 @@ class BookdetailNoticeTool {
     /**
      * 设置指派摄影师用户任务通知关联
      * @param type $model
-     * @param type $oldShootMan 旧摄影师
+     * @param type $oldRoleNmae 旧角色
+     * @param type $assignedRoleNmae 已经被指派的角色
      * @param type $post
      */
-    public  function setAssignNotification($model,$oldShootMan,$post){
+    public  function setAssignNotification($model, $oldRoleNmae = null, $assignedRoleNmae, $post){
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
         /* @var $authManager RbacManager */
         $authManager = Yii::$app->authManager;
         $shootLeaders = $authManager->getItemUsers(RbacName::ROLE_SHOOT_LEADER);
         $shootLeadersId = array_filter(ArrayHelper::getColumn($shootLeaders, 'id'));
-        if($oldShootMan != null){
-            //已经被指派的摄影师
-            $assignedShootMans = $this->getShootBookdetailRoleNames($model->id, RbacName::ROLE_SHOOT_MAN);   
-            $shootMans = [];
-            foreach ($assignedShootMans as $key => $value)
-                $shootMans[] = (string)$key;
+        if($oldRoleNmae != null){
+            $roleNmae = [];
+            foreach ($assignedRoleNmae as $key => $value)
+                $roleNmae[] = (string)$key;
         }
         
         //更新任务通知表
         $jobManager->updateJob(2, $model->id, ['progress'=> 70, 'status' => $model->getStatusName()]); 
         //清空用户任务通知关联
-        $jobManager->removeNotification(2,$model->id,($oldShootMan != null ? $shootMans : $shootLeadersId));
+        $jobManager->removeNotification(2, $model->id, ($oldRoleNmae != null ? $roleNmae : $shootLeadersId));
         //添加用户任务通知关联
-        $jobManager->addNotification(2,$model->id,$post['shoot_man']);
+        $jobManager->addNotification(2, $model->id, $post);
     }
     
     /**
      * jobManager 取消用户任务通知关联
      * @param type $model
+     * @param type $roleNmaeAll 所有角色
      */
-    public  function cancelJobManager($model){
+    public  function cancelJobManager($model, $roleNmaeAll){
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
         /* @var $authManager RbacManager */
         $authManager = Yii::$app->authManager;
-        $u_contacter = $this->getShootBookdetailRoleNames($model->id, RbacName::ROLE_CONTACT);
-        $u_shoot_man = $this->getShootBookdetailRoleNames($model->id, RbacName::ROLE_SHOOT_MAN);
+        
         $shootLeaders = $authManager->getItemUsers(RbacName::ROLE_SHOOT_LEADER);
         $shootLeadersId = array_filter(ArrayHelper::getColumn($shootLeaders, 'id'));
-        $contacts = [];
-        foreach ($u_contacter as $key => $value)
-            $contacts[] = (string)$key;
-        $shootMan = [];
-        foreach ($u_shoot_man as $key => $value)
-            $shootMan[] = (string)$key;
-        $jobUsers = ArrayHelper::merge($contacts, $shootLeadersId);
-        $jobUserAll = ArrayHelper::merge($shootMan, $jobUsers);
+        $roleNmaeAlls = [];
+        foreach ($roleNmaeAll as $key => $value)
+            $roleNmaeAlls[] = (string)$key;
+        
+        //全并两个数组的值
+        $jobUserAll = ArrayHelper::merge($roleNmaeAlls, $shootLeadersId);
         
         //修改job表任务
         $jobManager->updateJob(2,$model->id,['progress'=> 100, 'status'=>$model->getStatusName()]); 

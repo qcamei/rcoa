@@ -1,8 +1,7 @@
 <?php
 
+use common\models\User;
 use yii\helpers\Html;
-use yii\helpers\Url;
-use common\models\shoot\ShootBookdetail;
 /* 
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -14,10 +13,11 @@ use common\models\shoot\ShootBookdetail;
  
      马上查看(连接到任务详细页) 
  */
+$oldShootMan = User::findOne($u_shoot_man);
 ?>
 <div class="mail-new-shoot">
     
-    <p>您好！您在<b>【<?= Html::encode($model->fwCourse->name) ?>】</b>拍摄预约任务的指派已经被取消。</p>
+    <p><b><?= Html::encode($oldShootMan->nickname) ?></b> 您好！您在<b>【<?= Html::encode($model->fwCourse->name) ?>】</b>拍摄预约任务的指派已经被取消。</p>
 
     <p><b>预约时间</b>：【<?= Html::encode($model->site->name) ?>】 <?= Html::encode($bookTime) ?> <?= Html::encode($model->start_time) ?></p>
     

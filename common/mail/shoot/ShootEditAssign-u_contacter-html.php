@@ -20,7 +20,7 @@ use common\models\shoot\ShootBookdetail;
 ?>
 <div class="mail-new-shoot">
     
-    <p>您好！<b>【<?= Html::encode($model->fwCourse->name) ?>】</b>拍摄预约任务已经重新安排了摄影师。</p>
+    <p><b><?= Html::encode($model->contacter->nickname) ?></b> 您好！<b>【<?= Html::encode($model->fwCourse->name) ?>】</b>拍摄预约任务已经重新安排了摄影师。</p>
     
     <p><b>原因</b>：<?= Html::encode($model->history->history) ?></p>
 

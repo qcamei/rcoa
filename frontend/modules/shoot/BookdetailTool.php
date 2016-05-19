@@ -50,18 +50,17 @@ class BookdetailTool{
      * @param  $post
      * @param  $isIntersection  是否存在交集
      */
-     public function saveNewBookdetail($model, $post, $isIntersection)
+     public function saveNewBookdetail($model, $post, $isIntersection = false)
     {
         /* @var $bdNoticeTool BookdetailNoticeTool */
         $bdNoticeTool = Yii::$app->get('bdNoticeTool');
-        //$isIntersection = $this->isTwoArrayIntersection($model, RbacName::ROLE_CONTACT);    //判断两个数组是否存在交集
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
         {
             if(!$isIntersection && $model->save()){
                 //保存接洽人到ShootBookdetailRoleName表里 
-                $this->saveShootBookdetailRoleName($post, RbacName::ROLE_CONTACT); 
+                $this->saveShootBookdetailRoleName($model->id, RbacName::ROLE_CONTACT, $post); 
                 //添加任务管理
                 $bdNoticeTool->saveJobManager($model, $post);
                 //创建--给所有摄影组长发送通知
@@ -85,31 +84,49 @@ class BookdetailTool{
     /**
      * 拍摄任务指派时
      * @param type $model
+     * @param type $oldRoleNmae  旧角色
+     * @param type $assignedRoleNmae 已指派角色
+     * @param type $post
+     * @param type $isIntersection  是否有交集
      * @throws NotFoundHttpException
      * @throws Exception
      */
-    public function saveAssignTask($model){
+    public function saveAssignTask($model, $oldRoleNmae, $assignedRoleNmae, $post, $isIntersection = false){
+        /* @var $bdNoticeTool BookdetailNoticeTool */
+        $bdNoticeTool = Yii::$app->get('bdNoticeTool');
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
         {
-            if($model->save())
-                $this->emptyShootBookdetailRoleName($id, RbacName::ROLE_SHOOT_MAN);    //清空【已指派角色】数据
-            $isIntersection = $this->isTwoArrayIntersection($model, RbacName::ROLE_SHOOT_MAN);   //判断两个数组是否有交集
+            if($model->save() && $oldRoleNmae != null){
+                //清空【已指派角色】数据
+                $this->emptyShootBookdetailRoleName($model->id, RbacName::ROLE_SHOOT_MAN); 
+                $isIntersection = false;
+            }
             if(!$isIntersection) {
-                $this->saveShootBookdetailRoleName(RbacName::ROLE_SHOOT_MAN);   //保存【已指派摄影师】
-                $this->setAssignNotification($model, $oldShootMan, $post);  //设置指派摄影师用户任务通知关联
-                $this->saveNewHistory($model);    //保存编辑信息
+                //保存【已指派摄影师】
+                $this->saveShootBookdetailRoleName($model->id, RbacName::ROLE_SHOOT_MAN, $post);
+                //设置指派摄影师用户任务通知关联
+                $bdNoticeTool->setAssignNotification($model, $oldRoleNmae, $assignedRoleNmae, $post); 
+                //保存编辑信息
+                $this->saveNewHistory($model);   
                 /** 摄影师非null的时候为【更改指派】通知 */
-                if($oldShootMan != null){
-                    $this->sendContacterNotification($model, '更改指派', 'shoot\ShootEditAssign-u_contacter-html');   //更改指派--给接洽人发通知
-                    $this->sendShootManNotification($model, '更改指派', 'shoot\ShootEditAssign-u_shoot_man-html');    //更改指派--给旧摄影师发通知
-                    $this->sendShootManNotification($model, '更改指派', 'shoot\ShootAssign-u_shoot_man-html');        //更改指派--给新摄影师发通知
+                if($oldRoleNmae != null){
+                    //更改指派--给接洽人发通知
+                    $bdNoticeTool->sendContacterNotification($model, '更改指派', 'shoot\ShootEditAssign-u_contacter-html');   
+                    //更改指派--给旧摄影师发通知
+                    $bdNoticeTool->sendShootManNotification($model, '更改指派', 'shoot\ShootEditAssign-u_shoot_man-html', $oldRoleNmae);    
+                    //更改指派--给新摄影师发通知
+                    $bdNoticeTool->sendShootManNotification($model, '更改指派', 'shoot\ShootAssign-u_shoot_man-html');        
                 }else{
-                    $this->sendBookerNotification($model, '指派', 'shoot\ShootAssign-u_contacter-html');     //指派--给编导发通知
-                    $this->sendContacterNotification($model, '指派', 'shoot\ShootAssign-u_contacter-html');  //指派--给接茬人发通知
-                    $this->sendShootManNotification($model, '指派', 'shoot\ShootAssign-u_shoot_man-html');   //指派--给摄影师发通知
-                    $this->sendTeacherNotification($model, '指派', 'shoot\ShootAssign-u_teacher-html');      //指派--给老师发通知
+                    //指派--给编导发通知
+                    $bdNoticeTool->sendBookerNotification($model, '指派', 'shoot\ShootAssign-u_contacter-html');     
+                    //指派--给接茬人发通知
+                    $bdNoticeTool->sendContacterNotification($model, '指派', 'shoot\ShootAssign-u_contacter-html');  
+                    //指派--给摄影师发通知
+                    $bdNoticeTool->sendShootManNotification($model, '指派', 'shoot\ShootAssign-u_shoot_man-html');   
+                    //指派--给老师发通知
+                    $bdNoticeTool->sendTeacherNotification($model, '指派', 'shoot\ShootAssign-u_teacher-html');     
                 }
             } else{ throw new Exception(json_encode($model->getErrors()));}
             $trans->commit();  //提交事务
@@ -123,25 +140,35 @@ class BookdetailTool{
     /**
      * 拍摄任务更新时
      * @param type $model
+     * @param type $post
+     * @param type $assignedRoleNmae 已指派角色
+     * @param type $isIntersection 是否存在交集
      * @throws NotFoundHttpException
      * @throws Exception
      */
-    public function saveUpdateTask($model){
+    public function saveUpdateTask($model, $post, $assignedRoleNmae, $isIntersection = false){
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
         {
-            if($model->save())
-                $this->emptyShootBookdetailRoleName($id, RbacName::ROLE_CONTACT);    //清空【已指派角色】数据
-            $isIntersection = $this->isTwoArrayIntersection($model, RbacName::ROLE_CONTACT);  //判断两个数组是否存在交集
+            if($model->save()){
+                //清空【已指派角色】数据
+                $num = $this->emptyShootBookdetailRoleName($model->id, RbacName::ROLE_CONTACT);
+                if($num > 0) $isIntersection = false;
+            }
             if(!$isIntersection) {
-                $this->saveShootBookdetailRoleName(RbacName::ROLE_CONTACT);  //保存【已指派接洽人】
-                $jobManager->updateJob(2, $id, ['subject' => $model->fwCourse->name]);  //更新任务通知表
-                $jobManager->removeNotification(2, $id, $contacts);  //清空用户与任务通知关联
-                $jobManager->addNotification(2, $id, $post['ShootBookdetail']['u_contacter']);  //添加用户与任务通知关联
-                $this->saveNewHistory($model);  //保存编辑信息
+                //保存【已指派接洽人】
+                $this->saveShootBookdetailRoleName($model->id, RbacName::ROLE_CONTACT, $post); 
+                //更新任务通知表
+                $jobManager->updateJob(2, $model->id, ['subject' => $model->fwCourse->name]);  
+                //清空用户与任务通知关联
+                $jobManager->removeNotification(2, $model->id, $assignedRoleNmae);  
+                //添加用户与任务通知关联
+                $jobManager->addNotification(2, $model->id, $post);  
+                //保存编辑信息
+                $this->saveNewHistory($model); 
             }else{ throw new Exception(json_encode($model->getErrors()));}
             $trans->commit(); //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
@@ -154,25 +181,36 @@ class BookdetailTool{
     /**
      * 拍摄任务取消时
      * @param type $model
+     * @param type $roleNmaeAll 所有角色
      */
-    public function saveCancelTask($model){
+    public function saveCancelTask($model, $roleNmaeAll){
+        /* @var $bdNoticeTool BookdetailNoticeTool */
+        $bdNoticeTool = Yii::$app->get('bdNoticeTool');
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
         {  
             if($model->save()){
-                ShootBookdetailRoleName::updateAll(['iscancel' => 'Y'],'b_id = '.$id); //拍摄任务取消时修改iscancel字段
-                $this->cancelJobManager($model);  //取消用户任务通知关联
-                $this->saveNewHistory($model);   //保存编辑信息
-                $this->sendShootLeadersNotification($model, '取消', 'shoot\CancelShoot-html');  //取消--给所有摄影组长发通知
+                //拍摄任务取消时修改iscancel字段
+                ShootBookdetailRoleName::updateAll(['iscancel' => 'Y'],'b_id = '.$model->id); 
+                //取消用户任务通知关联
+                $bdNoticeTool->cancelJobManager($model, $roleNmaeAll); 
+                 //保存编辑信息
+                $this->saveNewHistory($model);  
+                //取消--给所有摄影组长发通知
+                $bdNoticeTool->sendShootLeadersNotification($model, '取消', 'shoot\CancelShoot-html'); 
                 /** 非编导自己取消任务才发送 */
                 if(!$model->u_booker)  
-                    $this->sendBookerNotification($model, '取消', 'shoot\CancelShoot-html');
+                    //取消--给编导发通知
+                    $bdNoticeTool->sendBookerNotification($model, '取消', 'shoot\CancelShoot-html');
                 /** 摄影师非空才发送 */
                 if(!empty($model->u_shoot_man)){
-                    $this->sendContacterNotification($model, '取消', 'shoot\CancelShoot-html');  //取消--给接洽人发通知
-                    $this->sendShootManNotification($model, '取消', 'shoot\CancelShoot-html');  //取消--给摄影师发通知
-                    $this->sendTeacherNotification($model, '取消', 'shoot\CancelShoot-u_teacher-html');  //取消--给老师发通知
+                    //取消--给接洽人发通知
+                    $bdNoticeTool->sendContacterNotification($model, '取消', 'shoot\CancelShoot-html');  
+                    //取消--给摄影师发通知
+                    $bdNoticeTool->sendShootManNotification($model, '取消', 'shoot\CancelShoot-html');  
+                    //取消--给老师发通知
+                    $bdNoticeTool->sendTeacherNotification($model, '取消', 'shoot\CancelShoot-u_teacher-html');  
                 }
             }
             $trans->commit();  //提交事务
@@ -185,23 +223,23 @@ class BookdetailTool{
 
     /**
      * 保存数据到ShootBookdetailRoleName表里
-     * @param type $role 角色
+     * @param type $b_id  任务id
+     * @param type $roleName 角色
+     * @param type $post 
      */
-    public function saveShootBookdetailRoleName($post,$roleName){
+    public function saveShootBookdetailRoleName($b_id, $roleName, $post){
         $values = [];
-        //$role为【接洽人角色】时读取u_contacter
-        $shootRoleName = $roleName == RbacName::ROLE_CONTACT ? $post['ShootBookdetail']['u_contacter'] : $post['shoot_man'];
-        $bid = $post['b_id'];
         /** 重组提交的数据为$values数组 */
-        foreach($shootRoleName as $key => $value)
+        foreach($post as $key => $value)
         {
             $values[] = [
-                'b_id' => $bid,
+                'b_id' => $b_id,
                 'u_id' => $value,
                 'role_name' => $roleName,
                 'primary_foreign' => $key == 0 ? 1 : 0,
             ];
         }
+        
         /** 添加$values数组到ShootBookdetailRoleName表里 */
         Yii::$app->db->createCommand()->batchInsert(ShootBookdetailRoleName::tableName(), 
         [
@@ -227,24 +265,6 @@ class BookdetailTool{
             $history->history = $post['editreason'];
             $history->save();
         } 
-    }
-    
-    /**
-     * 退出任务创建，清除锁定
-     * @param 退出任务的时间 $date
-     * @param 任务id $b_id
-     */
-    public function actionExitCreate($date,$b_id)
-    {
-        $model = $this->findModel($b_id);
-        if($model != null && $model->getIsBooking() && $model->create_by && $model->create_by == Yii::$app->user->id)
-        {
-            $model->setScenario(ShootBookdetail::SCENARIO_TEMP_CREATE);
-            $model->status = ShootBookdetail::STATUS_DEFAULT;
-            $model->save();
-        }
-        
-        $this->redirect(['index','date'=>$date,'b_id'=>$b_id, 'site'=>$model->site_id]);
     }
     
     /**

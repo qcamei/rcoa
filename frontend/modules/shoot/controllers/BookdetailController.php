@@ -125,7 +125,7 @@ class BookdetailController extends Controller
             //判断两个数组是否存在交集
             $isIntersection = $this->isTwoArrayIntersection($model, RbacName::ROLE_CONTACT, $post['ShootBookdetail']['u_contacter']); 
             //保存预约
-            $bookdetailTool->saveNewBookdetail($model, $post, $isIntersection); 
+            $bookdetailTool->saveNewBookdetail($model, $post['ShootBookdetail']['u_contacter'], $isIntersection); 
             
             return $this->redirect([ 'index', 
                 'date' => date('Y-m-d', $model->book_time), 
@@ -151,6 +151,24 @@ class BookdetailController extends Controller
                 'business' => $this->getBusiness(),
             ]);
         }
+    }
+    
+     /**
+     * 退出任务创建，清除锁定
+     * @param 退出任务的时间 $date
+     * @param 任务id $b_id
+     */
+    public function actionExitCreate($date,$b_id)
+    {
+        $model = $this->findModel($b_id);
+        if($model != null && $model->getIsBooking() && $model->create_by && $model->create_by == Yii::$app->user->id)
+        {
+            $model->setScenario(ShootBookdetail::SCENARIO_TEMP_CREATE);
+            $model->status = ShootBookdetail::STATUS_DEFAULT;
+            $model->save();
+        }
+        
+        $this->redirect(['index','date'=>$date,'b_id'=>$b_id, 'site'=>$model->site_id]);
     }
     
     /**
@@ -201,11 +219,16 @@ class BookdetailController extends Controller
     {
         $post = Yii::$app->getRequest()->getBodyParams();
         $model = $this->findModel($id);
+        /* @var $bookdetailTool BookdetailTool */
+        $bookdetailTool = Yii::$app->get('bookdetailTool');
         $oldShootMan = $model->u_shoot_man;
         $model->u_shoot_man = $post['shoot_man'][0];
         if(!empty($model->u_shoot_man))
            $model->status = $model::STATUS_SHOOTING;
-        //缺少代码
+        $assignedShootMans = $this->getShootBookdetailRoleNames($id, RbacName::ROLE_SHOOT_MAN);
+        $isIntersection = $this->isTwoArrayIntersection($model, RbacName::ROLE_SHOOT_MAN, $post['shoot_man']);
+        
+        $bookdetailTool->saveAssignTask($model, $oldShootMan, $assignedShootMans, $post['shoot_man'], $isIntersection);
         
         $this->redirect(['index',
             'date' => date('Y-m-d', $model->book_time), 
@@ -224,7 +247,8 @@ class BookdetailController extends Controller
     {
         $post = Yii::$app->getRequest()->getBodyParams();
         $model = $this->findModel($id);
-       
+        /* @var $bookdetailTool BookdetailTool */
+        $bookdetailTool = Yii::$app->get('bookdetailTool');
         /** 修改时设置Select2 value值*/
         $alreadyContacts = $this->getShootBookdetailRoleNames($id, RbacName::ROLE_CONTACT);
         $contacts = [];
@@ -234,12 +258,15 @@ class BookdetailController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $model->u_contacter = $post['ShootBookdetail']['u_contacter'][0];
             $model->status = ShootBookdetail::STATUS_ASSIGN ;
-            //缺少代码
+            $isIntersection = $this->isTwoArrayIntersection($model, RbacName::ROLE_CONTACT, $post['ShootBookdetail']['u_contacter']);
+            
+            $bookdetailTool->saveUpdateTask($model, $post['ShootBookdetail']['u_contacter'], $contacts, $isIntersection);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            
-            $alreadyContactsArray = $this->getIsRoleNames(RbacName::ROLE_CONTACT, $model->book_time, $model->index); //已指派了的接洽人
-            $allContactsArray = $this->getRoleToUsers(RbacName::ROLE_CONTACT); //所有接洽人
+            //已指派了的接洽人
+            $alreadyContactsArray = $this->getIsRoleNames(RbacName::ROLE_CONTACT, $model->book_time, $model->index); 
+            //所有接洽人
+            $allContactsArray = $this->getRoleToUsers(RbacName::ROLE_CONTACT); 
             $contactsKey = [];
             foreach ($alreadyContacts as $key => $value)
                 $contactsKey[] = $key;
@@ -266,11 +293,19 @@ class BookdetailController extends Controller
     public function actionCancel($id)
     {   
         $model = $this->findModel($id);
+        /* @var $bookdetailTool BookdetailTool */
+        $bookdetailTool = Yii::$app->get('bookdetailTool');
         if(Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model]))
         {
             if(!$model->getIsStatusCancel() && !$model->getIsStatusCompleted()){
                 $model->status =  $model::STATUS_CANCEL;
-                //缺少代码
+                $u_contacter = $this->getShootBookdetailRoleNames($id, RbacName::ROLE_CONTACT);
+                $u_shoot_man = $this->getShootBookdetailRoleNames($id, RbacName::ROLE_SHOOT_MAN);
+                //全并两个数组的值
+                $roleNmaeAll = ArrayHelper::merge($u_contacter, $u_shoot_man);
+                
+                $bookdetailTool->saveCancelTask($model, $roleNmaeAll);
+                
             } 
         }
         return $this->redirect(['index', 'date' => date('Y-m-d', $model->book_time), 'b_id' => $model->id, 'site'=> $model->site_id]);
@@ -288,8 +323,6 @@ class BookdetailController extends Controller
 
         return $this->redirect(['index']);
     }
-    
-    
     
     /**
      * Finds the ShootBookdetail model based on its primary key value.
@@ -353,7 +386,7 @@ class BookdetailController extends Controller
         return ArrayHelper::map($rbacManager->getItemUsers($roleName), 'id', 'nickname');
     }
     
-     /**
+    /**
      * 场地下拉数据
      */
     protected  function getSiteForSelect()
@@ -473,11 +506,10 @@ class BookdetailController extends Controller
     protected function isTwoArrayIntersection($model, $roleName, $post=null)
     {
         $alreadyRoleNames = $this->getIsRoleNames($roleName, $model->book_time, $model->index);
-       
         /** $post || $alreadyRoleNames 为空 return false*/
         if(empty($post) || empty($alreadyRoleNames))
             return false;
-        
+       
         /** 是否有交集 */
         foreach (array_values($post) as $temp){
            if(in_array($temp,array_keys($alreadyRoleNames))){
@@ -485,7 +517,7 @@ class BookdetailController extends Controller
             }
         }
         
-        unset($roleNames,$alreadyRoleNames,$temp);
+        unset($post,$alreadyRoleNames,$temp);
         return false;
     }
     
