@@ -33,6 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     . '<p class="course-name" ><span>描述：</span>'.$expert['attainment'].'</p></div></div>', 
             ['view','id'=> $expert['u_id']], ['id' => 'thelist']);
         }
+        //echo '<center style="margin-top:10px;"><b></b></center>';
     ?>
 </div>    
 
@@ -59,9 +60,9 @@ $(document).ready(function(){
         var scrollHeight = $(document).height();
         var windowHeight = $(this).height();
         if (scrollTop + windowHeight == scrollHeight) {
-            $("#expert-type a").last().html('<center style="margin-top:10px;"><b>加载中...<b/></center>');
+            //$("center b").html('加载中...');
             setTimeout(function () {
-                $("#expert-type a").last().html("");
+                //$("center b").html('');
                 typeAjax(page);
             }, 2000);
         }
@@ -74,13 +75,13 @@ JS;
 
 <script type="text/javascript">
     var page = 0;       //当前页数
-    var showNum = 15;    //每页显示数量
+    var showNum = 10;    //每页显示数量
     var isPost = false; 
     var pageCount = <?=$pageCount?>; //总页数
     var maxPage = pageCount/showNum; //最大页数
 function typeAjax(pagenum){
     if(pagenum+1 > Math.ceil(maxPage)){
-        $("#expert-type a").last().html('<center style="margin-top:10px;"><b>无数据...<b/></center>');
+        //$("center b").html('无数据...');
         return;    // 当前页数是否大于最大页数
     }
     isPost = true;
@@ -101,8 +102,6 @@ function typeAjax(pagenum){
             }
             page = Number(data["data"]["page"]); //把对象的值转换为数字
             showNum = Number(data["data"]["showNum"]);
-            
-            //console.log("page:"+page); //在console页面打印数据 
             
             var strHtml = "";
             var modelExpert = data.data.modelExpert;

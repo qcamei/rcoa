@@ -49,7 +49,7 @@ class DefaultController extends Controller
         return $this->render('type', [
             'model' => $this->findModel(['type' => $id]),
             'pageCount' => $this->ExpertCount(['type' => $id]),   
-            'modelExpert' => $this->findExpert(['type' => $id], 0, 15),
+            'modelExpert' => $this->findExpert(['type' => $id], 0, 10),
         ]);
                
     }
