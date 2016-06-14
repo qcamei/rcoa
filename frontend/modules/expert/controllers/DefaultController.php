@@ -60,7 +60,7 @@ class DefaultController extends Controller
     {   
         return $this->render('type', [
             'model' => $this->findModel(['type' => $id]),
-            'pageCount' => $this->ExpertCount(['type' => $id]),   
+            'pageCount' => $this->expertCount(['type' => $id]),   
             'modelExpert' => $this->findExpert(['type' => $id], 0, 10),
         ]);
                
@@ -246,7 +246,7 @@ class DefaultController extends Controller
      * @param type $id
      * @return type
      */
-    protected function ExpertCount($cons)
+    protected function expertCount($cons)
     {
         $count = Expert::find()
             ->where($cons)
@@ -256,7 +256,6 @@ class DefaultController extends Controller
 
     /**
      * 关键字搜索
-     
      * @param type $fieldName 字段名
      * @param type $key 搜索关键字
      * @return type

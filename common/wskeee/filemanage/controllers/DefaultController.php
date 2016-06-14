@@ -1,12 +1,11 @@
 <?php
-
 namespace common\wskeee\filemanage\controllers;
 
-use common\wskeee\filemanage\models\searchs\FileManageSearch;
 use wskeee\filemanage\FileManageTool;
 use wskeee\filemanage\models\FileManage;
 use wskeee\filemanage\models\FileManageDetail;
 use wskeee\filemanage\models\FileManageOwner;
+use wskeee\filemanage\models\searchs\FileManageSearch;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -14,6 +13,7 @@ use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
+
 
 /**
  * DefaultController implements the CRUD actions for FileManage model.
@@ -213,7 +213,7 @@ class DefaultController extends Controller
     public function getAuthManagerRoleName()
     {
         /* @var $authManager authManager */
-        $authManager = \Yii::$app->authManager;
+        $authManager = Yii::$app->authManager;
         $roleName = $authManager->getRoles();
         return ArrayHelper::map($roleName, 'name', 'description');
     }

@@ -17,17 +17,15 @@ and open the template in the editor.
     list-style: none;
     border-radius: 4px
 }
-.breadcrumbs > .active {
-    color: #777;
+.breadcrumbs .disabled {
+    color: #ccc;
+    pointer-events: none;
 }
 .breadcrumbs > li {
     display: inline-block;
 }
 .breadcrumbs li a {
     color: rgba(246,246,246,1);
-    padding-right: 1em;
-    padding-top: 1em;
-    padding-bottom: 1em;
     text-decoration: none;
 }
 .breadcrumbs > li + li:before {
@@ -117,11 +115,48 @@ and open the template in the editor.
     border-bottom:1px solid #258ecd;
     padding:1em;
 }
+.cbp-spmenu-vertical a:hover{
+    text-decoration: none;
+}
+.cbp-spmenu-vertical .active {
+    color: #ccc;
+    pointer-events: none;
+}
 .cbp-spmenu-open{
     margin-left: 0px;
 }
 .cbp-spmenu-open.cbp-spmenu-left{
     margin-left:-25%;
+}
+
+/** 搜索页面 */
+.file-manage-search a {
+    display: block;
+    width: 100%;
+    border: 1px #ccc solid;
+    height: 55px;
+    color: #000;
+}
+.file-manage-search img {
+    height:50px; 
+    padding:3.75px;
+    float: left;
+}
+.file-manage-search p {
+     margin-bottom: 0px;
+}
+.file-manage-search .position {
+    font-size: 10px;
+    color: #999;
+}
+.file-manage-search span {
+    font-size: 10px;
+    color: #ccc;
+    padding-right:5px;
+}
+.file-manage-search a:hover {
+   background-color: #eee;
+   text-decoration: none;
 }
 
 /**在谷歌浏览器隐藏滚动条样式 */

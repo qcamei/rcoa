@@ -1,11 +1,10 @@
 <?php
+namespace wskeee\filemanage\models\searchs;
 
-namespace common\wskeee\filemanage\models\searchs;
-
-use Yii;
+use wskeee\filemanage\models\FileManage;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use wskeee\filemanage\models\FileManage;
+
 
 /**
  * FileManageSearch represents the model behind the search form about `wskeee\filemanage\models\FileManage`.
@@ -19,7 +18,7 @@ class FileManageSearch extends FileManage
     {
         return [
             [['id', 'type', 'pid'], 'integer'],
-            [['name', 'keyword', 'icon'], 'safe'],
+            [['name', 'keyword', 'image', 'icon'], 'safe'],
         ];
     }
 
@@ -56,13 +55,14 @@ class FileManageSearch extends FileManage
         }
 
         $query->andFilterWhere([
-            //'id' => $this->id,
-            //'type' => $this->type,
+            'id' => $this->id,
+            'type' => $this->type,
             'pid' => $this->pid,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'keyword', $this->keyword])
+            ->andFilterWhere(['like', 'image', $this->image])
             ->andFilterWhere(['like', 'icon', $this->icon]);
 
         return $dataProvider;

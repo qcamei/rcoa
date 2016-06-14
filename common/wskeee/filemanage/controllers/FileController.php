@@ -4,6 +4,7 @@ namespace common\wskeee\filemanage\controllers;
 
 use wskeee\filemanage\FileManageTool;
 use wskeee\filemanage\models\FileManage;
+use wskeee\filemanage\models\searchs\FileManageSearch;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
@@ -51,16 +52,16 @@ class FileController extends Controller
         $fileManage = Yii::$app->get('fileManage');
         if (!$fileManage->isFmOwner(!isset($get['id'])? null : $get['id']))
             throw new UnauthorizedHttpException('无访问权限！');
-        $bread = $fileManage->getFileManageBread(!isset($get['id'])? null : $get['id']);
-        $list = $fileManage->getFileManageLeftList(!isset($get['id'])? null : $get['id']);
+        
         $dataProvider = new ActiveDataProvider([
             'query' => FileManage::find(),
         ]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
-            'bread' => $bread,
-            'list' => $list,
+            'get' => $get,
+            'bread' => $fileManage->getFileManageBread(!isset($get['id'])? null : $get['id']),
+            'list' => $fileManage->getFileManageLeftList(!isset($get['id'])? null : $get['id']),
         ]);
     }
 
@@ -71,16 +72,17 @@ class FileController extends Controller
      */
     public function actionView($id)
     {
+        $get = Yii::$app->request->queryParams;
         /* @var $fileManage FileManageTool */
         $fileManage = Yii::$app->get('fileManage');
         if (!$fileManage->isFmOwner($id))
             throw new UnauthorizedHttpException('无访问权限！');
-        $bread = $fileManage->getFileManageBread($id);
-        $list = $fileManage->getFileManageLeftList($id);
+       
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'bread' => $bread,
-            'list' => $list,
+            'get' => $get,
+            'bread' => $fileManage->getFileManageBread($id),
+            'list' => $fileManage->getFileManageLeftList($id),
         ]);
     }
 
@@ -120,6 +122,21 @@ class FileController extends Controller
             ]);
         }
     }
+    
+    /**
+     * Lists all FileManage models.
+     * @return mixed
+     */
+    public function actionSearch($keyword)
+    {
+        /* @var $fileManage FileManageTool */
+        $fileManage = Yii::$app->get('fileManage');
+        return $this->render('search', [
+            'keyword' => $keyword,
+            'fmSearch' => $this->findCategories($keyword, 'keyword'),
+            'fileManage' => $fileManage,
+        ]);
+    }
 
     /**
      * Deletes an existing FileManage model.
@@ -145,6 +162,24 @@ class FileController extends Controller
     {
         if (($model = FileManage::findOne($id)) !== null) {
             return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+    
+    /**
+     * 搜索关键字
+     * @param type $keyword     关键字
+     * @param type $fieldName   字段名
+     * @return type
+     * @throws NotFoundHttpException
+     */
+    protected function findCategories($keyword, $fieldName = null){
+        $model = FileManage::find();
+        $model->FilterWhere(['like', $fieldName, $keyword]);
+        $data = $model -> all();
+        if ($data !== null) {
+            return $data;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }

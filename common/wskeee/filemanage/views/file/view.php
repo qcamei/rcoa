@@ -1,7 +1,6 @@
 <?php
 
 use common\wskeee\filemanage\FileManageAsset;
-use wskeee\filemanage\FileManageTool;
 use wskeee\filemanage\models\FileManage;
 use yii\helpers\Html;
 use yii\web\View;
@@ -14,12 +13,12 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/fileManage', 'File Man
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<?= $this->render('_title',['bread' => $bread]) ?>
+<?= $this->render('_title',['get' => $get, 'bread' => $bread]) ?>
 
 <div class="container file-manage  has-title">
     <div class="row">
         <div id="cbp-spmenu-s1" class="col-xs-3 col-sm-3 col-md-3 cbp-spmenu cbp-spmenu-open">
-            <?= $this->render('_leftList',['list' => $list]) ?>
+            <?= $this->render('_leftList',['get' => $get, 'list' => $list]) ?>
         </div>
         <div id="cbp-spmenu-s2" class="col-xs-9 col-sm-9 col-md-9">
             <?php
@@ -32,6 +31,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 <hr>
                 <?= $model->filemanageDetail->content; ?>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="controlbar">
+    <div class="container">
+        <div class="row ">
+            <div class="col-sm-9 col-md-10 col-xs-7">
+                <?= $this->render('_form_search') ?>
+            </div>
+            <?= Html::submitButton(Yii::t('rcoa', 'Search'), ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(Yii::t('rcoa', 'Back'), ['index'], ['class' => 'btn btn-default']) ?>
         </div>
     </div>
 </div>

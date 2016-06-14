@@ -1,7 +1,7 @@
 <?php
 
-use common\wskeee\filemanage\models\searchs\FileManageSearch;
 use wskeee\filemanage\models\FileManage;
+use wskeee\filemanage\models\searchs\FileManageSearch;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;

@@ -15,12 +15,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 
-<?= $this->render('_title',['bread' => $bread]) ?>
+<?= $this->render('_title',['get' => $get, 'bread' => $bread]) ?>
 
 <div class="container file-manage  has-title">
     <div class="row">
         <div id="cbp-spmenu-s1" class="col-xs-3 col-sm-3 col-md-3 cbp-spmenu cbp-spmenu-open">
-            <?= $this->render('_leftList',['list' => $list]) ?>
+            <?= $this->render('_leftList',['get' => $get, 'list' => $list]) ?>
         </div>
         <div id="cbp-spmenu-s2" class="col-xs-9 col-sm-9 col-md-9">
             <?php
@@ -38,6 +38,17 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                 ?>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="controlbar">
+    <div class="container">
+        <div class="row ">
+            <div class="col-sm-10 col-md-11 col-xs-9">
+                <?= $this->render('_form_search') ?>
+            </div>
+            <?= Html::submitButton(Yii::t('rcoa', 'Search'), ['id' => 'submit','class' => 'btn btn-primary']) ?>
         </div>
     </div>
 </div>

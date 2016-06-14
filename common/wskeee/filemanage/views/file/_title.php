@@ -16,11 +16,12 @@ echo Html::beginTag('div', ['class'=>'title']);
             echo Html::beginTag('li', ['class' => 'course-name']);
                 echo Html::a('首页', ['index']);
             echo Html::endTag('li');
-            if(!isset($bread) || empty($bread)) echo '<li class="course-name">没有相关目录</li>';
+            if(!isset($bread) || empty($bread)) echo '<li class="disabled course-name">没有相关目录</li>';
 
             foreach ($bread as $key => $value) {
                 echo Html::beginTag('li',['class' => 'course-name', 'style' => $value->type != FileManage::FM_FILE ? :'width:30%;']);
-                    echo Html::a($value->name, [$value->type == FileManage::FM_FILE ? 'view' :'index', 'id' => $value->id]);
+                    echo Html::a($value->name, [$value->type == FileManage::FM_FILE ? 'view' :'index', 'id' => $value->id],
+                         ['class' => (!isset($get['id'])? null : $get['id']) != $value->id ?  '' : 'disabled']);
                 echo Html::endTag('li');
             }
         echo Html::endTag('ul');
