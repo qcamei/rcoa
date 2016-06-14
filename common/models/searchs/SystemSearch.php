@@ -2,10 +2,9 @@
 
 namespace common\models\searchs;
 
-use Yii;
+use common\models\System;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\System;
 
 /**
  * SystemSearch represents the model behind the search form about `common\models\System`.
@@ -18,8 +17,8 @@ class SystemSearch extends System
     public function rules()
     {
         return [
-            [['id'], 'integer'],
-            [['name', 'module_image', 'module_link', 'des'], 'safe'],
+            [['id', 'isjump'], 'integer'],
+            [['name', 'module_image', 'module_link', 'des', 'aliases'], 'safe'],
         ];
     }
 
@@ -57,12 +56,14 @@ class SystemSearch extends System
 
         $query->andFilterWhere([
             'id' => $this->id,
+            'isjump' => $this->isjump,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'module_image', $this->module_image])
             ->andFilterWhere(['like', 'module_link', $this->module_link])
-            ->andFilterWhere(['like', 'des', $this->des]);
+            ->andFilterWhere(['like', 'des', $this->des])
+            ->andFilterWhere(['like', 'aliases', $this->aliases]);
 
         return $dataProvider;
     }

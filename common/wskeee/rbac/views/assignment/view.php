@@ -1,14 +1,14 @@
 <?php
 
-use yii\helpers\Html;
-use yii\helpers\Url;
-use yii\helpers\Json;
-use yii\widgets\DetailView;
-
 use wskeee\rbac\RbacAsset;
+use yii\helpers\Html;
+use yii\helpers\Json;
+use yii\helpers\Url;
+use yii\web\IdentityInterface;
+use yii\web\View;
 
-/* @var $this yii\web\View */
-/* @var $model yii\web\IdentityInterface */
+/* @var $this View */
+/* @var $model IdentityInterface */
 
 $this->title = 'Assignment';
 $this->params['breadcrumbs'][] = ['label' => 'Assignment', 'url' => ['index']];
@@ -66,5 +66,5 @@ $('#btn-remove').click(function(){
 wskeee.rbac.searchRole('avaliable', true);
 wskeee.rbac.searchAssign('assigned', true);
 JS;
-    $this->registerJs($js, yii\web\View::POS_READY);
+    $this->registerJs($js, View::POS_READY);
 ?>

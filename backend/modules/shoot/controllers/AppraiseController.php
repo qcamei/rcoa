@@ -2,15 +2,15 @@
 
 namespace backend\modules\shoot\controllers;
 
-use Yii;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
-
 use common\models\question\Question;
 use common\models\shoot\ShootAppraiseTemplate;
-use common\models\shoot\searchs\ShootAppraiseSearch;
+use Yii;
+use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 /**
  * AppraiseController implements the CRUD actions for ShootAppraiseTemplate model.
  */
@@ -19,10 +19,21 @@ class AppraiseController extends Controller
     public function behaviors()
     {
         return [
+            //验证delete时为post传值
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
+                ],
+            ],
+             //access验证是否有登录
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
                 ],
             ],
         ];
@@ -34,7 +45,7 @@ class AppraiseController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new \yii\data\ActiveDataProvider(
+        $dataProvider = new ActiveDataProvider(
                 [
                     'query' => ShootAppraiseTemplate::find()
                 ]);

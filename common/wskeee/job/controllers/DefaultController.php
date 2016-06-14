@@ -1,13 +1,36 @@
 <?php
 
-namespace common\wskeee\job\controllers;
-
-use common\wskeee\job\JobManager;
-use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
+
+namespace common\wskeee\job\controllers;
 
 class DefaultController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            //验证delete时为post传值
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['post'],
+                ],
+            ],
+            //access验证是否有登录
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ],
+        ];
+    }
+    
     public function actionIndex()
     {
         return $this->render('index');

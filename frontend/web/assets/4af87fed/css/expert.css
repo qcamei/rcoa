@@ -1,0 +1,161 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2016-1-7, 10:39:02
+    Author     : Kiwi°
+*/
+
+
+.expert-type a {
+    color: #000 !important;
+    display: block !important; 
+}
+
+ .expert-type a:hover{
+    text-decoration: none !important;
+    background-color:  #eee !important;
+}
+.expert-type .expert{
+    height: 74px;
+    border:1px solid #CCC;
+}
+.expert .personal-image{
+    float: left;
+}
+.expert .nickname{
+    margin-top:0.5%; 
+    display: block;
+}
+
+/**
+ * 专家库列表描述列
+ * 为不同屏幕设置不同宽度
+ */
+.bookdetail-list .course-name
+{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin:0;
+}
+
+@media (min-width: 320px) {
+  #img{
+    height: 200px !important;
+  }
+}
+@media (min-width: 480px) {
+  #img{
+    height: 200px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  #img{
+    height: 360px !important;
+  }
+}
+
+@media (min-width: 992px) {
+  #img{
+    height: 360px;
+  }
+}
+@media (min-width: 1200px) {
+  #img{
+    height: 360px;
+  }
+}
+
+.expert-index a{
+    width:30%; 
+    line-height:60px; 
+    font-size:14px ;
+    margin:0 0 2% 2.5%; 
+    padding-left:5%
+}
+
+.container {
+    padding-right: 0px !important;
+    padding-left: 0px !important;
+    margin-right: auto;
+    margin-left: auto;
+}
+.ees{
+    table-layout: fixed;
+}
+.ees > tbody > tr:nth-of-type(odd){
+    background-color: #ffffff !important;
+}
+.ees > tbody > tr >th{
+    width: 100px;
+    min-width: 100px;
+}
+.ees > tbody > tr >td{
+   
+    min-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ees > tbody > tr:nth-of-type(1){
+    background-color: #f9f9f9 !important;
+}
+
+.clearfix:after {
+	content:".";
+	display:block;
+	height:0;
+	clear:both;
+	visibility:hidden;
+}
+.clearfix {
+	display:inline-table;
+}/* Hides from IE-mac */
+*html .clearfix {
+	height:1%;
+}
+.clearfix {
+	display:block;
+}/* End hide from IE-mac */
+*+html .clearfix {
+	min-height:1%;
+}
+/*.searchinfo li .text {
+	width:356px;
+	height:22px;
+	padding:4px 7px;
+	padding:6px 7px 2px9;
+	font:16px arial;
+	border:1px solid #cdcdcd;
+	border-color:#9a9a9a #cdcdcd #cdcdcd #9a9a9a;
+	vertical-align:top;
+	outline:none;
+	margin:0 5px 0 0;
+}*/
+#form-assign-key .dropdown {
+	width:100px;
+	padding:6px 5px;
+	border:solid 1px #ddd;
+	background:#efefef;
+	position:absolute  !important;
+	left:55px;
+	top:-237px;
+}
+
+#form-assign-key .dropdown li {
+	float:left;
+	width:175px;
+	padding:0 0 0 5px;
+	font-size:14px;
+	line-height:32px;
+	height:32px;
+        list-style: none;
+}
+#form-assign-key .dropdown li label {
+        color: #000;
+	cursor:pointer;
+}

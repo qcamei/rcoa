@@ -19,12 +19,14 @@ class RoleController extends Controller
     public function behaviors()
     {
         return [
+             //验证delete时为post传值
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
                 ],
             ],
+            //access验证是否有登录
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
@@ -33,7 +35,7 @@ class RoleController extends Controller
                         'roles' => ['@'],
                     ]
                 ],
-            ]
+            ],
         ];
     }
 

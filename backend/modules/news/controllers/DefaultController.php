@@ -2,12 +2,13 @@
 
 namespace backend\modules\news\controllers;
 
-use Yii;
-use common\models\System;
 use common\models\searchs\SystemSearch;
+use common\models\System;
+use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * NewsController implements the CRUD actions for System model.
@@ -17,10 +18,21 @@ class DefaultController extends Controller
     public function behaviors()
     {
         return [
+            //验证delete时为post传值
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
+                ],
+            ],
+             //access验证是否有登录
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
                 ],
             ],
         ];
@@ -52,7 +64,7 @@ class DefaultController extends Controller
             'model' => $this->findModel($id),
         ]);
     }
-
+    
     /**
      * Creates a new System model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -62,8 +74,7 @@ class DefaultController extends Controller
     {
         $model = new System();
         $post = Yii::$app->request->post();
-        
-        if ($model->load(Yii::$app->request->post())) {
+        if ($model->load($post)) {
             $model->isjump = $post['System']['isjump'];
             $model->save();
             return $this->redirect(['view', 'id' => $model->id]);

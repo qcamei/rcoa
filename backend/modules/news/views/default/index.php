@@ -1,35 +1,40 @@
 <?php
 
-use yii\helpers\Html;
+use common\models\searchs\SystemSearch;
+use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
+use yii\helpers\Html;
+use yii\web\View;
 
-/* @var $this yii\web\View */
-/* @var $searchModel common\models\searchs\SystemSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $this View */
+/* @var $searchModel SystemSearch */
+/* @var $dataProvider ActiveDataProvider */
 
-$this->title = 'Systems';
+$this->title = Yii::t('rcoa', 'Systems');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="system-index">
 
-    <h1>创建</h1>
+    <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('创建', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('rcoa', 'Create System'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            //['class' => 'yii\grid\SerialColumn'],
 
             'id',
             'name',
+            'aliases',
             'module_image',
             'module_link',
             'des',
+            // 'isjump',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

@@ -1,11 +1,13 @@
 <?php
 
+use common\models\searchs\SystemSearch;
 use yii\helpers\Html;
+use yii\web\View;
 use yii\widgets\ActiveForm;
 
-/* @var $this yii\web\View */
-/* @var $model common\models\searchs\SystemSearch */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $this View */
+/* @var $model SystemSearch */
+/* @var $form ActiveForm */
 ?>
 
 <div class="system-search">
@@ -25,9 +27,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'des') ?>
 
+    <?php // echo $form->field($model, 'isjump') ?>
+
+    <?php // echo $form->field($model, 'aliases') ?>
+
     <div class="form-group">
-        <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>
+        <?= Html::submitButton(Yii::t('rcoa', 'Search'), ['class' => 'btn btn-primary']) ?>
+        <?= Html::resetButton(Yii::t('rcoa', 'Reset'), ['class' => 'btn btn-default']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

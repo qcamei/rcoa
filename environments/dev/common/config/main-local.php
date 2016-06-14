@@ -29,6 +29,9 @@ return [
                 'from' => ['gzedu_reserve@163.com' => '资源中心工作平台']
             ],
             'useFileTransport' => false,
+            'assetManager' => [ 
+                'linkAssets' => false, 
+            ],  
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
@@ -74,6 +77,13 @@ return [
                 'class' => 'yii\caching\FileCache',
             ]
         ],
+        'fileManage'=>[
+            'class'=>'wskeee\filemanage\FileManageTool',
+            //'url'=>'http://rcoaadmin.tt.gzedu.net/framework/api/list',
+            'cache' => [
+                'class' => 'yii\caching\FileCache',
+            ]
+        ],
     ],
     'modules' => [
         'rbac' => [
@@ -90,6 +100,9 @@ return [
         ],
         'resource' => [
             'class' => 'frontend\modules\resource\Module',
+        ],
+       'filemanage' => [
+            'class' => 'common\wskeee\filemanage\Module',
         ],
     ],
 ];

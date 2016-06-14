@@ -2,13 +2,17 @@
 
 namespace common\models;
 
+use common\wskeee\job\models\Job;
 use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%system}}".
  *
  * @property integer $id    模块ID
  * @property string $name   模块名称
+ * @property string $aliases   模块别名
  * @property string $module_image   模块图片
  * @property string $modules_link   模块链接
  * @property string $des    模块描述
@@ -16,7 +20,7 @@ use Yii;
  *
  * @property Job[] $jobs
  */
-class System extends \yii\db\ActiveRecord
+class System extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -32,8 +36,9 @@ class System extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['isjump'], 'integer'],
             [['name'], 'string', 'max' => 64],
-            [['module_image', 'module_link', 'des','isjump','aliase'], 'string', 'max' => 255]
+            [['module_image', 'module_link', 'des', 'aliases'], 'string', 'max' => 255]
         ];
     }
 
@@ -48,12 +53,13 @@ class System extends \yii\db\ActiveRecord
             'module_image' => Yii::t('rcoa', 'Module Image'),
             'module_link' => Yii::t('rcoa', 'Module Link'),
             'des' => Yii::t('rcoa', 'Des'),
-            'isjump' => Yii::t('rcoa', 'Jump'),
+            'isjump' => Yii::t('rcoa', 'Isjump'),
+            'aliases' => Yii::t('rcoa', 'Aliases'),
         ];
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getJobs()
     {

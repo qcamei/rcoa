@@ -29,6 +29,9 @@ $config = [
         'resource' => [
             'class' => 'backend\modules\resource\Module',
         ],
+        'filemanage' => [
+            'class' => 'common\wskeee\filemanage\Module',
+        ],
     ],
 ];
 

@@ -16,6 +16,7 @@ return [
                         'rcoa/system' => 'system.php',
                         'rcoa/banner' => 'banner.php',
                         'rcoa/resource' => 'resource.php',
+                        'rcoa/fileManage' => 'fileManage.php',
                     ],
                 ],
                

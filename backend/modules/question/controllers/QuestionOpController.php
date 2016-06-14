@@ -2,12 +2,13 @@
 
 namespace backend\modules\question\controllers;
 
-use Yii;
 use common\models\question\QuestionOp;
 use common\models\question\searchs\QuestionOpSearch;
+use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * QuestionOpController implements the CRUD actions for QuestionOp model.
@@ -17,10 +18,21 @@ class QuestionOpController extends Controller
     public function behaviors()
     {
         return [
+            //验证delete时为post传值
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
+                ],
+            ],
+             //access验证是否有登录
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
                 ],
             ],
         ];

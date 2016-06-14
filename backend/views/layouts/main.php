@@ -90,7 +90,14 @@ AppAsset::register($this);
         $menuItems[] = [
             'label' => '资源展示',
             'items' => [
-                 ['label' => '资源管理', 'url' => '/resource/default'],
+                ['label' => '资源管理', 'url' => '/resource/default'],
+            ],
+        ];
+        $menuItems[] = [
+            'label' => '文档管理',
+            'items' => [
+                ['label' => '文档目录', 'url' => '/filemanage/default'],
+                ['label' => '文档详情', 'url' => '/filemanage/detail'],
             ],
         ];
 

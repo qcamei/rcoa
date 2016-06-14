@@ -19,7 +19,10 @@ return [
     'User' => '用户',
     'Role' => '角色',
     'Sex' => '性别',
+    'Image' => '图像',
+    'Icon' => '图标',
     'Avatar' => '头像',
+    'Aliases' => '别名',
     'Des' => '描述',
     'Index' => '序号',
     'Birth' => '出生年月',
@@ -113,6 +116,6 @@ return [
     'Subject' => '主题',
     'Module Image' => '模块图片',
     'Module Link' => '模块链接',
-    'Jump' => '是否跳转页面',
+    'Isjump' => '是否跳转页面',
     
 ];

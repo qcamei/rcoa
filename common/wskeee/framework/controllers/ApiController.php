@@ -1,13 +1,37 @@
 <?php
 
-namespace wskeee\framework\controllers;
-
-use yii\web\Controller;
-use wskeee\framework\models\Item;
 use wskeee\framework\FrameworkManager;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
+use yii\rbac\Item;
+use yii\web\Controller;
+
+namespace wskeee\framework\controllers;
 
 class ApiController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            //验证delete时为post传值
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['post'],
+                ],
+            ],
+            //access验证是否有登录
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ],
+        ];
+    }
     
     public function actionIndex()
     {
@@ -16,14 +40,14 @@ class ApiController extends Controller
     
     public function actionList()
     {
-        \Yii::$app->getResponse()->format = 'json';
+        Yii::$app->getResponse()->format = 'json';
         
         $errors = [];
         $items = [];
         try
         {
             $items = Item::find()->asArray()->all();
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             $errors [] = $ex->getMessage();
         }
         return [
@@ -40,16 +64,16 @@ class ApiController extends Controller
      */
     public function actionSearch($id)
     {
-        \Yii::$app->getResponse()->format = 'json';
+        Yii::$app->getResponse()->format = 'json';
         /* @var $fwManager FrameworkManager */
-        $fwManager = \Yii::$app->get('fwManager');
+        $fwManager = Yii::$app->get('fwManager');
         
         $errors = [];
         $items = [];
         try
         {
             $items = $fwManager->getChildren($id);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             $errors [] = $ex->getMessage();
         }
         return [

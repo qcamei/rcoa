@@ -1,14 +1,16 @@
 <?php
 
+use common\models\System;
 use yii\helpers\Html;
+use yii\web\View;
 
-/* @var $this yii\web\View */
-/* @var $model common\models\System */
+/* @var $this View */
+/* @var $model System */
 
-$this->title = 'Update System: ' . ' ' . $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Systems', 'url' => ['index']];
+$this->title = Yii::t('rcoa', 'Update System'). ':' . $model->name;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa', 'Systems'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = Yii::t('rcoa', 'Update');
 ?>
 <div class="system-update">
 

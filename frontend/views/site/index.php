@@ -48,6 +48,7 @@ $this->title = '课程中心工作平台';
                          'class' => 'center-block',
                          'width' => '272',
                          'height' => '166',
+                         'style' => 'margin-bottom:15px;',
                          'alt' => $value->des,
                      ]), $value->isjump == 0  ? $value->module_link : 
                          (!\Yii::$app->user->isGuest ? 

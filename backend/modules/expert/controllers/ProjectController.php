@@ -6,6 +6,7 @@ use common\models\expert\ExpertProject;
 use common\models\shoot\searchs\ExpertProjectSearch;
 use wskeee\framework\FrameworkManager;
 use Yii;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -19,10 +20,21 @@ class ProjectController extends Controller
     public function behaviors()
     {
         return [
+            //验证delete时为post传值
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
+                ],
+            ],
+             //access验证是否有登录
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
                 ],
             ],
         ];

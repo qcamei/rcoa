@@ -2,16 +2,41 @@
 
 namespace backend\modules\user\controllers;
 
-use Yii;
-use yii\web\Controller;
-use yii\data\ActiveDataProvider;
-
-use common\models\User;
 use common\models\searchs\UserSearch;
+use common\models\User;
+use Yii;
+use yii\base\Exception;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 class DefaultController extends Controller
 {
-   public function actionIndex()
+    public function behaviors()
+    {
+        return [
+            //验证delete时为post传值
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['post'],
+                ],
+            ],
+             //access验证是否有登录
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ],
+        ];
+    }
+    
+    public function actionIndex()
     {
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(\Yii::$app->getRequest()->getQueryParams());
@@ -52,7 +77,7 @@ class DefaultController extends Controller
     
     public function actionDelete($id)
     {
-        /*@var $model common\models\User*/
+        /*@var $model User*/
         
         if(($model = $this->findModel($id)) !== null)
         {
@@ -61,10 +86,10 @@ class DefaultController extends Controller
                 $model->delete();
                 return $this->redirect(['index']);
             }else
-                throw new \yii\base\Exception('自己不可以删除自己');
+                throw new Exception('自己不可以删除自己');
         }
         else
-            throw new \yii\base\Exception('找不到对应用户！');
+            throw new Exception('找不到对应用户！');
     }
     
     public function actionUpdate($id)
@@ -88,14 +113,14 @@ class DefaultController extends Controller
     /**
      * 查找用户模型
      * @param integer $id   用户模型id
-     * @return common\models\User 用户模型
-     * @throws \yii\web\NotFoundHttpException
+     * @return User 用户模型
+     * @throws NotFoundHttpException
      */
     private function findModel($id)
     {
         if(($model = User::findOne(['id'=>$id])) !== null)
             return $model;
         else
-            throw new \yii\web\NotFoundHttpException();
+            throw new NotFoundHttpException();
     }
 }

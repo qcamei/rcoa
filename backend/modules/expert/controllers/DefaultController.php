@@ -6,6 +6,7 @@ use backend\modules\expert\models\ExpertCreateForm;
 use common\models\expert\Expert;
 use common\models\expert\searchs\ExpertSearch;
 use Yii;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -18,10 +19,21 @@ class DefaultController extends Controller
     public function behaviors()
     {
         return [
+            //验证delete时为post传值
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
+                ],
+            ],
+             //access验证是否有登录
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
                 ],
             ],
         ];

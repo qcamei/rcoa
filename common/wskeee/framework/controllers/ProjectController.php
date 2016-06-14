@@ -2,15 +2,15 @@
 
 namespace wskeee\framework\controllers;
 
+use wskeee\framework\models\Item;
+use wskeee\framework\models\Project;
+use wskeee\framework\models\searchs\ItemSearch;
 use Yii;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
-
-use wskeee\framework\models\Project;
-use wskeee\framework\models\Item;
-use wskeee\framework\models\searchs\ItemSearch;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 /**
  * ProjectController implements the CRUD actions for Project model.
@@ -20,10 +20,21 @@ class ProjectController extends Controller
     public function behaviors()
     {
         return [
+             //验证delete时为post传值
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
+                ],
+            ],
+            //access验证是否有登录
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
                 ],
             ],
         ];
