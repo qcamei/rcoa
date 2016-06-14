@@ -52,7 +52,6 @@ and open the template in the editor.
 }
 .file-manage .col-md-1 {
     width:4.33333333%; 
-    top:420px;
     padding-right:0px;
     padding-left:0px;
 }
@@ -72,7 +71,6 @@ and open the template in the editor.
 }
 .file-manage .col-md-11 {
     width:95.66666667%;
-    height: 900px;
     padding-right:0px;
     padding-left:0px;
     overflow :scroll;
@@ -107,7 +105,6 @@ and open the template in the editor.
 }
 .cbp-spmenu-vertical {
     width:100%;
-    height: 900px;
     z-index:1000; 
     overflow :scroll;
 }
@@ -169,16 +166,73 @@ and open the template in the editor.
     .fm-md-3 {
         width: 50%;
     }
+    .file-manage .cbp-spmenu-vertical {
+        height: 550px;
+    }
+    .file-manage .col-md-11 {
+        height: 550px;
+    }
+    .file-manage .col-md-1 {
+       top:  245px;
+    }
 }
 
 @media (min-width: 480px) {
     .fm-md-3 {
         width: 33.33333%;
     }
+    .file-manage .cbp-spmenu-vertical {
+        height: 450px;
+    }
+    .file-manage .col-md-11 {
+        height: 450px;
+    }
+    .file-manage .col-md-1 {
+       top:  195px;
+    }
 }
 
 @media (min-width: 768px) {
     .fm-md-3 {
         width:20%;
+    }
+    .file-manage .cbp-spmenu-vertical {
+        height: 875px;
+    }
+    .file-manage .col-md-11 {
+        height: 875px;
+    }
+    .file-manage .col-md-1 {
+        top:407.5px;
+    }
+}
+
+@media (min-width: 992px) {
+    .fm-md-3 {
+        width:20%;
+    }
+    .file-manage .cbp-spmenu-vertical {
+        height: 650px;
+    }
+    .file-manage .col-md-11 {
+        height: 650px;
+    }
+    .file-manage .col-md-1 {
+        top:295px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .fm-md-3 {
+        width:20%;
+    }
+    .file-manage .cbp-spmenu-vertical {
+        height: 650px;
+    }
+    .file-manage .col-md-11 {
+        height: 650px;
+    }
+    .file-manage .col-md-1 {
+        top:295px;
     }
 }
