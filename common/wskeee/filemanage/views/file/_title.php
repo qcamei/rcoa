@@ -20,7 +20,7 @@ echo Html::beginTag('div', ['class'=>'title']);
 
             foreach ($bread as $key => $value) {
                 echo Html::beginTag('li',['class' => 'course-name', 'style' => $value->type != FileManage::FM_FILE ? :'width:30%;']);
-                    echo Html::a($value->name, [$value->type == FileManage::FM_FILE ? 'view' :'index', 'id' => $value->id],
+                    echo Html::a($value->name, [$value->type != FileManage::FM_FOLDER ? 'view' :'index', 'id' => $value->id],
                          ['class' => (!isset($get['id'])? null : $get['id']) != $value->id ?  '' : 'disabled']);
                 echo Html::endTag('li');
             }

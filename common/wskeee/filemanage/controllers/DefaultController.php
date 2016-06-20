@@ -82,15 +82,13 @@ class DefaultController extends Controller
         /* @var $fileManage FileManageTool */
         $fileManage = Yii::$app->get('fileManage');
         if ($model->load($post)) {
+            $model->image = $this->getFileImageMap($model);
             $owners = $post['FileManageOwner']['owner'];
             $content = $post['FileManageDetail']['content'];
             unset($post['FileManageOwner']);
             unset($post['FileManageDetail']);
             $fileManage->createTask($model, $owners, $content);
-            return $this->redirect([
-                $post['FileManage']['type'] == FileManage::FM_FILE ? 'detail/view' : 'view', 
-                'id' => $model->id
-            ]);
+            return $this->redirect([!$model->getFmFolder() ? 'detail/index' : 'index']);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -117,15 +115,13 @@ class DefaultController extends Controller
         $model = $this->findModel($id);
         $post = Yii::$app->request->post();
         if ($model->load($post)) {
+            $model->image = $this->getFileImageMap($model);
             $owners = $post['FileManageOwner']['owner'];
             $content = $post['FileManageDetail']['content'];
             unset($post['FileManageOwner']);
             unset($post['FileManageDetail']);
             $fileManage->updateTask($model, $owners, $content);
-            return $this->redirect([
-                $post['FileManage']['type'] == FileManage::FM_FILE ? 'detail/view' : 'view', 
-                'id' => $model->id
-            ]);
+            return $this->redirect([!$model->getFmFolder() ? 'detail/index' : 'index']);
         } else {
             $ownerValue = [];
             foreach ($this->getOwner($id) as $key => $value) 
@@ -133,7 +129,7 @@ class DefaultController extends Controller
             return $this->render('update', [
                 'model' => $model,
                 'owner' => $this->findOwner($id),
-                'detail' => $model->type == FileManage::FM_LIST ? new FileManageDetail() :$this->findDetail($id),
+                'detail' => !$model->getFmFile() ? new FileManageDetail() : $this->findDetail($id),
                 'ownerName' => $this->getAuthManagerRoleName(),
                 'ownerValue' => $ownerValue,
                 'fmList' => $this->getFmList(),
@@ -232,5 +228,20 @@ class DefaultController extends Controller
         /* @var $fileManage FileManageTool */
         $fileManage = Yii::$app->get('fileManage');
         return ArrayHelper::map($fileManage->getFileManageList(), 'id', 'name');
+    }
+    
+    /**
+     * 获取目录 or 文档图像
+     * @param type $model
+     * @param type $post ['FileManage']['file_link']
+     * @return type
+     */
+    public function getFileImageMap($model)
+    {
+        //获取上传文件后缀名
+        $fileSuffix = pathinfo($model->file_link, PATHINFO_EXTENSION);  
+        return $fileSuffix == null ? 
+                $model->fileImageMap[$model->type] : 
+                $model->fileImageMap[$model->type][$fileSuffix];
     }
 }

@@ -16,6 +16,8 @@ use yii\widgets\ActiveForm;
     
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= $form->field($model, 'type')->dropDownList($model->typeName,['prompt'=>'请选择...']) ?>
+    
     <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'placeholder' => '请输入目录名称或文档标题...']) ?>
     
     <?= $form->field($owner, 'owner')->widget(Select2::classname(), [
@@ -29,31 +31,33 @@ use yii\widgets\ActiveForm;
             'allowClear' => true,
         ],
     ]) ?>
-
+    
     <?= $form->field($model, 'pid')->widget(Select2::classname(), [
         'data' => $fmList, 'hideSearch'=>false, 'options' => ['placeholder' => '为根目录时可不选...'],
     ]) ?>
 
     <?= $form->field($model, 'keyword')->textInput(['maxlength' => true, 'placeholder' => '请输入关键字...']) ?>
     
-    <?= $form->field($model, 'image')->dropDownList([
-        FileManage::IMAGE_FOLDER => '目录图标', FileManage::IMAGE_FILE =>'文档图标'
-    ]) ?>
+    <?= $form->field($model, 'file_link', ['options'=> ['style' => !$model->getFmUpload()?'display: none;':'display:block;']])
+                ->textInput(['id' => 'files']) ?>
+    <?= Html::textInput('', '文件上传', [
+        'id'=> 'upload',
+        'class' => 'form-group field-filemanage-file_link',
+        'type' => 'button',
+        'style' => !$model->getFmUpload() ? 'display: none;' : 'display:block;',
+        'onclick' => 'uploadFile()'
+    ])?>
     
-    <?= $form->field($model, 'icon')->dropDownList([
-        FileManage::ICON_FOLDER => '目录图标', FileManage::ICON_FILE =>'文档图标'
-    ]) ?>
-    
-    <?= $form->field($model, 'type')->radioList([FileManage::FM_LIST => '目录', FileManage::FM_FILE => '文档']) ?>
-    
-    <?= $form->field($detail, 'content')->textarea([
-        'id' => 'container', 
-        'type' => 'text/plain', 
-        'style' => 'width:100%; height:300px;'
+    <?= $form->field($detail, 'content', ['options'=> ['style' => !$model->getFmFile()?'display: none;':'display:block;']])
+            ->textarea([
+            'id' => 'container', 
+            'type' => 'text/plain', 
+            'style' => 'width:100%; height:300px;'
     ]) ?>
     
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'), 
+        ['id' => 'submit','class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
@@ -61,29 +65,97 @@ use yii\widgets\ActiveForm;
 </div>
 
 <?php
- 
+
  $js =   
 <<<JS
-    var isNewRecord = "$model->isNewRecord";
-    var type = "$model->type";
-    if(!isNewRecord && type == 2){
-        $("input:radio").eq(1).attr("checked",true);
-        $('.field-filemanagedetail-content').css('display','block');
-    }else{
-        $("input:radio").eq(0).attr("checked",true);
-        $('.field-filemanagedetail-content').css('display','none');
-    }
-    $("input:radio").eq(0).click(function(){
-       $('.field-filemanagedetail-content').css('display','none');
-    });
-    $("input:radio").eq(1).click(function(){
-       $('.field-filemanagedetail-content').css('display','block');
-    });
     $('#container').removeClass('form-control');
     var ue = UE.getEditor('container');
+    var myselect = document.getElementById("filemanage-type");
+    myselect.onchange = function(){
+        switch (myselect.selectedIndex)
+        {
+            case 0:
+                $('.field-filemanagedetail-content').fadeOut();
+                $('.field-filemanage-file_link').fadeOut();
+                ue.execCommand('cleardoc');
+                $('#files').val('');
+            break;
+            case 1:
+                $('.field-filemanagedetail-content').fadeOut();
+                $('.field-filemanage-file_link').fadeOut();
+                ue.execCommand('cleardoc');
+                $('#files').val('');
+            break;
+            case 2:
+                $('.field-filemanagedetail-content').fadeIn();
+                $('.field-filemanage-file_link').fadeOut();
+                //if(ue.getContent() == null) 
+                $('#files').val('');
+            break;
+            case 3:
+                $('.field-filemanage-file_link').fadeIn();
+                $('.field-filemanagedetail-content').fadeOut();
+                ue.execCommand('cleardoc');
+            break;
+        }
+    }
+    
+    $('#submit').click(function(){
+        if(myselect.selectedIndex == 2 && !ue.hasContents()){
+            alert('内容不能为空');
+            return false;
+        }
+        if(myselect.selectedIndex == 3 && $('#files').val() == ''){
+            alert('附件链接不能为空');
+            return false;
+        }
+        $('#w0').submit();
+    });
 JS;
     $this->registerJs($js,  View::POS_READY); 
 ?> 
+
+<script type="text/javascript">
+window['process'] = function(result){
+        window['FILELIST'] = JSON.parse(result['data']);
+}
+
+function uploadFile(){
+    //var testPath = 'http://eechat.tt.gzedu.com/';
+    //var formalPath = 'http://eechat.gzedu.com/'; 
+    var api = $.dialog({
+        id: 'LHG76D',
+        //content: 'url:http://127.0.0.1:8080/ee_fis/upload/toUpload.do?formMap.filetype=ppt|doc|docx|xls|xlsx|pptx|txt|rar|zip|mp3|mp4|rmvb|wmv|flv|swf|3gp|jpg&formMap.filecwd=/files1/file&formMap.appId=APP005&formMap.filenum=2&formMap.origin=http://127.0.0.1:8080/ee_fis/uploadIframe.html&formMap.convert=Y&formMap.appType=oos&formMap.fileName=mp4/object_name&formMap.bucket=ougz-video',
+        content: 'url:http://eefile.gzedu.com/upload/toUpload.do?formMap.filetype=ppt|doc|docx|xls|xlsx|pptx|txt|rar|zip|mp3|mp4|rmvb|wmv|flv|swf|3gp|jpg&formMap.filecwd=/files1/file&formMap.appId=APP015&formMap.filenum=1&formMap.origin=http://ccoaadmin.gzedu.net/uploadIframe/uploadIframe.html',
+        //content: 'url:http://eefile.gzedu.com/upload/toUpload.do?formMap.filetype=ppt|doc|docx|xls|xlsx|pptx|txt|rar|zip|mp3|mp4|rmvb|wmv|flv|swf|3gp|jpg&formMap.filecwd=/files1/file&formMap.appId=APP005&formMap.filenum=2&formMap.origin=http://127.0.0.1:8080/ee_chat/uploadIframe.html&formMap.convert=Y&formMap.appType=oos&formMap.fileName=mp4/object_name&formMap.bucket=ougz-video',		
+        title: '文件上传',
+        width: 460,
+        height: 360,
+        button:[{
+            name : '取消上传',
+            callback : function(win){}
+        },{
+            name: '完成上传',
+            callback: function (win) {
+                var fileList = win['FILELIST'], 
+                        filelist = [],
+                        NameMD5List = [];
+
+                if(fileList && fileList.length > 0){
+                    for(var i = 0; i < fileList.length; i++){
+                        filelist.push(fileList[i].FileURL);
+                        NameMD5List.push(fileList[i].FileMD5);
+                    }
+                    $('#files').val(filelist.join(''));
+                    //$('#md5').val(NameMD5List.join(''));
+                    window['FILELIST'] = [];
+                }
+            },
+            focus : true
+        }]
+    });
+}
+</script>
 
 <?php
     FileManageAsset::register($this);

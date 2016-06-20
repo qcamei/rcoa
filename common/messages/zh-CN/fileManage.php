@@ -18,4 +18,5 @@ return[
     'Pid' => '上一级',
     'Owner Role Name'=> '所有者',
     'Keyword'=> '关键字',
+    'File Link'=> '附件链接',
 ];

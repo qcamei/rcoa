@@ -31,10 +31,14 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="col-xs-11 col-sm-11 col-md-11">
                 <?php
                     foreach ($list as $key => $value) {
+                        $fileSuffix = pathinfo($value->file_link, PATHINFO_EXTENSION);
                         echo Html::a('<div class="fm-md-3 course-name">'
                                 . '<p><img src="'.$value->image.'" style="height:80px;"></p>'
-                                .$value->name.'</div>', [$value->type == FileManage::FM_FILE ? 'view' :'index', 'id' => $value->id],
-                                ['title' => $value->name]);
+                                .$value->name.'</div>', 
+                                $fileSuffix == 'rar' || $fileSuffix == 'zip' ?
+                                    'http://eefile.gzedu.com'.$value->file_link :
+                                    [$value->type != FileManage::FM_FOLDER ? 'view' :'index', 'id' => $value->id] ,
+                                ['class' => (!isset($get['id'])? null : $get['id']) != $value->id ? :'active','title' => $value->name]);
                     }
                 ?>
             </div>
@@ -56,42 +60,4 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
     FileManageAsset::register($this);
 ?>
-
-<?php  
-$js =   
-<<<JS
-    var menuLeft = document.getElementById( 'cbp-spmenu-s1' ),
-        menuRight = document.getElementById( 'cbp-spmenu-s2' ),
-        showLeftImg = document.getElementById( 'showLeftImg' ),
-        showLeftPush = document.getElementById( 'showLeftPush' ),
-        className = 'col-xs-1 col-sm-1 col-md-1 active';
-    
-    if($(window).width() <= 768){
-        classie.toggle( menuLeft, 'cbp-spmenu-left');
-        classie.toggle( menuRight, 'cbp-spmenu-right');
-        showLeftImg.src = '/filedata/image/sidebar-arrow-right.jpg';
-        showLeftPush.onclick = function() {
-            classie.toggle( this, 'active' );
-            classie.toggle( menuLeft, 'cbp-spmenu-left');
-            classie.toggle( menuRight, 'cbp-spmenu-right');
-            if(showLeftPush.className == className)
-                showLeftImg.src = '/filedata/image/sidebar-arrow-left.jpg';
-            else
-                showLeftImg.src = '/filedata/image/sidebar-arrow-right.jpg';
-        };
-    }
-    else{
-        showLeftPush.onclick = function() {
-            classie.toggle( this, 'active' );
-            classie.toggle( menuLeft, 'cbp-spmenu-left' );
-            classie.toggle( menuRight, 'cbp-spmenu-right');
-            if(showLeftPush.className == className)
-                showLeftImg.src = '/filedata/image/sidebar-arrow-right.jpg';
-            else
-                showLeftImg.src = '/filedata/image/sidebar-arrow-left.jpg';
-        };
-    }
-    
-JS;
-    $this->registerJs($js,  View::POS_READY);
-?> 
+<?= $this->render('_file_js') ?>

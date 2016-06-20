@@ -12,11 +12,17 @@ $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/fileManage', 'File Manages'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="file-manage-view">
 
+<div class="container file-manage-view">
     <center><h1 style="font-family:微软雅黑;color:#467d19;"><?= Html::encode($model->name) ?></h1></center>
     <hr>
-    <?= $model->filemanageDetail->content; ?>
+    <?php 
+        if($model->getFmUpload())
+            echo '<iframe style="width:100%;height:600px;" src="http://officeweb365.com/o/?i=6824&furl=http://eefile.gzedu.com'.$model->file_link.'"></iframe>';
+        else
+            echo $model->filemanageDetail->content; 
+        
+    ?>
     
     <p>
         <?= Html::a(Yii::t('rcoa', 'Update'), ['/filemanage/default/update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>

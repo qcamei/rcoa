@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'type',
                 'format' => 'raw',
                 'value' => function ($model){
-                    return $model->type == FileManage::FM_FILE ? '文档' : '目录';
+                    return $model->getTypeName();
                 }
             ],
             'name',
@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             'keyword',
-            // 'icon',
+            //'file_link',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

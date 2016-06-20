@@ -18,7 +18,7 @@ class DetailSearch extends FileManage
     {
         return [
             [['id', 'type', 'pid'], 'integer'],
-            [['name', 'keyword', 'icon'], 'safe'],
+            [['name', 'keyword', 'file_link'], 'safe'],
         ];
     }
 
@@ -40,7 +40,8 @@ class DetailSearch extends FileManage
      */
     public function search($params)
     {
-        $query = FileManage::find()->where(['type' => FileManage::FM_FILE]);
+        $query = FileManage::find()->where(['type' => FileManage::FM_FILE])
+                ->orWhere(['type' => FileManage::FM_UPLOAD]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -62,7 +63,7 @@ class DetailSearch extends FileManage
 
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'keyword', $this->keyword])
-            ->andFilterWhere(['like', 'icon', $this->icon]);
+            ->andFilterWhere(['like', 'file_link', $this->file_link]);
 
         return $dataProvider;
     }

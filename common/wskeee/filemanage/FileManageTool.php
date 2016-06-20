@@ -24,7 +24,7 @@ class FileManageTool{
      */
     public function getFileManageList($id = null, $fileManageArray = [])
     {
-        $fileManages = FileManage::find()->where(['pid' => $id, 'type' => FileManage::FM_LIST])->all();
+        $fileManages = FileManage::find()->where(['pid' => $id, 'type' => FileManage::FM_FOLDER])->all();
         foreach ($fileManages as $key => $value) {
             $fileManageArray[] = $value;
             $fileManageArray = $this->getFileManageList($value['id'], $fileManageArray);

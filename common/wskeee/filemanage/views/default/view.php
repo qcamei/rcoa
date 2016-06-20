@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'type',
                 'format' => 'raw',
-                'value' => $model->type == FileManage::FM_FILE ?  '文档' : '目录',
+                'value' => $model->getTypeName(),
             ],
             'name',
             [
@@ -43,11 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => !isset($model->pid) ? '<span style="color:red">Null</span>' : $model->fileManagePid->name,
             ],
             'keyword',
-            [
-                'attribute' => 'icon',
-                'format' => 'raw',
-                'value' => '<i class="'.$model->icon.'"></i>',
-            ],
+            'file_link',
         ],
     ]) ?>
 

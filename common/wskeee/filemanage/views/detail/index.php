@@ -26,6 +26,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        //'summary' => true,
+        'tableOptions' => ['class' => 'table table-striped table-bordered'],
         'columns' => [
            //['class' => 'yii\grid\SerialColumn'],
 
@@ -34,14 +36,22 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'type',
                 'format' => 'raw',
                 'value' => function ($model){
-                    return $model->type == FileManage::FM_FILE ? '文档' : '目录';
+                    return $model->getTypeName();
                 }
             ],
             [
                 'attribute' => 'name',
                 'format' => 'raw',
+                 'contentOptions' => [
+                    'style' => [
+                        'max-width' => '200px'
+                    ],
+                    'class' => [
+                        'td' => 'course-name'
+                    ],
+                ],  
                 'content' => function ($model){
-                    return '<div class="course-name"><span>'.$model->name.'</span></div>' ;
+                    return $model->name ;
                 }
             ],
             //'name',
@@ -53,7 +63,22 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             'keyword',
-            // 'icon',
+            //'file_link',
+             [
+                'attribute' => 'file_link',
+                'format' => 'raw',
+                'contentOptions' => [
+                    'style' => [
+                        'max-width' => '200px'
+                    ],
+                    'class' => [
+                        'td' => 'course-name'
+                    ],
+                ],  
+                'content' => function ($model){
+                    return empty($model->file_link)? '<span style="color:red">Null</span>' : $model->file_link;
+                },
+            ],
 
             [
                 'class' => 'yii\grid\ActionColumn',
@@ -64,7 +89,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'aria-label' => Yii::t('yii', 'View'),
                             'data-pjax' => '0',
                         ];
-                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', 
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>',
                             ['/filemanage/detail/view', 'id' => $model->id], $options);
                     },
                     'update' => function ($url, $model, $key) {

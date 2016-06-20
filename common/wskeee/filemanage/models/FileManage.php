@@ -15,7 +15,7 @@ use yii\db\ActiveRecord;
  * @property integer $pid   上一级
  * @property string $keyword    关键字
  * @property string $image  图像
- * @property string $icon   图标
+ * @property string $file_link   附件链接
  *
  * @property FileManage $fileManagePid  获取父级ID
  * @property FileManage[] $fileManages  获取所有子级
@@ -25,17 +25,35 @@ use yii\db\ActiveRecord;
 class FileManage extends ActiveRecord
 {
     /** 文档类型 目录 */
-    const FM_LIST = 1;
+    const FM_FOLDER = 1;
     /** 文档类型 文件 */
     const FM_FILE = 2;
-    /** 文件夹图标 */
-    const ICON_FOLDER = 'glyphicon glyphicon-folder-open';
-    /** 文档图标 */
-    const ICON_FILE = 'glyphicon glyphicon-file';
-    /** 文件夹图像 */
-    const IMAGE_FOLDER = '/filedata/image/folder.png';
-    /** 文档图像 */
-    const IMAGE_FILE = '/filedata/image/file.png';
+    /** 文档类型 附件上传 */
+    const FM_UPLOAD = 3;
+    /** 类型名称 */
+    public $typeName = [
+       self::FM_FOLDER => '目录', 
+       self::FM_FILE => '文件', 
+       self::FM_UPLOAD => '附件', 
+    ];
+    /** 文档管理图像 */
+    public $fileImageMap = [
+        self::FM_FOLDER => '/filedata/image/folder.png',
+        self::FM_FILE => '/filedata/image/text.png',
+        self::FM_UPLOAD => [
+            'text' => '/filedata/image/text.png',
+            'txt' => '/filedata/image/text.png',
+            'docx' => '/filedata/image/docx.png',
+            'doc' => '/filedata/image/docx.png',
+            'pptx' => '/filedata/image/pptx.png',
+            'ppt' => '/filedata/image/pptx.png',
+            'xlsx' => '/filedata/image/xlsx.png',
+            'xls' => '/filedata/image/pdf.png',
+            'pdf' => '/filedata/image/pdf.png',
+            'rar' => '/filedata/image/rar.png',
+            'zip' => '/filedata/image/rar.png',
+        ]
+    ];
     
     /**
      * @inheritdoc
@@ -52,9 +70,9 @@ class FileManage extends ActiveRecord
     {
         return [
             [['type', 'pid'], 'integer'],
-            [['name', 'image'], 'string', 'max' => 255],
-            [['keyword', 'icon'], 'string', 'max' => 50],
-            [['type', 'name', 'keyword', 'icon', 'image'], 'required'],
+            [['name', 'image','file_link'], 'string', 'max' => 255],
+            [['keyword'], 'string', 'max' => 50],
+            [['type', 'name', 'keyword', 'image'], 'required'],
         ];
     }
 
@@ -70,7 +88,7 @@ class FileManage extends ActiveRecord
             'pid' => Yii::t('rcoa/fileManage', 'Pid'),
             'keyword' => Yii::t('rcoa/fileManage', 'Keyword'),
             'image' => Yii::t('rcoa', 'Image'),
-            'icon' => Yii::t('rcoa', 'Icon'),
+            'file_link' => Yii::t('rcoa/fileManage', 'File Link'),
         ];
     }
 
@@ -109,4 +127,38 @@ class FileManage extends ActiveRecord
     {
         return $this->hasOne(FilemanageOwner::className(), ['fm_id' => 'id']);
     }
+    
+    /**
+     * 获取类型名称
+     * @return type
+     */
+    public function getTypeName()
+    {
+        return $this->typeName[$this->type];
+    }
+    
+    /**
+     * 获取是否为【目录】类型
+     */
+    public function getFmFolder()
+    {
+        return $this->type == self::FM_FOLDER;
+    }
+    
+    /**
+     * 获取是否为【文件】类型
+     */
+    public function getFmFile()
+    {
+        return $this->type == self::FM_FILE;
+    }
+    
+    /**
+     * 获取是否为【附件上传】类型
+     */
+    public function getFmUpload()
+    {
+        return $this->type == self::FM_UPLOAD;
+    }
+    
 }
