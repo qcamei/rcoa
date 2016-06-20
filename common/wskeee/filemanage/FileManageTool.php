@@ -59,11 +59,11 @@ class FileManageTool{
    public function getFileManageLeftList($id = null)
     {
         //读取下一级
-        $leftListArray = FileManage::find()->where(['pid' => $id])->all();
+        $leftListArray = FileManage::find()->where(['pid' => $id])->orderBy('type ASC')->all();
         //如果没有下一级 就读取平级
         if(empty($leftListArray)){
             $leftListOne = FileManage::find()->where(['id' => $id])->one();
-            $leftListArray = FileManage::find()->where(['pid' => $leftListOne['pid']])->all();
+            $leftListArray = FileManage::find()->where(['pid' => $leftListOne['pid']])->orderBy('type ASC')->all();
         }
         return $leftListArray;
     }
