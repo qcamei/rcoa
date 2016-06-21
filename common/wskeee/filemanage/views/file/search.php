@@ -23,7 +23,11 @@ $this->title =  Yii::t('rcoa/fileManage', 'File Manage Search');
     <?php
         if(empty($fmSearch)) echo '<h3>没有相关数据</h3>';
         foreach ($fmSearch as $value) {
-            echo Html::beginTag('a',['href' => $value->type == FileManage::FM_FILE ? '/filemanage/file/view?id='.$value->id :'/filemanage/file/index?id='.$value->id]);
+            $fileSuffix = pathinfo($value->file_link, PATHINFO_EXTENSION);
+            echo Html::beginTag('a',['href' => 
+                $fileSuffix == 'rar' || $fileSuffix == 'zip' ?
+                    'http://eefile.gzedu.com'.$value->file_link :
+                    ($value->type != FileManage::FM_FOLDER ? '/filemanage/file/view?id='.$value->id :'/filemanage/file/index?id='.$value->id)]);
                 echo Html::img([$value->image]);
                 echo Html::beginTag('p',['style' => 'padding-top: 5px;']).
                      Html::beginTag('span').'名称:'.Html::endTag('span').$value->name.Html::endTag('p');
