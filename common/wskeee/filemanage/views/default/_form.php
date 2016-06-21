@@ -3,6 +3,7 @@
 use common\wskeee\filemanage\FileManageAsset;
 use kartik\widgets\Select2;
 use wskeee\filemanage\models\FileManage;
+use wskeee\filemanage\models\FileManageOwner;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
@@ -16,21 +17,25 @@ use yii\widgets\ActiveForm;
     
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'type')->dropDownList($model->typeName,['prompt'=>'请选择...']) ?>
+    <?= $form->field($model, 'type')->dropDownList($model->typeName) ?>
     
     <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'placeholder' => '请输入目录名称或文档标题...']) ?>
     
-    <?= $form->field($owner, 'owner')->widget(Select2::classname(), [
-        'value' => $model->isNewRecord ?  '' : $ownerValue,
-        'data' => $ownerName,
-        'maintainOrder' => true,
-        'options' => ['placeholder' => '请选择...', 'multiple' => true],
-        'pluginOptions' => [
-            'tags' => false,
-            'maximumInputLength' => 10,
-            'allowClear' => true,
-        ],
-    ]) ?>
+    <?php echo Html::beginTag('div', ['class' => 'form-group field-filemanage-name required']);
+        echo Html::label(Yii::t('rcoa/fileManage', 'Owner'), 'filemanage-name', ['class' => 'control-label']);
+        echo Select2::widget([
+            'data' => $ownerName,
+            'value' => $model->isNewRecord ?  '' : $ownerValue,
+            'name' => 'FileManageOwner[owner][]',
+            'options' => ['placeholder' => '请选择','multiple' => true],
+            'pluginOptions' => [
+                'tags' => true,
+                'allowClear' => true
+            ]
+        ]);
+        echo Html::beginTag('div', ['class' =>'help-block']).Html::endTag('div');
+    echo Html::endTag('div');
+    ?>
     
     <?= $form->field($model, 'pid')->widget(Select2::classname(), [
         'data' => $fmList, 'hideSearch'=>false, 'options' => ['placeholder' => '为根目录时可不选...'],
@@ -81,18 +86,11 @@ use yii\widgets\ActiveForm;
                 $('#files').val('');
             break;
             case 1:
-                $('.field-filemanagedetail-content').fadeOut();
+                $('.field-filemanagedetail-content').fadeIn();
                 $('.field-filemanage-file_link').fadeOut();
-                ue.execCommand('cleardoc');
                 $('#files').val('');
             break;
             case 2:
-                $('.field-filemanagedetail-content').fadeIn();
-                $('.field-filemanage-file_link').fadeOut();
-                //if(ue.getContent() == null) 
-                $('#files').val('');
-            break;
-            case 3:
                 $('.field-filemanage-file_link').fadeIn();
                 $('.field-filemanagedetail-content').fadeOut();
                 ue.execCommand('cleardoc');
@@ -101,11 +99,11 @@ use yii\widgets\ActiveForm;
     }
     
     $('#submit').click(function(){
-        if(myselect.selectedIndex == 2 && !ue.hasContents()){
+        if(myselect.selectedIndex == 1 && !ue.hasContents()){
             alert('内容不能为空');
             return false;
         }
-        if(myselect.selectedIndex == 3 && $('#files').val() == ''){
+        if(myselect.selectedIndex == 2 && $('#files').val() == ''){
             alert('附件链接不能为空');
             return false;
         }

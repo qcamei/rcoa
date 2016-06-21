@@ -12,10 +12,6 @@ and open the template in the editor.
     padding: 50px 5px 0px !important;
 }
 
-/*.active {
-    color: #ccc;
-    pointer-events: none;
-}*/
 .disabled {
     color: #ccc  !important;
     pointer-events: none;
