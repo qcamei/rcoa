@@ -133,7 +133,7 @@ class FileController extends Controller
         $fileManage = Yii::$app->get('fileManage');
         return $this->render('search', [
             'keyword' => $keyword,
-            'fmSearch' => $this->findCategories($keyword, 'keyword'),
+            'fmSearch' => $this->findCategories($keyword),
             'fileManage' => $fileManage,
         ]);
     }
@@ -174,9 +174,10 @@ class FileController extends Controller
      * @return type
      * @throws NotFoundHttpException
      */
-    protected function findCategories($keyword, $fieldName = null){
+    protected function findCategories($keyword){
         $model = FileManage::find();
-        $model->FilterWhere(['like', $fieldName, $keyword]);
+        $model->FilterWhere(['like', 'name', $keyword])
+                ->orFilterWhere(['like', 'keyword', $keyword]);
         $data = $model -> all();
         if ($data !== null) {
             return $data;
