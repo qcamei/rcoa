@@ -12,12 +12,8 @@ and open the template in the editor.
     padding: 50px 5px 0px !important;
 }
 
-.active {
-    color: #ccc;
-    pointer-events: none;
-}
 .disabled {
-    color: #ccc;
+    color: #ccc  !important;
     pointer-events: none;
 }
 /** 头部类目 */

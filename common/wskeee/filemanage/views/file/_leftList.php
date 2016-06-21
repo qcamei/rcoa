@@ -18,7 +18,7 @@ echo Html::beginTag('div',['class' => 'cbp-spmenu-vertical']);
                 $fileSuffix == 'rar' || $fileSuffix == 'zip' ?
                     'http://eefile.gzedu.com'.$value->file_link :
                     [$value->type != FileManage::FM_FOLDER ? 'view' :'index', 'id' => $value->id],
-                ['class' => (!isset($get['id'])? null : $get['id']) == $value->id ? 'active course-name' : 'course-name']);
+                ['class' => (!isset($get['id'])? null : $get['id']) == $value->id ? 'disabled course-name' : 'course-name']);
     }
 echo Html::endTag('div');
 

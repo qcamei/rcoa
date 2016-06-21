@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 $fileSuffix == 'rar' || $fileSuffix == 'zip' ?
                                     'http://eefile.gzedu.com'.$value->file_link :
                                     [$value->type != FileManage::FM_FOLDER ? 'view' :'index', 'id' => $value->id] ,
-                                ['class' => (!isset($get['id'])? null : $get['id']) != $value->id ? :'active','title' => $value->name]);
+                                ['class' => (!isset($get['id'])? null : $get['id']) != $value->id ? :'disabled','title' => $value->name]);
                     }
                 ?>
             </div>
