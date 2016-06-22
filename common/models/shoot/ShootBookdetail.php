@@ -6,6 +6,7 @@ use common\models\expert\Expert;
 use common\models\RmsSysData;
 use common\models\shoot\ShootSite;
 use common\models\User;
+use common\wskeee\job\JobManager;
 use Exception;
 use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\FWItem;
@@ -222,7 +223,7 @@ class ShootBookdetail extends ActiveRecord
             $count = ShootAppraiseResult::find()
                     ->where(['b_id'=>$this->id])
                     ->count();
-            /** @var $jobManager JobManager */
+            /* @var $jobManager JobManager */
             $jobManager = Yii::$app->get('jobManager');
             $trans = Yii::$app->db->beginTransaction();
             try
@@ -242,7 +243,7 @@ class ShootBookdetail extends ActiveRecord
                     $this->status = self::STATUS_COMPLETED;
                     \Yii::$app->db->createCommand()->batchInsert(ShootAppraiseResult::tableName(), 
                             ['b_id','u_id','role_name','q_id','value'], $values)->execute();
-                    $jobManager->updateJob(2,$this->id,['progress'=> 100, 'status'=>$this->getStatusName()]); 
+                    $jobManager->updateJob(2,$this->id,['progress'=> 100, 'status'=>$this->getStatusName()]);
                 }  else {
                     $this->status = self::STATUS_BREAK_PROMISE;
                     $jobManager->updateJob(2,$this->id,['progress'=> 100, 'status'=>$this->getStatusName()]); 

@@ -7,6 +7,7 @@ use common\models\shoot\ShootAppraise;
 use common\models\shoot\ShootAppraiseResult;
 use common\models\shoot\ShootAppraiseWork;
 use common\models\shoot\ShootBookdetail;
+use common\wskeee\job\JobManager;
 use wskeee\rbac\RbacName;
 use Yii;
 use yii\filters\AccessControl;
@@ -109,6 +110,7 @@ class AppraiseController extends Controller
         $b_id = $post['b_id'];
         /** 用户id */
         $u_id = \Yii::$app->user->id;
+        /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
         if(!Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_APPRAISE,['job'=>$this->findBookdetail($b_id)]))
             throw new NotAcceptableHttpException("无权限操作！");

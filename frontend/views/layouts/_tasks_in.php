@@ -25,7 +25,9 @@ $system = System::find()->all();
     <?php 
         foreach ($system as $value) {
             $haveReadNotice = Job::find()
-                ->where(['id'=>ArrayHelper::getColumn($notification, 'job_id'),'system_id'=> $value->id])->limit(2)->all();
+                ->where(['id'=>ArrayHelper::getColumn($notification, 'job_id'),'system_id'=> $value->id])
+                ->limit(2)
+                ->all();
             if(empty($haveReadNotice)) continue;
             echo '<li>';
             echo '<p>【'.$value->name.'】</p>';    

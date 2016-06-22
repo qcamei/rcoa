@@ -185,7 +185,7 @@ class BookdetailController extends Controller
         //设置用户对通知已读
         $jobManager->setNotificationHasReady(2,Yii::$app->user->id,$id);  
         
-        if($model->status == $model::STATUS_COMPLETED || $model->status == $model::STATUS_BREAK_PROMISE || $model->status == $model::STATUS_CANCEL)
+        if(!$model->getIsAssign() || !$model->getIsAppraise())
             //取消用户与任务通知的关联
             $jobManager->cancelNotification(2, $model->id, Yii::$app->user->id);  
         
@@ -219,6 +219,8 @@ class BookdetailController extends Controller
     {
         $post = Yii::$app->getRequest()->getBodyParams();
         $model = $this->findModel($id);
+        if(!$model->canAssign() && !$model->getIsAssign())
+            throw new NotAcceptableHttpException('该任务'.$model->getStatusName());
         /* @var $bookdetailTool BookdetailTool */
         $bookdetailTool = Yii::$app->get('bookdetailTool');
         $oldShootMan = $model->u_shoot_man;
@@ -247,6 +249,8 @@ class BookdetailController extends Controller
     {
         $post = Yii::$app->getRequest()->getBodyParams();
         $model = $this->findModel($id);
+        if(!$model->canEdit() && !$model->getIsAssign())
+            throw new NotAcceptableHttpException('该任务'.$model->getStatusName());
         /* @var $bookdetailTool BookdetailTool */
         $bookdetailTool = Yii::$app->get('bookdetailTool');
         /** 修改时设置Select2 value值*/
@@ -295,18 +299,16 @@ class BookdetailController extends Controller
         $model = $this->findModel($id);
         /* @var $bookdetailTool BookdetailTool */
         $bookdetailTool = Yii::$app->get('bookdetailTool');
-        if(Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model]))
-        {
-            if(!$model->getIsStatusCancel() && !$model->getIsStatusCompleted()){
-                $model->status =  $model::STATUS_CANCEL;
-                $u_contacter = $this->getShootBookdetailRoleNames($id, RbacName::ROLE_CONTACT);
-                $u_shoot_man = $this->getShootBookdetailRoleNames($id, RbacName::ROLE_SHOOT_MAN);
-                //全并两个数组的值
-                $roleNmaeAll = ArrayHelper::merge($u_contacter, $u_shoot_man);
-                
-                $bookdetailTool->saveCancelTask($model, $roleNmaeAll);
-                
-            } 
+        if(!$model->getIsAssign() && !Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model]))
+            throw new NotAcceptableHttpException('该任务'.$model->getStatusName());
+        else{
+            $model->status =  $model::STATUS_CANCEL;
+            $u_contacter = $this->getShootBookdetailRoleNames($id, RbacName::ROLE_CONTACT);
+            $u_shoot_man = $this->getShootBookdetailRoleNames($id, RbacName::ROLE_SHOOT_MAN);
+            //全并两个数组的值
+            $roleNmaeAll = ArrayHelper::merge($u_contacter, $u_shoot_man);
+
+            $bookdetailTool->saveCancelTask($model, $roleNmaeAll);
         }
         return $this->redirect(['index', 'date' => date('Y-m-d', $model->book_time), 'b_id' => $model->id, 'site'=> $model->site_id]);
     }
