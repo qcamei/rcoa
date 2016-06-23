@@ -228,11 +228,13 @@ class SiteController extends Controller
     
     /**
      * 修改我的属性
-     *
      * @return mixed
      */
     public function actionResetInfo()
     {
+        if (\Yii::$app->user->isGuest) 
+            return $this->goHome();
+        
         $model = User::findOne(Yii::$app->user->id);
         $model->scenario = User::SCENARIO_UPDATE;
         if($model->load(Yii::$app->getRequest()->post()))
