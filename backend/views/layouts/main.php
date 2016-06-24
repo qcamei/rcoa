@@ -100,6 +100,11 @@ AppAsset::register($this);
                 ['label' => '文档详情', 'url' => '/filemanage/detail'],
             ],
         ];
+        $menuItems[] = [
+            'label' => '团队管理',
+            'url' => '/team/team',
+        ];
+
 
     /*$menuItems[] = [
             'label' => 'Logout (' . Yii::$app->user->identity->username . ')',

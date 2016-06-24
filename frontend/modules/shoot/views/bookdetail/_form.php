@@ -154,23 +154,25 @@ use yii\widgets\ActiveForm;
 </div>
 <?php
   
- $js =   
+$js =   
 <<<JS
-   $(document).ready(function(){ 
-        var htmlImg = '<div class="form-group"><label class="col-lg-1 col-md-1 control-label" style="color: #999999; font-weight: normal;">形象</label><div class="col-lg-10 col-md-10"><div id="img" style="border:2px solid #999999; width:140px; padding:4px;"></div></div></div>';
-        $('#bookdetail-create-form img').before(htmlImg);
-        $('#bookdetail-create-form img').appendTo('#img');
-   }); 
-   $("input:radio").eq(1).attr("checked",true);
+    $(document).ready(function(){ 
+         var htmlImg = '<div class="form-group"><label class="col-lg-1 col-md-1 control-label" style="color: #999999; font-weight: normal;">形象</label><div class="col-lg-10 col-md-10"><div id="img" style="border:2px solid #999999; width:140px; padding:4px;"></div></div></div>';
+         $('#bookdetail-create-form img').before(htmlImg);
+         $('#bookdetail-create-form img').appendTo('#img');
+    }); 
+    var isNewRecord = "$model->isNewRecord";
+    if(isNewRecord)   
+        $("input:radio").eq(1).attr("checked",true);
          
-   $(".select2-selection__rendered li").prev(".select2-selection__choice").eq(0).css({border:"1px solid blue"});
+    $(".select2-selection__rendered li").prev(".select2-selection__choice").eq(0).css({border:"1px solid blue"});
     
 JS;
     $this->registerJs($js,  View::POS_READY); 
 ?> 
 <script type="text/javascript">
     function wx_one(e){
-        console.log($(e).val());
+        //console.log($(e).val());
 	$("#shootbookdetail-fw_course").html("");
 	$("#shootbookdetail-fw_project").html("");
 	$.post("/framework/api/search?id="+$(e).val(),function(data)
@@ -194,7 +196,7 @@ JS;
         });
     }
     function wx_three(e){
-        console.log($(e).val());
+        //console.log($(e).val());
 	$.post("/expert/default/search?id="+$(e).val(),function(data)
         {
             $('#shootbookdetail-teacher_phone').val(data.data.phone);

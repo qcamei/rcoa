@@ -32,6 +32,9 @@ $config = [
         'filemanage' => [
             'class' => 'common\wskeee\filemanage\Module',
         ],
+        'team' => [
+            'class' => 'backend\modules\team\Modul',
+        ],
     ],
 ];
 

@@ -36,8 +36,10 @@ class BookdetailNoticeTool {
         $shootLeaders = $authManager->getItemUsers(RbacName::ROLE_SHOOT_LEADER);
         //所有摄影师组长ee
         $receivers_ee = array_filter(ArrayHelper::getColumn($shootLeaders, 'ee'));
+       
         //所有摄影师组长邮箱地址
         $receivers_mail = array_filter(ArrayHelper::getColumn($shootLeaders, 'email'));
+         //var_dump($receivers_mail);exit;
         //发送ee消息 
         EeManager::sendEeByView($views, $params, $receivers_ee, $subject);
         //发送邮件消息 

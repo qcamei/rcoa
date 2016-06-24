@@ -29,9 +29,9 @@ return [
                 'from' => ['gzedu_reserve@163.com' => '资源中心工作平台']
             ],
             'useFileTransport' => false,
-            'assetManager' => [ 
+            /*'assetManager' => [ 
                 'linkAssets' => false, 
-            ],  
+            ],*/  
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,

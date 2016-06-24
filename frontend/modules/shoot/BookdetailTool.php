@@ -7,10 +7,9 @@ use common\models\shoot\ShootBookdetail;
 use common\models\shoot\ShootBookdetailRoleName;
 use common\models\shoot\ShootHistory;
 use common\wskeee\job\JobManager;
-use frontend\modules\shoot\BookdetailNoticeTool;
 use wskeee\rbac\RbacName;
 use Yii;
-use yii\base\Exception;
+use yii\db\Exception;
 use yii\web\NotFoundHttpException;
 
 /* 
