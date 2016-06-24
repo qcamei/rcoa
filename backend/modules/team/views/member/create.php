@@ -7,7 +7,7 @@ use yii\helpers\Html;
 /* @var $model common\models\team\TeamMember */
 
 $this->title = Yii::t('rcoa/team', 'Create Team Member');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/team', 'Team Members'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/team', 'Teams'), 'url' => ['/teammanage/team/view', 'id' => $model->team_id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="team-member-create">

@@ -37,14 +37,17 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'name',
-            'type',
+            [
+                'attribute' => 'type',
+                'value' => $model->teamType->name,
+            ],
             'des',
         ],
     ]) ?>
     
     <h3>团队成员</h3>
     <p>
-        <?= Html::a('添加成员', ['/teammanage/member/create','team_id'=>$model->id],['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('rcoa/team', 'Create Team Member'), ['/teammanage/member/create','team_id'=>$model->id],['class' => 'btn btn-success']) ?>
     </p>
     
     <?= GridView::widget([
