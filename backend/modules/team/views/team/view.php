@@ -44,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <h3>团队成员</h3>
     <p>
-        <?= Html::a('添加成员', ['/team/member/create','team_id'=>$model->id],['class' => 'btn btn-success']) ?>
+        <?= Html::a('添加成员', ['/teammanage/member/create','team_id'=>$model->id],['class' => 'btn btn-success']) ?>
     </p>
     
     <?= GridView::widget([
@@ -84,7 +84,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'data-pjax' => '0',
                         ];
                         return Html::a('<span class="glyphicon glyphicon-pencil"></span>', 
-                            ['/team/member/update', 'team_id' => $model->team_id, 'u_id' => $model->u_id], $options);
+                            ['/teammanage/member/update', 'team_id' => $model->team_id, 'u_id' => $model->u_id], $options);
                     },
                     'delete' => function ($url, $model, $key) {
                         $options = [
@@ -97,7 +97,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             ]
                         ];
                         return Html::a('<span class="glyphicon glyphicon-trash"></span>', 
-                            ['/team/member/delete', 'team_id' => $model->team_id, 'u_id' => $model->u_id], $options);
+                            ['/teammanage/member/delete', 'team_id' => $model->team_id, 'u_id' => $model->u_id], $options);
                     },       
                 ],
                 'template' => '{update}{delete}',

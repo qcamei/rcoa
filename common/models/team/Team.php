@@ -2,10 +2,10 @@
 
 namespace common\models\team;
 
+use common\models\User;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
-use yii\web\User;
 
 /**
  * This is the model class for table "{{%team}}".
@@ -16,7 +16,7 @@ use yii\web\User;
  * @property string $des    描述
  *
  * @property FrameworkCourseManage[] $frameworkCourseManages    获取课程管理
- * @property TeamType $type     获取团队类型    
+ * @property TeamType $teamType     获取团队类型    
  * @property TeamMember[] $teamMembers     获取团队成员
  * @property User[] $us     获取用户
  */
@@ -65,7 +65,7 @@ class Team extends ActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getType()
+    public function getTeamType()
     {
         return $this->hasOne(TeamType::className(), ['id' => 'type']);
     }

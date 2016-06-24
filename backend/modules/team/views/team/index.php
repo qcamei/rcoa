@@ -28,7 +28,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'name',
-            'type',
+            [
+                'attribute' => 'type',
+                'value' => function($model){
+                    return $model->teamType->name;
+                }
+            ],
             'des',
 
             ['class' => 'yii\grid\ActionColumn'],

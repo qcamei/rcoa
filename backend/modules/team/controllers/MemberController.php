@@ -66,7 +66,7 @@ class MemberController extends Controller
         $model = new TeamMember();
         $model->team_id = Yii::$app->request->queryParams['team_id'];
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['/team/team/view', 'id' => $model->team_id]);
+            return $this->redirect(['/teammanage/team/view', 'id' => $model->team_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -87,7 +87,7 @@ class MemberController extends Controller
         $model = $this->findModel($team_id, $u_id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['/team/team/view', 'id' => $model->team_id]);
+            return $this->redirect(['/teammanage/team/view', 'id' => $model->team_id]);
         } else {
             return $this->render('update', [
                 'model' => $model,

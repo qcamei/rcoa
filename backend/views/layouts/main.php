@@ -102,7 +102,7 @@ AppAsset::register($this);
         ];
         $menuItems[] = [
             'label' => '团队管理',
-            'url' => '/team/team',
+            'url' => '/teammanage/team',
         ];
 
 
