@@ -5,10 +5,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model wskeee\framework\models\Project */
 
-$this->title = 'Update Project: ' . ' ' . $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Projects', 'url' => ['index']];
+$this->title = Yii::t('rcoa/framework', 'Update Project') . '：' . $model->name;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/framework', 'Projects'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = Yii::t('rcoa', 'Update');
 ?>
 <div class="framework-update">
 

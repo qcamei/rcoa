@@ -74,11 +74,13 @@ AppAsset::register($this);
             ]
         ];
         $menuItems[] = [
-            'label' => '项目',
+            'label' => '项目管理',
             'items' => [
-                ['label' => '学院', 'url' => '/framework/college'],
-                ['label' => '项目', 'url' => '/framework/project'],
+                ['label' => '类别', 'url' => '/framework/type'],
+                ['label' => '项目', 'url' => '/framework/college'],
+                ['label' => '子项目', 'url' => '/framework/project'],
                 ['label' => '课程', 'url' => '/framework/course'],
+                ['label' => '阶段', 'url' => '/framework/phase'],
             ]
         ];
         $menuItems[] = [

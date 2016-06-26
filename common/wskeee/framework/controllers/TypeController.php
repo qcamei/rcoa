@@ -1,13 +1,14 @@
 <?php
 
-namespace common\wskeee\framework\controllers;
+namespace wskeee\framework\controllers;
 
-use Yii;
 use wskeee\framework\models\ItemType;
 use wskeee\framework\models\searchs\ItemTypeSearch;
+use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * TypeController implements the CRUD actions for ItemType model.
@@ -21,6 +22,16 @@ class TypeController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
+                ],
+            ],
+             //access验证是否有登录
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
                 ],
             ],
         ];

@@ -8,7 +8,7 @@ use yii\grid\GridView;
 /* @var $model wskeee\framework\models\Project */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => '所有项目', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/framework', 'Projects'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="framework-view">
@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
     
     <p>
-        <?= Html::a('添加课程', 
+        <?= Html::a(Yii::t('rcoa/framework', 'Create Course'), 
                 ['course/create','parent_id'=>$model->id], 
                 ['class' => 'btn btn-success', 'data' => ['method' => 'post']]) ?>
     </p>

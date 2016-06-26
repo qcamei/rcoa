@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel wskeee\framework\models\searchs\CollegeSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = '学院';
+$this->title = Yii::t('rcoa/framework', 'Items');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="college-index">
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('新增', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('rcoa/framework', 'Create Item'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([

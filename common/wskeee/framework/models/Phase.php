@@ -2,7 +2,11 @@
 
 namespace wskeee\framework\models;
 
+use common\models\User;
+use wskeee\framework\models\Link;
 use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%framework_phase}}".
@@ -13,11 +17,10 @@ use Yii;
  * @property integer $progress
  * @property string $create_by
  *
- * @property FrameworkCourseLink[] $frameworkCourseLinks
- * @property FrameworkLink[] $frameworkLinks
+ * @property FrameworkLink[] $links
  * @property User $createBy
  */
-class Phase extends \yii\db\ActiveRecord
+class Phase extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -47,31 +50,23 @@ class Phase extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('rcoa/framework', 'ID'),
-            'name' => Yii::t('rcoa/framework', 'Name'),
+            'name' => Yii::t('rcoa', 'Name'),
             'weights' => Yii::t('rcoa/framework', 'Weights'),
             'progress' => Yii::t('rcoa/framework', 'Progress'),
-            'create_by' => Yii::t('rcoa/framework', 'Create By'),
+            'create_by' => Yii::t('rcoa', 'Create By'),
         ];
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getFrameworkCourseLinks()
+    public function getLinks()
     {
-        return $this->hasMany(FrameworkCourseLink::className(), ['phase_id' => 'id']);
+        return $this->hasMany(Link::className(), ['phase_id' => 'id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getFrameworkLinks()
-    {
-        return $this->hasMany(FrameworkLink::className(), ['phase_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getCreateBy()
     {

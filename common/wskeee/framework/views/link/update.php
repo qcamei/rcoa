@@ -5,12 +5,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model wskeee\framework\models\Link */
 
-$this->title = Yii::t('rcoa/framework', 'Update {modelClass}: ', [
-    'modelClass' => 'Link',
-]) . ' ' . $model->name;
+$this->title = Yii::t('rcoa/framework', 'Update Link') . ': ' . $model->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/framework', 'Links'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = Yii::t('rcoa/framework', 'Update');
+$this->params['breadcrumbs'][] = Yii::t('rcoa', 'Update');
 ?>
 <div class="link-update">
 
@@ -18,6 +16,7 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa/framework', 'Update');
 
     <?= $this->render('_form', [
         'model' => $model,
+        'phases' => $phases,
     ]) ?>
 
 </div>

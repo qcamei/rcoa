@@ -1,11 +1,14 @@
 <?php
 
-use yii\helpers\Html;
+use wskeee\framework\models\searchs\PhaseSearch;
+use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
+use yii\helpers\Html;
+use yii\web\View;
 
-/* @var $this yii\web\View */
-/* @var $searchModel wskeee\framework\models\searchs\PhaseSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $this View */
+/* @var $searchModel PhaseSearch */
+/* @var $dataProvider ActiveDataProvider */
 
 $this->title = Yii::t('rcoa/framework', 'Phases');
 $this->params['breadcrumbs'][] = $this->title;
@@ -23,13 +26,18 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            //['class' => 'yii\grid\SerialColumn'],
 
             'id',
             'name',
             'weights',
             'progress',
-            'create_by',
+            [
+                'attribute' => 'create_by',
+                'value' => function($model){
+                    return $model->createBy->nickname;
+                }
+            ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

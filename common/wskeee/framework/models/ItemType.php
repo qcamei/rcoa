@@ -39,7 +39,7 @@ class ItemType extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('rcoa/framework', 'ID'),
-            'name' => Yii::t('rcoa/framework', 'Name'),
+            'name' => Yii::t('rcoa', 'Name'),
         ];
     }
 

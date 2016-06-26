@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model wskeee\framework\models\Course */
 
-$this->title = '添加课程';
-$this->params['breadcrumbs'][] = ['label' => '所有课程', 'url' => ['index']];
+$this->title = Yii::t('rcoa/framework', 'Create Course');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/framework', 'Courses'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="course-create">

@@ -30,6 +30,7 @@ return [
     'Link' => '链接',
     'Progress' => '进度',
     'Status' => '状态',
+    'Create By' => '创建者',
     'Created At' => '创建于',
     'Updated At' => '更新于',
     'Start Time' => '开始时间',
@@ -56,7 +57,6 @@ return [
     'Update Shoot Bookdetail' => '更新-课程预约拍摄',
     'Shoot Bookdetail Details' => '预约拍摄任务详情',
     //拍摄预约-字段
-    'Lession Time' => '课时',
     'Lession Time' => '课时',
     'Fw College' => '项目',
     'Fw Project' => '子项目',

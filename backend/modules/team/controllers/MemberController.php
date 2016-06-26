@@ -25,6 +25,16 @@ class MemberController extends Controller
                     'delete' => ['post'],
                 ],
             ],
+             //access验证是否有登录
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ],
         ];
     }
 

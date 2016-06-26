@@ -1,13 +1,14 @@
 <?php
 
-namespace common\wskeee\framework\controllers;
+namespace wskeee\framework\controllers;
 
-use Yii;
 use wskeee\framework\models\Phase;
 use wskeee\framework\models\searchs\PhaseSearch;
+use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * PhaseController implements the CRUD actions for Phase model.
@@ -21,6 +22,16 @@ class PhaseController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
+                ],
+            ],
+            //access验证是否有登录
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
                 ],
             ],
         ];
@@ -61,10 +72,12 @@ class PhaseController extends Controller
     public function actionCreate()
     {
         $model = new Phase();
-
+        $model->create_by = \Yii::$app->user->id;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
+            $model->weights = 0.10;
+            $model->progress = 0;
             return $this->render('create', [
                 'model' => $model,
             ]);

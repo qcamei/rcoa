@@ -15,8 +15,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a(Yii::t('rcoa/framework', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('rcoa/framework', 'Delete'), ['delete', 'id' => $model->id], [
+        <?= Html::a(Yii::t('rcoa', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(Yii::t('rcoa', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => Yii::t('rcoa/framework', 'Are you sure you want to delete this item?'),
@@ -29,12 +29,21 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'phase_id',
+            [
+                'attribute' => 'phase_id',
+                'value' => $model->phase->name,
+            ],
             'name',
-            'type',
+            [
+                'attribute' => 'type',
+                'value' => $model->types[$model->type],
+            ],
             'unit',
             'progress',
-            'create_by',
+            [
+                'attribute' => 'type',
+                'value' => $model->createBy->nickname,
+            ],
         ],
     ]) ?>
 

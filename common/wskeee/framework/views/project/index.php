@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel wskeee\framework\models\searchs\ItemSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = '项目';
+$this->title = Yii::t('rcoa/framework', 'Projects');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="framework-index">
@@ -15,9 +15,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
     <?php  //echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <?= Html::a('新增', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <!--<p>
+        <?= Html::a(Yii::t('rcoa/framework', 'Create Project'), ['create'], ['class' => 'btn btn-success']) ?>
+    </p>-->
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,

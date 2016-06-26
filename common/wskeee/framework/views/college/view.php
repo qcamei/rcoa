@@ -8,7 +8,7 @@ use yii\widgets\DetailView;
 /* @var $model wskeee\framework\models\College */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => '所有学院', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/framework', 'Items'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="college-view">
@@ -26,15 +26,15 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
     
     <p>
-        <?= Html::a('添加项目', 
+        <?= Html::a(Yii::t('rcoa/framework', 'Create Project'), 
                 ['project/create','parent_id'=>$model->id], 
-                ['class' => 'btn btn-success', 'data' => ['method' => 'post']]) ?>
+                ['class' => 'btn btn-success'/*, 'data' => ['method' => 'post']*/]) ?>
     </p>
 
     <?=GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            //['class' => 'yii\grid\SerialColumn'],
 
             'name',
             'des',

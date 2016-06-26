@@ -7,7 +7,7 @@ use yii\helpers\Html;
 /* @var $model wskeee\framework\models\Link */
 
 $this->title = Yii::t('rcoa/framework', 'Create Link');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/framework', 'Links'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/framework', 'Phases'), 'url' => ['/framework/phase/view', 'id' => $phaseId]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="link-create">
@@ -16,6 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
+        'phases' => $phases,
     ]) ?>
 
 </div>

@@ -2,24 +2,39 @@
 
 namespace wskeee\framework\models;
 
+use common\models\User;
 use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%framework_link}}".
  *
- * @property integer $id
- * @property integer $phase_id
- * @property string $name
- * @property integer $type
- * @property string $unit
- * @property integer $progress
- * @property string $create_by
+ * @property integer $id        ID
+ * @property integer $phase_id  阶段ID
+ * @property string $name       名称
+ * @property integer $type      类型
+ * @property array $types       类型名称
+ * @property string $unit       单位
+ * @property integer $progress  进度
+ * @property string $create_by  创建者
  *
- * @property User $createBy
- * @property FrameworkPhase $phase
+ * @property User $createBy     获取创建者
+ * @property Phase $phase  获取阶段
+ * @property PhaseLink[] $phaseLinks   
+ * @property Phase[] $phases   获取所有阶段
  */
-class Link extends \yii\db\ActiveRecord
+class Link extends ActiveRecord
 {
+    /** 状态 */
+    const STATUS = 0;
+    /** 数量 */
+    const AMOUNT = 1;
+    /** 类型 */
+    public $types = [
+        self::STATUS => '状态',
+        self::AMOUNT => '数量',
+    ];
     /**
      * @inheritdoc
      */
@@ -34,8 +49,7 @@ class Link extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required'],
-            [['id', 'phase_id', 'type', 'progress'], 'integer'],
+            [['phase_id', 'type', 'progress'], 'integer'],
             [['name'], 'string', 'max' => 255],
             [['unit'], 'string', 'max' => 16],
             [['create_by'], 'string', 'max' => 36]
@@ -50,16 +64,16 @@ class Link extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('rcoa/framework', 'ID'),
             'phase_id' => Yii::t('rcoa/framework', 'Phase ID'),
-            'name' => Yii::t('rcoa/framework', 'Name'),
-            'type' => Yii::t('rcoa/framework', 'Type'),
+            'name' => Yii::t('rcoa', 'Name'),
+            'type' => Yii::t('rcoa', 'Type'),
             'unit' => Yii::t('rcoa/framework', 'Unit'),
             'progress' => Yii::t('rcoa/framework', 'Progress'),
-            'create_by' => Yii::t('rcoa/framework', 'Create By'),
+            'create_by' => Yii::t('rcoa', 'Create By'),
         ];
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getCreateBy()
     {
@@ -67,10 +81,26 @@ class Link extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getPhase()
     {
-        return $this->hasOne(FrameworkPhase::className(), ['id' => 'phase_id']);
+        return $this->hasOne(Phase::className(), ['id' => 'phase_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getPhaseLinks()
+    {
+        return $this->hasMany(PhaseLink::className(), ['link_id' => 'id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getPhases()
+    {
+        return $this->hasMany(Phase::className(), ['id' => 'phases_id'])->viaTable('{{%framework_phase_link}}', ['link_id' => 'id']);
     }
 }

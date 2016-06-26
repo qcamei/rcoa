@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model wskeee\framework\models\Course */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => '所有课程', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/framework', 'Courses'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="course-view">

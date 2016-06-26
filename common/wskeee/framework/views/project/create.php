@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model wskeee\framework\models\Project */
 
-$this->title = '添加项目';
-$this->params['breadcrumbs'][] = ['label' => 'Projects', 'url' => ['index']];
+$this->title = Yii::t('rcoa/framework', 'Create Project');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/framework', 'Items'), 'url' => ['/framework/college/view', 'id' => $model->parent_id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="framework-create">

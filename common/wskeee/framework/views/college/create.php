@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model wskeee\framework\models\College */
 
-$this->title = '创建学院';
-$this->params['breadcrumbs'][] = ['label' => '学院', 'url' => ['index']];
+$this->title = Yii::t('rcoa/framework', 'Create Item');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/framework', 'Items'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="college-create">
