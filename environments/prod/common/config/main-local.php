@@ -64,5 +64,11 @@ return [
         'expert' => [
             'class' => 'frontend\modules\expert\Module'
         ],
+        'filemanage' => [
+            'class' => 'common\wskeee\filemanage\Module',
+        ],
+        'teamwork' => [
+            'class' => 'frontend\modules\teamwork\Module'
+        ],
     ],
 ];

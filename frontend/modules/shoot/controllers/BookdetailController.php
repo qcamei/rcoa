@@ -8,6 +8,7 @@ use common\models\shoot\searchs\ShootBookdetailSearch;
 use common\models\shoot\ShootBookdetail;
 use common\models\shoot\ShootBookdetailRoleName;
 use common\models\shoot\ShootSite;
+use common\wskeee\job\JobManager;
 use frontend\modules\shoot\BookdetailTool;
 use wskeee\framework\FrameworkManager;
 use wskeee\rbac\RbacManager;
@@ -58,10 +59,8 @@ class BookdetailController extends Controller
      */
     public function actionIndex()
     {
-       
         /* @var $fwManager FrameworkManager */
-        $fwManager = \Yii::$app->get('fwManager');
-        
+        $fwManager = Yii::$app->get('fwManager');
         $date = isset(Yii::$app->request->queryParams['date']) ? 
             date('Y-m-d',strtotime(Yii::$app->request->queryParams['date'])) : date('Y-m-d');
         $se = DateUtil::getWeekSE($date);
@@ -87,6 +86,8 @@ class BookdetailController extends Controller
             'prevWeek' => DateUtil::getWeekSE($date,-1)['start'],
             'nextWeek' => DateUtil::getWeekSE($date,1)['start'],
         ]);
+        
+       
     }
 
     /**
@@ -358,22 +359,26 @@ class BookdetailController extends Controller
         }
     }
     
+    /**
+     * 获取项目
+     * @return type
+     */
     protected function getCollegesForSelect()
     {
         /* @var $fwManager FrameworkManager */
-        $fwManager = \Yii::$app->get('fwManager');
+        $fwManager = Yii::$app->get('fwManager');
         return ArrayHelper::map($fwManager->getColleges(), 'id', 'name');
     }
     
     
     /**
-     * 获取项目
+     * 获取子项目
      * @param int $itemId
      */
     protected function getFwItemForSelect($itemId)
     {
         /* @var $fwManager FrameworkManager */
-        $fwManager = \Yii::$app->get('fwManager');
+        $fwManager = Yii::$app->get('fwManager');
         return ArrayHelper::map($fwManager->getChildren($itemId), 'id', 'name');
     }  
     
@@ -384,7 +389,7 @@ class BookdetailController extends Controller
     protected function getRoleToUsers($roleName)
     {
         /* @var $rbacManager RbacManager */
-        $rbacManager = \Yii::$app->authManager;
+        $rbacManager = Yii::$app->authManager;
         return ArrayHelper::map($rbacManager->getItemUsers($roleName), 'id', 'nickname');
     }
     
@@ -532,7 +537,7 @@ class BookdetailController extends Controller
     protected function isRole($roleName)
     {
         /* @var $rbacManager RbacManager */
-        $rbacManager = \Yii::$app->authManager;
+        $rbacManager = Yii::$app->authManager;
         return $rbacManager->isRole($roleName, Yii::$app->user->id);
     }
    

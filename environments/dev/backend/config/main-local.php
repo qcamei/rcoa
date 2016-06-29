@@ -33,7 +33,10 @@ $config = [
             'class' => 'common\wskeee\filemanage\Module',
         ],
         'teammanage' => [
-            'class' => 'backend\modules\team\Modul',
+            'class' => 'backend\modules\team\Module',
+        ],
+        'teamwork' => [
+            'class' => 'backend\modules\teamwork\Module',
         ],
     ],
 ];

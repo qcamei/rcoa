@@ -19,6 +19,7 @@ return [
                         'rcoa/fileManage' => 'fileManage.php',
                         'rcoa/team' => 'team.php',
                         'rcoa/framework' => 'framework.php',
+                        'rcoa/teamwork' => 'teamwork.php',
                     ],
                 ],
                

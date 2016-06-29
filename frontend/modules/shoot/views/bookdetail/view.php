@@ -3,7 +3,6 @@
 use common\models\shoot\ShootBookdetail;
 use wskeee\rbac\RbacName;
 use yii\helpers\Html;
-use yii\grid\GridView;
 use yii\web\View;
 
 /* @var $this View */
@@ -85,32 +84,32 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail Details') . ' : ' . $model->id;
     /** 指派操作*/
     var uShootMan = "$model->u_shoot_man";
     $('#submit').click(function()
-        {
-            if(uShootMan > 0){
-                $('#myModal').modal();
-                $("#myModal .modal-footer #save").click(function(){
-                    var ed = $("#myModal .modal-body input").val();
-                    var se = $(".table #shootbookdetail-u_shoot_man option:selected").val();
-                    if(uShootMan == se)
-                    {
-                        $('#myModal .modal-body').html('<b style="font-size:18px;">请重新选择摄影师</ b>'); //设置内容
-                        $("#myModal .modal-footer #save").remove();   //移出确定
-                    }
-                    else if(ed != '')
-                    {
-                        $('#form-assign-shoot_man input[name="editreason"]').val(ed);
-                        $('#form-assign-shoot_man').submit();
-                    }
-                    else
-                    {
-                        $('#myModal .modal-body').html('<b style="font-size:18px;">编辑原因不能为空</ b>');     //设置内容
-                        $("#myModal .modal-footer #save").remove();   //移除确定
-                    }
-                });
-                return false;
-            }
-            $('#form-assign-shoot_man').submit();
-        });
+    {
+        if(uShootMan > 0){
+            $('#myModal').modal();
+            $("#myModal .modal-footer #save").click(function(){
+                var ed = $("#myModal .modal-body input").val();
+                var se = $(".table #shootbookdetail-u_shoot_man option:selected").val();
+                if(uShootMan == se)
+                {
+                    $('#myModal .modal-body').html('<b style="font-size:18px;">请重新选择摄影师</ b>'); //设置内容
+                    $("#myModal .modal-footer #save").remove();   //移出确定
+                }
+                else if(ed != '')
+                {
+                    $('#form-assign-shoot_man input[name="editreason"]').val(ed);
+                    $('#form-assign-shoot_man').submit();
+                }
+                else
+                {
+                    $('#myModal .modal-body').html('<b style="font-size:18px;">编辑原因不能为空</ b>');     //设置内容
+                    $("#myModal .modal-footer #save").remove();   //移除确定
+                }
+            });
+            return false;
+        }
+        $('#form-assign-shoot_man').submit();
+    });
     /** 取消操作 */        
     $('#cancel').click(function(){
         $('#myModal').modal()

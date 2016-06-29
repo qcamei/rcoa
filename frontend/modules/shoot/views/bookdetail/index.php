@@ -13,6 +13,8 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\View;
 
+
+
 /* @var $this View */
 /* @var $searchModel ShootBookdetailSearch */
 /* @var $dataProvider ActiveDataProvider */
@@ -195,25 +197,26 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail');
     <div class="container">
         <div class="row ">
             <div class="btn btn-default" style="padding: 0px">
-                <?= Html::dropDownList('site', $site, $sites, ['class'=>'form-control','onchange'=>'siteDropDownListChange($(this).val())'])?> 
+                <?= Html::dropDownList('site', $site, $sites, ['class'=>'form-control'])?> 
             </div>
             <div  class="btn btn-default" style="padding: 0px;width: 85px">
                 <?=
-                DatePicker::widget([
-                    'name' => 'check_issue_date',
-                    'type' => DatePicker::TYPE_INPUT,
-                    'value' => date('Y/m',strtotime($date)),
-                    'readonly' => true,
-                    'options' => [
-                        'placeholder' => 'Select issue date ...',
-                        'onchange'=>'dateChange($(this).val())',
-                        ],
-                    'pluginOptions' => [
-                        'format' => 'yyyy/m',
-                        'todayHighlight' => true,
-                        'minViewMode' => 1,
-                    ]
-                ]);
+                    DatePicker::widget([
+                        'id' => 'date',
+                        'name' => 'check_issue_date',
+                        'type' => DatePicker::TYPE_INPUT,
+                        'value' => date('Y/m',strtotime($date)),
+                        'readonly' => true,
+                        'options' => [
+                            'placeholder' => 'Select issue date ...',
+                            //'onchange'=>'dateChange($(this).val())',
+                            ],
+                        'pluginOptions' => [
+                            'format' => 'yyyy/m',
+                            'todayHighlight' => true,
+                            'minViewMode' => 1,
+                        ]
+                    ]);
                 ?>
             </div>
             <?= 
@@ -229,24 +232,31 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail');
 </div>
 
 <?php  
-    $reflashUrl = Yii::$app->urlManager->createAbsoluteUrl(['/shoot/bookdetail/']);
+    $reflashUrl = Yii::$app->urlManager->createAbsoluteUrl(['/shoot/bookdetail/index']);
     $js =
 <<<JS
     var reflashUrl = "$reflashUrl";
     var refdate = "$date";
     var refsite = "$site";
+    $('.form-control').change(function()
+    {
+        siteDropDownListChange($(this).val());
+    });
+    $('#date').change(function()
+    {
+        dateChange($(this).val());
+    }); 
     function siteDropDownListChange(value)
     {  
         location.href = reflashUrl+'?date='+refdate+'&site='+value;
     }
     function dateChange(value)
     {
-         value += '/01';
-         location.href = reflashUrl+'?date='+value+'&site='+refsite;
+        value += '/01';
+        location.href = reflashUrl+'?date='+value+'&site='+refsite;
     }
 JS;
-    ShootAsset::register($this);
-    $this->registerJs($js, View::POS_HEAD);
+    $this->registerJs($js,  View::POS_READY);
 ?> 
 <?php
     ShootAsset::register($this);

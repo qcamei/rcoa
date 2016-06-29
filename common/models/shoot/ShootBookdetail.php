@@ -4,10 +4,12 @@ namespace common\models\shoot;
 
 use common\models\expert\Expert;
 use common\models\RmsSysData;
+use common\models\shoot\ShootAppraise;
+use common\models\shoot\ShootAppraiseResult;
+use common\models\shoot\ShootHistory;
 use common\models\shoot\ShootSite;
 use common\models\User;
 use common\wskeee\job\JobManager;
-use Exception;
 use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\FWItem;
 use wskeee\rbac\RbacName;
@@ -15,6 +17,8 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\db\Exception;
+
 /**
  * This is the model class for table "{{%shoot_bookdetail}}".
  *
@@ -241,7 +245,7 @@ class ShootBookdetail extends ActiveRecord
                             $values[] = [$this->id,$unUserId,$unAppRole,$appraise->q_id,$appraise->value];
                     }
                     $this->status = self::STATUS_COMPLETED;
-                    \Yii::$app->db->createCommand()->batchInsert(ShootAppraiseResult::tableName(), 
+                    Yii::$app->db->createCommand()->batchInsert(ShootAppraiseResult::tableName(), 
                             ['b_id','u_id','role_name','q_id','value'], $values)->execute();
                     $jobManager->updateJob(2,$this->id,['progress'=> 100, 'status'=>$this->getStatusName()]);
                 }  else {

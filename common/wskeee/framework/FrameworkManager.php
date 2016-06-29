@@ -3,11 +3,14 @@ namespace wskeee\framework;
 
 use linslin\yii2\curl\Curl;
 use wskeee\framework\models\FWItem;
+use wskeee\framework\models\Item;
 use Yii;
 use yii\base\Component;
 use yii\base\UserException;
 use yii\caching\Cache;
 use yii\di\Instance;
+
+
 
 /**
  * Description of ProjectManager
@@ -77,7 +80,7 @@ class FrameworkManager extends Component
     }
     
     /**
-     * return array 所有学院数据
+     * return array 所有项目数据
      */
     public function getColleges()
     {   
@@ -92,7 +95,7 @@ class FrameworkManager extends Component
     
     /**
      * 
-     * @return array 所有项目数据
+     * @return array 所有子项目数据
      */
     public function getProjects()
     {
@@ -135,9 +138,10 @@ class FrameworkManager extends Component
      * @return type
      */
     private function getRmsDb(){
-        $rmsdb = Yii::$app->db
+        $rmsdb = Item::find()->all();
+        /*$rmsdb = Yii::$app->db
                 ->createCommand('select PROJECT_SYS_DATA_ID as id, DATA_NAME as `name`, PARENT_ID as parent_id, DATA_TYPE as `level`, CREATE_DATE as created_at from rms_project_sys_data')
-               ->queryAll();
+               ->queryAll();*/
         return $rmsdb;
     }
    

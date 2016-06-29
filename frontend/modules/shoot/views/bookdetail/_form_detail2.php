@@ -13,6 +13,8 @@ use yii\web\View;
 use yii\widgets\ActiveForm;
 use yii\widgets\DetailView;
 
+
+
 /* @var $this View */
 /* @var $model ShootBookdetail */
 

@@ -80,7 +80,7 @@ AppAsset::register($this);
                 ['label' => '项目', 'url' => '/framework/college'],
                 ['label' => '子项目', 'url' => '/framework/project'],
                 ['label' => '课程', 'url' => '/framework/course'],
-                ['label' => '阶段', 'url' => '/framework/phase'],
+                ['label' => '阶段', 'url' => '/teamwork/phase'],
             ]
         ];
         $menuItems[] = [

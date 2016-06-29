@@ -1,4 +1,6 @@
 <?php
+
+use kartik\datecontrol\DateControl;
 return [
     'timeZone' => 'PRC',
     'components' => [
@@ -84,6 +86,7 @@ return [
                 'class' => 'yii\caching\FileCache',
             ]
         ],
+        
     ],
     'modules' => [
         'rbac' => [
@@ -104,5 +107,11 @@ return [
        'filemanage' => [
             'class' => 'common\wskeee\filemanage\Module',
         ],
+       'teamwork' => [
+            'class' => 'frontend\modules\teamwork\Module',
+        ],
+        'datecontrol' =>  [
+            'class' => '\kartik\datecontrol\Module',
+        ]
     ],
 ];

@@ -15,9 +15,9 @@ namespace wskeee\framework\models;
  */
 class FWItem extends \yii\base\Component 
 {
-    /** 学院 */
-    const LEVEL_COLLEGE = 1;
     /** 项目 */
+    const LEVEL_COLLEGE = 1;
+    /** 子项目 */
     const LEVEL_PROJECT = 2;
     /** 课程 */
     const LEVEL_COURSE = 3;
