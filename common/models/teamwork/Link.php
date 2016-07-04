@@ -10,21 +10,25 @@ use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
- * This is the model class for table "{{%teamwork_link}}".
+ * This is the model class for table "{{%teamwork_link_template}}".
  *
- * @property integer $id        ID
- * @property integer $phase_id  阶段ID
- * @property string $name       名称
- * @property integer $type      类型
- * @property array $types       类型名称
- * @property string $unit       单位
- * @property integer $progress  进度
- * @property string $create_by  创建者
+ * @property integer $id            ID
+ * @property integer $phase_id      阶段ID
+ * @property string $name           名称
+ * @property integer $type          类型
+ * @property array $types           类型名称
+ * @property string $unit           单位
+ * @property integer $progress      进度
+ * @property string $create_by      创建者
+ * @property integer $total         总数
+ * @property integer $completed     已完成数
+ * @property integer $index         索引
+ * @property string $is_delete      是否删除
  *
- * @property User $createBy     获取创建者
- * @property Phase $phase  获取阶段
+ * @property User $createBy         获取创建者
+ * @property Phase $phase           获取阶段
  * @property PhaseLink[] $phaseLinks   
- * @property Phase[] $phases   获取所有阶段
+ * @property Phase[] $phases        获取所有阶段
  */
 class Link extends ActiveRecord
 {
@@ -42,7 +46,7 @@ class Link extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%teamwork_link}}';
+        return '{{%teamwork_link_template}}';
     }
 
     /**
@@ -51,9 +55,10 @@ class Link extends ActiveRecord
     public function rules()
     {
         return [
-            [['phase_id', 'type', 'progress'], 'integer'],
+            [['phase_id', 'type', 'progress', 'index', 'total', 'completed'], 'integer'],
             [['name'], 'string', 'max' => 255],
             [['unit'], 'string', 'max' => 16],
+            [['is_delete'], 'string', 'max' => 4],
             [['create_by'], 'string', 'max' => 36]
         ];
     }
@@ -71,6 +76,10 @@ class Link extends ActiveRecord
             'unit' => Yii::t('rcoa/teamwork', 'Unit'),
             'progress' => Yii::t('rcoa/teamwork', 'Progress'),
             'create_by' => Yii::t('rcoa', 'Create By'),
+            'index' => Yii::t('rcoa', 'Index'),
+            'total' => Yii::t('rcoa/teamwork', 'Total'),
+            'completed' => Yii::t('rcoa/teamwork', 'Completed'),
+            'is_delete' => Yii::t('rcoa/teamwork', 'Is Delete'),
         ];
     }
 

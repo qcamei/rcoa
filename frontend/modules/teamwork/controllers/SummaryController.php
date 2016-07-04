@@ -1,61 +1,51 @@
 <?php
 
-namespace backend\modules\teamwork\controllers;
+namespace frontend\modules\teamwork\controllers;
 
-use common\models\teamwork\Phase;
-use common\models\teamwork\searchs\PhaseSearch;
 use Yii;
-use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
+use common\models\teamwork\CourseSummary;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-
-
+use yii\filters\VerbFilter;
 
 /**
- * PhaseController implements the CRUD actions for Phase model.
+ * SummaryController implements the CRUD actions for CourseSummary model.
  */
-class PhaseController extends Controller
+class SummaryController extends Controller
 {
+    /**
+     * @inheritdoc
+     */
     public function behaviors()
     {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['post'],
-                ],
-            ],
-            //access验证是否有登录
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ]
+                    'delete' => ['POST'],
                 ],
             ],
         ];
     }
 
     /**
-     * Lists all Phase models.
+     * Lists all CourseSummary models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new PhaseSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = new ActiveDataProvider([
+            'query' => CourseSummary::find(),
+        ]);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Displays a single Phase model.
+     * Displays a single CourseSummary model.
      * @param integer $id
      * @return mixed
      */
@@ -67,17 +57,18 @@ class PhaseController extends Controller
     }
 
     /**
-     * Creates a new Phase model.
+     * Creates a new CourseSummary model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Phase();
-        $model->loadDefaultValues();
-        $model->create_by = Yii::$app->user->id;
+        $model = new CourseSummary();
+        $params = Yii::$app->request->queryParams;
+        $model->course_id = $params['course_id'];
+        $model->create_time = date('Y-m-d', time());
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['course/view', 'id' => $model->course_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -86,17 +77,18 @@ class PhaseController extends Controller
     }
 
     /**
-     * Updates an existing Phase model.
+     * Updates an existing CourseSummary model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
+    public function actionUpdate($course_id)
     {
-        $model = $this->findModel($id);
-
+        $model = $this->findModel($course_id);
+        $model->course_id = $course_id;
+        $model->create_time = date('Y-m-d', time());
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['course/view', 'id' => $model->course_id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -104,8 +96,20 @@ class PhaseController extends Controller
         }
     }
 
+    public function actionSearch($course_id)
+    {
+        $post = Yii::$app->request->post();
+        
+        $model = CourseSummary::find()->where(['course_id' => $course_id, 'create_time' => $post['create_time']])->one();
+        
+        return $this->redirect(['course/view', 'id' => $course_id],[
+            'model' => $model,
+        ]);
+        
+    }
+
     /**
-     * Deletes an existing Phase model.
+     * Deletes an existing CourseSummary model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -118,15 +122,15 @@ class PhaseController extends Controller
     }
 
     /**
-     * Finds the Phase model based on its primary key value.
+     * Finds the CourseSummary model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Phase the loaded model
+     * @return CourseSummary the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    protected function findModel($course_id)
     {
-        if (($model = Phase::findOne($id)) !== null) {
+        if (($model = CourseSummary::findOne($course_id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

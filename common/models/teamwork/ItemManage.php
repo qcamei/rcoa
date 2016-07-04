@@ -29,6 +29,7 @@ use yii\db\ActiveRecord;
  *
  * @property CourseManage[] $courseManages      获取所有课程
  * @property User $createBy                     获取创建人
+ * @property TeamMember $teamMember             获取获取团队成员
  * @property Item $itemChild                    获取子项目
  * @property Item $item                         获取项目
  * @property ItemType $itemType                 获取项目类别
@@ -84,9 +85,9 @@ class ItemManage extends ActiveRecord
     {
         return [
             'id' => Yii::t('rcoa/teamwork', 'ID'),
-            'item_type_id' => Yii::t('rcoa/teamwork', 'Item Type ID'),
-            'item_id' => Yii::t('rcoa/teamwork', 'Item ID'),
-            'item_child_id' => Yii::t('rcoa/teamwork', 'Item Child ID'),
+            'item_type_id' => Yii::t('rcoa/teamwork', 'Item Type'),
+            'item_id' => Yii::t('rcoa/teamwork', 'Item'),
+            'item_child_id' => Yii::t('rcoa/teamwork', 'Item Child'),
             'create_by' => Yii::t('rcoa', 'Create By'),
             'created_at' => Yii::t('rcoa/teamwork', 'Created At'),
             'forecast_time' => Yii::t('rcoa/teamwork', 'Forecast Time'),
@@ -112,6 +113,14 @@ class ItemManage extends ActiveRecord
     public function getCreateBy()
     {
         return $this->hasOne(User::className(), ['id' => 'create_by']);
+    }
+    
+    /**
+     * @return ActiveQuery
+     */
+    public function getTeamMember()
+    {
+        return $this->hasOne(TeamMember::className(), ['u_id' => 'create_by']);
     }
 
     /**
@@ -161,17 +170,56 @@ class ItemManage extends ActiveRecord
     {
         return $this->status == self::STATUS_CARRY_OUT;
     }
+    
+    /**
+     * 获取状态名称
+     */
+    public function getStatusName()
+    {
+        return $this->statusName[$this->status];
+    }
+    
+    /**
+     * 获取课程时长总和
+     * @return type
+     */
+    public function getCourseLessionTimesSum()
+    {
+        $courses = [];
+        foreach ($this->courseManages as $value) 
+            $courses[] =  $value->lession_time;
+        
+        return $courses;
+    }
 
     /**
-     * 判断当前用户是否为队长
+     * 获取当前用户是否为【队长】
      * @return boolean  true为是
      */
-    public function isLeader()
+    public function getIsLeader()
     {
         //查出成员表里面所有队长
         $isLeader = TeamMember::findAll(['u_id' => \Yii::$app->user->id]);
-        foreach ($isLeader as $value){
-            if($value->is_leader == 'Y')
+        
+        if(!empty($isLeader) || isset($isLeader)){
+            foreach ($isLeader as $value){
+                if($value->is_leader == 'Y')
+                    return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * 获取该条项目下所有课程是否为【完成】状态
+     * @param ItemManage $model
+     * @return boolean  true 为是
+     */
+    public function getIsCoursesStatus()
+    {
+        /* @var $model ItemManage */
+        foreach ($this->courseManages as $value) {
+            if($value->status == self::STATUS_CARRY_OUT)
                 return true;
         }
         return false;

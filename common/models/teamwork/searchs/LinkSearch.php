@@ -17,8 +17,8 @@ class LinkSearch extends Link
     public function rules()
     {
         return [
-            [['id', 'phase_id', 'type', 'progress'], 'integer'],
-            [['name', 'unit', 'create_by'], 'safe'],
+            [['id', 'phase_id', 'type', 'progress', 'total', 'completed', 'index'], 'integer'],
+            [['name', 'unit', 'create_by', 'is_delete'], 'safe'],
         ];
     }
 
@@ -59,11 +59,15 @@ class LinkSearch extends Link
             'phase_id' => $this->phase_id,
             'type' => $this->type,
             'progress' => $this->progress,
+            'index' => $this->index,
+            'total' => $this->total,
+            'completed' => $this->completed,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'unit', $this->unit])
-            ->andFilterWhere(['like', 'create_by', $this->create_by]);
+            ->andFilterWhere(['like', 'create_by', $this->create_by])
+            ->andFilterWhere(['like', 'is_delete', $this->is_delete]);
 
         return $dataProvider;
     }

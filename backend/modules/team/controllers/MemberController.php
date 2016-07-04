@@ -118,7 +118,7 @@ class MemberController extends Controller
     {
         $this->findModel($team_id, $u_id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['team/view','id' => $team_id]);
     }
 
     /**

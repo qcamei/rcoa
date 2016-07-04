@@ -26,7 +26,7 @@ and open the template in the editor.
 /** 
  * 项目列表页样式 
  */
-.footer-item-index .footer-item{
+.footer-item-list .footer-item{
     display: block;
     width: 100px;
     height: 60px;
@@ -36,18 +36,21 @@ and open the template in the editor.
     font-weight: bold;
     color: #000;
 }
-.footer-item-index .footer-item-right{
+.footer-item-list .footer-item-bg{
+    background-color: #ebcccc;
+}
+.footer-item-list .footer-item-right{
     float: right;
     font-weight: initial;
     background-color: #2e6da4 !important;
 }
-.footer-item-index .footer-item img{
+.footer-item-list .footer-item img{
     width: 24px;
     height: 24px;
     margin-top: -5px;
     margin-right: 5px;
 }
-.footer-item-index a:hover, a:focus {
+.footer-item-list a:hover, a:focus {
     background-color: #ebcccc;
     text-decoration: blink;
 }

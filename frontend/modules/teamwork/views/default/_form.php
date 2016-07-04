@@ -69,7 +69,7 @@ use yii\widgets\ActiveForm;
                         ],
                     ],
                 ]);
-            echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']).Html::beginTag('div', ['class' => 'help-block']).Html::endTag('div').Html::endTag('div');
+                echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']).Html::beginTag('div', ['class' => 'help-block']).Html::endTag('div').Html::endTag('div');
             echo Html::endTag('div');
         echo Html::endTag('div');
     ?>

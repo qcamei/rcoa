@@ -86,6 +86,20 @@ $this->params['breadcrumbs'][] = $this->title;
                 }   
             ],
             [
+                'label'=>'总数',
+                'value'=>function($model){
+                    /* @var $model Link */
+                    return $model->total;
+                }   
+            ],
+            [
+                'label'=>'已完成数',
+                'value'=>function($model){
+                    /* @var $model Link */
+                    return $model->completed;
+                }   
+            ],
+            [
                 'label'=>'单位',
                 'value'=>function($model){
                     /* @var $model Link */

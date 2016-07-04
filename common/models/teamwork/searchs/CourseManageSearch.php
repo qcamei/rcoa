@@ -2,14 +2,15 @@
 
 namespace common\models\teamwork\searchs;
 
-use common\models\teamwork\Phase;
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use common\models\teamwork\CourseManage;
 
 /**
- * PhaseSearch represents the model behind the search form about `wskeee\framework\models\Phase`.
+ * CourseManageOwnerSearch represents the model behind the search form about `common\models\teamwork\CourseManage`.
  */
-class PhaseSearch extends Phase
+class CourseManageSearch extends CourseManage
 {
     /**
      * @inheritdoc
@@ -17,9 +18,8 @@ class PhaseSearch extends Phase
     public function rules()
     {
         return [
-            [['id', 'progress', 'index'], 'integer'],
-            [['name', 'create_by', 'is_delete'], 'safe'],
-            [['weights'], 'number'],
+            [['id', 'project_id', 'course_id', 'lession_time', 'created_at', 'progress', 'status'], 'integer'],
+            [['teacher', 'create_by', 'plan_start_time', 'plan_end_time', 'real_carry_out', 'des'], 'safe'],
         ];
     }
 
@@ -41,7 +41,9 @@ class PhaseSearch extends Phase
      */
     public function search($params)
     {
-        $query = Phase::find();
+        $query = CourseManage::find();
+
+        // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -55,16 +57,23 @@ class PhaseSearch extends Phase
             return $dataProvider;
         }
 
+        // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'weights' => $this->weights,
+            'project_id' => $this->project_id,
+            'course_id' => $this->course_id,
+            'lession_time' => $this->lession_time,
+            'created_at' => $this->created_at,
             'progress' => $this->progress,
-            'index' => $this->index,
+            'status' => $this->status,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name])
+        $query->andFilterWhere(['like', 'teacher', $this->teacher])
             ->andFilterWhere(['like', 'create_by', $this->create_by])
-            ->andFilterWhere(['like', 'is_delete', $this->is_delete]);
+            ->andFilterWhere(['like', 'plan_start_time', $this->plan_start_time])
+            ->andFilterWhere(['like', 'plan_end_time', $this->plan_end_time])
+            ->andFilterWhere(['like', 'real_carry_out', $this->real_carry_out])
+            ->andFilterWhere(['like', 'des', $this->des]);
 
         return $dataProvider;
     }

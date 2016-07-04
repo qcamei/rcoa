@@ -27,7 +27,7 @@ use yii\widgets\DetailView;
             ],
             [
                 'attribute' => 'create_by',
-                //'value' => $model->,
+                'value' => $model->teamMember->team->name.' ( '.$model->createBy->nickname.' )',
             ],
             [
                 'attribute' => 'created_at',

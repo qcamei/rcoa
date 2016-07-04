@@ -74,12 +74,12 @@ class LinkController extends Controller
     public function actionCreate()
     {
         $model = new Link();
+        $model->loadDefaultValues();
         $phaseId = Yii::$app->request->queryParams['phase_id'];
         $model->create_by = Yii::$app->user->id;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['/teamwork/phase/view', 'id' => $model->phase_id]);
         } else {
-            $model->progress = 0;
             return $this->render('create', [
                 'model' => $model,
                 'phaseId' => $phaseId,

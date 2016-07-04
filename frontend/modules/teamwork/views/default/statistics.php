@@ -10,3 +10,5 @@
         <code><?= __FILE__ ?></code>
     </p>
 </div>
+
+<?= $this->render('_footer'); ?>

@@ -1,6 +1,6 @@
 <?php
 
-use yii\bootstrap\NavBar;
+use frontend\modules\teamwork\TwAsset;
 use yii\helpers\Html;
 
 /* 
@@ -10,13 +10,31 @@ use yii\helpers\Html;
  */
 ?>
 
-<div class="controlbar" style="height: 60px;padding-top:0px; ">
+<div class="controlbar footer-item-list" style="height: 60px;padding-top:0px; ">
     <div class="container">
-        <?= Html::a(Html::img(['/filedata/image/home_64x64.png']).'主页', 'javascript:;', ['id'=>'submit', 'class' => 'footer-item',]) ?>
-        <?= Html::a(Html::img(['/filedata/image/project_64x64.png']).'项目', ['type', 'id' => ''], ['class' => 'footer-item']) ?>
-        <?= Html::a(Html::img(['/filedata/image/course_64x64.png']).'课程', ['type', 'id' => ''], ['class' => 'footer-item']) ?>
-        <?= Html::a(Html::img(['/filedata/image/statistics_64x64.png']).'统计', ['type', 'id' => ''], ['class' => 'footer-item']) ?>
-        <?= Html::a(Html::img(['/filedata/image/new_64px64.png']).'创建项目', ['type', 'id' => ''], ['class' => 'footer-item footer-item-right']) ?>
-        
+        <?php
+            $controllerId = Yii::$app->controller->id;          //当前控制器
+            $actionId = Yii::$app->controller->action->id;      //当前行为方法
+            echo Html::a(Html::img(['/filedata/image/home_64x64.png']).'主页', ['default/index'], 
+                    ['class' => $controllerId == 'default' &&  $actionId == 'index' 
+                    ? 'footer-item footer-item-bg' : 'footer-item']);
+            
+            echo Html::a(Html::img(['/filedata/image/project_64x64.png']).'项目', ['default/list'],  
+                    ['class' => $actionId == 'list' ? 'footer-item footer-item-bg' : 'footer-item']);
+            
+            echo Html::a(Html::img(['/filedata/image/course_64x64.png']).'课程', ['course/index'], [
+                    'class' => $controllerId == 'course' ? 'footer-item footer-item-bg' : 'footer-item']);
+            
+            echo Html::a(Html::img(['/filedata/image/statistics_64x64.png']).'统计', ['default/statistics'], 
+                    ['class' => $actionId == 'statistics' ? 'footer-item footer-item-bg' : 'footer-item']);
+            
+            if($actionId == 'list')
+                echo Html::a(Html::img(['/filedata/image/new_64px64.png']).'创建项目', ['create'], [
+                    'class' => $model->getIsLeader() ? 'footer-item footer-item-right' : 'footer-item footer-item-right disabled']);
+        ?>
     </div>
 </div>
+
+<?php
+    TwAsset::register($this);
+?>

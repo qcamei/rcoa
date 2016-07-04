@@ -9,13 +9,14 @@ use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
- * This is the model class for table "{{%teamwork_phase}}".
+ * This is the model class for table "{{%teamwork_phase_template}}".
  *
- * @property integer $id
- * @property string $name
- * @property string $weights
- * @property integer $progress
- * @property string $create_by
+ * @property integer $id            ID
+ * @property string $name           名称
+ * @property string $weights        权重
+ * @property integer $progress      进度
+ * @property string $create_by      创建者
+ * @property integer $index         索引
  *
  * @property Link[] $links
  * @property User $createBy
@@ -27,7 +28,7 @@ class Phase extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%teamwork_phase}}';
+        return '{{%teamwork_phase_template}}';
     }
 
     /**
@@ -37,9 +38,10 @@ class Phase extends ActiveRecord
     {
         return [
             [['weights'], 'number'],
-            [['progress'], 'integer'],
+            [['progress', 'index'], 'integer'],
             [['name'], 'string', 'max' => 255],
-            [['create_by'], 'string', 'max' => 36]
+            [['create_by'], 'string', 'max' => 36],
+            [['is_delete'], 'string', 'max' => 4]
         ];
     }
 
@@ -54,6 +56,8 @@ class Phase extends ActiveRecord
             'weights' => Yii::t('rcoa/teamwork', 'Weights'),
             'progress' => Yii::t('rcoa/teamwork', 'Progress'),
             'create_by' => Yii::t('rcoa', 'Create By'),
+            'index' => Yii::t('rcoa', 'Index'),
+            'is_delete' => Yii::t('rcoa', 'Is Delete'),
         ];
     }
 

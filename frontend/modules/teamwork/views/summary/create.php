@@ -1,32 +1,29 @@
 <?php
 
-use common\models\teamwork\ItemManage;
+use common\models\teamwork\CourseSummary;
 use frontend\modules\teamwork\TwAsset;
 use yii\helpers\Html;
 use yii\web\View;
 
 
 /* @var $this View */
-/* @var $model ItemManage */
+/* @var $model CourseSummary */
 
-$this->title = Yii::t('rcoa/teamwork', 'Item Manage');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/teamwork', 'Item Manages'), 'url' => ['index']];
+$this->title = Yii::t('rcoa/teamwork', 'Create Course Summary');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/teamwork', 'Course Summaries'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="title">
     <div class="container">
-        <?= $this->title.': 项目名称' ?>
+        <?= $this->title.'：'.$model->course->course->name ?>
     </div>
 </div>
 
-<div class="container item-manage-create has-title">
+<div class="container course-summary-create has-title">
 
     <?= $this->render('_form', [
         'model' => $model,
-        'itemType' => $itemType,
-        'items' => $items,
-        'itemChilds' => $itemChilds,
     ]) ?>
 
 </div>
@@ -37,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 $model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'),
                 'javascript:;', 
                 ['id'=>'submit', 'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('rcoa', 'Back'), ['list'], ['class' => 'btn btn-default']) ?>
+        <?= Html::a(Yii::t('rcoa', 'Back'), ['course/view', 'id' => $model->course_id], ['class' => 'btn btn-default']) ?>
     </div>
 </div>
 
@@ -46,7 +43,7 @@ $js =
 <<<JS
     $('#submit').click(function()
     {
-        $('#item-manage-form').submit();
+        $('#course-summary-form').submit();
     });
 JS;
     $this->registerJs($js,  View::POS_READY);
