@@ -2,6 +2,7 @@
 
 namespace wskeee\framework\controllers;
 
+use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\Course;
 use wskeee\framework\models\Item;
 use wskeee\framework\models\searchs\ItemSearch;
@@ -77,6 +78,10 @@ class CourseController extends Controller
         $model = new Course();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            /* @var $fwManager FrameworkManager */
+            $fwManager = \Yii::$app->fwManager;
+            $fwManager->invalidateCache();
+            
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             $model->parent_id = Yii::$app->getRequest()->getQueryParam('parent_id');
@@ -99,6 +104,10 @@ class CourseController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            /* @var $fwManager FrameworkManager */
+            $fwManager = \Yii::$app->fwManager;
+            $fwManager->invalidateCache();
+            
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -115,9 +124,14 @@ class CourseController extends Controller
      * @return mixed
      */
     public function actionDelete($id)
-    {
+    {   
+        /* @var $fwManager FrameworkManager */
+        $fwManager = \Yii::$app->fwManager;
+        
         $this->findModel($id)->delete();
-
+ 
+        $fwManager->invalidateCache();
+        
         return $this->redirect(['index']);
     }
 

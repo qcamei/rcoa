@@ -5,6 +5,7 @@ namespace wskeee\framework\controllers;
 use wskeee\framework\models\College;
 use wskeee\framework\models\Item;
 use wskeee\framework\models\searchs\ItemSearch;
+use wskeee\framework\FrameworkManager;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -80,6 +81,9 @@ class CollegeController extends Controller
         $model = new College();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+             /* @var $fwManager FrameworkManager */
+            $fwManager = \Yii::$app->fwManager;
+            $fwManager->invalidateCache();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             $searchModel = new ItemSearch(['level'=>  Item::LEVEL_COLLEGE]);
@@ -101,6 +105,9 @@ class CollegeController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+             /* @var $fwManager FrameworkManager */
+            $fwManager = \Yii::$app->fwManager;
+            $fwManager->invalidateCache();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -117,8 +124,13 @@ class CollegeController extends Controller
      */
     public function actionDelete($id)
     {
+        /* @var $fwManager FrameworkManager */
+        $fwManager = \Yii::$app->fwManager;
+        
         $this->findModel($id)->delete();
-
+        
+        $fwManager->invalidateCache();
+        
         return $this->redirect(['index']);
     }
     

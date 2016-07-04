@@ -2,6 +2,7 @@
 
 namespace wskeee\framework\controllers;
 
+use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\Item;
 use wskeee\framework\models\Project;
 use wskeee\framework\models\searchs\ItemSearch;
@@ -82,6 +83,10 @@ class ProjectController extends Controller
                 
         if ($model->load(Yii::$app->request->post()) && $model->save()) 
         {
+            /* @var $fwManager FrameworkManager */
+            $fwManager = \Yii::$app->fwManager;
+            $fwManager->invalidateCache();
+            
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             
@@ -104,6 +109,10 @@ class ProjectController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            /* @var $fwManager FrameworkManager */
+            $fwManager = \Yii::$app->fwManager;
+            $fwManager->invalidateCache();
+            
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -121,8 +130,13 @@ class ProjectController extends Controller
      */
     public function actionDelete($id)
     {
+        /* @var $fwManager FrameworkManager */
+        $fwManager = \Yii::$app->fwManager;
+
         $this->findModel($id)->delete();
 
+        $fwManager->invalidateCache();
+        
         return $this->redirect(['index']);
     }
 

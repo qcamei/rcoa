@@ -56,6 +56,7 @@ return [
             'url'=>'http://rcoaadmin.tt.gzedu.net/framework/api/list',
             'cache' => [
                 'class' => 'yii\caching\FileCache',
+                'cachePath' => dirname(dirname(__DIR__)) . '/frontend/runtime/cache'
             ]
         ],
         'jobManager'=>[

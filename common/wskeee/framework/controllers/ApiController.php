@@ -84,4 +84,13 @@ class ApiController extends Controller
             'error' => $errors
         ];
     }
+    
+    /**
+     * 手动清取项目缓存数据
+     */
+    public function actionClearCache(){
+        /* @var $fwManager FrameworkManager */
+        $fwManager = \Yii::$app->fwManager;
+        $fwManager->invalidateCache();
+    }
 }
