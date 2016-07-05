@@ -78,23 +78,26 @@ class ItemActBtnCol extends ItemListTd {
         /* @var $model CourseManage */
         else if (!empty($model) && $controllerId == 'course' && $actionId == 'index') {
             $url = [
+                'view' => 'view',
                 'deploy' => 'link-list',
                 'progress' => 'progress-list',
             ];
             $buttonName = [
+                'view' => '查看',
                 'deploy' => '配置',
                 'progress' => '进度',  
             ];
             $params = [
+                'view' => ['id' => $model->id],
                 'deploy' => ['course_id' => $model->id,],
                 'progress' => ['course_id' => $model->id,]
             ];
             $btnClass = [
+               'view' => 'btn btn-primary',
                'deploy' => $model->project->getIsLeader() ? 'btn btn-primary' : 'btn btn-primary disabled',
                'progress' => 'btn btn-primary',
             ];
         }
-        
         foreach ($buttonName as $key => $value) {
             $button[] = Html::a($value, 
                     //如果出现  disabled 样式则删除href 属性,主要是禁用ie浏览器点击
@@ -102,6 +105,7 @@ class ItemActBtnCol extends ItemListTd {
                         'class' => $btnClass[$key], 
                         'role' => "button", 'style' => 'margin-right:4px;']) . '';
         }
+        
         return  implode('',$button);
     }
 }

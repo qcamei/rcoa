@@ -31,3 +31,4 @@ phpunit.phar
 /frontend/web/assets/
 /frontend/modules/teamwork/components/EditItem[[]暂时保留].php
 /frontend/modules/teamwork/components/ItemListGridView[[]暂时保留].php
+/backend/web/assets/

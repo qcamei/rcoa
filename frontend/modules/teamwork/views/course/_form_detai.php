@@ -7,6 +7,13 @@ use yii\widgets\DetailView;
 /* @var $this View */
 /* @var $model CourseManage */
 
+/*$producers = [];
+foreach ($producer as $value) {
+    $producers[] = $value['is_leader'] == 'Y'?
+    '<span style="margin:5px;color:red;">'.$value['nickname'].'(队长)</span>':
+    '<span style="margin:5px;">'.$value['nickname'].'</span>';
+}*/
+
 ?>
 <div class="item-manage-view">
     <?= DetailView::widget([
@@ -74,7 +81,7 @@ use yii\widgets\DetailView;
             [
                 'attribute' => '资源制作人',
                 'format' => 'raw',
-                'value' => implode('', $producer),
+                'value' => empty($producer)? '无' :implode('', $producer),
             ],
         ],
     ]) ?>

@@ -98,19 +98,11 @@ class CourseController extends Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
-        $assignProducer = $this->getAssignProducers(['course_id' => $model->id]);
-        var_dump($assignProducer);exit;
-        $producers = [];
-        foreach ($assignProducer as $key => $producer){
-            $producers[] = $key == \Yii::$app->user->id ? 
-                    '<span style="margin:5px;color:red;">'.$producer.'(队长)</span>'    :
-                    '<span style="margin:5px;">'.$producer.'</span>';
-        }
-       
+        
         return $this->render('view', [
             'model' => $model,
             'statusName' => $this->AgainStatusName($model),
-            'producer' => $producers,
+            'producer' => $this->getAssignProducers($model->id),
         ]);
     }
 
@@ -195,7 +187,7 @@ class CourseController extends Controller
                 'courses' => $this->getCourses($model->project->item_child_id),
                 'teachers' => $this->getExpert(),
                 'producerList' => $this->getTeamMemberList(),
-                'producer' => $this->getAssignProducers(['course_id' => $model->id]),
+                'producer' => $this->getAssignProducers($model->id),
             ]);
         }
         
@@ -335,9 +327,17 @@ class CourseController extends Controller
         $teamMember = TeamMember::find()->where(['u_id' => $u_id])->one();
         $sameTeamMember = TeamMember::find()
                         ->where(['team_id' => $teamMember->team_id])
+                        ->orderBy('is_leader DESC')
                         ->with('u')
                         ->all();
-        return ArrayHelper::map($sameTeamMember, 'u_id','u.nickname');
+        $producers = [];
+        foreach ($sameTeamMember as $key => $producer){
+                /* @var $producer TeamMember */
+                $producers[$producer->u_id] = $producer->is_leader == 'Y' ?
+                        '<span style="margin:5px;color:red;">'.$producer->u->nickname.'(队长)</span>':
+                        '<span style="margin:5px;">'.$producer->u->nickname.'</span>';
+        }
+        return $producers;
     }
     
     /**
@@ -347,16 +347,36 @@ class CourseController extends Controller
      */
     public function getAssignProducers($condition){
         $assignProducers = CourseProducer::find()
-                           ->select(['course_id','is_leader','producer','u_id'])
                            ->where($condition)
                            ->with('producerOne')
-                           ->asArray()
                            ->all();
-                   var_dump($assignProducers);exit;
-        $v = ArrayHelper::multisort($assignProducers, 'is_leader', 'SORT_ASC');
-        var_dump($v);exit;
-        return ;
+        $producers = [];
+        foreach ($assignProducers as $key => $producer){
+                /* @var $producer CourseProducer */
+                $producers[$producer->producer] = $producer->producerOne->is_leader == 'Y'?
+                        '<span style="margin:5px;color:red;">'.$producer->producerOne->u->nickname.'(队长)</span>':
+                        '<span style="margin:5px;">'.$producer->producerOne->u->nickname.'</span>';
+        }
+        return $producers;
     }
+    
+    /**
+     * 获取制作人在页面显示
+     * @param type $course_id 课程ID
+     * @return type
+    
+    public function getDisplayProducers($course_id)
+    {
+         $sql = "SELECT A.course_id,A.producer,B.is_leader,C.nickname   
+                    FROM ccoa_teamwork_course_producer as A  
+                    LEFT JOIN ccoa_user as C ON A.producer = C.id
+                    LEFT JOIN ccoa_team_member as B ON A.producer = B.u_id
+                    WHERE course_id = $course_id
+                    ORDER BY B.is_leader DESC";  
+                  
+        $assignProducers = CourseProducer::findBySql($sql)->asArray()->all(); 
+        return $assignProducers;
+    } */
 
     /**
      * 重组 $model->statusName 数组
