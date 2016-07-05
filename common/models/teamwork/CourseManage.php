@@ -2,6 +2,8 @@
 
 namespace common\models\teamwork;
 
+use common\models\team\TeamMember;
+use common\models\teamwork\CourseProducer;
 use common\models\teamwork\ItemManage;
 use common\models\User;
 use wskeee\framework\models\Item;
@@ -27,11 +29,14 @@ use yii\db\ActiveRecord;
  * @property integer $status            状态
  * @property string $des                描述
  *
- * @property User $createBy                 获取创建者
- * @property Item $course                   获取课程
- * @property User $speakerTeacher           获取主讲讲师
- * @property ItemManage $project            获取项目
- * @property CourseSummary $courseSummary   获取课程总结
+ * @property User $createBy                     获取创建者
+ * @property Item $course                       获取课程
+ * @property User $speakerTeacher               获取主讲讲师
+ * @property ItemManage $project                获取项目
+ * @property CourseSummary $courseSummary       获取课程总结
+ * @property CoursePhase[] $coursePhases        获取所有阶段
+ * @property CourseLink[] $courseLinks          获取所有环节
+ * @property TeamMember[] $producers            获取所有制作人
  */
 class CourseManage extends ActiveRecord
 {
@@ -88,6 +93,7 @@ class CourseManage extends ActiveRecord
     }
 
     /**
+     * 获取创建者
      * @return ActiveQuery
      */
     public function getCreateBy()
@@ -96,6 +102,7 @@ class CourseManage extends ActiveRecord
     }
 
     /**
+     * 获取课程
      * @return ActiveQuery
      */
     public function getCourse()
@@ -104,14 +111,54 @@ class CourseManage extends ActiveRecord
     }
     
     /**
+     * 获取所有环节
+     * @return ActiveQuery
+     */
+    public function getCourseLinks()
+    {
+        return $this->hasMany(CourseLink::className(), ['course_id' => 'id']);
+    }
+
+    /**
+     * 获取所有阶段
+     * @return ActiveQuery
+     */
+    public function getCoursePhases()
+    {
+        return $this->hasMany(CoursePhase::className(), ['course_id' => 'id']);
+    }
+
+   
+    /**
+     * 获取所有制作人
+     * @return ActiveQuery
+     
+    public function getCourseProducers()
+    {
+        return $this->hasMany(CourseProducer::className(), ['course_id' => 'id']);
+    }*/
+    
+    /**
+     * 获取所有团队成员
+     * @return ActiveQuery
+     */
+    public function getProducers()
+    {
+        return $this->hasMany(TeamMember::className(), ['u_id' => 'producer'])->viaTable('{{%teamwork_course_producer}}', ['course_id' => 'id']);
+    }
+    
+
+    /**
+     * 获取课程总结
      * @return ActiveQuery
      */
     public function getCourseSummary()
     {
         return $this->hasOne(CourseSummary::className(), ['course_id' => 'id']);
     }
-
+    
     /**
+     * 获取主讲讲师
      * @return ActiveQuery
      */
     public function getSpeakerTeacher()
@@ -120,6 +167,7 @@ class CourseManage extends ActiveRecord
     }
 
     /**
+     * 获取项目管理
      * @return ActiveQuery
      */
     public function getProject()

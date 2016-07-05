@@ -26,6 +26,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'courses' => $courses,
         'teachers' => $teachers,
+        'producerList' => $producerList,
+        'producer' => $producer,
     ]) ?>
 
 </div>
@@ -47,6 +49,7 @@ $js =
     {
         $('#course-manage-form').submit();
     });
+    
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>

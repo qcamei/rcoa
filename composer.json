@@ -22,7 +22,8 @@
         "linslin/yii2-curl": "*",
         "kartik-v/yii2-dropdown-x": "*",
         "kartik-v/yii2-date-range": "*",
-        "kartik-v/yii2-datecontrol": "dev-master"
+        "kartik-v/yii2-datecontrol": "dev-master",
+        "kartik-v/yii2-checkbox-x": "*"
         
     },
     "require-dev": {

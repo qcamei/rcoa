@@ -71,8 +71,8 @@ class ItemActBtnCol extends ItemListTd {
                 ]
             ];
             $btnClass = [
-               'update' => $model->project->create_by == \Yii::$app->user->id ? 'btn btn-primary' : 'btn btn-primary disabled',
-               'delete' => $model->project->create_by == \Yii::$app->user->id ? 'btn btn-danger' : 'btn btn-danger disabled'
+               'update' => $model->create_by == \Yii::$app->user->id ? 'btn btn-primary' : 'btn btn-primary disabled',
+               'delete' => $model->create_by == \Yii::$app->user->id ? 'btn btn-danger' : 'btn btn-danger disabled'
             ];
         }
         /* @var $model CourseManage */

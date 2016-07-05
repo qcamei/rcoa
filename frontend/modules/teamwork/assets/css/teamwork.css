@@ -78,3 +78,26 @@ and open the template in the editor.
     width: 80%;
     min-width: 100px;
 }
+
+/*
+ * 课程添加页面样式
+ */
+.producer{
+    display: block;
+    float: left;
+    width: 80px;
+    height: 35px;
+    border: 1px #000 solid;
+    line-height: 35px;
+    text-align: center;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+.producer .delete-icon{
+    background: url("/filedata/image/delete.png") no-repeat;
+    margin-top: -42px;
+    margin-left: 67px;
+    height: 16px;
+    display: block;
+    width: 16px;
+}

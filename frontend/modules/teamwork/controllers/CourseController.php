@@ -3,8 +3,9 @@
 namespace frontend\modules\teamwork\controllers;
 
 use common\models\expert\Expert;
+use common\models\team\TeamMember;
 use common\models\teamwork\CourseManage;
-use common\models\teamwork\CourseSummary;
+use common\models\teamwork\CourseProducer;
 use common\models\teamwork\ItemManage;
 use wskeee\framework\models\Item;
 use Yii;
@@ -97,10 +98,19 @@ class CourseController extends Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
-        
+        $assignProducer = $this->getAssignProducers(['course_id' => $model->id]);
+        var_dump($assignProducer);exit;
+        $producers = [];
+        foreach ($assignProducer as $key => $producer){
+            $producers[] = $key == \Yii::$app->user->id ? 
+                    '<span style="margin:5px;color:red;">'.$producer.'(队长)</span>'    :
+                    '<span style="margin:5px;">'.$producer.'</span>';
+        }
+       
         return $this->render('view', [
             'model' => $model,
             'statusName' => $this->AgainStatusName($model),
+            'producer' => $producers,
         ]);
     }
 
@@ -120,14 +130,28 @@ class CourseController extends Controller
         if(!$model->project->getIsLeader())
             throw new NotAcceptableHttpException('只有队长才可以【添加课程】');
         
-        if ($model->load($post) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load($post)) {
+            /** 开启事务 */
+            $trans = Yii::$app->db->beginTransaction();
+            try
+            {  
+                if($model->save())
+                    $this->saveCourseProducer($model->id, $post['producer']);
+                $trans->commit();  //提交事务
+                Yii::$app->getSession()->setFlash('success','操作成功！');
+                return $this->redirect(['view', 'id' => $model->id]);
+            }catch (Exception $ex) {
+                $trans ->rollBack(); //回滚事务
+                Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
+                $this->render(['create', 'id' => $model->project_id]);
+            }
         } else {
             return $this->render('create', [
                 'model' => $model,
                 'courses' => $this->getCourses($model->project->item_child_id),
                 'teachers' => $this->getExpert(),
-                'teams' => [],
+                'producerList' => $this->getTeamMemberList(),
+                'producer' => $this->getSameTeamMember(\Yii::$app->user->id)
             ]);
         }
     }
@@ -141,19 +165,37 @@ class CourseController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $post = Yii::$app->request->post();
         if(!$model->project->getIsLeader() || $model->create_by !== \Yii::$app->user->id)
             throw new NotAcceptableHttpException('只有队长才可以【编辑】课程 or 该课程隶属于自己');
         
         if(!$model->project->getIsNormal())
             throw new NotAcceptableHttpException('该项目现在状态为：'.$model->project->getStatusName());
         
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load($post)) {
+            /** 开启事务 */
+            $trans = Yii::$app->db->beginTransaction();
+            try
+            {  
+                if($model->save()){
+                    CourseProducer::deleteAll(['course_id' => $model->id]);
+                    $this->saveCourseProducer($model->id, $post['producer']);
+                }
+                $trans->commit();  //提交事务
+                Yii::$app->getSession()->setFlash('success','操作成功！');
+                return $this->redirect(['view', 'id' => $model->id]);
+            }catch (Exception $ex) {
+                $trans ->rollBack(); //回滚事务
+                Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
+                $this->render(['update', 'id' => $model->id]);
+            }
         } else {
             return $this->render('update', [
                 'model' => $model,
                 'courses' => $this->getCourses($model->project->item_child_id),
                 'teachers' => $this->getExpert(),
+                'producerList' => $this->getTeamMemberList(),
+                'producer' => $this->getAssignProducers(['course_id' => $model->id]),
             ]);
         }
         
@@ -224,6 +266,31 @@ class CourseController extends Controller
     }
     
     /**
+     * 保存数据到表里
+     * @param type $course_id  任务id
+     * @param type $post 
+     */
+    public function saveCourseProducer($course_id, $post){
+        $values = [];
+        /** 重组提交的数据为$values数组 */
+        foreach($post as $value)
+        {
+            $values[] = [
+                'course_id' => $course_id,
+                'producer' => $value,
+            ];
+        }
+        
+        /** 添加$values数组到表里 */
+        Yii::$app->db->createCommand()->batchInsert(CourseProducer::tableName(), 
+        [
+            'course_id',
+            'producer',
+        ], $values)->execute();
+    }
+    
+    
+    /**
      * 获取课程
      * @param type $model
      * @return type
@@ -242,9 +309,55 @@ class CourseController extends Controller
         $expert = Expert::find()
                 ->with('user') 
                 ->all();
-         return ArrayHelper::map($expert, 'u_id','user.nickname');
+        return ArrayHelper::map($expert, 'u_id','user.nickname');
     }
     
+    /**
+     * 获取团队成员
+     * @return type
+     */
+    public function getTeamMemberList()
+    {
+        /* @var $model CourseManage */
+        $producers = TeamMember::find()
+                    ->with('u')
+                    ->all();
+        return ArrayHelper::map($producers, 'u_id','u.nickname');
+    }
+    
+    /**
+     * 获取当前用户下的所有团队成员
+     * @param type $u_id    用户ID
+     * @return type
+     */
+    public function getSameTeamMember($u_id)
+    {
+        $teamMember = TeamMember::find()->where(['u_id' => $u_id])->one();
+        $sameTeamMember = TeamMember::find()
+                        ->where(['team_id' => $teamMember->team_id])
+                        ->with('u')
+                        ->all();
+        return ArrayHelper::map($sameTeamMember, 'u_id','u.nickname');
+    }
+    
+    /**
+     * 获取已分配的制作人
+     * @param type $condition   条件
+     * @return type
+     */
+    public function getAssignProducers($condition){
+        $assignProducers = CourseProducer::find()
+                           ->select(['course_id','is_leader','producer','u_id'])
+                           ->where($condition)
+                           ->with('producerOne')
+                           ->asArray()
+                           ->all();
+                   var_dump($assignProducers);exit;
+        $v = ArrayHelper::multisort($assignProducers, 'is_leader', 'SORT_ASC');
+        var_dump($v);exit;
+        return ;
+    }
+
     /**
      * 重组 $model->statusName 数组
      * @param type $model

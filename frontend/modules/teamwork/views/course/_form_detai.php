@@ -71,6 +71,11 @@ use yii\widgets\DetailView;
                 'format' => 'raw',
                 'value' => '<div style="height:65px;">'.$model->des.'</div>',
             ],
+            [
+                'attribute' => '资源制作人',
+                'format' => 'raw',
+                'value' => implode('', $producer),
+            ],
         ],
     ]) ?>
 

@@ -22,4 +22,7 @@ class TwAsset extends AssetBundle
     public $depends = [
         'yii\web\YiiAsset'
     ];
+    public $publishOptions = [
+        'forceCopy' => YII_DEBUG,
+    ];
 }

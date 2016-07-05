@@ -29,16 +29,17 @@ $this->params['breadcrumbs'][] = $this->title;
    <?= $this->render('_form_detai', [
         'model' => $model,
         'statusName' => $statusName,
+        'producer' => $producer,
     ]) ?>
     
     <h4>课程进度总结：</h4>
     <?php
-        /*ActiveForm::begin([
+        ActiveForm::begin([
             'id' => 'form-search_for_summary',
             'action'=>'/teamwork/summary/search?course_id='.$model->id,
-        ]);*/
+        ]);
         echo Html::beginTag('div', ['class' => 'row']);
-           /* echo Html::beginTag('div', ['class' => 'col-sm-4', 'style'=> 'margin-bottom:10px;']).
+            echo Html::beginTag('div', ['class' => 'col-sm-4', 'style'=> 'margin-bottom:10px;']).
                   DateControl::widget([
                     'name' => 'create_time',
                     'value' => empty($model->courseSummary) ? date('Y-m-d', time()) : $model->courseSummary->create_time, 
@@ -53,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'autoclose' => true,
                         ],
                     ],
-                 ]).Html::endTag('div');*/
+                 ]).Html::endTag('div');
             echo Html::beginTag('div', ['class' => 'col-sm-4', 'style'=> 'margin-bottom:10px;']).
                  Html::a('编辑', ['summary/update', 'course_id' => $model->id], ['class' => 'btn btn-primary']).' '.
                  Html::a('新增', ['summary/create', 'course_id' => $model->id], ['class' => 'btn btn-primary']).Html::endTag('div');
@@ -63,7 +64,7 @@ $this->params['breadcrumbs'][] = $this->title;
                  (empty($model->courseSummary)? '':$model->courseSummary->content).
                  Html::endTag('div').Html::endTag('div');
         echo Html::endTag('div');
-        //ActiveForm::end();
+        ActiveForm::end();
     ?>
     
 </div>

@@ -1,6 +1,7 @@
 <?php
 
 use common\models\teamwork\CourseManage;
+use kartik\checkbox\CheckboxX;
 use kartik\datecontrol\DateControl;
 use kartik\widgets\Select2;
 use kartik\widgets\TouchSpin;
@@ -118,9 +119,69 @@ use yii\widgets\ActiveForm;
             echo Html::endTag('div');
         echo Html::endTag('div');
     ?>
-
+    
     <?= $form->field($model, 'des')->textarea(['rows' => 4]) ?>
+    
+    <?php
+        echo Html::beginTag('div', ['class' => 'form-group field-courseproducer-producer has-success']);
+             echo Html::beginTag('label', [
+                 'class' => 'col-lg-1 col-md-1 control-label',
+                 'style' => 'color: #999999; font-weight: normal; padding-left: 0; padding-right: 0;',
+                 'for' => 'courseproducer-producer'
+                ]).'资源制作人'.Html::endTag('label');
+             echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']);
+                     echo Html::img(['/filedata/image/add_list_64.png'], [
+                         'data-toggle' => 'collapse', 
+                         'href' => '#collapseExample', 
+                         'aria-expanded' => 'false',
+                         'aria-controls' => 'collapseExample',
+                         'width' => '48',
+                         'height' => '48']);
+                     echo Html::beginTag('div', ['class' => 'collapse', 'id' => 'collapseExample', ]).
+                            Html::checkboxList('producer', array_keys($producer), $producerList, ['class' => 'well',
+                                'itemOptions' => ['style'=>'margin-left:20px;']]).Html::endTag('div');
+                      echo Html::beginTag('div',['id' => 'display-list', 'style' => 'margin-top:15px;']); 
+                           foreach ($producer as $key => $value)
+                                echo '<span value ="'.$key.'" class="producer img-rounded">'.$value.'<i class="delete-icon"></i></span>';
+                      echo Html::endTag('div');
+             echo Html::endTag('div');           
+             echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']).
+                    Html::beginTag('div', ['class' => 'help-block']).
+                    Html::endTag('div').Html::endTag('div');
+        echo Html::endTag('div');
 
+    ?>
+    
     <?php ActiveForm::end(); ?>
 
 </div>
+
+
+<?php
+$js = 
+<<<JS
+    deleteIcon();
+    function deleteIcon(){    
+        $('.delete-icon').click(function()
+        {
+            var displayValue = $(this).parent().remove().attr("value");
+            $('input[type="checkbox"]').each(function (i,e){
+                if(e.checked == true && e.value == displayValue)
+                    e.checked = false;
+            });
+        });
+    }
+    $('input[type="checkbox"]').change (function (){
+            var val = $(this).val();
+                text = $(this).parent().text();
+                html = '<span value="'+val+'" class="producer img-rounded">'+text+'<i class="delete-icon"></i></span>';
+        $(this).each(function (i,e){
+            if(e.checked == true)
+                $(html).appendTo('#display-list');
+        });  
+        deleteIcon();
+    });
+    
+JS;
+    $this->registerJs($js,  View::POS_READY);
+?>
