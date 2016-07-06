@@ -39,7 +39,20 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'des',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => yii\grid\ActionColumn::className(),
+                'template' => '{view}{update}{delete}',
+                'buttons' => [
+                    'view' => function ($url, $model, $key) {
+                        $options = [
+                            'title' => Yii::t('yii', 'View'),
+                            'aria-label' => Yii::t('yii', 'View'),
+                            'data-pjax' => '0',
+                        ];
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['project/view', 'id' => $key], $options);
+                    }
+                ]
+            ],
         ],
     ]); ?>
 </div>

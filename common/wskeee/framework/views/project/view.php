@@ -38,18 +38,29 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a(Yii::t('rcoa/framework', 'Create Course'), 
                 ['course/create','parent_id'=>$model->id], 
-                ['class' => 'btn btn-success', 'data' => ['method' => 'post']]) ?>
+                ['class' => 'btn btn-success'/*, 'data' => ['method' => 'post']*/]) ?>
     </p>
 
-    <?=GridView::widget([
+    <?=
+    GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
             'name',
             'des',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
+            [
+                'class' => yii\grid\ActionColumn::className(),
+                'template' => '{view}{update}{delete}',
+                'buttons' => [
+                    'view' => function ($url, $model, $key) {
+                        $options = [
+                            'title' => Yii::t('yii', 'View'),
+                            'aria-label' => Yii::t('yii', 'View'),
+                            'data-pjax' => '0',
+                        ];
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['course/view', 'id' => $key], $options);
+                    }
+                ]
+            ]]
+    ]);?>
 </div>

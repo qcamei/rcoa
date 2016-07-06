@@ -157,7 +157,7 @@ class CourseController extends Controller
      */
     protected function getParents()
     {
-        $searchModel = new ItemSearch(['level' => Item::LEVEL_COLLEGE]);
+        $searchModel = new ItemSearch(['level' => Item::LEVEL_PROJECT]);
         $results = $searchModel->search([])->models;
         $parents = ArrayHelper::map($results, 'id', 'name');
         return $parents;
