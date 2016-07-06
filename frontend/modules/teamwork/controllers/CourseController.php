@@ -103,13 +103,16 @@ class CourseController extends Controller
         $post = Yii::$app->request->post();
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
+        $result = empty($post) ? $twTool->getWeek($id, date('Y-m-d', time())) : 
+                    $twTool->getWeek($id, $post['create_time']);
         return $this->render('view', [
             'model' => $model,
             'statusName' => $this->AgainStatusName($model),
             'producer' => $this->getAssignProducers($model->id),
             'create_time' => $this->getSummaryCreateTime(['course_id' => $model->id]),
-            'result' => empty($post) ? null : 
-                    $twTool->getWeek($id, $post['create_time']),
+            'createTime' => empty($result)? null :$result->create_time,
+            'createdAt' => empty($result)? date('Y-m-d H:i', time()) :date('Y-m-d H:i', $result->created_at),
+            'content' => empty($result)? '无' :$result->content,
         ]);
     }
 
@@ -394,7 +397,7 @@ class CourseController extends Controller
     {
         $createTime = CourseSummary::find()
                       ->where($condition)
-                      ->orderBy('create_time desc')
+                      ->orderBy('create_time asc')
                       ->all();
         return ArrayHelper::map($createTime, 'create_time', 'create_time');
     }

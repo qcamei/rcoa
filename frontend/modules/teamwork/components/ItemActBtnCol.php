@@ -38,7 +38,7 @@ class ItemActBtnCol extends ItemListTd {
         if (!empty($model) && $controllerId == 'default' && $actionId == 'list'){
             $url = [
                 'view' => 'view',
-                'course' => '/teamwork/course/index',
+                'course' => 'course/index',
             ];
             $buttonName = [
                 'view' => '查看',
@@ -79,8 +79,8 @@ class ItemActBtnCol extends ItemListTd {
         else if (!empty($model) && $controllerId == 'course' && $actionId == 'index') {
             $url = [
                 'view' => 'view',
-                'deploy' => 'link-list',
-                'progress' => 'progress-list',
+                'deploy' => 'courselink/index',
+                'progress' => 'courselink/progress',
             ];
             $buttonName = [
                 'view' => '查看',

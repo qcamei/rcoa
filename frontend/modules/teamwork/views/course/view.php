@@ -15,7 +15,6 @@ $this->title = Yii::t('rcoa/teamwork', 'Course View');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/teamwork', 'Course Manages'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-$model->courseSummary->course_id = $model->id;
 ?>
 
 <div class="title">
@@ -41,9 +40,10 @@ $model->courseSummary->course_id = $model->id;
     <?= Html::beginTag('div', ['class' => 'col-lg-3 col-md-3 col-sm-4', 'style'=> 'padding:0;margin-bottom:10px;']).
              Select2::widget([
                 'name' => 'create_time',
-                'value' => empty($result) ? $model->courseSummary->create_time : $result->create_time,
+                'value' => array_keys($create_time),
                 'data' => $create_time,
                 'hideSearch' => true,
+                'options' => ['placeholder' => '请选择...'],
                 'pluginEvents' => [
                     'change' => 'function(){ select2Log();}'
                 ]
@@ -54,15 +54,13 @@ $model->courseSummary->course_id = $model->id;
     <?php
         echo Html::beginTag('div', ['class' => 'col-lg-3 col-md-3 col-sm-4', 'style'=> 'margin-bottom:10px;']).
              Html::a('编辑', [
-                'summary/update', 'course_id' => $model->id, 
-                'create_time' => empty($result) ? $model->courseSummary->create_time : $result->create_time,], 
+                'summary/update', 'course_id' => $model->id, 'create_time' => $createTime,], 
                 ['class' => 'btn btn-primary']).' '.
              Html::a('新增', ['summary/create', 'course_id' => $model->id], ['class' => 'btn btn-primary']).Html::endTag('div');
         /* @var $model CourseManage */
         echo Html::beginTag('div', ['class' => 'col-lg-12 col-md-12 col-sm-4', 'style' => 'padding:0']).
-             Html::beginTag('div',['style' => 'width:100%;height:350px;border:1px #ccc solid;color:#ccc;padding:10px']).'<p>时间：'.
-             (!empty($result)? date('Y-m-d H:i', $result->created_at) : date('Y-m-d H:i', $model->courseSummary->created_at)).'</p>'.
-             (!empty($result)? $result->content : $model->courseSummary->content).
+             Html::beginTag('div',['style' => 'width:100%;height:350px;border:1px #ccc solid;color:#ccc;padding:10px']).'<p>时间：'.$createdAt.'</p>'.
+             $content. 
              Html::endTag('div').Html::endTag('div');
     ?>
     

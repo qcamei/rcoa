@@ -100,8 +100,10 @@ class SummaryController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($course_id, $create_time)
+    public function actionUpdate($course_id, $create_time = null)
     {
+        if(empty($create_time))
+            return $this->redirect(['create', 'course_id' => $course_id]);
         $model = $this->findModel($course_id, $create_time);
         if ($model->load(Yii::$app->request->post())) {
             $model->save(false, ['content', 'updated_at']);

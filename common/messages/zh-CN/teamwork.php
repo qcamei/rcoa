@@ -23,6 +23,7 @@ return[
     'Create Course Manage' => '课程添加',
     'Create Course Summary' => '课程总结新增',
     'Update Course Summary' => '课程总结编辑',
+    'Course Links' => '课程配置',
     'Weights' => '权重',
     'Progress' => '进度',
     'Phase ID' => '所属阶段',
