@@ -87,6 +87,13 @@ return [
                 'class' => 'yii\caching\FileCache',
             ]
         ],
+        'twTool'=>[
+            'class'=>'frontend\modules\teamwork\TeamworkTool',
+            //'url'=>'http://rcoaadmin.tt.gzedu.net/framework/api/list',
+            'cache' => [
+                'class' => 'yii\caching\FileCache',
+            ]
+        ],
         
     ],
     'modules' => [

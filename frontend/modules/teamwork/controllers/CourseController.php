@@ -6,7 +6,9 @@ use common\models\expert\Expert;
 use common\models\team\TeamMember;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\CourseProducer;
+use common\models\teamwork\CourseSummary;
 use common\models\teamwork\ItemManage;
+use frontend\modules\teamwork\TeamworkTool;
 use wskeee\framework\models\Item;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -98,11 +100,16 @@ class CourseController extends Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
-        
+        $post = Yii::$app->request->post();
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
         return $this->render('view', [
             'model' => $model,
             'statusName' => $this->AgainStatusName($model),
             'producer' => $this->getAssignProducers($model->id),
+            'create_time' => $this->getSummaryCreateTime(['course_id' => $model->id]),
+            'result' => empty($post) ? null : 
+                    $twTool->getWeek($id, $post['create_time']),
         ]);
     }
 
@@ -211,7 +218,7 @@ class CourseController extends Controller
         }
         $this->redirect(['view', 'id' => $model->id]);
     }
-
+    
     /**
      * Deletes an existing CourseManage model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -377,7 +384,21 @@ class CourseController extends Controller
         $assignProducers = CourseProducer::findBySql($sql)->asArray()->all(); 
         return $assignProducers;
     } */
-
+    
+    /**
+     * 获取总结创建时间
+     * @param type $condition   条件
+     * @return type
+     */
+    public function getSummaryCreateTime($condition)
+    {
+        $createTime = CourseSummary::find()
+                      ->where($condition)
+                      ->orderBy('create_time desc')
+                      ->all();
+        return ArrayHelper::map($createTime, 'create_time', 'create_time');
+    }
+    
     /**
      * 重组 $model->statusName 数组
      * @param type $model
@@ -387,7 +408,6 @@ class CourseController extends Controller
         $statusName = [];
         /* @var $model CourseManage */
         foreach ($model->project->statusName as $key => $value) {
-            //var_dump(array_pop($value));
             $statusName[] = $model->project->statusName[$model->status] == $value ? 
                     '<span style="color:red">'.$value.'</span>' : $value;
         }

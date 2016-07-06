@@ -2,12 +2,14 @@
 
 namespace frontend\modules\teamwork\controllers;
 
-use Yii;
 use common\models\teamwork\CourseSummary;
+use frontend\modules\teamwork\TeamworkTool;
+use Yii;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * SummaryController implements the CRUD actions for CourseSummary model.
@@ -24,6 +26,16 @@ class SummaryController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                ],
+            ],
+             //access验证是否有登录
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
                 ],
             ],
         ];
@@ -67,6 +79,12 @@ class SummaryController extends Controller
         $params = Yii::$app->request->queryParams;
         $model->course_id = $params['course_id'];
         $model->create_time = date('Y-m-d', time());
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
+        $result = $twTool->getWeek($model->course_id, $model->create_time);
+        if(!empty($result))
+            return $this->redirect(['update', 'course_id' => $model->course_id, 'create_time' => $result->create_time]);
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['course/view', 'id' => $model->course_id]);
         } else {
@@ -82,12 +100,11 @@ class SummaryController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($course_id)
+    public function actionUpdate($course_id, $create_time)
     {
-        $model = $this->findModel($course_id);
-        $model->course_id = $course_id;
-        $model->create_time = date('Y-m-d', time());
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $model = $this->findModel($course_id, $create_time);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->save(false, ['content', 'updated_at']);
             return $this->redirect(['course/view', 'id' => $model->course_id]);
         } else {
             return $this->render('update', [
@@ -96,18 +113,22 @@ class SummaryController extends Controller
         }
     }
 
+    /**
+     * 搜索总结在某一时间段的数据
+     * CarryOut an existing ItemManage model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $course_id
+     * @return mixed
+     */
     public function actionSearch($course_id)
     {
         $post = Yii::$app->request->post();
-        
-        $model = CourseSummary::find()->where(['course_id' => $course_id, 'create_time' => $post['create_time']])->one();
-        
-        return $this->redirect(['course/view', 'id' => $course_id],[
-            'model' => $model,
-        ]);
-        
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
+        $result = $twTool->getWeek($course_id, $post['create_time']);
+        return $this->redirect(['course/view', 'id' => $course_id, 'create_time' => $result->create_time]);
     }
-
+    
     /**
      * Deletes an existing CourseSummary model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -128,12 +149,13 @@ class SummaryController extends Controller
      * @return CourseSummary the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($course_id)
+    protected function findModel($course_id, $create_time)
     {
-        if (($model = CourseSummary::findOne($course_id)) !== null) {
+        if (($model = CourseSummary::findOne(['course_id' => $course_id, 'create_time' => $create_time])) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+    
 }

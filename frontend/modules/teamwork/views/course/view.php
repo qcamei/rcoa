@@ -2,7 +2,7 @@
 
 use common\models\teamwork\CourseManage;
 use frontend\modules\teamwork\TwAsset;
-use kartik\datecontrol\DateControl;
+use kartik\widgets\Select2;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
@@ -15,7 +15,7 @@ $this->title = Yii::t('rcoa/teamwork', 'Course View');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/teamwork', 'Course Manages'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-
+$model->courseSummary->course_id = $model->id;
 ?>
 
 <div class="title">
@@ -33,38 +33,37 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
     
     <h4>课程进度总结：</h4>
+    
+    <?php  $form = ActiveForm::begin([
+        'id' => 'form-summary-search',
+    ]) ?>
+    
+    <?= Html::beginTag('div', ['class' => 'col-lg-3 col-md-3 col-sm-4', 'style'=> 'padding:0;margin-bottom:10px;']).
+             Select2::widget([
+                'name' => 'create_time',
+                'value' => empty($result) ? $model->courseSummary->create_time : $result->create_time,
+                'data' => $create_time,
+                'hideSearch' => true,
+                'pluginEvents' => [
+                    'change' => 'function(){ select2Log();}'
+                ]
+             ]).Html::endTag('div'); ?> 
+    
+    <?php ActiveForm::end() ?>
+    
     <?php
-        ActiveForm::begin([
-            'id' => 'form-search_for_summary',
-            'action'=>'/teamwork/summary/search?course_id='.$model->id,
-        ]);
-        echo Html::beginTag('div', ['class' => 'row']);
-            echo Html::beginTag('div', ['class' => 'col-sm-4', 'style'=> 'margin-bottom:10px;']).
-                  DateControl::widget([
-                    'name' => 'create_time',
-                    'value' => empty($model->courseSummary) ? date('Y-m-d', time()) : $model->courseSummary->create_time, 
-                    'type'=> DateControl::FORMAT_DATE,
-                    'displayFormat' => 'yyyy-MM-dd',
-                    'saveFormat' => 'yyyy-MM-dd',
-                    'ajaxConversion'=> true,
-                    'autoWidget' => true,
-                    'readonly' => true,
-                    'options' => [
-                        'pluginOptions' => [
-                            'autoclose' => true,
-                        ],
-                    ],
-                 ]).Html::endTag('div');
-            echo Html::beginTag('div', ['class' => 'col-sm-4', 'style'=> 'margin-bottom:10px;']).
-                 Html::a('编辑', ['summary/update', 'course_id' => $model->id], ['class' => 'btn btn-primary']).' '.
-                 Html::a('新增', ['summary/create', 'course_id' => $model->id], ['class' => 'btn btn-primary']).Html::endTag('div');
-            echo Html::beginTag('div', ['class' => 'col-md-12 col-sm-4']).
-                 Html::beginTag('div',['style' => 'width:100%;height:350px;border:1px #ccc solid;color:#ccc;padding:10px']).
-                 (empty($model->courseSummary)? '' :'<p>时间：'.$model->courseSummary->create_time.'</p>').
-                 (empty($model->courseSummary)? '':$model->courseSummary->content).
-                 Html::endTag('div').Html::endTag('div');
-        echo Html::endTag('div');
-        ActiveForm::end();
+        echo Html::beginTag('div', ['class' => 'col-lg-3 col-md-3 col-sm-4', 'style'=> 'margin-bottom:10px;']).
+             Html::a('编辑', [
+                'summary/update', 'course_id' => $model->id, 
+                'create_time' => empty($result) ? $model->courseSummary->create_time : $result->create_time,], 
+                ['class' => 'btn btn-primary']).' '.
+             Html::a('新增', ['summary/create', 'course_id' => $model->id], ['class' => 'btn btn-primary']).Html::endTag('div');
+        /* @var $model CourseManage */
+        echo Html::beginTag('div', ['class' => 'col-lg-12 col-md-12 col-sm-4', 'style' => 'padding:0']).
+             Html::beginTag('div',['style' => 'width:100%;height:350px;border:1px #ccc solid;color:#ccc;padding:10px']).'<p>时间：'.
+             (!empty($result)? date('Y-m-d H:i', $result->created_at) : date('Y-m-d H:i', $model->courseSummary->created_at)).'</p>'.
+             (!empty($result)? $result->content : $model->courseSummary->content).
+             Html::endTag('div').Html::endTag('div');
     ?>
     
 </div>
@@ -105,13 +104,17 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 $js = 
 <<<JS
-    $('#w0').change(function()
-    {   
-        $('#form-search_for_summary').submit();
-    });
+  
 JS;
     //$this->registerJs($js,  View::POS_READY);
 ?>
+
+<script type="text/javascript">
+    function select2Log(){
+        $("#form-summary-search").submit();
+    } 
+</script>
+
 
 <?php
     TwAsset::register($this);

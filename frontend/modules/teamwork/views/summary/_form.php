@@ -19,6 +19,11 @@ use yii\widgets\ActiveForm;
         ],
     ]) ?>
 
+    <?php
+        if(!$model->isNewRecord)
+            echo '<span style="color:#ccc">时间：'.date('Y-m-d H:i', $model->created_at).'</span>'
+    ?>
+    
     <?= $form->field($model, 'content')->textarea([
         'style' => 'width:100%', 
         'rows' => 23, 

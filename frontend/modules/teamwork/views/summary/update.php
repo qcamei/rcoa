@@ -22,8 +22,6 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa/teamwork', 'Update');
 
 <div class="container course-summary-update has-title">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>

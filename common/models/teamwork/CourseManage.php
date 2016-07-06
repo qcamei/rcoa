@@ -154,7 +154,7 @@ class CourseManage extends ActiveRecord
      */
     public function getCourseSummary()
     {
-        return $this->hasOne(CourseSummary::className(), ['course_id' => 'id']);
+        return $this->hasOne(CourseSummary::className(), ['course_id' => 'id'])->orderBy('create_time desc');
     }
     
     /**
