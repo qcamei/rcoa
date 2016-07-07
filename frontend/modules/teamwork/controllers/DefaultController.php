@@ -85,7 +85,7 @@ class DefaultController extends Controller
         $model = $this->findModel($id);
         return $this->render('view', [
             'model' => $model,
-            'statusName' => $this->AgainStatusName($model),
+            //'statusName' => $this->AgainStatusName($model),
         ]);
     }
 
@@ -268,15 +268,15 @@ class DefaultController extends Controller
      * @param type $model
      * @return type
      */
-    public function AgainStatusName($model){
+    /*public function AgainStatusName($model){
         $statusName = [];
-        /* @var $model ItemManage */
+        /* @var $model ItemManage 
         foreach ($model->statusName as $value) {
             $statusName[] = $model->statusName[$model->status] == $value ? 
                     '<span style="color:red">'.$value.'</span>' : $value;
         }
         return $statusName;
-    }
+    }*/
     
     public function getCourseLessionTimesSum($model)
     {

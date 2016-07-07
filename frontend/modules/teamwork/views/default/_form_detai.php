@@ -42,13 +42,16 @@ use yii\widgets\DetailView;
                 'value' => $model->real_carry_out,
             ],
             [
-                'attribute' => 'progress',
-                'value' => $model->progress.'%',
+                'label' => '当前进度',
+                'format' => 'raw',
+                'value' => '0%',
             ],
             [
                 'attribute' => 'status',
                 'format' => 'raw',
-                'value' => implode(' / ', $statusName),
+                'value' => $model->getIsTimeOut() ? 
+                        '<span style="color:red">'.$model->statusName[$model->status].'</span>' : 
+                        $model->statusName[$model->status],
             ],
             [
                 'attribute' => 'background',

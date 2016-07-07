@@ -2,12 +2,13 @@
 
 namespace frontend\modules\teamwork\controllers;
 
-use Yii;
 use common\models\teamwork\CourseLink;
-use yii\data\ActiveDataProvider;
+use common\models\teamwork\CoursePhase;
+use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * CourselinkController implements the CRUD actions for CourseLink model.
@@ -26,6 +27,16 @@ class CourselinkController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            //access验证是否有登录
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ],
         ];
     }
 
@@ -33,14 +44,27 @@ class CourselinkController extends Controller
      * Lists all CourseLink models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($course_id)
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => CourseLink::find(),
-        ]);
-
+        $coursePhase = CoursePhase::findAll(['course_id' => $course_id, 'is_delete' => 'N']);
+        
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            'coursePhase' => $coursePhase,
+            'course_id' => $course_id
+        ]);
+    }
+    
+    /**
+     * Progress all CourseLink models.
+     * @return mixed
+     */
+    public function actionProgress($course_id)
+    {
+        $coursePhase = CoursePhase::findAll(['course_id' => $course_id, 'is_delete' => 'N']);
+        
+        return $this->render('progress', [
+            'coursePhase' => $coursePhase,
+            'course_id' => $course_id
         ]);
     }
 

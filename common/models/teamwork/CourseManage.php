@@ -25,7 +25,6 @@ use yii\db\ActiveRecord;
  * @property string $plan_start_time    计划开始时间
  * @property string $plan_end_time      计划完成时间
  * @property string $real_carry_out     实际完成时间
- * @property integer $progress          当前进度
  * @property integer $status            状态
  * @property string $des                描述
  *
@@ -62,7 +61,7 @@ class CourseManage extends ActiveRecord
     {
         return [
             [['project_id',  'course_id', 'teacher'], 'required'],
-            [['project_id', 'course_id', 'lession_time', 'created_at', 'progress', 'status'], 'integer'],
+            [['project_id', 'course_id', 'lession_time', 'created_at', 'status'], 'integer'],
             [['teacher', 'create_by'], 'string', 'max' => 36],
             [['plan_start_time', 'plan_end_time', 'real_carry_out'], 'string', 'max' => 60],
             [['plan_start_time', 'plan_end_time'], 'required'],
@@ -86,7 +85,6 @@ class CourseManage extends ActiveRecord
             'plan_start_time' => Yii::t('rcoa/teamwork', 'Plan Start Time'),
             'plan_end_time' => Yii::t('rcoa/teamwork', 'Plan End Time'),
             'real_carry_out' => Yii::t('rcoa/teamwork', 'Real Carry Out'),
-            'progress' => Yii::t('rcoa/teamwork', 'Progress'),
             'status' => Yii::t('rcoa', 'Status'),
             'des' => Yii::t('rcoa/teamwork', 'Des'),
         ];

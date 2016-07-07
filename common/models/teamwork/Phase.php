@@ -14,7 +14,6 @@ use yii\db\ActiveRecord;
  * @property integer $id            ID
  * @property string $name           名称
  * @property string $weights        权重
- * @property integer $progress      进度
  * @property string $create_by      创建者
  * @property integer $index         索引
  *
@@ -38,7 +37,7 @@ class Phase extends ActiveRecord
     {
         return [
             [['weights'], 'number'],
-            [['progress', 'index'], 'integer'],
+            [['index'], 'integer'],
             [['name'], 'string', 'max' => 255],
             [['create_by'], 'string', 'max' => 36],
             [['is_delete'], 'string', 'max' => 4]
@@ -54,7 +53,6 @@ class Phase extends ActiveRecord
             'id' => Yii::t('rcoa/teamwork', 'ID'),
             'name' => Yii::t('rcoa', 'Name'),
             'weights' => Yii::t('rcoa/teamwork', 'Weights'),
-            'progress' => Yii::t('rcoa/teamwork', 'Progress'),
             'create_by' => Yii::t('rcoa', 'Create By'),
             'index' => Yii::t('rcoa', 'Index'),
             'is_delete' => Yii::t('rcoa', 'Is Delete'),

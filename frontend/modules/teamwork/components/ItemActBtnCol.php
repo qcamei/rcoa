@@ -67,7 +67,6 @@ class ItemActBtnCol extends ItemListTd {
                 'update' => ['id' => $model->id,],
                 'delete' => [
                     'id' => $model->id,
-                    //'project_id' => $model->id,
                 ]
             ];
             $btnClass = [
@@ -102,7 +101,7 @@ class ItemActBtnCol extends ItemListTd {
             $button[] = Html::a($value, 
                     //如果出现  disabled 样式则删除href 属性,主要是禁用ie浏览器点击
                     strpos($btnClass[$key],' disabled') ? null : Url::to(ArrayHelper::merge([$url[$key]], $params[$key], $this->params)),[
-                        'class' => $btnClass[$key], 
+                        'class' => $btnClass[$key], 'method' => 'post',
                         'role' => "button", 'style' => 'margin-right:4px;']) . '';
         }
         

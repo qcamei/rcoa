@@ -18,7 +18,6 @@ use yii\db\ActiveRecord;
  * @property integer $type          类型
  * @property array $types           类型名称
  * @property string $unit           单位
- * @property integer $progress      进度
  * @property string $create_by      创建者
  * @property integer $total         总数
  * @property integer $completed     已完成数
@@ -55,7 +54,7 @@ class Link extends ActiveRecord
     public function rules()
     {
         return [
-            [['phase_id', 'type', 'progress', 'index', 'total', 'completed'], 'integer'],
+            [['phase_id', 'type', 'index', 'total', 'completed'], 'integer'],
             [['name'], 'string', 'max' => 255],
             [['unit'], 'string', 'max' => 16],
             [['is_delete'], 'string', 'max' => 4],
@@ -74,7 +73,6 @@ class Link extends ActiveRecord
             'name' => Yii::t('rcoa', 'Name'),
             'type' => Yii::t('rcoa', 'Type'),
             'unit' => Yii::t('rcoa/teamwork', 'Unit'),
-            'progress' => Yii::t('rcoa/teamwork', 'Progress'),
             'create_by' => Yii::t('rcoa', 'Create By'),
             'index' => Yii::t('rcoa', 'Index'),
             'total' => Yii::t('rcoa/teamwork', 'Total'),

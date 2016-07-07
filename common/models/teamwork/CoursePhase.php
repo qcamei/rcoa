@@ -9,16 +9,15 @@ use yii\db\ActiveRecord;
 /**
  * This is the model class for table "{{%teamwork_course_phase}}".
  *
- * @property integer $id
- * @property integer $course_id
- * @property integer $phase_id
- * @property string $weights
- * @property integer $progress
- * @property string $is_delete
+ * @property integer $id            id  
+ * @property integer $course_id     课程ID
+ * @property integer $phase_id      阶段ID
+ * @property string $weights        权重
+ * @property string $is_delete      是否删除
  *
- * @property CourseLink[] $courseLinks
- * @property CourseManage $course
- * @property Phase $phase
+ * @property CourseLink[] $courseLinks  获取所有课程环节
+ * @property CourseManage $course       获取课程
+ * @property Phase $phase               获取阶段
  */
 class CoursePhase extends ActiveRecord
 {
@@ -37,7 +36,7 @@ class CoursePhase extends ActiveRecord
     {
         return [
             [['course_id', 'phase_id'], 'required'],
-            [['course_id', 'phase_id', 'progress'], 'integer'],
+            [['course_id', 'phase_id'], 'integer'],
             [['weights'], 'number'],
             [['is_delete'], 'string', 'max' => 4],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => CourseManage::className(), 'targetAttribute' => ['course_id' => 'id']],
@@ -55,7 +54,6 @@ class CoursePhase extends ActiveRecord
             'course_id' => Yii::t('rcoa/teamwork', 'Course ID'),
             'phase_id' => Yii::t('rcoa/teamwork', 'Phase ID'),
             'weights' => Yii::t('rcoa/teamwork', 'Weights'),
-            'progress' => Yii::t('rcoa/teamwork', 'Progress'),
             'is_delete' => Yii::t('rcoa/teamwork', 'Is Delete'),
         ];
     }
@@ -65,7 +63,8 @@ class CoursePhase extends ActiveRecord
      */
     public function getCourseLinks()
     {
-        return $this->hasMany(CourseLink::className(), ['course_phase_id' => 'id']);
+        return $this->hasMany(CourseLink::className(), ['course_phase_id' => 'phase_id'])
+                ->where(['course_id' => $this->course_id, 'is_delete' => 'N']);
     }
 
     /**

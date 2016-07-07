@@ -17,7 +17,7 @@ class PhaseSearch extends Phase
     public function rules()
     {
         return [
-            [['id', 'progress', 'index'], 'integer'],
+            [['id', 'index'], 'integer'],
             [['name', 'create_by', 'is_delete'], 'safe'],
             [['weights'], 'number'],
         ];
@@ -58,7 +58,6 @@ class PhaseSearch extends Phase
         $query->andFilterWhere([
             'id' => $this->id,
             'weights' => $this->weights,
-            'progress' => $this->progress,
             'index' => $this->index,
         ]);
 

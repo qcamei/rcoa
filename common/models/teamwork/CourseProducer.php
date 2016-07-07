@@ -10,11 +10,11 @@ use yii\db\ActiveRecord;
 /**
  * This is the model class for table "{{%teamwork_course_producer}}".
  *
- * @property integer $course_id
- * @property string $producer
+ * @property integer $course_id     课程ID
+ * @property string $producer       制作人
  *
- * @property TeamMember $producerOne
- * @property CourseManage $course
+ * @property TeamMember $producerOne    获取团队成员
+ * @property CourseManage $course       获取课程
  */
 class CourseProducer extends ActiveRecord
 {

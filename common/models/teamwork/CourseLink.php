@@ -18,7 +18,6 @@ use yii\db\ActiveRecord;
  * @property integer $link_id              环节ID
  * @property integer $total                总数
  * @property integer $completed            已完成数
- * @property integer $progress             进度
  * @property string $is_delete             是否删除
  *
  * @property CourseManage $course          获取课程
@@ -42,7 +41,7 @@ class CourseLink extends ActiveRecord
     {
         return [
             [['course_id', 'course_phase_id', 'link_id'], 'required'],
-            [['course_id', 'course_phase_id', 'link_id', 'total', 'completed', 'progress'], 'integer'],
+            [['course_id', 'course_phase_id', 'link_id', 'total', 'completed'], 'integer'],
             [['is_delete'], 'string', 'max' => 4],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => CourseManage::className(), 'targetAttribute' => ['course_id' => 'id']],
             [['course_phase_id'], 'exist', 'skipOnError' => true, 'targetClass' => CoursePhase::className(), 'targetAttribute' => ['course_phase_id' => 'id']],
@@ -62,7 +61,6 @@ class CourseLink extends ActiveRecord
             'link_id' => Yii::t('rcoa/teamwork', 'Link ID'),
             'total' => Yii::t('rcoa/teamwork', 'Total'),
             'completed' => Yii::t('rcoa/teamwork', 'Completed'),
-            'progress' => Yii::t('rcoa/teamwork', 'Progress'),
             'is_delete' => Yii::t('rcoa/teamwork', 'Is Delete'),
         ];
     }
@@ -77,11 +75,11 @@ class CourseLink extends ActiveRecord
 
     /**
      * @return ActiveQuery
-     */
+     
     public function getCoursePhase()
     {
         return $this->hasOne(CoursePhase::className(), ['id' => 'course_phase_id']);
-    }
+    }*/
 
     /**
      * @return ActiveQuery

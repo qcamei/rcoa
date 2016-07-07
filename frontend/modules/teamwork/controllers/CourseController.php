@@ -107,8 +107,8 @@ class CourseController extends Controller
                     $twTool->getWeek($id, $post['create_time']);
         return $this->render('view', [
             'model' => $model,
-            'statusName' => $this->AgainStatusName($model),
-            'producer' => $this->getAssignProducers($model->id),
+            //'statusName' => $this->AgainStatusName($model),
+            'producer' => $this->getAssignProducers(['course_id' => $model->id]),
             'create_time' => $this->getSummaryCreateTime(['course_id' => $model->id]),
             'createTime' => empty($result)? null :$result->create_time,
             'createdAt' => empty($result)? date('Y-m-d H:i', time()) :date('Y-m-d H:i', $result->created_at),
@@ -123,6 +123,8 @@ class CourseController extends Controller
      */
     public function actionCreate()
     {
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
         $params = Yii::$app->request->queryParams;
         $post = Yii::$app->request->post();
         $model = new CourseManage();
@@ -137,8 +139,11 @@ class CourseController extends Controller
             $trans = Yii::$app->db->beginTransaction();
             try
             {  
-                if($model->save())
+                if($model->save()){
                     $this->saveCourseProducer($model->id, $post['producer']);
+                    $twTool->addCoursePhase($model->id);
+                    $twTool->addCourseLink($model->id);
+                }
                 $trans->commit();  //提交事务
                 Yii::$app->getSession()->setFlash('success','操作成功！');
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -407,9 +412,9 @@ class CourseController extends Controller
      * @param type $model
      * @return type
      */
-    public function AgainStatusName($model){
+    /*public function AgainStatusName($model){
         $statusName = [];
-        /* @var $model CourseManage */
+        /* @var $model CourseManage 
         foreach ($model->project->statusName as $key => $value) {
             $statusName[] = $model->project->statusName[$model->status] == $value ? 
                     '<span style="color:red">'.$value.'</span>' : $value;
@@ -417,5 +422,5 @@ class CourseController extends Controller
         $array_pop = array_pop($statusName);
         unset($array_pop);
         return $statusName;
-    }
+    }*/
 }

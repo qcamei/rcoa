@@ -8,6 +8,9 @@ and open the template in the editor.
     Author     : KiwiUser
 */
 
+/**
+ * 公共部分样式
+ */
 .container.item-manage{
     padding-left: 0px;
     padding-right: 0px;
@@ -21,6 +24,12 @@ and open the template in the editor.
 }
 .controlbar .disabled{
     pointer-events: none;
+}
+.table-list .table-list-progress{
+    height:20px;
+    margin-bottom:5px;
+    border-radius:5px;
+    margin-top: 5px;
 }
 
 /** 
@@ -101,3 +110,8 @@ and open the template in the editor.
     display: block;
     width: 16px;
 }
+
+/**
+ * 课程进度页面样式
+ */
+

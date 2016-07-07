@@ -2,7 +2,12 @@
 
 namespace frontend\modules\teamwork;
 
+use common\models\teamwork\CourseLink;
+use common\models\teamwork\CoursePhase;
 use common\models\teamwork\CourseSummary;
+use common\models\teamwork\Link;
+use common\models\teamwork\Phase;
+use Yii;
 
 /* 
  * To change this license header, choose License Headers in Project Properties.
@@ -30,5 +35,57 @@ class TeamworkTool{
                 ->andWhere('create_time <="'. $now_end.'"')
                 ->one();
         return $result;
+    }
+    
+    /**
+     * 复制Phase表数据到CoursePhase表
+     * @param type $course_id  课程ID
+     */
+    public function addCoursePhase($course_id)
+    {
+        $phase = Phase::find()->all();
+        $values = [];
+        /** 重组提交的数据为$values数组 */
+        foreach($phase as $value)
+        {
+            $values[] = [
+                'course_id' => $course_id,
+                'phase_id' => $value->id,
+            ];
+        }
+        
+        /** 添加$values数组到表里 */
+        Yii::$app->db->createCommand()->batchInsert(CoursePhase::tableName(), 
+        [
+            'course_id',
+            'phase_id',
+        ], $values)->execute();
+    }
+    
+    /**
+     * 复制Link表数据到CourseLink表
+     * @param type $course_id   课程ID
+     */
+    public function addCourseLink($course_id)
+    {
+        $link = Link::find()->all();
+        $values = [];
+        /** 重组提交的数据为$values数组 */
+        foreach($link as $value)
+        {
+            $values[] = [
+                'course_id' => $course_id,
+                'course_phase_id' => $value->phase_id,
+                'link_id' => $value->id,
+            ];
+        }
+        
+        /** 添加$values数组到表里 */
+        Yii::$app->db->createCommand()->batchInsert(CourseLink::tableName(), 
+        [
+            'course_id',
+            'course_phase_id',
+            'link_id'
+        ], $values)->execute();
     }
 }

@@ -17,7 +17,7 @@ class LinkSearch extends Link
     public function rules()
     {
         return [
-            [['id', 'phase_id', 'type', 'progress', 'total', 'completed', 'index'], 'integer'],
+            [['id', 'phase_id', 'type', 'total', 'completed', 'index'], 'integer'],
             [['name', 'unit', 'create_by', 'is_delete'], 'safe'],
         ];
     }
@@ -58,7 +58,6 @@ class LinkSearch extends Link
             'id' => $this->id,
             'phase_id' => $this->phase_id,
             'type' => $this->type,
-            'progress' => $this->progress,
             'index' => $this->index,
             'total' => $this->total,
             'completed' => $this->completed,

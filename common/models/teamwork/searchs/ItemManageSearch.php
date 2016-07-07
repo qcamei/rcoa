@@ -17,7 +17,7 @@ class ItemManageSearch extends ItemManage
     public function rules()
     {
         return [
-            [['id', 'item_type_id', 'item_id', 'item_child_id', 'created_at', 'progress', 'status'], 'integer'],
+            [['id', 'item_type_id', 'item_id', 'item_child_id', 'created_at', 'status'], 'integer'],
             [['create_by', 'forecast_time', 'real_carry_out', 'background', 'use'], 'safe'],
         ];
     }
@@ -60,7 +60,6 @@ class ItemManageSearch extends ItemManage
             'item_id' => $this->item_id,
             'item_child_id' => $this->item_child_id,
             'created_at' => $this->created_at,
-            'progress' => $this->progress,
             'status' => $this->status,
         ]);
 
@@ -81,7 +80,6 @@ class ItemManageSearch extends ItemManage
                             'item_type_id' => $model->item_type_id,
                             'item_id' => $model->item_id,
                             'item_child_id' => $model->item_child_id,
-                            'progress' => $model->progress,
                         ]);
         return $dataProvider;
     }*/

@@ -18,7 +18,7 @@ class CourseManageSearch extends CourseManage
     public function rules()
     {
         return [
-            [['id', 'project_id', 'course_id', 'lession_time', 'created_at', 'progress', 'status'], 'integer'],
+            [['id', 'project_id', 'course_id', 'lession_time', 'created_at', 'status'], 'integer'],
             [['teacher', 'create_by', 'plan_start_time', 'plan_end_time', 'real_carry_out', 'des'], 'safe'],
         ];
     }
@@ -64,7 +64,6 @@ class CourseManageSearch extends CourseManage
             'course_id' => $this->course_id,
             'lession_time' => $this->lession_time,
             'created_at' => $this->created_at,
-            'progress' => $this->progress,
             'status' => $this->status,
         ]);
 

@@ -53,16 +53,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value' => function($model){
                     /* @var $model ItemManage */
-                    return Html::beginTag('div', ['class' => 'progress', 'style' => 'height:20px;margin-bottom:0px;']).
+                    return Html::beginTag('div', ['class' => 'progress table-list-progress']).
                                 Html::beginTag('div', [
                                     'class' => 'progress-bar', 
-                                    'role' => 'progressbar', 
-                                    'aria-valuenow' => $model->progress,
-                                    'aria-valuemin' => '0',
-                                    'aria-valuemax' => '100',
-                                    'style' => 'width:'.$model->progress.'%',
+                                    'style' => 'width:0%',
                                 ]).
-                                $model->progress.'%'.
+                                '0%'.
                                 Html::endTag('div').
                             Html::endTag('div');
                 }

@@ -24,6 +24,7 @@ return[
     'Create Course Summary' => '课程总结新增',
     'Update Course Summary' => '课程总结编辑',
     'Course Links' => '课程配置',
+    'Course Progress' => '课程进度',
     'Weights' => '权重',
     'Progress' => '进度',
     'Phase ID' => '所属阶段',

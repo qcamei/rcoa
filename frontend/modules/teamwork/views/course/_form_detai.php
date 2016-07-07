@@ -65,13 +65,13 @@ foreach ($producer as $value) {
                 'value' => $model->real_carry_out,
             ],
             [
-                'attribute' => 'progress',
-                'value' => $model->progress.'%',
+                'attribute' => '当前进度',
+                'value' => '0%',
             ],
             [
                 'attribute' => 'status',
                 'format' => 'raw',
-                'value' => implode(' / ', $statusName),
+                'value' => $model->project->statusName[$model->status],
             ],
             [
                 'attribute' => 'des',

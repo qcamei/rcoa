@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
    <?= $this->render('_form_detai', [
         'model' => $model,
-        'statusName' => $statusName,
+        //'statusName' => $statusName,
         'producer' => $producer,
     ]) ?>
     
@@ -68,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="controlbar">
     <div class="container">
-        <?= Html::a(Yii::t('rcoa', 'Back'), '', ['class' => 'btn btn-default','onclick'=>'history.go(-1)']) ?>
+        <?= Html::a(Yii::t('rcoa', 'Back'), ['index'], ['class' => 'btn btn-default',/*'onclick'=>'history.go(-1)'*/]) ?>
         <?php
             /**
              * 编辑 按钮显示必须满足以下条件：
@@ -84,9 +84,9 @@ $this->params['breadcrumbs'][] = $this->title;
              * 2、必须是【队长】
              */
             if($model->project->getIsNormal() && $model->project->getIsLeader())    
-                echo Html::a('配置', ['/teamwork/course/link-list', 'course_id' => $model->id], ['class' => 'btn btn-primary']).' ';
+                echo Html::a('配置', ['/teamwork/courselink/index', 'course_id' => $model->id], ['class' => 'btn btn-primary']).' ';
            
-            echo Html::a('进度', ['/teamwork/course/progress-list', 'course_id' => $model->id], ['class' => 'btn btn-primary']).' ';
+            echo Html::a('进度', ['/teamwork/courselink/progress', 'course_id' => $model->id], ['class' => 'btn btn-primary']).' ';
             /**
              * 完成 按钮显示必须满足以下条件：
              * 1、必须是状态为【正常】

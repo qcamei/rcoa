@@ -22,7 +22,6 @@ use yii\db\ActiveRecord;
  * @property integer $created_at        创建时间
  * @property string $forecast_time      预计上线时间
  * @property string $real_carry_out     实际完成时间
- * @property integer $progress          当前进度
  * @property integer $status            状态
  * @property string $background         项目背景
  * @property string $use                项目用途
@@ -71,7 +70,7 @@ class ItemManage extends ActiveRecord
     {
         return [
             [['item_type_id',  'item_id', 'item_child_id'], 'required'],
-            [['item_type_id', 'item_id', 'item_child_id', 'created_at', 'progress', 'status'], 'integer'],
+            [['item_type_id', 'item_id', 'item_child_id', 'created_at', 'status'], 'integer'],
             [['create_by'], 'string', 'max' => 36],
             [['forecast_time', 'real_carry_out'], 'string', 'max' => 60],
             [['background', 'use'], 'string', 'max' => 255]
@@ -92,7 +91,6 @@ class ItemManage extends ActiveRecord
             'created_at' => Yii::t('rcoa/teamwork', 'Created At'),
             'forecast_time' => Yii::t('rcoa/teamwork', 'Forecast Time'),
             'real_carry_out' => Yii::t('rcoa/teamwork', 'Real Carry Out'),
-            'progress' => Yii::t('rcoa/teamwork', 'Now Progress'),
             'status' => Yii::t('rcoa', 'Status'),
             'background' => Yii::t('rcoa/teamwork', 'Background'),
             'use' => Yii::t('rcoa/teamwork', 'Use'),
