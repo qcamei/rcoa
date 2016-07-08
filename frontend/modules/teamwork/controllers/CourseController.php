@@ -56,21 +56,15 @@ class CourseController extends Controller
      */
     public function actionIndex()
     {
-        /* @var $model CourseManage */
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
         $params = Yii::$app->request->queryParams;
-        $model = new CourseManage();
-        if(isset($params['project_id'])){    
-            $dataProvider = new ArrayDataProvider([
-                'allModels' => $this->findItemModel($params['project_id']),
-            ]);
-        }else {
-            $dataProvider = new ActiveDataProvider([
-                'query' => CourseManage::find(),
-            ]);
-        }
-        
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => isset($params['project_id']) ? 
+                        $twTool->getCourseProgress($params['project_id']) :
+                        $twTool->getCourseProgress(),
+        ]);
         return $this->render('index', [
-            'model' => $model,
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -99,15 +93,16 @@ class CourseController extends Controller
      */
     public function actionView($id)
     {
-        $model = $this->findModel($id);
-        $post = Yii::$app->request->post();
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
+        /* @var $model CourseManage */
+        $model = $twTool->getCourseProgressOne($id);
+        
+        $post = Yii::$app->request->post();
         $result = empty($post) ? $twTool->getWeek($id, date('Y-m-d', time())) : 
                     $twTool->getWeek($id, $post['create_time']);
         return $this->render('view', [
             'model' => $model,
-            //'statusName' => $this->AgainStatusName($model),
             'producer' => $this->getAssignProducers(['course_id' => $model->id]),
             'create_time' => $this->getSummaryCreateTime(['course_id' => $model->id]),
             'createTime' => empty($result)? null :$result->create_time,
@@ -176,7 +171,7 @@ class CourseController extends Controller
         if(!$model->project->getIsLeader() || $model->create_by !== \Yii::$app->user->id)
             throw new NotAcceptableHttpException('只有队长才可以【编辑】课程 or 该课程隶属于自己');
         
-        if(!$model->project->getIsNormal())
+        if(!$model->getIsNormal())
             throw new NotAcceptableHttpException('该项目现在状态为：'.$model->project->getStatusName());
         
         if ($model->load($post)) {
@@ -217,12 +212,16 @@ class CourseController extends Controller
      */
     public function actionCarryOut($id)
     {
-        $model = $this->findModel($id);
-        
-        if ($model != null && $model->project->getIsNormal() && $model->project->getIsLeader() && $model->create_by == \Yii::$app->user->id) 
-        {
-            $model->status = ItemManage::STATUS_CARRY_OUT;
-            $model->save();
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
+        /* @var $model CourseManage */
+        $model = $twTool->getCourseProgressOne($id);
+        if($model != null && $model->getIsNormal() && $model->project->getIsLeader()){
+            if ($model->create_by == \Yii::$app->user->id && $model->progress == 1){
+
+                $model->status = ItemManage::STATUS_CARRY_OUT;
+                $model->save();
+            }
         }
         $this->redirect(['view', 'id' => $model->id]);
     }

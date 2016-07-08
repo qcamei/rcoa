@@ -76,14 +76,14 @@ $this->params['breadcrumbs'][] = $this->title;
              * 2、必须是【队长】
              * 3、创建者是自己
              */
-            if($model->project->getIsNormal() && $model->project->getIsLeader() && $model->create_by == Yii::$app->user->id)
+            if($model->getIsNormal() && $model->project->getIsLeader() && $model->create_by == Yii::$app->user->id)
                 echo Html::a('编辑', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']).' ';
             /**
              * 配置 按钮显示必须满足以下条件：
              * 1、必须是状态为【正常】
              * 2、必须是【队长】
              */
-            if($model->project->getIsNormal() && $model->project->getIsLeader())    
+            if($model->getIsNormal() && $model->project->getIsLeader())    
                 echo Html::a('配置', ['/teamwork/courselink/index', 'course_id' => $model->id], ['class' => 'btn btn-primary']).' ';
            
             echo Html::a('进度', ['/teamwork/courselink/progress', 'course_id' => $model->id], ['class' => 'btn btn-primary']).' ';
@@ -93,7 +93,7 @@ $this->params['breadcrumbs'][] = $this->title;
              * 2、必须是【队长】
              * 3、创建者是自己
              */
-            if($model->project->getIsNormal() && $model->project->getIsLeader() && $model->create_by == Yii::$app->user->id)
+            if($model->getIsNormal() && $model->project->getIsLeader() && $model->create_by == Yii::$app->user->id)
                 echo Html::a('完成', ['carry-out', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
         ?>
     </div>

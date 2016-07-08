@@ -27,6 +27,7 @@ use yii\db\ActiveRecord;
  * @property string $real_carry_out     实际完成时间
  * @property integer $status            状态
  * @property string $des                描述
+ * @property integer $progress          进度
  *
  * @property User $createBy                     获取创建者
  * @property Item $course                       获取课程
@@ -39,7 +40,10 @@ use yii\db\ActiveRecord;
  */
 class CourseManage extends ActiveRecord
 {
-   
+    
+    /** 进度 */
+    public $progress;
+    
     /**
      * @inheritdoc
      */
@@ -171,6 +175,22 @@ class CourseManage extends ActiveRecord
     public function getProject()
     {
         return $this->hasOne(ItemManage::className(), ['id' => 'project_id']);
+    }
+    
+    /**
+     * 获取状态是否为【正常】
+     */
+    public function getIsNormal()
+    {
+        return $this->status == ItemManage::STATUS_NORMAL;
+    }
+    
+    /**
+     * 获取状态是否为【完成】
+     */
+    public function getIsCarryOut()
+    {
+        return $this->status == ItemManage::STATUS_CARRY_OUT;
     }
     
 }

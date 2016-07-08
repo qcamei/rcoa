@@ -66,7 +66,7 @@ foreach ($producer as $value) {
             ],
             [
                 'attribute' => '当前进度',
-                'value' => '0%',
+                'value' => (int)($model->progress * 100).'%',
             ],
             [
                 'attribute' => 'status',

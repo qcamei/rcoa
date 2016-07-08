@@ -23,12 +23,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <table class="table table-striped table-list">
         <thead>
             <tr>
-              <th>阶段</th>
-              <th>环节</th>
-              <th>总量</th>
-              <th>已完成</th>
-              <th></th>
-              <th style="width:95px">进度</th>
+              <th style="width:20%">阶段</th>
+              <th style="width:20%">环节</th>
+              <th style="width:20%">总量</th>
+              <th style="width:20%">已完成</th>
+              <th style="width:10%"></th>
+              <th style="width:10%">进度</th>
             </tr>
         </thead>
         <tbody>
@@ -40,11 +40,10 @@ $this->params['breadcrumbs'][] = $this->title;
             <td colspan="2"></td>
             <td>'.Html::beginTag('div', ['class' => 'progress table-list-progress']).
                                 Html::beginTag('div', [
-                                    'class' => 'progress-bar progress-bar-success', //'progress-bar-danger',
-                                    'role' => 'progressbar', 
-                                    'style' => 'width:50%',
+                                    'class' => 'progress-bar progress-bar-danger',
+                                    'style' => 'width:'.(int)($phase->progress * 100).'%',
                                 ]).
-                                '50%'.
+                                (int)($phase->progress * 100).'%'.
                                 Html::endTag('div').
                             Html::endTag('div').'</td>
             </tr>';
@@ -59,10 +58,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 <td></td>
                 <td>'.Html::beginTag('div', ['class' => 'progress table-list-progress']).
                                 Html::beginTag('div', [
-                                    'class' => (($link->completed / $link->total) * 100) != 100 ? 'progress-bar ' : 'progress-bar progress-bar-danger', 
-                                    'style' => 'width:'.(($link->completed / $link->total) * 100).'%',
+                                    'class' => 'progress-bar', 
+                                    'style' => 'width:'.($link->completed / $link->total * 100).'%',
                                 ]).
-                                (($link->completed / $link->total) * 100).'%'.
+                                ($link->completed / $link->total * 100).'%'.
                                 Html::endTag('div').
                             Html::endTag('div').'</td>
                 </tr>';

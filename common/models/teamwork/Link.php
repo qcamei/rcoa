@@ -26,7 +26,6 @@ use yii\db\ActiveRecord;
  *
  * @property User $createBy         获取创建者
  * @property Phase $phase           获取阶段
- * @property PhaseLink[] $phaseLinks   
  * @property Phase[] $phases        获取所有阶段
  */
 class Link extends ActiveRecord
@@ -97,14 +96,7 @@ class Link extends ActiveRecord
         return $this->hasOne(Phase::className(), ['id' => 'phase_id']);
     }
 
-    /**
-     * @return ActiveQuery
-     */
-    public function getPhaseLinks()
-    {
-        return $this->hasMany(PhaseLink::className(), ['link_id' => 'id']);
-    }
-
+   
     /**
      * @return ActiveQuery
      */

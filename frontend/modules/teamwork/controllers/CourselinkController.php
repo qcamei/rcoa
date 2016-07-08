@@ -4,6 +4,7 @@ namespace frontend\modules\teamwork\controllers;
 
 use common\models\teamwork\CourseLink;
 use common\models\teamwork\CoursePhase;
+use frontend\modules\teamwork\TeamworkTool;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -60,11 +61,12 @@ class CourselinkController extends Controller
      */
     public function actionProgress($course_id)
     {
-        $coursePhase = CoursePhase::findAll(['course_id' => $course_id, 'is_delete' => 'N']);
-        
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
+        $coursePhase = $twTool->getCoursePhaseProgress($course_id);
         return $this->render('progress', [
+            'course_id' => $course_id,
             'coursePhase' => $coursePhase,
-            'course_id' => $course_id
         ]);
     }
 

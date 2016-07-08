@@ -1,6 +1,7 @@
 <?php
 
 use common\models\teamwork\CourseManage;
+use frontend\modules\teamwork\TeamworkTool;
 use frontend\modules\teamwork\TwAsset;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
@@ -67,10 +68,18 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
                 'label' => '进度',
-                /*'value'=> function($model){
-                    /* @var $model CourseManage
-                    return $model->project->teamMember->team->name;
-                },*/
+                'format' => 'raw',
+                'value'=> function($model){
+                    /* @var $model CourseManage */
+                    return Html::beginTag('div', ['class' => 'progress table-list-progress']).
+                                Html::beginTag('div', [
+                                    'class' => 'progress-bar progress-bar',
+                                    'style' => 'width:'.(int)($model->progress * 100).'%',
+                                ]).
+                                (int)($model->progress * 100).'%'.
+                                Html::endTag('div').
+                            Html::endTag('div'); 
+                }
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemActBtnCol',

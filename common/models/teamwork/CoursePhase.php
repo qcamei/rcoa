@@ -14,6 +14,7 @@ use yii\db\ActiveRecord;
  * @property integer $phase_id      阶段ID
  * @property string $weights        权重
  * @property string $is_delete      是否删除
+ * @property integer $progress      进度
  *
  * @property CourseLink[] $courseLinks  获取所有课程环节
  * @property CourseManage $course       获取课程
@@ -21,6 +22,7 @@ use yii\db\ActiveRecord;
  */
 class CoursePhase extends ActiveRecord
 {
+    public $progress;
     /**
      * @inheritdoc
      */
