@@ -75,11 +75,11 @@ class CourseLink extends ActiveRecord
 
     /**
      * @return ActiveQuery
-     
+     */
     public function getCoursePhase()
     {
-        return $this->hasOne(CoursePhase::className(), ['id' => 'course_phase_id']);
-    }*/
+        return $this->hasOne(CoursePhase::className(), ['phase_id' => 'course_phase_id']);
+    }
 
     /**
      * @return ActiveQuery
