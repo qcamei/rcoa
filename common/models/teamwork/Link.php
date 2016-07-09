@@ -95,8 +95,7 @@ class Link extends ActiveRecord
     {
         return $this->hasOne(Phase::className(), ['id' => 'phase_id']);
     }
-
-   
+    
     /**
      * @return ActiveQuery
      */
@@ -104,4 +103,5 @@ class Link extends ActiveRecord
     {
         return $this->hasMany(Phase::className(), ['id' => 'phases_id'])->viaTable('{{%framework_phase_link}}', ['link_id' => 'id']);
     }
+    
 }

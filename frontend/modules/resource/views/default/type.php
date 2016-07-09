@@ -99,8 +99,6 @@ $js =
     $('#myModal').on('loaded.bs.modal', function () {
         $('.carousel').carousel('pause');
         $('#carousel-731952').on('slid.bs.carousel', function () {
-            //var item = $('.carousel .item');
-            //console.log(item);
              $(".item").each(function(i,item) {
                 $(this).find("video").each(function(){
                     this.pause();

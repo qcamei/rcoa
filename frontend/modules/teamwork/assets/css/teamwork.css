@@ -31,6 +31,9 @@ and open the template in the editor.
     border-radius:5px;
     margin-top: 5px;
 }
+.table-list .progress {
+    background-image: linear-gradient(to bottom, #ddd, #ccc);
+}
 
 /** 
  * 项目列表页样式 
@@ -112,6 +115,17 @@ and open the template in the editor.
 }
 
 /**
- * 课程进度页面样式
+ * 课程进度录入页面样式
  */
+
+#myModal {
+    padding-right: 0px !important;
+}
+#myModal .modal-md {
+    margin-top: 150px;
+}
+
+#myModal .entry-link-form {
+    margin: 20px;
+}
 

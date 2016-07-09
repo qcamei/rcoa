@@ -2,6 +2,7 @@
 
 namespace common\models\teamwork;
 
+use common\models\teamwork\CourseManage;
 use common\models\team\TeamMember;
 use Yii;
 use yii\db\ActiveQuery;
@@ -36,7 +37,7 @@ class CourseProducer extends ActiveRecord
             [['course_id'], 'integer'],
             [['producer'], 'string', 'max' => 36],
             [['producer'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['producer' => 'u_id']],
-            [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => TeamworkCourseManage::className(), 'targetAttribute' => ['course_id' => 'id']],
+            [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => CourseManage::className(), 'targetAttribute' => ['course_id' => 'id']],
         ];
     }
 
@@ -64,6 +65,6 @@ class CourseProducer extends ActiveRecord
      */
     public function getCourse()
     {
-        return $this->hasOne(TeamworkCourseManage::className(), ['id' => 'course_id']);
+        return $this->hasOne(CourseManage::className(), ['id' => 'course_id']);
     }
 }

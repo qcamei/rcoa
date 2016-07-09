@@ -9,6 +9,7 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
+use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -50,6 +51,7 @@ class CourselinkController extends Controller
         $coursePhase = CoursePhase::findAll(['course_id' => $course_id, 'is_delete' => 'N']);
         
         return $this->render('index', [
+            'model' => $this->findModel(['course_id' => $course_id]),
             'coursePhase' => $coursePhase,
             'course_id' => $course_id
         ]);
@@ -87,15 +89,16 @@ class CourselinkController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($course_id)
     {
         $model = new CourseLink();
-
+        //$params = Yii::$app->request->queryParams;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'course_id' => $course_id,
             ]);
         }
     }
@@ -118,7 +121,65 @@ class CourselinkController extends Controller
             ]);
         }
     }
-
+    
+    /**
+     * PhaseDelete an existing CourseLink model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionPhaseDelete($id)
+    {
+        $model = CoursePhase::findOne($id);
+        $model->is_delete = 'Y';
+        if($model->update() !== false && $model->course->project->getIsLeader() && $model->course->create_by == \Yii::$app->user->id){
+            Yii::$app->db->createCommand()
+                ->update(CourseLink::tableName(), ['is_delete'=> 'Y'], [
+                    'course_id' => $model->course_id, 'course_phase_id' => $model->phase_id])->execute();
+            $this->redirect(['index', 'course_id' => $model->course_id]);
+        }else 
+            throw new NotAcceptableHttpException('只有队长 or 该课程隶属于自己才可以操作');
+    }
+    
+    /**
+     * Entry a new CourseLink model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionEntry($id)
+    {
+        $model = $this->findModel($id);
+        if(!$model->course->project->getIsLeader() || $model->course->create_by == \Yii::$app->user->id)
+            throw new NotAcceptableHttpException('只有队长 or 该课程隶属于自己才可以操作');
+            
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['progress', 'course_id' => $model->course_id]);
+        } else {
+            return $this->renderPartial('entry', [
+                'model' => $model,
+            ]);
+        }
+    }
+    
+    
+    /**
+     * LinkDelete an existing CourseLink model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     
+    public function actionLinkDelete($id)
+    {
+        $model = $this->findModel($id);
+        $model->is_delete = 'Y';
+        
+        if($model->course->project->getIsLeader() && $model->course->create_by == \Yii::$app->user->id){
+            $model->update();
+            $this->redirect(['index', 'course_id' => $model->course_id]);
+        }else 
+            throw new NotAcceptableHttpException('只有队长 or 该课程隶属于自己才可以操作');
+    }*/
+    
     /**
      * Deletes an existing CourseLink model.
      * If deletion is successful, the browser will be redirected to the 'index' page.

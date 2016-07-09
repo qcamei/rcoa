@@ -1,16 +1,35 @@
 <?php
 
+use common\models\teamwork\CourseLink;
 use yii\helpers\Html;
+use yii\web\View;
 use yii\widgets\ActiveForm;
 
-/* @var $this yii\web\View */
-/* @var $model common\models\teamwork\CourseLink */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $this View */
+/* @var $model CourseLink */
+/* @var $form ActiveForm */
 ?>
 
 <div class="course-link-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+        'options'=>[
+            'id' => 'course-manage-form',
+            'class'=>'form-horizontal',
+        ],
+        'fieldConfig' => [  
+            'template' => "{label}\n<div class=\"col-lg-10 col-md-10\">{input}</div>\n<div class=\"col-lg-10 col-md-10\">{error}</div>",  
+            'labelOptions' => [
+                'class' => 'col-lg-1 col-md-1 control-label',
+                'style'=>[
+                    'color'=>'#999999',
+                    'font-weight'=>'normal', 
+                    'padding-left' => 0,
+                    'padding-right' => 0,
+                ]
+            ],  
+        ], 
+    ]); ?>
 
     <?= $form->field($model, 'course_id')->textInput() ?>
 
@@ -22,13 +41,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'completed')->textInput() ?>
 
-    <?= $form->field($model, 'progress')->textInput() ?>
-
     <?= $form->field($model, 'is_delete')->textInput(['maxlength' => true]) ?>
-
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? Yii::t('rcoa/teamwork', 'Create') : Yii::t('rcoa/teamwork', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
 
     <?php ActiveForm::end(); ?>
 

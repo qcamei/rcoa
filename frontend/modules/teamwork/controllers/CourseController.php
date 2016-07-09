@@ -101,12 +101,11 @@ class CourseController extends Controller
         
         $result = empty($post) ? $twTool->getWeek($id, date('Y-m-d', time())) : 
                     $twTool->getWeek($id, $post['create_time']);
-        
         return $this->render('view', [
-            'model' => $model,
+            'model' => !empty($model) ? $model : $this->findModel($id),
             'result' => $result,
-            'producer' => $this->getAssignProducers(['course_id' => $model->id]),
-            'create_time' => $this->getSummaryCreateTime(['course_id' => $model->id]),
+            'producer' => $this->getAssignProducers(['course_id' => $id]),
+            'create_time' => $this->getSummaryCreateTime(['course_id' => $id]),
             'createTime' => empty($result)? null :$result->create_time,
             'createdAt' => empty($result)? date('Y-m-d H:i', time()) :date('Y-m-d H:i', $result->created_at),
             'content' => empty($result)? '无' :$result->content,
@@ -365,6 +364,7 @@ class CourseController extends Controller
         $assignProducers = CourseProducer::find()
                            ->where($condition)
                            ->with('producerOne')
+                           ->with('course')
                            ->all();
         $producers = [];
         foreach ($assignProducers as $key => $producer){

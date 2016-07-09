@@ -183,7 +183,7 @@ class TeamworkTool{
                         LEFT JOIN ccoa_teamwork_phase_template AS Phase_Temp ON Phase.phase_id = Phase_Temp.id
                         LEFT JOIN ccoa_teamwork_course_manage AS Course ON Link.course_id = Course.id
                         LEFT JOIN ccoa_teamwork_item_manage AS Item ON Item.id = Course.project_id
-                        WHERE Link.is_delete = 'N' 
+                        WHERE Link.is_delete = 'N' AND Course.`status` = 1
                         GROUP BY Link.course_phase_id,Link.course_id) AS Phase_PRO 
                     GROUP BY course_id) AS Course_List
                 GROUP BY id";
