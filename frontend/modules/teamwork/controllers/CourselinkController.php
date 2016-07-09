@@ -63,7 +63,7 @@ class CourselinkController extends Controller
     {
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
-        $coursePhase = $twTool->getCoursePhaseProgress($course_id);
+        $coursePhase = $twTool->getCoursePhaseProgressAll($course_id);
         return $this->render('progress', [
             'course_id' => $course_id,
             'coursePhase' => $coursePhase,

@@ -9,6 +9,7 @@ use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
+use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -76,15 +77,19 @@ class SummaryController extends Controller
     public function actionCreate()
     {
         $model = new CourseSummary();
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
         $params = Yii::$app->request->queryParams;
         $model->course_id = $params['course_id'];
         $model->create_time = date('Y-m-d', time());
-        /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
         $result = $twTool->getWeek($model->course_id, $model->create_time);
+        
         if(!empty($result))
             return $this->redirect(['update', 'course_id' => $model->course_id, 'create_time' => $result->create_time]);
         
+        if(!$model->course->getIsNormal() || !$model->course->project->getIsLeader())
+            throw new NotAcceptableHttpException('只有队长 or 状态为正常才可以【创建总结】');
+         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['course/view', 'id' => $model->course_id]);
         } else {
@@ -102,9 +107,15 @@ class SummaryController extends Controller
      */
     public function actionUpdate($course_id, $create_time = null)
     {
-        if(empty($create_time))
+        if($create_time == null)
             return $this->redirect(['create', 'course_id' => $course_id]);
+        
+        //var_dump($create_time);exit;
         $model = $this->findModel($course_id, $create_time);
+         
+        if(!$model->course->getIsNormal() || !$model->course->project->getIsLeader())
+            throw new NotAcceptableHttpException('只有队长 or 状态为正常才可以【编辑总结】');
+       
         if ($model->load(Yii::$app->request->post())) {
             $model->save(false, ['content', 'updated_at']);
             return $this->redirect(['course/view', 'id' => $model->course_id]);
@@ -115,22 +126,6 @@ class SummaryController extends Controller
         }
     }
 
-    /**
-     * 搜索总结在某一时间段的数据
-     * CarryOut an existing ItemManage model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $course_id
-     * @return mixed
-     */
-    public function actionSearch($course_id)
-    {
-        $post = Yii::$app->request->post();
-        /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
-        $result = $twTool->getWeek($course_id, $post['create_time']);
-        return $this->redirect(['course/view', 'id' => $course_id, 'create_time' => $result->create_time]);
-    }
-    
     /**
      * Deletes an existing CourseSummary model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -153,7 +148,8 @@ class SummaryController extends Controller
      */
     protected function findModel($course_id, $create_time)
     {
-        if (($model = CourseSummary::findOne(['course_id' => $course_id, 'create_time' => $create_time])) !== null) {
+        $model = CourseSummary::findOne(['course_id' => $course_id, 'create_time' => $create_time]);
+        if ($model !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

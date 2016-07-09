@@ -56,9 +56,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     return Html::beginTag('div', ['class' => 'progress table-list-progress']).
                                 Html::beginTag('div', [
                                     'class' => 'progress-bar', 
-                                    'style' => 'width:0%',
+                                    'style' => 'width:'.(int)($model->progress * 100).'%',
                                 ]).
-                                '0%'.
+                                (int)($model->progress * 100).'%'.
                                 Html::endTag('div').
                             Html::endTag('div');
                 }

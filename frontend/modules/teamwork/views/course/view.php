@@ -27,7 +27,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
    <?= $this->render('_form_detai', [
         'model' => $model,
-        //'statusName' => $statusName,
         'producer' => $producer,
     ]) ?>
     
@@ -38,9 +37,9 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
     
     <?= Html::beginTag('div', ['class' => 'col-lg-3 col-md-3 col-sm-4', 'style'=> 'padding:0;margin-bottom:10px;']).
-             Select2::widget([
+            Select2::widget([
                 'name' => 'create_time',
-                'value' => array_keys($create_time),
+                'value' => empty($result) ? '' :array_keys($create_time),
                 'data' => $create_time,
                 'hideSearch' => true,
                 'options' => ['placeholder' => '请选择...'],

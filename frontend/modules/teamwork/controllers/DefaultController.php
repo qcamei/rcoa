@@ -3,10 +3,11 @@
 namespace frontend\modules\teamwork\controllers;
 
 use common\models\teamwork\ItemManage;
+use frontend\modules\teamwork\TeamworkTool;
 use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\ItemType;
 use Yii;
-use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -66,8 +67,10 @@ class DefaultController extends Controller
     public function actionList()
     {
         $model = new ItemManage();
-        $dataProvider = new ActiveDataProvider([
-            'query' => ItemManage::find(),
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $twTool->getItemProgressAll(),
         ]);
         return $this->render('list', [
             'model' => $model,
@@ -82,10 +85,11 @@ class DefaultController extends Controller
      */
     public function actionView($id)
     {
-        $model = $this->findModel($id);
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
+        $model = $twTool->getItemProgressOne($id);
         return $this->render('view', [
             'model' => $model,
-            //'statusName' => $this->AgainStatusName($model),
         ]);
     }
 
@@ -277,14 +281,4 @@ class DefaultController extends Controller
         }
         return $statusName;
     }*/
-    
-    public function getCourseLessionTimesSum($model)
-    {
-        $courses = [];
-        /* @var $model ItemManage */
-        foreach ($model->courseManages as $value) 
-            $courses[] =  $value->lession_time;
-        
-        return $courses;
-    }
 }

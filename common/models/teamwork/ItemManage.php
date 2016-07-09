@@ -25,13 +25,14 @@ use yii\db\ActiveRecord;
  * @property integer $status            状态
  * @property string $background         项目背景
  * @property string $use                项目用途
+ * @property integer $progress          进度
  *
  * @property CourseManage[] $courseManages      获取所有课程
  * @property User $createBy                     获取创建人
- * @property TeamMember $teamMember             获取获取团队成员
  * @property Item $itemChild                    获取子项目
  * @property Item $item                         获取项目
  * @property ItemType $itemType                 获取项目类别
+ * @property TeamMember $teamMember             获取团队成员
  */
 class ItemManage extends ActiveRecord
 {
@@ -41,7 +42,9 @@ class ItemManage extends ActiveRecord
     const STATUS_NORMAL = 1;
     /** 完成 */
     const STATUS_CARRY_OUT = 99;
-    
+    /** 进度 */
+    public $progress;
+
     /** 状态名 */
     public $statusName = [
         self::STATUS_NORMAL => '正常',
@@ -69,11 +72,14 @@ class ItemManage extends ActiveRecord
     public function rules()
     {
         return [
-            [['item_type_id',  'item_id', 'item_child_id'], 'required'],
-            [['item_type_id', 'item_id', 'item_child_id', 'created_at', 'status'], 'integer'],
+            [['item_type_id', 'item_id', 'item_child_id', 'created_at', 'updated_at', 'status'], 'integer'],
             [['create_by'], 'string', 'max' => 36],
             [['forecast_time', 'real_carry_out'], 'string', 'max' => 60],
-            [['background', 'use'], 'string', 'max' => 255]
+            [['background', 'use'], 'string', 'max' => 255],
+            [['create_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['create_by' => 'id']],
+            [['item_child_id'], 'exist', 'skipOnError' => true, 'targetClass' => Item::className(), 'targetAttribute' => ['item_child_id' => 'id']],
+            [['item_id'], 'exist', 'skipOnError' => true, 'targetClass' =>Item::className(), 'targetAttribute' => ['item_id' => 'id']],
+            [['item_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => ItemType::className(), 'targetAttribute' => ['item_type_id' => 'id']],
         ];
     }
 
@@ -98,6 +104,7 @@ class ItemManage extends ActiveRecord
     }
 
     /**
+     * 获取所有课程
      * @return ActiveQuery
      */
     public function getCourseManages()
@@ -106,22 +113,16 @@ class ItemManage extends ActiveRecord
     }
 
     /**
+     * 获取创建者
      * @return ActiveQuery
      */
     public function getCreateBy()
     {
         return $this->hasOne(User::className(), ['id' => 'create_by']);
     }
-    
-    /**
-     * @return ActiveQuery
-     */
-    public function getTeamMember()
-    {
-        return $this->hasOne(TeamMember::className(), ['u_id' => 'create_by']);
-    }
 
     /**
+     * 获取子项目
      * @return ActiveQuery
      */
     public function getItemChild()
@@ -130,6 +131,7 @@ class ItemManage extends ActiveRecord
     }
 
     /**
+     * 获取项目
      * @return ActiveQuery
      */
     public function getItem()
@@ -138,11 +140,21 @@ class ItemManage extends ActiveRecord
     }
 
     /**
+     * 获取类别
      * @return ActiveQuery
      */
     public function getItemType()
     {
         return $this->hasOne(ItemType::className(), ['id' => 'item_type_id']);
+    }
+    
+    /**
+     * 获取团队成员
+     * @return ActiveQuery
+     */
+    public function getTeamMember()
+    {
+        return $this->hasOne(TeamMember::className(), ['u_id' => 'create_by']);
     }
     
     /**

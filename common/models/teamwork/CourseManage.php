@@ -3,7 +3,6 @@
 namespace common\models\teamwork;
 
 use common\models\team\TeamMember;
-use common\models\teamwork\CourseProducer;
 use common\models\teamwork\ItemManage;
 use common\models\User;
 use wskeee\framework\models\Item;
@@ -29,14 +28,15 @@ use yii\db\ActiveRecord;
  * @property string $des                描述
  * @property integer $progress          进度
  *
- * @property User $createBy                     获取创建者
- * @property Item $course                       获取课程
- * @property User $speakerTeacher               获取主讲讲师
- * @property ItemManage $project                获取项目
- * @property CourseSummary $courseSummary       获取课程总结
- * @property CoursePhase[] $coursePhases        获取所有阶段
- * @property CourseLink[] $courseLinks          获取所有环节
- * @property TeamMember[] $producers            获取所有制作人
+ * @property CourseLink[] $courseLinks              获取所有课程环节
+ * @property User $createBy                         获取创建者
+ * @property Item $course                           获取课程
+ * @property User $speakerTeacher                   获取主讲讲师
+ * @property ItemManage $project                    获取项目
+ * @property CoursePhase[] $coursePhases            获取所有课程阶段
+ * @property CourseProducer[] $courseProducers      获取所有制作人
+ * @property TeamMember[] $producers                获取所有团队成员
+ * @property CourseSummary[] $courseSummaries       获取所有课程总结
  */
 class CourseManage extends ActiveRecord
 {
@@ -64,12 +64,14 @@ class CourseManage extends ActiveRecord
     public function rules()
     {
         return [
-            [['project_id',  'course_id', 'teacher'], 'required'],
-            [['project_id', 'course_id', 'lession_time', 'created_at', 'status'], 'integer'],
+           [['project_id', 'course_id', 'lession_time', 'created_at', 'updated_at', 'status'], 'integer'],
             [['teacher', 'create_by'], 'string', 'max' => 36],
             [['plan_start_time', 'plan_end_time', 'real_carry_out'], 'string', 'max' => 60],
-            [['plan_start_time', 'plan_end_time'], 'required'],
-            [['des'], 'string', 'max' => 255]
+            [['des'], 'string', 'max' => 255],
+            [['create_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['create_by' => 'id']],
+            [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Item::className(), 'targetAttribute' => ['course_id' => 'id']],
+            [['teacher'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['teacher' => 'id']],
+            [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => ItemManage::className(), 'targetAttribute' => ['project_id' => 'id']],
         ];
     }
 
@@ -93,7 +95,16 @@ class CourseManage extends ActiveRecord
             'des' => Yii::t('rcoa/teamwork', 'Des'),
         ];
     }
-
+    
+    /**
+     * 获取所有课程环节
+     * @return ActiveQuery
+     */
+    public function getCourseLinks()
+    {
+        return $this->hasMany(CourseLink::className(), ['course_id' => 'id']);
+    }
+    
     /**
      * 获取创建者
      * @return ActiveQuery
@@ -113,12 +124,21 @@ class CourseManage extends ActiveRecord
     }
     
     /**
-     * 获取所有环节
+     * 获取主讲讲师
      * @return ActiveQuery
      */
-    public function getCourseLinks()
+    public function getSpeakerTeacher()
     {
-        return $this->hasMany(CourseLink::className(), ['course_id' => 'id']);
+        return $this->hasOne(User::className(), ['id' => 'teacher']);
+    }
+    
+    /**
+     * 获取项目管理
+     * @return ActiveQuery
+     */
+    public function getProject()
+    {
+        return $this->hasOne(ItemManage::className(), ['id' => 'project_id']);
     }
 
     /**
@@ -130,15 +150,14 @@ class CourseManage extends ActiveRecord
         return $this->hasMany(CoursePhase::className(), ['course_id' => 'id']);
     }
 
-   
     /**
      * 获取所有制作人
      * @return ActiveQuery
-     
-    public function getCourseProducers()
+     */
+    public function getTeamworkCourseProducers()
     {
-        return $this->hasMany(CourseProducer::className(), ['course_id' => 'id']);
-    }*/
+        return $this->hasMany(TeamworkCourseProducer::className(), ['course_id' => 'id']);
+    }
     
     /**
      * 获取所有团队成员
@@ -151,30 +170,12 @@ class CourseManage extends ActiveRecord
     
 
     /**
-     * 获取课程总结
+     * 获取所有课程总结
      * @return ActiveQuery
      */
-    public function getCourseSummary()
+    public function getCourseSummaries()
     {
-        return $this->hasOne(CourseSummary::className(), ['course_id' => 'id'])->orderBy('create_time desc');
-    }
-    
-    /**
-     * 获取主讲讲师
-     * @return ActiveQuery
-     */
-    public function getSpeakerTeacher()
-    {
-        return $this->hasOne(User::className(), ['id' => 'teacher']);
-    }
-
-    /**
-     * 获取项目管理
-     * @return ActiveQuery
-     */
-    public function getProject()
-    {
-        return $this->hasOne(ItemManage::className(), ['id' => 'project_id']);
+        return $this->hasMany(CourseSummary::className(), ['course_id' => 'id']);
     }
     
     /**

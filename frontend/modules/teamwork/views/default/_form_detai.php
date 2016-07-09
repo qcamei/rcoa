@@ -44,7 +44,7 @@ use yii\widgets\DetailView;
             [
                 'label' => '当前进度',
                 'format' => 'raw',
-                'value' => '0%',
+                'value' => (int)($model->progress * 100).'%',
             ],
             [
                 'attribute' => 'status',

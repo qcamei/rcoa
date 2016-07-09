@@ -61,8 +61,8 @@ class CourseController extends Controller
         $params = Yii::$app->request->queryParams;
         $dataProvider = new ArrayDataProvider([
             'allModels' => isset($params['project_id']) ? 
-                        $twTool->getCourseProgress($params['project_id']) :
-                        $twTool->getCourseProgress(),
+                        $twTool->getCourseProgressAll($params['project_id']) :
+                        $twTool->getCourseProgressAll(),
         ]);
         return $this->render('index', [
             'dataProvider' => $dataProvider,
@@ -97,12 +97,14 @@ class CourseController extends Controller
         $twTool = Yii::$app->get('twTool');
         /* @var $model CourseManage */
         $model = $twTool->getCourseProgressOne($id);
-        
         $post = Yii::$app->request->post();
+        
         $result = empty($post) ? $twTool->getWeek($id, date('Y-m-d', time())) : 
                     $twTool->getWeek($id, $post['create_time']);
+        
         return $this->render('view', [
             'model' => $model,
+            'result' => $result,
             'producer' => $this->getAssignProducers(['course_id' => $model->id]),
             'create_time' => $this->getSummaryCreateTime(['course_id' => $model->id]),
             'createTime' => empty($result)? null :$result->create_time,
