@@ -54,7 +54,7 @@ class CoursePhase extends ActiveRecord
         return [
             'id' => Yii::t('rcoa/teamwork', 'ID'),
             'course_id' => Yii::t('rcoa/teamwork', 'Course ID'),
-            'phase_id' => Yii::t('rcoa/teamwork', 'Phase ID'),
+            'phase_id' => Yii::t('rcoa/teamwork', 'Course Phase ID'),
             'weights' => Yii::t('rcoa/teamwork', 'Weights'),
             'is_delete' => Yii::t('rcoa/teamwork', 'Is Delete'),
         ];

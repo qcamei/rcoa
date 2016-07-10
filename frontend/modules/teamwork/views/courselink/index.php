@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <td colspan="2">'.$phase->phase->name.'</td>
             <td>'.$phase->weights.'</td>
             <td colspan="2"></td>
-            <td>'.Html::a('修改',['update', 'id' => $phase->id], ['class' => $classUpdate]).' '.
+            <td style="text-align:right">'.Html::a('修改',['update', 'id' => $phase->id], ['class' => $classUpdate]).' '.
                  Html::a('删除',['phase-delete', 'id' => $phase->id], ['class' => $classDeletee]).'</td>
             </tr>';
             foreach ($phase->courseLinks as $link) {
@@ -56,7 +56,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 <td colspan="2">'.$link->link->name.'</td>
                 <td>'.$link->link->types[$link->link->type].'</td>
                 <td>'.$link->link->unit.'</td>
-                <td style="height:51px;"></td>
+                <td style="text-align:right">'.
+                        Html::a('删除',['link-delete', 'id' => $link->id], ['class' => $classDeletee]).'</td>
                 </tr>';
             }
         }

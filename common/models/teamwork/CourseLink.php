@@ -39,12 +39,12 @@ class CourseLink extends ActiveRecord
      */
     public function rules()
     {
-        return [
+         return [
             [['course_id', 'course_phase_id', 'link_id'], 'required'],
             [['course_id', 'course_phase_id', 'link_id', 'total', 'completed'], 'integer'],
             [['is_delete'], 'string', 'max' => 4],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => CourseManage::className(), 'targetAttribute' => ['course_id' => 'id']],
-            [['course_phase_id'], 'exist', 'skipOnError' => true, 'targetClass' => CoursePhase::className(), 'targetAttribute' => ['course_phase_id' => 'id']],
+            [['course_phase_id'], 'exist', 'skipOnError' => true, 'targetClass' => CoursePhase::className(), 'targetAttribute' => ['course_phase_id' => 'phase_id']],
             [['link_id'], 'exist', 'skipOnError' => true, 'targetClass' => Link::className(), 'targetAttribute' => ['link_id' => 'id']],
         ];
     }

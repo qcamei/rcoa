@@ -9,8 +9,7 @@ use yii\web\View;
 /* @var $this View */
 /* @var $model CourseLink */
 
-$this->title = Yii::t('rcoa/teamwork', 'Create Course Phase');
-//$this->title = Yii::t('rcoa/teamwork', 'Create Course Link');
+$this->title = Yii::t('rcoa/teamwork', 'Create Course Phase Link');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/teamwork', 'Course Links'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -21,11 +20,12 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 
-
 <div class="container course-link-create has-title">
 
     <?= $this->render('_form', [
-        'model' => $model,
+        'phaseModel' => $phaseModel,
+        'phase' => $phase,
+        'link' => $link,
     ]) ?>
 
 </div>
@@ -43,11 +43,11 @@ $js =
 <<<JS
     $('#submit').click(function()
     {
-        $('#course-manage-form').submit();
+        $('#course-form').submit();
     });
     
 JS;
-    //$this->registerJs($js,  View::POS_READY);
+    $this->registerJs($js,  View::POS_READY);
 ?>
 
 <?php
