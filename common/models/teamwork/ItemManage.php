@@ -204,19 +204,6 @@ class ItemManage extends ActiveRecord
     }
     
     /**
-     * 获取课程时长总和
-     * @return type
-     */
-    public function getCourseLessionTimesSum()
-    {
-        $courses = [];
-        foreach ($this->courseManages as $value) 
-            $courses[] =  $value->lession_time;
-        
-        return $courses;
-    }
-    
-    /**
      * 获取该条项目下所有课程是否为【完成】状态
      * @param ItemManage $model
      * @return boolean  true 为是

@@ -50,11 +50,30 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
-       return $this->render('index',[
-           'completedLessionTimes' => $this->getCourseLessionTimesSum(['status' => ItemManage::STATUS_CARRY_OUT]),
-           'undoneLessionTimes' => $this->getCourseLessionTimesSum(['status' => ItemManage::STATUS_NORMAL]),
-           'team' => Team::find()->with('courseManages')->all(), 
-       ]);
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
+        $completed = $twTool->getCourseLessionTimesSum(['status' => ItemManage::STATUS_CARRY_OUT]);
+        $undone = $twTool->getCourseLessionTimesSum(['status' => ItemManage::STATUS_NORMAL]);
+        $team = Team::find()->with('courseManages')->all();
+        return $this->render('index',[
+            'twTool' => $twTool,
+            'completed' => $completed,
+            'undone' => $undone,
+            'team' => $team,
+        ]);
+    }
+    
+    /**
+     * Member all ItemManage models.
+     * @return mixed
+     */
+    public function actionMember($team_id)
+    {
+        $team = Team::findOne(['id' => $team_id]);
+        
+        return $this->render('member', [
+            'team' => $team,
+        ]);
     }
     
     /**
@@ -63,7 +82,7 @@ class DefaultController extends Controller
      */
     public function actionStatistics()
     {
-       return $this->render('statistics');
+        return $this->render('statistics');
     }
     
     /**
@@ -99,6 +118,7 @@ class DefaultController extends Controller
         return $this->render('view', [
             'model' => !empty($model->progress) ? $model : $this->findModel($id),
             'twTool' => $twTool,
+            'lessionTime' => $twTool->getCourseLessionTimesSum(['project_id' => $id])
         ]);
     }
 
@@ -283,25 +303,6 @@ class DefaultController extends Controller
         return ArrayHelper::map($fwManager->getChildren($itemId), 'id', 'name');
     }
     
-    /**
-     * 获取课程学时总和
-     * @param type $condition  条件
-     * @return type
-     */
-    public function getCourseLessionTimesSum($condition){
-        $lessionTimes = CourseManage::find()
-                    ->where($condition)
-                    ->with('project')
-                    ->all();
-        $lessionTime = [];
-        foreach ($lessionTimes as $value) {
-            /* @var $value  CourseManage */
-            $lessionTime[] = $value->lession_time;
-        }
-        return $lessionTime;
-    }
-
-
     /**
      * 重组 $model->statusName 数组
      * @param type $model

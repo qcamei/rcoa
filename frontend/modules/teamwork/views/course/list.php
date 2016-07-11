@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => '学时 ('.array_sum($model->project->getCourseLessionTimesSum()).')',
+                'label' => '学时 ('.$lessionTime.')',
                 'format' => 'raw',
                 'value' => function($model){
                         /* @var $model CourseManage */

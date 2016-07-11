@@ -85,6 +85,7 @@ class CourseController extends Controller
             'allModels' => $allModels,
             'twTool' => $twTool,
             'model' => empty($allModels) ? new CourseManage() : $model,
+            'lessionTime' => $twTool->getCourseLessionTimesSum(['project_id' => $project_id]),
             'project_id' => $project_id,
         ]);
     }

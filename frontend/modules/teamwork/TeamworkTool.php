@@ -69,6 +69,24 @@ class TeamworkTool{
         }
         return false;
     }
+    
+    /**
+     * 获取课程时长总和
+     * @return type
+     */
+    public function getCourseLessionTimesSum($condition)
+    {
+        $lessionTimes = CourseManage::find()
+                        ->where($condition)
+                        ->with('project')
+                        ->all();
+        $lessionTime = [];
+        foreach ($lessionTimes as $value)
+            /* @var $value  CourseManage */
+            $lessionTime[] = $value->lession_time;
+       
+        return array_sum($lessionTime);
+    }
         
     /**
      * 复制Phase表数据到CoursePhase表

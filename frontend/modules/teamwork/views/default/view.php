@@ -56,7 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
                 //array_sum()返回数组中所有值的和
-                'label' => '学时 ('.array_sum($model->getCourseLessionTimesSum()).')', 
+                'label' => '学时 ('.$lessionTime.')', 
                 'value'=> function($model){
                     /* @var $model CourseManage */
                     return $model->lession_time;
