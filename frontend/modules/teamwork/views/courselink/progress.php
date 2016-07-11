@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </thead>
         <tbody>
         <?php foreach ($coursePhase as $phase) {
-            $className = $phase->course->project->getIsLeader() && $phase->course->create_by == Yii::$app->user->id ?
+            $className = $twTool->getIsLeader() && $phase->course->create_by == Yii::$app->user->id ?
                         'btn btn-primary' : 'btn btn-primary disabled';
             /* @var $phase CoursePhase */
             echo '<tr style="background-color:#eee">
@@ -84,7 +84,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div id="myModal" class="fade modal" role="dialog" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content has-title">
-
+            
         </div>
     </div>
 </div>

@@ -76,6 +76,7 @@ class DefaultController extends Controller
         ]);
         return $this->render('list', [
             'model' => $model,
+            'twTool' => $twTool,
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -93,6 +94,7 @@ class DefaultController extends Controller
         $model = $twTool->getItemProgressOne($id);
         return $this->render('view', [
             'model' => !empty($model->progress) ? $model : $this->findModel($id),
+            'twTool' => $twTool,
         ]);
     }
 
@@ -104,8 +106,9 @@ class DefaultController extends Controller
     public function actionCreate()
     {
         $model = new ItemManage();
-       
-        if(!$model->getIsLeader())
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
+        if(!$twTool->getIsLeader())
             throw new NotAcceptableHttpException('只有队长才可以【创建项目】');
         $model->loadDefaultValues();
         $model->create_by = \Yii::$app->user->id;
@@ -130,8 +133,9 @@ class DefaultController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        
-        if(!$model->getIsLeader() || $model->create_by !== \Yii::$app->user->id)
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
+        if(!$twTool->getIsLeader() || $model->create_by !== \Yii::$app->user->id)
             throw new NotAcceptableHttpException('只有队长才可以【编辑】项目 or 该项目隶属于自己');
         
         if(!$model->getIsNormal())
@@ -159,8 +163,9 @@ class DefaultController extends Controller
     public function actionTimeOut($id)
     {
         $model = $this->findModel($id);
-        
-        if ($model != null && $model->getIsNormal() && $model->getIsLeader() && $model->create_by == \Yii::$app->user->id) 
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
+        if ($model != null && $model->getIsNormal() && $twTool->getIsLeader() && $model->create_by == \Yii::$app->user->id) 
         {
             $model->status = ItemManage::STATUS_TIME_OUT;
             $model->save();
@@ -178,8 +183,9 @@ class DefaultController extends Controller
     public function actionNormal($id)
     {
         $model = $this->findModel($id);
-        
-        if ($model != null && $model->getIsTimeOut() && $model->getIsLeader() && $model->create_by == \Yii::$app->user->id) 
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
+        if ($model != null && $model->getIsTimeOut() && $twTool->getIsLeader() && $model->create_by == \Yii::$app->user->id) 
         {
             $model->status = ItemManage::STATUS_NORMAL;
             $model->save();
@@ -197,8 +203,9 @@ class DefaultController extends Controller
     public function actionCarryOut($id)
     {
         $model = $this->findModel($id);
-        
-        if ($model != null && $model->getIsNormal() && $model->getIsLeader() && $model->getIsCoursesStatus() && $model->create_by == \Yii::$app->user->id) 
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
+        if ($model != null && $model->getIsNormal() && $twTool->getIsLeader() && $model->getIsCoursesStatus() && $model->create_by == \Yii::$app->user->id) 
         {
             $model->status = ItemManage::STATUS_CARRY_OUT;
             $model->save();
@@ -244,7 +251,7 @@ class DefaultController extends Controller
      */
     public function getItemType()
     {
-        $itemType = ItemType::find()->all();
+        $itemType = ItemType::find()->with('itemManages')->all();
         return ArrayHelper::map($itemType, 'id', 'name');
     }
     

@@ -49,10 +49,13 @@ class CourselinkController extends Controller
      */
     public function actionIndex($course_id)
     {
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
         $coursePhase = CoursePhase::findAll(['course_id' => $course_id, 'is_delete' => 'N']);
         
         return $this->render('index', [
             'model' => $this->findModel(['course_id' => $course_id]),
+            'twTool' => $twTool,
             'coursePhase' => $coursePhase,
             'course_id' => $course_id
         ]);
@@ -68,6 +71,7 @@ class CourselinkController extends Controller
         $twTool = Yii::$app->get('twTool');
         $coursePhase = $twTool->getCoursePhaseProgressAll($course_id);
         return $this->render('progress', [
+            'twTool' => $twTool,
             'course_id' => $course_id,
             'coursePhase' => $coursePhase,
         ]);
@@ -93,11 +97,13 @@ class CourselinkController extends Controller
      */
     public function actionCreate($course_id)
     {
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
         $phaseModel = new CoursePhase();
         $phaseModel->loadDefaultValues();
         $post = Yii::$app->request->post();
         $phaseModel->course_id = $course_id;
-        if(!$phaseModel->course->project->getIsLeader() || $phaseModel->course->create_by == \Yii::$app->user->id)
+        if(!$twTool->getIsLeader() || $phaseModel->course->create_by !== \Yii::$app->user->id)
             throw new NotAcceptableHttpException('只有队长 or 该课程隶属于自己才可以【新增阶段和环节】');
             
         if ($phaseModel->load($post)){
@@ -130,10 +136,12 @@ class CourselinkController extends Controller
      */
     public function actionUpdate($id)
     {
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
         $phaseModel = CoursePhase::findOne($id);
         $post = Yii::$app->request->post();
         $link = empty($post['link_id']) ? [] : $post['link_id'];
-        if(!$phaseModel->course->project->getIsLeader() || $phaseModel->course->create_by == \Yii::$app->user->id)
+        if(!$twTool->getIsLeader() || $phaseModel->course->create_by !== \Yii::$app->user->id)
             throw new NotAcceptableHttpException('只有队长 or 该课程隶属于自己才可以【编辑阶段和环节】');
         
         if ($phaseModel->load($post) && $phaseModel->save()) {
@@ -160,9 +168,8 @@ class CourselinkController extends Controller
     public function actionEntry($id)
     {
         $model = $this->findModel($id);
-         /* @var $twTool TeamworkTool */
+        /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
-        //var_dump($twTool->getIsLeader());exit;
         if(!$twTool->getIsLeader() || $model->course->create_by !== \Yii::$app->user->id)
             throw new NotAcceptableHttpException('只有队长 or 该课程隶属于自己才可以操作');
             
@@ -184,8 +191,10 @@ class CourselinkController extends Controller
     public function actionPhaseDelete($id)
     {
         $model = CoursePhase::findOne($id);
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
         $model->is_delete = 'Y';
-        if($model->update() !== false && $model->course->project->getIsLeader() && $model->course->create_by == \Yii::$app->user->id){
+        if($model->update() !== false && $twTool->getIsLeader() && $model->course->create_by == \Yii::$app->user->id){
             Yii::$app->db->createCommand()
                 ->update(CourseLink::tableName(), ['is_delete'=> 'Y'], [
                     'course_id' => $model->course_id, 'course_phase_id' => $model->phase_id])->execute();
@@ -234,10 +243,12 @@ class CourselinkController extends Controller
      */
     public function actionLinkDelete($id)
     {
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
         $model = $this->findModel($id);
         $model->is_delete = 'Y';
         
-        if($model->course->project->getIsLeader() && $model->course->create_by == \Yii::$app->user->id){
+        if($twTool->getIsLeader() && $model->course->create_by == \Yii::$app->user->id){
             $model->update();
             $this->redirect(['index', 'course_id' => $model->course_id]);
         }else 

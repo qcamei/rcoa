@@ -201,24 +201,6 @@ class ItemManage extends ActiveRecord
         
         return $courses;
     }
-
-    /**
-     * 获取当前用户是否为【队长】
-     * @return boolean  true为是
-     */
-    public function getIsLeader()
-    {
-        //查出成员表里面所有队长
-        $isLeader = TeamMember::findAll(['u_id' => \Yii::$app->user->id]);
-        
-        if(!empty($isLeader) || isset($isLeader)){
-            foreach ($isLeader as $value){
-                if($value->is_leader == 'Y')
-                    return true;
-            }
-        }
-        return false;
-    }
     
     /**
      * 获取该条项目下所有课程是否为【完成】状态

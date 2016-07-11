@@ -17,7 +17,7 @@ use yii\helpers\Url;
  */
 
 class ItemActBtnCol extends ItemListTd {
-     public $params = [];
+    public $params = [];
     
     public function init() {
         parent::init();
@@ -26,6 +26,8 @@ class ItemActBtnCol extends ItemListTd {
     //put your code here
     public function getDataCellValue($model, $key, $index) 
     {
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
         $controllerId = Yii::$app->controller->id;              //当前控制器
         $actionId = Yii::$app->controller->action->id;      //当前行为方法
         $url = [];          //href
@@ -35,6 +37,7 @@ class ItemActBtnCol extends ItemListTd {
         $button = [];       //生成按钮
         $btnClass = [];     //按钮样式类名
         /* @var $model ItemManage */
+        /* @var $twTool TeamworkTool */
         if (!empty($model) && $controllerId == 'default' && $actionId == 'list'){
             $url = [
                 'view' => 'view',
@@ -54,7 +57,8 @@ class ItemActBtnCol extends ItemListTd {
             ];
         }
         /* @var $model CourseManage */
-        else if (!empty($model) && $controllerId == 'course' && $actionId == 'list' && $model->project->getIsLeader()){
+        /* @var $twTool TeamworkTool */
+        else if (!empty($model) && $controllerId == 'course' && $actionId == 'list' && $twTool->getIsLeader()){
             $url = [
                 'update' => 'update',
                 'delete' => 'delete',
@@ -67,6 +71,7 @@ class ItemActBtnCol extends ItemListTd {
                 'update' => ['id' => $model->id,],
                 'delete' => [
                     'id' => $model->id,
+                    'project_id' => $model->project_id
                 ]
             ];
             $btnClass = [
@@ -75,6 +80,7 @@ class ItemActBtnCol extends ItemListTd {
             ];
         }
         /* @var $model CourseManage */
+        /* @var $twTool TeamworkTool */
         else if (!empty($model) && $controllerId == 'course' && $actionId == 'index') {
             $url = [
                 'view' => 'view',
@@ -93,7 +99,7 @@ class ItemActBtnCol extends ItemListTd {
             ];
             $btnClass = [
                'view' => 'btn btn-primary',
-               'deploy' => $model->project->getIsLeader() ? 'btn btn-primary' : 'btn btn-primary disabled',
+               'deploy' => $twTool->getIsLeader() ? 'btn btn-primary' : 'btn btn-primary disabled',
                'progress' => 'btn btn-primary',
             ];
         }

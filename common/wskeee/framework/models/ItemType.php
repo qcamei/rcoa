@@ -2,6 +2,7 @@
 
 namespace wskeee\framework\models;
 
+use common\models\teamwork\ItemManage;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -12,7 +13,7 @@ use yii\db\ActiveRecord;
  * @property integer $id
  * @property string $name
  *
- * @property FrameworkItemManage[] $frameworkItemManages
+ * @property ItemManage[] $itemManages
  */
 class ItemType extends ActiveRecord
 {
@@ -48,8 +49,8 @@ class ItemType extends ActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getFrameworkItemManages()
+    public function getItemManages()
     {
-        return $this->hasMany(FrameworkItemManage::className(), ['item_type_id' => 'id']);
+        return $this->hasMany(ItemManage::className(), ['item_type_id' => 'id']);
     }
 }

@@ -86,14 +86,14 @@ $this->params['breadcrumbs'][] = $this->title;
              * 2、必须是【队长】
              * 3、创建者是自己
              */
-            if($model->getIsNormal() && $model->getIsLeader() && $model->create_by == Yii::$app->user->id)
+            if($model->getIsNormal() && $twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
                 echo Html::a('编辑', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']).' ';
             /**
              * 配置 按钮显示必须满足以下条件：
              * 1、必须是状态为【正常】
              * 2、必须是【队长】
              */
-            if($model->getIsNormal() && $model->getIsLeader())    
+            if($model->getIsNormal() && $twTool->getIsLeader())    
                 echo Html::a('配置', ['/teamwork/course/list', 'project_id' => $model->id], ['class' => 'btn btn-primary']).' ';
             /**
              * 课程 按钮显示必须满足以下条件：
@@ -107,7 +107,7 @@ $this->params['breadcrumbs'][] = $this->title;
              * 2、必须是【队长】
              * 3、创建者是自己
              */
-            if($model->getIsNormal() && $model->getIsLeader() && $model->create_by == Yii::$app->user->id)
+            if($model->getIsNormal() && $twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
                 echo Html::a('完成', ['carry-out', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
             /**
              * 暂停 按钮显示必须满足以下条件：
@@ -115,7 +115,7 @@ $this->params['breadcrumbs'][] = $this->title;
              * 2、必须是【队长】
              * 3、创建者是自己
              */
-            if($model->getIsNormal() && $model->getIsLeader() && $model->create_by == Yii::$app->user->id)
+            if($model->getIsNormal() && $twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
                 echo Html::a('暂停', ['time-out', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
             /**
              * 恢复 按钮显示必须满足以下条件：
@@ -123,7 +123,7 @@ $this->params['breadcrumbs'][] = $this->title;
              * 2、必去是【队长】
              * 3、创建者是自己
              */
-            if($model->getIsTimeOut() && $model->getIsLeader() && $model->create_by == Yii::$app->user->id)
+            if($model->getIsTimeOut() && $twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
                 echo Html::a('恢复', ['normal', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
         ?>
     </div>

@@ -38,9 +38,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <tbody>
         <?php foreach ($coursePhase as $phase) {
             /* @var $phase CoursePhase */
-            $classUpdate = $phase->course->project->getIsLeader() && $phase->course->create_by == Yii::$app->user->id ?
+            $classUpdate = $twTool->getIsLeader() && $phase->course->create_by == Yii::$app->user->id ?
                          'btn btn-primary' : 'btn btn-primary disabled';
-            $classDeletee = $phase->course->project->getIsLeader() && $phase->course->create_by == Yii::$app->user->id ?
+            $classDeletee = $twTool->getIsLeader() && $phase->course->create_by == Yii::$app->user->id ?
                          'btn btn-danger' : 'btn btn-danger disabled';
             echo '<tr style="background-color:#eee">
             <td colspan="2">'.$phase->phase->name.'</td>
@@ -76,7 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
              * 1、必须是【队长】
              * 2、创建者是自己
              */
-            if($model->course->project->getIsLeader() && $model->course->create_by == Yii::$app->user->id)
+            if($twTool->getIsLeader() && $model->course->create_by == Yii::$app->user->id)
                echo Html::a('新增', ['create', 'course_id' => $course_id], ['class' => 'btn btn-primary']) 
         ?>
         <?= Html::a('进度', ['progress', 'course_id' => $course_id], ['class' => 'btn btn-primary']) ?>

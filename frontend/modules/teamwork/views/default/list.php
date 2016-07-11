@@ -84,4 +84,5 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?= $this->render('_footer',[
     'model' => $model,
+    'twTool' => $twTool,
 ]); ?>

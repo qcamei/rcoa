@@ -76,11 +76,14 @@ class CourseController extends Controller
     public function actionList($project_id)
     {
         $allModels = $this->findItemModel($project_id);
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
         foreach ($allModels as $value)
             $model = $this->findModel($value->id);
         
         return $this->render('list', [
             'allModels' => $allModels,
+            'twTool' => $twTool,
             'model' => empty($allModels) ? new CourseManage() : $model,
             'project_id' => $project_id,
         ]);
@@ -103,6 +106,7 @@ class CourseController extends Controller
                     $twTool->getWeek($id, $post['create_time']);
         return $this->render('view', [
             'model' => !empty($model) ? $model : $this->findModel($id),
+            'twTool' => $twTool,
             'result' => $result,
             'producer' => $this->getAssignProducers(['course_id' => $id]),
             'create_time' => $this->getSummaryCreateTime(['course_id' => $id]),
@@ -127,7 +131,7 @@ class CourseController extends Controller
         $model->loadDefaultValues();
         $model->project_id = $params['project_id'];
         $model->create_by = \Yii::$app->user->id;
-        if(!$model->project->getIsLeader())
+        if(!$twTool->getIsLeader())
             throw new NotAcceptableHttpException('只有队长才可以【添加课程】');
         
         if ($model->load($post)) {
@@ -151,6 +155,7 @@ class CourseController extends Controller
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'twTool' => $twTool,
                 'courses' => $this->getCourses($model->project->item_child_id),
                 'teachers' => $this->getExpert(),
                 'producerList' => $this->getTeamMemberList(),
@@ -167,9 +172,11 @@ class CourseController extends Controller
      */
     public function actionUpdate($id)
     {
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
         $model = $this->findModel($id);
         $post = Yii::$app->request->post();
-        if(!$model->project->getIsLeader() || $model->create_by !== \Yii::$app->user->id)
+        if(!$twTool->getIsLeader() || $model->create_by !== \Yii::$app->user->id)
             throw new NotAcceptableHttpException('只有队长才可以【编辑】课程 or 该课程隶属于自己');
         
         if(!$model->getIsNormal())
@@ -195,6 +202,7 @@ class CourseController extends Controller
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'twTool' => $twTool,
                 'courses' => $this->getCourses($model->project->item_child_id),
                 'teachers' => $this->getExpert(),
                 'producerList' => $this->getTeamMemberList(),
@@ -217,7 +225,7 @@ class CourseController extends Controller
         $twTool = Yii::$app->get('twTool');
         /* @var $model CourseManage */
         $model = $twTool->getCourseProgressOne($id);
-        if($model != null && $model->getIsNormal() && $model->project->getIsLeader()){
+        if($model != null && $model->getIsNormal() && $twTool->getIsLeader()){
             if ($model->create_by == \Yii::$app->user->id && $model->progress == 1){
 
                 $model->status = ItemManage::STATUS_CARRY_OUT;
@@ -235,7 +243,11 @@ class CourseController extends Controller
      */
     public function actionDelete($id, $project_id)
     {
-        //$this->findModel($id)->delete();
+        $model = $this->findModel(['id' => $id, 'project_id' => $project_id]);
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
+        if($model->getIsNormal() && $twTool->getIsLeader() && $model->create_by == \Yii::$app->user->id)
+            $model->delete();
 
         $this->redirect(['list','project_id' => $project_id]);
     }

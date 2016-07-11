@@ -30,7 +30,7 @@ use yii\helpers\Html;
             
             if($actionId == 'list')
                 echo Html::a(Html::img(['/filedata/image/new_64px64.png']).'创建项目', ['create'], [
-                    'class' => $model->getIsLeader() ? 'footer-item footer-item-right' : 'footer-item footer-item-right disabled']);
+                    'class' => $twTool->getIsLeader() ? 'footer-item footer-item-right' : 'footer-item footer-item-right disabled']);
         ?>
     </div>
 </div>

@@ -95,7 +95,7 @@ $this->params['breadcrumbs'][] = $this->title;
              * 1、必须是状态为【正常】
              * 2、必须是【队长】
              */
-            if($model->project->getIsNormal() && $model->project->getIsLeader())
+            if($model->project->getIsNormal() && $twTool->getIsLeader())
                 echo Html::a(Yii::t('rcoa/teamwork', 'Create Course Manage'), ['create','project_id' => $model->project_id], 
                 ['class' => 'btn btn-primary']);
         ?>
