@@ -45,6 +45,10 @@ foreach ($producer as $value) {
                 'value' => $model->lession_time,
             ],
             [
+                'attribute' => 'team_id',
+                'value' => $model->team->name,
+            ],
+            [
                 'attribute' => 'create_by',
                 'value' => $model->project->teamMember->team->name.' ( '.$model->createBy->nickname.' )',
             ],

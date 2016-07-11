@@ -110,6 +110,8 @@ $js =
     $('#myModal').on('hidden.bs.modal', function () {
         window.location.reload();
     });
+        
+    
     
 JS;
     $this->registerJs($js,  View::POS_READY);

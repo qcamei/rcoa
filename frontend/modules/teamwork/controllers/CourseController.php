@@ -130,6 +130,7 @@ class CourseController extends Controller
         $model = new CourseManage();
         $model->loadDefaultValues();
         $model->project_id = $params['project_id'];
+        $model->team_id = $twTool->getHotelTeam(\Yii::$app->user->id);
         $model->create_by = \Yii::$app->user->id;
         if(!$twTool->getIsLeader())
             throw new NotAcceptableHttpException('只有队长才可以【添加课程】');
@@ -150,7 +151,7 @@ class CourseController extends Controller
             }catch (Exception $ex) {
                 $trans ->rollBack(); //回滚事务
                 Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
-                $this->render(['create', 'id' => $model->project_id]);
+                //$this->render(['create', 'id' => $model->project_id]);
             }
         } else {
             return $this->render('create', [

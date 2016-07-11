@@ -26,6 +26,10 @@ use yii\widgets\DetailView;
                 'value' => $model->itemChild->name,
             ],
             [
+                'attribute' => 'team_id',
+                'value' => $model->team->name,
+            ],
+            [
                 'attribute' => 'create_by',
                 'value' => $model->teamMember->team->name.' ( '.$model->createBy->nickname.' )',
             ],

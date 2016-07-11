@@ -176,7 +176,7 @@ class CourselinkController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['progress', 'course_id' => $model->course_id]);
         } else {
-            return $this->renderPartial('entry', [
+            return $this->renderAjax('entry', [
                 'model' => $model,
             ]);
         }

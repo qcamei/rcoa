@@ -2,6 +2,8 @@
 
 namespace common\models\team;
 
+use common\models\teamwork\CourseManage;
+use common\models\teamwork\ItemManage;
 use common\models\User;
 use Yii;
 use yii\db\ActiveQuery;
@@ -15,10 +17,11 @@ use yii\db\ActiveRecord;
  * @property integer $type  类型
  * @property string $des    描述
  *
- * @property FrameworkCourseManage[] $frameworkCourseManages    获取课程管理
- * @property TeamType $teamType     获取团队类型    
- * @property TeamMember[] $teamMembers     获取团队成员
- * @property User[] $us     获取用户
+ * @property TeamType $teamType             获取团队类型    
+ * @property TeamMember[] $teamMembers      获取团队成员
+ * @property User[] $us                     获取用户
+ * @property CourseManage[] $courseManages  获取课程
+ * @property ItemManage[] $itemManages      获取项目
  */
 class Team extends ActiveRecord
 {
@@ -37,7 +40,8 @@ class Team extends ActiveRecord
     {
         return [
             [['type'], 'integer'],
-            [['name', 'des'], 'string', 'max' => 255]
+            [['name', 'des'], 'string', 'max' => 255],
+            [['type'], 'exist', 'skipOnError' => true, 'targetClass' => TeamType::className(), 'targetAttribute' => ['type' => 'id']],
         ];
     }
 
@@ -54,14 +58,7 @@ class Team extends ActiveRecord
         ];
     }
     
-    /**
-     * @return ActiveQuery
-     */
-    public function getFrameworkCourseManages()
-    {
-        return $this->hasMany(FrameworkCourseManage::className(), ['resource_people' => 'id']);
-    }
-
+    
     /**
      * @return ActiveQuery
      */
@@ -69,6 +66,8 @@ class Team extends ActiveRecord
     {
         return $this->hasOne(TeamType::className(), ['id' => 'type']);
     }
+    
+    
 
     /**
      * @return ActiveQuery
@@ -84,5 +83,21 @@ class Team extends ActiveRecord
     public function getUs()
     {
         return $this->hasMany(User::className(), ['id' => 'u_id'])->viaTable('{{%team_member}}', ['team_id' => 'id']);
+    }
+    
+    /**
+     * @return ActiveQuery
+     */
+    public function getCourseManages()
+    {
+        return $this->hasMany(CourseManage::className(), ['team_id' => 'id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getItemManages()
+    {
+        return $this->hasMany(ItemManage::className(), ['team_id' => 'id']);
     }
 }

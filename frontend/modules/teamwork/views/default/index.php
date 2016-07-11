@@ -3,6 +3,7 @@
 use common\models\teamwork\ItemManage;
 use frontend\modules\teamwork\TwAsset;
 use yii\data\ActiveDataProvider;
+use yii\helpers\Html;
 use yii\web\View;
 
 /* @var $this View */
@@ -15,21 +16,33 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="container item-manage-index item-manage">
-    <div style="background-color: rgba(243, 123, 83, 1);width: 100%; height: 180px;margin-top: 20px;">
-        <dl>    
-            <dt style="padding:10px;display: block;font-size: 20px;color: #fff">课程中心</dt>
-            <dd  style="padding-left:50px;color: #fff;">已完成：
-                <span style="font-size:35px">2000</span>&nbsp;
-                <span>学时</span>&nbsp;&nbsp;
-                <a style="font-size: 25px;color: #fff" class="glyphicon glyphicon-eye-open"></a>
-            </dd>
-            <dd  style="padding-left:50px;color: #fff">在&nbsp;&nbsp;&nbsp;做：
-                <span style="font-size:35px">2000</span>&nbsp;
-                <span>学时</span>&nbsp;&nbsp;
-                <a style="font-size: 25px;color: #fff" class="glyphicon glyphicon-eye-open"></a>
-            </dd>
-        </dl>
-    </div>
+    
+    <?php 
+        echo Html::beginTag('div', ['class' => 'item-manage-head']);
+            echo Html::beginTag('div', ['class' => 'item-manage-headline']).'课程中心'.Html::endTag('div');
+            echo Html::beginTag('div', ['class' => 'lession-time']);
+                echo '<p>已完成：<span>'.array_sum($completedLessionTimes).'</span>学时'.
+                Html::a('', ['index', 'status' => ItemManage::STATUS_CARRY_OUT], ['class' => 'glyphicon glyphicon-eye-open ']).'</p>
+                <p>&nbsp;&nbsp;&nbsp;在做：<span>'.array_sum($undoneLessionTimes).'</span>学时'.
+                Html::a('', ['index', 'status' => ItemManage::STATUS_NORMAL], ['class' => 'glyphicon glyphicon-eye-open ']).'</p>'; 
+            echo Html::endTag('div');
+        echo Html::endTag('div');
+    ?>
+    <?php
+        foreach ($team as $value) {
+            echo Html::beginTag('div', ['class' => 'item-manage-head item-manage-bottom']);
+                echo Html::beginTag('div', ['class' => 'item-manage-headline']).$value->name.Html::endTag('div');
+                echo Html::beginTag('div', ['class' => 'lession-time']);
+                    echo '<p>已完成：<span style="font-size:25px;">'.array_sum($completedLessionTimes).'</span>学时'.
+                    Html::a('', '', ['class' => 'glyphicon glyphicon-eye-open ']).'</p>
+                    <p>&nbsp;&nbsp;&nbsp;在做：<span style="font-size:25px;">'.array_sum($undoneLessionTimes).'</span>学时'.
+                    Html::a('', '', ['class' => 'glyphicon glyphicon-eye-open ']).'</p>'; 
+                echo Html::endTag('div');
+            echo Html::endTag('div');
+        }
+    ?>
+    
+    
 </div>
 
 <?= $this->render('_footer'); ?>

@@ -2,6 +2,7 @@
 
 namespace common\models\teamwork;
 
+use common\models\team\Team;
 use common\models\team\TeamMember;
 use common\models\teamwork\ItemManage;
 use common\models\User;
@@ -19,6 +20,7 @@ use yii\db\ActiveRecord;
  * @property integer $course_id         课程Id
  * @property string $teacher            主讲教师
  * @property integer $lession_time      学时
+ * @property integer $team_id           创建者所在团队
  * @property string $create_by          创建者
  * @property integer $created_at        创建于
  * @property string $plan_start_time    计划开始时间
@@ -29,6 +31,7 @@ use yii\db\ActiveRecord;
  * @property integer $progress          进度
  *
  * @property CourseLink[] $courseLinks              获取所有课程环节
+ * @property Team $team                             获取团队
  * @property User $createBy                         获取创建者
  * @property Item $course                           获取课程
  * @property User $speakerTeacher                   获取主讲讲师
@@ -68,6 +71,7 @@ class CourseManage extends ActiveRecord
             [['teacher', 'create_by'], 'string', 'max' => 36],
             [['plan_start_time', 'plan_end_time', 'real_carry_out'], 'string', 'max' => 60],
             [['des'], 'string', 'max' => 255],
+            [['team_id'], 'exist', 'skipOnError' => true, 'targetClass' => Team::className(), 'targetAttribute' => ['team_id' => 'id']],
             [['create_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['create_by' => 'id']],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Item::className(), 'targetAttribute' => ['course_id' => 'id']],
             [['teacher'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['teacher' => 'id']],
@@ -86,6 +90,7 @@ class CourseManage extends ActiveRecord
             'course_id' => Yii::t('rcoa/teamwork', 'Course ID'),
             'teacher' => Yii::t('rcoa/teamwork', 'Teacher'),
             'lession_time' => Yii::t('rcoa/teamwork', 'Lession Time'),
+            'team_id' => Yii::t('rcoa/team', 'Team ID'),
             'create_by' => Yii::t('rcoa', 'Create By'),
             'created_at' => Yii::t('rcoa/teamwork', 'Created At'),
             'plan_start_time' => Yii::t('rcoa/teamwork', 'Plan Start Time'),
@@ -103,6 +108,15 @@ class CourseManage extends ActiveRecord
     public function getCourseLinks()
     {
         return $this->hasMany(CourseLink::className(), ['course_id' => 'id']);
+    }
+    
+    /**
+     * 获取团队
+     * @return ActiveQuery
+     */
+    public function getTeam()
+    {
+        return $this->hasOne(Team::className(), ['id' => 'team_id']);
     }
     
     /**

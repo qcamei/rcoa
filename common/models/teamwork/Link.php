@@ -3,7 +3,6 @@
 namespace common\models\teamwork;
 
 use common\models\teamwork\Phase;
-use common\models\teamwork\PhaseLink;
 use common\models\User;
 use Yii;
 use yii\db\ActiveQuery;
@@ -24,9 +23,9 @@ use yii\db\ActiveRecord;
  * @property integer $index         索引
  * @property string $is_delete      是否删除
  *
- * @property User $createBy         获取创建者
- * @property Phase $phase           获取阶段
- * @property Phase[] $phases        获取所有阶段
+ * @property CourseLink[] $courseLinks     获取所有课程阶段
+ * @property User $createBy                 获取创建者
+ * @property Phase $phase                   获取阶段
  */
 class Link extends ActiveRecord
 {
@@ -57,7 +56,9 @@ class Link extends ActiveRecord
             [['name'], 'string', 'max' => 255],
             [['unit'], 'string', 'max' => 16],
             [['is_delete'], 'string', 'max' => 4],
-            [['create_by'], 'string', 'max' => 36]
+            [['create_by'], 'string', 'max' => 36],
+            [['phase_id'], 'exist', 'skipOnError' => true, 'targetClass' => Phase::className(), 'targetAttribute' => ['phase_id' => 'id']],
+            [['create_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['create_by' => 'id']],
         ];
     }
 
@@ -79,6 +80,14 @@ class Link extends ActiveRecord
             'is_delete' => Yii::t('rcoa/teamwork', 'Is Delete'),
         ];
     }
+    
+    /**
+     * @return ActiveQuery
+     */
+    public function getCourseLinks()
+    {
+        return $this->hasMany(CourseLink::className(), ['link_id' => 'id']);
+    }
 
     /**
      * @return ActiveQuery
@@ -94,14 +103,5 @@ class Link extends ActiveRecord
     public function getPhase()
     {
         return $this->hasOne(Phase::className(), ['id' => 'phase_id']);
-    }
-    
-    /**
-     * @return ActiveQuery
-     */
-    public function getPhases()
-    {
-        return $this->hasMany(Phase::className(), ['id' => 'phases_id'])->viaTable('{{%framework_phase_link}}', ['link_id' => 'id']);
-    }
-    
+    }    
 }

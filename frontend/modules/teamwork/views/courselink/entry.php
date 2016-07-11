@@ -2,6 +2,7 @@
 
 use common\models\teamwork\CourseLink;
 use common\models\teamwork\Link;
+use frontend\modules\teamwork\TwAsset;
 use kartik\slider\Slider;
 use yii\helpers\Html;
 use yii\web\View;
@@ -40,21 +41,17 @@ use yii\widgets\ActiveForm;
     ]); ?>
 
     <?= $form->field($model, 'total')->textInput([
-        $model->link->type === Link::AMOUNT ? '' : 'disabled' => 'disabled']) ?>
+        'type' => 'number',
+        'id' => 'courselink-total', $model->link->type === Link::AMOUNT ? '' : 'disabled' => 'disabled']) ?>
 
     <?= $form->field($model, 'completed')->widget(Slider::classname(), [
-        'pluginConflict' => true,
-        'value'=>2.54,
-        'sliderColor'=>Slider::TYPE_WARNING,
-        'handleColor'=>Slider::TYPE_WARNING,
+        'value'=>$model->completed,
         'pluginOptions'=>[
             'min'=>0,
-            'max'=>20,
+            'max'=> $model->total,
             'step'=>1,
-            'handle'=>'triangle',
-            'tooltip'=>'always',
+            'tooltip'=>'always' 
         ],
-        //'options'=>['disabled'=>true]
     ]) ?>
 
     <?php ActiveForm::end(); ?>
@@ -66,4 +63,25 @@ use yii\widgets\ActiveForm;
 
 </div>
 
-            
+<?php
+$js = 
+<<<JS
+    $('#courselink-total').change(function(){  
+        var oldValue = $('#courselink-completed').slider('getValue');  
+        var maxValue = $(this).val();  
+        if(oldValue>maxValue)  
+            oldValue = maxValue;  
+        $('#courselink-completed').slider({max:maxValue,value:Number(oldValue)});  
+        $('#courselink-completed').slider('refresh');  
+    });  
+
+
+
+    
+JS;
+    $this->registerJs($js,  View::POS_READY);
+?>
+
+<?php
+    TwAsset::register($this);
+?>       

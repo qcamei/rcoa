@@ -2,6 +2,8 @@
 
 namespace frontend\modules\teamwork\controllers;
 
+use common\models\team\Team;
+use common\models\teamwork\CourseManage;
 use common\models\teamwork\ItemManage;
 use frontend\modules\teamwork\TeamworkTool;
 use wskeee\framework\FrameworkManager;
@@ -48,9 +50,11 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
-        
-       
-       return $this->render('index');
+       return $this->render('index',[
+           'completedLessionTimes' => $this->getCourseLessionTimesSum(['status' => ItemManage::STATUS_CARRY_OUT]),
+           'undoneLessionTimes' => $this->getCourseLessionTimesSum(['status' => ItemManage::STATUS_NORMAL]),
+           'team' => Team::find()->with('courseManages')->all(), 
+       ]);
     }
     
     /**
@@ -72,7 +76,7 @@ class DefaultController extends Controller
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
         $dataProvider = new ArrayDataProvider([
-            'allModels' => $twTool->getItemProgressAll(),
+            'allModels' => $twTool->getItemProgressAll(), 
         ]);
         return $this->render('list', [
             'model' => $model,
@@ -106,11 +110,13 @@ class DefaultController extends Controller
     public function actionCreate()
     {
         $model = new ItemManage();
+       
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
         if(!$twTool->getIsLeader())
             throw new NotAcceptableHttpException('只有队长才可以【创建项目】');
         $model->loadDefaultValues();
+        $model->team_id = $twTool->getHotelTeam(\Yii::$app->user->id);
         $model->create_by = \Yii::$app->user->id;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -277,6 +283,25 @@ class DefaultController extends Controller
         return ArrayHelper::map($fwManager->getChildren($itemId), 'id', 'name');
     }
     
+    /**
+     * 获取课程学时总和
+     * @param type $condition  条件
+     * @return type
+     */
+    public function getCourseLessionTimesSum($condition){
+        $lessionTimes = CourseManage::find()
+                    ->where($condition)
+                    ->with('project')
+                    ->all();
+        $lessionTime = [];
+        foreach ($lessionTimes as $value) {
+            /* @var $value  CourseManage */
+            $lessionTime[] = $value->lession_time;
+        }
+        return $lessionTime;
+    }
+
+
     /**
      * 重组 $model->statusName 数组
      * @param type $model
