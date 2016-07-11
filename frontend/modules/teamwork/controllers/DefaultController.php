@@ -48,6 +48,8 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
+        
+       
        return $this->render('index');
     }
     
@@ -85,11 +87,12 @@ class DefaultController extends Controller
      */
     public function actionView($id)
     {
+        /* @var $model ItemManage */
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
         $model = $twTool->getItemProgressOne($id);
         return $this->render('view', [
-            'model' => $model,
+            'model' => !empty($model->progress) ? $model : $this->findModel($id),
         ]);
     }
 
@@ -101,9 +104,9 @@ class DefaultController extends Controller
     public function actionCreate()
     {
         $model = new ItemManage();
+       
         if(!$model->getIsLeader())
             throw new NotAcceptableHttpException('只有队长才可以【创建项目】');
-            
         $model->loadDefaultValues();
         $model->create_by = \Yii::$app->user->id;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

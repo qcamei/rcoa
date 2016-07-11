@@ -96,7 +96,10 @@ class CourselinkController extends Controller
         $phaseModel = new CoursePhase();
         $phaseModel->loadDefaultValues();
         $post = Yii::$app->request->post();
-        
+        $phaseModel->course_id = $course_id;
+        if(!$phaseModel->course->project->getIsLeader() || $phaseModel->course->create_by == \Yii::$app->user->id)
+            throw new NotAcceptableHttpException('只有队长 or 该课程隶属于自己才可以【新增阶段和环节】');
+            
         if ($phaseModel->load($post)){
             Yii::$app->db->createCommand()
                     ->update(CoursePhase::tableName(), ['is_delete'=> 'N', 'weights' => $post['CoursePhase']['weights']], [
@@ -130,6 +133,9 @@ class CourselinkController extends Controller
         $phaseModel = CoursePhase::findOne($id);
         $post = Yii::$app->request->post();
         $link = empty($post['link_id']) ? [] : $post['link_id'];
+        if(!$phaseModel->course->project->getIsLeader() || $phaseModel->course->create_by == \Yii::$app->user->id)
+            throw new NotAcceptableHttpException('只有队长 or 该课程隶属于自己才可以【编辑阶段和环节】');
+        
         if ($phaseModel->load($post) && $phaseModel->save()) {
             foreach ($link as $value) 
                 Yii::$app->db->createCommand()
@@ -154,7 +160,10 @@ class CourselinkController extends Controller
     public function actionEntry($id)
     {
         $model = $this->findModel($id);
-        if(!$model->course->project->getIsLeader() || $model->course->create_by == \Yii::$app->user->id)
+         /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
+        //var_dump($twTool->getIsLeader());exit;
+        if(!$twTool->getIsLeader() || $model->course->create_by !== \Yii::$app->user->id)
             throw new NotAcceptableHttpException('只有队长 or 该课程隶属于自己才可以操作');
             
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

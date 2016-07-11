@@ -2,6 +2,7 @@
 
 namespace frontend\modules\teamwork;
 
+use common\models\team\TeamMember;
 use common\models\teamwork\CourseLink;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\CoursePhase;
@@ -37,6 +38,24 @@ class TeamworkTool{
                 ->andWhere('create_time <="'. $now_end.'"')
                 ->one();
         return $result;
+    }
+    
+    /**
+     * 获取当前用户是否为【队长】
+     * @return boolean  true为是
+     */
+    public function getIsLeader()
+    {
+        //查出成员表里面所有队长
+        $isLeader = TeamMember::findAll(['u_id' => \Yii::$app->user->id]);
+        
+        if(!empty($isLeader) || isset($isLeader)){
+            foreach ($isLeader as $value){
+                if($value->is_leader == 'Y')
+                    return true;
+            }
+        }
+        return false;
     }
     
     /**
@@ -208,7 +227,7 @@ class TeamworkTool{
     public function getItemProgressOne($id)
     {
         $sql = "SELECT Course_List.*, (SUM(Course_List.Course_progress)/COUNT(Course_List.Course_progress)) AS progress FROM 
-                    (SELECT *,(SUM(Phase_PRO.phase_progress)/COUNT(Phase_PRO.phase_progress)) AS Course_progress FROM  
+                    (SELECT Phase_PRO.*,(SUM(Phase_PRO.phase_progress)/COUNT(Phase_PRO.phase_progress)) AS Course_progress FROM  
                         (SELECT Item.*,SUM(total) AS total,SUM(completed) AS completed,(SUM(completed)/SUM(total)) AS phase_progress  
                             FROM ccoa_teamwork_course_link AS Link  
                             LEFT JOIN ccoa_teamwork_course_phase AS Phase ON Phase.id = Link.course_phase_id  
@@ -216,10 +235,10 @@ class TeamworkTool{
                             LEFT JOIN ccoa_teamwork_course_manage AS Course ON Link.course_id = Course.id
                             LEFT JOIN ccoa_teamwork_item_manage AS Item ON Item.id = Course.project_id
                             WHERE Link.is_delete = 'N' 
-                            GROUP BY Link.course_phase_id,Link.course_id) AS Phase_PRO 
-                    GROUP BY id) AS Course_List
-                WHERE id = $id
-                GROUP BY id";
+                            GROUP BY Item.id) AS Phase_PRO 
+                    GROUP BY Phase_PRO.id) AS Course_List
+                WHERE Course_List.id = $id
+                GROUP BY Course_List.id";
         
         $itemProgress = ItemManage::findBySql($sql)->one();
         

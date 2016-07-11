@@ -56,7 +56,7 @@ use yii\widgets\ActiveForm;
             echo Html::beginTag('div', ['class' => 'col-sm-4']);
                 echo DateControl::widget([
                     'name' => 'ItemManage[forecast_time]',
-                    'value' => $model->isNewRecord ? date('Y-m-d H:i', time()) : $model->forecast_time, 
+                    'value' => $model->isNewRecord ? date('Y-m-d H:i', strtotime('+3 day')) : $model->forecast_time, 
                     'type'=> DateControl::FORMAT_DATETIME,
                     'displayFormat' => 'yyyy-MM-dd H:i',
                     'saveFormat' => 'yyyy-MM-dd H:i',
