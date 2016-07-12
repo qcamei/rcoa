@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
     <?php
         foreach ($team->teamMembers as $value) {
-            echo Html::beginTag('div', ['class' => 'col-lg-4']);
+            echo Html::beginTag('div', ['class' => 'col-lg-3 col-md-3 col-sm-4 col-xm-12']);
                 echo Html::beginTag('div', ['class' => 'member-bg']);
                     echo Html::beginTag('div', ['class' => 'left']).
                         Html::img([$value->u->avatar], ['class' => 'img-circle']).Html::endTag('div');
