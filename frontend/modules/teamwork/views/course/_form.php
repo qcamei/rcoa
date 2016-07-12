@@ -56,11 +56,9 @@ use yii\widgets\ActiveForm;
     ]) ?>
 
     <?= $form->field($model, 'lession_time')->widget(TouchSpin::classname(),  [
-            'readonly' => true,
             'pluginOptions' => [
                 'placeholder' => '学时 ...',
                 'min' => 1,
-                //'max' => 5,
             ],
     ])?>
     

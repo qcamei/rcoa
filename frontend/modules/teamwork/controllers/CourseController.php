@@ -102,17 +102,19 @@ class CourseController extends Controller
         /* @var $model CourseManage */
         $model = $twTool->getCourseProgressOne($id);
         $post = Yii::$app->request->post();
-        
+        $producer = $this->getAssignProducers(['course_id' => $id]);
+        $create_time = $this->getSummaryCreateTime(['course_id' => $id]);
         $result = empty($post) ? $twTool->getWeek($id, date('Y-m-d', time())) : 
                     $twTool->getWeek($id, $post['create_time']);
+                    
         return $this->render('view', [
             'model' => !empty($model) ? $model : $this->findModel($id),
             'twTool' => $twTool,
-            'result' => $result,
-            'producer' => $this->getAssignProducers(['course_id' => $id]),
-            'create_time' => $this->getSummaryCreateTime(['course_id' => $id]),
-            'createTime' => empty($result)? null :$result->create_time,
-            'createdAt' => empty($result)? date('Y-m-d H:i', time()) :date('Y-m-d H:i', $result->created_at),
+            'producer' => $producer,
+            'create_time' => $create_time,
+            'create_time_key' => empty($post) ? null : array_keys($create_time),
+            'createTime' => empty($result) ? null : $result->create_time,
+            'createdAt' => empty($result)? '无' : date('Y-m-d H:i', $result->created_at),
             'content' => empty($result)? '无' :$result->content,
         ]);
     }
@@ -152,7 +154,7 @@ class CourseController extends Controller
             }catch (Exception $ex) {
                 $trans ->rollBack(); //回滚事务
                 Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
-                //$this->render(['create', 'id' => $model->project_id]);
+                $this->render(['create', 'id' => $model->project_id]);
             }
         } else {
             return $this->render('create', [

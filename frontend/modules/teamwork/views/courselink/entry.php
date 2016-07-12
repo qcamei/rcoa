@@ -46,6 +46,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'completed')->widget(Slider::classname(), [
         'value'=>$model->completed,
+        'options' => [
+            'style' => 'width:100%'
+        ],
         'pluginOptions'=>[
             'min'=>0,
             'max'=> $model->total,

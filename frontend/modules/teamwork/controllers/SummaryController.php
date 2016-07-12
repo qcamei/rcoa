@@ -87,7 +87,7 @@ class SummaryController extends Controller
         if(!empty($result))
             return $this->redirect(['update', 'course_id' => $model->course_id, 'create_time' => $result->create_time]);
         
-        if(!$model->course->getIsNormal() || !$model->course->project->getIsLeader())
+        if(!$model->course->getIsNormal() || !$twTool->getIsLeader())
             throw new NotAcceptableHttpException('只有队长 or 状态为正常才可以【创建总结】');
          
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -110,10 +110,11 @@ class SummaryController extends Controller
         if($create_time == null)
             return $this->redirect(['create', 'course_id' => $course_id]);
         
-        //var_dump($create_time);exit;
+         /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
         $model = $this->findModel($course_id, $create_time);
          
-        if(!$model->course->getIsNormal() || !$model->course->project->getIsLeader())
+        if(!$model->course->getIsNormal() || !$twTool->getIsLeader())
             throw new NotAcceptableHttpException('只有队长 or 状态为正常才可以【编辑总结】');
        
         if ($model->load(Yii::$app->request->post())) {

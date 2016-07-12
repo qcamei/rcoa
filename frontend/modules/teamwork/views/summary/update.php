@@ -30,11 +30,11 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa/teamwork', 'Update');
 
 <div class="controlbar">
     <div class="container">
+        <?= Html::a(Yii::t('rcoa', 'Back'), ['course/view', 'id' => $model->course_id], ['class' => 'btn btn-default']) ?>
         <?= Html::a(
                 $model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'),
                 'javascript:;', 
                 ['id'=>'submit', 'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('rcoa', 'Back'), ['course/view', 'id' => $model->course_id], ['class' => 'btn btn-default']) ?>
     </div>
 </div>
 

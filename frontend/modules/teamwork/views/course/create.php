@@ -34,11 +34,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="controlbar">
     <div class="container">
+        <?= Html::a(Yii::t('rcoa', 'Back'), ['list','project_id' => $model->project_id], ['class' => 'btn btn-default']) ?>
         <?= Html::a(
                 $model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'),
                 'javascript:;', 
                 ['id'=>'submit', 'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('rcoa', 'Back'), ['list','project_id' => $model->project_id], ['class' => 'btn btn-default']) ?>
     </div>
 </div>
 

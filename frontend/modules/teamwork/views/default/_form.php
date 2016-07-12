@@ -88,7 +88,10 @@ use yii\widgets\ActiveForm;
  */
 $js = 
 <<<JS
-    //$('#w0-disp').css('width','35%');
+    $('#itemmanage-item_id').change(function(){
+        $('#select2-itemmanage-item_child_id-container').html("");
+    });
+     
 JS;
 /**
  * 注册 $js 到 ready 函数，以页面加载完成才执行 js
@@ -98,8 +101,6 @@ $this->registerJs($js,  View::POS_READY);
 
 <script type="text/javascript">
     function wx_one(e){
-        //console.log($(e).val());
-	//$("#itemmanage-item_id").html("");
 	$("#itemmanage-item_child_id").html("");
 	$.post("/framework/api/search?id="+$(e).val(),function(data)
         {

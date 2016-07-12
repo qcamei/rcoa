@@ -67,7 +67,8 @@ class CourseManage extends ActiveRecord
     public function rules()
     {
         return [
-           [['project_id', 'course_id', 'lession_time', 'created_at', 'updated_at', 'status'], 'integer'],
+            [['project_id', 'course_id', 'lession_time', 'created_at', 'updated_at', 'status'], 'integer'],
+            [['project_id', 'course_id', 'teacher'], 'required'],
             [['teacher', 'create_by'], 'string', 'max' => 36],
             [['plan_start_time', 'plan_end_time', 'real_carry_out'], 'string', 'max' => 60],
             [['des'], 'string', 'max' => 255],

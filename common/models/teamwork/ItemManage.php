@@ -76,6 +76,7 @@ class ItemManage extends ActiveRecord
     {
         return [
             [['item_type_id', 'item_id', 'item_child_id', 'created_at', 'updated_at', 'status','team_id'], 'integer'],
+            [['item_type_id', 'item_id', 'item_child_id'], 'required'],
             [['create_by'], 'string', 'max' => 36],
             [['forecast_time', 'real_carry_out'], 'string', 'max' => 60],
             [['background', 'use'], 'string', 'max' => 255],

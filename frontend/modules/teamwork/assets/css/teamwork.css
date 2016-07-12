@@ -192,6 +192,15 @@ and open the template in the editor.
     width: 80%;
     min-width: 100px;
 }
+.summar{
+    width:100%;
+    height:350px;
+    border:1px #ccc solid;
+    padding:10px
+}
+.summar p {
+    color:#ccc;
+}
 
 /*
  * 课程添加页面样式

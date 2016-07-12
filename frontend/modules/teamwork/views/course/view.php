@@ -35,21 +35,22 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php  $form = ActiveForm::begin([
         'id' => 'form-summary-search',
     ]) ?>
-    
+
     <?= Html::beginTag('div', ['class' => 'col-lg-3 col-md-3 col-sm-4', 'style'=> 'padding:0;margin-bottom:10px;']).
             Select2::widget([
                 'name' => 'create_time',
-                'value' => empty($result) ? '' :array_keys($create_time),
+                'value' => $create_time_key,
                 'data' => $create_time,
                 'hideSearch' => true,
-                'options' => ['placeholder' => '请选择...'],
+                'options' => [
+                    'placeholder' => '请选择...',
+                ],
                 'pluginEvents' => [
                     'change' => 'function(){ select2Log();}'
                 ]
              ]).Html::endTag('div'); ?> 
     
-    <?php ActiveForm::end() ?>
-    
+    <?php ActiveForm::end(); ?>
     <?php
         echo Html::beginTag('div', ['class' => 'col-lg-3 col-md-3 col-sm-4', 'style'=> 'margin-bottom:10px;']).
              Html::a('编辑', [
@@ -58,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
              Html::a('新增', ['summary/create', 'course_id' => $model->id], ['class' => 'btn btn-primary']).Html::endTag('div');
         /* @var $model CourseManage */
         echo Html::beginTag('div', ['class' => 'col-lg-12 col-md-12 col-sm-4', 'style' => 'padding:0']).
-             Html::beginTag('div',['style' => 'width:100%;height:350px;border:1px #ccc solid;color:#ccc;padding:10px']).'<p>时间：'.$createdAt.'</p>'.
+             Html::beginTag('div',['class' => 'summar']).'<p>时间：'.$createdAt.'</p>'.
              $content. 
              Html::endTag('div').Html::endTag('div');
     ?>
@@ -99,14 +100,25 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php
+//$reflashUrl = Yii::$app->urlManager->createAbsoluteUrl(['/teamwork/default/view']);
+//id = "$model->id";
 $js = 
 <<<JS
-  
+    var reflashUrl = "",
+        
+    $('#create_time').change(function(){
+        select2Log($(this).val());
+    });
+    function select2Log(value)
+    {  
+        location.href = reflashUrl+'?id='+id+'&date='+value;
+    }
 JS;
     //$this->registerJs($js,  View::POS_READY);
 ?>
 
 <script type="text/javascript">
+
     function select2Log(){
         $("#form-summary-search").submit();
     } 
