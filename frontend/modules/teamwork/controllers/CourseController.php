@@ -356,8 +356,7 @@ class CourseController extends Controller
     public function getTeamMemberList()
     {
         /* @var $model CourseManage */
-        $producers = TeamMember::find()
-                    ->with('u')
+        $producers = TeamMember::find()->with('u')
                     ->all();
         return ArrayHelper::map($producers, 'u_id','u.nickname');
     }
