@@ -128,6 +128,8 @@ class CourseController extends Controller
     {
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
+        if(!$twTool->getIsLeader())
+            throw new NotAcceptableHttpException('只有队长才可以【添加课程】');
         $params = Yii::$app->request->queryParams;
         $post = Yii::$app->request->post();
         $model = new CourseManage();
@@ -135,9 +137,8 @@ class CourseController extends Controller
         $model->project_id = $params['project_id'];
         $model->team_id = $twTool->getHotelTeam(\Yii::$app->user->id);
         $model->create_by = \Yii::$app->user->id;
-        if(!$twTool->getIsLeader())
-            throw new NotAcceptableHttpException('只有队长才可以【添加课程】');
-        
+        $courses = $this->getCourses($model->project->item_child_id);
+        $existedCourses = $this->getExistedCourses($model->project_id);
         if ($model->load($post)) {
             /** 开启事务 */
             $trans = Yii::$app->db->beginTransaction();
@@ -160,7 +161,7 @@ class CourseController extends Controller
             return $this->render('create', [
                 'model' => $model,
                 'twTool' => $twTool,
-                'courses' => $this->getCourses($model->project->item_child_id),
+                'courses' => array_diff($courses, $existedCourses),
                 'teachers' => $this->getExpert(),
                 'producerList' => $this->getTeamMemberList(),
                 'producer' => $this->getSameTeamMember(\Yii::$app->user->id)
@@ -180,12 +181,14 @@ class CourseController extends Controller
         $twTool = Yii::$app->get('twTool');
         $model = $this->findModel($id);
         $post = Yii::$app->request->post();
+        $courses = $this->getCourses($model->project->item_child_id);
+        $existedCourses = $this->getExistedCourses(['project_id' => $model->project_id]);
+        $existedCoursesOne = $this->getExistedCourses(['id' => $id]);    //获取已经存在的单条课程
         if(!$twTool->getIsLeader() || $model->create_by !== \Yii::$app->user->id)
-            throw new NotAcceptableHttpException('只有队长才可以【编辑】课程 or 该课程隶属于自己');
-        
+           throw new NotAcceptableHttpException('只有队长才可以【编辑】课程 or 该课程隶属于自己');
         if(!$model->getIsNormal())
             throw new NotAcceptableHttpException('该项目现在状态为：'.$model->project->getStatusName());
-        
+       
         if ($model->load($post)) {
             /** 开启事务 */
             $trans = Yii::$app->db->beginTransaction();
@@ -207,7 +210,7 @@ class CourseController extends Controller
             return $this->render('update', [
                 'model' => $model,
                 'twTool' => $twTool,
-                'courses' => $this->getCourses($model->project->item_child_id),
+                'courses' => ArrayHelper::merge($existedCoursesOne, array_diff($courses, $existedCourses)),
                 'teachers' => $this->getExpert(),
                 'producerList' => $this->getTeamMemberList(),
                 'producer' => $this->getAssignProducers($model->id),
@@ -325,12 +328,23 @@ class CourseController extends Controller
     }
     
     /**
+     * 获取已存在的所有课程
+     * @param type $condition
+     * @return type
+     */
+    public function getExistedCourses($condition)
+    {
+        $courses = CourseManage::find()->where($condition)
+                ->with('project')->with('course')->all();
+        return ArrayHelper::map($courses, 'course_id', 'course.name');
+    }
+    
+    /**
      * 获取专家库
      * @return type
      */
     public function getExpert(){
-        $expert = Expert::find()
-                ->with('user') 
+        $expert = Expert::find()->with('user')
                 ->all();
         return ArrayHelper::map($expert, 'u_id','user.nickname');
     }

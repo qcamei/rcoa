@@ -3,10 +3,10 @@
 namespace frontend\modules\teamwork\controllers;
 
 use common\models\team\Team;
-use common\models\teamwork\CourseManage;
 use common\models\teamwork\ItemManage;
 use frontend\modules\teamwork\TeamworkTool;
 use wskeee\framework\FrameworkManager;
+use wskeee\framework\models\Item;
 use wskeee\framework\models\ItemType;
 use Yii;
 use yii\data\ArrayDataProvider;
@@ -166,6 +166,10 @@ class DefaultController extends Controller
         
         if(!$model->getIsNormal())
             throw new NotAcceptableHttpException('该项目现在状态为：'.$model->getStatusName());
+
+        $itemChild = $this->getFwItemForSelect($model->item_id);
+        $existedItemChild = $this->getExistedItemForSelect($model->item_id);
+        $existedItemChildOne = $this->getExistedItemChild($model->item_child_id);
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -174,7 +178,7 @@ class DefaultController extends Controller
                 'model' => $model,
                 'itemType' => $this->getItemType(),
                 'items' => $this->getCollegesForSelect(),
-                'itemChilds' => $this->getFwItemForSelect($model->item_id),
+                'itemChilds' => ArrayHelper::merge($existedItemChildOne, array_diff($itemChild, $existedItemChild)),
             ]);
         }
     }
@@ -238,6 +242,35 @@ class DefaultController extends Controller
         }else
             throw new NotAcceptableHttpException('该项目下有课程未完成！');
         $this->redirect(['view', 'id' => $model->id]);
+    }
+    
+    /**
+     * 获取项目子项
+     * @param type $id
+     * @return type JSON
+     */
+    public function actionSearch($id)
+    {
+        Yii::$app->getResponse()->format = 'json';
+        $itemChildId = ItemManage::find()  
+                        ->select('item_child_id')  
+                        ->where(['item_id'=> $id]);         
+        $errors = [];
+        $items = [];
+        try
+        {
+            $items = Item::find()  
+                ->where(['parent_id'=>$id])  
+                ->andWhere(['not in','id',$itemChildId])  
+                ->all(); 
+        } catch (Exception $ex) {
+            $errors [] = $ex->getMessage();
+        }
+        return [
+            'type'=>'S',
+            'data' => $items,
+            'error' => $errors
+        ];
     }
 
     /**
@@ -303,6 +336,33 @@ class DefaultController extends Controller
         return ArrayHelper::map($fwManager->getChildren($itemId), 'id', 'name');
     }
     
+    /**
+     * 获取项目已存在的所有子项目
+     * @param type $itemId
+     * @return type
+     */
+    public function getExistedItemForSelect($itemId)
+    {
+        $itemChild = ItemManage::find() ->where(['item_id' => $itemId])
+                ->with('itemChild')->with('item')->all();
+        
+        return ArrayHelper::map($itemChild, 'item_child_id', 'itemChild.name');
+    }
+    
+    /**
+     * 获取已经存在的单条子项目
+     * @param type $itemChildId
+     * @return type
+     */
+    public function getExistedItemChild($itemChildId)
+    {
+        $itemChild = ItemManage::find()->where(['item_child_id' => $itemChildId])
+                ->with('itemChild')->all();
+       
+        return ArrayHelper::map($itemChild, 'item_child_id', 'itemChild.name');
+    }
+
+
     /**
      * 重组 $model->statusName 数组
      * @param type $model

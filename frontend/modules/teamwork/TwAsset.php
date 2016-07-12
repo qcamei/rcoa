@@ -15,10 +15,8 @@ class TwAsset extends AssetBundle
     public $sourcePath = '@frontend/modules/teamwork/assets';
     public $css = [
        'css/teamwork.css',
-       'css/bootstrap-slider.css'
     ];
     public $js = [
-        'js/bootstrap-slider.js'
     ];
     public $depends = [
         'yii\web\YiiAsset'

@@ -206,9 +206,10 @@ and open the template in the editor.
  * 课程添加页面样式
  */
 .producer{
+    //position: absolute;
     display: block;
     float: left;
-    width: 80px;
+    width: 100%;
     height: 35px;
     border: 1px #000 solid;
     line-height: 35px;
@@ -217,9 +218,10 @@ and open the template in the editor.
     margin-bottom: 10px;
 }
 .producer .delete-icon{
+    position: absolute;
     background: url("/filedata/image/delete.png") no-repeat;
-    margin-top: -42px;
-    margin-left: 67px;
+    top: -6px;
+    right: 10px;
     height: 16px;
     display: block;
     width: 16px;

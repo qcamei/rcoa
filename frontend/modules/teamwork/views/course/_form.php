@@ -138,10 +138,13 @@ use yii\widgets\ActiveForm;
                      echo Html::beginTag('div', ['class' => 'collapse', 'id' => 'collapseExample', ]).
                             Html::checkboxList('producer', array_keys($producer), $producerList, ['class' => 'well',
                                 'itemOptions' => ['style'=>'margin-left:20px;']]).Html::endTag('div');
-                      echo Html::beginTag('div',['id' => 'display-list', 'style' => 'margin-top:15px;']); 
-                           foreach ($producer as $key => $value)
-                                echo '<span value ="'.$key.'" class="producer img-rounded">'.$value.'<i class="delete-icon"></i></span>';
-                      echo Html::endTag('div');
+                     echo Html::beginTag('div',['id' => 'display-list','class' => 'row','style' => 'margin-top:15px;']); 
+                            foreach ($producer as $key => $value){
+                               echo Html::beginTag('div',['class' => 'col-lg-2 col-md-2 col-sm-4 col-xs-6']);  
+                               echo '<span value ="'.$key.'" class="producer img-rounded">'.$value.'<i class="delete-icon"></i></span>';
+                               echo Html::endTag('div');
+                            }
+                     echo Html::endTag('div');
              echo Html::endTag('div');           
              echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']).
                     Html::beginTag('div', ['class' => 'help-block']).
