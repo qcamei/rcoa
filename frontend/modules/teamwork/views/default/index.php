@@ -23,12 +23,12 @@ $this->params['breadcrumbs'][] = $this->title;
         echo Html::beginTag('div', ['class' => 'item-manage-head']);
             echo Html::beginTag('div', ['class' => 'item-manage-headline']).'课程中心'.Html::endTag('div');
             echo Html::beginTag('div', ['class' => 'lession-time']);
-                echo '<p><span>已完成：</span><span class="completed-undone">'.$completed.'</span><span>学时</span>'.
-                Html::a(Html::img(['/filedata/image/u13784_a.png'], ['class' => 'eye-team']), 
+                echo '<p><span>已完成：</span><span class="completed-undone">'.$completed.'</span><span style="float:left">学时</span>'.
+                        Html::a(Html::img(['/filedata/image/u13784_a.png'], ['class' => 'eye-team']), 
                         ['index', 'status' => ItemManage::STATUS_CARRY_OUT]).'</p>
-                <p><span>在&nbsp;&nbsp;&nbsp;做：</span><span class="completed-undone">'.$undone.'</span><span>学时</span>'.
-                Html::a(Html::img(['/filedata/image/u13784_a.png'], ['class' => 'eye-team']), 
-                        ['index', 'status' => ItemManage::STATUS_NORMAL]).'</p>';
+                    <p><span>在&nbsp;&nbsp;&nbsp;做：</span><span class="completed-undone">'.$undone.'</span><span>学时</span>'.
+                        Html::a(Html::img(['/filedata/image/u13784_a.png'], ['class' => 'eye-team']), 
+                                ['index', 'status' => ItemManage::STATUS_NORMAL]).'</p>';
             echo Html::endTag('div');
         echo Html::endTag('div');
     ?>
