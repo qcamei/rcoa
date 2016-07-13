@@ -7,6 +7,7 @@ use yii\data\ArrayDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\web\View;
+use yii\widgets\Breadcrumbs;
 
 /* @var $this View */
 /* @var $model CourseManage */
@@ -21,7 +22,23 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="title">
     <div class="container">
-        <?= $this->title.': 项目名称' ?>
+        <?= Breadcrumbs::widget([
+            'options' => ['class' => 'breadcrumb'],
+            'homeLink' => [
+                'label' => Yii::t('rcoa/teamwork', 'Item Manages'),
+                'url' => ['list'],
+            ],
+            'links' => [
+                [
+                    'label' => Yii::t('rcoa/teamwork', 'Item View'),
+                    'url' => ['view', 'id' => $model->project_id],
+                ],
+                [
+                    'label' => $this->title.'：'.$model->project->itemChild->name,
+                    'class' => 'active',
+                ],
+            ]
+        ]);?>
     </div>
 </div>
 
@@ -88,7 +105,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="controlbar">
     <div class="container">
-        <?= Html::a(Yii::t('rcoa', 'Back'), ['default/list'], ['class' => 'btn btn-default']) ?>
+        <?= Html::a(Yii::t('rcoa', 'Back'), ['default/view', 'id' => $model->project_id], ['class' => 'btn btn-default']) ?>
         <?php
             /**
              * 添加课程 按钮显示必须满足以下条件：

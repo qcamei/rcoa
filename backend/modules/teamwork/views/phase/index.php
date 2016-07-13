@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'name',
             'weights',
-            'progress',
+            //'progress',
             [
                 'attribute' => 'create_by',
                 'value' => function($model){

@@ -4,6 +4,7 @@ use common\models\teamwork\ItemManage;
 use frontend\modules\teamwork\TwAsset;
 use yii\helpers\Html;
 use yii\web\View;
+use yii\widgets\Breadcrumbs;
 
 /* @var $this View */
 /* @var $model ItemManage */
@@ -16,7 +17,23 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa', 'Update');
 
 <div class="title">
     <div class="container">
-        <?= $this->title.': 项目名称' ?>
+         <?= Breadcrumbs::widget([
+            'options' => ['class' => 'breadcrumb'],
+            'homeLink' => [
+                'label' => Yii::t('rcoa/teamwork', 'Item Manages'),
+                'url' => ['list'],
+            ],
+            'links' => [
+                [
+                    'label' => Yii::t('rcoa/teamwork', 'Item View'),
+                    'url' => ['view', 'id' => $model->id],
+                ],
+                [
+                    'label' => $this->title,
+                    'class' => 'active',
+                ],
+            ]
+        ]);?>
     </div>
 </div>
 

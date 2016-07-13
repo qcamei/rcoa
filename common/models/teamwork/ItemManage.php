@@ -40,11 +40,11 @@ use yii\db\ActiveRecord;
 class ItemManage extends ActiveRecord
 {
     /** 暂停 */
-    const STATUS_TIME_OUT = 0;
+    const STATUS_TIME_OUT = 25;
     /** 正常 */
-    const STATUS_NORMAL = 1;
+    const STATUS_NORMAL = 5;
     /** 完成 */
-    const STATUS_CARRY_OUT = 99;
+    const STATUS_CARRY_OUT = 15;
     /** 进度 */
     public $progress;
 

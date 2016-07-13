@@ -89,17 +89,17 @@ class ItemActBtnCol extends ItemListTd {
             ];
             $buttonName = [
                 'view' => '查看',
-                'deploy' => '配置',
+                //'deploy' => '配置',
                 'progress' => '进度',  
             ];
             $params = [
                 'view' => ['id' => $model->id],
-                'deploy' => ['course_id' => $model->id,],
+                //'deploy' => ['course_id' => $model->id,],
                 'progress' => ['course_id' => $model->id,]
             ];
             $btnClass = [
                'view' => 'btn btn-primary',
-               'deploy' => $twTool->getIsLeader() ? 'btn btn-primary' : 'btn btn-primary disabled',
+               //'deploy' => $twTool->getIsLeader() ? 'btn btn-primary' : 'btn btn-primary disabled',
                'progress' => 'btn btn-primary',
             ];
         }

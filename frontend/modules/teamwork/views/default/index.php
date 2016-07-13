@@ -3,14 +3,12 @@
 use common\models\teamwork\ItemManage;
 use frontend\modules\teamwork\TeamworkTool;
 use frontend\modules\teamwork\TwAsset;
-use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\web\View;
 
 /* @var $this View */
 /* @var $model ItemManage */
 /* @var $twTool TeamworkTool */
-/* @var $dataProvider ActiveDataProvider */
 
 
 $this->title = Yii::t('rcoa/teamwork', 'Item Manages');
@@ -25,10 +23,10 @@ $this->params['breadcrumbs'][] = $this->title;
             echo Html::beginTag('div', ['class' => 'lession-time']);
                 echo '<p><span>已完成：</span><span class="completed-undone">'.$completed.'</span><span style="float:left">学时</span>'.
                         Html::a(Html::img(['/filedata/image/u13784_a.png'], ['class' => 'eye-team']), 
-                        ['index', 'status' => ItemManage::STATUS_CARRY_OUT]).'</p>
+                        ['list', 'status' => ItemManage::STATUS_CARRY_OUT]).'</p>
                     <p><span>在&nbsp;&nbsp;&nbsp;做：</span><span class="completed-undone">'.$undone.'</span><span>学时</span>'.
                         Html::a(Html::img(['/filedata/image/u13784_a.png'], ['class' => 'eye-team']), 
-                                ['index', 'status' => ItemManage::STATUS_NORMAL]).'</p>';
+                                ['list', 'status' => ItemManage::STATUS_NORMAL]).'</p>';
             echo Html::endTag('div');
         echo Html::endTag('div');
     ?>
@@ -44,12 +42,12 @@ $this->params['breadcrumbs'][] = $this->title;
                         Html::endTag('div');
                 echo Html::beginTag('div', ['class' => 'lession-time']);
                     echo '<p><span>已完成：</span><span class="completed-undone">'.$completed.'</span><span>学时</span>'.
-                    Html::a(Html::img(['/filedata/image/u13784_a.png'], ['class' => 'eye-team']), ['index', 
+                    Html::a(Html::img(['/filedata/image/u13784_a.png'], ['class' => 'eye-team']), ['list', 
                         'team_id' => $value->id,
                         'status' => ItemManage::STATUS_CARRY_OUT
                     ]).'</p>
                      <p><span>在&nbsp;&nbsp;&nbsp;做：</span><span class="completed-undone">'.$undone.'</span><span>学时</span>'.
-                    Html::a(Html::img(['/filedata/image/u13784_a.png'], ['class' => 'eye-team']), ['index', 
+                    Html::a(Html::img(['/filedata/image/u13784_a.png'], ['class' => 'eye-team']), ['list', 
                         'team_id' => $value->id,
                         'status' => ItemManage::STATUS_NORMAL
                     ]).'</p>'; 
@@ -72,7 +70,7 @@ $js =
         $('#item-manage-form').submit();
     });
 JS;
-    $this->registerJs($js,  View::POS_READY);
+    //$this->registerJs($js,  View::POS_READY);
 ?>
 
 <?php

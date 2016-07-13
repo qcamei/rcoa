@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => $model->types[$model->type],
             ],
             'unit',
-            'progress',
+            //'progress',
             [
                 'attribute' => 'type',
                 'value' => $model->createBy->nickname,

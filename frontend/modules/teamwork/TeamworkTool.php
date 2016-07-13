@@ -222,13 +222,18 @@ class TeamworkTool{
     
     /**
      * 获取所有项目进度
+     * @param type $status     状态
+     * @param type $team_id    团队ID
      * @return type
      */
-    public function getItemProgressAll(){
+    public function getItemProgressAll($status = null, $team_id = null){
+        $status = $status == null ? '1' : "(Course.`status` = $status)";
+        $team_id = $team_id == null ? '' : "AND (Course.team_id = $team_id)";
         $sql = "SELECT Item_course.*,(SUM(Course_link.completed)/SUM(Course_link.total)) AS progress FROM     
-                    (SELECT Item.id, Course.id AS course_id,Item.item_type_id,Item.item_id, Item.item_child_id   
-                    FROM ccoa_teamwork_item_manage AS Item      
-                    LEFT JOIN ccoa_teamwork_course_manage AS Course ON Course.project_id = Item.id) AS Item_course    
+                    (SELECT Item.id, Course.id AS course_id,Item.item_type_id,Item.item_id, Item.item_child_id,Course.team_id,Course.`status` 
+                        FROM ccoa_teamwork_item_manage AS Item  
+                        LEFT JOIN ccoa_teamwork_course_manage AS Course ON Course.project_id = Item.id
+                        WHERE $status $team_id ) AS Item_course
                 LEFT JOIN ccoa_teamwork_course_link AS Course_link ON Item_course.course_id = Course_link.course_id  
                 GROUP BY Item_course.id ";
         $itemProgress = ItemManage::findBySql($sql)

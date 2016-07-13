@@ -38,7 +38,34 @@ and open the template in the editor.
 .table-list .progress {
     background-image: linear-gradient(to bottom, #ddd, #ccc);
 }
-
+/**
+ * 面包屑样式
+ */
+.container .breadcrumb {
+    padding: 8px 15px;
+    margin-bottom: 20px;
+    margin-top: -7px;
+    list-style: none;
+    background-color: #2e6da4;
+    border-radius: 4px;
+}
+.breadcrumb a {
+    color: #fff;
+}
+.breadcrumb a:hover {
+    color: #fff;
+    text-decoration:none;
+}
+.breadcrumb .active {
+    //width: 100px;
+    color: #fff !important;
+}
+.breadcrumb .course-name
+{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 /**
  *  首页样式
  */

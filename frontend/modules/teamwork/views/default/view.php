@@ -7,18 +7,33 @@ use yii\data\ArrayDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\web\View;
+use yii\widgets\Breadcrumbs;
 
 /* @var $this View */
 /* @var $model ItemManage */
 
 $this->title = Yii::t('rcoa/teamwork', 'Item View');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/teamwork', 'Item Manages'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/teamwork', 'Item Manages'), 'url' => ['list']];
+$this->params['breadcrumbs'] = $this->title;
 ?>
 
 <div class="title">
     <div class="container">
-        <?= $this->title ?>
+        <?= Breadcrumbs::widget([
+            'itemTemplate' => '<li style="margin-top:-5px;">{link}</li>',
+            'options' => ['class' => 'breadcrumb'],
+            'homeLink' => [
+                'label' => Yii::t('rcoa/teamwork', 'Item Manages'),
+                'url' => ['list'],
+            ],
+            'links' => [
+                [
+                    'label' => $this->title.'：'.$model->itemChild->name,
+                    'template' => '<li class="course-name" style="width:20%">{link}</li>',
+                    'class' => 'active',
+                ],
+            ]
+        ]);?>
     </div>
 </div>
 

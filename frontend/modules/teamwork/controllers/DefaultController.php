@@ -89,13 +89,13 @@ class DefaultController extends Controller
      * Lists all ItemManage models.
      * @return mixed
      */
-    public function actionList()
+    public function actionList($status = null, $team_id = null)
     {
         $model = new ItemManage();
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
         $dataProvider = new ArrayDataProvider([
-            'allModels' => $twTool->getItemProgressAll(), 
+            'allModels' => $twTool->getItemProgressAll($status, $team_id), 
         ]);
         return $this->render('list', [
             'model' => $model,
