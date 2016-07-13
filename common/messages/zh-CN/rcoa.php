@@ -49,6 +49,9 @@ return [
     'Delete' => '删除',
     'Search' => '搜索',
     'Back' => '返回',
+    'View' => '查看',
+    'Detail' => '详情',
+    'Deploy' => '配置',
     
     
     //拍摄预约-公共部分

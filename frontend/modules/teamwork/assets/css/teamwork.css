@@ -42,9 +42,9 @@ and open the template in the editor.
  * 面包屑样式
  */
 .container .breadcrumb {
-    padding: 8px 15px;
+    padding: 0px;
     margin-bottom: 20px;
-    margin-top: -7px;
+    margin-top: 0px;
     list-style: none;
     background-color: #2e6da4;
     border-radius: 4px;
@@ -57,8 +57,7 @@ and open the template in the editor.
     text-decoration:none;
 }
 .breadcrumb .active {
-    //width: 100px;
-    color: #fff !important;
+    color: #ccc !important;
 }
 .breadcrumb .course-name
 {

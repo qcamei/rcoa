@@ -4,6 +4,7 @@ use common\models\teamwork\CourseManage;
 use frontend\modules\teamwork\TwAsset;
 use yii\helpers\Html;
 use yii\web\View;
+use yii\widgets\Breadcrumbs;
 
 /* @var $this View */
 /* @var $model CourseManage */
@@ -16,7 +17,18 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa/teamwork', 'Update');
 
 <div class="title">
     <div class="container">
-        <?= $this->title.'：'.$model->course->name ?>
+        <?= Breadcrumbs::widget([
+            'options' => ['class' => 'breadcrumb'],
+            'homeLink' => [
+                'label' => Yii::t('rcoa/teamwork', 'Courses'),
+                'url' => ['index'],
+            ],
+            'links' => [
+                [
+                    'label' => Yii::t('rcoa', 'Update'),
+                ],
+            ]
+        ]);?>
     </div>
 </div>
 
@@ -34,7 +46,7 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa/teamwork', 'Update');
 
 <div class="controlbar">
     <div class="container">
-        <?= Html::a(Yii::t('rcoa', 'Back'), ['list','project_id' => $model->project_id], ['class' => 'btn btn-default']) ?>
+        <?= Html::a(Yii::t('rcoa', 'Back'), ['view','id' => $model->id], ['class' => 'btn btn-default']) ?>
         <?= Html::a(
                 $model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'),
                 'javascript:;', 

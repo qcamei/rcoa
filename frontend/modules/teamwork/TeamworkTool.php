@@ -179,14 +179,14 @@ class TeamworkTool{
     public function getCourseProgressAll($project_id = null)
     {
         $project_id = $project_id == null ?  '' : "AND Course.project_id = $project_id"; 
-        
+        $status = ItemManage::STATUS_NORMAL;
         $sql = "SELECT id,Phase_PRO.project_id,Phase_PRO.course_id,(SUM(Phase_PRO.progress)/COUNT(Phase_PRO.progress)) AS progress FROM  
                     (SELECT Course.project_id, Course.course_id, Link.course_id AS id,SUM(total) AS total,SUM(completed) AS completed,(SUM(completed)/SUM(total)) AS progress  
                     FROM ccoa_teamwork_course_link AS Link  
                     LEFT JOIN ccoa_teamwork_course_phase AS Phase ON Phase.id = Link.course_phase_id  
                     LEFT JOIN ccoa_teamwork_phase_template AS Phase_Temp ON Phase.phase_id = Phase_Temp.id
                     LEFT JOIN ccoa_teamwork_course_manage AS Course ON Link.course_id = Course.id
-                    WHERE Link.is_delete = 'N' AND Course.`status` = 1 $project_id
+                    WHERE Link.is_delete = 'N' AND Course.`status` = $status $project_id 
                     GROUP BY Link.course_id) AS Phase_PRO 
                 GROUP BY id";
         

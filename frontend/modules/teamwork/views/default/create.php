@@ -20,13 +20,12 @@ $this->params['breadcrumbs'][] = $this->title;
        <?= Breadcrumbs::widget([
             'options' => ['class' => 'breadcrumb'],
             'homeLink' => [
-                'label' => Yii::t('rcoa/teamwork', 'Item Manages'),
+                'label' => Yii::t('rcoa/teamwork', 'Items'),
                 'url' => ['list'],
             ],
             'links' => [
                 [
-                    'label' => $this->title,
-                    'class' => 'active',
+                    'label' => Yii::t('rcoa', 'Create'),
                 ],
             ]
         ]);?>

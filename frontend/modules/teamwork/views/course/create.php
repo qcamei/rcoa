@@ -4,6 +4,7 @@ use common\models\teamwork\CourseManage;
 use frontend\modules\teamwork\TwAsset;
 use yii\helpers\Html;
 use yii\web\View;
+use yii\widgets\Breadcrumbs;
 
 
 /* @var $this View */
@@ -16,7 +17,18 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="title">
     <div class="container">
-        <?= $this->title ?>
+        <?= Breadcrumbs::widget([
+            'options' => ['class' => 'breadcrumb'],
+            'homeLink' => [
+                'label' => Yii::t('rcoa/teamwork', 'Courses'),
+                'url' => ['index'],
+            ],
+            'links' => [
+                [
+                    'label' => Yii::t('rcoa', 'Create'),
+                ],
+            ]
+        ]);?>
     </div>
 </div>
 

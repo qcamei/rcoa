@@ -20,17 +20,16 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa', 'Update');
          <?= Breadcrumbs::widget([
             'options' => ['class' => 'breadcrumb'],
             'homeLink' => [
-                'label' => Yii::t('rcoa/teamwork', 'Item Manages'),
+                'label' => Yii::t('rcoa/teamwork', 'Items'),
                 'url' => ['list'],
             ],
             'links' => [
                 [
-                    'label' => Yii::t('rcoa/teamwork', 'Item View'),
+                    'label' => Yii::t('rcoa', 'Detail'),
                     'url' => ['view', 'id' => $model->id],
                 ],
                 [
-                    'label' => $this->title,
-                    'class' => 'active',
+                    'label' => Yii::t('rcoa', 'Update'),
                 ],
             ]
         ]);?>

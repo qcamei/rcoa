@@ -6,6 +6,7 @@ use kartik\widgets\Select2;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
+use yii\widgets\Breadcrumbs;
 
 
 /* @var $this View */
@@ -19,7 +20,20 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="title">
     <div class="container">
-        <?= $this->title.'：'.$model->course->name ?>
+        <?= Breadcrumbs::widget([
+            'options' => ['class' => 'breadcrumb'],
+            'homeLink' => [
+                'label' => Yii::t('rcoa/teamwork', 'Courses'),
+                'url' => ['index'],
+                'template' => '<li class="course-name">{link}</li>',
+            ],
+            'links' => [
+                [
+                    'label' => Yii::t('rcoa', 'Detail').'：'.$model->course->name,
+                    'template' => '<li class="course-name active" style="width:50%">{link}</li>',
+                ],
+            ]
+        ]);?>
     </div>
 </div>
 

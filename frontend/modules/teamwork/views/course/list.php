@@ -14,7 +14,7 @@ use yii\widgets\Breadcrumbs;
 /* @var $dataProvider ActiveDataProvider */
 
 
-$this->title = Yii::t('rcoa/teamwork', 'Item Manage');
+$this->title = Yii::t('rcoa/teamwork', 'Item Deploy');
 $this->params['breadcrumbs'][] = $this->title;
 
 !empty($allModels) ? : $model->project_id = $project_id;
@@ -25,17 +25,19 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Breadcrumbs::widget([
             'options' => ['class' => 'breadcrumb'],
             'homeLink' => [
-                'label' => Yii::t('rcoa/teamwork', 'Item Manages'),
-                'url' => ['list'],
+                'label' => Yii::t('rcoa/teamwork', 'Items'),
+                'url' => ['default/list'],
+                'template' => '<li class="course-name">{link}</li>',
             ],
             'links' => [
                 [
-                    'label' => Yii::t('rcoa/teamwork', 'Item View'),
+                    'label' => Yii::t('rcoa', 'Detail'),
                     'url' => ['view', 'id' => $model->project_id],
+                    'template' => '<li class="course-name">{link}</li>',
                 ],
                 [
-                    'label' => $this->title.'：'.$model->project->itemChild->name,
-                    'class' => 'active',
+                    'label' => Yii::t('rcoa', 'Deploy').'：'.$model->project->itemChild->name,
+                    'template' => '<li class="course-name active" style="width:50%">{link}</li>',
                 ],
             ]
         ]);?>
@@ -113,7 +115,7 @@ $this->params['breadcrumbs'][] = $this->title;
              * 2、必须是【队长】
              */
             if($model->project->getIsNormal() && $twTool->getIsLeader())
-                echo Html::a(Yii::t('rcoa/teamwork', 'Create Course Manage'), ['create','project_id' => $model->project_id], 
+                echo Html::a(Yii::t('rcoa/teamwork', 'Create Course'), ['create','project_id' => $model->project_id], 
                 ['class' => 'btn btn-primary']);
         ?>
     </div>

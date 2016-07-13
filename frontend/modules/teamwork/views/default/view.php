@@ -20,17 +20,16 @@ $this->params['breadcrumbs'] = $this->title;
 <div class="title">
     <div class="container">
         <?= Breadcrumbs::widget([
-            'itemTemplate' => '<li style="margin-top:-5px;">{link}</li>',
             'options' => ['class' => 'breadcrumb'],
             'homeLink' => [
-                'label' => Yii::t('rcoa/teamwork', 'Item Manages'),
+                'label' => Yii::t('rcoa/teamwork', 'Items'),
                 'url' => ['list'],
+                'template' => '<li class="course-name">{link}</li>',
             ],
             'links' => [
                 [
-                    'label' => $this->title.'：'.$model->itemChild->name,
-                    'template' => '<li class="course-name" style="width:20%">{link}</li>',
-                    'class' => 'active',
+                    'label' => Yii::t('rcoa', 'Detail').'：'.$model->itemChild->name,
+                    'template' => '<li class="course-name active" style="width:50%">{link}</li>',
                 ],
             ]
         ]);?>

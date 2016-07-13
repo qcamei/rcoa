@@ -6,6 +6,7 @@ use frontend\modules\teamwork\TwAsset;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\web\View;
+use yii\widgets\Breadcrumbs;
 
 /* @var $this View */
 /* @var $dataProvider ActiveDataProvider */
@@ -15,7 +16,18 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="title">
     <div class="container">
-        <?= $this->title ?>
+        <?= Breadcrumbs::widget([
+            'options' => ['class' => 'breadcrumb'],
+            'homeLink' => [
+                'label' => Yii::t('rcoa/teamwork', 'Courses'),
+                'url' => ['course/index'],
+            ],
+            'links' => [
+                [
+                    'label' => Yii::t('rcoa', '进度'),
+                ],
+            ]
+        ]);?>
     </div>
 </div>
 <div class="container course-link-index has-title">
@@ -77,7 +89,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="controlbar">
     <div class="container">
-        <?= Html::a(Yii::t('rcoa', 'Back'), ['course/view','id' => $course_id], ['class' => 'btn btn-default']) ?>
+        <?= Html::a(Yii::t('rcoa', 'Back'), ['course/index'], ['class' => 'btn btn-default']) ?>
     </div>
 </div>
 
