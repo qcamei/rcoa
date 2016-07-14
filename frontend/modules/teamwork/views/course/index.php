@@ -15,20 +15,50 @@ $this->title = Yii::t('rcoa/teamwork', 'Course Manages');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="container course-manage-index has-title">
+<div class="container course-manage-index has-title item-manage">
     
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'summary' => false,
         'tableOptions' => ['class' => 'table table-striped table-list'],
         'columns' => [
-           [
+            [
+                'class' => 'frontend\modules\teamwork\components\ItemListTd',
+                'label' => '',
+                'value'=> function($model){
+                    /* @var $model CourseManage */
+                    return $model->project->teamMember->team->name;
+                },
+                'headerOptions' => [
+                    'class'=>[
+                        'th'=>'hidden-xs',
+                    ],
+                    'style' => [
+                        'width' => '124px' 
+                    ],
+                ],
+                'contentOptions' =>[
+                    'class'=>'hidden-xs',
+                ],
+            ],
+            [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
                 'label' => '项目类型',
                 'value'=> function($model){
                     /* @var $model CourseManage */
                     return $model->project->itemType->name;
                 },
+                'headerOptions' => [
+                    'class'=>[
+                        'th'=>'hidden-xs',
+                    ],
+                    'style' => [
+                        'width' => '89px' 
+                    ],
+                ],
+                'contentOptions' =>[
+                    'class'=>'hidden-xs',
+                ],
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
@@ -37,6 +67,17 @@ $this->params['breadcrumbs'][] = $this->title;
                     /* @var $model CourseManage */
                     return $model->project->item->name;
                 },
+                'headerOptions' => [
+                    'class'=>[
+                        'th'=>'hidden-xs',
+                    ],
+                    'style' => [
+                        'width' => '107px' 
+                    ],
+                ],
+                'contentOptions' =>[
+                    'class'=>'hidden-xs',
+                ],
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
@@ -45,6 +86,18 @@ $this->params['breadcrumbs'][] = $this->title;
                     /* @var $model CourseManage */
                     return $model->project->itemChild->name;
                 },
+                'headerOptions' => [
+                    'class'=>[
+                        'th'=>'hidden-xs',
+                    ],
+                    'style' => [
+                        'width' => '350px' 
+                    ],
+                ],
+                'contentOptions' =>[
+                    'class' => 'course-name',
+                    'class'=>'hidden-xs',
+                ],
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
@@ -53,17 +106,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value'=> function($model){
                     /* @var $model CourseManage */
                     return Html::a($model->course->name, ['view','id' => $model->id], [
-                            'style' => 'color:#000',
-                        ]);
+                        'style' => 'color:#000',
+                    ]);
                 },
-            ],
-            [
-                'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => '制作团队',
-                'value'=> function($model){
-                    /* @var $model CourseManage */
-                    return $model->project->teamMember->team->name;
-                },
+                'headerOptions' => [
+                    'style' => [
+                        'max-width' => '271px',
+                        'min-width' => '84px',
+                    ],
+                ],
+                'contentOptions' =>[
+                    'class' => 'course-name',
+                    'style' => [
+                        'max-width' => '271px', 
+                        'max-width' => '84px', 
+                    ],
+                ],
+                
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
@@ -79,7 +138,12 @@ $this->params['breadcrumbs'][] = $this->title;
                                 (int)($model->progress * 100).'%'.
                                 Html::endTag('div').
                             Html::endTag('div'); 
-                }
+                },
+                'headerOptions' => [
+                    'style' => [
+                        'width' => '74px',
+                    ],
+                ],
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemActBtnCol',
@@ -92,7 +156,7 @@ $this->params['breadcrumbs'][] = $this->title;
                  ],
                  'headerOptions'=>[
                     'style'=> [
-                        'width' => '185px',
+                        'width' => '125px',
                     ]
                 ],
             ],            

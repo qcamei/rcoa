@@ -41,18 +41,19 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 
-<div class="container course-link-index has-title">
+<div class="container course-link-index has-title item-manage">
     
     <table class="table table-list">
         <thead>
             <tr style="background-color:#eee;">
-              <th style="width:20%">阶段</th>
-              <th style="width:25%">环节</th>
-              <th style="width:15%">权重</th>
-              <th style="width:15%">类型</th>
-              <th style="width:13%">单位</th>
-              <th style="width:12%">操作</th>
+                <th style="width:212px;padding:8px;">阶段</th>
+                <th style="max-width:434px;min-width:80px;padding:8px;">环节</th>
+                <th style="width:130px;padding:8px;">权重</th>
+                <th class="hidden-xs" style="width:130px;padding:8px;">类型</th>
+                <th class="hidden-xs" style="width:130px;padding:8px;">单位</th>
+                <th style="width:135px;padding:8px;">操作</th>
             </tr>
+            
         </thead>
         <tbody>
         <?php foreach ($coursePhase as $phase) {
@@ -62,21 +63,23 @@ $this->params['breadcrumbs'][] = $this->title;
             $classDeletee = $twTool->getIsLeader() && $phase->course->create_by == Yii::$app->user->id ?
                          'btn btn-danger' : 'btn btn-danger disabled';
             echo '<tr style="background-color:#eee">
-            <td colspan="2">'.$phase->phase->name.'</td>
-            <td>'.$phase->weights.'</td>
-            <td colspan="2"></td>
-            <td style="text-align:right">'.Html::a('修改',['update', 'id' => $phase->id], ['class' => $classUpdate]).' '.
+                <td>'.$phase->phase->name.'</td>
+                <td></td>
+                <td>'.$phase->weights.'</td>
+                <td class="hidden-xs"></td>
+                <td class="hidden-xs"></td>
+                <td>'.Html::a('修改',['update', 'id' => $phase->id], ['class' => $classUpdate]).' '.
                  Html::a('删除',['phase-delete', 'id' => $phase->id], ['class' => $classDeletee]).'</td>
             </tr>';
             foreach ($phase->courseLinks as $link) {
                 /* @var $link CourseLink */
                 echo '<tr>
-                <td></td>
-                <td colspan="2">'.$link->link->name.'</td>
-                <td>'.$link->link->types[$link->link->type].'</td>
-                <td>'.$link->link->unit.'</td>
-                <td style="text-align:right">'.
-                        Html::a('删除',['link-delete', 'id' => $link->id], ['class' => $classDeletee]).'</td>
+                    <td></td>
+                    <td>'.$link->link->name.'</td>
+                    <td></td>
+                    <td class="hidden-xs">'.$link->link->types[$link->link->type].'</td>
+                    <td class="hidden-xs">'.$link->link->unit.'</td>
+                    <td><div class="hidden-xs" style="width:58px;height:34px;float:left;"></div>'.Html::a('删除',['link-delete', 'id' => $link->id], ['class' => $classDeletee]).'</td>
                 </tr>';
             }
         }
@@ -98,7 +101,7 @@ $this->params['breadcrumbs'][] = $this->title;
             if($twTool->getIsLeader() && $model->course->create_by == Yii::$app->user->id)
                echo Html::a('新增', ['create', 'course_id' => $course_id], ['class' => 'btn btn-primary']) 
         ?>
-        <?= Html::a('进度', ['progress', 'course_id' => $course_id], ['class' => 'btn btn-primary']) ?>
+        <?php /* Html::a('进度', ['progress', 'course_id' => $course_id], ['class' => 'btn btn-primary'])*/ ?>
     </div>
 </div>
 

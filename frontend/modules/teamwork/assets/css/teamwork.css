@@ -38,6 +38,12 @@ and open the template in the editor.
 .table-list .progress {
     background-image: linear-gradient(to bottom, #ddd, #ccc);
 }
+.course-name
+{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 /**
  * 面包屑样式
  */
@@ -59,12 +65,7 @@ and open the template in the editor.
 .breadcrumb .active {
     color: #ccc !important;
 }
-.breadcrumb .course-name
-{
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
+
 /**
  *  首页样式
  */

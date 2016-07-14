@@ -30,19 +30,19 @@ $this->params['breadcrumbs'][] = $this->title;
         ]);?>
     </div>
 </div>
-<div class="container course-link-index has-title">
+<div class="container course-link-index has-title item-manage">
     
     <table class="table table-list">
         <thead>
-            <tr style="background-color:#eee">
-              <th style="width:15%">阶段</th>
-              <th style="width:25%">环节</th>
-              <th style="width:15%">总量</th>
-              <th style="width:15%">已完成</th>
-              <th style="width:10%">进度</th>
-              <th style="width:15%"></th>
-              <th style="width:5%">操作</th>
+            <tr style="background-color:#eee;">
+                <th style="width:212px;padding:8px;">阶段</th>
+                <th style="max-width:434px;min-width:84px;padding:8px;">环节</th>
+                <th class="hidden-xs" style="width:130px;padding:8px;">总量</th>
+                <th class="hidden-xs" style="width:171px;padding:8px;">已完成</th>
+                <th style="width: 143px;padding:8px;">进度</th>
+                <th style="width:80px;padding:8px;">操作</th>
             </tr>
+            
         </thead>
         <tbody>
         <?php foreach ($coursePhase as $phase) {
@@ -50,34 +50,36 @@ $this->params['breadcrumbs'][] = $this->title;
                         'btn btn-primary' : 'btn btn-primary disabled';
             /* @var $phase CoursePhase */
             echo '<tr style="background-color:#eee">
-            <td colspan="2">'.$phase->phase->name.'</td>
-            <td colspan="2"></td>
-            <td>'.Html::beginTag('div', ['class' => 'progress table-list-progress']).
+                <td>'.$phase->phase->name.'</td>
+                <td></td>
+                <td class="hidden-xs"></td>
+                <td class="hidden-xs"></td>
+                <td>'.Html::beginTag('div', ['class' => 'progress table-list-progress']).
                                 Html::beginTag('div', [
                                     'class' => 'progress-bar progress-bar-danger',
                                     'style' => 'width:'.(int)($phase->progress * 100).'%',
                                 ]).
                                 (int)($phase->progress * 100).'%'.
                                 Html::endTag('div').
-                            Html::endTag('div').'</td><td></td>
-            <td></td>
+                            Html::endTag('div').'</td>
+                <td></td>
             </tr>';
             foreach ($phase->courseLinks as $link) {
                 /* @var $link CourseLink */
                 echo '<tr>
-                <td></td>
-                <td>'.$link->link->name.'</td>
-                <td>'.$link->total.'</td>
-                <td>'.$link->completed.'</td>
-                <td>'.Html::beginTag('div', ['class' => 'progress table-list-progress']).
+                    <td></td>
+                    <td>'.$link->link->name.'</td>
+                    <td class="hidden-xs">'.$link->total.'</td>
+                    <td class="hidden-xs">'.$link->completed.'</td>
+                    <td>'.Html::beginTag('div', ['class' => 'progress table-list-progress']).
                                 Html::beginTag('div', [
                                     'class' => 'progress-bar', 
-                                    'style' => 'width:'.($link->completed / $link->total * 100).'%',
+                                    'style' => 'width:'.(int)($link->completed / $link->total * 100).'%',
                                 ]).
-                                ($link->completed / $link->total * 100).'%'.
+                                (int)($link->completed / $link->total * 100).'%'.
                                 Html::endTag('div').
-                            Html::endTag('div').'</td><td></td>
-                <td>'.Html::a('录入',['entry', 'id' => $link->id], ['class' => $className]).'</td>
+                            Html::endTag('div').'</td>
+                    <td>'.Html::a('录入',['entry', 'id' => $link->id], ['class' => $className]).'</td>
                 </tr>';
             }
         } ?>

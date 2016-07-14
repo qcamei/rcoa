@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 
-<div class="container course-manage-view has-title">
+<div class="container course-manage-view has-title item-manage">
 
    <?= $this->render('_form_detai', [
         'model' => $model,

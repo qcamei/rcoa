@@ -58,6 +58,19 @@ $this->params['breadcrumbs'] = $this->title;
                     /* @var $model CourseManage */
                     return $model->course->name;
                 },
+                'headerOptions' => [
+                    'style' => [
+                        'max-width' => '214px',
+                        'min-width' => '84px',
+                    ],
+                ],
+                'contentOptions' =>[
+                    'class' => 'course-name',
+                    'style' => [
+                        'max-width' => '214px', 
+                        'max-width' => '84px', 
+                    ],
+                ],
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
@@ -66,6 +79,11 @@ $this->params['breadcrumbs'] = $this->title;
                     /* @var $model CourseManage */
                     return $model->speakerTeacher->nickname;
                 },
+                'headerOptions' => [
+                    'style' => [
+                        'max-width' => '115px',
+                    ],
+                ],
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
@@ -75,6 +93,12 @@ $this->params['breadcrumbs'] = $this->title;
                     /* @var $model CourseManage */
                     return $model->lession_time;
                 },
+                'headerOptions' => [
+                    'style' => [
+                        //'max-width' => '191px',
+                        'width' => '84px',
+                    ],
+                ],
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
@@ -83,6 +107,17 @@ $this->params['breadcrumbs'] = $this->title;
                     /* @var $model CourseManage */
                     return $model->des;
                 },
+                'headerOptions' => [
+                    'class'=>[
+                        'th'=>'hidden-xs',
+                    ],
+                    'style' => [
+                        'max-width' => '740px',
+                    ],
+                ],
+                'contentOptions' =>[
+                    'class'=>'hidden-xs',
+                ],
             ],
             
         ],
@@ -120,25 +155,28 @@ $this->params['breadcrumbs'] = $this->title;
              * 1、必须是状态为【正常】
              * 2、必须是【队长】
              * 3、创建者是自己
-             */
+             
             if($model->getIsNormal() && $twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
                 echo Html::a('完成', ['carry-out', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
+            */
             /**
              * 暂停 按钮显示必须满足以下条件：
              * 1、必须是状态为【正常】
              * 2、必须是【队长】
              * 3、创建者是自己
-             */
+             
             if($model->getIsNormal() && $twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
                 echo Html::a('暂停', ['time-out', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
+             */
             /**
              * 恢复 按钮显示必须满足以下条件：
              * 1、必须是状态为【暂停】
              * 2、必去是【队长】
              * 3、创建者是自己
-             */
+             
             if($model->getIsTimeOut() && $twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
                 echo Html::a('恢复', ['normal', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
+             */
         ?>
     </div>
 </div>

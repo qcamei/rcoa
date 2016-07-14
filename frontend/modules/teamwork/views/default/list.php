@@ -27,6 +27,17 @@ $this->params['breadcrumbs'][] = $this->title;
                     /* @var $model ItemManage */
                     return $model->itemType->name;
                 },
+                'headerOptions' => [
+                    'class'=>[
+                        'th'=>'hidden-xs',
+                    ],
+                    'style' => [
+                        'width' => '126px'  
+                    ],
+                ],
+                'contentOptions' =>[
+                    'class'=>'hidden-xs',
+                ],
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
@@ -35,18 +46,43 @@ $this->params['breadcrumbs'][] = $this->title;
                     /* @var $model ItemManage */
                     return $model->item->name;
                 },
+                'headerOptions' => [
+                    'class'=>[
+                        'th'=>'hidden-xs',
+                    ],
+                    'style' => [
+                        'width' => '225px' 
+                    ],
+                ],
+                'contentOptions' =>[
+                    'class'=>'hidden-xs',
+                ],
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
                 'label' => '子项目',
                 'format' => 'raw',
-                'value' => function($model){
+                'content' => function($model){
                         /* @var $model ItemManage */
                         return Html::a($model->itemChild->name, ['view','id' => $model->id], [
+                            //'class' => 'course-name',
                             'style' => 'color:#000',
                         ]);
-                    }
+                    },
+                'headerOptions' => [
+                    'style' => [
+                        'max-width' => '600px',
+                        'min-width' => '84px',
+                    ],
                 ],
+                'contentOptions' =>[
+                    'class' => 'course-name',
+                    'style' => [
+                        'max-width' => '600px', 
+                        'max-width' => '84px', 
+                    ],
+                ],
+            ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
                 'label' => '进度',
@@ -61,7 +97,13 @@ $this->params['breadcrumbs'][] = $this->title;
                                 (int)($model->progress * 100).'%'.
                                 Html::endTag('div').
                             Html::endTag('div');
-                }
+                },
+                'headerOptions' => [
+                    'style' => [
+                        'width' => '74px',
+                    ],
+                ],
+               
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemActBtnCol',

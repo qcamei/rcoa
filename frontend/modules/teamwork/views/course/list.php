@@ -59,6 +59,19 @@ $this->params['breadcrumbs'][] = $this->title;
                     /* @var $model CourseManage */
                     return $model->course->name;
                 },
+                'headerOptions' => [
+                    'style' => [
+                        'max-width' => '191px',
+                        'min-width' => '84px',
+                    ],
+                ],
+                'contentOptions' =>[
+                    'class' => 'course-name',
+                    'style' => [
+                        'max-width' => '191px', 
+                        'max-width' => '84px', 
+                    ],
+                ],
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
@@ -67,6 +80,17 @@ $this->params['breadcrumbs'][] = $this->title;
                     /* @var $model CourseManage */
                     return $model->speakerTeacher->nickname;
                 },
+                'headerOptions' => [
+                    'class'=>[
+                        'th'=>'hidden-xs',
+                    ],
+                    'style' => [
+                        'width' => '121px',
+                    ],
+                ],
+                'contentOptions' =>[
+                    'class'=>'hidden-xs',
+                ],
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
@@ -75,8 +99,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function($model){
                         /* @var $model CourseManage */
                         return $model->lession_time;
-                    }
+                },
+                'headerOptions' => [
+                    'style' => [
+                        //'max-width' => '191px',
+                        'width' => '84px',
+                    ],
                 ],
+            ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
                 'label' => '课程描述',
@@ -84,7 +114,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function($model){
                     /* @var $model CourseManage */
                     return $model->des;
-                }
+                },
+                'headerOptions' => [
+                    'class'=>[
+                        'th'=>'hidden-xs',
+                    ],
+                    'style' => [
+                        'width' => '604px',
+                    ],
+                ],
+                'contentOptions' =>[
+                    'class'=>'hidden-xs',
+                ],
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemActBtnCol',
