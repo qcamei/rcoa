@@ -39,7 +39,7 @@ class CoursePhase extends ActiveRecord
         return [
             [['course_id', 'phase_id'], 'required'],
             [['course_id', 'phase_id'], 'integer'],
-            [['weights'], 'number'],
+            [['weights'], 'number', 'max' => 1],
             [['is_delete'], 'string', 'max' => 4],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => CourseManage::className(), 'targetAttribute' => ['course_id' => 'id']],
             [['phase_id'], 'exist', 'skipOnError' => true, 'targetClass' => Phase::className(), 'targetAttribute' => ['phase_id' => 'id']],

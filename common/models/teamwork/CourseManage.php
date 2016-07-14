@@ -28,6 +28,7 @@ use yii\db\ActiveRecord;
  * @property string $real_carry_out     实际完成时间
  * @property integer $status            状态
  * @property string $des                描述
+ * @property string $path               存储服务器路径
  * @property integer $progress          进度
  *
  * @property CourseLink[] $courseLinks              获取所有课程环节
@@ -68,10 +69,10 @@ class CourseManage extends ActiveRecord
     {
         return [
             [['project_id', 'course_id', 'lession_time', 'created_at', 'updated_at', 'status'], 'integer'],
-            [['project_id', 'course_id', 'teacher'], 'required'],
+            [['project_id', 'course_id', 'teacher','path'], 'required'],
             [['teacher', 'create_by'], 'string', 'max' => 36],
             [['plan_start_time', 'plan_end_time', 'real_carry_out'], 'string', 'max' => 60],
-            [['des'], 'string', 'max' => 255],
+            [['des','path'], 'string', 'max' => 255],
             [['team_id'], 'exist', 'skipOnError' => true, 'targetClass' => Team::className(), 'targetAttribute' => ['team_id' => 'id']],
             [['create_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['create_by' => 'id']],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Item::className(), 'targetAttribute' => ['course_id' => 'id']],
@@ -99,6 +100,7 @@ class CourseManage extends ActiveRecord
             'real_carry_out' => Yii::t('rcoa/teamwork', 'Real Carry Out'),
             'status' => Yii::t('rcoa', 'Status'),
             'des' => Yii::t('rcoa/teamwork', 'Des'),
+            'path' => Yii::t('rcoa/teamwork', 'Path'),
         ];
     }
     

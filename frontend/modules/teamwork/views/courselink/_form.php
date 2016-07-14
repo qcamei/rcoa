@@ -46,10 +46,10 @@ use yii\widgets\ActiveForm;
         ]
     ]) ?>
 
-    <?php echo Html::beginTag('div', ['class' => 'form-group field-coursephase-weights has-success']);
+    <?php echo Html::beginTag('div', ['class' => 'form-group field-coursephase-link_id has-success']);
             echo Html::beginTag('label', ['class' => 'col-lg-1 col-md-1 control-label',
                     'style' => 'color: #999999; font-weight: normal; padding-left: 0; padding-right: 0;',
-                    'for' => 'coursephase-weights'
+                    'for' => 'coursephase-link_id'
                 ]).'环节名称'.Html::endTag('label');
             echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']).
                     Select2::widget([

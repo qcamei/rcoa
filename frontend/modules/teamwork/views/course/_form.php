@@ -120,6 +120,8 @@ use yii\widgets\ActiveForm;
     
     <?= $form->field($model, 'des')->textarea(['rows' => 4]) ?>
     
+    <?= $form->field($model, 'path')->textInput(['placeholder' => '存储服务器路径...']) ?>
+    
     <?php
         echo Html::beginTag('div', ['class' => 'form-group field-courseproducer-producer has-success']);
              echo Html::beginTag('label', [

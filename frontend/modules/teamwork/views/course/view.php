@@ -44,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'producer' => $producer,
     ]) ?>
     
-    <h4>课程进度总结：</h4>
+    <h4>开发周报：</h4>
     
     <?php  $form = ActiveForm::begin([
         'id' => 'form-summary-search',

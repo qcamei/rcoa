@@ -83,6 +83,11 @@ foreach ($producer as $value) {
                 'value' => '<div style="height:65px;">'.$model->des.'</div>',
             ],
             [
+                'attribute' => 'path',
+                'format' => 'raw',
+                'value' => empty($model->path) ? '无' : $model->path,
+            ],
+            [
                 'attribute' => '资源制作人',
                 'format' => 'raw',
                 'value' => empty($producer)? '无' :implode('', $producer),
