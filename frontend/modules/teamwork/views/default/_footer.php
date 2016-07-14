@@ -25,8 +25,8 @@ use yii\helpers\Html;
             echo Html::a(Html::img(['/filedata/image/course_64x64.png']).'课程', ['course/index'], [
                     'class' => $controllerId == 'course' ? 'footer-item footer-item-bg' : 'footer-item']);
             
-            echo Html::a(Html::img(['/filedata/image/statistics_64x64.png']).'统计', ['default/statistics'], 
-                    ['class' => $actionId == 'statistics' ? 'footer-item footer-item-bg' : 'footer-item']);
+            echo Html::a(Html::img(['/filedata/image/statistics_64x64.png']).'统计', ['/teamwork/statistics'], 
+                    ['class' => $controllerId == 'statistics' ? 'footer-item footer-item-bg' : 'footer-item']);
             
             if($actionId == 'list')
                 echo Html::a(Html::img(['/filedata/image/new_64px64.png']).'创建项目', ['create'], [

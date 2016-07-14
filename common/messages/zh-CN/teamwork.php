@@ -56,4 +56,10 @@ return[
     'Link ID' => '环节名称',
     'Total' => '总量',
     'Completed' => '已完成',
+    'Statistics' => '统计',
+    'Statistics-Time-Rang'=>'时间段',
+    'Statistics-Team'=>'团队',
+    'Statistics-Team-prompt'=>'全部',
+    'Statistics-Status'=>'状态',
+    'Statistics-Search'=>'统计',
 ];

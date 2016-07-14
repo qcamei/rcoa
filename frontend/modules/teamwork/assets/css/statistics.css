@@ -1,0 +1,12 @@
+.statistics-content{
+    padding-top: 20px;
+}
+@media (max-width: 480px) {
+    .statistics-content{
+        padding-top: 0px;
+    }
+}
+.statistics-content .chart{
+    width: 100%;
+    height: 400px;
+}

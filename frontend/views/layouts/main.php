@@ -72,7 +72,7 @@ AppAsset::register($this);
     if($bar_route != 'site'){
         AppGlobalVariables::$system_aliases = Yii::$app->controller->module->id;
         $system_id = System::find()->where(['aliases'=>AppGlobalVariables::$system_aliases])->one();
-        AppGlobalVariables::$system_id = $system_id->id;
+            AppGlobalVariables::$system_id = $system_id->id;
     }  else {
         Yii::$app->controller->getRoute();
     }
