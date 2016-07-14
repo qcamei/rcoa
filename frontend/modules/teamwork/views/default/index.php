@@ -17,19 +17,27 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="container item-manage-index item-manage">
     
+    <div class="row">
     <?php 
-        echo Html::beginTag('div', ['class' => 'item-manage-head']);
-            echo Html::beginTag('div', ['class' => 'item-manage-headline']).'课程中心'.Html::endTag('div');
-            echo Html::beginTag('div', ['class' => 'lession-time']);
-                echo '<p><span>已完成：</span><span class="completed-undone">'.$completed.'</span><span style="float:left">学时</span>'.
-                        Html::a(Html::img(['/filedata/image/u13784_a.png'], ['class' => 'eye-team']), 
-                        ['list', 'status' => ItemManage::STATUS_CARRY_OUT]).'</p>
-                    <p><span>在&nbsp;&nbsp;&nbsp;做：</span><span class="completed-undone">'.$undone.'</span><span>学时</span>'.
-                        Html::a(Html::img(['/filedata/image/u13784_a.png'], ['class' => 'eye-team']), 
-                                ['list', 'status' => ItemManage::STATUS_NORMAL]).'</p>';
+        echo Html::beginTag('div', ['class' => 'col-lg-12 col-md-12 col-sm-12 col-xs-12', 
+            'style' => 'padding-left:0px;padding-right:0px;']);
+            echo Html::beginTag('div', ['class' => 'item-manage-head']);
+                echo Html::beginTag('div', ['class' => 'item-manage-headline']).'课程中心'.Html::endTag('div');
+                echo Html::beginTag('div', ['class' => 'lession-time']);
+                    echo '<p><span>已完成：</span><span class="col-lg-2 col-md-2 col-sm-4 col-xs-6 completed-undone">'.
+                            $completed.'</span><span>学时</span>'.
+                            Html::a(Html::img(['/filedata/image/u13784_a.png'], ['class' => 'eye-team']), 
+                            ['course/index', 'status' => ItemManage::STATUS_CARRY_OUT]).'</p>
+                        <p><span>在&nbsp;&nbsp;&nbsp;建：</span><span class="col-lg-2 col-md-2 col-sm-3 col-xs-6 completed-undone">'.
+                            $undone.'</span><span>学时</span>'.
+                            Html::a(Html::img(['/filedata/image/u13784_a.png'], ['class' => 'eye-team']), 
+                                    ['course/index', 'status' => ItemManage::STATUS_NORMAL]).'</p>';
+                echo Html::endTag('div');
             echo Html::endTag('div');
         echo Html::endTag('div');
     ?>
+    </div>
+    
     <div class="row">
     <?php
         foreach ($team as $value) {
@@ -41,13 +49,15 @@ $this->params['breadcrumbs'][] = $this->title;
                         Html::a(Html::img(['/filedata/image/u13784_team.png'], ['class' => 'eye-team']), ['member', 'team_id' => $value->id]).
                         Html::endTag('div');
                 echo Html::beginTag('div', ['class' => 'lession-time']);
-                    echo '<p><span>已完成：</span><span class="completed-undone">'.$completed.'</span><span>学时</span>'.
-                    Html::a(Html::img(['/filedata/image/u13784_a.png'], ['class' => 'eye-team']), ['list', 
+                    echo '<p><span>已完成：</span><span class="col-lg-5 col-md-5 col-sm-5 col-xs-5 completed-undone">'.
+                            $completed.'</span><span>学时</span>'.
+                    Html::a(Html::img(['/filedata/image/u13784_a.png'], ['class' => 'eye-team']), ['course/index', 
                         'team_id' => $value->id,
                         'status' => ItemManage::STATUS_CARRY_OUT
                     ]).'</p>
-                     <p><span>在&nbsp;&nbsp;&nbsp;做：</span><span class="completed-undone">'.$undone.'</span><span>学时</span>'.
-                    Html::a(Html::img(['/filedata/image/u13784_a.png'], ['class' => 'eye-team']), ['list', 
+                     <p><span>在&nbsp;&nbsp;&nbsp;建：</span><span class="col-lg-5 col-md-5 col-sm-5 col-xs-5 completed-undone">'.
+                            $undone.'</span><span>学时</span>'.
+                    Html::a(Html::img(['/filedata/image/u13784_a.png'], ['class' => 'eye-team']), ['course/index', 
                         'team_id' => $value->id,
                         'status' => ItemManage::STATUS_NORMAL
                     ]).'</p>'; 

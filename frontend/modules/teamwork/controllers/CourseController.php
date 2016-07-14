@@ -54,15 +54,12 @@ class CourseController extends Controller
      * Index all CourseManage models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($project_id = null, $status = null, $team_id = null)
     {
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
-        $params = Yii::$app->request->queryParams;
         $dataProvider = new ArrayDataProvider([
-            'allModels' => isset($params['project_id']) ? 
-                        $twTool->getCourseProgressAll($params['project_id']) :
-                        $twTool->getCourseProgressAll(),
+            'allModels' => $twTool->getCourseProgressAll($project_id, $status, $team_id),
         ]);
         return $this->render('index', [
             'dataProvider' => $dataProvider,
@@ -108,7 +105,7 @@ class CourseController extends Controller
                     $twTool->getWeek($id, $post['create_time']);
                     
         return $this->render('view', [
-            'model' => !empty($model) ? $model : $this->findModel($id),
+            'model' => $model,
             'twTool' => $twTool,
             'producer' => $producer,
             'create_time' => $create_time,

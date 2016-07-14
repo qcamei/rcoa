@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '124px' 
+                        'width' => '100px' 
                     ],
                 ],
                 'contentOptions' =>[
@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '89px' 
+                        'width' => '80px' 
                     ],
                 ],
                 'contentOptions' =>[
@@ -72,7 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '107px' 
+                        'width' => '135px' 
                     ],
                 ],
                 'contentOptions' =>[

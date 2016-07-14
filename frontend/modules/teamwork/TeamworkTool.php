@@ -11,6 +11,7 @@ use common\models\teamwork\ItemManage;
 use common\models\teamwork\Link;
 use common\models\teamwork\Phase;
 use Yii;
+use yii\db\Query;
 
 /* 
  * To change this license header, choose License Headers in Project Properties.
@@ -151,54 +152,51 @@ class TeamworkTool{
     
     /**
      * 获取课程阶段进度
-     * @param type $course_id   课程ID
+     * @param type $courseId   课程ID
      * @return type
      */
-    public function getCoursePhaseProgressAll($course_id)
+    public function getCoursePhaseProgressAll($courseId)
     {
-        $sql = "SELECT Link.course_id, Link.course_phase_id as phase_id,Phase_Temp.`name`,SUM(total) AS total,SUM(completed) AS completed,(SUM(completed)/SUM(total)) AS progress  
-                FROM ccoa_teamwork_course_link AS Link  
-                LEFT JOIN ccoa_teamwork_course_phase AS Phase ON Phase.id = Link.course_phase_id  
-                LEFT JOIN ccoa_teamwork_phase_template AS Phase_Temp ON Phase.phase_id = Phase_Temp.id  
-                WHERE Link.course_id = $course_id AND Link.is_delete = 'N'
-                GROUP BY Link.course_phase_id";
-        
-        $coursePhaseProgress = CoursePhase::findBySql($sql)
+        $results = CoursePhase::find()
+                ->select(['Course_phase.*',
+                    '(SUM(Course_link.completed) / SUM(Course_link.total)) AS progress '])
+                ->from(['Course_phase'=> CoursePhase::tableName()])
+                ->leftJoin(['Course_link'=> CourseLink::tableName()], ' Course_link.course_phase_id = Course_phase.phase_id')
+                ->where(['Course_link.course_id' => $courseId])
+                ->andWhere(['Course_link.is_delete' => 'N'])
+                ->groupBy('Course_phase.phase_id')
                 ->with('course')
                 ->with('phase')
-                //->with('courseLinks')
                 ->all();
-        return $coursePhaseProgress;
+        return $results;
     }
     
     /**
      * 获取所有课程进度
-     * @param type $project_id  项目ID
-     * @return type $project_id,非null返回项目对应下的所有课程进度, 为null返回所有课程进度
+     * @param type $projectId   项目ID
+     * @param type $status      状态
+     * @param type $teamId      团队ID
+     * @return type 返回结果对象
      */
-    public function getCourseProgressAll($project_id = null)
+    public function getCourseProgressAll($projectId = null, $status = null, $teamId = null)
     {
-        $project_id = $project_id == null ?  '' : "AND Course.project_id = $project_id"; 
-        $status = ItemManage::STATUS_NORMAL;
-        $sql = "SELECT id,Phase_PRO.project_id,Phase_PRO.course_id,(SUM(Phase_PRO.progress)/COUNT(Phase_PRO.progress)) AS progress FROM  
-                    (SELECT Course.project_id, Course.course_id, Link.course_id AS id,SUM(total) AS total,SUM(completed) AS completed,(SUM(completed)/SUM(total)) AS progress  
-                    FROM ccoa_teamwork_course_link AS Link  
-                    LEFT JOIN ccoa_teamwork_course_phase AS Phase ON Phase.id = Link.course_phase_id  
-                    LEFT JOIN ccoa_teamwork_phase_template AS Phase_Temp ON Phase.phase_id = Phase_Temp.id
-                    LEFT JOIN ccoa_teamwork_course_manage AS Course ON Link.course_id = Course.id
-                    WHERE Link.is_delete = 'N' AND Course.`status` = $status $project_id 
-                    GROUP BY Link.course_id) AS Phase_PRO 
-                GROUP BY id";
-        
-        $courseProgress = CourseManage::findBySql($sql)
-                        ->with('course')
-                        ->with('courseLinks')
-                        ->with('coursePhases')
-                        ->with('producers')
-                        ->with('speakerTeacher')
-                        ->with('project')
-                        ->all();
-        return $courseProgress;
+        $results = CourseManage::find()
+                    ->select(['Course.*',  
+                        '(SUM(Course_link.completed) / SUM(Course_link.total)) AS progress '])  
+                    ->from(['Course'=>CourseManage::tableName()])
+                    ->leftJoin(['Course_link'=>  CourseLink::tableName()], 'Course_link.course_id = Course.id')
+                    ->andFilterWhere(['Course.project_id'=> $projectId])
+                    ->andFilterWhere(['Course.`status`'=> $status])
+                    ->andFilterWhere(['Course.team_id'=> $teamId])
+                    ->groupBy('Course.id')
+                    ->with('course')
+                    ->with('courseLinks')
+                    ->with('coursePhases')
+                    ->with('producers')
+                    ->with('speakerTeacher')
+                    ->with('project')
+                    ->all();
+        return $results;
     }
     
     /**
@@ -207,33 +205,26 @@ class TeamworkTool{
      */
     public function getCourseProgressOne($id)
     {
-        $sql = "SELECT Course.*,SUM(total) AS total,SUM(completed) AS completed,(SUM(completed)/SUM(total)) AS progress  
-		FROM ccoa_teamwork_course_link AS Link  
-		LEFT JOIN ccoa_teamwork_course_phase AS Phase ON Phase.id = Link.course_phase_id  
-		LEFT JOIN ccoa_teamwork_phase_template AS Phase_Temp ON Phase.phase_id = Phase_Temp.id
-		LEFT JOIN ccoa_teamwork_course_manage AS Course ON Link.course_id = Course.id
-		WHERE Link.is_delete = 'N' AND Course.id = $id
-		GROUP BY id";
-        
-        $courseProgress = CourseManage::findBySql($sql)->one();
-       
-        return $courseProgress;
+        $results = CourseManage::find()
+                    ->select(['Course.*',  
+                        '(SUM(Course_link.completed) / SUM(Course_link.total)) AS progress '])  
+                    ->from(['Course'=>CourseManage::tableName()])
+                    ->leftJoin(['Course_link'=>  CourseLink::tableName()], 'Course_link.course_id = Course.id')
+                    ->where(['Course.id' => $id])
+                    ->one();
+        return $results;
     }
     
     /**
      * 获取所有项目进度
-     * @param type $status     状态
-     * @param type $team_id    团队ID
      * @return type
      */
-    public function getItemProgressAll($status = null, $team_id = null){
-        $status = $status == null ? '1' : "(Course.`status` = $status)";
-        $team_id = $team_id == null ? '' : "AND (Course.team_id = $team_id)";
+    public function getItemProgressAll(){
+        
         $sql = "SELECT Item_course.*,(SUM(Course_link.completed)/SUM(Course_link.total)) AS progress FROM     
                     (SELECT Item.id, Course.id AS course_id,Item.item_type_id,Item.item_id, Item.item_child_id,Course.team_id,Course.`status` 
                         FROM ccoa_teamwork_item_manage AS Item  
-                        LEFT JOIN ccoa_teamwork_course_manage AS Course ON Course.project_id = Item.id
-                        WHERE $status $team_id ) AS Item_course
+                        LEFT JOIN ccoa_teamwork_course_manage AS Course ON Course.project_id = Item.id) AS Item_course
                 LEFT JOIN ccoa_teamwork_course_link AS Course_link ON Item_course.course_id = Course_link.course_id  
                 GROUP BY Item_course.id ";
         $itemProgress = ItemManage::findBySql($sql)
