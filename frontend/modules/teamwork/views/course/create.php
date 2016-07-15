@@ -39,6 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'courses' => $courses,
         'teachers' => $teachers,
         'producerList' => $producerList,
+        'weeklyEditors' => $weeklyEditors,
         'producer' => $producer,
     ]) ?>
 

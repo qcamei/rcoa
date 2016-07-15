@@ -19,4 +19,5 @@ return[
     'Team ID' => '团队名称',
     'U ID' => '成员',
     'Is Leader' => '是否为队长',
+    'Position' => '职位',
 ];

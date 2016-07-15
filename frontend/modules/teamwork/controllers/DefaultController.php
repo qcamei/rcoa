@@ -3,6 +3,7 @@
 namespace frontend\modules\teamwork\controllers;
 
 use common\models\team\Team;
+use common\models\team\TeamMember;
 use common\models\teamwork\ItemManage;
 use frontend\modules\teamwork\TeamworkTool;
 use wskeee\framework\FrameworkManager;
@@ -70,9 +71,15 @@ class DefaultController extends Controller
     public function actionMember($team_id)
     {
         $team = Team::findOne(['id' => $team_id]);
-        
+        $teamMember = TeamMember::find()
+                ->where(['team_id' => $team_id])
+                ->with('team')
+                ->orderBy('index asc')
+                ->all();
+       
         return $this->render('member', [
             'team' => $team,
+            'teamMember' => $teamMember,
         ]);
     }
     

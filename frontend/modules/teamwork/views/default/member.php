@@ -26,14 +26,14 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="container item-manage-member has-title item-manage">
     <div class="row">
     <?php
-        foreach ($team->teamMembers as $value) {
+        foreach ($teamMember as $value) {
             echo Html::beginTag('div', ['class' => 'col-lg-3 col-md-3 col-sm-4 col-xm-12']);
                 echo Html::beginTag('div', ['class' => 'member-bg']);
                     echo Html::beginTag('div', ['class' => 'left']).
                         Html::img([$value->u->avatar], ['class' => 'img-circle']).Html::endTag('div');
                     echo Html::beginTag('div', ['class' => 'right']).
                         '<p><span class="span-name">'.$value->u->nickname.'</span></p>
-                         <p><span class="span-position">职位</span></p>' .Html::endTag('div');
+                         <p><span class="span-position">'.$value->position.'</span></p>' .Html::endTag('div');
                 echo Html::endTag('div');
             echo Html::endTag('div');
         }

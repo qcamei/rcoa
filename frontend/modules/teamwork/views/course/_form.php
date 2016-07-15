@@ -1,17 +1,19 @@
 <?php
 
 use common\models\teamwork\CourseManage;
-use kartik\checkbox\CheckboxX;
 use kartik\datecontrol\DateControl;
 use kartik\widgets\Select2;
 use kartik\widgets\TouchSpin;
 use yii\helpers\Html;
+use yii\web\JsExpression;
 use yii\web\View;
 use yii\widgets\ActiveForm;
+
 
 /* @var $this View */
 /* @var $model CourseManage */
 /* @var $form ActiveForm */
+
 ?>
 
 <div class="course-manage-form">
@@ -54,13 +56,17 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'teacher')->widget(Select2::classname(), [
         'data' => $teachers, 'options' => ['placeholder' => '请选择...']
     ]) ?>
-
+    
     <?= $form->field($model, 'lession_time')->widget(TouchSpin::classname(),  [
             'pluginOptions' => [
                 'placeholder' => '学时 ...',
                 'min' => 1,
             ],
     ])?>
+    
+    <?= $form->field($model, 'weekly_editors_people')->widget(Select2::classname(), [
+        'data' => $weeklyEditors, 'options' => ['placeholder' => '请选择...']
+    ]) ?>
     
     <?php
         echo Html::beginTag('div', ['class' => 'form-group field-itemmanage-forecast_time has-success']);
@@ -130,26 +136,27 @@ use yii\widgets\ActiveForm;
                  'for' => 'courseproducer-producer'
                 ]).'资源制作人'.Html::endTag('label');
              echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']);
-                     echo Html::img(['/filedata/image/add_list_64.png'], [
-                         'data-toggle' => 'collapse', 
-                         'href' => '#collapseExample', 
-                         'aria-expanded' => 'false',
-                         'aria-controls' => 'collapseExample',
-                         'width' => '48',
-                         'height' => '48']);
-                     echo Html::beginTag('div', ['class' => 'collapse', 'id' => 'collapseExample', ]).
-                            Html::checkboxList('producer', array_keys($producer), $producerList, ['class' => 'well',
-                                'itemOptions' => ['style'=>'margin-left:20px;']]).Html::endTag('div');
-                     echo Html::beginTag('div',['id' => 'display-list','class' => 'row','style' => 'margin-top:15px;']); 
-                            foreach ($producer as $key => $value){
-                               echo Html::beginTag('div',['class' => 'col-lg-2 col-md-2 col-sm-4 col-xs-6']);  
-                               echo '<span value ="'.$key.'" class="producer img-rounded">'.$value.'<i class="delete-icon"></i></span>';
-                               echo Html::endTag('div');
-                            }
-                     echo Html::endTag('div');
+                echo Select2::widget([
+                    'name' => 'producer',
+                    'value' => array_keys($producer),
+                    'data' => $producerList,
+                    'options' => [
+                        'placeholder' => 'Select a state ...',
+                        'multiple' => true,
+                    ],
+                    'pluginOptions' => [
+                        //'templateResult' => new JsExpression('format'),
+                        //'templateSelection' => new JsExpression('format'),
+                        'escapeMarkup' => new JsExpression("function(m) { return m; }"),
+                        'allowClear' => true
+                    ],
+                    'pluginEvents' => [
+                        'change' => "function() { log($(this)); }",
+                    ],
+                ]);
+                
              echo Html::endTag('div');           
-             echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']).
-                    Html::beginTag('div', ['class' => 'help-block']).
+             echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']).Html::beginTag('div', ['class' => 'help-block']).
                     Html::endTag('div').Html::endTag('div');
         echo Html::endTag('div');
 
@@ -161,29 +168,30 @@ use yii\widgets\ActiveForm;
 
 
 <?php
+$url = Yii::$app->urlManager->baseUrl . '/images/flags/';
+$format = 
+<<< SCRIPT
+    function format(state) {
+        if (!state.id) return state.text; // optgroup
+        src = '$url' +  state.id.toLowerCase() + '.png'
+        return '<img class="flag" src="' + src + '"/>' + state.text;
+    }
+SCRIPT;
+    //$this->registerJs($format, View::POS_HEAD);
 $js = 
 <<<JS
-    deleteIcon();
-    function deleteIcon(){    
-        $('.delete-icon').click(function()
-        {
-            var displayValue = $(this).parent().remove().attr("value");
-            $('input[type="checkbox"]').each(function (i,e){
-                if(e.checked == true && e.value == displayValue)
-                    e.checked = false;
-            });
+    function log(value){
+        var option = value.children().children()
+        console.log(option);
+        $('<option/>').appendTo($("#coursemanage-weekly_editors_people"));
+        
+        $(option).each(function(index, element){
+            if(element.selected == true && element.defaultSelected == false)
+                $('<option>').val(element.value).text(element.text).appendTo($("#coursemanage-weekly_editors_people"));
         });
+        
+       
     }
-    $('input[type="checkbox"]').change (function (){
-            var val = $(this).val();
-                text = $(this).parent().text();
-                html = '<span value="'+val+'" class="producer img-rounded">'+text+'<i class="delete-icon"></i></span>';
-        $(this).each(function (i,e){
-            if(e.checked == true)
-                $(html).appendTo('#display-list');
-        });  
-        deleteIcon();
-    });
     
 JS;
     $this->registerJs($js,  View::POS_READY);

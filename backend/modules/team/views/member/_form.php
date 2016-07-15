@@ -2,6 +2,7 @@
 
 use common\models\team\TeamMember;
 use kartik\widgets\Select2;
+use kartik\widgets\TouchSpin;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
@@ -22,6 +23,16 @@ use yii\widgets\ActiveForm;
     ]) ?>
 
     <?= $form->field($model, 'is_leader')->radioList($model->is_leaders)->label('') ?>
+    
+    <?= $form->field($model, 'index')->widget(TouchSpin::classname(),  [
+            'pluginOptions' => [
+                'placeholder' => '顺序 ...',
+                'min' => 1,
+                'max' => 10,
+            ],
+    ])?>
+
+    <?= $form->field($model, 'position')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

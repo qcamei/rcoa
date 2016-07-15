@@ -15,23 +15,25 @@ use yii\db\ActiveRecord;
 /**
  * This is the model class for table "{{%teamwork_course_manage}}".
  *
- * @property integer $id                ID
- * @property integer $project_id        项目Id
- * @property integer $course_id         课程Id
- * @property string $teacher            主讲教师
- * @property integer $lession_time      学时
- * @property integer $team_id           创建者所在团队
- * @property string $create_by          创建者
- * @property integer $created_at        创建于
- * @property string $plan_start_time    计划开始时间
- * @property string $plan_end_time      计划完成时间
- * @property string $real_carry_out     实际完成时间
- * @property integer $status            状态
- * @property string $des                描述
- * @property string $path               存储服务器路径
- * @property integer $progress          进度
+ * @property integer $id                        ID
+ * @property integer $project_id                项目Id
+ * @property integer $course_id                 课程Id
+ * @property string $teacher                    主讲教师
+ * @property string $weekly_editors_people      周报编辑人
+ * @property integer $lession_time              学时
+ * @property integer $team_id                   创建者所在团队
+ * @property string $create_by                  创建者
+ * @property integer $created_at                创建于
+ * @property string $plan_start_time            计划开始时间
+ * @property string $plan_end_time              计划完成时间
+ * @property string $real_carry_out             实际完成时间
+ * @property integer $status                    状态
+ * @property string $des                        描述
+ * @property string $path                       存储服务器路径
+ * @property integer $progress                  进度
  *
  * @property CourseLink[] $courseLinks              获取所有课程环节
+ * @property TeamMember $weeklyEditorsPeople        获取周报编辑人
  * @property Team $team                             获取团队
  * @property User $createBy                         获取创建者
  * @property Item $course                           获取课程
@@ -69,10 +71,11 @@ class CourseManage extends ActiveRecord
     {
         return [
             [['project_id', 'course_id', 'lession_time', 'created_at', 'updated_at', 'status'], 'integer'],
-            [['project_id', 'course_id', 'teacher','path'], 'required'],
-            [['teacher', 'create_by'], 'string', 'max' => 36],
+            [['project_id', 'course_id', 'teacher', 'path', 'weekly_editors_people'], 'required'],
+            [['teacher', 'create_by', 'weekly_editors_people'], 'string', 'max' => 36],
             [['plan_start_time', 'plan_end_time', 'real_carry_out'], 'string', 'max' => 60],
             [['des','path'], 'string', 'max' => 255],
+            [['weekly_editors_people'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['weekly_editors_people' => 'u_id']],
             [['team_id'], 'exist', 'skipOnError' => true, 'targetClass' => Team::className(), 'targetAttribute' => ['team_id' => 'id']],
             [['create_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['create_by' => 'id']],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Item::className(), 'targetAttribute' => ['course_id' => 'id']],
@@ -91,6 +94,7 @@ class CourseManage extends ActiveRecord
             'project_id' => Yii::t('rcoa/teamwork', 'Project ID'),
             'course_id' => Yii::t('rcoa/teamwork', 'Course ID'),
             'teacher' => Yii::t('rcoa/teamwork', 'Teacher'),
+            'weekly_editors_people' => Yii::t('rcoa/teamwork', 'Weekly Editors People'),
             'lession_time' => Yii::t('rcoa/teamwork', 'Lession Time'),
             'team_id' => Yii::t('rcoa/team', 'Team ID'),
             'create_by' => Yii::t('rcoa', 'Create By'),
@@ -111,6 +115,15 @@ class CourseManage extends ActiveRecord
     public function getCourseLinks()
     {
         return $this->hasMany(CourseLink::className(), ['course_id' => 'id']);
+    }
+    
+    /**
+     * 获取周报编辑人
+     * @return ActiveQuery
+     */
+    public function getWeeklyEditorsPeople()
+    {
+        return $this->hasOne(TeamMember::className(), ['u_id' => 'weekly_editors_people']);
     }
     
     /**

@@ -13,7 +13,13 @@ foreach ($producer as $value) {
     '<span style="margin:5px;color:red;">'.$value['nickname'].'(队长)</span>':
     '<span style="margin:5px;">'.$value['nickname'].'</span>';
 }*/
-
+/*$producers = [];
+foreach ($producers as $element) {
+    $key = ArrayHelper::getValue($element, 'producer');
+    $value = ArrayHelper::getValue($element, 'producerOne.u.nickname').' ('.ArrayHelper::getValue($element, 'producerOne.position').')';
+    //$producers[ArrayHelper::getValue($element, 'producerOne.team.name')][$key] = $value;
+    $producers[$key] = $value;
+}*/
 ?>
 <div class="item-manage-view">
     <?= DetailView::widget([
@@ -90,7 +96,7 @@ foreach ($producer as $value) {
             [
                 'attribute' => '资源制作人',
                 'format' => 'raw',
-                'value' => empty($producer)? '无' :implode('', $producer),
+                'value' => empty($producer)? '无' :implode(' ', $producer),
             ],
         ],
     ]) ?>

@@ -67,7 +67,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'团员职称',
                 'value'=>function($model){
                     /* @var $model TeamMember */
-                    //return $model->u->job_title;
+                    return $model->position;
                 }   
             ],
             [

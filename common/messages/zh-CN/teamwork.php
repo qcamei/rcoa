@@ -47,6 +47,7 @@ return[
     'Course ID' => '课程名称',
     'Teacher' => '主讲讲师',
     'Lession Time' => '学时',
+    'Weekly Editors People' => '周报编辑人',
     'Plan Start Time' => '计划开始时间',
     'Plan End Time' => '计划结束时间',
     'Des' => '课程描述',

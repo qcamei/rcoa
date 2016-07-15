@@ -161,7 +161,7 @@ class TeamworkTool{
                 ->select(['Course_phase.*',
                     '(SUM(Course_link.completed) / SUM(Course_link.total)) AS progress '])
                 ->from(['Course_phase'=> CoursePhase::tableName()])
-                ->leftJoin(['Course_link'=> CourseLink::tableName()], ' Course_link.course_phase_id = Course_phase.phase_id')
+                ->leftJoin(['Course_link'=> CourseLink::tableName()], 'Course_link.course_phase_id = Course_phase.phase_id')
                 ->where(['Course_link.course_id' => $courseId])
                 ->andWhere(['Course_link.is_delete' => 'N'])
                 ->groupBy('Course_phase.phase_id')

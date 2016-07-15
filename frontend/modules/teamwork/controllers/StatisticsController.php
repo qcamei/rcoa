@@ -5,10 +5,12 @@ namespace frontend\modules\teamwork\controllers;
 use common\models\team\Team;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\ItemManage;
+use frontend\modules\teamwork\TeamworkTool;
 use wskeee\framework\models\Item;
 use wskeee\framework\models\ItemType;
 use Yii;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 
 class StatisticsController extends Controller
@@ -81,7 +83,7 @@ class StatisticsController extends Controller
                     ->select(['id','name'])
                     ->asArray()
                     ->all();
-        $teamIds = \yii\helpers\ArrayHelper::map($teamIds, 'id', 'name');
+        $teamIds = ArrayHelper::map($teamIds, 'id', 'name');
         
         return $this->render('index',[
             'dateRange'=>$dateRange,

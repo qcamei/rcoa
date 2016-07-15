@@ -3,6 +3,7 @@
 namespace frontend\modules\teamwork\controllers;
 
 use common\models\expert\Expert;
+use common\models\team\Team;
 use common\models\team\TeamMember;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\CourseProducer;
@@ -11,7 +12,6 @@ use common\models\teamwork\ItemManage;
 use frontend\modules\teamwork\TeamworkTool;
 use wskeee\framework\models\Item;
 use Yii;
-use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -99,7 +99,7 @@ class CourseController extends Controller
         /* @var $model CourseManage */
         $model = $twTool->getCourseProgressOne($id);
         $post = Yii::$app->request->post();
-        $producer = $this->getAssignProducers(['course_id' => $id]);
+        $producer = $this->getAssignProducers($id);
         $create_time = $this->getSummaryCreateTime(['course_id' => $id]);
         $result = empty($post) ? $twTool->getWeek($id, date('Y-m-d', time())) : 
                     $twTool->getWeek($id, $post['create_time']);
@@ -161,7 +161,8 @@ class CourseController extends Controller
                 'courses' => array_diff($courses, $existedCourses),
                 'teachers' => $this->getExpert(),
                 'producerList' => $this->getTeamMemberList(),
-                'producer' => $this->getSameTeamMember(\Yii::$app->user->id)
+                'weeklyEditors' => $this->getSameTeamMember(\Yii::$app->user->id),
+                'producer' => $this->getSameTeamMember(\Yii::$app->user->id),
             ]);
         }
     }
@@ -209,6 +210,7 @@ class CourseController extends Controller
                 'twTool' => $twTool,
                 'courses' => ArrayHelper::merge($existedCoursesOne, array_diff($courses, $existedCourses)),
                 'teachers' => $this->getExpert(),
+                'weeklyEditors' => $this->getAssignWeeklyEditors($model->id),
                 'producerList' => $this->getTeamMemberList(),
                 'producer' => $this->getAssignProducers($model->id),
             ]);
@@ -352,10 +354,21 @@ class CourseController extends Controller
      */
     public function getTeamMemberList()
     {
-        /* @var $model CourseManage */
-        $producers = TeamMember::find()->with('u')
+        /* @var $teamMember TeamMember */
+        $teamMember = TeamMember::find()
+                    ->orderBy(['index' => 'asc', 'team_id' => 'asc'])
+                    ->with('u')
+                    ->with('team')
                     ->all();
-        return ArrayHelper::map($producers, 'u_id','u.nickname');
+       
+        $producers = [];
+        foreach ($teamMember as $element) {
+            $key = ArrayHelper::getValue($element, 'u_id');
+            $value = ArrayHelper::getValue($element, 'u.nickname').' ('.ArrayHelper::getValue($element, 'position').')';
+            $producers[ArrayHelper::getValue($element, 'team.name')][$key] = $value;
+        }
+        
+        return $producers;
     }
     
     /**
@@ -368,36 +381,53 @@ class CourseController extends Controller
         $teamMember = TeamMember::find()->where(['u_id' => $u_id])->one();
         $sameTeamMember = TeamMember::find()
                         ->where(['team_id' => $teamMember->team_id])
-                        ->orderBy('is_leader DESC')
+                        ->orderBy('index asc')
                         ->with('u')
+                        ->with('team')
                         ->all();
-        $producers = [];
-        foreach ($sameTeamMember as $key => $producer){
-                /* @var $producer TeamMember */
-                $producers[$producer->u_id] = $producer->is_leader == 'Y' ?
-                        '<span style="margin:5px;color:red;">'.$producer->u->nickname.'(队长)</span>':
-                        '<span style="margin:5px;">'.$producer->u->nickname.'</span>';
-        }
-        return $producers;
+        
+        return ArrayHelper::map($sameTeamMember, 'u_id', 'u.nickname');
     }
     
     /**
+     * 获取周报编辑人
+     * @param type $courseId
+     */
+    public function getAssignWeeklyEditors($courseId)
+    {
+        $assignWeeklyEditors = CourseProducer::find()
+                               ->where(['course_id' => $courseId])
+                               ->with('producerOne')
+                               ->with('course')
+                               ->all();
+        
+        return ArrayHelper::map($assignWeeklyEditors, 'producer', 'producerOne.u.nickname');
+    }
+
+    /**
      * 获取已分配的制作人
-     * @param type $condition   条件
+     * @param type $courseId   课程ID
      * @return type
      */
-    public function getAssignProducers($condition){
+    public function getAssignProducers($courseId){
+        
         $assignProducers = CourseProducer::find()
-                           ->where($condition)
+                           ->select(['Producer.*','Member.`index`'])
+                           ->from(['Producer' => CourseProducer::tableName()])
+                           ->leftJoin(['Member' => TeamMember::tableName()], 'Member.u_id = Producer.producer')
+                           ->where(['Producer.course_id' => $courseId])
+                           ->orderBy('Member.`index` ASC')
                            ->with('producerOne')
                            ->with('course')
                            ->all();
         $producers = [];
-        foreach ($assignProducers as $key => $producer){
-                /* @var $producer CourseProducer */
-                $producers[$producer->producer] = $producer->producerOne->is_leader == 'Y'?
-                        '<span style="margin:5px;color:red;">'.$producer->producerOne->u->nickname.'(队长)</span>':
-                        '<span style="margin:5px;">'.$producer->producerOne->u->nickname.'</span>';
+        foreach ($assignProducers as $element) {
+            $key = ArrayHelper::getValue($element, 'producer');
+            $value = ArrayHelper::getValue($element, 'producerOne.is_leader') == 'Y' ? 
+                    '<span style="color:red">'.ArrayHelper::getValue($element, 'producerOne.u.nickname').' ('.ArrayHelper::getValue($element, 'producerOne.position').')</span>' : 
+                    ArrayHelper::getValue($element, 'producerOne.u.nickname').' ('.ArrayHelper::getValue($element, 'producerOne.position').')';
+            //$producers[ArrayHelper::getValue($element, 'producerOne.team.name')][$key] = $value;
+            $producers[$key] = $value;
         }
         return $producers;
     }
