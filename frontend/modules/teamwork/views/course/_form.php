@@ -10,6 +10,7 @@ use yii\web\View;
 use yii\widgets\ActiveForm;
 
 
+
 /* @var $this View */
 /* @var $model CourseManage */
 /* @var $form ActiveForm */
@@ -68,11 +69,33 @@ use yii\widgets\ActiveForm;
         'data' => $producerList, 'options' => ['placeholder' => '请选择...']
     ]) ?>
     
-    <?= $form->field($model, 'weekly_editors_people')->widget(Select2::classname(), [
-        //'value' => array_keys($weeklyEditors),
-        'data' => $weeklyEditors, 'options' => ['placeholder' => '请选择...']
-    ]) ?>
-    
+    <?php
+        echo Html::beginTag('div', ['class' => 'form-group field-coursemanage-weekly_editors_people required has-success']);
+             echo Html::beginTag('label', [
+                 'class' => 'col-lg-1 col-md-1 control-label',
+                 'style' => 'color: #999999; font-weight: normal; padding-left: 0; padding-right: 0;',
+                 'for' => 'weekly_editors_people'
+                ]).Yii::t('rcoa/teamwork', 'Weekly Editors People').Html::endTag('label');
+             echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']);
+                echo Select2::widget([
+                    'name' => 'CourseManage[weekly_editors_people]',
+                    'value' => $model->isNewRecord ? Yii::$app->user->id : $model->weekly_editors_people,
+                    'data' => $weeklyEditors,
+                    'options' => [
+                        'placeholder' => 'Select a state ...',
+                    ],
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
+                ]);
+                
+             echo Html::endTag('div');           
+             echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']).Html::beginTag('div', ['class' => 'help-block']).
+                    Html::endTag('div').Html::endTag('div');
+        echo Html::endTag('div');
+
+    ?>
+   
     <?php
         echo Html::beginTag('div', ['class' => 'form-group field-itemmanage-forecast_time has-success']);
             echo Html::beginTag('label', [
@@ -139,7 +162,7 @@ use yii\widgets\ActiveForm;
                  'class' => 'col-lg-1 col-md-1 control-label',
                  'style' => 'color: #999999; font-weight: normal; padding-left: 0; padding-right: 0;',
                  'for' => 'courseproducer-producer'
-                ]).'资源制作人'.Html::endTag('label');
+                ]).Yii::t('rcoa/teamwork', 'Resource People').Html::endTag('label');
              echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']);
                 echo Select2::widget([
                     'name' => 'producer',

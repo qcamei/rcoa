@@ -179,6 +179,14 @@ and open the template in the editor.
     font-weight: bold;
     color: #000;
 }
+.footer-item-list .footer-item-xs{
+    display: block;
+    width: 60px;
+    height: 60px;
+    float: left;
+    text-align: center;
+    line-height: 55px;
+}
 .footer-item-list .footer-item-bg{
     background-color: #ebcccc;
 }
@@ -190,6 +198,12 @@ and open the template in the editor.
 .footer-item-list .footer-item img{
     width: 24px;
     height: 24px;
+    margin-top: -5px;
+    margin-right: 5px;
+}
+.footer-item-list .footer-item-xs img{
+    width: 36px;
+    height: 36px;
     margin-top: -5px;
     margin-right: 5px;
 }
