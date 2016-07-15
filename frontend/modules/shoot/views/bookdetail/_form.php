@@ -137,7 +137,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'photograph')->checkbox()->label('') ?>
     
-    <!--<?= $form->field($model, 'photograph')->checkboxList($model->timeIndexMap)->label('') ?>-->
+    <!--<?= $form->field($model, 'photograph')->checkboxList(ShootBookdetail::$timeIndexMap)->label('') ?>-->
     
     <!--隐藏的字段属性-->
     <?= Html::activeHiddenInput($model, 'ver') ?>
@@ -175,6 +175,8 @@ JS;
         //console.log($(e).val());
 	$("#shootbookdetail-fw_course").html("");
 	$("#shootbookdetail-fw_project").html("");
+        $("#select2-shootbookdetail-fw_project-container").html("");
+	$("#select2-shootbookdetail-fw_course-container").html("");
 	$.post("/framework/api/search?id="+$(e).val(),function(data)
         {
             $('<option/>').appendTo($("#shootbookdetail-fw_project"));
@@ -186,6 +188,7 @@ JS;
     }
     function wx_two(e){
         $("#shootbookdetail-fw_course").html("");
+        $("#select2-shootbookdetail-fw_course-container").html("");
         $.post("/framework/api/search?id="+$(e).val(),function(data)
         {
             $('<option/>').appendTo($("#shootbookdetail-fw_course"));

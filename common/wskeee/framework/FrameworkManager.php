@@ -130,6 +130,8 @@ class FrameworkManager extends Component
      */
     public function getChildren($itemId)
     {
+        if(!isset($this->childs[$itemId]))
+            return [];
         return $this->childs[$itemId];
     }
     

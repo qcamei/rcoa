@@ -53,7 +53,7 @@ use yii\widgets\DetailView;
             ['label' => '<span class="btn-block viewdetail-th-head">课程信息</span>','value'=>''],
             [
                 'attribute' => 'business_id',
-                'value' => $model->business->NAME,
+                'value' => $model->business->name,
             ],
             [
                 'attribute' => 'fw_college',
