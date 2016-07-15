@@ -3,7 +3,6 @@
 namespace frontend\modules\shoot\controllers;
 
 use common\models\expert\Expert;
-use common\models\RmsSysData;
 use common\models\shoot\searchs\ShootBookdetailSearch;
 use common\models\shoot\ShootBookdetail;
 use common\models\shoot\ShootBookdetailRoleName;
@@ -11,6 +10,7 @@ use common\models\shoot\ShootSite;
 use common\wskeee\job\JobManager;
 use frontend\modules\shoot\BookdetailTool;
 use wskeee\framework\FrameworkManager;
+use wskeee\framework\models\ItemType;
 use wskeee\rbac\RbacManager;
 use wskeee\rbac\RbacName;
 use wskeee\utils\DateUtil;
@@ -417,10 +417,8 @@ class BookdetailController extends Controller
      * @return type
      */
     protected function getBusiness(){
-        $business = RmsSysData::find()
-                  ->where(['TYPE_CODE'=> 'RMS_BUSINESS_CODE'])
-                  ->all();
-        return ArrayHelper::map($business, 'SYS_DATA_ID','NAME');
+        $business = ItemType::find()->all();
+        return ArrayHelper::map($business, 'id','name');
     }
 
     /**

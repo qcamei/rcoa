@@ -3,7 +3,6 @@
 namespace common\models\shoot;
 
 use common\models\expert\Expert;
-use common\models\RmsSysData;
 use common\models\shoot\ShootAppraise;
 use common\models\shoot\ShootAppraiseResult;
 use common\models\shoot\ShootHistory;
@@ -12,6 +11,7 @@ use common\models\User;
 use common\wskeee\job\JobManager;
 use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\FWItem;
+use wskeee\framework\models\ItemType;
 use wskeee\rbac\RbacName;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -24,9 +24,9 @@ use yii\db\Exception;
  *
  * @property integer $id
  * @property integer $site_id   场地ID
- * @property string $fw_college 项目
- * @property string $fw_project 子项目
- * @property string $fw_course  课程
+ * @property integer $fw_college 项目
+ * @property integer $fw_project 子项目
+ * @property integer $fw_course  课程
  * @property integer $lession_time  时长
  * @property string $u_teacher     老师
  * @property string $u_contacter   接洽人
@@ -43,17 +43,17 @@ use yii\db\Exception;
  * @property integer $ver
  * @property string $remark         备注
  * @property string $start_time     开始时间
- * @property string $business_id    学历ID
+ * @property integer $business_id    学历ID
  *
  * @property ShootAppraise[] $shootAppraises  评价题目
  * @property ShootAppraiseResult[] $shootAppraiseResults    评价结束
- * @property RmsSysData $business    获取学历
+ * @property Item $business    获取学历
  * @property User $booker      获取预约人
- * @property RmsProjectSysData $fwCollege    获取项目
+ * @property FWItem $fwCollege    获取项目
  * @property User $contacter   获取接洽人
- * @property RmsProjectSysData $fwCourse     获取课程
+ * @property FWItem $fwCourse     获取课程
  * @property User $createBy     
- * @property RmsProjectSysData $fwProject    获取子项目
+ * @property FWItem $fwProject    获取子项目
  * @property User $shootMan        获取摄影师
  * @property ShootSite $site        获取场地
  * @property Expert $teacher        获取老师
@@ -123,7 +123,7 @@ class ShootBookdetail extends ActiveRecord
     ];
     
     /** 时间段名称 */
-    public $timeIndexMap = [
+    public static $timeIndexMap = [
         self::TIME_INDEX_MORNING => '上',
         self::TIME_INDEX_AFTERNOON => '下',
         self::TIME_INDEX_NIGHT => '晚',
@@ -289,7 +289,7 @@ class ShootBookdetail extends ActiveRecord
      */
     public function getBusiness()
     {
-        return $this->hasOne(RmsSysData::className(), ['SYS_DATA_ID' => 'business_id']);
+        return $this->hasOne(ItemType::className(), ['id' => 'business_id']);
     }
 
     
@@ -559,7 +559,7 @@ class ShootBookdetail extends ActiveRecord
      */
     public function getTimeIndexName()
     {
-        return $this->timeIndexMap[$this->index];
+        return self::$timeIndexMap[$this->index];
     }
     
 }
