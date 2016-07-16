@@ -5,7 +5,9 @@ namespace frontend\views;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 use yii\web\AssetBundle;
+use const YII_DEBUG;
 /**
  * Description of RbacAsset
  *
@@ -24,5 +26,8 @@ class SiteAsset extends AssetBundle
     ];
     public $depends = [
         'yii\web\YiiAsset'
+    ];
+    public $publishOptions = [
+        'forceCopy' => YII_DEBUG,
     ];
 }
