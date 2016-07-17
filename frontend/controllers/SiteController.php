@@ -80,7 +80,7 @@ class SiteController extends Controller
                 ->where(['isdisplay' => Banner::DISPLAY])
                 ->orderBy('index ASC')
                 ->all();
-        $system = System::find()->all();
+        $system = System::find()->with('jobs')->all();
         $user = User::findOne(Yii::$app->user->id);
         return $this->render('index',[
             'banner' => $banner,

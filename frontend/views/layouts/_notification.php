@@ -2,6 +2,7 @@
 
 use common\config\AppGlobalVariables;
 use common\models\System;
+use common\wskeee\job\JobManager;
 use common\wskeee\job\models\Job;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -12,9 +13,10 @@ use yii\web\View;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+/* @var $jobManager JobManager */
 $jobManager = Yii::$app->get('jobManager');
 $notification = $jobManager->getUnReadyNotification(Yii::$app->user->id);
-$system = System::find()->all();
+$system = System::find()->with('jobs')->all();
 
 ?>
 <span class="badge badge-warning"><?php echo count($notification)?></span>
@@ -24,10 +26,7 @@ $system = System::find()->all();
     </li>
     <?php 
         foreach ($system as $value) {
-            $unReadyNotice = Job::find()
-             ->where(['status'=>  Job::STATUS_ASSIGN])
-             ->orWhere(['status'=> Job::STATUS_SHOOTING])
-             ->andWhere(['id'=>ArrayHelper::getColumn($notification, 'job_id'),'system_id' => $value->id])->limit(2)->all();
+            $jobManager->getHaveReadNotice(ArrayHelper::getColumn($notification, 'job_id'), ['system_id' => $value->id]);
             if(empty($unReadyNotice)) continue;
             echo '<li>';
             echo '<p>【'.$value->name.'】</p>';   
