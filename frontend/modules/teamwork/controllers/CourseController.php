@@ -233,7 +233,7 @@ class CourseController extends Controller
         $model = $twTool->getCourseProgressOne($id);
         if($model != null && $model->getIsNormal() && $twTool->getIsLeader()){
             if ($model->create_by == \Yii::$app->user->id && $model->progress == 1){
-
+                $model->real_carry_out = date('Y-m-d H:i', time());
                 $model->status = ItemManage::STATUS_CARRY_OUT;
                 $model->save();
             }
