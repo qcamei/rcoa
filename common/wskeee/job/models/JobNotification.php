@@ -2,7 +2,10 @@
 
 namespace common\wskeee\job\models;
 
-use Yii;
+use common\models\User;
+use common\wskeee\job\models\Job;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%job_notification}}".
@@ -15,7 +18,7 @@ use Yii;
  * @property Job $job
  * @property Job $jobs
  */
-class JobNotification extends \yii\db\ActiveRecord
+class JobNotification extends ActiveRecord
 {
     /**
      * 初始、未读状态
@@ -64,7 +67,7 @@ class JobNotification extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getU()
     {
@@ -72,7 +75,7 @@ class JobNotification extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getJob()
     {
@@ -80,7 +83,7 @@ class JobNotification extends \yii\db\ActiveRecord
     }
     
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getJobs()
     {

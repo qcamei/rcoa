@@ -1,10 +1,11 @@
 <?php
 
+namespace common\wskeee\job\controllers;
+
+use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
-
-namespace common\wskeee\job\controllers;
 
 class DefaultController extends Controller
 {
@@ -31,23 +32,6 @@ class DefaultController extends Controller
         ];
     }
     
-    public function actionIndex()
-    {
-        return $this->render('index');
-    }
-    
-    public function actionCreate()
-    {
-       
-        return $this->render('index');
-    }
-    
-    public function actionUpdate()
-    {
-        return $this->render('index');
-    }
-    
-   
     /**
      * 清除用户关联的所有通知
      */

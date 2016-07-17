@@ -26,7 +26,7 @@ $system = System::find()->with('jobs')->all();
     </li>
     <?php 
         foreach ($system as $value) {
-            $jobManager->getHaveReadNotice(ArrayHelper::getColumn($notification, 'job_id'), ['system_id' => $value->id]);
+            $unReadyNotice = $jobManager->getHaveReadNotice(ArrayHelper::getColumn($notification, 'job_id'), ['system_id' => $value->id]);
             if(empty($unReadyNotice)) continue;
             echo '<li>';
             echo '<p>【'.$value->name.'】</p>';   
@@ -39,7 +39,7 @@ $system = System::find()->with('jobs')->all();
         }
         
         echo '<li>';
-        echo Html::a('全部清除','', ['id'=>'allRemove','style'=>'text-align: center']);
+        echo Html::a('全部清除', '', ['id'=>'allRemove','style'=>'text-align: center']);
         echo '</li>';
     ?>
     

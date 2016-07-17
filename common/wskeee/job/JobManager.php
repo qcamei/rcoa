@@ -1,5 +1,12 @@
 <?php
 
+namespace common\wskeee\job;
+
+use common\wskeee\job\models\Job;
+use common\wskeee\job\models\JobNotification;
+use Yii;
+use yii\web\NotFoundHttpException;
+
 /*
  * 1、管理平台所有任务
  * 因不同模块都有独自任务，这在平台总任务无法管理，
@@ -10,14 +17,7 @@
  * 该类包括对通知的【添加】【删除】【获取未读】【获取所有】【设置已读】操作
  */
 
-namespace common\wskeee\job;
 
-use common\wskeee\job\models\Job;
-use common\wskeee\job\models\JobNotification;
-use Yii;
-use yii\db\Exception;
-use yii\helpers\ArrayHelper;
-use yii\web\NotFoundHttpException;
 
 /**
  * Description of JobManager
@@ -302,6 +302,7 @@ class JobManager {
             ->with('system')
             ->limit(2)
             ->all();
+        return $unReadyNotice;
     }
 
     /**
@@ -317,5 +318,6 @@ class JobManager {
             ->with('system')
             ->limit(2)
             ->all();
+        return $haveReadNotice;
     }
 }
