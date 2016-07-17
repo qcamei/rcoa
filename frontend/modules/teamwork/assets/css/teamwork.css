@@ -12,6 +12,9 @@ and open the template in the editor.
  * 公共部分样式
  */
 
+.content {
+    padding: 50px 0 20px !important;
+}
 .container.item-manage{
     padding-left: 0px;
     padding-right: 0px;
@@ -69,62 +72,141 @@ and open the template in the editor.
 /**
  *  首页样式
  */
-.item-manage .item-manage-head {
-    background-color: rgba(243, 123, 83, 1);
-    width: 100%; 
-    height: 180px;
-    margin-top: 20px;
+.row {
+    margin: 0px !important;
 }
-.item-manage-head .item-manage-headline{
-    padding:10px;
-    display: block;
-    font-size: 22px;
-    color: #fff
-}
-.item-manage-head .lession-time{
-    padding-left:50px;
-    color: #fff;
-}
-.item-manage-head p{
-    padding-bottom: 20px;
-}
-.item-manage-head span{
-    float: left;
-    display: block
-}
-
-.item-manage-head .completed-undone{
-    font-size: 30px;
-    float:left;
-    margin-top: -15px;
-    padding-left: 0px;
-    padding-right: 5px;
-    text-align: right;
-    //word-break: break-all;
-}
-
-.item-manage-head .eye-team{
-    margin-left: 15px;
-    width: 24px;
-    height: 24px;
-}
-
-.item-manage-head a:hover{
-    text-decoration:none;
-    color: #fff;
-}
-.item-manage .item-manage-bottom{
-    background-color: rgba(119, 128, 138, 1);
+.row .item-manage-top-bg {
     width: 100%;
-    height: 150px;
+    height: 250px;
+    margin-top: 25px;
+    background: url("/filedata/teamwork/image/item-manage-top-bg.jpg") no-repeat;
+}
+.item-manage-top-bg .container {
+    padding: 0px;
+}
+.row .item-manage-top-left {
+    margin-top: 75px;
+    margin-left: 15px;
     float: left;
 }
-.item-manage-bottom .completed-undone{
-    font-size:23px;
-    margin-top: -10px;
-    padding-left: 0px;
-    padding-right: 5px;
+.item-manage-top-left .lession-time {
+    width: 100%;
+    float: left;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
+.lession-time span {
+    font-size: 25px;
+    font-weight: 400;
+    display: block;
+    float: left;
+}
+.lession-time .completed-undone {
+    font-size: 35px;
+    color: red;
+    margin-top: -10px;
+    text-align: center;
+    padding: 0px;
+}
+.lession-time .eye-icon-button {
+    width: 36px;
+    height: 36px;
+    margin-left: 5px;
+    float: left;
+    display: block;
+    background: url("/filedata/teamwork/image/eye-icon-button-1.png") no-repeat;
+}
+.item-manage-team {
+    width: 100%;
+    height: 203px;
+    margin-top: 25px;
+}
+.item-manage-team-left {
+    width: 25%;
+    height: 203px;
+    float: left;
+}
+.item-manage-team-left .item-manage-team-icon-1 {
+    width: 47px;
+    height: 49px;
+    margin: 75px 0;
+    //float: right;
+    display: block;
+}
+.item-manage-team-right {
+    width: 75%;
+    color: #fff;
+    float: left;
+}
+.item-manage-team-right .team-lession-time {
+    width: 100%;
+    float: left;
+    //margin-top: 5px;
+    //margin-bottom: 5px;
+}
+.item-manage-team-right p {
+    margin-top: 20px;
+    margin-left: 8px;
+    font-size: 25px;
+}
+.item-manage-team-right span {
+    margin-top: 20px;
+    margin-left: 10px;
+    font-size: 14px;
+    display: block;
+    float: left;
+}
+.item-manage-team-right .completed {
+    color: #fcb322;
+    font-size: 18px;
+    margin-top: 16px;
+    margin-right: 5px;
+    text-align: right;
+}
+.item-manage-team-right .undone {
+    color: #fff;
+    font-size: 18px;
+    margin-top: 16px;
+    margin-right: 5px;
+    text-align: right;
+}
+.item-manage-team-right .item-manage-team-icon-2 {
+    width: 26px;
+    height: 28px;
+    margin-top: 15px;
+    margin-left: 5px;
+    display: block;
+    float: left;
+}
+.science-factory {
+    background-color: #5cadaa;
+    //background: url("/filedata/teamwork/image/science-factory.png") no-repeat;
+}
+.science-factory .science-factory-left {
+    background-color: #4b9f9c;
+    //background: url("/filedata/teamwork/image/science-factory-left.png") no-repeat;
+}
+.science-factory-left .science-factory-icon-1 {
+    background: url("/filedata/teamwork/image/science-factory-icon-1.png") no-repeat;
+}
+.science-factory .science-factory-icon-2 {
+    background: url("/filedata/teamwork/image/science-factory-icon-2.png") no-repeat;
+}
+.team-info {
+    background-color: #53d192;
+    //background: url("/filedata/teamwork/image/team-info.png") no-repeat;
+}
+.team-info .team-info-left {
+    background-color: #38b677;
+    //background: url("/filedata/teamwork/image/team-info-left.png") no-repeat;
+}
+.team-info-left .team-info-icon-1 {
+    background: url("/filedata/teamwork/image/team-info-icon-1.png") no-repeat;
+}
+.team-info .team-info-icon-2 {
+    background: url("/filedata/teamwork/image/team-info-icon-2.png") no-repeat;
+}
+
 
 
 /**
