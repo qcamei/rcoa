@@ -16,7 +16,7 @@ $this->title = '课程中心工作平台';
     <div class="jumbotron">
         <div class="row hidden-xs">
             <?php foreach ($system as $value){
-                 echo '<div class="col-lg-2 col-md-4 col-sm-4 modules-list">';
+                 echo '<div class="col-lg-2 col-md-3 col-sm-4 modules-list">';
                  echo Html::a(Html::img($value->module_image,[
                          'class' => 'center-block',
                          'width' => '150',
