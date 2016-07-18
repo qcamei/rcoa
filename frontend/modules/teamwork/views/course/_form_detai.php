@@ -43,7 +43,8 @@ use yii\widgets\DetailView;
             ],
             [
                 'attribute' => 'course_ops',
-                'value' => $model->courseOps->u->nickname.' ( '.$model->courseOps->position.' ) ',
+                'value' => empty($model->course_ops) ? '无'
+                           :$model->courseOps->u->nickname.' ( '.$model->courseOps->position.' ) ',
             ],
             [
                 'attribute' => 'create_by',

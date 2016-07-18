@@ -74,12 +74,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     <td>'.Html::beginTag('div', ['class' => 'progress table-list-progress']).
                                 Html::beginTag('div', [
                                     'class' => 'progress-bar', 
-                                    'style' => 'width:'.(int)($link->completed / $link->total * 100).'%',
+                                    'style' => 'width:'.(int)(($link->completed / $link->total) * 100).'%',
                                 ]).
-                                (int)($link->completed / $link->total * 100).'%'.
+                                (int)(($link->completed / $link->total) * 100).'%'.
                                 Html::endTag('div').
                             Html::endTag('div').'</td>
-                    <td>'.Html::a('录入',['entry', 'id' => $link->id], ['class' => $className]).'</td>
+                    <td>'.Html::a('录入', ['entry', 'id' => $link->id], ['class' => $className]).'</td>
                 </tr>';
             }
         } ?>

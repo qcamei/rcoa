@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
     
     <h4> 开发周报：</h4>
-    <!--<span>本周开发者：<?= $model->weeklyEditorsPeople->u->nickname ?></span>-->
+    <span>本周开发者：<?= empty($model->weekly_editors_people)? '无' :$model->weeklyEditorsPeople->u->nickname ?></span>
      <?php  $form = ActiveForm::begin([
         'id' => 'form-summary-search',
     ]) ?>

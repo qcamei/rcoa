@@ -46,50 +46,6 @@ class CourselinkController extends Controller
         ];
     }
     
-    public function actionTest(){
-        
-        $subQuery = ItemManage::find()
-                        ->select('item_child_id')
-                        ->where(['item_id'=>2]);
-        
-        $items = \wskeee\framework\models\Item::find()
-                ->where(['parent_id'=>2])
-                ->andWhere(['not in','id',$subQuery])
-                ->all();
-        var_dump($items);exit;
-        
-        $sql = "SELECT Item_course.*,(SUM(Course_link.completed)/SUM(Course_link.total)) AS progress FROM     
-                    (SELECT Item.id, Course.id AS course_id,Item.item_type_id,Item.item_id, Item.item_child_id   
-                        FROM ccoa_teamwork_item_manage AS Item   
-                        LEFT JOIN ccoa_teamwork_course_manage AS Course ON Course.project_id = Item.id) AS Item_course   
-                LEFT JOIN ccoa_teamwork_course_link AS Course_link ON Item_course.course_id = Course_link.course_id  
-                GROUP BY Item_course.id ";
-        $itemProgress = ItemManage::findBySql($sql)
-                        ->with('courseManages')
-                        ->with('createBy')
-                        ->with('itemChild')
-                        ->with('item')
-                        ->with('itemType')
-                        ->with('teamMember')
-                        ->all();
-                
-        
-        //var_dump($itemProgress);exit; 
-        $Item_courseQuery = (new Query())
-                ->select(['Item.id, Course.id AS course_id,Item.item_type_id,Item.item_id, Item.item_child_id'])
-                ->from(['Item'=> ItemManage::tableName()])
-                ->leftJoin(CourseManage::tableName().' AS Course', 'Course.project_id = Item.id) AS Item_course');
-        $values = (new Query())
-                ->select(['Item_course.*','(SUM(Course_link.completed)/SUM(Course_link.total)) AS progress FROM'])
-                ->from(['Item_course'=>$Item_courseQuery])
-                ->leftJoin(CourseLink::tableName().' AS Course_link', 'Item_course.course_id = Course_link.course_id')
-                ->groupBy('Item_course.id')
-                ->createCommand(\Yii::$app->db);
-        
-        var_dump($values);
-        return $this->render('test');
-    }
-
     /**
      * Lists all CourseLink models.
      * @return mixed
