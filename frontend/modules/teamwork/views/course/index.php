@@ -15,7 +15,20 @@ $this->title = Yii::t('rcoa/teamwork', 'Course Manages');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="container course-manage-index has-title item-manage">
+<div class="container course-manage-index item-manage">
+    
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="height: 35px;border: 1px #ccc solid;margin-top: 5px;border-radius: 5px;padding: 0px;">
+        <i style="background: url('/filedata/teamwork/image/search-icon.png')no-repeat;width: 16px;height: 16px;display: block;margin-top: 8px;margin-left: 5px;float: left;"></i>
+        <?= Html::textInput('', '', [
+            'class' => 'col-lg-10 col-md-10 col-sm-10 col-xs-8',
+            'style' => 'float: left;height: 32px;border: 0px;padding: 8px;margin-left: 5px;padding: 0px;',
+            'placeholder' => '该功能待开发中...'
+        ])?>
+        <?= Html::img(['/filedata/teamwork/image/20160718152550.jpg'], [
+            
+            'style' => 'height: 32px;float: right; padding: 0px;"'
+        ])?>
+    </div>
     
     <?= GridView::widget([
         'dataProvider' => $dataProvider,

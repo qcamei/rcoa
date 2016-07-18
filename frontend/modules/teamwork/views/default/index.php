@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ]); ?>
                     </div>
                     <div class="lession-time">
-                        <span>在&nbsp;&nbsp;&nbsp;建：</span>
+                        <span>在&nbsp;&nbsp;&nbsp;&nbsp;建：</span>
                         <span class="col-lg-4 col-md-4 col-sm-5 col-xs-4 completed-undone">
                             <?= $undone; ?>
                         </span>
@@ -62,7 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             ]) ?>
                         </div>
                         <div class="team-lession-time">
-                            <span>在&nbsp;&nbsp;&nbsp;建：</span>
+                            <span>在&nbsp;&nbsp;&nbsp;&nbsp;建：</span>
                             <span class="col-lg-4 col-md-4 col-sm-4 undone" style="padding: 0px;">111</span>
                             <span>学时</span>
                              <?= Html::a('', ['course/index', 'team_id' => '', 'status' => ItemManage::STATUS_NORMAL], [
@@ -102,7 +102,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ]);
                            echo '</div>';
                            echo '<div class="team-lession-time">';
-                                echo '<span>在&nbsp;&nbsp;&nbsp;建：</span>'
+                                echo '<span>在&nbsp;&nbsp;&nbsp;&nbsp;建：</span>'
                                 . '<span class="col-lg-4 col-md-3 col-sm-4 col-xs-3 undone" style="padding:0px;">'.$undone.'</span>'
                                 . '<span>学时</span>'
                                 . Html::a('', ['course/index', 'team_id' => $value->id, 'status' => ItemManage::STATUS_NORMAL], [
@@ -134,7 +134,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             ]) ?>
                         </div>
                         <div class="team-lession-time">
-                            <span>在&nbsp;&nbsp;&nbsp;建：</span>
+                            <span>在&nbsp;&nbsp;&nbsp;&nbsp;建：</span>
                             <span class="col-xs-3 undone" style="padding: 0px;">111</span>
                             <span>学时</span>
                              <?= Html::a('', ['course/index', 'team_id' => '', 'status' => ItemManage::STATUS_NORMAL], [

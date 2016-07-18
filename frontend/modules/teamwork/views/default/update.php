@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa', 'Update');
     </div>
 </div>
 
-<div class="container item-manage-update item-manage has-title ">
+<div class="container item-manage-update has-title ">
 
     <?= $this->render('_form', [
         'model' => $model,
