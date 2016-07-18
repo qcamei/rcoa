@@ -44,12 +44,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'producer' => $producer,
     ]) ?>
     
-    <h4>开发周报：</h4>
-    
-    <?php  $form = ActiveForm::begin([
+    <h4> 开发周报：</h4>
+    <!--<span>本周开发者：<?= $model->weeklyEditorsPeople->u->nickname ?></span>-->
+     <?php  $form = ActiveForm::begin([
         'id' => 'form-summary-search',
     ]) ?>
-
+    
     <?= Html::beginTag('div', ['class' => 'col-lg-3 col-md-3 col-sm-4', 'style'=> 'padding:0;margin-bottom:10px;']).
             Select2::widget([
                 'name' => 'create_time',
@@ -65,6 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
              ]).Html::endTag('div'); ?> 
     
     <?php ActiveForm::end(); ?>
+    
     <?php
         echo Html::beginTag('div', ['class' => 'col-lg-3 col-md-3 col-sm-4', 'style'=> 'margin-bottom:10px;']).
              Html::a('编辑', [
@@ -137,7 +138,6 @@ JS;
         $("#form-summary-search").submit();
     } 
 </script>
-
 
 <?php
     TwAsset::register($this);

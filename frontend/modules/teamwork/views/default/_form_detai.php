@@ -25,13 +25,14 @@ use yii\widgets\DetailView;
                 'attribute' => 'item_child_id',
                 'value' => $model->itemChild->name,
             ],
-            [
+            /*[
                 'attribute' => 'team_id',
                 'value' => $model->team->name,
-            ],
+            ],*/
             [
                 'attribute' => 'create_by',
-                'value' => $model->teamMember->team->name.' ( '.$model->createBy->nickname.' )',
+                //'value' => $model->teamMember->team->name.' ( '.$model->createBy->nickname.' )',
+                'value' => $model->createBy->nickname,
             ],
             [
                 'attribute' => 'created_at',

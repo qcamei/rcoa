@@ -63,4 +63,5 @@ return[
     'Statistics-Team-prompt'=>'全部',
     'Statistics-Status'=>'状态',
     'Statistics-Search'=>'统计',
+    'Course Ops'=>'运维负责人',
 ];

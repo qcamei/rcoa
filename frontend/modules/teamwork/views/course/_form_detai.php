@@ -7,19 +7,6 @@ use yii\widgets\DetailView;
 /* @var $this View */
 /* @var $model CourseManage */
 
-/*$producers = [];
-foreach ($producer as $value) {
-    $producers[] = $value['is_leader'] == 'Y'?
-    '<span style="margin:5px;color:red;">'.$value['nickname'].'(队长)</span>':
-    '<span style="margin:5px;">'.$value['nickname'].'</span>';
-}*/
-/*$producers = [];
-foreach ($producers as $element) {
-    $key = ArrayHelper::getValue($element, 'producer');
-    $value = ArrayHelper::getValue($element, 'producerOne.u.nickname').' ('.ArrayHelper::getValue($element, 'producerOne.position').')';
-    //$producers[ArrayHelper::getValue($element, 'producerOne.team.name')][$key] = $value;
-    $producers[$key] = $value;
-}*/
 ?>
 <div class="item-manage-view">
     <?= DetailView::widget([
@@ -53,6 +40,10 @@ foreach ($producers as $element) {
             [
                 'attribute' => 'team_id',
                 'value' => $model->team->name,
+            ],
+            [
+                'attribute' => 'course_ops',
+                'value' => $model->courseOps->u->nickname.' ( '.$model->courseOps->position.' ) ',
             ],
             [
                 'attribute' => 'create_by',

@@ -64,7 +64,12 @@ use yii\widgets\ActiveForm;
             ],
     ])?>
     
+    <?= $form->field($model, 'course_ops')->widget(Select2::classname(), [
+        'data' => $producerList, 'options' => ['placeholder' => '请选择...']
+    ]) ?>
+    
     <?= $form->field($model, 'weekly_editors_people')->widget(Select2::classname(), [
+        //'value' => array_keys($weeklyEditors),
         'data' => $weeklyEditors, 'options' => ['placeholder' => '请选择...']
     ]) ?>
     
@@ -178,20 +183,32 @@ $format =
     }
 SCRIPT;
     //$this->registerJs($format, View::POS_HEAD);
-$js = 
+$sourceProducers = [];  
+    foreach ($producerList as $teams){  
+        foreach($teams as $id=>$name){  
+            $sourceProducers[$id]=$name;  
+        }  
+    }  
+$sourceProducers = json_encode($sourceProducers);  
+$js =   
 <<<JS
-    function log(value){
-        var option = value.children().children()
-        console.log(option);
-        $('<option/>').appendTo($("#coursemanage-weekly_editors_people"));
+    var sourceProducers = $sourceProducers; 
+    function log(value){   
+        var hasSelected = $("#coursemanage-weekly_editors_people").val();    
+        $("#coursemanage-weekly_editors_people").html("");    
+        var producers = $(value).val();
+        for(var i=0,len=producers.length;i<len;i++){    
+            $('<option>').val(producers[i]).text(sourceProducers[producers[i]]).appendTo($("#coursemanage-weekly_editors_people"));     
+        }    
         
-        $(option).each(function(index, element){
-            if(element.selected == true && element.defaultSelected == false)
-                $('<option>').val(element.value).text(element.text).appendTo($("#coursemanage-weekly_editors_people"));
-        });
-        
-       
-    }
+        if(producers.indexOf(hasSelected)!=-1)    
+            $("#coursemanage-weekly_editors_people").val(hasSelected);    
+        else{  
+            $("#coursemanage-weekly_editors_people").val("");  
+            $("#select2-coursemanage-weekly_editors_people-container").html("请选择...");  
+        }  
+    }    
+
     
 JS;
     $this->registerJs($js,  View::POS_READY);

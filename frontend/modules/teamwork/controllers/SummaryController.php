@@ -2,6 +2,7 @@
 
 namespace frontend\modules\teamwork\controllers;
 
+use common\models\teamwork\CourseManage;
 use common\models\teamwork\CourseSummary;
 use frontend\modules\teamwork\TeamworkTool;
 use Yii;
@@ -81,6 +82,8 @@ class SummaryController extends Controller
         $twTool = Yii::$app->get('twTool');
         $params = Yii::$app->request->queryParams;
         $model->course_id = $params['course_id'];
+        $course = CourseManage::findOne(['id' => $model->course_id]);
+        $model->create_by = $course->weekly_editors_people;
         $model->create_time = date('Y-m-d', time());
         $result = $twTool->getWeek($model->course_id, $model->create_time);
         
@@ -113,12 +116,13 @@ class SummaryController extends Controller
          /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
         $model = $this->findModel($course_id, $create_time);
+        //$course = CourseManage::findOne(['id' => $model->course_id]);
+        $model->create_by = $model->weeklyCreateBy->weekly_editors_people;
          
         if(!$model->course->getIsNormal() || !$twTool->getIsLeader())
             throw new NotAcceptableHttpException('只有队长 or 状态为正常才可以【编辑总结】');
        
-        if ($model->load(Yii::$app->request->post())) {
-            $model->save(false, ['content', 'updated_at']);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['course/view', 'id' => $model->course_id]);
         } else {
             return $this->render('update', [

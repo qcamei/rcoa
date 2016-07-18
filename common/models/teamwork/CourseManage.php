@@ -22,6 +22,7 @@ use yii\db\ActiveRecord;
  * @property string $weekly_editors_people      周报编辑人
  * @property integer $lession_time              学时
  * @property integer $team_id                   创建者所在团队
+ * @property string $course_ops                 课程运维负责人
  * @property string $create_by                  创建者
  * @property integer $created_at                创建于
  * @property string $plan_start_time            计划开始时间
@@ -33,15 +34,17 @@ use yii\db\ActiveRecord;
  * @property integer $progress                  进度
  *
  * @property CourseLink[] $courseLinks              获取所有课程环节
- * @property TeamMember $weeklyEditorsPeople        获取周报编辑人
+ * @property TeamMember $courseOps                  获取课程运维负责人
  * @property Team $team                             获取团队
  * @property User $createBy                         获取创建者
  * @property Item $course                           获取课程
  * @property User $speakerTeacher                   获取主讲讲师
  * @property ItemManage $project                    获取项目
+ * @property TeamMember $weeklyEditorsPeople        获取周报编辑人
  * @property CoursePhase[] $coursePhases            获取所有课程阶段
  * @property CourseProducer[] $courseProducers      获取所有制作人
  * @property TeamMember[] $producers                获取所有团队成员
+ * @property CourseSummary[] $courseWeekly          获取所有周报开发人
  * @property CourseSummary[] $courseSummaries       获取所有课程总结
  */
 class CourseManage extends ActiveRecord
@@ -72,9 +75,10 @@ class CourseManage extends ActiveRecord
         return [
             [['project_id', 'course_id', 'lession_time', 'created_at', 'updated_at', 'status'], 'integer'],
             [['project_id', 'course_id', 'teacher', 'path', 'weekly_editors_people'], 'required'],
-            [['teacher', 'create_by', 'weekly_editors_people'], 'string', 'max' => 36],
+            [['teacher', 'create_by', 'weekly_editors_people', 'course_ops'], 'string', 'max' => 36],
             [['plan_start_time', 'plan_end_time', 'real_carry_out'], 'string', 'max' => 60],
             [['des','path'], 'string', 'max' => 255],
+            [['course_ops'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['course_ops' => 'u_id']],
             [['weekly_editors_people'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['weekly_editors_people' => 'u_id']],
             [['team_id'], 'exist', 'skipOnError' => true, 'targetClass' => Team::className(), 'targetAttribute' => ['team_id' => 'id']],
             [['create_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['create_by' => 'id']],
@@ -97,6 +101,7 @@ class CourseManage extends ActiveRecord
             'weekly_editors_people' => Yii::t('rcoa/teamwork', 'Weekly Editors People'),
             'lession_time' => Yii::t('rcoa/teamwork', 'Lession Time'),
             'team_id' => Yii::t('rcoa/team', 'Team ID'),
+            'course_ops' => Yii::t('rcoa/teamwork', 'Course Ops'),
             'create_by' => Yii::t('rcoa', 'Create By'),
             'created_at' => Yii::t('rcoa/teamwork', 'Created At'),
             'plan_start_time' => Yii::t('rcoa/teamwork', 'Plan Start Time'),
@@ -116,6 +121,16 @@ class CourseManage extends ActiveRecord
     {
         return $this->hasMany(CourseLink::className(), ['course_id' => 'id']);
     }
+    
+    /**
+     * 获取课程运维负责人
+     * @return ActiveQuery
+     */
+    public function getCourseOps()
+    {
+        return $this->hasOne(TeamMember::className(), ['u_id' => 'course_ops']);
+    }
+
     
     /**
      * 获取周报编辑人
@@ -198,6 +213,14 @@ class CourseManage extends ActiveRecord
         return $this->hasMany(TeamMember::className(), ['u_id' => 'producer'])->viaTable('{{%teamwork_course_producer}}', ['course_id' => 'id']);
     }
     
+    /**
+     * 获取所有周报开发人
+     * @return ActiveQuery
+     */
+    public function getCourseWeeklys()
+    {
+        return $this->hasMany(CourseSummary::className(), ['create_by' => 'weekly_editors_people']);
+    }
 
     /**
      * 获取所有课程总结
