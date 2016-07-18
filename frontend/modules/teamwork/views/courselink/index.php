@@ -46,8 +46,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <table class="table table-list">
         <thead>
             <tr style="background-color:#eee;">
-                <th style="width:212px;padding:8px;">阶段</th>
-                <th style="max-width:434px;min-width:80px;padding:8px;">环节</th>
+                <th style="width:232px;padding:8px;">阶段</th>
+                <th style="max-width:434px;min-width:140px;padding:8px;">环节</th>
                 <th style="width:130px;padding:8px;">权重</th>
                 <th class="hidden-xs" style="width:130px;padding:8px;">类型</th>
                 <th class="hidden-xs" style="width:130px;padding:8px;">单位</th>
