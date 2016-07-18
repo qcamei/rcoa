@@ -25,16 +25,17 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
                 'label' => '',
+                'format' => 'raw',
                 'value'=> function($model){
                     /* @var $model CourseManage */
-                    return $model->project->teamMember->team->name;
+                    return '<span>'.$model->project->teamMember->team->name.'</span>';
                 },
                 'headerOptions' => [
                     'class'=>[
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '100px' 
+                        'width' => '60px' 
                     ],
                 ],
                 'contentOptions' =>[
@@ -50,14 +51,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'headerOptions' => [
                     'class'=>[
-                        'th'=>'hidden-xs',
+                        'th'=>'hidden-sm hidden-xs',
                     ],
                     'style' => [
                         'width' => '80px' 
                     ],
                 ],
                 'contentOptions' =>[
-                    'class'=>'hidden-xs',
+                    'class'=>'hidden-sm hidden-xs',
                 ],
             ],
             [
@@ -69,14 +70,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'headerOptions' => [
                     'class'=>[
-                        'th'=>'hidden-xs',
+                        'th'=>'hidden-sm hidden-xs',
                     ],
                     'style' => [
                         'width' => '135px' 
                     ],
                 ],
                 'contentOptions' =>[
-                    'class'=>'hidden-xs',
+                    'class'=>'hidden-sm hidden-xs',
                 ],
             ],
             [
@@ -95,8 +96,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
                 'contentOptions' =>[
-                    'class' => 'course-name',
-                    'class'=>'hidden-xs',
+                    'class' => 'course-name hidden-xs',
                 ],
             ],
             [
