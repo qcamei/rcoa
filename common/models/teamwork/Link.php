@@ -52,7 +52,8 @@ class Link extends ActiveRecord
     public function rules()
     {
         return [
-            [['phase_id', 'type', 'index', 'total', 'completed'], 'integer'],
+            [['type', 'index', 'total', 'completed'], 'integer'],
+            [['phase_id', 'type', 'index', 'total', 'completed'], 'required'],
             [['name'], 'string', 'max' => 255],
             [['unit'], 'string', 'max' => 16],
             [['is_delete'], 'string', 'max' => 4],

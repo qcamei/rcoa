@@ -17,8 +17,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'weights')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'progress')->textInput() ?>
-
     <?= $form->field($model, 'create_by')->textInput(['value' => $model->createBy->nickname, 'disabled' => 'disabled', 'maxlength' => true]) ?>
 
     <div class="form-group">

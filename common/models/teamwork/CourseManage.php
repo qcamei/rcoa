@@ -20,7 +20,12 @@ use yii\db\ActiveRecord;
  * @property integer $course_id                 课程Id
  * @property string $teacher                    主讲教师
  * @property string $weekly_editors_people      周报编辑人
+ * @property integer $credit                    学分
  * @property integer $lession_time              学时
+ * @property double $video_length               视频时长
+ * @property integer $question_mete             题量
+ * @property integer $case_number               案例数
+ * @property integer $activity_number           活动数
  * @property integer $team_id                   创建者所在团队
  * @property string $course_ops                 课程运维负责人
  * @property string $create_by                  创建者
@@ -49,6 +54,12 @@ use yii\db\ActiveRecord;
  */
 class CourseManage extends ActiveRecord
 {
+    /** 创建场景 */
+    const SCENARIO_CREATE = 'create';
+    /** 更新场景 */
+    const SCENARIO_UPDATE = 'update';
+    /** 已完成场景 */
+    const SCENARIO_CARRYOUT = 'carry-out';
     
     /** 进度 */
     public $progress;
@@ -59,6 +70,25 @@ class CourseManage extends ActiveRecord
     public static function tableName()
     {
         return '{{%teamwork_course_manage}}';
+    }
+    
+    public function scenarios() 
+    {
+        return [
+            self::SCENARIO_CREATE => 
+                ['id', 'project_id', 'course_id', 'teacher', 'weekly_editors_people', 'credit', 'lession_time', 
+                'video_length','question_mete', 'case_number', 'activity_number', 'team_id', 'course_ops', 'create_by',
+                'plan_start_time', 'plan_end_time', 'real_carry_out', 'status','des', 'path'],
+            self::SCENARIO_UPDATE => 
+                ['id', 'project_id', 'course_id', 'teacher', 'weekly_editors_people', 'credit', 'lession_time', 
+                'video_length','question_mete', 'case_number', 'activity_number', 'team_id', 'course_ops', 'create_by',
+                'plan_start_time', 'plan_end_time', 'real_carry_out', 'status','des', 'path'],
+            self::SCENARIO_CARRYOUT => ['video_length', 'question_mete', 'case_number', 'activity_number'],
+            self::SCENARIO_DEFAULT => 
+                ['id', 'project_id', 'course_id', 'teacher', 'weekly_editors_people', 'credit', 'lession_time', 
+                'video_length','question_mete', 'case_number', 'activity_number', 'team_id', 'course_ops', 'create_by',
+                'plan_start_time', 'plan_end_time', 'real_carry_out', 'status','des', 'path']
+        ];
     }
     
     public function behaviors() {
@@ -73,8 +103,9 @@ class CourseManage extends ActiveRecord
     public function rules()
     {
         return [
-            [['project_id', 'course_id', 'lession_time', 'created_at', 'updated_at', 'status'], 'integer'],
-            [['project_id', 'course_id', 'teacher', 'path', 'weekly_editors_people'], 'required'],
+            [['project_id', 'course_id', 'credit', 'lession_time', 'video_length', 'question_mete', 'case_number', 'activity_number', 'team_id', 'created_at', 'updated_at', 'status'], 'integer'],
+            [['project_id', 'course_id', 'credit', 'lession_time', 'teacher', 'path', 'weekly_editors_people'], 'required'],
+            [['video_length', 'question_mete', 'case_number', 'activity_number'], 'required', 'on' => [self::SCENARIO_CARRYOUT]],
             [['teacher', 'create_by', 'weekly_editors_people', 'course_ops'], 'string', 'max' => 36],
             [['plan_start_time', 'plan_end_time', 'real_carry_out'], 'string', 'max' => 60],
             [['des','path'], 'string', 'max' => 255],
@@ -99,11 +130,17 @@ class CourseManage extends ActiveRecord
             'course_id' => Yii::t('rcoa/teamwork', 'Course ID'),
             'teacher' => Yii::t('rcoa/teamwork', 'Teacher'),
             'weekly_editors_people' => Yii::t('rcoa/teamwork', 'Weekly Editors People'),
+            'credit' => Yii::t('rcoa/teamwork', 'Credit'),
             'lession_time' => Yii::t('rcoa/teamwork', 'Lession Time'),
+            'video_length' => Yii::t('rcoa/teamwork', 'Video Length'),
+            'question_mete' => Yii::t('rcoa/teamwork', 'Question Mete'),
+            'case_number' => Yii::t('rcoa/teamwork', 'Case Number'),
+            'activity_number' => Yii::t('rcoa/teamwork', 'Activity Number'),
             'team_id' => Yii::t('rcoa/team', 'Team ID'),
             'course_ops' => Yii::t('rcoa/teamwork', 'Course Ops'),
             'create_by' => Yii::t('rcoa', 'Create By'),
             'created_at' => Yii::t('rcoa/teamwork', 'Created At'),
+            'updated_at' => Yii::t('rcoa/teamwork', 'Updated At'),
             'plan_start_time' => Yii::t('rcoa/teamwork', 'Plan Start Time'),
             'plan_end_time' => Yii::t('rcoa/teamwork', 'Plan End Time'),
             'real_carry_out' => Yii::t('rcoa/teamwork', 'Real Carry Out'),
@@ -199,7 +236,7 @@ class CourseManage extends ActiveRecord
      * 获取所有制作人
      * @return ActiveQuery
      */
-    public function getTeamworkCourseProducers()
+    public function getCourseProducers()
     {
         return $this->hasMany(TeamworkCourseProducer::className(), ['course_id' => 'id']);
     }
@@ -232,7 +269,7 @@ class CourseManage extends ActiveRecord
     }
     
     /**
-     * 获取状态是否为【正常】
+     * 获取状态是否为【在建】
      */
     public function getIsNormal()
     {
@@ -240,7 +277,7 @@ class CourseManage extends ActiveRecord
     }
     
     /**
-     * 获取状态是否为【完成】
+     * 获取状态是否为【已完成】
      */
     public function getIsCarryOut()
     {

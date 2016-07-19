@@ -50,8 +50,8 @@ class ItemManage extends ActiveRecord
 
     /** 状态名 */
     public $statusName = [
-        self::STATUS_NORMAL => '正常',
-        self::STATUS_CARRY_OUT => '完成',
+        self::STATUS_NORMAL => '在建',
+        self::STATUS_CARRY_OUT => '已完成',
         self::STATUS_TIME_OUT => '暂停',
     ];
 
@@ -173,7 +173,7 @@ class ItemManage extends ActiveRecord
     }
     
     /**
-     * 获取状态是否为【正常】
+     * 获取状态是否为【在建】
      */
     public function getIsNormal()
     {
@@ -189,7 +189,7 @@ class ItemManage extends ActiveRecord
     }
     
     /**
-     * 获取状态是否为【完成】
+     * 获取状态是否为【已完成】
      */
     public function getIsCarryOut()
     {

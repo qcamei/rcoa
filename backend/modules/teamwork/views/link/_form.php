@@ -1,11 +1,12 @@
 <?php
 
+use common\models\teamwork\Link;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
 
 /* @var $this View */
-/* @var $model wskeee\framework\models\Link */
+/* @var $model Link */
 /* @var $form ActiveForm */
 ?>
 
@@ -13,15 +14,13 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'phase_id')->dropDownList($phases) ?>
+    <?= $form->field($model, 'phase_id')->textInput(['value' => $model->phase->name]) ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'type')->dropDownList($model->types) ?>
 
     <?= $form->field($model, 'unit')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'progress')->textInput() ?>
 
     <?= $form->field($model, 'create_by')->textInput(['value' => $model->createBy->nickname, 'disabled' => 'disabled', 'maxlength' => true]) ?>
 
