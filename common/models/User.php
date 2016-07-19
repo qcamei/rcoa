@@ -301,8 +301,6 @@ class User extends ActiveRecord implements IdentityInterface
                 $uploadpath = $this->fileExists(Yii::getAlias('@filedata').'/avatars/');
                 $upload->saveAs($uploadpath.$this->username.'.'.$ext);
                 $this->avatar = '/filedata/avatars/'.$this->username.'.'.$ext;
-            }else{
-                $this->avatar = '/filedata/avatars/timg.jpg';
             }
             
             

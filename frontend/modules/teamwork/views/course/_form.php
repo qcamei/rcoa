@@ -37,6 +37,8 @@ use yii\widgets\ActiveForm;
         ], 
     ]); ?>
 
+    <h5><b>基础信息</b></h5>
+    
     <?= $form->field($model, 'project.item_type_id')->textInput([
         'value' => $model->project->itemType->name, 'disabled' => 'disabled'
     ]) ?>
@@ -119,9 +121,40 @@ use yii\widgets\ActiveForm;
         ],
     ]) ?>
     
-    <?= $form->field($model, 'course_ops')->widget(Select2::classname(), [
-        'data' => $producerList, 'options' => ['placeholder' => '请选择...']
-    ]) ?>
+    <h5><b>开发信息</b></h5>
+    
+    <?php
+        echo Html::beginTag('div', ['class' => 'form-group field-courseproducer-producer has-success']);
+             echo Html::beginTag('label', [
+                 'class' => 'col-lg-1 col-md-1 control-label',
+                 'style' => 'color: #999999; font-weight: normal; padding-right:0;padding-left:10px;',
+                 'for' => 'courseproducer-producer'
+                ]).Yii::t('rcoa/teamwork', 'Resource People').Html::endTag('label');
+             echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']);
+                echo Select2::widget([
+                    'name' => 'producer',
+                    'value' => array_keys($producer),
+                    'data' => $producerList,
+                    'options' => [
+                        'placeholder' => 'Select a state ...',
+                        'multiple' => true,
+                    ],
+                    'pluginOptions' => [
+                        //'templateResult' => new JsExpression('format'),
+                        //'templateSelection' => new JsExpression('format'),
+                        'escapeMarkup' => new JsExpression("function(m) { return m; }"),
+                        'allowClear' => true
+                    ],
+                    'pluginEvents' => [
+                        'change' => "function() { log($(this)); }",
+                    ],
+                ]);
+                
+             echo Html::endTag('div');           
+             echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']).Html::beginTag('div', ['class' => 'help-block']).
+                    Html::endTag('div').Html::endTag('div');
+        echo Html::endTag('div');
+    ?>
     
     <?php
         echo Html::beginTag('div', ['class' => 'form-group field-coursemanage-weekly_editors_people required has-success']);
@@ -147,8 +180,11 @@ use yii\widgets\ActiveForm;
              echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']).Html::beginTag('div', ['class' => 'help-block']).
                     Html::endTag('div').Html::endTag('div');
         echo Html::endTag('div');
-
     ?>
+    
+    <?= $form->field($model, 'course_ops')->widget(Select2::classname(), [
+        'data' => $producerList, 'options' => ['placeholder' => '请选择...']
+    ]) ?>    
    
     <?php
         echo Html::beginTag('div', ['class' => 'form-group field-coursemanage-plan_start_time has-success']);
@@ -206,43 +242,11 @@ use yii\widgets\ActiveForm;
         echo Html::endTag('div');
     ?>
     
-    <?= $form->field($model, 'des')->textarea(['rows' => 4]) ?>
-    
     <?= $form->field($model, 'path')->textInput(['placeholder' => '存储服务器路径...']) ?>
     
-    <?php
-        echo Html::beginTag('div', ['class' => 'form-group field-courseproducer-producer has-success']);
-             echo Html::beginTag('label', [
-                 'class' => 'col-lg-1 col-md-1 control-label',
-                 'style' => 'color: #999999; font-weight: normal; padding-right:0;padding-left:10px;',
-                 'for' => 'courseproducer-producer'
-                ]).Yii::t('rcoa/teamwork', 'Resource People').Html::endTag('label');
-             echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']);
-                echo Select2::widget([
-                    'name' => 'producer',
-                    'value' => array_keys($producer),
-                    'data' => $producerList,
-                    'options' => [
-                        'placeholder' => 'Select a state ...',
-                        'multiple' => true,
-                    ],
-                    'pluginOptions' => [
-                        //'templateResult' => new JsExpression('format'),
-                        //'templateSelection' => new JsExpression('format'),
-                        'escapeMarkup' => new JsExpression("function(m) { return m; }"),
-                        'allowClear' => true
-                    ],
-                    'pluginEvents' => [
-                        'change' => "function() { log($(this)); }",
-                    ],
-                ]);
-                
-             echo Html::endTag('div');           
-             echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']).Html::beginTag('div', ['class' => 'help-block']).
-                    Html::endTag('div').Html::endTag('div');
-        echo Html::endTag('div');
-
-    ?>
+    <h5><b>其他信息</b></h5>
+    
+    <?= $form->field($model, 'des')->textarea(['rows' => 4]) ?>
     
     <?php ActiveForm::end(); ?>
 

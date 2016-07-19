@@ -391,14 +391,19 @@ class CourseController extends Controller
     public function getSameTeamMember($u_id)
     {
         $teamMember = TeamMember::find()->where(['u_id' => $u_id])->one();
-        $sameTeamMember = TeamMember::find()
+        $sameTeamMembers = TeamMember::find()
                         ->where(['team_id' => $teamMember->team_id])
                         ->orderBy('index asc')
                         ->with('u')
                         ->with('team')
                         ->all();
-        
-        return ArrayHelper::map($sameTeamMember, 'u_id', 'u.nickname');
+        $sameTeamMember = [];
+        foreach ($sameTeamMembers as $element) {
+            $key = ArrayHelper::getValue($element, 'u_id');
+            $value = ArrayHelper::getValue($element, 'u.nickname').' ('.ArrayHelper::getValue($element, 'position').')';
+            $sameTeamMember[$key] = $value;
+        }
+        return $sameTeamMember;
     }
     
     /**
@@ -408,12 +413,21 @@ class CourseController extends Controller
     public function getAssignWeeklyEditors($courseId)
     {
         $assignWeeklyEditors = CourseProducer::find()
-                               ->where(['course_id' => $courseId])
-                               ->with('producerOne')
-                               ->with('course')
-                               ->all();
-        
-        return ArrayHelper::map($assignWeeklyEditors, 'producer', 'producerOne.u.nickname');
+                            ->select(['Weeklyeditors.*','Member.`index`'])
+                            ->from(['Weeklyeditors' => CourseProducer::tableName()])
+                            ->leftJoin(['Member' => TeamMember::tableName()], 'Member.u_id = Weeklyeditors.producer')
+                            ->where(['Weeklyeditors.course_id' => $courseId])
+                            ->orderBy(['Member.`index`' => 'ASC', 'Member.team_id' => 'ASC'])
+                            ->with('producerOne')
+                            ->with('course')
+                            ->all();
+        $weeklyEditors = [];
+        foreach ($assignWeeklyEditors as $element) {
+            $key = ArrayHelper::getValue($element, 'producer');
+            $value = ArrayHelper::getValue($element, 'producerOne.u.nickname').' ('.ArrayHelper::getValue($element, 'producerOne.position').')';
+            $weeklyEditors[$key] = $value;
+        }
+        return $weeklyEditors;
     }
 
     /**
@@ -436,7 +450,7 @@ class CourseController extends Controller
         foreach ($assignProducers as $element) {
             $key = ArrayHelper::getValue($element, 'producer');
             $value = ArrayHelper::getValue($element, 'producerOne.is_leader') == 'Y' ? 
-                    '<span style="color:red">'.ArrayHelper::getValue($element, 'producerOne.u.nickname').' ('.ArrayHelper::getValue($element, 'producerOne.position').')</span>' : 
+                    '<span style="color:blue">'.ArrayHelper::getValue($element, 'producerOne.u.nickname').' ('.ArrayHelper::getValue($element, 'producerOne.position').')</span>' : 
                     ArrayHelper::getValue($element, 'producerOne.u.nickname').' ('.ArrayHelper::getValue($element, 'producerOne.position').')';
             //$producers[ArrayHelper::getValue($element, 'producerOne.team.name')][$key] = $value;
             $producers[$key] = $value;

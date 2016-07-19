@@ -83,9 +83,10 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail Details') . ' : ' . $model->id;
     });
     /** 指派操作*/
     var uShootMan = "$model->u_shoot_man";
+    
     $('#submit').click(function()
     {
-        if(uShootMan > 0){
+        if(uShootMan != ''){
             $('#myModal').modal();
             $("#myModal .modal-footer #save").click(function(){
                 var ed = $("#myModal .modal-body input").val();

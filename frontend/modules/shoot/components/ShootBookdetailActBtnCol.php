@@ -72,7 +72,7 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
             $isMe = (!$isNew && $model->u_shoot_man && $model->shootMan->id == Yii::$app->user->id);
         }
         //编导
-        else if($authManager->isRole(RbacName::ROLE_WD, Yii::$app->user->id))
+        else if($authManager->isRole(RbacName::ROLE_CONTACT, Yii::$app->user->id))
         {
             //预约任务时间
             $bookTime = date('Y-m-d H:i:s',$model->book_time);

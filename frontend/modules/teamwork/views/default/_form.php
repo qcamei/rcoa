@@ -32,7 +32,9 @@ use yii\widgets\ActiveForm;
             ],  
         ], 
     ]); ?>
-
+    
+    <h5><b>基础信息</b></h5>
+    
     <?= $form->field($model, 'item_type_id')->widget(Select2::classname(), [
         'data' => $itemType, 'options' => ['placeholder' => '请选择...']
     ]) ?>
@@ -44,6 +46,8 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'item_child_id')->widget(Select2::classname(), [
         'data' => $itemChilds, 'options' => ['placeholder' => '请选择...']
     ]) ?>
+    
+    <h5><b>开发信息</b></h5>
     
     <?php
         echo Html::beginTag('div', ['class' => 'form-group field-itemmanage-forecast_time has-success']);
@@ -73,6 +77,8 @@ use yii\widgets\ActiveForm;
         echo Html::endTag('div');
     ?>
 
+    <h5><b>其他信息</b></h5>
+    
     <?= $form->field($model, 'background')->textarea(['rows' => 4]) ?>
 
     <?= $form->field($model, 'use')->textarea(['rows' => 4]) ?>
