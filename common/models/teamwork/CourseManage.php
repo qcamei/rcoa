@@ -64,6 +64,12 @@ class CourseManage extends ActiveRecord
     /** 进度 */
     public $progress;
     
+    /** 状态名 */
+    public $statusName = [
+        ItemManage::STATUS_NORMAL => '在建',
+        ItemManage::STATUS_CARRY_OUT => '已完成',
+    ];
+    
     /**
      * @inheritdoc
      */
@@ -282,6 +288,14 @@ class CourseManage extends ActiveRecord
     public function getIsCarryOut()
     {
         return $this->status == ItemManage::STATUS_CARRY_OUT;
+    }
+    
+    /**
+     * 获取状态名称
+     */
+    public function getStatusName()
+    {
+        return $this->statusName[$this->status];
     }
     
 }

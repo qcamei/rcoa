@@ -183,13 +183,15 @@ class BookdetailController extends Controller
         
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
-        //设置用户对通知已读
-        $jobManager->setNotificationHasReady(2, Yii::$app->user->id, $id);  
-       
-        if(!$model->getIsAssign() && !$model->getIsAppraise()){
+        
+        if($model->getIsAssign() || $model->getIsStausShootIng()){
+            //设置用户对通知已读
+            $jobManager->setNotificationHasReady(2, Yii::$app->user->id, $id);  
+        }  else {
             //取消用户与任务通知的关联
-            $jobManager->cancelNotification(2, $model->id, Yii::$app->user->id);  
+            $jobManager->cancelNotification(2, $model->id, Yii::$app->user->id); 
         }
+        
         
         //被指派了的摄影师
         $alreadyShootMansArray = $this->getIsRoleNames(RbacName::ROLE_SHOOT_MAN, $model->book_time, $model->index); 
@@ -301,7 +303,7 @@ class BookdetailController extends Controller
         $model = $this->findModel($id);
         /* @var $bookdetailTool BookdetailTool */
         $bookdetailTool = Yii::$app->get('bookdetailTool');
-        if(!$model->getIsAssign() && !Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model]))
+        if((!$model->getIsAssign() || !$model->getIsStausShootIng()) && !Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model]))
             throw new NotAcceptableHttpException('该任务'.$model->getStatusName());
         else{
             $model->status =  $model::STATUS_CANCEL;

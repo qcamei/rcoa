@@ -136,7 +136,7 @@ use yii\widgets\ActiveForm;
                     'value' => array_keys($producer),
                     'data' => $producerList,
                     'options' => [
-                        'placeholder' => 'Select a state ...',
+                        'placeholder' => '请选择...',
                         'multiple' => true,
                     ],
                     'pluginOptions' => [
@@ -169,7 +169,7 @@ use yii\widgets\ActiveForm;
                     'value' => $model->isNewRecord ? Yii::$app->user->id : $model->weekly_editors_people,
                     'data' => $weeklyEditors,
                     'options' => [
-                        'placeholder' => 'Select a state ...',
+                        'placeholder' => '请选择...',
                     ],
                     'pluginOptions' => [
                         'allowClear' => true
@@ -242,7 +242,7 @@ use yii\widgets\ActiveForm;
         echo Html::endTag('div');
     ?>
     
-    <?= $form->field($model, 'path')->textInput(['placeholder' => '存储服务器路径...']) ?>
+    <?= $form->field($model, 'path')->textInput(['placeholder' => '课程存储服务器路径...']) ?>
     
     <h5><b>其他信息</b></h5>
     

@@ -179,7 +179,6 @@ class CourseController extends Controller
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
         $model = $this->findModel($id);
-        //$model->scenario = CourseManage::SCENARIO_DEFAULT;
         $post = Yii::$app->request->post();
         $courses = $this->getCourses($model->project->item_child_id);
         $existedCourses = $this->getExistedCourses(['project_id' => $model->project_id]);
@@ -187,7 +186,7 @@ class CourseController extends Controller
         if(!$twTool->getIsLeader() || $model->create_by !== \Yii::$app->user->id)
            throw new NotAcceptableHttpException('只有队长才可以【编辑】课程 or 该课程隶属于自己');
         if(!$model->getIsNormal())
-            throw new NotAcceptableHttpException('该项目现在状态为：'.$model->project->getStatusName());
+            throw new NotAcceptableHttpException('该课程现在状态为：'.$model->getStatusName());
         if ($model->load($post)) {
             $model->video_length = strtotime($post['CourseManage']['video_length']);
             

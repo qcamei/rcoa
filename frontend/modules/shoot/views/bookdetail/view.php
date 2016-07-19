@@ -62,9 +62,10 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail Details') . ' : ' . $model->id;
              * 取消 按钮显示必须满足以下条件：
              * 1、拥有【取消】权限（编导自己和管理员）
              * 2、必须是在24小时之前
-             * 3、必须为【待指派】状态
+             * 3、必须为【待指派】 or 【待评价】状态
              */
-            if($model->getIsAssign() && Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model]) && $model->book_time > date('Y-m-d H:i:s',strtotime('+1 day')))
+            
+            if(($model->getIsAssign() || $model->getIsStausShootIng()) && Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model]) && $model->book_time > strtotime('+1 day'))
                 echo Html::a('取消', 'javascript::', ['id'=>'cancel', 'class' => 'btn btn-warning']).' ';
         ?>
         <?= Html::a('返回', ['index','date'=>  date('Y-m-d',$model->book_time), 'site'=>$model->site_id], ['class' => 'btn btn-default']) ?>

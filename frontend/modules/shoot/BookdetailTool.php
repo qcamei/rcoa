@@ -196,14 +196,15 @@ class BookdetailTool{
                 $bdNoticeTool->cancelJobManager($model, $roleNmaeAll); 
                  //保存编辑信息
                 $this->saveNewHistory($model);  
-                //取消--给所有摄影组长发通知
-                $bdNoticeTool->sendShootLeadersNotification($model, '取消', 'shoot\CancelShoot-html'); 
+                
                 /** 非编导自己取消任务才发送 */
                 if(!$model->u_booker)  
                     //取消--给编导发通知
                     $bdNoticeTool->sendBookerNotification($model, '取消', 'shoot\CancelShoot-html');
                 /** 摄影师非空才发送 */
                 if(!empty($model->u_shoot_man)){
+                    //取消--给所有摄影组长发通知
+                    $bdNoticeTool->sendShootLeadersNotification($model, '取消', 'shoot\CancelShoot-html'); 
                     //取消--给接洽人发通知
                     $bdNoticeTool->sendContacterNotification($model, '取消', 'shoot\CancelShoot-html');  
                     //取消--给摄影师发通知
