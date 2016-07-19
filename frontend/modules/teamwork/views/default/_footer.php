@@ -29,9 +29,9 @@ use yii\helpers\Html;
             echo Html::a(Html::img(['/filedata/image/statistics_64x64.png']), ['/teamwork/statistics'], 
                     ['class' => $controllerId == 'statistics' ? 'footer-item-xs footer-item-bg visible-xs-inline-block' : 'footer-item-xs visible-xs-inline-block']);
             
-            if($actionId == 'list')
+            if($actionId == 'list' && $twTool->getIsLeader())
                 echo Html::a(Html::img(['/filedata/image/new_64px64.png']), ['create'], [
-                    'class' => $twTool->getIsLeader() ? 'footer-item-xs footer-item-right visible-xs-inline-block' : 'footer-item-xs footer-item-right disabled visible-xs-inline-block']);
+                    'class' => 'footer-item-xs footer-item-right visible-xs-inline-block']);
             
             /** 大屏幕上显示 */
             echo Html::a(Html::img(['/filedata/image/home_64x64.png']).'主页', ['default/index'], 
@@ -47,9 +47,9 @@ use yii\helpers\Html;
             echo Html::a(Html::img(['/filedata/image/statistics_64x64.png']).'统计', ['/teamwork/statistics'], 
                     ['class' => $controllerId == 'statistics' ? 'footer-item footer-item-bg hidden-xs' : 'footer-item hidden-xs']);
             
-            if($actionId == 'list')
+            if($actionId == 'list' && $twTool->getIsLeader())
                 echo Html::a(Html::img(['/filedata/image/new_64px64.png']).'创建项目', ['create'], [
-                    'class' => $twTool->getIsLeader() ? 'footer-item footer-item-right hidden-xs' : 'footer-item footer-item-right disabled hidden-xs']);
+                    'class' => 'footer-item footer-item-right hidden-xs']);
         ?>
     </div>
 </div>
