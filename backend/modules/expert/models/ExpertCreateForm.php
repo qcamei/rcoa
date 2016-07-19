@@ -190,7 +190,7 @@ class ExpertCreateForm extends Model {
                 {
                     $uploadpath = $this->fileExists(Yii::getAlias('@filedata').'/expert/personalImage/');
                     $upload->saveAs($uploadpath.$this->username.'.jpg');
-                    $this->personal_image = FILEDATA_PATH.'expert/personalImage/'.$this->username.'.jpg';
+                    $this->personal_image ='/filedata/expert/personalImage/'.$this->username.'.jpg';
                 }
 
                 $trans = Yii::$app->db->beginTransaction();

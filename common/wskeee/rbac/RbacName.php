@@ -16,6 +16,10 @@ namespace wskeee\rbac;
 class RbacName {
     /** 管理员 */
     const ROLE_ADMIN = 'r_admin';
+    /** 所有用户 平台所有合法的账号 */
+    const ROLE_USERS = 'r_users';
+    /** 课程中心组 课程中心所有用户，不包括外聘老师账号 */
+    const ROLE_CC_USERS = 'r_cc_users';
     /** 接洽人 */
     const ROLE_CONTACT = 'r_contact';
     /** 游客 */
