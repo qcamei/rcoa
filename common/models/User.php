@@ -9,7 +9,6 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 use yii\web\UploadedFile;
-use const FILEDATA_PATH;
 
 //use wskeee\rbac\RbacManager;
 
