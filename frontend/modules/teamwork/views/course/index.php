@@ -67,7 +67,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-sm hidden-xs',
                     ],
                     'style' => [
-                        'width' => '80px' 
+                        'width' => '180px' 
                     ],
                 ],
                 'contentOptions' =>[
