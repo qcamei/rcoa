@@ -67,7 +67,7 @@ use yii\widgets\DetailView;
             [
                 'attribute' => Yii::t('rcoa/teamwork', 'Resource People'),
                 'format' => 'raw',
-                'value' => empty($producer)? '无' :implode(' ', $producer),
+                'value' => empty($producer)? '无' :implode('', $producer),
             ],
             [
                 'attribute' => 'course_ops',
@@ -103,7 +103,7 @@ use yii\widgets\DetailView;
             ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">其它信息</span>','value' => ''],
             [
                 'attribute' => 'create_by',
-                'value' => $model->project->teamMember->team->name.' ( '.$model->createBy->nickname.' )',
+                'value' => $model->team->name.' ( '.$model->createBy->nickname.' )',
             ],
             [
                 'attribute' => 'created_at',

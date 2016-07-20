@@ -94,6 +94,7 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
                         'book_time' => $model->book_time,
                         'index' => $model->index
                     ] : ['id' => $model->id];
+            
             $isMe = !$isNew && ($model->booker->id || $model->contacter->id) == Yii::$app->user->id;
             if($dayTomorrow < $bookTime && $bookTime < $dayEnd){
                 $btnClass .= ($isBreakPromise ? ' btn-danger' : ($isNew ? ' btn-primary' : ' btn-default'));
@@ -103,7 +104,7 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
             $btnClass .= (!$isMe && $model->getIsBooking()) ? ' disabled' : "";
         }
         $html = '';
-        $html .= '<span class="rcoa-icon rcoa-icon-me is-me ' . ($isMe ? '' : 'hide') . '"/>';
+        $html .= '<span class="rcoa-icon rcoa-icon-me is-me ' . (false ? '' : 'hide') . '"/>';
         return $html . Html::a($buttonName, 
                                 //如果出现  disabled 样式则删除href 属性,主要是禁用ie浏览器点击
                                 strpos($btnClass,' disabled') ? null : Url::to(ArrayHelper::merge([$url], $params,$this->params)), 

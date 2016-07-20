@@ -55,17 +55,17 @@ $this->params['breadcrumbs'][] = $this->title;
                         <p>学工厂</p>
                         <div class="team-lession-time">
                             <span>已完成：</span>
-                            <span class="col-lg-4 col-md-4 col-sm-4 completed" style="padding: 0px;">111</span>
+                            <span class="col-lg-4 col-md-4 col-sm-4 completed" style="padding: 0px;">0</span>
                             <span>学时</span>
-                            <?= Html::a('', ['course/index', 'team_id' => '', 'status' => ItemManage::STATUS_CARRY_OUT], [
+                            <?= Html::a('', '#'/*['course/index', 'team_id' => '', 'status' => ItemManage::STATUS_CARRY_OUT]*/, [
                                 'class' => 'item-manage-team-icon-2 science-factory-icon-2'
                             ]) ?>
                         </div>
                         <div class="team-lession-time">
                             <span>在&nbsp;&nbsp;&nbsp;&nbsp;建：</span>
-                            <span class="col-lg-4 col-md-4 col-sm-4 undone" style="padding: 0px;">111</span>
+                            <span class="col-lg-4 col-md-4 col-sm-4 undone" style="padding: 0px;">0</span>
                             <span>学时</span>
-                             <?= Html::a('', ['course/index', 'team_id' => '', 'status' => ItemManage::STATUS_NORMAL], [
+                             <?= Html::a('', '#'/*['course/index', 'team_id' => '', 'status' => ItemManage::STATUS_NORMAL]*/, [
                                 'class' => 'item-manage-team-icon-2 science-factory-icon-2'
                             ]) ?>
                         </div>
@@ -129,7 +129,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             <span>已完成：</span>
                             <span class="col-xs-3 completed" style="padding: 0px;">111</span>
                             <span>学时</span>
-                            <?= Html::a('', ['course/index', 'team_id' => '', 'status' => ItemManage::STATUS_CARRY_OUT], [
+                            <?= Html::a('', '#'/*['course/index', 'team_id' => '', 'status' => ItemManage::STATUS_CARRY_OUT]*/, [
                                 'class' => 'item-manage-team-icon-2 science-factory-icon-2'
                             ]) ?>
                         </div>
@@ -137,7 +137,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             <span>在&nbsp;&nbsp;&nbsp;&nbsp;建：</span>
                             <span class="col-xs-3 undone" style="padding: 0px;">111</span>
                             <span>学时</span>
-                             <?= Html::a('', ['course/index', 'team_id' => '', 'status' => ItemManage::STATUS_NORMAL], [
+                             <?= Html::a('', '#'/*['course/index', 'team_id' => '', 'status' => ItemManage::STATUS_NORMAL]*/, [
                                 'class' => 'item-manage-team-icon-2 science-factory-icon-2'
                             ]) ?>
                         </div>

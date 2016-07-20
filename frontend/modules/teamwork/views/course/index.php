@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value'=> function($model){
                     /* @var $model CourseManage */
-                    return '<span>'.$model->project->teamMember->team->name.'</span>';
+                    return '<span>'.$model->team->name.'</span>';
                 },
                 'headerOptions' => [
                     'class'=>[
@@ -105,7 +105,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '350px' 
+                        'width' => '300px' 
                     ],
                 ],
                 'contentOptions' =>[
@@ -124,7 +124,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'headerOptions' => [
                     'style' => [
-                        'max-width' => '271px',
+                        'max-width' => '321px',
                         'min-width' => '84px',
                     ],
                 ],

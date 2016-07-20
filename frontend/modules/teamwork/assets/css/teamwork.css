@@ -157,16 +157,16 @@ and open the template in the editor.
     float: left;
 }
 .item-manage-team-right .completed {
-    color: #fcb322;
-    font-size: 18px;
-    margin-top: 16px;
+    color: #fff;
+    font-size: 27px;
+    margin-top: 10px;
     margin-right: 5px;
     text-align: right;
 }
 .item-manage-team-right .undone {
     color: #fff;
-    font-size: 18px;
-    margin-top: 16px;
+    font-size: 27px;
+    margin-top: 10px;
     margin-right: 5px;
     text-align: right;
 }
@@ -334,6 +334,13 @@ and open the template in the editor.
 }
 .summar p {
     color:#ccc;
+}
+.team-leader {
+  color: blue;  
+}
+.developer {
+  margin: 5px 10px 5px 0;
+  display: inline-block;
 }
 
 /*

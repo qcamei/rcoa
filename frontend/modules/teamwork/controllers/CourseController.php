@@ -441,7 +441,7 @@ class CourseController extends Controller
                            ->from(['Producer' => CourseProducer::tableName()])
                            ->leftJoin(['Member' => TeamMember::tableName()], 'Member.u_id = Producer.producer')
                            ->where(['Producer.course_id' => $courseId])
-                           ->orderBy('Member.`index` ASC')
+                           ->orderBy(['Member.`index`' => 'ASC', 'Member.team_id' => 'ASC'])
                            ->with('producerOne')
                            ->with('course')
                            ->all();
@@ -449,31 +449,19 @@ class CourseController extends Controller
         foreach ($assignProducers as $element) {
             $key = ArrayHelper::getValue($element, 'producer');
             $value = ArrayHelper::getValue($element, 'producerOne.is_leader') == 'Y' ? 
-                    '<span style="color:blue">'.ArrayHelper::getValue($element, 'producerOne.u.nickname').' ('.ArrayHelper::getValue($element, 'producerOne.position').')</span>' : 
-                    ArrayHelper::getValue($element, 'producerOne.u.nickname').' ('.ArrayHelper::getValue($element, 'producerOne.position').')';
+                    '<span class="team-leader developer">'.
+                        ArrayHelper::getValue($element, 'producerOne.u.nickname').
+                        '('.ArrayHelper::getValue($element, 'producerOne.position').')'.
+                     '</span>' : 
+                    '<span class="developer">'.
+                        ArrayHelper::getValue($element, 'producerOne.u.nickname').
+                        '('.ArrayHelper::getValue($element, 'producerOne.position').')'. 
+                   '</span>';
             //$producers[ArrayHelper::getValue($element, 'producerOne.team.name')][$key] = $value;
             $producers[$key] = $value;
         }
         return $producers;
     }
-    
-    /**
-     * 获取制作人在页面显示
-     * @param type $course_id 课程ID
-     * @return type
-    
-    public function getDisplayProducers($course_id)
-    {
-         $sql = "SELECT A.course_id,A.producer,B.is_leader,C.nickname   
-                    FROM ccoa_teamwork_course_producer as A  
-                    LEFT JOIN ccoa_user as C ON A.producer = C.id
-                    LEFT JOIN ccoa_team_member as B ON A.producer = B.u_id
-                    WHERE course_id = $course_id
-                    ORDER BY B.is_leader DESC";  
-                  
-        $assignProducers = CourseProducer::findBySql($sql)->asArray()->all(); 
-        return $assignProducers;
-    } */
     
     /**
      * 获取总结创建时间
