@@ -142,6 +142,7 @@ class PermissionController extends Controller
                     $authManager->addChild($parent, $child);
                 else
                     $authManager->removeChild ($parent, $child);
+                $authManager->invalidateCache();
             } catch (\Exception $ex) {
                 $error[] = $ex->getMessage();
             }
