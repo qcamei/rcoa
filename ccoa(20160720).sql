@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50525
 File Encoding         : 65001
 
-Date: 2016-07-20 11:20:36
+Date: 2016-07-20 13:55:51
 */
 
 SET FOREIGN_KEY_CHECKS=0;		-- 取消外键关联
@@ -28,7 +28,7 @@ CREATE TABLE `ccoa_auth_assignment` (
   KEY `fk_u_id_1` (`user_id`),
   CONSTRAINT `fk_item_name` FOREIGN KEY (`item_name`) REFERENCES `ccoa_auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_u_id_1` FOREIGN KEY (`user_id`) REFERENCES `ccoa_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='分配用户角色表';
 
 -- ----------------------------
 -- Records of ccoa_auth_assignment
@@ -84,7 +84,7 @@ CREATE TABLE `ccoa_auth_item` (
   PRIMARY KEY (`name`),
   KEY `rule_name` (`rule_name`),
   CONSTRAINT `ccoa_auth_item_ibfk_1` FOREIGN KEY (`rule_name`) REFERENCES `ccoa_auth_rule` (`name`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='权限和角色信息表';
 
 -- ----------------------------
 -- Records of ccoa_auth_item
@@ -126,7 +126,7 @@ CREATE TABLE `ccoa_auth_item_child` (
   KEY `child` (`child`),
   CONSTRAINT `ccoa_auth_item_child_ibfk_1` FOREIGN KEY (`parent`) REFERENCES `ccoa_auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `ccoa_auth_item_child_ibfk_2` FOREIGN KEY (`child`) REFERENCES `ccoa_auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色拥有的权限表';
 
 -- ----------------------------
 -- Records of ccoa_auth_item_child
@@ -167,7 +167,7 @@ CREATE TABLE `ccoa_auth_rule` (
   `created_at` int(11) DEFAULT NULL,
   `updated_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='权限规则表';
 
 -- ----------------------------
 -- Records of ccoa_auth_rule
@@ -190,7 +190,7 @@ CREATE TABLE `ccoa_banner` (
   `index` tinyint(2) NOT NULL DEFAULT '1' COMMENT '顺序',
   `isdisplay` varchar(4) DEFAULT '1' COMMENT '是否在页面显示  1为开启显示',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='平台广告栏表';
 
 -- ----------------------------
 -- Records of ccoa_banner
@@ -212,7 +212,7 @@ CREATE TABLE `ccoa_expert` (
   `attainment` text COMMENT '主要成就',
   PRIMARY KEY (`u_id`),
   CONSTRAINT `ccoa_expert_ibfk_1` FOREIGN KEY (`u_id`) REFERENCES `ccoa_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='平台专家库表';
 
 -- ----------------------------
 -- Records of ccoa_expert
@@ -234,7 +234,7 @@ CREATE TABLE `ccoa_expert_project` (
   PRIMARY KEY (`id`),
   KEY `fk_ExpertId` (`expert_id`),
   CONSTRAINT `fk_ExpertId` FOREIGN KEY (`expert_id`) REFERENCES `ccoa_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 COMMENT='专家项目表';
 
 -- ----------------------------
 -- Records of ccoa_expert_project
@@ -249,7 +249,7 @@ CREATE TABLE `ccoa_expert_type` (
   `name` varchar(64) NOT NULL COMMENT '类型名称',
   `icon` varchar(255) DEFAULT NULL COMMENT '图标路径',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='专家类型表';
 
 -- ----------------------------
 -- Records of ccoa_expert_type
@@ -276,7 +276,7 @@ CREATE TABLE `ccoa_filemanage` (
   PRIMARY KEY (`id`),
   KEY `fk_fm_pid` (`pid`),
   CONSTRAINT `fk_fm_pid` FOREIGN KEY (`pid`) REFERENCES `ccoa_filemanage` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8 COMMENT='文档管理表';
 
 -- ----------------------------
 -- Records of ccoa_filemanage
@@ -295,7 +295,7 @@ CREATE TABLE `ccoa_filemanage_detail` (
   `content` text NOT NULL COMMENT '内容',
   PRIMARY KEY (`fm_id`),
   CONSTRAINT `fk_fm_detail_id` FOREIGN KEY (`fm_id`) REFERENCES `ccoa_filemanage` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文档详情表';
 
 -- ----------------------------
 -- Records of ccoa_filemanage_detail
@@ -312,7 +312,7 @@ CREATE TABLE `ccoa_filemanage_owner` (
   KEY `fk_fm_owner` (`owner`),
   CONSTRAINT `fk_fm_id` FOREIGN KEY (`fm_id`) REFERENCES `ccoa_filemanage` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_fm_owner` FOREIGN KEY (`owner`) REFERENCES `ccoa_auth_item` (`name`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文档所有者表';
 
 -- ----------------------------
 -- Records of ccoa_filemanage_owner
@@ -378,7 +378,7 @@ CREATE TABLE `ccoa_framework_item` (
   UNIQUE KEY `u_project_name` (`name`) USING BTREE,
   KEY `fk_project_parent` (`parent_id`),
   CONSTRAINT `fk_project_parent` FOREIGN KEY (`parent_id`) REFERENCES `ccoa_framework_item` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8 COMMENT='项目基础数据表';
 
 -- ----------------------------
 -- Records of ccoa_framework_item
@@ -424,23 +424,6 @@ INSERT INTO `ccoa_framework_item` VALUES ('104', '《综合素质（中学）》
 INSERT INTO `ccoa_framework_item` VALUES ('105', '《教育知识与能力（中学）》精讲精练', '', '3', '1468925012', '1468925012', '78');
 
 -- ----------------------------
--- Table structure for ccoa_framework_item_child
--- ----------------------------
-DROP TABLE IF EXISTS `ccoa_framework_item_child`;
-CREATE TABLE `ccoa_framework_item_child` (
-  `parent` int(11) NOT NULL,
-  `child` int(11) NOT NULL,
-  PRIMARY KEY (`parent`,`child`),
-  KEY `child` (`child`) USING BTREE,
-  CONSTRAINT `fk_project_item_child_id` FOREIGN KEY (`child`) REFERENCES `ccoa_framework_item` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_project_item_id` FOREIGN KEY (`parent`) REFERENCES `ccoa_framework_item` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of ccoa_framework_item_child
--- ----------------------------
-
--- ----------------------------
 -- Table structure for ccoa_framework_item_type
 -- ----------------------------
 DROP TABLE IF EXISTS `ccoa_framework_item_type`;
@@ -448,7 +431,7 @@ CREATE TABLE `ccoa_framework_item_type` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL COMMENT '类别名称',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='项目类型表';
 
 -- ----------------------------
 -- Records of ccoa_framework_item_type
@@ -477,7 +460,7 @@ CREATE TABLE `ccoa_job` (
   PRIMARY KEY (`id`),
   KEY `fk_system` (`system_id`),
   CONSTRAINT `fk_system` FOREIGN KEY (`system_id`) REFERENCES `ccoa_system` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=150 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=150 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='通知详情表';
 
 -- ----------------------------
 -- Records of ccoa_job
@@ -495,7 +478,7 @@ CREATE TABLE `ccoa_job_notification` (
   KEY `u_id` (`u_id`),
   CONSTRAINT `ccoa_job_notification_ibfk_1` FOREIGN KEY (`u_id`) REFERENCES `ccoa_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_job_id` FOREIGN KEY (`job_id`) REFERENCES `ccoa_job` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='关联用户通知表';
 
 -- ----------------------------
 -- Records of ccoa_job_notification
@@ -528,7 +511,7 @@ CREATE TABLE `ccoa_question` (
   `title` varchar(255) DEFAULT NULL COMMENT '题目标题',
   `des` varchar(255) DEFAULT NULL COMMENT '题目描述',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='题目表';
 
 -- ----------------------------
 -- Records of ccoa_question
@@ -553,7 +536,7 @@ CREATE TABLE `ccoa_question_op` (
   PRIMARY KEY (`id`),
   KEY `pk_q_id` (`question_id`),
   CONSTRAINT `pk_q_id` FOREIGN KEY (`question_id`) REFERENCES `ccoa_question` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COMMENT='题目选项表';
 
 -- ----------------------------
 -- Records of ccoa_question_op
@@ -590,7 +573,7 @@ CREATE TABLE `ccoa_resource` (
   PRIMARY KEY (`id`),
   KEY `fk_type` (`type`),
   CONSTRAINT `fk_type` FOREIGN KEY (`type`) REFERENCES `ccoa_resource_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='资源展示表';
 
 -- ----------------------------
 -- Records of ccoa_resource
@@ -621,7 +604,7 @@ CREATE TABLE `ccoa_resource_path` (
   PRIMARY KEY (`id`),
   KEY `fk_r_id` (`r_id`),
   CONSTRAINT `fk_r_id` FOREIGN KEY (`r_id`) REFERENCES `ccoa_resource` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COMMENT='资源路径表';
 
 -- ----------------------------
 -- Records of ccoa_resource_path
@@ -657,7 +640,7 @@ CREATE TABLE `ccoa_resource_type` (
   `name` varchar(255) DEFAULT NULL COMMENT '类型名称',
   `image` varchar(255) DEFAULT NULL COMMENT '资源展示类型图片',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='资源展示类型表';
 
 -- ----------------------------
 -- Records of ccoa_resource_type
@@ -685,7 +668,7 @@ CREATE TABLE `ccoa_shoot_appraise` (
   CONSTRAINT `ccoa_shoot_appraise_ibfk_1` FOREIGN KEY (`role_name`) REFERENCES `ccoa_auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `pk_bookdetail_id` FOREIGN KEY (`b_id`) REFERENCES `ccoa_shoot_bookdetail` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `pk_question_id` FOREIGN KEY (`q_id`) REFERENCES `ccoa_question` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色评价表';
 
 -- ----------------------------
 -- Records of ccoa_shoot_appraise
@@ -710,7 +693,7 @@ CREATE TABLE `ccoa_shoot_appraise_result` (
   CONSTRAINT `ccoa_shoot_appraise_result_ibfk_2` FOREIGN KEY (`role_name`) REFERENCES `ccoa_auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `pk_b_id` FOREIGN KEY (`b_id`) REFERENCES `ccoa_shoot_bookdetail` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `pk_q_id_pk` FOREIGN KEY (`q_id`) REFERENCES `ccoa_question` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='角色评价结果表';
 
 -- ----------------------------
 -- Records of ccoa_shoot_appraise_result
@@ -729,7 +712,7 @@ CREATE TABLE `ccoa_shoot_appraise_template` (
   KEY `pk_qid` (`q_id`),
   CONSTRAINT `ccoa_shoot_appraise_template_ibfk_1` FOREIGN KEY (`role_name`) REFERENCES `ccoa_auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `pk_qid` FOREIGN KEY (`q_id`) REFERENCES `ccoa_question` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色评价模版表';
 
 -- ----------------------------
 -- Records of ccoa_shoot_appraise_template
@@ -789,7 +772,7 @@ CREATE TABLE `ccoa_shoot_bookdetail` (
   CONSTRAINT `fk_shoot_man` FOREIGN KEY (`u_shoot_man`) REFERENCES `ccoa_user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `fk_site_id` FOREIGN KEY (`site_id`) REFERENCES `ccoa_shoot_site` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `fk_teacher` FOREIGN KEY (`u_teacher`) REFERENCES `ccoa_user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1436 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1436 DEFAULT CHARSET=utf8 COMMENT='预约拍摄任务表';
 
 -- ----------------------------
 -- Records of ccoa_shoot_bookdetail
@@ -811,7 +794,7 @@ CREATE TABLE `ccoa_shoot_bookdetail_role_name` (
   CONSTRAINT `ccoa_shoot_bookdetail_role_name_ibfk_1` FOREIGN KEY (`u_id`) REFERENCES `ccoa_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `ccoa_shoot_bookdetail_role_name_ibfk_2` FOREIGN KEY (`role_name`) REFERENCES `ccoa_auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_bid` FOREIGN KEY (`b_id`) REFERENCES `ccoa_shoot_bookdetail` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='预约拍摄角色分配表';
 
 -- ----------------------------
 -- Records of ccoa_shoot_bookdetail_role_name
@@ -834,7 +817,7 @@ CREATE TABLE `ccoa_shoot_history` (
   KEY `fk_u_id` (`u_id`),
   CONSTRAINT `fk_b_id` FOREIGN KEY (`b_id`) REFERENCES `ccoa_shoot_bookdetail` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_u_id` FOREIGN KEY (`u_id`) REFERENCES `ccoa_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='历史原因表';
 
 -- ----------------------------
 -- Records of ccoa_shoot_history
@@ -850,7 +833,7 @@ CREATE TABLE `ccoa_shoot_site` (
   `traffic` varchar(255) DEFAULT NULL COMMENT '交通、坐车指引',
   `des` varchar(255) DEFAULT NULL COMMENT '描述',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='预约拍摄场地表';
 
 -- ----------------------------
 -- Records of ccoa_shoot_site
@@ -874,7 +857,7 @@ CREATE TABLE `ccoa_shoot_site_rule` (
   PRIMARY KEY (`id`),
   KEY `fk_site` (`site`),
   CONSTRAINT `fk_site` FOREIGN KEY (`site`) REFERENCES `ccoa_shoot_site` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='预约拍摄场地规则表';
 
 -- ----------------------------
 -- Records of ccoa_shoot_site_rule
@@ -893,7 +876,7 @@ CREATE TABLE `ccoa_system` (
   `isjump` tinyint(1) DEFAULT NULL COMMENT '是否跳转页面, 1:为是',
   `aliases` varchar(255) DEFAULT NULL COMMENT '模块别名',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='平台系统表';
 
 -- ----------------------------
 -- Records of ccoa_system
@@ -916,7 +899,7 @@ CREATE TABLE `ccoa_team` (
   PRIMARY KEY (`id`),
   KEY `fk_team_type` (`type`),
   CONSTRAINT `fk_team_type` FOREIGN KEY (`type`) REFERENCES `ccoa_team_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='平台团队表';
 
 -- ----------------------------
 -- Records of ccoa_team
@@ -948,11 +931,33 @@ CREATE TABLE `ccoa_teamwork_course_link` (
   CONSTRAINT `fk_cl_course_phase_id` FOREIGN KEY (`course_phase_id`) REFERENCES `ccoa_teamwork_course_phase` (`phase_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_cl_course_id` FOREIGN KEY (`course_id`) REFERENCES `ccoa_teamwork_course_manage` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_cl_link_id` FOREIGN KEY (`link_id`) REFERENCES `ccoa_teamwork_link_template` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1057 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1079 DEFAULT CHARSET=utf8 COMMENT='团队合作课程管理环节表';
 
 -- ----------------------------
 -- Records of ccoa_teamwork_course_link
 -- ----------------------------
+INSERT INTO `ccoa_teamwork_course_link` VALUES ('1057', '86', '8', '23', '1', '0', 'N');
+INSERT INTO `ccoa_teamwork_course_link` VALUES ('1058', '86', '8', '24', '1', '0', 'N');
+INSERT INTO `ccoa_teamwork_course_link` VALUES ('1059', '86', '8', '25', '1', '0', 'N');
+INSERT INTO `ccoa_teamwork_course_link` VALUES ('1060', '86', '8', '26', '1', '0', 'N');
+INSERT INTO `ccoa_teamwork_course_link` VALUES ('1061', '86', '8', '27', '1', '0', 'N');
+INSERT INTO `ccoa_teamwork_course_link` VALUES ('1062', '86', '9', '28', '1', '0', 'N');
+INSERT INTO `ccoa_teamwork_course_link` VALUES ('1063', '86', '9', '29', '1', '0', 'N');
+INSERT INTO `ccoa_teamwork_course_link` VALUES ('1064', '86', '10', '30', '1', '0', 'N');
+INSERT INTO `ccoa_teamwork_course_link` VALUES ('1065', '86', '10', '31', '1', '0', 'N');
+INSERT INTO `ccoa_teamwork_course_link` VALUES ('1066', '86', '10', '32', '1', '0', 'N');
+INSERT INTO `ccoa_teamwork_course_link` VALUES ('1067', '86', '10', '33', '1', '0', 'N');
+INSERT INTO `ccoa_teamwork_course_link` VALUES ('1068', '86', '10', '34', '1', '0', 'N');
+INSERT INTO `ccoa_teamwork_course_link` VALUES ('1069', '86', '10', '35', '1', '0', 'N');
+INSERT INTO `ccoa_teamwork_course_link` VALUES ('1070', '86', '10', '36', '1', '0', 'N');
+INSERT INTO `ccoa_teamwork_course_link` VALUES ('1071', '86', '10', '37', '1', '0', 'N');
+INSERT INTO `ccoa_teamwork_course_link` VALUES ('1072', '86', '10', '38', '1', '0', 'N');
+INSERT INTO `ccoa_teamwork_course_link` VALUES ('1073', '86', '10', '39', '1', '0', 'N');
+INSERT INTO `ccoa_teamwork_course_link` VALUES ('1074', '86', '11', '40', '1', '0', 'N');
+INSERT INTO `ccoa_teamwork_course_link` VALUES ('1075', '86', '12', '41', '1', '0', 'N');
+INSERT INTO `ccoa_teamwork_course_link` VALUES ('1076', '86', '13', '42', '1', '0', 'N');
+INSERT INTO `ccoa_teamwork_course_link` VALUES ('1077', '86', '13', '43', '1', '0', 'N');
+INSERT INTO `ccoa_teamwork_course_link` VALUES ('1078', '86', '14', '44', '1', '0', 'N');
 
 -- ----------------------------
 -- Table structure for ccoa_teamwork_course_manage
@@ -995,11 +1000,12 @@ CREATE TABLE `ccoa_teamwork_course_manage` (
   CONSTRAINT `fk_course_teacher` FOREIGN KEY (`teacher`) REFERENCES `ccoa_user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `fk_project_id` FOREIGN KEY (`project_id`) REFERENCES `ccoa_teamwork_item_manage` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_weekly_editors_people` FOREIGN KEY (`weekly_editors_people`) REFERENCES `ccoa_team_member` (`u_id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=87 DEFAULT CHARSET=utf8 COMMENT='团队合作课程管理表';
 
 -- ----------------------------
 -- Records of ccoa_teamwork_course_manage
 -- ----------------------------
+INSERT INTO `ccoa_teamwork_course_manage` VALUES ('86', '30', '80', '827c778917e76db96600b77f41fbc632', '12', '3', '2', '1468947600', '1', '1', null, '4', '', '12', '1468994083', '1468994083', '2016-07-20 11:34', '2016-07-20 11:34', '无', '5', '无', '');
 
 -- ----------------------------
 -- Table structure for ccoa_teamwork_course_phase
@@ -1016,11 +1022,18 @@ CREATE TABLE `ccoa_teamwork_course_phase` (
   KEY `fk_cp_phase_id` (`phase_id`),
   CONSTRAINT `fk_cp_course_id` FOREIGN KEY (`course_id`) REFERENCES `ccoa_teamwork_course_manage` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_cp_phase_id` FOREIGN KEY (`phase_id`) REFERENCES `ccoa_teamwork_phase_template` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=393 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=400 DEFAULT CHARSET=utf8 COMMENT='团队合作课程管理阶段表';
 
 -- ----------------------------
 -- Records of ccoa_teamwork_course_phase
 -- ----------------------------
+INSERT INTO `ccoa_teamwork_course_phase` VALUES ('393', '86', '8', '0.10', 'N');
+INSERT INTO `ccoa_teamwork_course_phase` VALUES ('394', '86', '9', '0.10', 'N');
+INSERT INTO `ccoa_teamwork_course_phase` VALUES ('395', '86', '10', '0.60', 'N');
+INSERT INTO `ccoa_teamwork_course_phase` VALUES ('396', '86', '11', '0.05', 'N');
+INSERT INTO `ccoa_teamwork_course_phase` VALUES ('397', '86', '12', '0.05', 'N');
+INSERT INTO `ccoa_teamwork_course_phase` VALUES ('398', '86', '13', '0.05', 'N');
+INSERT INTO `ccoa_teamwork_course_phase` VALUES ('399', '86', '14', '0.05', 'N');
 
 -- ----------------------------
 -- Table structure for ccoa_teamwork_course_producer
@@ -1033,11 +1046,15 @@ CREATE TABLE `ccoa_teamwork_course_producer` (
   KEY `fk_crp_producer` (`producer`),
   CONSTRAINT `fk_crp_producer` FOREIGN KEY (`producer`) REFERENCES `ccoa_team_member` (`u_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_crp_course_id` FOREIGN KEY (`course_id`) REFERENCES `ccoa_teamwork_course_manage` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='团队合作课程管理资源制作人表';
 
 -- ----------------------------
 -- Records of ccoa_teamwork_course_producer
 -- ----------------------------
+INSERT INTO `ccoa_teamwork_course_producer` VALUES ('86', '10');
+INSERT INTO `ccoa_teamwork_course_producer` VALUES ('86', '12');
+INSERT INTO `ccoa_teamwork_course_producer` VALUES ('86', '18c7a607148f64d5c0277c2c6b263bc4');
+INSERT INTO `ccoa_teamwork_course_producer` VALUES ('86', '967624f78ad9ad1431ed397c047d0054');
 
 -- ----------------------------
 -- Table structure for ccoa_teamwork_course_summary
@@ -1054,7 +1071,7 @@ CREATE TABLE `ccoa_teamwork_course_summary` (
   KEY `fk_cs_create_by` (`create_by`),
   CONSTRAINT `fk_cs_create_by` FOREIGN KEY (`create_by`) REFERENCES `ccoa_teamwork_course_manage` (`weekly_editors_people`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_cs_course_id` FOREIGN KEY (`course_id`) REFERENCES `ccoa_teamwork_course_manage` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='团队合作课程管理周报表';
 
 -- ----------------------------
 -- Records of ccoa_teamwork_course_summary
@@ -1089,11 +1106,12 @@ CREATE TABLE `ccoa_teamwork_item_manage` (
   CONSTRAINT `fk_fim_item_id` FOREIGN KEY (`item_id`) REFERENCES `ccoa_framework_item` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_fim_item_type_id` FOREIGN KEY (`item_type_id`) REFERENCES `ccoa_framework_item_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_tw_team_id` FOREIGN KEY (`team_id`) REFERENCES `ccoa_team` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 COMMENT='团队合作项目管理表';
 
 -- ----------------------------
 -- Records of ccoa_teamwork_item_manage
 -- ----------------------------
+INSERT INTO `ccoa_teamwork_item_manage` VALUES ('30', '3', '67', '68', '4', '12', '1468985631', '1468985631', '2016-07-29 19:00', '无', '5', '无', '无');
 
 -- ----------------------------
 -- Table structure for ccoa_teamwork_link_template
@@ -1114,7 +1132,7 @@ CREATE TABLE `ccoa_teamwork_link_template` (
   KEY `fk_phase_id` (`phase_id`),
   KEY `fk_link_create_by` (`create_by`),
   CONSTRAINT `fk_phase_id` FOREIGN KEY (`phase_id`) REFERENCES `ccoa_teamwork_phase_template` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8 COMMENT='团队合作环节模版表';
 
 -- ----------------------------
 -- Records of ccoa_teamwork_link_template
@@ -1155,7 +1173,7 @@ CREATE TABLE `ccoa_teamwork_phase_template` (
   `is_delete` varchar(4) DEFAULT 'N' COMMENT '是否删除：Y为是，N为否',
   PRIMARY KEY (`id`),
   KEY `fk_phase_create_by` (`create_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COMMENT='团队合作阶段模版表';
 
 -- ----------------------------
 -- Records of ccoa_teamwork_phase_template
@@ -1182,7 +1200,7 @@ CREATE TABLE `ccoa_team_member` (
   KEY `fk_team_u_id` (`u_id`),
   CONSTRAINT `fk_team_id` FOREIGN KEY (`team_id`) REFERENCES `ccoa_team` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_team_u_id` FOREIGN KEY (`u_id`) REFERENCES `ccoa_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='团队成员表';
 
 -- ----------------------------
 -- Records of ccoa_team_member
@@ -1223,7 +1241,7 @@ CREATE TABLE `ccoa_team_type` (
   `name` varchar(255) DEFAULT NULL COMMENT '团队类别',
   `des` varchar(255) DEFAULT NULL COMMENT '描述',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='团队类型表';
 
 -- ----------------------------
 -- Records of ccoa_team_type
@@ -1252,7 +1270,7 @@ CREATE TABLE `ccoa_user` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `password_reset_token` (`password_reset_token`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='平台用户表';
 
 -- ----------------------------
 -- Records of ccoa_user
