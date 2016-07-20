@@ -26,6 +26,18 @@ $config = [
         'banner' => [
             'class' => 'backend\modules\banner\Module'
         ],
+        'resource' => [
+            'class' => 'backend\modules\resource\Module',
+        ],
+        'filemanage' => [
+            'class' => 'common\wskeee\filemanage\Module',
+        ],
+        'teammanage' => [
+            'class' => 'backend\modules\team\Module',
+        ],
+        'teamwork' => [
+            'class' => 'backend\modules\teamwork\Module',
+        ],
     ],
 ];
 

@@ -53,6 +53,41 @@ return [
                 'class' => 'yii\caching\FileCache',
             ]
         ],
+        'jobManager'=>[
+            'class'=>'common\wskeee\job\JobManager',
+            //'url'=>'http://rcoaadmin.tt.gzedu.net/framework/api/list',
+            'cache' => [
+                'class' => 'yii\caching\FileCache',
+            ]
+        ],
+        'bookdetailTool'=>[
+            'class'=>'frontend\modules\shoot\BookdetailTool',
+            //'url'=>'http://rcoaadmin.tt.gzedu.net/framework/api/list',
+            'cache' => [
+                'class' => 'yii\caching\FileCache',
+            ]
+        ],
+        'bdNoticeTool'=>[
+            'class'=>'frontend\modules\shoot\BookdetailNoticeTool',
+            //'url'=>'http://rcoaadmin.tt.gzedu.net/framework/api/list',
+            'cache' => [
+                'class' => 'yii\caching\FileCache',
+            ]
+        ],
+        'fileManage'=>[
+            'class'=>'wskeee\filemanage\FileManageTool',
+            //'url'=>'http://rcoaadmin.tt.gzedu.net/framework/api/list',
+            'cache' => [
+                'class' => 'yii\caching\FileCache',
+            ]
+        ],
+        'twTool'=>[
+            'class'=>'frontend\modules\teamwork\TeamworkTool',
+            //'url'=>'http://rcoaadmin.tt.gzedu.net/framework/api/list',
+            'cache' => [
+                'class' => 'yii\caching\FileCache',
+            ]
+        ],
     ],
     'modules' => [
         'rbac' => [
@@ -61,14 +96,23 @@ return [
         'framework' => [
             'class' => 'wskeee\framework\Module'
         ],
+        'job' => [
+            'class' => 'common\wskeee\job\Module'
+        ],
         'expert' => [
             'class' => 'frontend\modules\expert\Module'
         ],
-        'filemanage' => [
+        'resource' => [
+            'class' => 'frontend\modules\resource\Module',
+        ],
+       'filemanage' => [
             'class' => 'common\wskeee\filemanage\Module',
         ],
-        'teamwork' => [
-            'class' => 'frontend\modules\teamwork\Module'
+       'teamwork' => [
+            'class' => 'frontend\modules\teamwork\Module',
         ],
+        'datecontrol' =>  [
+            'class' => '\kartik\datecontrol\Module',
+        ]
     ],
 ];
