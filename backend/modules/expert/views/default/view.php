@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'personal_image',
                 'format'=>'raw',
-                'value'=> Html::a(Html::img(WEB_ROOT.$model->personal_image,['width'=>'128px']), $model->personal_image),
+                'value'=> Html::a(Html::img(WEB_ROOT.$model->personal_image,['width'=>'128px']), WEB_ROOT.$model->personal_image),
             ],
             'u_id',
             'user.username',
