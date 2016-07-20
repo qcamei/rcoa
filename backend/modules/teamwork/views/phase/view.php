@@ -39,10 +39,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'weights',
             //'progress',
-            [
+            /*[
                 'attribute' => 'create_by',
                 'value' => $model->createBy->nickname,
-            ],
+            ],*/
         ],
     ]) ?>
     
@@ -113,13 +113,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->progress;
                 }   
             ],*/
-            [
+            /*[
                 'label'=>'创建者',
                 'value'=>function($model){
-                    /* @var $model Link */
+                    /* @var $model Link 
                     return $model->createBy->nickname;
                 }   
-            ],
+            ],*/
             [
                 'class' => 'yii\grid\ActionColumn',
                 'buttons' => [

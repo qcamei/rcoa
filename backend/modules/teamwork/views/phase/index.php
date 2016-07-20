@@ -32,12 +32,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'weights',
             //'progress',
-            [
+            /*[
                 'attribute' => 'create_by',
                 'value' => function($model){
                     return $model->createBy->nickname;
                 }
-            ],
+            ],*/
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

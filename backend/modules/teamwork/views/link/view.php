@@ -42,10 +42,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'unit',
             //'progress',
-            [
+            /*[
                 'attribute' => 'type',
                 'value' => $model->createBy->nickname,
-            ],
+            ],*/
         ],
     ]) ?>
 
