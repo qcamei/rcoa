@@ -77,10 +77,10 @@ class RbacManager extends DbManager{
             if (isset($this->items[$row['child']])) {
                 $this->parents[$row['child']][] = $row['parent'];
             }
-            /*
+            
             if (isset($this->items[$row['parent']])) {
                 $this->childs[$row['parent']][] = $row['child'];
-            }*/
+            }
         }
         
         //create roleToUsers;
@@ -100,7 +100,7 @@ class RbacManager extends DbManager{
             $this->getItemUser($itemName, $result);
             $this->itemToUsers[$itemName] = array_unique($result);
         }
-        
+       
         $this->cache->set($this->cacheKey, [$this->items, $this->rules, $this->parents,$this->itemToUsers]);
     }
     
@@ -111,14 +111,12 @@ class RbacManager extends DbManager{
      */
     protected function getItemUser($itemName,&$result)
     {
-        if(isset($this->assignmentToUsers[$itemName]))
+        $atousers = isset($this->assignmentToUsers[$itemName]) ? $this->assignmentToUsers[$itemName] : [];
+        $result = ArrayHelper::merge($atousers,$result);
+        if(isset($this->parents[$itemName]))
         {
-            $result = ArrayHelper::merge($this->assignmentToUsers[$itemName],$result);
-            if(isset($this->parents[$itemName]))
-            {
-                foreach ($this->parents[$itemName] as $child)
-                    $this->getItemUser($child,$result);
-            }
+            foreach ($this->parents[$itemName] as $child)
+                $this->getItemUser($child,$result);
         }
     }
     
