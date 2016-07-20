@@ -27,6 +27,7 @@ use yii\widgets\ActiveForm;
                 'style'=>[
                     'color'=>'#999999',
                     'font-weight'=>'normal',
+                    'padding-right' => '0' 
                 ]
             ],  
         ], 
@@ -48,7 +49,7 @@ use yii\widgets\ActiveForm;
         echo Html::beginTag('div', ['class' => 'form-group field-itemmanage-forecast_time has-success']);
             echo Html::beginTag('label', [
                     'class' => 'col-lg-1 col-md-1 control-label', 
-                    'style' => 'color: #999999; font-weight: normal;',
+                    'style' => 'color: #999999; font-weight: normal;padding-right:0;padding-left:10px;',
                     'for' => 'itemmanage-forecast_time'
                 ]).Yii::t('rcoa/teamwork', 'Forecast Time').Html::endTag('label');
             echo Html::beginTag('div', ['class' => 'col-sm-4']);

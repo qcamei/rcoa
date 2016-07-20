@@ -106,13 +106,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     return empty($model->unit) ? '无' : $model->unit;
                 }   
             ],
-            [
+            /*[
                 'label'=>'进度',
                 'value'=>function($model){
-                    /* @var $model Link */
+                    /* @var $model Link 
                     return $model->progress;
                 }   
-            ],
+            ],*/
             [
                 'label'=>'创建者',
                 'value'=>function($model){

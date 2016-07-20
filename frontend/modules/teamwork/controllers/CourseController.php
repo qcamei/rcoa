@@ -3,7 +3,6 @@
 namespace frontend\modules\teamwork\controllers;
 
 use common\models\expert\Expert;
-use common\models\team\Team;
 use common\models\team\TeamMember;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\CourseProducer;
@@ -136,7 +135,9 @@ class CourseController extends Controller
         $model->create_by = \Yii::$app->user->id;
         $courses = $this->getCourses($model->project->item_child_id);
         $existedCourses = $this->getExistedCourses($model->project_id);
+        $model->scenario = CourseManage::SCENARIO_DEFAULT;
         if ($model->load($post)) {
+            $model->video_length = strtotime($post['CourseManage']['video_length']);
             /** 开启事务 */
             $trans = Yii::$app->db->beginTransaction();
             try
@@ -152,7 +153,7 @@ class CourseController extends Controller
             }catch (Exception $ex) {
                 $trans ->rollBack(); //回滚事务
                 Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
-                $this->render(['create', 'id' => $model->project_id]);
+                $this->render(['create', 'project_id' => $model->project_id]);
             }
         } else {
             return $this->render('create', [
@@ -178,6 +179,7 @@ class CourseController extends Controller
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
         $model = $this->findModel($id);
+        //$model->scenario = CourseManage::SCENARIO_DEFAULT;
         $post = Yii::$app->request->post();
         $courses = $this->getCourses($model->project->item_child_id);
         $existedCourses = $this->getExistedCourses(['project_id' => $model->project_id]);
@@ -186,8 +188,9 @@ class CourseController extends Controller
            throw new NotAcceptableHttpException('只有队长才可以【编辑】课程 or 该课程隶属于自己');
         if(!$model->getIsNormal())
             throw new NotAcceptableHttpException('该项目现在状态为：'.$model->project->getStatusName());
-       
         if ($model->load($post)) {
+            $model->video_length = strtotime($post['CourseManage']['video_length']);
+            
             /** 开启事务 */
             $trans = Yii::$app->db->beginTransaction();
             try
@@ -231,15 +234,23 @@ class CourseController extends Controller
         $twTool = Yii::$app->get('twTool');
         /* @var $model CourseManage */
         $model = $twTool->getCourseProgressOne($id);
-        
-        if($model != null && $model->getIsNormal() && $twTool->getIsLeader() && $model->progress == 1){
-            if ($model->create_by == \Yii::$app->user->id && $model->progress == 1){
-                $model->real_carry_out = date('Y-m-d H:i', time());
-                $model->status = ItemManage::STATUS_CARRY_OUT;
-                $model->save();
+        $model->scenario = CourseManage::SCENARIO_CARRYOUT;
+        if($model != null && $model->getIsNormal() && $twTool->getIsLeader() && $model->create_by == \Yii::$app->user->id && $model->progress == 1){
+            $model->real_carry_out = date('Y-m-d H:i', time());
+            $model->status = ItemManage::STATUS_CARRY_OUT;
+            if ($model->save()){
+                $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                throw new NotFoundHttpException ('以下属性不能为空：'.Yii::t('rcoa/teamwork', 'Video Length').', '
+                        .Yii::t('rcoa/teamwork', 'Question Mete').', '
+                        .Yii::t('rcoa/teamwork', 'Case Number').', '
+                        .Yii::t('rcoa/teamwork', 'Activity Number'));
             }
+        }  else {
+            throw new NotFoundHttpException ('必须满足以下条件课程才可以操作【完成】：1、状态必须是【在建】, '
+                        . '2、必须是【队长】才可以操作, 3、创建者必须是自己, 4、课程阶段和课程环节【进度】必须是100%');
+                        
         }
-        $this->redirect(['view', 'id' => $model->id]);
     }
     
     /**

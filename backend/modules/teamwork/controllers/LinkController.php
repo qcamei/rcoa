@@ -74,16 +74,18 @@ class LinkController extends Controller
     public function actionCreate()
     {
         $model = new Link();
+        $post = Yii::$app->request->post();
         $model->loadDefaultValues();
-        $phaseId = Yii::$app->request->queryParams['phase_id'];
+        unset($post['Link']['phase_id']);
+        $model->phase_id  = Yii::$app->request->queryParams['phase_id'];
         $model->create_by = Yii::$app->user->id;
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load($post) && $model->save()) {
             return $this->redirect(['/teamwork/phase/view', 'id' => $model->phase_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'phaseId' => $phaseId,
-                'phases' => ArrayHelper::map(Phase::find()->all(), 'id', 'name'),
+                //'phaseId' => $phaseId,
+                //'phases' => ArrayHelper::map(Phase::findOne(['id' => $phaseId]), 'id', 'name'),
             ]);
         }
     }
@@ -97,13 +99,15 @@ class LinkController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $model->phase_id = $model->phase_id;
+        $post = Yii::$app->request->post();
+        unset($post['Link']['phase_id']);
+        if ($model->load($post) && $model->save()) {
             return $this->redirect(['/teamwork/phase/view', 'id' => $model->phase_id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
-                'phases' => ArrayHelper::map(Phase::find()->all(), 'id', 'name'),
+                //'phases' => ArrayHelper::map(Phase::find()->all(), 'id', 'name'),
             ]);
         }
     }

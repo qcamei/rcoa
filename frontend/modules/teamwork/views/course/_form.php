@@ -30,7 +30,8 @@ use yii\widgets\ActiveForm;
                 'class' => 'col-lg-1 col-md-1 control-label',
                 'style'=>[
                     'color'=>'#999999',
-                    'font-weight'=>'normal', 
+                    'font-weight'=>'normal',
+                    'padding-right' => '0'
                 ]
             ],  
         ], 
@@ -56,12 +57,67 @@ use yii\widgets\ActiveForm;
         'data' => $teachers, 'options' => ['placeholder' => '请选择...']
     ]) ?>
     
+    <?= $form->field($model, 'credit')->widget(TouchSpin::classname(),  [
+        'pluginOptions' => [
+            'placeholder' => '学分 ...',
+            'min' => 1,
+        ],
+    ]) ?>
+    
     <?= $form->field($model, 'lession_time')->widget(TouchSpin::classname(),  [
-            'pluginOptions' => [
-                'placeholder' => '学时 ...',
-                'min' => 1,
-            ],
-    ])?>
+        'pluginOptions' => [
+            'placeholder' => '学时 ...',
+            'min' => 1,
+        ],
+    ]) ?>
+    
+    <?php
+        echo Html::beginTag('div', ['class' => 'form-group field-coursemanage-video_length has-success']);
+            echo Html::beginTag('label', [
+                    'class' => 'col-lg-1 col-md-1 control-label', 
+                    'style' => 'color: #999999; font-weight: normal; padding-right:0;padding-left:10px;',
+                    'for' => 'coursemanage-video_length'
+                ]).Yii::t('rcoa/teamwork', 'Video Length').Html::endTag('label');
+            echo Html::beginTag('div', ['class' => 'col-sm-4']);
+                echo DateControl::widget([
+                    'name' => 'CourseManage[video_length]',
+                    'value' => $model->isNewRecord ? date('H:i:s', strtotime('01:00:00')) : date('H:i:s', $model->video_length), 
+                    'type'=> DateControl::FORMAT_TIME,
+                    'displayFormat' => 'H:i:s',
+                    'saveFormat' => 'H:i:s',
+                    'ajaxConversion'=> true,
+                    'autoWidget' => true,
+                    'options' => [
+                        'pluginOptions' => [
+                            'autoclose' => true,
+                        ],
+                    ],
+                ]);
+                echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']).Html::beginTag('div', ['class' => 'help-block']).Html::endTag('div').Html::endTag('div');
+            echo Html::endTag('div');
+        echo Html::endTag('div');
+    ?>
+    
+    <?= $form->field($model, 'question_mete')->widget(TouchSpin::classname(),  [
+        'pluginOptions' => [
+            'placeholder' => '题量 ...',
+            'min' => 1,
+        ],
+    ]) ?>
+    
+    <?= $form->field($model, 'case_number')->widget(TouchSpin::classname(),  [
+        'pluginOptions' => [
+            'placeholder' => '案例数...',
+            'min' => 1,
+        ],
+    ]) ?>
+    
+    <?= $form->field($model, 'activity_number')->widget(TouchSpin::classname(),  [
+        'pluginOptions' => [
+            'placeholder' => '活动数 ...',
+            'min' => 1,
+        ],
+    ]) ?>
     
     <?= $form->field($model, 'course_ops')->widget(Select2::classname(), [
         'data' => $producerList, 'options' => ['placeholder' => '请选择...']
@@ -71,7 +127,7 @@ use yii\widgets\ActiveForm;
         echo Html::beginTag('div', ['class' => 'form-group field-coursemanage-weekly_editors_people required has-success']);
              echo Html::beginTag('label', [
                  'class' => 'col-lg-1 col-md-1 control-label',
-                 'style' => 'color: #999999; font-weight: normal;',
+                 'style' => 'color: #999999; font-weight: normal;padding-right:0;padding-left:10px;',
                  'for' => 'weekly_editors_people'
                 ]).Yii::t('rcoa/teamwork', 'Weekly Editors People').Html::endTag('label');
              echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']);
@@ -95,10 +151,10 @@ use yii\widgets\ActiveForm;
     ?>
    
     <?php
-        echo Html::beginTag('div', ['class' => 'form-group field-itemmanage-forecast_time has-success']);
+        echo Html::beginTag('div', ['class' => 'form-group field-coursemanage-plan_start_time has-success']);
             echo Html::beginTag('label', [
                     'class' => 'col-lg-1 col-md-1 control-label', 
-                    'style' => 'color: #999999; font-weight: normal;',
+                    'style' => 'color: #999999; font-weight: normal; padding-right:0;padding-left:10px;',
                     'for' => 'coursemanage-plan_start_time'
                 ]).Yii::t('rcoa/teamwork', 'Plan Start Time').Html::endTag('label');
             echo Html::beginTag('div', ['class' => 'col-sm-4']);
@@ -123,10 +179,10 @@ use yii\widgets\ActiveForm;
     ?>
     
     <?php
-        echo Html::beginTag('div', ['class' => 'form-group field-itemmanage-forecast_time has-success']);
+        echo Html::beginTag('div', ['class' => 'form-group field-coursemanage-plan_end_time has-success']);
             echo Html::beginTag('label', [
                     'class' => 'col-lg-1 col-md-1 control-label', 
-                    'style' => 'color: #999999; font-weight: normal;',
+                    'style' => 'color: #999999; font-weight: normal; padding-right:0;padding-left:10px;',
                     'for' => 'coursemanage-plan_end_time'
                 ]).Yii::t('rcoa/teamwork', 'Plan End Time').Html::endTag('label');
             echo Html::beginTag('div', ['class' => 'col-sm-4']);
@@ -158,7 +214,7 @@ use yii\widgets\ActiveForm;
         echo Html::beginTag('div', ['class' => 'form-group field-courseproducer-producer has-success']);
              echo Html::beginTag('label', [
                  'class' => 'col-lg-1 col-md-1 control-label',
-                 'style' => 'color: #999999; font-weight: normal;',
+                 'style' => 'color: #999999; font-weight: normal; padding-right:0;padding-left:10px;',
                  'for' => 'courseproducer-producer'
                 ]).Yii::t('rcoa/teamwork', 'Resource People').Html::endTag('label');
              echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']);

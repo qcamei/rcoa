@@ -11,8 +11,10 @@ use yii\widgets\DetailView;
 <div class="item-manage-view">
     <?= DetailView::widget([
         'model' => $model,
+        //'options' => ['class' => 'table table-bordered detail-view'],
         'template' => '<tr><th class="viewdetail-th">{label}</th><td class="viewdetail-td">{value}</td></tr>',
         'attributes' => [
+            ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">基本信息</span>','value' => ''],
             [
                 'attribute' => 'project.item_type_id',
                 'value' => $model->project->itemType->name,
@@ -34,25 +36,43 @@ use yii\widgets\DetailView;
                 'value' => $model->speakerTeacher->nickname,
             ],
             [
+                'attribute' => 'credit',
+                'value' => $model->credit,
+            ],
+            [
                 'attribute' => 'lession_time',
                 'value' => $model->lession_time,
             ],
+            [
+                'attribute' => 'video_length',
+                'value' => empty($model->video_length) ? '空' : date('H:i:s', $model->video_length),
+            ],
+            [
+                'attribute' => 'question_mete',
+                'value' => empty($model->question_mete) ? '空' : $model->question_mete,
+            ],
+            [
+                'attribute' => 'case_number',
+                'value' => empty($model->case_number) ? '空' : $model->case_number,
+            ],
+            [
+                'attribute' => 'activity_number',
+                'value' => empty($model->activity_number) ? '空' : $model->activity_number,
+            ],
+            ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">开发信息</span>','value' => ''],
             [
                 'attribute' => 'team_id',
                 'value' => $model->team->name,
             ],
             [
+                'attribute' => Yii::t('rcoa/teamwork', 'Resource People'),
+                'format' => 'raw',
+                'value' => empty($producer)? '无' :implode(' ', $producer),
+            ],
+            [
                 'attribute' => 'course_ops',
                 'value' => empty($model->course_ops) ? '无'
                            :$model->courseOps->u->nickname.' ( '.$model->courseOps->position.' ) ',
-            ],
-            [
-                'attribute' => 'create_by',
-                'value' => $model->project->teamMember->team->name.' ( '.$model->createBy->nickname.' )',
-            ],
-            [
-                'attribute' => 'created_at',
-                'value' => date('Y-m-d H:i', $model->created_at),
             ],
             [
                 'attribute' => 'plan_start_time',
@@ -67,7 +87,7 @@ use yii\widgets\DetailView;
                 'value' => $model->real_carry_out,
             ],
             [
-                'attribute' => '当前进度',
+                'attribute' => Yii::t('rcoa/teamwork', 'Progress'),
                 'value' => (int)($model->progress * 100).'%',
             ],
             [
@@ -76,19 +96,27 @@ use yii\widgets\DetailView;
                 'value' => $model->project->statusName[$model->status],
             ],
             [
-                'attribute' => 'des',
-                'format' => 'raw',
-                'value' => '<div style="height:65px;">'.$model->des.'</div>',
-            ],
-            [
                 'attribute' => 'path',
                 'format' => 'raw',
                 'value' => empty($model->path) ? '无' : $model->path,
             ],
+            ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">其它信息</span>','value' => ''],
             [
-                'attribute' => '资源制作人',
+                'attribute' => 'create_by',
+                'value' => $model->project->teamMember->team->name.' ( '.$model->createBy->nickname.' )',
+            ],
+            [
+                'attribute' => 'created_at',
+                'value' => date('Y-m-d H:i', $model->created_at),
+            ],
+            [
+                'attribute' => 'updated_at',
+                'value' => date('Y-m-d H:i', $model->updated_at),
+            ],
+            [
+                'attribute' => 'des',
                 'format' => 'raw',
-                'value' => empty($producer)? '无' :implode(' ', $producer),
+                'value' => '<div style="height:65px;">'.$model->des.'</div>',
             ],
         ],
     ]) ?>
