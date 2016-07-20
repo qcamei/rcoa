@@ -89,7 +89,7 @@ class CourseManage extends ActiveRecord
                 ['id', 'project_id', 'course_id', 'teacher', 'weekly_editors_people', 'credit', 'lession_time', 
                 'video_length','question_mete', 'case_number', 'activity_number', 'team_id', 'course_ops', 'create_by',
                 'plan_start_time', 'plan_end_time', 'real_carry_out', 'status','des', 'path'],
-            self::SCENARIO_CARRYOUT => ['video_length', 'question_mete', 'case_number', 'activity_number'],
+            self::SCENARIO_CARRYOUT => ['video_length', 'question_mete', 'case_number', 'activity_number', 'path'],
             self::SCENARIO_DEFAULT => 
                 ['id', 'project_id', 'course_id', 'teacher', 'weekly_editors_people', 'credit', 'lession_time', 
                 'video_length','question_mete', 'case_number', 'activity_number', 'team_id', 'course_ops', 'create_by',
@@ -110,8 +110,8 @@ class CourseManage extends ActiveRecord
     {
         return [
             [['project_id', 'course_id', 'credit', 'lession_time', 'video_length', 'question_mete', 'case_number', 'activity_number', 'team_id', 'created_at', 'updated_at', 'status'], 'integer'],
-            [['project_id', 'course_id', 'credit', 'lession_time', 'teacher', 'path', 'weekly_editors_people'], 'required'],
-            [['video_length', 'question_mete', 'case_number', 'activity_number'], 'required', 'on' => [self::SCENARIO_CARRYOUT]],
+            [['project_id', 'course_id', 'credit', 'lession_time', 'teacher',  'weekly_editors_people'], 'required'],
+            [['video_length', 'question_mete', 'case_number', 'activity_number', 'path'], 'required', 'on' => [self::SCENARIO_CARRYOUT]],
             [['teacher', 'create_by', 'weekly_editors_people', 'course_ops'], 'string', 'max' => 36],
             [['plan_start_time', 'plan_end_time', 'real_carry_out'], 'string', 'max' => 60],
             [['des','path'], 'string', 'max' => 255],

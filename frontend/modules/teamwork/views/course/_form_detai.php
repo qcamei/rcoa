@@ -98,7 +98,7 @@ use yii\widgets\DetailView;
             [
                 'attribute' => 'path',
                 'format' => 'raw',
-                'value' => empty($model->path) ? '无' : $model->path,
+                'value' => empty($model->path) ? '空' : $model->path,
             ],
             ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">其它信息</span>','value' => ''],
             [

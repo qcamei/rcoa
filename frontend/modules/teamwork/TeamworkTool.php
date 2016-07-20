@@ -107,6 +107,7 @@ class TeamworkTool{
             $values[] = [
                 'course_id' => $course_id,
                 'phase_id' => $value->id,
+                'weights' => $value->weights,
             ];
         }
         
@@ -115,6 +116,7 @@ class TeamworkTool{
         [
             'course_id',
             'phase_id',
+            'weights',
         ], $values)->execute();
     }
     
@@ -138,6 +140,8 @@ class TeamworkTool{
                 'course_id' => $course_id,
                 'course_phase_id' => $value->phase_id,
                 'link_id' => $value->id,
+                'total' => $value->total,
+                'completed' => $value->completed,
             ];
         }
         
@@ -146,7 +150,9 @@ class TeamworkTool{
         [
             'course_id',
             'course_phase_id',
-            'link_id'
+            'link_id',
+            'total',
+            'completed',
         ], $values)->execute();
     }
     
