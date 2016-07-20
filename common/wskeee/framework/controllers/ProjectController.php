@@ -79,7 +79,7 @@ class ProjectController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Project();
+            $model = new Project();
                 
         if ($model->load(Yii::$app->request->post()) && $model->save()) 
         {
@@ -162,7 +162,7 @@ class ProjectController extends Controller
     protected function getParents()
     {
         $searchModel = new ItemSearch(['level' => Item::LEVEL_COLLEGE]);
-        $results = $searchModel->search([])->models;
+        $results = $searchModel->search([])->query->all();
         $parents = ArrayHelper::map($results, 'id', 'name');
         return $parents;
     }

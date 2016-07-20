@@ -172,7 +172,7 @@ class ShootBookdetail extends ActiveRecord
         return [
             [['site_id', 'lession_time',  'book_time', 'index', 'shoot_mode', 'photograph', 'status', 'created_at', 'updated_at', 'ver'], 'integer'],
             [['u_teacher', 'u_contacte', 'u_booker', 'u_shoot_man', 'create_by'], 'string', 'max' => 36],
-            [['fw_college', 'fw_project', 'fw_course', 'business_id'], 'string', 'max' => 32],
+            [['fw_college', 'fw_project', 'fw_course', 'business_id'], 'integer'],
             [['u_booker',  'create_by', 'u_teacher', 'fw_college', 'fw_project', 'fw_course', 'business_id'], 'required'],
             [['remark'], 'string', 'max' => 255],
             [['start_time'], 'string', 'max' => 20]

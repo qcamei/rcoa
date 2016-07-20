@@ -28,8 +28,7 @@ use const FILEDATA_PATH;
  * @property string $ee         ee号
  * @property string $phone      手机
  * @property string $avatar     头像
- * @property string $status    状态
- * @property string $STOP       是否停用，0停用，1正常
+ * @property int $status    状态0停用，1正常
  * @property integer $created_at    
  * @property integer $updated_at
  */
@@ -41,9 +40,9 @@ class User extends ActiveRecord implements IdentityInterface
     const SCENARIO_UPDATE = 'update';
     
     //已停账号
-    const STATUS_STOP = "0";
+    const STATUS_STOP = 0;
     //活动账号
-    const STATUS_ACTIVE = "1";
+    const STATUS_ACTIVE = 10;
     /** 性别 男 */
     const SEX_MALE = 1;
     /** 性别 女 */
@@ -144,7 +143,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return self::findOne(['id'=>$id,'STOP'=>  self::STATUS_ACTIVE]);
+        return self::findOne(['id'=>$id,'status'=>  self::STATUS_ACTIVE]);
     }
     
     /**
@@ -163,7 +162,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findByUsername($username)
     {
-        return static::findOne(['username' => $username, 'STOP' => self::STATUS_ACTIVE]);
+        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
     }
     
     /**
@@ -180,7 +179,7 @@ class User extends ActiveRecord implements IdentityInterface
 
         return static::findOne([
             'password_reset_token' => $token,
-            'STOP' => self::STATUS_ACTIVE,
+            'status' => self::STATUS_ACTIVE,
         ]);
     }
     
