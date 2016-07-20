@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => '项目类型',
+                'label' => Yii::t('rcoa/teamwork', 'Item Type'),
                 'value'=> function($model){
                     /* @var $model ItemManage */
                     return $model->itemType->name;
@@ -55,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => '项目名称',
+                'label' => Yii::t('rcoa/teamwork', 'Item'),
                 'value' => function ($model){
                     /* @var $model ItemManage */
                     return $model->item->name;
@@ -74,7 +74,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => '子项目',
+                'label' => Yii::t('rcoa/teamwork', 'Item Child'),
                 'format' => 'raw',
                 'content' => function($model){
                         /* @var $model ItemManage */
@@ -99,7 +99,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => '进度',
+                'label' => Yii::t('rcoa/teamwork', 'Progress'),
                 'format' => 'raw',
                 'value' => function($model){
                     /* @var $model ItemManage */
@@ -121,7 +121,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemActBtnCol',
-                'label' => '操作',
+                'label' => Yii::t('rcoa', 'Operating'),
                 'contentOptions' =>[
                     'style'=> [
                         'width' => '90px',

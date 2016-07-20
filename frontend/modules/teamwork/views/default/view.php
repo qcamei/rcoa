@@ -52,7 +52,7 @@ $this->params['breadcrumbs'] = $this->title;
         'columns' => [
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => '课程名称 ('.count($model->courseManages).')',
+                'label' => Yii::t('rcoa/teamwork', 'Course ID').' ('.count($model->courseManages).')',
                 'format' => 'raw',
                 'value'=> function($model){
                     /* @var $model CourseManage */
@@ -74,7 +74,7 @@ $this->params['breadcrumbs'] = $this->title;
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => '主讲讲师',
+                'label' => Yii::t('rcoa/teamwork', 'Teacher'),
                 'value'=> function($model){
                     /* @var $model CourseManage */
                     return $model->speakerTeacher->nickname;
@@ -88,7 +88,7 @@ $this->params['breadcrumbs'] = $this->title;
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
                 //array_sum()返回数组中所有值的和
-                'label' => '学时 ('.$lessionTime.')', 
+                'label' => Yii::t('rcoa/teamwork', 'Lession Time').'('.$lessionTime.')', 
                 'value'=> function($model){
                     /* @var $model CourseManage */
                     return $model->lession_time;
@@ -102,7 +102,7 @@ $this->params['breadcrumbs'] = $this->title;
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => '课程描述',
+                'label' => Yii::t('rcoa/teamwork', 'Des'),
                 'value'=> function($model){
                     /* @var $model CourseManage */
                     return $model->des;

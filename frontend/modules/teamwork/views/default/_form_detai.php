@@ -41,7 +41,7 @@ use yii\widgets\DetailView;
                 'value' => $model->real_carry_out,
             ],*/
             [
-                'label' => Yii::t('rcoa/teamwork', 'Progress'),
+                'label' => Yii::t('rcoa/teamwork', 'Now Progress'),
                 'format' => 'raw',
                 'value' => (int)($model->progress * 100).'%',
             ],

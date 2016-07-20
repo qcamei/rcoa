@@ -57,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => '项目类型',
+                'label' => Yii::t('rcoa/teamwork', 'Item Type'),
                 'value'=> function($model){
                     /* @var $model CourseManage */
                     return $model->project->itemType->name;
@@ -76,7 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => '项目名称',
+                'label' => Yii::t('rcoa/teamwork', 'Item'),
                 'value'=> function($model){
                     /* @var $model CourseManage */
                     return $model->project->item->name;
@@ -95,7 +95,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => '子项目名称',
+                'label' => Yii::t('rcoa/teamwork', 'Item Child'),
                 'value'=> function($model){
                     /* @var $model CourseManage */
                     return $model->project->itemChild->name;
@@ -114,7 +114,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => '课程名称',
+                'label' => Yii::t('rcoa/teamwork', 'Course ID'),
                 'format' => 'raw',
                 'value'=> function($model){
                     /* @var $model CourseManage */
@@ -139,7 +139,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => '进度',
+                'label' => Yii::t('rcoa/teamwork', 'Progress'),
                 'format' => 'raw',
                 'value'=> function($model){
                     /* @var $model CourseManage */
@@ -160,7 +160,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemActBtnCol',
-                'label' => '操作',
+                'label' => Yii::t('rcoa', 'Operating'),
                 'contentOptions' =>[
                     'style'=> [
                         'width' => '90px',

@@ -54,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => '课程名称 ('.count($model->project->courseManages).')',
+                'label' => Yii::t('rcoa/teamwork', 'Course ID').' ('.count($model->project->courseManages).')',
                 'value'=> function($model){
                     /* @var $model CourseManage */
                     return $model->course->name;
@@ -75,7 +75,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => '主讲讲师',
+                'label' => Yii::t('rcoa/teamwork', 'Teacher'),
                 'value' => function ($model){
                     /* @var $model CourseManage */
                     return $model->speakerTeacher->nickname;
@@ -94,7 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => '学时 ('.$lessionTime.')',
+                'label' => Yii::t('rcoa/teamwork', 'Lession Time').'('.$lessionTime.')',
                 'format' => 'raw',
                 'value' => function($model){
                         /* @var $model CourseManage */
@@ -109,7 +109,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => '课程描述',
+                'label' => Yii::t('rcoa/teamwork', 'Des'),
                 'format' => 'raw',
                 'value' => function($model){
                     /* @var $model CourseManage */
@@ -129,7 +129,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemActBtnCol',
-                'label' => '操作',
+                'label' => Yii::t('rcoa', 'Operating'),
                 'contentOptions' =>[
                     'style'=> [
                         'width' => '90px',

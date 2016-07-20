@@ -52,6 +52,7 @@ return [
     'View' => '查看',
     'Detail' => '详情',
     'Deploy' => '配置',
+    'Operating' => '操作',
     
     
     //拍摄预约-公共部分
