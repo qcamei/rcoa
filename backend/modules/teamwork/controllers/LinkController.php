@@ -100,8 +100,10 @@ class LinkController extends Controller
     {
         $model = $this->findModel($id);
         $model->phase_id = $model->phase_id;
+        $model->create_by = Yii::$app->user->id;
         $post = Yii::$app->request->post();
         unset($post['Link']['phase_id']);
+       
         if ($model->load($post) && $model->save()) {
             return $this->redirect(['/teamwork/phase/view', 'id' => $model->phase_id]);
         } else {
@@ -122,7 +124,7 @@ class LinkController extends Controller
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['/teamwork/phase/view', 'id' => $model->phase_id]);
     }
 
     /**
