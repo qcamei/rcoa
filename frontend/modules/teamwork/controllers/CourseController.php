@@ -231,7 +231,8 @@ class CourseController extends Controller
         $twTool = Yii::$app->get('twTool');
         /* @var $model CourseManage */
         $model = $twTool->getCourseProgressOne($id);
-        if($model != null && $model->getIsNormal() && $twTool->getIsLeader()){
+        
+        if($model != null && $model->getIsNormal() && $twTool->getIsLeader() && $model->progress == 1){
             if ($model->create_by == \Yii::$app->user->id && $model->progress == 1){
                 $model->real_carry_out = date('Y-m-d H:i', time());
                 $model->status = ItemManage::STATUS_CARRY_OUT;

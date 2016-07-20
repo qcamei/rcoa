@@ -62,7 +62,7 @@ use yii\widgets\ActiveForm;
 </div>
 
 <div class="modal-footer">
-    <?= Html::submitButton('保存',['id' => 'submit', 'class' => 'btn btn-primary'])?>
+    <?= Html::submitButton('保存', ['id' => 'submit', 'class' => 'btn btn-primary'])?>
 
 </div>
 

@@ -31,8 +31,6 @@ use yii\widgets\ActiveForm;
                 'style'=>[
                     'color'=>'#999999',
                     'font-weight'=>'normal', 
-                    'padding-left' => 0,
-                    'padding-right' => 0,
                 ]
             ],  
         ], 
@@ -73,7 +71,7 @@ use yii\widgets\ActiveForm;
         echo Html::beginTag('div', ['class' => 'form-group field-coursemanage-weekly_editors_people required has-success']);
              echo Html::beginTag('label', [
                  'class' => 'col-lg-1 col-md-1 control-label',
-                 'style' => 'color: #999999; font-weight: normal; padding-left: 0; padding-right: 0;',
+                 'style' => 'color: #999999; font-weight: normal;',
                  'for' => 'weekly_editors_people'
                 ]).Yii::t('rcoa/teamwork', 'Weekly Editors People').Html::endTag('label');
              echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']);
@@ -100,7 +98,7 @@ use yii\widgets\ActiveForm;
         echo Html::beginTag('div', ['class' => 'form-group field-itemmanage-forecast_time has-success']);
             echo Html::beginTag('label', [
                     'class' => 'col-lg-1 col-md-1 control-label', 
-                    'style' => 'color: #999999; font-weight: normal; padding-left: 0; padding-right: 0;',
+                    'style' => 'color: #999999; font-weight: normal;',
                     'for' => 'coursemanage-plan_start_time'
                 ]).Yii::t('rcoa/teamwork', 'Plan Start Time').Html::endTag('label');
             echo Html::beginTag('div', ['class' => 'col-sm-4']);
@@ -128,7 +126,7 @@ use yii\widgets\ActiveForm;
         echo Html::beginTag('div', ['class' => 'form-group field-itemmanage-forecast_time has-success']);
             echo Html::beginTag('label', [
                     'class' => 'col-lg-1 col-md-1 control-label', 
-                    'style' => 'color: #999999; font-weight: normal; padding-left: 0; padding-right: 0;',
+                    'style' => 'color: #999999; font-weight: normal;',
                     'for' => 'coursemanage-plan_end_time'
                 ]).Yii::t('rcoa/teamwork', 'Plan End Time').Html::endTag('label');
             echo Html::beginTag('div', ['class' => 'col-sm-4']);
@@ -160,7 +158,7 @@ use yii\widgets\ActiveForm;
         echo Html::beginTag('div', ['class' => 'form-group field-courseproducer-producer has-success']);
              echo Html::beginTag('label', [
                  'class' => 'col-lg-1 col-md-1 control-label',
-                 'style' => 'color: #999999; font-weight: normal; padding-left: 0; padding-right: 0;',
+                 'style' => 'color: #999999; font-weight: normal;',
                  'for' => 'courseproducer-producer'
                 ]).Yii::t('rcoa/teamwork', 'Resource People').Html::endTag('label');
              echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']);

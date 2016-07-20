@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'links' => [
                 [
-                    'label' => Yii::t('rcoa', 'Detail'),
+                    'label' => Yii::t('rcoa/teamwork', 'Course View'),
                     'url' => ['course/view', 'id' => $phaseModel->course_id],
                 ],
                 [

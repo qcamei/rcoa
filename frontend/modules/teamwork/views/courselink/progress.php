@@ -35,8 +35,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <table class="table table-list">
         <thead>
             <tr style="background-color:#eee;">
-                <th style="width:212px;padding:8px;">阶段</th>
-                <th style="max-width:434px;min-width:84px;padding:8px;">环节</th>
+                <th style="width:232px;padding:8px;">阶段</th>
+                <th style="max-width:434px;min-width:140px;padding:8px;">环节</th>
                 <th class="hidden-xs" style="width:130px;padding:8px;">总量</th>
                 <th class="hidden-xs" style="width:171px;padding:8px;">已完成</th>
                 <th style="width: 143px;padding:8px;">进度</th>
@@ -74,12 +74,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     <td>'.Html::beginTag('div', ['class' => 'progress table-list-progress']).
                                 Html::beginTag('div', [
                                     'class' => 'progress-bar', 
-                                    'style' => 'width:'.(int)($link->completed / $link->total * 100).'%',
+                                    'style' => 'width:'.(int)(($link->completed / $link->total) * 100).'%',
                                 ]).
-                                (int)($link->completed / $link->total * 100).'%'.
+                                (int)(($link->completed / $link->total) * 100).'%'.
                                 Html::endTag('div').
                             Html::endTag('div').'</td>
-                    <td>'.Html::a('录入',['entry', 'id' => $link->id], ['class' => $className]).'</td>
+                    <td>'.Html::a('录入', ['entry', 'id' => $link->id], ['class' => $className]).'</td>
                 </tr>';
             }
         } ?>

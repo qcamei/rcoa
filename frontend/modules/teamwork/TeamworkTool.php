@@ -158,13 +158,14 @@ class TeamworkTool{
     public function getCoursePhaseProgressAll($courseId)
     {
         $results = CoursePhase::find()
-                ->select(['Course_phase.*',
-                    '(SUM(Course_link.completed) / SUM(Course_link.total)) AS progress '])
-                ->from(['Course_phase'=> CoursePhase::tableName()])
-                ->leftJoin(['Course_link'=> CourseLink::tableName()], 'Course_link.course_phase_id = Course_phase.phase_id')
+                ->select(['Course_phase.id', 'Course_link.course_id AS course_id',
+                    'Course_link.course_phase_id AS phase_id', 'Course_phase.weights',
+                    '(SUM(Course_link.completed)/SUM(Course_link.total)) AS progress '])
+                ->from(['Course_link'=> CourseLink::tableName()])
+                ->leftJoin(['Course_phase'=> CoursePhase::tableName()], 'Course_phase.phase_id = Course_link.course_phase_id')
                 ->where(['Course_link.course_id' => $courseId])
                 ->andWhere(['Course_link.is_delete' => 'N'])
-                ->groupBy('Course_phase.phase_id')
+                ->groupBy('Course_link.course_phase_id')
                 ->with('course')
                 ->with('phase')
                 ->all();
