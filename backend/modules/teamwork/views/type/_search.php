@@ -25,6 +25,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'updated_at') ?>
 
+    <?php // echo $form->field($model, 'des') ?>
+
     <div class="form-group">
         <?= Html::submitButton(Yii::t('rcoa/teamwork', 'Search'), ['class' => 'btn btn-primary']) ?>
         <?= Html::resetButton(Yii::t('rcoa/teamwork', 'Reset'), ['class' => 'btn btn-default']) ?>

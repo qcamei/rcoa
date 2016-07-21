@@ -91,15 +91,18 @@ class TeamworkTool{
         
     /**
      * 复制Phase表数据到CoursePhase表
-     * @param type $course_id  课程ID
+     * @param type $course_id       课程ID
+     * @param type $templateType    模版类别
      */
-    public function addCoursePhase($course_id)
+    public function addCoursePhase($course_id, $templateType)
     {
         $phase = Phase::find()
+                ->andFilterWhere(['template_type_id' => $templateType])
                 ->with('links')
+                ->with('templateType')
                 ->with('createBy')
                 ->all();
-        
+       
         $values = [];
         /** 重组提交的数据为$values数组 */
         foreach($phase as $value)
@@ -107,7 +110,9 @@ class TeamworkTool{
             $values[] = [
                 'course_id' => $course_id,
                 'phase_id' => $value->id,
+                'name' => $value->name,
                 'weights' => $value->weights,
+                'create_by' => \Yii::$app->user->id,
             ];
         }
         
@@ -116,7 +121,9 @@ class TeamworkTool{
         [
             'course_id',
             'phase_id',
+            'name',
             'weights',
+            'create_by',
         ], $values)->execute();
     }
     
@@ -124,12 +131,13 @@ class TeamworkTool{
      * 复制Link表数据到CourseLink表
      * @param type $course_id   课程ID
      */
-    public function addCourseLink($course_id)
+    public function addCourseLink($course_id, $templateType)
     {
         $link = Link::find()
+                ->andFilterWhere(['template_type_id' => $templateType])
+                ->with('templateType')
                 ->with('createBy')
                 ->with('phase')
-                ->with('courseLinks')
                 ->all();
         
         $values = [];
@@ -140,8 +148,12 @@ class TeamworkTool{
                 'course_id' => $course_id,
                 'course_phase_id' => $value->phase_id,
                 'link_id' => $value->id,
+                'name' => $value->name,
+                'type' => $value->type,
                 'total' => $value->total,
                 'completed' => $value->completed,
+                'unit' => $value->unit,
+                'create_by' => \Yii::$app->user->id,
             ];
         }
         
@@ -151,8 +163,12 @@ class TeamworkTool{
             'course_id',
             'course_phase_id',
             'link_id',
+            'name',
+            'type',
             'total',
             'completed',
+            'unit',
+            'create_by',
         ], $values)->execute();
     }
     
@@ -164,13 +180,13 @@ class TeamworkTool{
     public function getCoursePhaseProgressAll($courseId)
     {
         $results = CoursePhase::find()
-                ->select(['Course_phase.id', 'Course_link.course_id AS course_id',
-                    'Course_link.course_phase_id AS phase_id', 'Course_phase.weights',
+                ->select(['Course_phase.id', 'Course_phase.name', 'Course_link.course_id',
+                    'Course_phase.phase_id', 'Course_phase.weights',
                     '(SUM(Course_link.completed)/SUM(Course_link.total)) AS progress '])
                 ->from(['Course_link'=> CourseLink::tableName()])
-                ->leftJoin(['Course_phase'=> CoursePhase::tableName()], 'Course_phase.phase_id = Course_link.course_phase_id')
+                ->leftJoin(['Course_phase'=> CoursePhase::tableName()],
+                    '(Course_phase.phase_id = Course_link.course_phase_id AND Course_link.course_id = Course_phase.course_id)' )
                 ->where(['Course_link.course_id' => $courseId])
-                ->andWhere(['Course_link.is_delete' => 'N'])
                 ->groupBy('Course_link.course_phase_id')
                 ->with('course')
                 ->with('phase')

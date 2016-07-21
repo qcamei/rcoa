@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model wskeee\framework\models\searchs\PhaseSearch */
+/* @var $model common\models\teamwork\searchs\PhaseSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -17,17 +17,25 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id') ?>
 
+    <?= $form->field($model, 'template_type_id') ?>
+
     <?= $form->field($model, 'name') ?>
 
     <?= $form->field($model, 'weights') ?>
 
-    <?= $form->field($model, 'progress') ?>
-
     <?= $form->field($model, 'create_by') ?>
 
+    <?php // echo $form->field($model, 'created_at') ?>
+
+    <?php // echo $form->field($model, 'updated_at') ?>
+
+    <?php // echo $form->field($model, 'index') ?>
+
+    <?php // echo $form->field($model, 'is_delete') ?>
+
     <div class="form-group">
-        <?= Html::submitButton(Yii::t('rcoa/framework', 'Search'), ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton(Yii::t('rcoa/framework', 'Reset'), ['class' => 'btn btn-default']) ?>
+        <?= Html::submitButton(Yii::t('rcoa/teamwork', 'Search'), ['class' => 'btn btn-primary']) ?>
+        <?= Html::resetButton(Yii::t('rcoa/teamwork', 'Reset'), ['class' => 'btn btn-default']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

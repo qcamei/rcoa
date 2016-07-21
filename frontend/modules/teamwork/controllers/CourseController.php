@@ -144,8 +144,8 @@ class CourseController extends Controller
             {  
                 if($model->save()){
                     $this->saveCourseProducer($model->id, $post['producer']);
-                    $twTool->addCoursePhase($model->id);
-                    $twTool->addCourseLink($model->id);
+                    $twTool->addCoursePhase($model->id, $templateType = null);
+                    $twTool->addCourseLink($model->id, $templateType = null);
                 }
                 $trans->commit();  //提交事务
                 Yii::$app->getSession()->setFlash('success','操作成功！');
@@ -303,7 +303,7 @@ class CourseController extends Controller
     }
     
     /**
-     * 保存数据到表里
+     * 保存制作人到表里面
      * @param type $course_id  任务id
      * @param type $post 
      */

@@ -36,6 +36,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
+            [
+                'attribute' => 'template_type_id',
+                'value' => $model->templateType->name,
+            ],
+            //'template_type_id',
             'name',
             'weights',
             //'progress',

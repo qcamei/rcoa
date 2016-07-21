@@ -17,6 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a(Yii::t('rcoa/teamwork', 'Create Template Type'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('rcoa/teamwork', 'Phases'), ['phase/index'], ['class' => 'btn btn-primary']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -26,9 +27,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'name',
-            'create_by',
-            'created_at',
-            'updated_at',
+            //'create_by',
+            //'created_at',
+            //'updated_at',
+            // 'des',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

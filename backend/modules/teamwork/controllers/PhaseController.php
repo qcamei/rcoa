@@ -4,9 +4,11 @@ namespace backend\modules\teamwork\controllers;
 
 use common\models\teamwork\Phase;
 use common\models\teamwork\searchs\PhaseSearch;
+use common\models\teamwork\TemplateType;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -81,6 +83,7 @@ class PhaseController extends Controller
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'templateType' => $this->getTemplateType(),
             ]);
         }
     }
@@ -100,6 +103,7 @@ class PhaseController extends Controller
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'templateType' => $this->getTemplateType(),
             ]);
         }
     }
@@ -131,5 +135,10 @@ class PhaseController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    
+    public function getTemplateType() 
+    {
+        return ArrayHelper::map(TemplateType::find()->all(), 'id', 'name');
     }
 }

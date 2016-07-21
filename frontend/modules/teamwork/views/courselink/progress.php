@@ -50,7 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'btn btn-primary' : 'btn btn-primary disabled';
             /* @var $phase CoursePhase */
             echo '<tr style="background-color:#eee">
-                <td>'.$phase->phase->name.'</td>
+                <td>'.$phase->name.'</td>
                 <td></td>
                 <td class="hidden-xs"></td>
                 <td class="hidden-xs"></td>
@@ -68,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 /* @var $link CourseLink */
                 echo '<tr>
                     <td></td>
-                    <td>'.$link->link->name.'</td>
+                    <td>'.$link->name.'</td>
                     <td class="hidden-xs">'.$link->total.'</td>
                     <td class="hidden-xs">'.$link->completed.'</td>
                     <td>'.Html::beginTag('div', ['class' => 'progress table-list-progress']).

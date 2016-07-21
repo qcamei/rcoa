@@ -19,7 +19,7 @@ class TemplateTypeSearch extends TemplateType
     {
         return [
             [['id', 'created_at', 'updated_at'], 'integer'],
-            [['name', 'create_by'], 'safe'],
+            [['name', 'create_by', 'des'], 'safe'],
         ];
     }
 
@@ -65,7 +65,8 @@ class TemplateTypeSearch extends TemplateType
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'create_by', $this->create_by]);
+            ->andFilterWhere(['like', 'create_by', $this->create_by])
+            ->andFilterWhere(['like', 'des', $this->des]);
 
         return $dataProvider;
     }

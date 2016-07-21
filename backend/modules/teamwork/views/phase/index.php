@@ -1,5 +1,6 @@
 <?php
 
+use common\models\teamwork\Phase;
 use common\models\teamwork\searchs\PhaseSearch;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
@@ -7,6 +8,7 @@ use yii\helpers\Html;
 use yii\web\View;
 
 /* @var $this View */
+/* @var $model Phase*/
 /* @var $searchModel PhaseSearch */
 /* @var $dataProvider ActiveDataProvider */
 
@@ -20,6 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a(Yii::t('rcoa/teamwork', 'Create Phase'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('rcoa/teamwork', 'Template Types'), ['type/index'], ['class' => 'btn btn-primary']) ?>
     </p>
 
     <?= GridView::widget([
@@ -29,6 +32,14 @@ $this->params['breadcrumbs'][] = $this->title;
             //['class' => 'yii\grid\SerialColumn'],
 
             'id',
+            [
+                'attribute' => 'template_type_id',
+                'value' => function($model){
+                    /* @var $model Phase*/
+                    return $model->templateType->name;
+                }
+            ],
+            //'template_type_id',
             'name',
             'weights',
             //'progress',

@@ -216,7 +216,8 @@ class CourselinkController extends Controller
         Yii::$app->getResponse()->format = 'json';
         $link = CourseLink::find()
                 ->where(['course_phase_id' => $phase_id, 'is_delete' => 'Y'])
-                ->with('link')
+                ->with('course')
+                ->with('phase')
                 ->all();
         $errors = [];
         $items = [];
@@ -225,7 +226,7 @@ class CourselinkController extends Controller
             foreach ($link as $value) {
                 $items[] = [
                     'id' => $value->id,
-                    'name' => $value->link->name
+                    'name' => $value->name
                 ];
             }
         } catch (Exception $ex) {
@@ -296,9 +297,9 @@ class CourselinkController extends Controller
     {
         $phase = CoursePhase::find()
                 ->where($condition)
-                ->with('phase')
+                ->with('course')
                 ->all();
-        return ArrayHelper::map($phase, 'phase_id', 'phase.name');
+        return ArrayHelper::map($phase, 'phase_id', 'name');
         
     }
     
@@ -311,9 +312,9 @@ class CourselinkController extends Controller
     {
         $phase = CourseLink::find()
                 ->where($condition)
-                ->with('link')
+                ->with('course')
                 ->all();
-        return ArrayHelper::map($phase, 'id', 'link.name');
+        return ArrayHelper::map($phase, 'id', 'name');
         
     }
 }

@@ -13,6 +13,8 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= $form->field($model, 'template_type_id')->dropDownList($templateType) ?>
+    
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'weights')->textInput(['maxlength' => true]) ?>

@@ -63,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
             $classDeletee = $twTool->getIsLeader() && $phase->course->create_by == Yii::$app->user->id ?
                          'btn btn-danger' : 'btn btn-danger disabled';
             echo '<tr style="background-color:#eee">
-                <td>'.$phase->phase->name.'</td>
+                <td>'.$phase->name.'</td>
                 <td></td>
                 <td>'.$phase->weights.'</td>
                 <td class="hidden-xs"></td>
@@ -75,10 +75,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 /* @var $link CourseLink */
                 echo '<tr>
                     <td></td>
-                    <td>'.$link->link->name.'</td>
+                    <td>'.$link->name.'</td>
                     <td></td>
-                    <td class="hidden-xs">'.$link->link->types[$link->link->type].'</td>
-                    <td class="hidden-xs">'.$link->link->unit.'</td>
+                    <td class="hidden-xs">'.$link->link->types[$link->type].'</td>
+                    <td class="hidden-xs">'.$link->unit.'</td>
                     <td><div class="hidden-xs" style="width:58px;height:34px;float:left;"></div>'.Html::a('删除',['link-delete', 'id' => $link->id], ['class' => $classDeletee]).'</td>
                 </tr>';
             }

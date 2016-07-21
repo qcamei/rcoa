@@ -64,7 +64,7 @@ class TypeController extends Controller
     public function actionCreate()
     {
         $model = new TemplateType();
-
+        $model->create_by = \Yii::$app->user->id;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {

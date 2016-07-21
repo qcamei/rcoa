@@ -79,6 +79,8 @@ class LinkController extends Controller
         unset($post['Link']['phase_id']);
         $model->phase_id  = Yii::$app->request->queryParams['phase_id'];
         $model->create_by = Yii::$app->user->id;
+        $model->template_type_id = $model->phase->template_type_id;
+        
         if ($model->load($post) && $model->save()) {
             return $this->redirect(['/teamwork/phase/view', 'id' => $model->phase_id]);
         } else {
@@ -102,6 +104,7 @@ class LinkController extends Controller
         $model->phase_id = $model->phase_id;
         $model->create_by = Yii::$app->user->id;
         $post = Yii::$app->request->post();
+        $model->template_type_id = $model->phase->template_type_id;
         unset($post['Link']['phase_id']);
        
         if ($model->load($post) && $model->save()) {

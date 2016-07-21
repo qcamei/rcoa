@@ -7,6 +7,9 @@
  */
 
 return[
+    'Template Types' => '模版类型',
+    'Create Template Type' => '创建-模版类型',
+    'Update Template Type' => '更新-模版类型',
     'Phases' => '阶段',
     'Create Phase' => '创建-阶段',
     'Update Phase' => '更新-阶段',
@@ -31,6 +34,7 @@ return[
     'Items' => '项目',
     'Courses' => '课程',
     'Create Course' => '课程添加',
+    'Template Type' => '模版类型',
     'Weights' => '权重',
     'Progress' => '进度',
     'Phase ID' => '所属阶段',
