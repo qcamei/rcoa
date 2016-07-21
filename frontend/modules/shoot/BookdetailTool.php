@@ -63,7 +63,7 @@ class BookdetailTool{
                 //添加任务管理
                 $bdNoticeTool->saveJobManager($model, $post);
                 //创建--给所有摄影组长发送通知
-                $bdNoticeTool->sendShootLeadersNotification($model, '新增', 'shoot\newShoot-html');
+                $bdNoticeTool->sendShootLeadersNotification($model, '新增', 'shoot/newShoot-html');
             }
             else{ throw new Exception(json_encode($model->getErrors()));}
                
@@ -112,20 +112,20 @@ class BookdetailTool{
                 /** 摄影师非null的时候为【更改指派】通知 */
                 if($oldRoleNmae != null){
                     //更改指派--给接洽人发通知
-                    $bdNoticeTool->sendContacterNotification($model, '更改指派', 'shoot\ShootEditAssign-u_contacter-html');   
+                    $bdNoticeTool->sendContacterNotification($model, '更改指派', 'shoot/ShootEditAssign-u_contacter-html');   
                     //更改指派--给旧摄影师发通知
-                    $bdNoticeTool->sendShootManNotification($model, '更改指派', 'shoot\ShootEditAssign-u_shoot_man-html', $oldRoleNmae);    
+                    $bdNoticeTool->sendShootManNotification($model, '更改指派', 'shoot/ShootEditAssign-u_shoot_man-html', $oldRoleNmae);    
                     //更改指派--给新摄影师发通知
-                    $bdNoticeTool->sendShootManNotification($model, '更改指派', 'shoot\ShootAssign-u_shoot_man-html');        
+                    $bdNoticeTool->sendShootManNotification($model, '更改指派', 'shoot/ShootAssign-u_shoot_man-html');        
                 }else{
                     //指派--给编导发通知
-                    $bdNoticeTool->sendBookerNotification($model, '指派', 'shoot\ShootAssign-u_contacter-html');     
+                    $bdNoticeTool->sendBookerNotification($model, '指派', 'shoot/ShootAssign-u_contacter-html');     
                     //指派--给接茬人发通知
-                    $bdNoticeTool->sendContacterNotification($model, '指派', 'shoot\ShootAssign-u_contacter-html');  
+                    $bdNoticeTool->sendContacterNotification($model, '指派', 'shoot/ShootAssign-u_contacter-html');  
                     //指派--给摄影师发通知
-                    $bdNoticeTool->sendShootManNotification($model, '指派', 'shoot\ShootAssign-u_shoot_man-html');   
+                    $bdNoticeTool->sendShootManNotification($model, '指派', 'shoot/ShootAssign-u_shoot_man-html');   
                     //指派--给老师发通知
-                    $bdNoticeTool->sendTeacherNotification($model, '指派', 'shoot\ShootAssign-u_teacher-html');     
+                    $bdNoticeTool->sendTeacherNotification($model, '指派', 'shoot/ShootAssign-u_teacher-html');     
                 }
             } else{ throw new Exception(json_encode($model->getErrors()));}
             $trans->commit();  //提交事务
@@ -200,17 +200,17 @@ class BookdetailTool{
                 /** 非编导自己取消任务才发送 */
                 if(!$model->u_booker)  
                     //取消--给编导发通知
-                    $bdNoticeTool->sendBookerNotification($model, '取消', 'shoot\CancelShoot-html');
+                    $bdNoticeTool->sendBookerNotification($model, '取消', 'shoot/CancelShoot-html');
                 /** 摄影师非空才发送 */
                 if(!empty($model->u_shoot_man)){
                     //取消--给所有摄影组长发通知
-                    $bdNoticeTool->sendShootLeadersNotification($model, '取消', 'shoot\CancelShoot-html'); 
+                    $bdNoticeTool->sendShootLeadersNotification($model, '取消', 'shoot/CancelShoot-html'); 
                     //取消--给接洽人发通知
-                    $bdNoticeTool->sendContacterNotification($model, '取消', 'shoot\CancelShoot-html');  
+                    $bdNoticeTool->sendContacterNotification($model, '取消', 'shoot/CancelShoot-html');  
                     //取消--给摄影师发通知
-                    $bdNoticeTool->sendShootManNotification($model, '取消', 'shoot\CancelShoot-html');  
+                    $bdNoticeTool->sendShootManNotification($model, '取消', 'shoot/CancelShoot-html');  
                     //取消--给老师发通知
-                    $bdNoticeTool->sendTeacherNotification($model, '取消', 'shoot\CancelShoot-u_teacher-html');  
+                    $bdNoticeTool->sendTeacherNotification($model, '取消', 'shoot/CancelShoot-u_teacher-html');  
                 }
             }
             $trans->commit();  //提交事务

@@ -27,11 +27,6 @@ class RbacManager extends DbManager{
         parent::init();
         $this->loadFromCache();
     }
-    /*
-     * 角色所包括的用户
-     * @var type role => [user,user]
-     */
-    protected $itemToUsers;
 
     /**
      *
@@ -54,8 +49,8 @@ class RbacManager extends DbManager{
         $data = $this->cache->get($this->cacheKey);
         
         if (is_array($data) && isset($data[0], $data[1], $data[2], $data[3])) {
-            list ($this->items, $this->rules, $this->parents,$this->itemToUsers) = $data;
-            return;
+            list ($this->items, $this->rules, $this->parents) = $data;
+            //return;
         }
         
         $query = (new Query)->from($this->itemTable);
@@ -84,7 +79,6 @@ class RbacManager extends DbManager{
         }
         
         //create roleToUsers;
-        $this->itemToUsers = [];
         $this->assignmentToUsers = [];
          
         $query = (new Query)->from($this->assignmentTable);
@@ -93,33 +87,29 @@ class RbacManager extends DbManager{
             if(isset($this->items[$row['item_name']]))
                 $this->assignmentToUsers[$row['item_name']][] = $row['user_id'];
         }
-        $result;
-        foreach ($this->items as $itemName => $item)
-        {
-            $result = [];
-            $this->getItemUser($itemName, $result);
-            $this->itemToUsers[$itemName] = array_unique($result);
-        }
-       
-        $this->cache->set($this->cacheKey, [$this->items, $this->rules, $this->parents,$this->itemToUsers]);
+        
+        $this->cache->set($this->cacheKey, [$this->items, $this->rules, $this->parents]);
     }
     
     /**
      * 获取属于该角色或者权限的所有用户
      * @param string $itemName  目标角色或者权限
-     * @param array $result     最终结果,所甩用户集合
+     * @param array $result     []
+     * @return 最终结果,所甩用户集合
      */
-    protected function getItemUser($itemName,&$result)
+    protected function getItemUser($itemName,$result)
     {
         $atousers = isset($this->assignmentToUsers[$itemName]) ? $this->assignmentToUsers[$itemName] : [];
-        $result = ArrayHelper::merge($atousers,$result);
-        if(isset($this->parents[$itemName]))
+        $result = array_unique(ArrayHelper::merge($atousers,$result));
+        if(isset($this->childs[$itemName]))
         {
-            foreach ($this->parents[$itemName] as $child)
-                $this->getItemUser($child,$result);
+            foreach ($this->childs[$itemName] as $child)
+                $result = array_unique(ArrayHelper::merge($this->getItemUser($child,$result),$result));
         }
+        var_dump($itemName);
+        return $result;
     }
-    
+
     /**
      * 获取拥有该角色或者权限所有用户，<br/>
      * 比如，获取所有【编导】，或者所有能【创建预约】的用户
@@ -128,9 +118,9 @@ class RbacManager extends DbManager{
      */
     public function getItemUsers($itemName)
     {
-        $result = [];
-        if(isset($this->itemToUsers[$itemName]))
-            $result = User::findAll(['id'=>  $this->itemToUsers[$itemName]]);
+        $userIds = isset($this->assignmentToUsers[$itemName]) ? $this->assignmentToUsers[$itemName] : [];
+        $result = User::findAll(['id'=>  $userIds]);
+        
         return $result;
     }
     
@@ -142,15 +132,6 @@ class RbacManager extends DbManager{
      */
     public function isRole($roleName,$userId)
     {
-        /* @var $user User */
-        if(isset($this->itemToUsers[$roleName]))
-        {
-            foreach($this->itemToUsers[$roleName] as $uid)
-            {
-                if($uid == $userId)
-                    return true;
-            }
-        }
-        return false;
+        return $this->checkAccess($userId, $roleName);
     }
 }
