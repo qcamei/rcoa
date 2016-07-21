@@ -1,5 +1,5 @@
 <?php
-if(isset($_SERVER['HTTP_CCOA_DEBUG']))
+if(isset($_SERVER['HTTP_CCOADEBUG']))
 {
     defined('YII_DEBUG') or define('YII_DEBUG', true);
     defined('YII_ENV') or define('YII_ENV', 'dev');
@@ -20,11 +20,12 @@ $config = yii\helpers\ArrayHelper::merge(
     require(__DIR__ . '/../config/main.php'),
     require(__DIR__ . '/../config/main-local.php')
 );
-
-if(isset($_SERVER['HTTP_CCOA_DEBUG']))
+if(isset($_SERVER['HTTP_CCOADEBUG']))
 {
-     $config['modules']['debug']['allowedIPs'] = ['*.*.*.*'];
+    $config['modules']['debug'] = [
+        'class'=>'yii\debug\Module',
+        'allowedIPs'=>['*.*.*.*']
+    ];
 }
-
 $application = new yii\web\Application($config);
 $application->run();
