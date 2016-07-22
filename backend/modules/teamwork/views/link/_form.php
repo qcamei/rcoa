@@ -18,7 +18,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'type')->dropDownList($model->types) ?>
+    <?= $form->field($model, 'type')->dropDownList(Link::$types) ?>
 
     <?= $form->field($model, 'unit')->textInput(['maxlength' => true]) ?>
 

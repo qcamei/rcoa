@@ -82,7 +82,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <td>'.Html::a('录入', ['entry', 'id' => $link->id], ['class' => $className]).'</td>
                 </tr>';
             }
-        } ?>
+        } //exit;?>
         
         </tbody>
     </table>

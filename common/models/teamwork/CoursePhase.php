@@ -12,7 +12,6 @@ use yii\db\ActiveRecord;
  *
  * @property integer $id            id  
  * @property integer $course_id     课程ID
- * @property integer $phase_id      阶段ID
  * @property string $name           课程阶段名称
  * @property string $weights        权重
  * @property string $create_by      创建者
@@ -49,13 +48,13 @@ class CoursePhase extends ActiveRecord
     public function rules()
     {
         return [
-            [['course_id', 'phase_id'], 'required'],
-            [['course_id', 'phase_id', 'created_at', 'updated_at', 'index'], 'integer'],
+            [['course_id'], 'required'],
+            [['course_id', 'created_at', 'updated_at', 'index'], 'integer'],
             [['weights'], 'number', 'max' => 1],
             [['name'], 'string', 'max' => 255],
             [['is_delete'], 'string', 'max' => 4],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => CourseManage::className(), 'targetAttribute' => ['course_id' => 'id']],
-            [['phase_id'], 'exist', 'skipOnError' => true, 'targetClass' => Phase::className(), 'targetAttribute' => ['phase_id' => 'id']],
+            
         ];
     }
 
@@ -65,9 +64,8 @@ class CoursePhase extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('rcoa/teamwork', 'ID'),
+            'id' => Yii::t('rcoa/teamwork', 'Course Phase ID'),
             'course_id' => Yii::t('rcoa/teamwork', 'Course ID'),
-            'phase_id' => Yii::t('rcoa/teamwork', 'Course Phase ID'),
             'name' => Yii::t('rcoa', 'Name'),
             'weights' => Yii::t('rcoa/teamwork', 'Weights'),
             'create_by' => Yii::t('rcoa', 'Create By'),
@@ -83,8 +81,8 @@ class CoursePhase extends ActiveRecord
      */
     public function getCourseLinks()
     {
-        return $this->hasMany(CourseLink::className(), ['course_phase_id' => 'phase_id'])
-                ->where(['course_id' => $this->course_id, 'is_delete' => 'N']);
+        return $this->hasMany(CourseLink::className(), ['course_phase_id' => 'id'])
+                ->where(['is_delete' => 'N']);
     }
 
     /**
@@ -94,12 +92,5 @@ class CoursePhase extends ActiveRecord
     {
         return $this->hasOne(CourseManage::className(), ['id' => 'course_id']);
     }
-
-    /**
-     * @return ActiveQuery
-     */
-    public function getPhase()
-    {
-        return $this->hasOne(Phase::className(), ['id' => 'phase_id']);
-    }
+   
 }

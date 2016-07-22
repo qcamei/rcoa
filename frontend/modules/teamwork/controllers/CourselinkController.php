@@ -112,10 +112,10 @@ class CourselinkController extends Controller
         if ($phaseModel->load($post)){
             Yii::$app->db->createCommand()
                     ->update(CoursePhase::tableName(), ['is_delete'=> 'N', 'weights' => $post['CoursePhase']['weights']], [
-                        'course_id' => $course_id,'phase_id' => $post['CoursePhase']['phase_id'],
+                        'id' => $post['CoursePhase']['id'],
                     ])->execute();
             
-            foreach ($post['link_id'] as $value)
+            foreach ($post['id'] as $value)
                 Yii::$app->db->createCommand()
                     ->update(CourseLink::tableName(), ['is_delete'=> 'N'], ['id' => (int)$value])->execute();
           
@@ -143,7 +143,7 @@ class CourselinkController extends Controller
         $twTool = Yii::$app->get('twTool');
         $phaseModel = CoursePhase::findOne($id);
         $post = Yii::$app->request->post();
-        $link = empty($post['link_id']) ? [] : $post['link_id'];
+        $link = empty($post['id']) ? [] : $post['id'];
         if(!$twTool->getIsLeader() || $phaseModel->course->create_by !== \Yii::$app->user->id)
             throw new NotAcceptableHttpException('只有队长 or 该课程隶属于自己才可以【编辑阶段和环节】');
         
@@ -158,7 +158,7 @@ class CourselinkController extends Controller
                 'phaseModel' => $phaseModel,
                 'phase' => $this->getCoursePhase(['course_id' => $phaseModel->course_id, 'is_delete' => 'N']),
                 'link' => $this->getCourseLink(['course_id' => $phaseModel->course_id, 
-                    'course_phase_id' => $phaseModel->phase_id, 'is_delete' => 'Y']),
+                    'course_phase_id' => $phaseModel->id, 'is_delete' => 'Y']),
             ]);
         }
     }
@@ -200,7 +200,7 @@ class CourselinkController extends Controller
         if($model->update() !== false && $twTool->getIsLeader() && $model->course->create_by == \Yii::$app->user->id){
             Yii::$app->db->createCommand()
                 ->update(CourseLink::tableName(), ['is_delete'=> 'Y'], [
-                    'course_id' => $model->course_id, 'course_phase_id' => $model->phase_id])->execute();
+                    'course_id' => $model->course_id, 'course_phase_id' => $model->id])->execute();
             $this->redirect(['index', 'course_id' => $model->course_id]);
         }else 
             throw new NotAcceptableHttpException('只有队长 or 该课程隶属于自己才可以操作');
@@ -211,24 +211,26 @@ class CourselinkController extends Controller
      * @param type $id
      * @return type JSON
      */
-    public function actionSearch($phase_id)
+    public function actionSearch($id)
     {
         Yii::$app->getResponse()->format = 'json';
         $link = CourseLink::find()
-                ->where(['course_phase_id' => $phase_id, 'is_delete' => 'Y'])
+                ->where(['course_phase_id' => $id, 'is_delete' => 'Y'])
                 ->with('course')
-                ->with('phase')
+                ->with('coursePhase')
                 ->all();
         $errors = [];
         $items = [];
         try
         {
             foreach ($link as $value) {
-                $items[] = [
+                /* @var $value CourseLink */
+                $items[] = ['link' => [ 
                     'id' => $value->id,
                     'name' => $value->name
-                ];
+                ], 'weights' => $value->coursePhase->weights];
             }
+            
         } catch (Exception $ex) {
             $errors [] = $ex->getMessage();
         }
@@ -299,7 +301,7 @@ class CourselinkController extends Controller
                 ->where($condition)
                 ->with('course')
                 ->all();
-        return ArrayHelper::map($phase, 'phase_id', 'name');
+        return ArrayHelper::map($phase, 'id', 'name');
         
     }
     

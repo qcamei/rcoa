@@ -82,8 +82,10 @@ class LinkController extends Controller
         $model->template_type_id = $model->phase->template_type_id;
         
         if ($model->load($post) && $model->save()) {
+            
             return $this->redirect(['/teamwork/phase/view', 'id' => $model->phase_id]);
         } else {
+            
             return $this->render('create', [
                 'model' => $model,
                 //'phaseId' => $phaseId,
@@ -125,8 +127,8 @@ class LinkController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $model = $this->findModel($id);
+        $model->delete();
         return $this->redirect(['/teamwork/phase/view', 'id' => $model->phase_id]);
     }
 

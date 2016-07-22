@@ -40,7 +40,7 @@ class Link extends ActiveRecord
     /** 数量 */
     const AMOUNT = 1;
     /** 类型 */
-    public $types = [
+    public static $types = [
         self::STATUS => '状态',
         self::AMOUNT => '数量',
     ];
@@ -65,7 +65,7 @@ class Link extends ActiveRecord
     {
         return [
             [['template_type_id', 'type', 'index', 'total', 'completed'], 'integer'],
-            [['phase_id', 'type', 'index', 'total', 'completed'], 'required'],
+            [['phase_id', 'type'], 'required'],
             [['name'], 'string', 'max' => 255],
             [['unit'], 'string', 'max' => 16],
             [['is_delete'], 'string', 'max' => 4],
@@ -95,14 +95,6 @@ class Link extends ActiveRecord
         ];
     }
     
-    /**
-     * @return ActiveQuery
-     
-    public function getCourseLinks()
-    {
-        return $this->hasMany(CourseLink::className(), ['link_id' => 'id']);
-    }*/
-
     /**
      * 获取创建者
      * @return ActiveQuery

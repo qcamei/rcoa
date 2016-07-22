@@ -54,12 +54,11 @@ class CourseLink extends ActiveRecord
     public function rules()
     {
          return [
-            [['course_id', 'course_phase_id', 'link_id'], 'required'],
-            [['course_id', 'course_phase_id', 'link_id', 'type', 'total', 'completed', 'created_at', 'updated_at', 'index'], 'integer'],
+            [['course_id', 'course_phase_id', ], 'required'],
+            [['course_id', 'course_phase_id', 'type', 'total', 'completed', 'created_at', 'updated_at', 'index'], 'integer'],
             [['is_delete'], 'string', 'max' => 4],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => CourseManage::className(), 'targetAttribute' => ['course_id' => 'id']],
-            [['course_phase_id'], 'exist', 'skipOnError' => true, 'targetClass' => CoursePhase::className(), 'targetAttribute' => ['course_phase_id' => 'phase_id']],
-            [['link_id'], 'exist', 'skipOnError' => true, 'targetClass' => Link::className(), 'targetAttribute' => ['link_id' => 'id']],
+            [['course_phase_id'], 'exist', 'skipOnError' => true, 'targetClass' => CoursePhase::className(), 'targetAttribute' => ['course_phase_id' => 'id']],
         ];
     }
 
@@ -69,10 +68,9 @@ class CourseLink extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('rcoa/teamwork', 'ID'),
+            'id' => Yii::t('rcoa/teamwork', 'Link ID'),
             'course_id' => Yii::t('rcoa/teamwork', 'Course ID'),
             'course_phase_id' => Yii::t('rcoa/teamwork', 'Course Phase ID'),
-            'link_id' => Yii::t('rcoa/teamwork', 'Link ID'),
             'name' => Yii::t('rcoa', 'Name'),
             'type' => Yii::t('rcoa', 'Type'),
             'total' => Yii::t('rcoa/teamwork', 'Total'),
@@ -99,14 +97,7 @@ class CourseLink extends ActiveRecord
      */
     public function getCoursePhase()
     {
-        return $this->hasOne(CoursePhase::className(), ['phase_id' => 'course_phase_id']);
+        return $this->hasOne(CoursePhase::className(), ['id' => 'course_phase_id']);
     }
 
-    /**
-     * @return ActiveQuery
-     */
-    public function getLink()
-    {
-        return $this->hasOne(Link::className(), ['id' => 'link_id']);
-    }
 }

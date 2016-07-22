@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             [
                 'attribute' => 'type',
-                'value' => $model->types[$model->type],
+                'value' => Link::$types[$model->type],
             ],
             'unit',
             //'progress',

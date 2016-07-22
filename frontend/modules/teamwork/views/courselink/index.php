@@ -2,6 +2,7 @@
 
 use common\models\teamwork\CourseLink;
 use common\models\teamwork\CoursePhase;
+use common\models\teamwork\Link;
 use frontend\modules\teamwork\TwAsset;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
@@ -77,7 +78,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <td></td>
                     <td>'.$link->name.'</td>
                     <td></td>
-                    <td class="hidden-xs">'.$link->link->types[$link->type].'</td>
+                    <td class="hidden-xs">'.Link::$types[$link->type].'</td>
                     <td class="hidden-xs">'.$link->unit.'</td>
                     <td><div class="hidden-xs" style="width:58px;height:34px;float:left;"></div>'.Html::a('删除',['link-delete', 'id' => $link->id], ['class' => $classDeletee]).'</td>
                 </tr>';

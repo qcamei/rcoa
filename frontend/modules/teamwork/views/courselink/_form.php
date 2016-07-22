@@ -34,7 +34,7 @@ use yii\widgets\ActiveForm;
         ], 
     ]) ?>
     
-    <?= $form->field($phaseModel, 'phase_id')->widget(Select2::classname(), [
+    <?= $form->field($phaseModel, 'id')->widget(Select2::classname(), [
         'data' => $phase, 
         'hideSearch' => true,
         'disabled' => !$phaseModel->isNewRecord ? true : false,
@@ -46,14 +46,14 @@ use yii\widgets\ActiveForm;
         ]
     ]) ?>
 
-    <?php echo Html::beginTag('div', ['class' => 'form-group field-coursephase-link_id has-success']);
+    <?php echo Html::beginTag('div', ['class' => 'form-group field-courselink-link_id has-success']);
             echo Html::beginTag('label', ['class' => 'col-lg-1 col-md-1 control-label',
                     'style' => 'color: #999999; font-weight: normal; padding-left: 0; padding-right: 0;',
-                    'for' => 'coursephase-link_id'
+                    'for' => 'courselink-link_id'
                 ]).'环节名称'.Html::endTag('label');
             echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']).
                     Select2::widget([
-                        'name' => 'link_id',
+                        'name' => 'id',
                         'id' => 'courselink-link_id',
                         'data' => $link, 
                         'hideSearch' => true,
@@ -76,10 +76,8 @@ use yii\widgets\ActiveForm;
     ?>
     
     
-
-    <?= $form->field($phaseModel, 'weights')->textInput([
-        'value' => $phaseModel->weights,
-    ]) ?>
+    
+    <?= $form->field($phaseModel, 'weights')->textInput( ) ?>
 
     <?php ActiveForm::end(); ?>
 
@@ -89,12 +87,13 @@ use yii\widgets\ActiveForm;
     function wx_one(e){
         $('.select2-selection__choice').remove();
 	$("#courselink-link_id").html("");
-	$.post("/teamwork/courselink/search?phase_id="+$(e).val(),function(data)
+	$.post("/teamwork/courselink/search?id="+$(e).val(),function(data)
         {
             $('<option/>').appendTo($("#courselink-link_id"));
             $.each(data['data'],function()
             {
-                $('<option>').val(this['id']).text(this['name']).appendTo($("#courselink-link_id"));
+                $('<option>').val(this['link']['id']).text(this['link']['name']).appendTo($("#courselink-link_id"));
+                $('#coursephase-weights').val(this['weights']);
             });
 	});
     }

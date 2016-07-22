@@ -109,7 +109,6 @@ class TeamworkTool{
         {
             $values[] = [
                 'course_id' => $course_id,
-                'phase_id' => $value->id,
                 'name' => $value->name,
                 'weights' => $value->weights,
                 'create_by' => \Yii::$app->user->id,
@@ -120,7 +119,6 @@ class TeamworkTool{
         Yii::$app->db->createCommand()->batchInsert(CoursePhase::tableName(), 
         [
             'course_id',
-            'phase_id',
             'name',
             'weights',
             'create_by',
@@ -133,11 +131,14 @@ class TeamworkTool{
      */
     public function addCourseLink($course_id, $templateType)
     {
-        $link = Link::find()
+        $link = (new Query())
+                ->select(['Course_phase.id AS course_phase_id', 'Link.*'])
+                ->from(['Link' => Link::tableName()])
+                ->leftJoin(['Phase' => Phase::tableName()], 'Phase.id = Link.phase_id')
+                ->leftJoin(['Course_phase' => CoursePhase::tableName()], 'Course_phase.name = Phase.name')
+                ->where(['course_id' => $course_id])
                 ->andFilterWhere(['template_type_id' => $templateType])
-                ->with('templateType')
-                ->with('createBy')
-                ->with('phase')
+               
                 ->all();
         
         $values = [];
@@ -146,13 +147,12 @@ class TeamworkTool{
         {
             $values[] = [
                 'course_id' => $course_id,
-                'course_phase_id' => $value->phase_id,
-                'link_id' => $value->id,
-                'name' => $value->name,
-                'type' => $value->type,
-                'total' => $value->total,
-                'completed' => $value->completed,
-                'unit' => $value->unit,
+                'course_phase_id' => $value['course_phase_id'],
+                'name' => $value['name'],
+                'type' => $value['type'],
+                'total' => $value['total'],
+                'completed' => $value['completed'],
+                'unit' => $value['unit'],
                 'create_by' => \Yii::$app->user->id,
             ];
         }
@@ -162,7 +162,6 @@ class TeamworkTool{
         [
             'course_id',
             'course_phase_id',
-            'link_id',
             'name',
             'type',
             'total',
@@ -180,16 +179,18 @@ class TeamworkTool{
     public function getCoursePhaseProgressAll($courseId)
     {
         $results = CoursePhase::find()
-                ->select(['Course_phase.id', 'Course_phase.name', 'Course_link.course_id',
-                    'Course_phase.phase_id', 'Course_phase.weights',
+                ->select(['Course_phase.id', 'Course_phase.course_id', 'Course_phase.name', 'Course_link.course_id',
+                    'Course_phase.weights',
                     '(SUM(Course_link.completed)/SUM(Course_link.total)) AS progress '])
                 ->from(['Course_link'=> CourseLink::tableName()])
-                ->leftJoin(['Course_phase'=> CoursePhase::tableName()],
-                    '(Course_phase.phase_id = Course_link.course_phase_id AND Course_link.course_id = Course_phase.course_id)' )
-                ->where(['Course_link.course_id' => $courseId])
+                ->leftJoin(['Course_phase'=> CoursePhase::tableName()],'Course_phase.id = Course_link.course_phase_id')
+                ->where([
+                    'Course_link.course_id' => $courseId, 
+                    'Course_phase.is_delete' => 'N', 
+                    'Course_link.is_delete' => 'N'])
                 ->groupBy('Course_link.course_phase_id')
                 ->with('course')
-                ->with('phase')
+                ->with('courseLinks')
                 ->all();
         return $results;
     }
@@ -208,6 +209,8 @@ class TeamworkTool{
                         '(SUM(Course_link.completed) / SUM(Course_link.total)) AS progress '])  
                     ->from(['Course'=>CourseManage::tableName()])
                     ->leftJoin(['Course_link'=>  CourseLink::tableName()], 'Course_link.course_id = Course.id')
+                    ->leftJoin(['Course_phase' => CoursePhase::tableName()], 'Course_phase.course_id = Course.id')
+                    ->where(['Course_phase.is_delete' => 'N', 'Course_link.is_delete' => 'N'])
                     ->andFilterWhere(['Course.project_id'=> $projectId])
                     ->andFilterWhere(['Course.`status`'=> $status])
                     ->andFilterWhere(['Course.team_id'=> $teamId])
@@ -233,7 +236,10 @@ class TeamworkTool{
                         '(SUM(Course_link.completed) / SUM(Course_link.total)) AS progress '])  
                     ->from(['Course'=>CourseManage::tableName()])
                     ->leftJoin(['Course_link'=>  CourseLink::tableName()], 'Course_link.course_id = Course.id')
-                    ->where(['Course.id' => $id])
+                    ->leftJoin(['Course_phase' => CoursePhase::tableName()], 'Course_phase.course_id = Course.id')
+                    ->where(['Course.id' => $id,
+                        'Course_phase.is_delete' => 'N', 
+                        'Course_link.is_delete' => 'N'])
                     ->one();
         return $results;
     }
@@ -248,7 +254,8 @@ class TeamworkTool{
                     (SELECT Item.id, Course.id AS course_id,Item.item_type_id,Item.item_id, Item.item_child_id,Course.team_id,Course.`status` 
                         FROM ccoa_teamwork_item_manage AS Item  
                         LEFT JOIN ccoa_teamwork_course_manage AS Course ON Course.project_id = Item.id) AS Item_course
-                LEFT JOIN ccoa_teamwork_course_link AS Course_link ON Item_course.course_id = Course_link.course_id  
+                LEFT JOIN ccoa_teamwork_course_link AS Course_link ON Item_course.course_id = Course_link.course_id 
+                WHERE Course_link.is_delete = 'N'
                 GROUP BY Item_course.id ";
         $itemProgress = ItemManage::findBySql($sql)
                         ->with('courseManages')
@@ -274,7 +281,7 @@ class TeamworkTool{
                         (SELECT Item.*,SUM(total) AS total,SUM(completed) AS completed,(SUM(completed)/SUM(total)) AS phase_progress  
                             FROM ccoa_teamwork_course_link AS Link  
                             LEFT JOIN ccoa_teamwork_course_phase AS Phase ON Phase.id = Link.course_phase_id  
-                            LEFT JOIN ccoa_teamwork_phase_template AS Phase_Temp ON Phase.phase_id = Phase_Temp.id
+                      
                             LEFT JOIN ccoa_teamwork_course_manage AS Course ON Link.course_id = Course.id
                             LEFT JOIN ccoa_teamwork_item_manage AS Item ON Item.id = Course.project_id
                             WHERE Link.is_delete = 'N' 

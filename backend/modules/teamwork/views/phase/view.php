@@ -87,7 +87,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'类型',
                 'value'=>function($model){
                     /* @var $model Link */
-                    return $model->types[$model->type];
+                    return Link::$types[$model->type];
                 }   
             ],
             [
