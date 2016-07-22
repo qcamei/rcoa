@@ -254,8 +254,7 @@ class TeamworkTool{
                     (SELECT Item.id, Course.id AS course_id,Item.item_type_id,Item.item_id, Item.item_child_id,Course.team_id,Course.`status` 
                         FROM ccoa_teamwork_item_manage AS Item  
                         LEFT JOIN ccoa_teamwork_course_manage AS Course ON Course.project_id = Item.id) AS Item_course
-                LEFT JOIN ccoa_teamwork_course_link AS Course_link ON Item_course.course_id = Course_link.course_id 
-                WHERE Course_link.is_delete = 'N'
+                LEFT JOIN ccoa_teamwork_course_link AS Course_link ON (Item_course.course_id = Course_link.course_id AND  Course_link.is_delete = 'N')
                 GROUP BY Item_course.id ";
         $itemProgress = ItemManage::findBySql($sql)
                         ->with('courseManages')
