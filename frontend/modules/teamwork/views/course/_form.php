@@ -4,6 +4,7 @@ use common\models\teamwork\CourseManage;
 use kartik\datecontrol\DateControl;
 use kartik\widgets\Select2;
 use kartik\widgets\TouchSpin;
+use wskeee\utils\DateUtil;
 use yii\helpers\Html;
 use yii\web\JsExpression;
 use yii\web\View;
@@ -76,32 +77,9 @@ use yii\widgets\ActiveForm;
         ],
     ]) ?>
     
-    <?php
-        echo Html::beginTag('div', ['class' => 'form-group field-coursemanage-video_length has-success']);
-            echo Html::beginTag('label', [
-                    'class' => 'col-lg-1 col-md-1 control-label', 
-                    'style' => 'color: #999999; font-weight: normal; padding-right:0;padding-left:10px;',
-                    'for' => 'coursemanage-video_length'
-                ]).Yii::t('rcoa/teamwork', 'Video Length').Html::endTag('label');
-            echo Html::beginTag('div', ['class' => 'col-sm-4']);
-                echo DateControl::widget([
-                    'name' => 'CourseManage[video_length]',
-                    'value' => $model->isNewRecord ? date('H:i:s', strtotime('01:00:00')) : date('H:i:s', $model->video_length), 
-                    'type'=> DateControl::FORMAT_TIME,
-                    'displayFormat' => 'H:i:s',
-                    'saveFormat' => 'H:i:s',
-                    'ajaxConversion'=> true,
-                    'autoWidget' => true,
-                    'options' => [
-                        'pluginOptions' => [
-                            'autoclose' => true,
-                        ],
-                    ],
-                ]);
-                echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']).Html::beginTag('div', ['class' => 'help-block']).Html::endTag('div').Html::endTag('div');
-            echo Html::endTag('div');
-        echo Html::endTag('div');
-    ?>
+    
+    <?= $form->field($model, 'video_length')->textInput(['value'=>  DateUtil::intToTime($model->video_length)])->hint('aaaa')?>
+    
     
     <?= $form->field($model, 'question_mete')->widget(TouchSpin::classname(),  [
         'pluginOptions' => [

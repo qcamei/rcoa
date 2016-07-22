@@ -1,6 +1,7 @@
 <?php
 
 use common\models\teamwork\CourseManage;
+use wskeee\utils\DateUtil;
 use yii\web\View;
 use yii\widgets\DetailView;
 
@@ -45,19 +46,19 @@ use yii\widgets\DetailView;
             ],
             [
                 'attribute' => 'video_length',
-                'value' => empty($model->video_length) ? '空' : date('H:i:s', $model->video_length),
+                'value' => DateUtil::intToTime($model->video_length),
             ],
             [
                 'attribute' => 'question_mete',
-                'value' => empty($model->question_mete) ? '空' : $model->question_mete,
+                'value' => $model->question_mete,
             ],
             [
                 'attribute' => 'case_number',
-                'value' => empty($model->case_number) ? '空' : $model->case_number,
+                'value' => $model->case_number,
             ],
             [
                 'attribute' => 'activity_number',
-                'value' => empty($model->activity_number) ? '空' : $model->activity_number,
+                'value' => $model->activity_number,
             ],
             ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">开发信息</span>','value' => ''],
             [

@@ -109,7 +109,7 @@ class CourseManage extends ActiveRecord
     public function rules()
     {
         return [
-            [['project_id', 'course_id', 'credit', 'lession_time', 'video_length', 'question_mete', 'case_number', 'activity_number', 'team_id', 'created_at', 'updated_at', 'status'], 'integer'],
+            [['project_id', 'course_id', 'credit', 'lession_time',  'question_mete', 'case_number', 'activity_number', 'team_id', 'created_at', 'updated_at', 'status'], 'integer'],
             [['project_id', 'course_id', 'credit', 'lession_time', 'teacher',  'weekly_editors_people'], 'required'],
             [['video_length', 'question_mete', 'case_number', 'activity_number', 'path'], 'required', 'on' => [self::SCENARIO_CARRYOUT]],
             [['teacher', 'create_by', 'weekly_editors_people', 'course_ops'], 'string', 'max' => 36],
@@ -122,7 +122,38 @@ class CourseManage extends ActiveRecord
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Item::className(), 'targetAttribute' => ['course_id' => 'id']],
             [['teacher'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['teacher' => 'id']],
             [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => ItemManage::className(), 'targetAttribute' => ['project_id' => 'id']],
+            [['video_length'],'checkVideoLen'],
         ];
+    }
+    /**
+     * 检验视频时长格式是否正确
+     * @param string $attribute     video_length
+     * @param string $params
+     */
+    public function checkVideoLen($attribute, $params)
+    {
+        $videolength = $this->video_length;
+        if(!is_numeric($videolength))
+        {
+            if(strpos($videolength ,":"))
+            {
+                $times = explode(":", $videolength);
+            }else if(strpos($videolength ,'：')){
+                $times = explode(":", $videolength);
+            }else
+            {
+                $this->addError($attribute, "格式不正确，请按 00:00:00 格式录入!");
+                return;
+            }
+            $h = (int)$times[0] ;
+            $m = (int)$times[1];
+            $s = count($times) == 3 ? (int)$times[2] : 0;
+            $videolength = $h*3600+$m*60+$s;
+            if($videolength>=0)
+                $this->video_length = $videolength;
+            else
+                $this->addError($attribute, Yii::t('rcoa/teamwork', 'ID')."不可以小于0");
+        }
     }
 
     /**

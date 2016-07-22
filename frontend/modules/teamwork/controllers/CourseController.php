@@ -187,8 +187,8 @@ class CourseController extends Controller
            throw new NotAcceptableHttpException('只有队长才可以【编辑】课程 or 该课程隶属于自己');
         if(!$model->getIsNormal())
             throw new NotAcceptableHttpException('该课程现在状态为：'.$model->getStatusName());
-        if ($model->load($post)) {
-            $model->video_length = strtotime($post['CourseManage']['video_length']);
+        if ($model->load($post) && $model->validate()) {
+            $model->video_length = $post['CourseManage']['video_length'];
             
             /** 开启事务 */
             $trans = Yii::$app->db->beginTransaction();
@@ -237,10 +237,16 @@ class CourseController extends Controller
         if($model != null && $model->getIsNormal() && $twTool->getIsLeader() && $model->create_by == \Yii::$app->user->id && $model->progress == 1){
             $model->real_carry_out = date('Y-m-d H:i', time());
             $model->status = ItemManage::STATUS_CARRY_OUT;
-            if ($model->save()){
+            if ($model->validate() && $model->save()){
                 $this->redirect(['view', 'id' => $model->id]);
             } else {
-                throw new NotFoundHttpException ($model->getFirstErrors());
+                $errors = [];
+                foreach($model->getErrors() as $error){
+                    foreach($error as $name=>$value){
+                        $errors[] = $value;
+                    }
+                }
+                throw new NotFoundHttpException (implode($errors));
             }
         }  else {
             throw new NotFoundHttpException ('必须满足以下条件课程才可以操作【完成】：1、状态必须是【在建】, '
