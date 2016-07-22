@@ -1,9 +1,9 @@
 <?php
 
+use common\widgets\ueditor\UeditorAsset;
 use common\wskeee\filemanage\FileManageAsset;
 use kartik\widgets\Select2;
 use wskeee\filemanage\models\FileManage;
-use wskeee\filemanage\models\FileManageOwner;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
@@ -157,4 +157,6 @@ function uploadFile(){
 
 <?php
     FileManageAsset::register($this);
+    UeditorAsset::register($this);
 ?>
+

@@ -56,8 +56,8 @@ AppAsset::register($this);
                  ['label' => '场地管理', 'url' => '/shoot/site'],
             ]
         ];
-        $menuItems[] = ['label' => '多媒体制作','url' => '#'];
-        $menuItems[] = ['label' => '评优','url' => '#'];
+        /*$menuItems[] = ['label' => '多媒体制作','url' => '#'];
+        $menuItems[] = ['label' => '评优','url' => '#'];*/
         $menuItems[] = [
             'label' => '专家库',
             'items' => [

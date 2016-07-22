@@ -76,7 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
              Html::a('新增', ['summary/create', 'course_id' => $model->id], ['class' => 'btn btn-primary']).Html::endTag('div');
         /* @var $model CourseManage */
         echo Html::beginTag('div', ['class' => 'col-lg-12 col-md-12 col-sm-4', 'style' => 'padding:0']).
-             Html::beginTag('div',['class' => 'summar']).'<p>时间：'.$createdAt.'</p>'.
+             Html::beginTag('div',['class' => 'summar']).'<p class ="time">时间：'.$createdAt.'</p>'.
              $content. 
              Html::endTag('div').Html::endTag('div');
     ?>

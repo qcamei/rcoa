@@ -19,6 +19,7 @@ use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 use yii\web\Controller;
 use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
@@ -452,7 +453,7 @@ class BookdetailController extends Controller
         $newRoleNames = [];
         foreach ($roleNames as $roleNamesValue){
             $newRoleNames[] = $roleNamesValue->primary_foreign == 1 ? 
-                           '<span style="color:blue;">' . $roleNamesValue->u->nickname . '( '.$roleNamesValue->u->phone.' )</span>' :   //设置主角色
+                           '<span style="color:blue;">' . $roleNamesValue->u->nickname . '( '.  Html::a($roleNamesValue->u->phone, 'tel:'.$roleNamesValue->u->phone).' )</span>' :   //设置主角色
                            $roleNamesValue->u->nickname;
         }
         return $newRoleNames;

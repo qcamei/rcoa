@@ -12,6 +12,7 @@ use yii\web\View;
 $this->title = Yii::t('rcoa/teamwork', 'Create Course Summary');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/teamwork', 'Course Summaries'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 
 <div class="title">
@@ -24,6 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
+        'weekly' => $weekly,
     ]) ?>
 
 </div>

@@ -24,6 +24,7 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa/teamwork', 'Update');
 
     <?= $this->render('_form', [
         'model' => $model,
+        'weekly' => $weekly,
     ]) ?>
 
 </div>

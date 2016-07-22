@@ -46,7 +46,7 @@ class CourseSummary extends ActiveRecord
             [['course_id', 'create_time'], 'required'],
             [['course_id', 'created_at', 'updated_at'], 'integer'],
             [['create_time'], 'string', 'max' => 60],
-            [['content'], 'string', 'max' => 255],
+            [['content'], 'string'],
             [['create_by'], 'string', 'max' => 36],
             [['create_by'], 'exist', 'skipOnError' => true, 'targetClass' => CourseManage::className(), 'targetAttribute' => ['create_by' => 'weekly_editors_people']],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => CourseManage::className(), 'targetAttribute' => ['course_id' => 'id']],
@@ -61,7 +61,7 @@ class CourseSummary extends ActiveRecord
         return [
             'course_id' => Yii::t('rcoa/teamwork', 'Course ID'),
             'create_time' => Yii::t('rcoa/teamwork', 'Create Time'),
-            'content' => Yii::t('rcoa/teamwork', 'Content'),
+            'content' => Yii::t('rcoa', 'Content'),
             'create_by' => Yii::t('rcoa', 'Create By'),
             'created_at' => Yii::t('rcoa/teamwork', 'Created At'),
             'updated_at' => Yii::t('rcoa/teamwork', 'Updated At'),

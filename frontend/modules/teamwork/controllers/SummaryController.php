@@ -92,12 +92,14 @@ class SummaryController extends Controller
         
         if(!$model->course->getIsNormal() || !$twTool->getIsLeader())
             throw new NotAcceptableHttpException('只有队长 or 状态为正常才可以【创建总结】');
-         
+       
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->getErrors();
             return $this->redirect(['course/view', 'id' => $model->course_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'weekly' => file_get_contents('./filedata/teamwork/weekly/weekly_template.html'),       //获取文件内容
             ]);
         }
     }
@@ -127,6 +129,7 @@ class SummaryController extends Controller
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'weekly' => $model->content,
             ]);
         }
     }

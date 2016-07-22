@@ -37,7 +37,8 @@ use yii\widgets\DetailView;
             ],
             [
                 'attribute' => 'u_booker',
-                'value' => $model->booker->nickname. '( '.$model->booker->phone.' )',
+                'format' => 'raw',
+                'value' => $model->booker->nickname. '('.  Html::a($model->booker->phone, 'tel:'.$model->booker->phone).' )',
             ],
             [
                 'attribute' => 'u_contacter',
@@ -85,11 +86,13 @@ use yii\widgets\DetailView;
             ],
             [
                 'attribute' => 'u_teacher',
-                'value' => $model->teacher->user->nickname.'('. $model->teacher->user->phone .')',
+                'format' => 'raw',
+                'value' => $model->teacher->user->nickname.'('. Html::a($model->teacher->user->phone, 'tel:'.$model->teacher->user->phone) .')',
             ],
             [
                 'attribute' => 'teacher_email',
-                'value' => $model->teacher->user->email,
+                'format' => 'raw',
+                'value' => Html::a($model->teacher->user->email, 'mailto:'.$model->teacher->user->email),
             ],
             
             

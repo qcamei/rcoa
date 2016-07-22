@@ -1,4 +1,5 @@
 <?php
+
 namespace common\wskeee\filemanage;
 
 use yii\web\AssetBundle;
