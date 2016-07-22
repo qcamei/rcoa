@@ -62,14 +62,17 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'credit')->widget(TouchSpin::classname(),  [
         'pluginOptions' => [
             'placeholder' => '学分 ...',
-            'min' => 1,
+            'min' => 0,
+            'max' => 1000000000000000,
         ],
     ]) ?>
     
     <?= $form->field($model, 'lession_time')->widget(TouchSpin::classname(),  [
         'pluginOptions' => [
             'placeholder' => '学时 ...',
-            'min' => 1,
+            'min' => 0,
+            'max' => 1000000000000000,
+            
         ],
     ]) ?>
     
@@ -103,21 +106,24 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'question_mete')->widget(TouchSpin::classname(),  [
         'pluginOptions' => [
             'placeholder' => '题量 ...',
-            'min' => 1,
+            'min' => 0,
+            'max' => 1000000000000000,
         ],
     ]) ?>
     
     <?= $form->field($model, 'case_number')->widget(TouchSpin::classname(),  [
         'pluginOptions' => [
             'placeholder' => '案例数...',
-            'min' => 1,
+            'min' => 0,
+            'max' => 1000000000000000,
         ],
     ]) ?>
     
     <?= $form->field($model, 'activity_number')->widget(TouchSpin::classname(),  [
         'pluginOptions' => [
             'placeholder' => '活动数 ...',
-            'min' => 1,
+            'min' => 0,
+            'max' => 1000000000000000,
         ],
     ]) ?>
     

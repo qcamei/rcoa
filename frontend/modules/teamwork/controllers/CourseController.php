@@ -240,11 +240,7 @@ class CourseController extends Controller
             if ($model->save()){
                 $this->redirect(['view', 'id' => $model->id]);
             } else {
-                throw new NotFoundHttpException ('以下属性不能为空：'.Yii::t('rcoa/teamwork', 'Video Length').', '
-                        .Yii::t('rcoa/teamwork', 'Question Mete').', '
-                        .Yii::t('rcoa/teamwork', 'Case Number').', '
-                        .Yii::t('rcoa/teamwork', 'Activity Number').', '
-                        .Yii::t('rcoa/teamwork', 'Path'));
+                throw new NotFoundHttpException ($model->getFirstErrors());
             }
         }  else {
             throw new NotFoundHttpException ('必须满足以下条件课程才可以操作【完成】：1、状态必须是【在建】, '

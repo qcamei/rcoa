@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa/teamwork', 'Update');
                 ],
                 [
                     'label' => Yii::t('rcoa/teamwork', 'Update Course Summary'),
-                    'template' => '<li class="course-name" style="width:112px;">{link}</li>',
+                    'template' => '<li class="course-name active" style="width:112px;">{link}</li>',
                 ],
             ],
         ]);?>
