@@ -39,9 +39,17 @@ use yii\widgets\ActiveForm;
 
  $js =
 <<<JS
-    
     $('#container').removeClass('form-control');
-    var ue = UE.getEditor('container');
+    var ue = UE.getEditor('container', {toolbars:[
+        [
+            'fullscreen', 'source', '|', 'undo', 'redo', '|',  
+            'bold', 'italic', 'underline','fontborder', 'strikethrough', 'removeformat', 'formatmatch', '|', 
+            'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',
+            'paragraph', 'fontfamily', 'fontsize', '|',
+            'justifyleft', 'justifyright' , 'justifycenter', 'justifyjustify', '|',
+            'simpleupload', 'horizontal'
+        ]
+    ]});
     ue.ready(function(){
         ue.setContent('$weekly');
     });
