@@ -21,15 +21,9 @@ class FileManageAsset extends AssetBundle
     public $sourcePath = '@common/wskeee/filemanage/assets';
     public $css = [
        'css/filemanage.css',
-       //'css/default.css',
-       //'css/component.css',
     ];
     public $js = [
-        'js/ueditor/ueditor.config.js',
-        'js/ueditor/ueditor.all.js',
         'js/classie.js',
-        'http://eefile.gzedu.com/js/lhgdialog.min.js',
-        'http://eefile.gzedu.com/js/json2.js',
     ];
     public $depends = [
         'yii\web\YiiAsset'
