@@ -138,7 +138,6 @@ class TeamworkTool{
                 ->leftJoin(['Course_phase' => CoursePhase::tableName()], 'Course_phase.name = Phase.name')
                 ->where(['course_id' => $course_id])
                 ->andFilterWhere(['template_type_id' => $templateType])
-               
                 ->all();
         
         $values = [];

@@ -56,6 +56,7 @@ class CourseLink extends ActiveRecord
          return [
             [['course_id', 'course_phase_id', ], 'required'],
             [['course_id', 'course_phase_id', 'type', 'total', 'completed', 'created_at', 'updated_at', 'index'], 'integer'],
+            [['total'], 'integer', 'min' => 1],
             [['is_delete'], 'string', 'max' => 4],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => CourseManage::className(), 'targetAttribute' => ['course_id' => 'id']],
             [['course_phase_id'], 'exist', 'skipOnError' => true, 'targetClass' => CoursePhase::className(), 'targetAttribute' => ['course_phase_id' => 'id']],
