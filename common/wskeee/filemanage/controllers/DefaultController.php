@@ -242,6 +242,7 @@ class DefaultController extends Controller
         $fileSuffix = pathinfo($model->file_link, PATHINFO_EXTENSION);
         if($fileSuffix == null)
             return $model->fileImageMap[$model->type];
+        /** 判断上传的文件格式(键值)是否在数组里面 */
         if(array_key_exists($fileSuffix, $model->fileImageMap[$model->type])){
             return $model->fileImageMap[$model->type][$fileSuffix];
         }  else {
