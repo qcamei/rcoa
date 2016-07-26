@@ -4,6 +4,7 @@ namespace frontend\modules\teamwork\controllers;
 
 use common\models\expert\Expert;
 use common\models\team\TeamMember;
+use common\models\teamwork\CourseAnnex;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\CourseProducer;
 use common\models\teamwork\CourseSummary;
@@ -112,6 +113,7 @@ class CourseController extends Controller
             'createTime' => empty($result) ? null : $result->create_time,
             'createdAt' => empty($result)? '无' : date('Y-m-d H:i', $result->created_at),
             'content' => empty($result)? '无' :$result->content,
+            'annex' => $this->getCourseAnnex($model->id),
         ]);
     }
 
@@ -185,6 +187,7 @@ class CourseController extends Controller
                 'weeklyEditors' => $this->getAssignWeeklyEditors($model->id),
                 'producerList' => $this->getTeamMemberList(),
                 'producer' => $this->getAssignProducers($model->id),
+                'annex' => $this->getCourseAnnex($model->id),
             ]);
         }
         
@@ -425,9 +428,14 @@ class CourseController extends Controller
         return ArrayHelper::map($createTime, 'create_time', 'create_time');
     }
     
-    public function getCourseAnnex()
+    
+    public function getCourseAnnex($course_id)
     {
-        
+        $annex = CourseAnnex::find()
+                ->where(['course_id' => $course_id])
+                ->with('course')
+                ->all();
+        return $annex;
     }
 
     /**

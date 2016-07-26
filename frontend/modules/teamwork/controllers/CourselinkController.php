@@ -173,8 +173,8 @@ class CourselinkController extends Controller
         $model = $this->findModel($id);
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
-        if(!$twTool->getIsLeader() || $model->course->create_by !== \Yii::$app->user->id)
-            throw new NotAcceptableHttpException('只有队长 or 该课程隶属于自己才可以操作');
+        if(!$twTool->getIsUserBelongTeam($model->course_id))
+            throw new NotAcceptableHttpException('该课程团队下成员才可以操作');
             
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['progress', 'course_id' => $model->course_id]);

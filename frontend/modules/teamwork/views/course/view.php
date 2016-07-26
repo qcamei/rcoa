@@ -44,6 +44,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'producer' => $producer,
     ]) ?>
     
+    <span>课程附件：</span>
+    <?php
+        foreach ($annex as $value) {
+            echo Html::a($value->name, ['annex/view', 'id' => $value->id], ['style' => 'margin-right:10px;']);
+        }
+    ?>
+    
     <h4> 开发周报：</h4>
     <span style="color: blue;">本周开发者：<?= empty($model->weekly_editors_people)? '无' : 
             $model->weeklyEditorsPeople->u->nickname.' ('.$model->weeklyEditorsPeople->position.')' ?>
@@ -85,7 +92,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="controlbar">
     <div class="container">
-        <?= Html::a(Yii::t('rcoa', 'Back'), ['index'], ['class' => 'btn btn-default',/*'onclick'=>'history.go(-1)'*/]) ?>
+        <?= Html::a(Yii::t('rcoa', 'Back'), '#', ['class' => 'btn btn-default','onclick'=>'history.go(-1)']) ?>
         <?php
             /**
              * 编辑 按钮显示必须满足以下条件：

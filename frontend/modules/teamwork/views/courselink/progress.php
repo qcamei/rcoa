@@ -39,6 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <th style="max-width:434px;min-width:140px;padding:8px;">环节</th>
                 <th class="hidden-xs" style="width:130px;padding:8px;">总量</th>
                 <th class="hidden-xs" style="width:171px;padding:8px;">已完成</th>
+                <th class="hidden-xs" style="width:130px;padding:8px;">单位</th>
                 <th style="width: 143px;padding:8px;">进度</th>
                 <th style="width:80px;padding:8px;">操作</th>
             </tr>
@@ -46,12 +47,13 @@ $this->params['breadcrumbs'][] = $this->title;
         </thead>
         <tbody>
         <?php foreach ($coursePhase as $phase) {
-            $className = $twTool->getIsLeader() && $phase->course->create_by == Yii::$app->user->id ?
+            $className = $twTool->getIsUserBelongTeam($phase->course_id) ?
                         'btn btn-primary' : 'btn btn-primary disabled';
             /* @var $phase CoursePhase */
             echo '<tr style="background-color:#eee">
                 <td>'.$phase->name.'</td>
                 <td></td>
+                <td class="hidden-xs"></td>
                 <td class="hidden-xs"></td>
                 <td class="hidden-xs"></td>
                 <td>'.Html::beginTag('div', ['class' => 'progress table-list-progress']).
@@ -71,6 +73,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <td>'.$link->name.'</td>
                     <td class="hidden-xs">'.$link->total.'</td>
                     <td class="hidden-xs">'.$link->completed.'</td>
+                    <td class="hidden-xs">'.$link->unit.'</td>
                     <td>'.Html::beginTag('div', ['class' => 'progress table-list-progress']).
                                 Html::beginTag('div', [
                                     'class' => 'progress-bar', 
@@ -91,7 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="controlbar">
     <div class="container">
-        <?= Html::a(Yii::t('rcoa', 'Back'), ['course/index'], ['class' => 'btn btn-default']) ?>
+        <?= Html::a(Yii::t('rcoa', 'Back'), '#', ['class' => 'btn btn-default', 'onclick'=>'history.go(-1)']) ?>
     </div>
 </div>
 

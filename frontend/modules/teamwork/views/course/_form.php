@@ -261,7 +261,18 @@ use yii\widgets\ActiveForm;
                 'style' => 'color: #999999; font-weight: normal; padding-right: 0;',
             ]).Html::endTag('label');
             echo Html::beginTag('div', ['id' => 'courseannex', 'class' => 'col-lg-10 col-md-10']);
-                
+                if(!$model->isNewRecord){
+                    foreach ($annex as $value) {
+                        echo  Html::textInput('CourseAnnex[name][]', $value->name, [
+                            'type' => 'text',
+                            'id' => 'courseannex-name',
+                            'class' => 'form-control',
+                        ]);//.Html::img(['/filedata/teamwork/image/delete.png'], ['class' => 'form-img']);
+                        echo Html::hiddenInput('CourseAnnex[path][]', $value->path, [
+                            'id' => 'courseannex-path',
+                        ]);
+                    }
+                }
             echo Html::endTag('div');
             echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']).Html::beginTag('div', ['class' => 'help-block'])
                 .Html::endTag('div').Html::endTag('div');
@@ -309,7 +320,9 @@ $js =
             $("#select2-coursemanage-weekly_editors_people-container").html("请选择...");  
         }  
     }    
-
+    $('.form-img').click(function(){
+        
+    });
     
 JS;
     $this->registerJs($js,  View::POS_READY);
@@ -350,6 +363,7 @@ function uploadFile(){
                     }
                     for(var i = 0; i < fileList.length; i++){
                         var inputText = '<input type="text" name="CourseAnnex[name][]" id="courseannex-name" class="form-control">';
+                        //<img class="form-img" src="/filedata/teamwork/image/delete.png">';
                         var inputHidden = '<input type="hidden" name="CourseAnnex[path][]" id="courseannex-path">';
                         if(i == 0){
                             $(inputText).val(fileName.join('')).appendTo($("#courseannex"));

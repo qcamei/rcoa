@@ -32,6 +32,7 @@ return[
     'Course Progress' => '课程进度',
     'Create Course Phase Link' => '课程配置-新增-阶段-环节',
     'Update Course Phase Link' => '课程配置-编辑-阶段-环节',
+    'Course Annexes' => '课程附件',
     'Items' => '项目',
     'Courses' => '课程',
     'Create Course' => '课程添加',

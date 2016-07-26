@@ -90,17 +90,18 @@ class SummaryController extends Controller
         if(!empty($result))
             return $this->redirect(['update', 'course_id' => $model->course_id, 'create_time' => $result->create_time]);
         
-        if(!$model->course->getIsNormal() || !$twTool->getIsLeader())
-            throw new NotAcceptableHttpException('只有队长 or 状态为正常才可以【创建总结】');
-       
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->getErrors();
-            return $this->redirect(['course/view', 'id' => $model->course_id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-                'weekly' => file_get_contents('./filedata/teamwork/weekly/weekly_template.html'),       //获取文件内容
-            ]);
+        if($model->course->getIsNormal() && ($twTool->getIsLeader() || $model->course->weekly_editors_people == \Yii::$app->user->id)){
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                $model->getErrors();
+                return $this->redirect(['course/view', 'id' => $model->course_id]);
+            } else {
+                return $this->render('create', [
+                    'model' => $model,
+                    'weekly' => file_get_contents('./filedata/teamwork/weekly/weekly_template.html'),       //获取文件内容
+                ]);
+            }
+        }else{
+            throw new NotAcceptableHttpException('只有队长 or 指定周报编辑人 or 状态为正常才可以【创建周报】');
         }
     }
 
@@ -118,19 +119,19 @@ class SummaryController extends Controller
          /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
         $model = $this->findModel($course_id, $create_time);
-        //$course = CourseManage::findOne(['id' => $model->course_id]);
         $model->create_by = $model->weeklyCreateBy->weekly_editors_people;
-         
-        if(!$model->course->getIsNormal() || !$twTool->getIsLeader())
-            throw new NotAcceptableHttpException('只有队长 or 状态为正常才可以【编辑总结】');
-       
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['course/view', 'id' => $model->course_id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-                'weekly' => $model->content,
-            ]);
+        
+        if($model->course->getIsNormal() && ($twTool->getIsLeader() || $model->course->weekly_editors_people == \Yii::$app->user->id)){
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['course/view', 'id' => $model->course_id]);
+            } else {
+                return $this->render('update', [
+                    'model' => $model,
+                    'weekly' => $model->content,
+                ]);
+            }
+        }else {
+            throw new NotAcceptableHttpException('只有队长 or 指定周报编辑人 or 状态为正常才可以【编辑周报】');
         }
     }
 

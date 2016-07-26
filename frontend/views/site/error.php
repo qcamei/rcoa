@@ -20,7 +20,7 @@ $this->title = $name;
         </div>
         
         <p>
-            <?=  Html::a('返回', '', ['onclick'=>'history.go(-1)'])?>
+            <?=  Html::a('返回', '#', ['onclick'=>'history.go(-1)'])?>
         </p>
         <p>
             很抱歉！服务器在处理您的请求时发生了错误！

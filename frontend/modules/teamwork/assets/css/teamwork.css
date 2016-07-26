@@ -13,7 +13,7 @@ and open the template in the editor.
  */
 
 .content {
-    padding: 50px 0 20px !important;
+    padding: 50px 5px 20px !important;
 }
 .container.item-manage{
     padding-left: 0px;
@@ -269,7 +269,7 @@ and open the template in the editor.
     line-height: 55px;
 }
 .footer-item-list .footer-item-bg{
-    background-color: #ebcccc;
+    background-color: #fff;
 }
 .footer-item-list .footer-item-right{
     float: right;
@@ -289,7 +289,7 @@ and open the template in the editor.
     margin-right: 5px;
 }
 .footer-item-list a:hover, a:focus {
-    background-color: #ebcccc;
+    background-color: rgba(255, 255, 255, 0.46);;
     text-decoration: blink;
 }
 
@@ -303,6 +303,14 @@ and open the template in the editor.
     border-radius: 5px;
 }
 
+/**
+ * 课程表单页样式
+ */
+.form-img {
+    position: absolute ;
+    right: 10px;
+    top: -5px;
+}
 /**
  * 任务详细页样式 
  */
@@ -371,7 +379,6 @@ and open the template in the editor.
 /**
  * 课程进度录入页面样式
  */
-
 #myModal {
     padding-right: 0px !important;
 }
@@ -384,4 +391,11 @@ and open the template in the editor.
 }
 #ex1Slider .slider-selection {
 	background: #BABABA;
+}
+
+/**
+ * 课程附件详情页样式
+ */
+.course-annex-view iframe {
+    border: none;
 }

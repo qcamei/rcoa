@@ -3,7 +3,8 @@
 use common\models\teamwork\CourseLink;
 use common\models\teamwork\Link;
 use frontend\modules\teamwork\TwAsset;
-use kartik\slider\Slider;
+use kartik\widgets\SwitchInput;
+use kartik\widgets\TouchSpin;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
@@ -40,23 +41,48 @@ use yii\widgets\ActiveForm;
         ], 
     ]); ?>
 
-    <?= $form->field($model, 'total')->textInput([
-        'type' => 'number',
-        'id' => 'courselink-total', $model->type === Link::AMOUNT ? '' : 'disabled' => 'disabled']) ?>
-
-    <?= $form->field($model, 'completed')->widget(Slider::classname(), [
-        'value'=>$model->completed,
-        'options' => [
-            'style' => 'width:100%'
-        ],
-        'pluginOptions'=>[
-            'min'=>0,
-            'max'=> $model->total,
-            'step'=>1,
-            'tooltip'=>'always' 
-        ],
-    ]) ?>
-
+    <?php
+        if($model->type == Link::AMOUNT){
+            echo Html::beginTag('div', ['class' => 'form-group field-courselink-total']);
+                echo Html::beginTag('label', [
+                    'class' => 'col-lg-1 col-md-1 control-label',
+                    'style' => 'color: #999999; font-weight: normal; padding-left: 0; padding-right: 0; float:left',
+                    'for' => 'courselink-total',
+                ]).Yii::t('rcoa/teamwork', 'Total').Html::endTag('label');
+                echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']);
+                    echo Html::textInput('CourseLink[total]', $model->total, [
+                        'id' => 'courselink-total',
+                        'class' => 'form-control',
+                        'type' => 'number',
+                        'style' => 'float:left',
+                    ]);
+                echo Html::endTag('div').'<span style="float:left;display: block;padding: 5px;">'.$model->unit.'</span>';
+                echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']).Html::beginTag('div',['class' => 'help-block']);
+                echo Html::endTag('div').Html::endTag('div');
+            echo Html::endTag('div');
+            
+            echo $form->field($model, 'completed')->widget(TouchSpin::classname(),  [
+                    'value' =>$model->completed,
+                    'pluginOptions' => [
+                        'placeholder' => '已完成数 ...',
+                        'min' => 0,
+                        'max' => $model->total,
+                    ],
+                ]);
+        }else {
+            echo $form->field($model, 'completed')->widget(SwitchInput::classname(),[
+                'containerOptions' => [
+                    'style' => 'padding-left:0px;padding-right:0px;',
+                ],
+                'pluginOptions' => [
+                    'size' => 'small',
+                    'onText' => 'ON',
+                    'offText' => 'OFF',
+                ]
+            ])->label('状态');
+        }
+    ?>
+      
     <?php ActiveForm::end(); ?>
 
 </div>
@@ -77,10 +103,6 @@ $js =
         $('#courselink-completed').slider({max:maxValue,value:Number(oldValue)});  
         $('#courselink-completed').slider('refresh');  
     });  
-
-
-
-    
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>

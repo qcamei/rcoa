@@ -23,7 +23,7 @@ class TeamworkTool{
      * 模版类型
      * @var integer 
      */
-    public $templateType = null;
+    public $templateType = 1;
 
     /**
      * 获取一周时间
@@ -54,7 +54,6 @@ class TeamworkTool{
     public function getHotelTeam($create_by)
     {
         $create_by = TeamMember::findOne(['u_id' => $create_by]);
-         
         return $create_by->team_id;
     }
 
@@ -76,6 +75,24 @@ class TeamworkTool{
         return false;
     }
     
+    /**
+     * 获取当前用户是否隶属于该课程下的团队成员
+     * @param type $course_id   课程id
+     * @return boolean          true 为是
+     */
+    public function getIsUserBelongTeam($course_id)
+    {
+        $currentUser = TeamMember::findAll(['u_id' => \Yii::$app->user->id]);
+        $courseTeam = CourseManage::findOne(['id' => $course_id]);
+        if(!empty($currentUser) || isset($currentUser) || !empty($course_id)){
+            foreach ($currentUser as $value) {
+                if($value->team_id == $courseTeam->team_id)
+                    return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * 获取课程时长总和
      * @return type
@@ -266,7 +283,9 @@ class TeamworkTool{
         {  
             if($model->save()){
                 CourseProducer::deleteAll(['course_id' => $model->id]);
+                CourseAnnex::deleteAll(['course_id' => $model->id]);
                 $this->saveCourseProducer($model->id, $post['producer']);
+                $this->saveCourseAnnex($model->id, $post['CourseAnnex']);
             }
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
