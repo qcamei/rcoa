@@ -5,6 +5,7 @@ namespace common\models\teamwork;
 use common\models\team\Team;
 use common\models\team\TeamMember;
 use common\models\teamwork\ItemManage;
+use common\models\teamwork\CourseAnnex;
 use common\models\User;
 use wskeee\framework\models\Item;
 use Yii;
@@ -38,6 +39,7 @@ use yii\db\ActiveRecord;
  * @property string $path                       存储服务器路径
  * @property integer $progress                  进度
  *
+ * @property CourseAnnex $courseAnnex               获取附件
  * @property CourseLink[] $courseLinks              获取所有课程环节
  * @property TeamMember $courseOps                  获取课程运维负责人
  * @property Team $team                             获取团队
@@ -185,6 +187,15 @@ class CourseManage extends ActiveRecord
             'des' => Yii::t('rcoa/teamwork', 'Des'),
             'path' => Yii::t('rcoa/teamwork', 'Path'),
         ];
+    }
+    
+    /**
+     * 获取附件
+     * @return ActiveQuery
+     */
+    public function getCourseAnnex()
+    {
+        return $this->hasOne(CourseAnnex::className(), ['course_id' => 'id']);
     }
     
     /**

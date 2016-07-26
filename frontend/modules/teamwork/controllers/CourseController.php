@@ -138,23 +138,8 @@ class CourseController extends Controller
         $model->scenario = CourseManage::SCENARIO_DEFAULT;
         if ($model->load($post)) {
             $model->video_length = strtotime($post['CourseManage']['video_length']);
-            /** 开启事务 */
-            $trans = Yii::$app->db->beginTransaction();
-            try
-            {  
-                if($model->save()){
-                    $this->saveCourseProducer($model->id, $post['producer']);
-                    $twTool->addCoursePhase($model->id, $templateType = null);
-                    $twTool->addCourseLink($model->id, $templateType = null);
-                }
-                $trans->commit();  //提交事务
-                Yii::$app->getSession()->setFlash('success','操作成功！');
-                return $this->redirect(['view', 'id' => $model->id]);
-            }catch (Exception $ex) {
-                $trans ->rollBack(); //回滚事务
-                Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
-                $this->render(['create', 'project_id' => $model->project_id]);
-            }
+            $twTool->CreateTask($model, $post);         //创建任务操作
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -189,23 +174,8 @@ class CourseController extends Controller
             throw new NotAcceptableHttpException('该课程现在状态为：'.$model->getStatusName());
         if ($model->load($post) && $model->validate()) {
             $model->video_length = $post['CourseManage']['video_length'];
-            
-            /** 开启事务 */
-            $trans = Yii::$app->db->beginTransaction();
-            try
-            {  
-                if($model->save()){
-                    CourseProducer::deleteAll(['course_id' => $model->id]);
-                    $this->saveCourseProducer($model->id, $post['producer']);
-                }
-                $trans->commit();  //提交事务
-                Yii::$app->getSession()->setFlash('success','操作成功！');
-                return $this->redirect(['view', 'id' => $model->id]);
-            }catch (Exception $ex) {
-                $trans ->rollBack(); //回滚事务
-                Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
-                $this->render(['update', 'id' => $model->id]);
-            }
+            $twTool->UpdateTask($model, $post);         //更新任务操作
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -303,31 +273,6 @@ class CourseController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-    
-    /**
-     * 保存制作人到表里面
-     * @param type $course_id  任务id
-     * @param type $post 
-     */
-    public function saveCourseProducer($course_id, $post){
-        $values = [];
-        /** 重组提交的数据为$values数组 */
-        foreach($post as $value)
-        {
-            $values[] = [
-                'course_id' => $course_id,
-                'producer' => $value,
-            ];
-        }
-        
-        /** 添加$values数组到表里 */
-        Yii::$app->db->createCommand()->batchInsert(CourseProducer::tableName(), 
-        [
-            'course_id',
-            'producer',
-        ], $values)->execute();
-    }
-    
     
     /**
      * 获取课程
@@ -480,6 +425,11 @@ class CourseController extends Controller
         return ArrayHelper::map($createTime, 'create_time', 'create_time');
     }
     
+    public function getCourseAnnex()
+    {
+        
+    }
+
     /**
      * 重组 $model->statusName 数组
      * @param type $model

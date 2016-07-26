@@ -239,9 +239,14 @@ class DefaultController extends Controller
     public function getFileImageMap($model)
     {
         //获取上传文件后缀名
-        $fileSuffix = pathinfo($model->file_link, PATHINFO_EXTENSION);  
-        return $fileSuffix == null ? 
-                $model->fileImageMap[$model->type] : 
-                $model->fileImageMap[$model->type][$fileSuffix];
+        $fileSuffix = pathinfo($model->file_link, PATHINFO_EXTENSION);
+        if($fileSuffix == null)
+            return $model->fileImageMap[$model->type];
+        /** 判断上传的文件格式(键值)是否在数组里面 */
+        if(array_key_exists($fileSuffix, $model->fileImageMap[$model->type])){
+            return $model->fileImageMap[$model->type][$fileSuffix];
+        }  else {
+            throw new NotFoundHttpException('上传文件格式不正确,请重新上传');
+        }
     }
 }

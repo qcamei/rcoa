@@ -75,4 +75,7 @@ return[
     'Statistics-Status'=>'状态',
     'Statistics-Search'=>'统计',
     'Course Ops'=>'运维人员',
+    'Annex' => '附件上传',
+    'Annex Name' => '附件名称',
+    'Annex Path' => '附件路径',
 ];
