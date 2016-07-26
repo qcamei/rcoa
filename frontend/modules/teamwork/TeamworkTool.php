@@ -3,23 +3,28 @@
 namespace frontend\modules\teamwork;
 
 use common\models\team\TeamMember;
+use common\models\teamwork\CourseAnnex;
 use common\models\teamwork\CourseLink;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\CoursePhase;
+use common\models\teamwork\CourseProducer;
 use common\models\teamwork\CourseSummary;
 use common\models\teamwork\ItemManage;
 use common\models\teamwork\Link;
 use common\models\teamwork\Phase;
 use Yii;
+use yii\db\Exception;
 use yii\db\Query;
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 class TeamworkTool{
+    
+    /**
+     * 模版类型
+     * @var integer 
+     */
+    public $templateType = null;
+
     /**
      * 获取一周时间
      * @param type $course_id
@@ -88,6 +93,30 @@ class TeamworkTool{
        
         return array_sum($lessionTime);
     }
+    
+     /**
+     * 保存制作人到表里面
+     * @param type $course_id  任务id
+     * @param type $post 
+     */
+    public function saveCourseProducer($course_id, $post){
+        $values = [];
+        /** 重组提交的数据为$values数组 */
+        foreach($post as $value)
+        {
+            $values[] = [
+                'course_id' => $course_id,
+                'producer' => $value,
+            ];
+        }
+        
+        /** 添加$values数组到表里 */
+        Yii::$app->db->createCommand()->batchInsert(CourseProducer::tableName(), 
+        [
+            'course_id',
+            'producer',
+        ], $values)->execute();
+    }
         
     /**
      * 复制Phase表数据到CoursePhase表
@@ -102,7 +131,6 @@ class TeamworkTool{
                 ->with('templateType')
                 ->with('createBy')
                 ->all();
-       
         $values = [];
         /** 重组提交的数据为$values数组 */
         foreach($phase as $value)
@@ -170,6 +198,84 @@ class TeamworkTool{
         ], $values)->execute();
     }
     
+    /**
+     * 保存课程附件到表里
+     * @param type $course_id
+     * @param type $post
+     */
+    public function saveCourseAnnex($course_id, $post)
+    {
+        $values = [];
+        /** 重组提交的数据为$values数组 */
+        foreach ($post['name'] as $key => $value) {
+           $values[] = [
+               'course_id' => $course_id,
+               'name' => $value,
+               'path' => $post['path'][$key],
+           ];
+        }  
+        
+        /** 添加$values数组到表里 */
+        Yii::$app->db->createCommand()->batchInsert(CourseAnnex::tableName(), 
+        [
+            'course_id',
+            'name',
+            'path',
+        ], $values)->execute();
+    }
+
+    /**
+     * 创建任务操作
+     * @param type $model
+     * @param type $post
+     * @return type
+     */
+    public function CreateTask($model, $post)
+    {
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {  
+            /* @var $model CourseManage*/
+            if($model->save()){
+                $this->saveCourseProducer($model->id, $post['producer']);
+                $this->addCoursePhase($model->id, $this->templateType);
+                $this->addCourseLink($model->id, $this->templateType);
+                $this->saveCourseAnnex($model->id, $post['CourseAnnex']);
+            }
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        }catch (Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            $model->getErrors();
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
+        }
+    }
+    
+    /**
+     * 更新任务操作
+     * @param type $model
+     * @param type $post
+     * @return type
+     */
+    public function UpdateTask($model, $post)
+    {
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {  
+            if($model->save()){
+                CourseProducer::deleteAll(['course_id' => $model->id]);
+                $this->saveCourseProducer($model->id, $post['producer']);
+            }
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        }catch (Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
+        }
+    }
+
     /**
      * 获取课程阶段进度
      * @param type $courseId   课程ID

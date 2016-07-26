@@ -31,11 +31,13 @@ function uploadFile(){
             callback: function (win) {
                 var fileList = win['FILELIST'], 
                         filelist = [],
+                        fileName = [],
                         NameMD5List = [];
 
                 if(fileList && fileList.length > 0){
                     for(var i = 0; i < fileList.length; i++){
                         filelist.push(fileList[i].FileURL);
+                        fileName.push(fileList[i].CFileName);
                         NameMD5List.push(fileList[i].FileMD5);
                     }
                     $('#files').val(filelist.join(''));

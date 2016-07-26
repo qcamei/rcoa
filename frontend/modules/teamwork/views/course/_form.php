@@ -1,6 +1,7 @@
 <?php
 
 use common\models\teamwork\CourseManage;
+use common\widgets\uploadFile\UploadFileAsset;
 use kartik\datecontrol\DateControl;
 use kartik\widgets\Select2;
 use kartik\widgets\TouchSpin;
@@ -232,13 +233,48 @@ use yii\widgets\ActiveForm;
     
     <?= $form->field($model, 'des')->textarea(['rows' => 4]) ?>
     
+    <?php
+        //附件上传按钮
+        echo Html::beginTag('div', ['class' => 'form-group field-courseannex-annex', 'style' => 'margin-bottom:5px;']);
+            echo Html::beginTag('label', [
+                'class' => 'col-lg-1 col-md-1 control-label',
+                'style' => 'color: #999999; font-weight: normal; padding-right: 0;',
+                'for' => 'courseannex-annex',
+            ]).Yii::t('rcoa/teamwork', 'Annex').Html::endTag('label');
+            echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']);
+                echo Html::textInput('', '文件上传', [
+                    'id'=> 'upload',
+                    'class' => 'form-group',
+                    'type' => 'button',
+                    'style' => 'margin-left: 5px;margin-top: 3px;margin-bottom:5px;',
+                    'onclick' => 'uploadFile()'
+                ]);
+            echo Html::endTag('div');
+            /*echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']).Html::beginTag('div', ['class' => 'help-block'])
+                .Html::endTag('div').Html::endTag('div');*/
+        echo Html::endTag('div');
+        
+        //附件上传输入框
+        echo Html::beginTag('div', ['class' => 'form-group']);
+            echo Html::beginTag('label', [
+                'class' => 'col-lg-1 col-md-1 control-label',
+                'style' => 'color: #999999; font-weight: normal; padding-right: 0;',
+            ]).Html::endTag('label');
+            echo Html::beginTag('div', ['id' => 'courseannex', 'class' => 'col-lg-10 col-md-10']);
+                
+            echo Html::endTag('div');
+            echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']).Html::beginTag('div', ['class' => 'help-block'])
+                .Html::endTag('div').Html::endTag('div');
+        echo Html::endTag('div');
+    ?>
+        
     <?php ActiveForm::end(); ?>
 
 </div>
 
 
 <?php
-$url = Yii::$app->urlManager->baseUrl . '/images/flags/';
+/*$url = Yii::$app->urlManager->baseUrl . '/images/flags/';
 $format = 
 <<< SCRIPT
     function format(state) {
@@ -247,14 +283,14 @@ $format =
         return '<img class="flag" src="' + src + '"/>' + state.text;
     }
 SCRIPT;
-    //$this->registerJs($format, View::POS_HEAD);
+    //$this->registerJs($format, View::POS_HEAD);*/  
 $sourceProducers = [];  
     foreach ($producerList as $teams){  
         foreach($teams as $id=>$name){  
             $sourceProducers[$id]=$name;  
         }  
     }  
-$sourceProducers = json_encode($sourceProducers);  
+$sourceProducers = json_encode($sourceProducers);
 $js =   
 <<<JS
     var sourceProducers = $sourceProducers; 
@@ -277,4 +313,63 @@ $js =
     
 JS;
     $this->registerJs($js,  View::POS_READY);
+?>
+
+<script type="text/javascript">
+window['process'] = function(result){
+        window['FILELIST'] = JSON.parse(result['data']);
+}
+
+function uploadFile(){
+    //var testPath = 'http://eechat.tt.gzedu.com/';
+    //var formalPath = 'http://eechat.gzedu.com/'; 
+    var api = $.dialog({
+        id: 'LHG76D',
+        //content: 'url:http://127.0.0.1:8080/ee_fis/upload/toUpload.do?formMap.filetype=ppt|doc|docx|xls|xlsx|pptx|txt|rar|zip|mp3|mp4|rmvb|wmv|flv|swf|3gp|jpg&formMap.filecwd=/files1/file&formMap.appId=APP005&formMap.filenum=2&formMap.origin=http://127.0.0.1:8080/ee_fis/uploadIframe.html&formMap.convert=Y&formMap.appType=oos&formMap.fileName=mp4/object_name&formMap.bucket=ougz-video',
+        content: 'url:http://eefile.gzedu.com/upload/toUpload.do?formMap.filetype=ppt|doc|docx|xls|xlsx|pptx|txt|rar|zip|mp3|mp4|rmvb|wmv|flv|swf|3gp|jpg&formMap.filecwd=/files1/file&formMap.appId=APP015&formMap.filenum=1&formMap.origin=http://ccoa.gzedu.net/uploadIframe/uploadIframe.html',
+        //content: 'url:http://eefile.gzedu.com/upload/toUpload.do?formMap.filetype=ppt|doc|docx|xls|xlsx|pptx|txt|rar|zip|mp3|mp4|rmvb|wmv|flv|swf|3gp|jpg&formMap.filecwd=/files1/file&formMap.appId=APP005&formMap.filenum=2&formMap.origin=http://127.0.0.1:8080/ee_chat/uploadIframe.html&formMap.convert=Y&formMap.appType=oos&formMap.fileName=mp4/object_name&formMap.bucket=ougz-video',		
+        title: '文件上传',
+        width: 460,
+        height: 360,
+        button:[{
+            name : '取消上传',
+            callback : function(win){}
+        },{
+            name: '完成上传',
+            callback: function (win) {
+                var fileList = win['FILELIST'], 
+                        filelist = [],
+                        fileName = [],
+                        NameMD5List = [];
+
+                if(fileList && fileList.length > 0){
+                    for(var i = 0; i < fileList.length; i++){
+                        filelist.push(fileList[i].FileURL);
+                        fileName.push(fileList[i].CFileName);
+                        NameMD5List.push(fileList[i].FileMD5);
+                    }
+                    for(var i = 0; i < fileList.length; i++){
+                        var inputText = '<input type="text" name="CourseAnnex[name][]" id="courseannex-name" class="form-control">';
+                        var inputHidden = '<input type="hidden" name="CourseAnnex[path][]" id="courseannex-path">';
+                        if(i == 0){
+                            $(inputText).val(fileName.join('')).appendTo($("#courseannex"));
+                            $("#courseannex").append($(inputHidden).val(filelist.join('')));
+                        }
+                        else{
+                            $(inputText).val(fileName.join('')).after($("#courseannex-path"));
+                            $(inputHidden).val(filelist.join('')).after($("#courseannex-name"));
+                        }
+                        //$('#md5').val(NameMD5List.join(''));
+                    }
+                    window['FILELIST'] = [];
+                }
+            },
+            focus : true
+        }]
+    });
+}
+</script>
+
+<?php
+    UploadFileAsset::register($this);
 ?>
