@@ -38,6 +38,9 @@ $config = [
         'teamwork' => [
             'class' => 'backend\modules\teamwork\Module',
         ],
+        'unittest' => [
+            'class' => 'backend\modules\unittest\Module',
+        ],
     ],
 ];
 

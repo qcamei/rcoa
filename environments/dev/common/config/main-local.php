@@ -1,6 +1,4 @@
 <?php
-
-use kartik\datecontrol\DateControl;
 return [
     'timeZone' => 'PRC',
     'components' => [
