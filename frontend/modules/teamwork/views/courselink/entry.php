@@ -47,11 +47,12 @@ use yii\widgets\ActiveForm;
                 echo Html::beginTag('label', [
                     'class' => 'col-lg-1 col-md-1 control-label',
                     'style' => 'color: #999999; font-weight: normal; padding-left: 0; padding-right: 0; float:left',
-                    'for' => 'courselink-total',
+                    'for' => 'field-courselink-total',
                 ]).Yii::t('rcoa/teamwork', 'Total').Html::endTag('label');
                 echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']);
                     echo Html::textInput('CourseLink[total]', $model->total, [
                         'id' => 'courselink-total',
+                        'min' => 1,
                         'class' => 'form-control',
                         'type' => 'number',
                         'style' => 'float:left',
@@ -70,16 +71,7 @@ use yii\widgets\ActiveForm;
                     ],
                 ]);
         }else {
-            echo $form->field($model, 'completed')->widget(SwitchInput::classname(),[
-                'containerOptions' => [
-                    'style' => 'padding-left:0px;padding-right:0px;',
-                ],
-                'pluginOptions' => [
-                    'size' => 'small',
-                    'onText' => 'ON',
-                    'offText' => 'OFF',
-                ]
-            ])->label('状态');
+            echo $form->field($model, 'completed')->checkbox()->label('状态');
         }
     ?>
       
@@ -95,13 +87,14 @@ use yii\widgets\ActiveForm;
 <?php
 $js = 
 <<<JS
-    $('#courselink-total').change(function(){  
-        var oldValue = $('#courselink-completed').slider('getValue');  
-        var maxValue = $(this).val();  
-        if(oldValue>maxValue)  
-            oldValue = maxValue;  
-        $('#courselink-completed').slider({max:maxValue,value:Number(oldValue)});  
-        $('#courselink-completed').slider('refresh');  
+    $('#courselink-total').change(function(){    
+        var oldValue = $('#courselink-completed').val();    
+        var maxValue = $(this).val();    
+        console.log(maxValue);  
+        if(oldValue>maxValue)    
+            oldValue = maxValue;    
+        $("#courselink-completed").trigger("touchspin.updatesettings", {max: maxValue});  
+        $('#courselink-completed').val(oldValue);  
     });  
 JS;
     $this->registerJs($js,  View::POS_READY);
