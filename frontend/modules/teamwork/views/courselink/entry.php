@@ -71,7 +71,13 @@ use yii\widgets\ActiveForm;
                     ],
                 ]);
         }else {
-            echo $form->field($model, 'completed')->checkbox()->label('状态');
+            //echo $form->field($model, 'completed')->checkbox()->label('状态');
+            echo $form->field($model, 'completed')->widget(SwitchInput::classname(), [
+                'pluginOptions' => [
+                    'onText' => '完成',
+                    'offText' => '未完成',
+                ]
+            ])->label('状态：');
         }
     ?>
       

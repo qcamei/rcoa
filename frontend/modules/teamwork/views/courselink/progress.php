@@ -3,6 +3,7 @@
 use common\models\teamwork\CourseLink;
 use common\models\teamwork\CoursePhase;
 use frontend\modules\teamwork\TwAsset;
+use kartik\widgets\SwitchInput;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\web\View;
@@ -89,7 +90,11 @@ $this->params['breadcrumbs'][] = $this->title;
         
         </tbody>
     </table>
-    
+    <?php 
+        SwitchInput::widget([
+            'name' => 'nouse'
+        ]); 
+        ?>
 </div>
 
 <div class="controlbar">
