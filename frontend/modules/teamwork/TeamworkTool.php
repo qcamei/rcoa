@@ -10,12 +10,11 @@ use common\models\teamwork\CoursePhase;
 use common\models\teamwork\CourseProducer;
 use common\models\teamwork\CourseSummary;
 use common\models\teamwork\ItemManage;
-use common\models\teamwork\Link;
 use common\models\teamwork\Phase;
+use common\models\teamwork\Link;
 use Yii;
-use yii\db\Exception;
 use yii\db\Query;
-
+use yii\web\NotFoundHttpException;
 
 class TeamworkTool{
     
@@ -64,7 +63,7 @@ class TeamworkTool{
     public function getIsLeader()
     {
         //查出成员表里面所有队长
-        $isLeader = TeamMember::findAll(['u_id' => \Yii::$app->user->id]);
+        $isLeader = TeamMember::findAll(['u_id' => Yii::$app->user->id]);
         
         if(!empty($isLeader) || isset($isLeader)){
             foreach ($isLeader as $value){
@@ -82,7 +81,7 @@ class TeamworkTool{
      */
     public function getIsUserBelongTeam($course_id)
     {
-        $currentUser = TeamMember::findAll(['u_id' => \Yii::$app->user->id]);
+        $currentUser = TeamMember::findAll(['u_id' => Yii::$app->user->id]);
         $courseTeam = CourseManage::findOne(['id' => $course_id]);
         if(!empty($currentUser) || isset($currentUser) || !empty($course_id)){
             foreach ($currentUser as $value) {
@@ -116,23 +115,28 @@ class TeamworkTool{
      * @param type $course_id  任务id
      * @param type $post 
      */
-    public function saveCourseProducer($course_id, $post){
+    public function saveCourseProducer($course_id, $post)
+    {
         $values = [];
-        /** 重组提交的数据为$values数组 */
-        foreach($post as $value)
-        {
-            $values[] = [
-                'course_id' => $course_id,
-                'producer' => $value,
-            ];
+        if(!empty($post)){
+            /** 重组提交的数据为$values数组 */
+            foreach($post as $value)
+            {
+                $values[] = [
+                    'course_id' => $course_id,
+                    'producer' => $value,
+                ];
+            }
+
+            /** 添加$values数组到表里 */
+            Yii::$app->db->createCommand()->batchInsert(CourseProducer::tableName(), 
+            [
+                'course_id',
+                'producer',
+            ], $values)->execute();
+        }  else {
+            throw new NotFoundHttpException('开发人员不能为空！');
         }
-        
-        /** 添加$values数组到表里 */
-        Yii::$app->db->createCommand()->batchInsert(CourseProducer::tableName(), 
-        [
-            'course_id',
-            'producer',
-        ], $values)->execute();
     }
         
     /**
@@ -156,7 +160,7 @@ class TeamworkTool{
                 'course_id' => $course_id,
                 'name' => $value->name,
                 'weights' => $value->weights,
-                'create_by' => \Yii::$app->user->id,
+                'create_by' => Yii::$app->user->id,
             ];
         }
         
@@ -180,9 +184,9 @@ class TeamworkTool{
                 ->select(['Course_phase.id AS course_phase_id', 'Link.*'])
                 ->from(['Link' => Link::tableName()])
                 ->leftJoin(['Phase' => Phase::tableName()], 'Phase.id = Link.phase_id')
-                ->leftJoin(['Course_phase' => CoursePhase::tableName()], 'Course_phase.name = Phase.name')
+                ->leftJoin(['Course_phase' => CoursePhase::tableName()], 'Course_phase.`name` = Phase.`name`')
                 ->where(['course_id' => $course_id])
-                ->andFilterWhere(['template_type_id' => $templateType])
+                ->andFilterWhere(['Link.template_type_id' => $templateType])
                 ->all();
         
         $values = [];
@@ -197,7 +201,7 @@ class TeamworkTool{
                 'total' => $value['total'],
                 'completed' => $value['completed'],
                 'unit' => $value['unit'],
-                'create_by' => \Yii::$app->user->id,
+                'create_by' => Yii::$app->user->id,
             ];
         }
         
@@ -224,21 +228,23 @@ class TeamworkTool{
     {
         $values = [];
         /** 重组提交的数据为$values数组 */
-        foreach ($post['name'] as $key => $value) {
-           $values[] = [
-               'course_id' => $course_id,
-               'name' => $value,
-               'path' => $post['path'][$key],
-           ];
-        }  
+        if(!empty($post)){
+            foreach ($post['name'] as $key => $value) {
+               $values[] = [
+                   'course_id' => $course_id,
+                   'name' => $value,
+                   'path' => $post['path'][$key],
+               ];
+            }
         
-        /** 添加$values数组到表里 */
-        Yii::$app->db->createCommand()->batchInsert(CourseAnnex::tableName(), 
-        [
-            'course_id',
-            'name',
-            'path',
-        ], $values)->execute();
+            /** 添加$values数组到表里 */
+            Yii::$app->db->createCommand()->batchInsert(CourseAnnex::tableName(), 
+            [
+                'course_id',
+                'name',
+                'path',
+            ], $values)->execute();
+        }
     }
 
     /**
@@ -255,10 +261,10 @@ class TeamworkTool{
         {  
             /* @var $model CourseManage*/
             if($model->save()){
-                $this->saveCourseProducer($model->id, $post['producer']);
+                $this->saveCourseProducer($model->id, (!empty($post['producer']) ? $post['producer'] : []));
                 $this->addCoursePhase($model->id, $this->templateType);
                 $this->addCourseLink($model->id, $this->templateType);
-                $this->saveCourseAnnex($model->id, $post['CourseAnnex']);
+                $this->saveCourseAnnex($model->id, (!empty($post['CourseAnnex']) ? $post['CourseAnnex'] : []));
             }
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
@@ -284,8 +290,8 @@ class TeamworkTool{
             if($model->save()){
                 CourseProducer::deleteAll(['course_id' => $model->id]);
                 CourseAnnex::deleteAll(['course_id' => $model->id]);
-                $this->saveCourseProducer($model->id, $post['producer']);
-                $this->saveCourseAnnex($model->id, $post['CourseAnnex']);
+                $this->saveCourseProducer($model->id, (!empty($post['producer']) ? $post['producer'] : []));
+                $this->saveCourseAnnex($model->id, (!empty($post['CourseAnnex']) ? $post['CourseAnnex'] : []));
             }
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');

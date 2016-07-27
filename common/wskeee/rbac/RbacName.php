@@ -40,7 +40,8 @@ class RbacName {
     const ROLE_WD_LEADER = 'r_wd_leader';
     /** 老师 */
     const ROLE_TEACHERS = 'r_teachers';
-    
+    /** 项目管理员 */
+    const ROLE_PROJECT_MANAGER = 'r_project_manager';
     
     
     /** 平台新闻发布 */
@@ -67,4 +68,10 @@ class RbacName {
     const PERMSSIONT_SHOOT_OWN_UPDATE = 'p_shoot_own_update';
     /** 拍摄-更新预约 */
     const PERMSSIONT_SHOOT_UPDATE = 'p_shoot_update';
+    /** 团队-项目管理创建 */
+    const PERMSSION_TEAMWORK_CREATE = 'p_teamwork_create';
+    /** 团队-项目管理更新 */
+    const PERMSSION_TEAMWORK_UPDATE = 'p_teamwork_update';
+    /** 团队-课程复原 */
+    const PERMSSION_TEAMWORK_COURSE_RESTORE = 'p_teamwork_course_restore';
 }

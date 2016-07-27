@@ -3,12 +3,9 @@
 namespace frontend\modules\teamwork\controllers;
 
 use common\models\teamwork\CourseLink;
-use common\models\teamwork\CourseManage;
 use common\models\teamwork\CoursePhase;
-use common\models\teamwork\ItemManage;
 use frontend\modules\teamwork\TeamworkTool;
 use Yii;
-use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -100,15 +97,19 @@ class CourselinkController extends Controller
      */
     public function actionCreate($course_id)
     {
+        $phaseModel = new CoursePhase();
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
-        $phaseModel = new CoursePhase();
         $phaseModel->loadDefaultValues();
         $post = Yii::$app->request->post();
         $phaseModel->course_id = $course_id;
-        if(!$twTool->getIsLeader() || $phaseModel->course->create_by !== \Yii::$app->user->id)
-            throw new NotAcceptableHttpException('只有队长 or 该课程隶属于自己才可以【新增阶段和环节】');
-            
+        
+        if(!$twTool->getIsLeader() || $phaseModel->course->create_by != Yii::$app->user->id)
+            throw new NotAcceptableHttpException('无权限操作');
+        
+        if(!$phaseModel->course->getIsNormal())
+            throw new NotAcceptableHttpException('该课程'.$phaseModel->course->getStatusName().'！');
+        
         if ($phaseModel->load($post)){
             Yii::$app->db->createCommand()
                     ->update(CoursePhase::tableName(), ['is_delete'=> 'N', 'weights' => $post['CoursePhase']['weights']], [
@@ -139,13 +140,16 @@ class CourselinkController extends Controller
      */
     public function actionUpdate($id)
     {
+        $phaseModel = CoursePhase::findOne($id);
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
-        $phaseModel = CoursePhase::findOne($id);
+        if(!$twTool->getIsLeader() || $phaseModel->course->create_by != Yii::$app->user->id)
+            throw new NotAcceptableHttpException('无权限操作');
+         
         $post = Yii::$app->request->post();
         $link = empty($post['id']) ? [] : $post['id'];
-        if(!$twTool->getIsLeader() || $phaseModel->course->create_by !== \Yii::$app->user->id)
-            throw new NotAcceptableHttpException('只有队长 or 该课程隶属于自己才可以【编辑阶段和环节】');
+        if(!$phaseModel->course->getIsNormal())
+            throw new NotAcceptableHttpException('该课程'.$phaseModel->course->getStatusName().'！');
         
         if ($phaseModel->load($post) && $phaseModel->save()) {
             foreach ($link as $value) 
@@ -174,7 +178,10 @@ class CourselinkController extends Controller
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
         if(!$twTool->getIsUserBelongTeam($model->course_id))
-            throw new NotAcceptableHttpException('该课程团队下成员才可以操作');
+            throw new NotAcceptableHttpException('无权限操作');
+        
+        if(!$model->course->getIsNormal() )
+            throw new NotAcceptableHttpException('该课程'.$phaseModel->course->getStatusName().'！');
             
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['progress', 'course_id' => $model->course_id]);
@@ -196,14 +203,19 @@ class CourselinkController extends Controller
         $model = CoursePhase::findOne($id);
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
+        if(!$twTool->getIsLeader() || $model->course->create_by != Yii::$app->user->id)
+            throw new NotAcceptableHttpException('无权限操作');
+        
+        if(!$model->course->getIsNormal() )
+            throw new NotAcceptableHttpException('该课程'.$phaseModel->course->getStatusName().'！');
+        
         $model->is_delete = 'Y';
-        if($model->update() !== false && $twTool->getIsLeader() && $model->course->create_by == \Yii::$app->user->id){
+        if($model->update() !== false){
             Yii::$app->db->createCommand()
                 ->update(CourseLink::tableName(), ['is_delete'=> 'Y'], [
                     'course_id' => $model->course_id, 'course_phase_id' => $model->id])->execute();
             $this->redirect(['index', 'course_id' => $model->course_id]);
-        }else 
-            throw new NotAcceptableHttpException('只有队长 or 该课程隶属于自己才可以操作');
+        }
     }
    
     /**
@@ -249,16 +261,20 @@ class CourselinkController extends Controller
      */
     public function actionLinkDelete($id)
     {
+        $model = $this->findModel($id);
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
-        $model = $this->findModel($id);
-        $model->is_delete = 'Y';
+        if(!$twTool->getIsLeader() || $model->course->create_by != Yii::$app->user->id)   
+            throw new NotAcceptableHttpException('无权限操作');
         
-        if($twTool->getIsLeader() && $model->course->create_by == \Yii::$app->user->id){
-            $model->update();
-            $this->redirect(['index', 'course_id' => $model->course_id]);
-        }else 
-            throw new NotAcceptableHttpException('只有队长 or 该课程隶属于自己才可以操作');
+        $model = $this->findModel($id);
+        if(!$model->course->getIsNormal() )
+            throw new NotAcceptableHttpException('该课程'.$phaseModel->course->getStatusName().'！');
+        
+        $model->is_delete = 'Y';
+        $model->update();
+        $this->redirect(['index', 'course_id' => $model->course_id]);
+            
     }
     
     /**

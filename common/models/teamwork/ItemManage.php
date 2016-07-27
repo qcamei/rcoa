@@ -41,9 +41,9 @@ class ItemManage extends ActiveRecord
 {
     /** 暂停 */
     const STATUS_TIME_OUT = 25;
-    /** 正常 */
+    /** 在建 */
     const STATUS_NORMAL = 5;
-    /** 完成 */
+    /** 已完成 */
     const STATUS_CARRY_OUT = 15;
     /** 进度 */
     public $progress;

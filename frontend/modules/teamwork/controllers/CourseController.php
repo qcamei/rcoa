@@ -11,6 +11,7 @@ use common\models\teamwork\CourseSummary;
 use common\models\teamwork\ItemManage;
 use frontend\modules\teamwork\TeamworkTool;
 use wskeee\framework\models\Item;
+use wskeee\rbac\RbacName;
 use Yii;
 use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
@@ -72,9 +73,9 @@ class CourseController extends Controller
      */
     public function actionList($project_id)
     {
-        $allModels = $this->findItemModel($project_id);
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
+        $allModels = $this->findItemModel($project_id);
         foreach ($allModels as $value)
             $model = $this->findModel($value->id);
         
@@ -127,7 +128,8 @@ class CourseController extends Controller
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
         if(!$twTool->getIsLeader())
-            throw new NotAcceptableHttpException('只有队长才可以【添加课程】');
+            throw new NotAcceptableHttpException('无权限操作！');
+        
         $params = Yii::$app->request->queryParams;
         $post = Yii::$app->request->post();
         $model = new CourseManage();
@@ -163,17 +165,19 @@ class CourseController extends Controller
      */
     public function actionUpdate($id)
     {
+        $model = $this->findModel($id);
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
-        $model = $this->findModel($id);
+        if(!$twTool->getIsLeader() || $model->create_by != \Yii::$app->user->id)
+           throw new NotAcceptableHttpException('无权限操作！');
+        
         $post = Yii::$app->request->post();
         $courses = $this->getCourses($model->project->item_child_id);
         $existedCourses = $this->getExistedCourses(['project_id' => $model->project_id]);
         $existedCoursesOne = $this->getExistedCourses(['id' => $id]);    //获取已经存在的单条课程
-        if(!$twTool->getIsLeader() || $model->create_by !== \Yii::$app->user->id)
-           throw new NotAcceptableHttpException('只有队长才可以【编辑】课程 or 该课程隶属于自己');
         if(!$model->getIsNormal())
-            throw new NotAcceptableHttpException('该课程现在状态为：'.$model->getStatusName());
+            throw new NotAcceptableHttpException('该课程'.$model->getStatusName().'！');
+        
         if ($model->load($post) && $model->validate()) {
             $model->video_length = $post['CourseManage']['video_length'];
             $twTool->UpdateTask($model, $post);         //更新任务操作
@@ -194,6 +198,29 @@ class CourseController extends Controller
     }
     
     /**
+     * 更改状态为【在建】
+     * Normal an existing ItemManage model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionNormal($id)
+    {
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
+        if (!Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)) 
+            throw new NotFoundHttpException('无权限操作！');
+        
+         $model = $this->findModel($id);
+        if($model != null && !$model->getIsCarryOut())
+            throw new NotFoundHttpException('该课程'.$model->getStatusName().'！');
+        
+        $model->status = ItemManage::STATUS_NORMAL;
+        $model->save();
+        $this->redirect(['view', 'id' => $model->id]);
+    }
+    
+    /**
      * 更改状态为【完成】
      * CarryOut an existing ItemManage model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -207,24 +234,27 @@ class CourseController extends Controller
         /* @var $model CourseManage */
         $model = $twTool->getCourseProgressOne($id);
         $model->scenario = CourseManage::SCENARIO_CARRYOUT;
-        if($model != null && $model->getIsNormal() && $twTool->getIsLeader() && $model->create_by == \Yii::$app->user->id && $model->progress == 1){
-            $model->real_carry_out = date('Y-m-d H:i', time());
-            $model->status = ItemManage::STATUS_CARRY_OUT;
-            if ($model->validate() && $model->save()){
-                $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                $errors = [];
-                foreach($model->getErrors() as $error){
-                    foreach($error as $name=>$value){
-                        $errors[] = $value;
-                    }
+        if(!$twTool->getIsLeader() || $model->create_by != \Yii::$app->user->id)
+            throw new NotFoundHttpException('无权限操作！');
+        
+        if($model != null && $model->progress != 1)
+            throw new NotFoundHttpException('当前进度必须为100%！');
+        
+        if(!$model->getIsNormal())
+            throw new NotFoundHttpException('该课程'.$model->getStatusName().'！');
+        
+        $model->real_carry_out = date('Y-m-d H:i', time());
+        $model->status = ItemManage::STATUS_CARRY_OUT;
+        if ($model->validate() && $model->save()){
+            $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            $errors = [];
+            foreach($model->getErrors() as $error){
+                foreach($error as $name=>$value){
+                    $errors[] = $value;
                 }
-                throw new NotFoundHttpException (implode($errors));
             }
-        }  else {
-            throw new NotFoundHttpException ('必须满足以下条件课程才可以操作【完成】：1、状态必须是【在建】, '
-                        . '2、必须是【队长】才可以操作, 3、创建者必须是自己, 4、课程阶段和课程环节【进度】必须是100%');
-                        
+            throw new NotFoundHttpException (implode($errors));
         }
     }
     
@@ -241,7 +271,9 @@ class CourseController extends Controller
         $twTool = Yii::$app->get('twTool');
         if($model->getIsNormal() && $twTool->getIsLeader() && $model->create_by == \Yii::$app->user->id)
             $model->delete();
-
+        else 
+            throw new NotFoundHttpException('无权限操作！');
+        
         $this->redirect(['list','project_id' => $project_id]);
     }
 

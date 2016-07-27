@@ -1,6 +1,7 @@
 <?php
 
 use frontend\modules\teamwork\TwAsset;
+use wskeee\rbac\RbacName;
 use yii\helpers\Html;
 
 /* 
@@ -29,7 +30,12 @@ use yii\helpers\Html;
             echo Html::a(Html::img(['/filedata/image/statistics_64x64.png']), ['/teamwork/statistics'], 
                     ['class' => $controllerId == 'statistics' ? 'footer-item-xs footer-item-bg visible-xs-inline-block' : 'footer-item-xs visible-xs-inline-block']);
             
-            if($actionId == 'list' && $twTool->getIsLeader())
+            /**
+             * 创建项目 按钮必须满足以下条件：
+             * 1、操作方法必须是 【list】
+             * 2、必须是【队长】 or 【项目管理员】
+             */
+            if($actionId == 'list' && ($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a(Html::img(['/filedata/image/new_64px64.png']), ['create'], [
                     'class' => 'footer-item-xs footer-item-right visible-xs-inline-block']);
             
@@ -47,7 +53,12 @@ use yii\helpers\Html;
             echo Html::a(Html::img(['/filedata/image/statistics_64x64.png']).'统计', ['/teamwork/statistics'], 
                     ['class' => $controllerId == 'statistics' ? 'footer-item footer-item-bg hidden-xs' : 'footer-item hidden-xs']);
             
-            if($actionId == 'list' && $twTool->getIsLeader())
+            /**
+             * 创建项目 按钮必须满足以下条件：
+             * 1、操作方法必须是 【list】
+             * 2、必须是【队长】 or 【项目管理员】
+             */
+            if($actionId == 'list' && ($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a(Html::img(['/filedata/image/new_64px64.png']).'创建项目', ['create'], [
                     'class' => 'footer-item footer-item-right hidden-xs']);
         ?>

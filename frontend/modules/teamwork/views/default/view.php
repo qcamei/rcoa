@@ -3,6 +3,7 @@
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\ItemManage;
 use frontend\modules\teamwork\TwAsset;
+use wskeee\rbac\RbacName;
 use yii\data\ArrayDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -131,50 +132,46 @@ $this->params['breadcrumbs'] = $this->title;
         <?php
             /**
              * 编辑 按钮显示必须满足以下条件：
-             * 1、必须是状态为【正常】
-             * 2、必须是【队长】
-             * 3、创建者是自己
+             * 1、必须是状态为【在建】
+             * 2、必须是【队长】 or 【项目管理员】
              */
-            if($model->getIsNormal() && $twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
+            if($model->getIsNormal() && ($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a('编辑', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']).' ';
             /**
              * 配置 按钮显示必须满足以下条件：
-             * 1、必须是状态为【正常】
-             * 2、必须是【队长】
+             * 1、必须是状态为【在建】
+             * 2、必须是【队长】 or 【项目管理员】
              */
             if($model->getIsNormal() && $twTool->getIsLeader())    
                 echo Html::a('配置', ['/teamwork/course/list', 'project_id' => $model->id], ['class' => 'btn btn-primary']).' ';
             /**
              * 课程 按钮显示必须满足以下条件：
-             * 1、必须是状态为【正常】
+             * 1、必须是状态为【在建】
              */
             if($model->getIsNormal())
                 echo Html::a('课程', ['/teamwork/course/index', 'project_id' => $model->id], ['class' => 'btn btn-primary']).' ';
             /**
              * 完成 按钮显示必须满足以下条件：
-             * 1、必须是状态为【正常】
-             * 2、必须是【队长】
-             * 3、创建者是自己
+             * 1、必须是状态为【在建】
+             * 2、必须是【队长】 or 【项目管理员】
              
-            if($model->getIsNormal() && $twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
+            if($model->getIsNormal() && ($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a('完成', ['carry-out', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
             */
             /**
              * 暂停 按钮显示必须满足以下条件：
-             * 1、必须是状态为【正常】
-             * 2、必须是【队长】
-             * 3、创建者是自己
+             * 1、必须是状态为【在建】
+             * 2、必须是【队长】 or 【项目管理员】
              
-            if($model->getIsNormal() && $twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
+            if($model->getIsNormal() && ($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a('暂停', ['time-out', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
              */
             /**
              * 恢复 按钮显示必须满足以下条件：
-             * 1、必须是状态为【暂停】
-             * 2、必去是【队长】
-             * 3、创建者是自己
+             * 1、必须是状态为【在建】
+             * 2、必去是【队长】 or 【项目管理员】
              
-            if($model->getIsTimeOut() && $twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
+            if($model->getIsTimeOut() && ($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a('恢复', ['normal', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
              */
         ?>

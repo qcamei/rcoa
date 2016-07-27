@@ -3,6 +3,7 @@
 use common\models\teamwork\CourseManage;
 use frontend\modules\teamwork\TwAsset;
 use kartik\widgets\Select2;
+use wskeee\rbac\RbacName;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
@@ -106,8 +107,9 @@ $this->params['breadcrumbs'][] = $this->title;
              * 配置 按钮显示必须满足以下条件：
              * 1、必须是状态为【正常】
              * 2、必须是【队长】
+             * 3、创建者是自己
              */
-            if($model->getIsNormal() && $twTool->getIsLeader())    
+            if($model->getIsNormal() && $twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)    
                 echo Html::a('配置', ['/teamwork/courselink/index', 'course_id' => $model->id], ['class' => 'btn btn-primary']).' ';
            
             echo Html::a('进度', ['/teamwork/courselink/progress', 'course_id' => $model->id], ['class' => 'btn btn-primary']).' ';
@@ -119,6 +121,14 @@ $this->params['breadcrumbs'][] = $this->title;
              */
             if($model->getIsNormal() && $twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
                 echo Html::a('完成', ['carry-out', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
+            
+            /**
+             * 恢复 按钮显示必须满足以下条件：
+             * 1、必须是状态为【已经完成】
+             * 2、必须是【项目管理员】
+            */
+            if($model->getIsCarryOut() && Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))
+                echo Html::a('恢复', ['normal', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
         ?>
     </div>
 </div>

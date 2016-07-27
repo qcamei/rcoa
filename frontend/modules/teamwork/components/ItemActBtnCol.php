@@ -5,6 +5,7 @@ namespace frontend\modules\teamwork\components;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\ItemManage;
 use frontend\modules\teamwork\components\ItemListTd;
+use frontend\modules\teamwork\TeamworkTool;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;

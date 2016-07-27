@@ -2,6 +2,7 @@
 
 use common\models\teamwork\CourseManage;
 use frontend\modules\teamwork\TwAsset;
+use wskeee\rbac\RbacName;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\grid\GridView;
@@ -153,9 +154,9 @@ $this->params['breadcrumbs'][] = $this->title;
             /**
              * 添加课程 按钮显示必须满足以下条件：
              * 1、必须是状态为【正常】
-             * 2、必须是【队长】
+             * 2、必须是【队长】  or 【项目管理员】
              */
-            if($model->project->getIsNormal() && $twTool->getIsLeader())
+            if(/*$model->project->getIsNormal() && */$twTool->getIsLeader())
                 echo Html::a(Yii::t('rcoa/teamwork', 'Create Course'), ['create','project_id' => $model->project_id], 
                 ['class' => 'btn btn-primary']);
         ?>

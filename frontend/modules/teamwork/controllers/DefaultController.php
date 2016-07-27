@@ -9,6 +9,7 @@ use frontend\modules\teamwork\TeamworkTool;
 use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\Item;
 use wskeee\framework\models\ItemType;
+use wskeee\rbac\RbacName;
 use Yii;
 use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
@@ -136,15 +137,15 @@ class DefaultController extends Controller
      */
     public function actionCreate()
     {
-        $model = new ItemManage();
-       
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
-        if(!$twTool->getIsLeader())
-            throw new NotAcceptableHttpException('只有队长才可以【创建项目】');
+        if(!($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
+            throw new NotAcceptableHttpException('无权限操作！');
+        
+        $model = new ItemManage();
         $model->loadDefaultValues();
-        $model->team_id = $twTool->getHotelTeam(\Yii::$app->user->id);
-        $model->create_by = \Yii::$app->user->id;
+        //$model->team_id = $twTool->getHotelTeam(Yii::$app->user->id);
+        $model->create_by = Yii::$app->user->id;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -165,14 +166,14 @@ class DefaultController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
-        if(!$twTool->getIsLeader() || $model->create_by !== \Yii::$app->user->id)
-            throw new NotAcceptableHttpException('只有队长才可以【编辑】项目 or 该项目隶属于自己');
+        if(!($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
+            throw new NotAcceptableHttpException('无权限操作！');
         
+        $model = $this->findModel($id);
         if(!$model->getIsNormal())
-            throw new NotAcceptableHttpException('该项目现在状态为：'.$model->getStatusName());
+            throw new NotAcceptableHttpException('该项目'.$model->getStatusName().'！');
 
         $itemChild = $this->getFwItemForSelect($model->item_id);
         $existedItemChild = $this->getExistedItemForSelect($model->item_id);
@@ -197,59 +198,59 @@ class DefaultController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionTimeOut($id)
+    /*public function actionTimeOut($id)
     {
         $model = $this->findModel($id);
-        /* @var $twTool TeamworkTool */
+        /* @var $twTool TeamworkTool
         $twTool = Yii::$app->get('twTool');
-        if ($model != null && $model->getIsNormal() && $twTool->getIsLeader() && $model->create_by == \Yii::$app->user->id) 
+        if ($model != null && $model->getIsNormal() && ($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))) 
         {
             $model->status = ItemManage::STATUS_TIME_OUT;
             $model->save();
         }
         $this->redirect(['view', 'id' => $model->id]);
-    }
+    }*/
     
     /**
-     * 更改状态为【正常】
+     * 更改状态为【在建】
      * Normal an existing ItemManage model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
      */
-    public function actionNormal($id)
+    /*public function actionNormal($id)
     {
         $model = $this->findModel($id);
-        /* @var $twTool TeamworkTool */
+        /* @var $twTool TeamworkTool 
         $twTool = Yii::$app->get('twTool');
-        if ($model != null && $model->getIsTimeOut() && $twTool->getIsLeader() && $model->create_by == \Yii::$app->user->id) 
+        if ($model != null && $model->getIsTimeOut() && ($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))) 
         {
             $model->status = ItemManage::STATUS_NORMAL;
             $model->save();
         }
         $this->redirect(['view', 'id' => $model->id]);
-    }
+    }*/
     
     /**
-     * 更改状态为【完成】
+     * 更改状态为【已完成】
      * CarryOut an existing ItemManage model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
      */
-    public function actionCarryOut($id)
+    /*public function actionCarryOut($id)
     {
         $model = $this->findModel($id);
-        /* @var $twTool TeamworkTool */
+        /* @var $twTool TeamworkTool
         $twTool = Yii::$app->get('twTool');
-        if ($model != null && $model->getIsNormal() && $twTool->getIsLeader() && $model->getIsCoursesStatus() && $model->create_by == \Yii::$app->user->id) 
+        if ($model != null && $model->getIsNormal() && ($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)) && $model->getIsCoursesStatus()) 
         {
             $model->status = ItemManage::STATUS_CARRY_OUT;
             $model->save();
         }else
             throw new NotAcceptableHttpException('该项目下有课程未完成！');
         $this->redirect(['view', 'id' => $model->id]);
-    }
+    }*/
     
     /**
      * 获取项目子项
@@ -289,7 +290,7 @@ class DefaultController extends Controller
     public function actionDelete($id)
     {
         $model =  $this->findModel($id);
-        if ($model != null && $model->getIsNormal() && $model->getIsLeader() && $model->create_by == \Yii::$app->user->id)
+        if ($model != null && $model->getIsNormal() && $model->getIsLeader() && $model->create_by == Yii::$app->user->id)
             $model->delete();
 
         return $this->redirect(['index']);
