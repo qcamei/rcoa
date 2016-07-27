@@ -292,7 +292,7 @@ class User extends ActiveRecord implements IdentityInterface
             if(!$this->id)
                 $this->id = md5(rand(1,10000) + time());    //自动生成用户ID
             $upload = UploadedFile::getInstance($this, 'avatar');
-            if($upload != null && !$this->isNewRecord)
+            if($upload != null)
             {
                 $string = $upload->name;
                 $array = explode('.',$string);
@@ -300,7 +300,7 @@ class User extends ActiveRecord implements IdentityInterface
                 $ext = count($array) == 0 ? 'jpg' : $array[count($array)-1];
                 $uploadpath = $this->fileExists(Yii::getAlias('@filedata').'/avatars/');
                 $upload->saveAs($uploadpath.$this->username.'.'.$ext);
-                $this->avatar = '/filedata/avatars/'.$this->username.'.'.$ext;
+                $this->avatar = '/filedata/avatars/'.$this->username.'.'.$ext.'?rand='.  rand(0, 1000);
             }
             
             
