@@ -101,7 +101,7 @@ class CourseManage extends ActiveRecord
     
     public function behaviors() {
         return [
-            TimestampBehavior::className('created_at')
+            TimestampBehavior::className()
         ];
     }
 

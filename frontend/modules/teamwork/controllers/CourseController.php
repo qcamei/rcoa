@@ -141,7 +141,6 @@ class CourseController extends Controller
         $existedCourses = $this->getExistedCourses($model->project_id);
         $model->scenario = CourseManage::SCENARIO_DEFAULT;
         if ($model->load($post)) {
-            $model->video_length = strtotime($post['CourseManage']['video_length']);
             $twTool->CreateTask($model, $post);         //创建任务操作
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
