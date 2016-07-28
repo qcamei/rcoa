@@ -33,7 +33,7 @@ class StatisticsController extends Controller
         
         /* @var $query Query */
         $query = (new Query())
-                ->andFilterWhere(['Course.status'=>$status])
+                ->andFilterWhere(['Course.status'=>($status == 0 || $status == 100) ? null : $status])
                 ->andFilterWhere(['Course.`team_id`'=>$team])
                 ->andFilterWhere(['Item.`item_type_id`'=>$item_type_id])
                 ->andFilterWhere(['Item.`item_id`'=>$item_id])
@@ -46,9 +46,9 @@ class StatisticsController extends Controller
          **/
         if($dateRange = $request->getQueryParam('dateRange')){
             $dateRange_Arr = explode(" - ",$dateRange);
-            if($status == null || $status == ItemManage::STATUS_CARRY_OUT)
+            if($status == 100 || $status == ItemManage::STATUS_CARRY_OUT)
                 $query->andFilterWhere(['between','Course.real_carry_out',$dateRange_Arr[0],$dateRange_Arr[1]]);
-            if($status == null || $status == ItemManage::STATUS_NORMAL)
+            if($status == 0 || $status == 100 || $status == ItemManage::STATUS_NORMAL)
                 $query->andFilterWhere(['between','Course.plan_start_time',$dateRange_Arr[0],$dateRange_Arr[1]]);
         }
         $model = new ItemManage();

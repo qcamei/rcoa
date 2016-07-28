@@ -24,13 +24,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 echo DateRangePicker::widget([
                     'value'=>$dateRange,
                     'name' => 'dateRange',
-                    'presetDropdown' => true,
+                    //'presetDropdown' => true,
                     'hideInput' => true,
                     'convertFormat'=>true,
                     'pluginOptions'=>[
                         'locale'=>['format' => 'Y-m-d'],
                         'allowClear' => true,
-                    ]
+                        'ranges' => [
+                            Yii::t('rcoa/teamwork', "Statistics-Prev-Week") => ["moment().startOf('week').subtract(1,'week')", "moment().endOf('week').subtract(1,'week')"],
+                            Yii::t('rcoa/teamwork', "Statistics-This-Week") => ["moment().startOf('week')", "moment().endOf('week')"],
+                            Yii::t('rcoa/teamwork', "Statistics-Prev-Month") => ["moment().startOf('month').subtract(1,'month')", "moment().endOf('month').subtract(1,'month')"],
+                            Yii::t('rcoa/teamwork', "Statistics-This-Month") => ["moment().startOf('month')", "moment().endOf('month')"],
+                            Yii::t('rcoa/teamwork', "Statistics-First-Half-Year") => ["moment().startOf('year')", "moment().startOf('year').add(5,'month').endOf('month')"],
+                            Yii::t('rcoa/teamwork', "Statistics-Next-Half-Year") => ["moment().startOf('year').add(6,'month')", "moment().endOf('year')"],
+                            Yii::t('rcoa/teamwork', "Statistics-Full-Year") => ["moment().startOf('year')", "moment().endOf('year')"],
+                        ]
+                    ],
+                    
                 ]);
             ?>
           </div>
@@ -120,7 +130,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 echo Select2::widget([
                     'value'=> $status,
                     'name' => 'status',
-                    'data' => [ItemManage::STATUS_CARRY_OUT=>'已完成',ItemManage::STATUS_NORMAL=>'在建'],
+                    'data' => [0=>'已建',ItemManage::STATUS_CARRY_OUT=>'已完成',ItemManage::STATUS_NORMAL=>'在建',100=>'在建 和 已完成'],
                     'options' => [
                         'placeholder' => Yii::t('rcoa/teamwork', 'Statistics-Team-prompt'),
                     ],
