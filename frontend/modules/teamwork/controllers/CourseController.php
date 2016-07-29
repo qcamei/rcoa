@@ -99,22 +99,27 @@ class CourseController extends Controller
         $twTool = Yii::$app->get('twTool');
         /* @var $model CourseManage */
         $model = $twTool->getCourseProgressOne($id);
-        $post = Yii::$app->request->post();
-        $producer = $this->getAssignProducers($id);
-        $create_time = $this->getSummaryCreateTime(['course_id' => $id]);
-        $result = empty($post) ? $twTool->getWeek($id, date('Y-m-d', time())) : 
-                    $twTool->getWeek($id, $post['create_time']);
-                    
+        $get = Yii::$app->request->queryParams;
+        $week = $twTool->getWeek(date('Y-m-d', time()));
+        
+        $weeklyInfo = !empty($get['start']) && !empty($get['end'])? 
+                $twTool->getWeeklyInfo($id, $get['start'], $get['end']) :
+                $twTool->getWeeklyInfo($id, $week['start'], $week['end']);
+        
+        if(empty($weeklyInfo) || $weeklyInfo->create_time < $week['start'])
+            $createTime = null;
+        else
+            $createTime = $weeklyInfo->create_time;
+        
         return $this->render('view', [
             'model' => $model,
             'twTool' => $twTool,
-            'producer' => $producer,
-            'create_time' => $create_time,
-            'create_time_key' => empty($post) ? null : array_keys($create_time),
-            'createTime' => empty($result) ? null : $result->create_time,
-            'createdAt' => empty($result)? '无' : date('Y-m-d H:i', $result->created_at),
-            'content' => empty($result)? '无' :$result->content,
+            'producer' => $this->getAssignProducers($id),
+            'weekinfo' => $twTool->getWeekInfo(date('Y-m', time())),
             'annex' => $this->getCourseAnnex($model->id),
+            'createTime' =>  $createTime,
+            'createdAt' => empty($weeklyInfo)? '无' : date('Y-m-d H:i', $weeklyInfo->created_at),
+            'content' => empty($weeklyInfo)? '无' :$weeklyInfo->content,
         ]);
     }
 
@@ -449,7 +454,7 @@ class CourseController extends Controller
      * 获取总结创建时间
      * @param type $condition   条件
      * @return type
-     */
+     
     public function getSummaryCreateTime($condition)
     {
         $createTime = CourseSummary::find()
@@ -457,9 +462,13 @@ class CourseController extends Controller
                       ->orderBy('create_time asc')
                       ->all();
         return ArrayHelper::map($createTime, 'create_time', 'create_time');
-    }
+    }*/
     
-    
+    /**
+     * 获取课程附件
+     * @param type $course_id
+     * @return type
+     */
     public function getCourseAnnex($course_id)
     {
         $annex = CourseAnnex::find()

@@ -10,10 +10,11 @@ use common\models\teamwork\CoursePhase;
 use common\models\teamwork\CourseProducer;
 use common\models\teamwork\CourseSummary;
 use common\models\teamwork\ItemManage;
-use common\models\teamwork\Phase;
 use common\models\teamwork\Link;
+use common\models\teamwork\Phase;
 use Yii;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 
 class TeamworkTool{
@@ -26,10 +27,9 @@ class TeamworkTool{
 
     /**
      * 获取一周时间
-     * @param type $course_id
-     * @param type $date
+     * @param type $date            日期
      */
-    public function getWeek($course_id, $date)
+    public function getWeek($date)
     {
         //$date = date('Y-m-d');  //当前日期
         $first = 1; //$first =1 表示每周星期一为开始日期 0表示每周日为开始日期
@@ -38,13 +38,48 @@ class TeamworkTool{
         $now_end = date('Y-m-d',strtotime("$now_start +6 days"));  //本周结束日期
         //$last_start=date('Y-m-d',strtotime("$now_start - 7 days"));  //上周开始日期
         //$last_end=date('Y-m-d',strtotime("$now_start - 1 days"));  //上周结束日期
+        $week = [
+            'start' => $now_start,
+            'end' => $now_end,
+        ];
+        
+        return  $week;
+    }
+    
+    /**
+     * 计算一个月有多少周
+     * @param type $month       月份
+     * @return type
+     */
+    public function getWeekInfo($month){
+        $weekinfo = [];
+        $end_date = date('d',strtotime($month.' +1 month -1 day'));   //计算一个月有多少天 
+        for ($i=1; $i <$end_date ; $i=$i+7) { 
+            $w = date('N',strtotime($month.'-'.$i));        //计算每月1号在一个星期是第几天
+            $weekinfo[] = [
+                'start' => date('Y-m-d',strtotime($month.'-'.$i.' -'.($w-1).' days')),         //获取星期一是几号
+                'end' => date('Y-m-d',strtotime($month.'-'.$i.' +'.(7-$w).' days'))          //获取星期天是几号
+            ];
+        }
+        return $weekinfo;
+    }			
+	
+    /**
+     * 获取周报信息
+     * @param type $course_id   课程ID
+     * @param type $weekStart   一周开始日期
+     * @param type $WeekEnd     一周结束日期
+     * @return type
+     */
+    public function getWeeklyInfo($course_id, $weekStart, $WeekEnd) 
+    {
         $result = CourseSummary::find()->where(['course_id' => $course_id])
-                ->andWhere('create_time >="'. $now_start.'"')
-                ->andWhere('create_time <="'. $now_end.'"')
+                ->andWhere('create_time >="'. $weekStart.'"')
+                ->andWhere('create_time <="'. $WeekEnd.'"')
                 ->one();
         return $result;
     }
-    
+
     /**
      * 获取创建者所在团队
      * @param type $create_by   创建者

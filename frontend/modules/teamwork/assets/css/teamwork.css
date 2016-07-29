@@ -334,6 +334,9 @@ and open the template in the editor.
     width: 80%;
     min-width: 100px;
 }
+.row .weekinfo{
+    margin: 5px 5px 5px 0px;
+}
 .summar{
     width:100%;
     height:auto;

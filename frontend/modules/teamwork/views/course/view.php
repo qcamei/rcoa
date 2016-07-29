@@ -56,38 +56,29 @@ $this->params['breadcrumbs'][] = $this->title;
     <span style="color: blue;">本周开发者：<?= empty($model->weekly_editors_people)? '无' : 
             $model->weeklyEditorsPeople->u->nickname.' ('.$model->weeklyEditorsPeople->position.')' ?>
     </span>
-     <?php  $form = ActiveForm::begin([
-        'id' => 'form-summary-search',
-    ]) ?>
     
-    <?= Html::beginTag('div', ['class' => 'col-lg-3 col-md-3 col-sm-4', 'style'=> 'padding:0;margin-bottom:10px;']).
-            Select2::widget([
-                'name' => 'create_time',
-                'value' => $create_time_key,
-                'data' => $create_time,
-                'hideSearch' => true,
-                'options' => [
-                    'placeholder' => '请选择...',
-                ],
-                'pluginEvents' => [
-                    'change' => 'function(){ select2Log();}'
-                ]
-             ]).Html::endTag('div'); ?> 
-    
-    <?php ActiveForm::end(); ?>
-    
+    <div class="row">
     <?php
-        echo Html::beginTag('div', ['class' => 'col-lg-3 col-md-3 col-sm-4', 'style'=> 'margin-bottom:10px;']).
+        echo Html::beginTag('div', ['class' => 'col-lg-7 col-md-10 col-sm-10 col-xs-12', 'style' => 'padding:0px;']);
+            foreach ($weekinfo as $value) {
+                $result = $twTool->getWeeklyInfo($model->id, $value['start'], $value['end']);
+                echo Html::a(date('m-d',  strtotime($value['start'])).'～'.date('m-d',  strtotime($value['end'])), [
+                    'view', 'id' => $model->id, 'start' => $value['start'], 'end' => $value['end']
+                ], ['class' => !empty($result) ?  'btn btn-info weekinfo' : 'btn btn-info weekinfo disabled',]);
+            }
+        echo Html::endTag('div');
+        echo Html::beginTag('div', ['class' => 'col-lg-2 col-md-2 col-sm-2 col-xs-12', 'style' => 'padding:0px;']).
              Html::a('编辑', [
                 'summary/update', 'course_id' => $model->id, 'create_time' => $createTime,], 
-                ['class' => 'btn btn-primary']).' '.
-             Html::a('新增', ['summary/create', 'course_id' => $model->id], ['class' => 'btn btn-primary']).Html::endTag('div');
+                ['class' => 'btn btn-primary weekinfo']).' '.
+             Html::a('新增', ['summary/create', 'course_id' => $model->id], ['class' => 'btn btn-primary weekinfo']).Html::endTag('div');
         /* @var $model CourseManage */
         echo Html::beginTag('div', ['class' => 'col-lg-12 col-md-12 col-sm-4', 'style' => 'padding:0']).
              Html::beginTag('div',['class' => 'summar']).'<p class ="time">时间：'.$createdAt.'</p>'.
              $content. 
              Html::endTag('div').Html::endTag('div');
     ?>
+    </div>
     
 </div>
 
