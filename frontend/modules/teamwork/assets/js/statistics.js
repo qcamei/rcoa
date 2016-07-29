@@ -18,7 +18,7 @@
         this.reflashChart(title,datas);
         var _this = this;
         $(win).resize(function(){
-            _this.reflashChart(title,datas);
+            _this.chart.resize();
         });
     }
     var p = PicChart.prototype;
@@ -40,7 +40,8 @@
             },
             tooltip : {
                 trigger: 'item',
-                formatter: "{a} <br/>{b} : {c} ({d}%)"
+                formatter: "{a} <br/>{b} : {c} ({d}%)",
+                position: ($(dom).width() >= 720 ? null : ['0%', '15%'])
             },
             legend: {
                 orient: 'vertical',
@@ -65,7 +66,8 @@
                     label:{
                         normal:{
                             show:true,
-                            formatter:'{b} ( {c}学时 ) {d}%'
+                            formatter:'{b} ( {c}学时 ) {d}%',
+                            left:'left'
                         }
                     },
                     
@@ -115,7 +117,7 @@
         this.reflashChart(title,datas);
         var _this = this;
         $(win).resize(function(){
-            _this.reflashChart(title,datas);
+            _this.chart.resize();
         });
     }
     var p = BarChart.prototype;
