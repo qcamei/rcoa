@@ -100,27 +100,28 @@ class CourseController extends Controller
         /* @var $model CourseManage */
         $model = $twTool->getCourseProgressOne($id);
         $get = Yii::$app->request->queryParams;
-        
-        $weeklyMonth = $this->getWeeklyMonth($model);
-        
-        $lastWeek = $twTool->getMonthLastWeek(end($weeklyMonth));
-        
-        $week = $twTool->getWeek(date('Y-m-d', time()));
-        
+        $weeklyMonth = $this->getWeeklyMonth($model);   //周报月份列表
+        $lastWeek = $twTool->getMonthLastWeek(end($weeklyMonth));   //获取每个月最后一周
+        $week = $twTool->getWeek(date('Y-m-d', time()));    //获取一周
+        $weeklyMonthValue = !empty($get['start']) && !empty($get['end']) ? date('Y-m', strtotime($get['start'] )) : 
+                            (empty($get['month']) ? end($weeklyMonth) : $get['month']);     //周报月份列表值
+        $weekinfo = !empty($get['start']) && !empty($get['end']) ? date('Y-m', strtotime($get['start'] )) : 
+                    (empty($get['month']) ? end($weeklyMonth) : $get['month']);     //一个月的周数
         $weeklyInfo = !empty($get['start']) && !empty($get['end'])? 
                 $twTool->getWeeklyInfo($id, $get['start'], $get['end']) :
                 ($model->getIsNormal() ?  $twTool->getWeeklyInfo($id, $week['start'], $week['end']): 
-                        $twTool->getWeeklyInfo($id, $lastWeek['start'], $lastWeek['end']));
-        
+                        $twTool->getWeeklyInfo($id, $lastWeek['start'], $lastWeek['end']));     //周报信息
+        $createTime = empty($weeklyInfo) || $weeklyInfo->create_time < ($model->getIsNormal() ? 
+                            $week['start'] : $lastWeek['start']) ?  null : $weeklyInfo->create_time;    //周报创建日期
+                            
         return $this->render('view', [
             'model' => $model,
             'twTool' => $twTool,
             'producer' => $this->getAssignProducers($id),
             'weeklyMonth' => $weeklyMonth,
-            'weeklyMonthValue' => empty($get['month']) ? end($weeklyMonth) : $get['month'],
-            'weekinfo' => $twTool->getWeekInfo(empty($get['month']) ? end($weeklyMonth) : $get['month']),
-            'createTime' =>  empty($weeklyInfo) || $weeklyInfo->create_time < ($model->getIsNormal() ? $week['start'] : $lastWeek['start']) ? 
-                            null : $weeklyInfo->create_time,
+            'weeklyMonthValue' => $weeklyMonthValue,
+            'weekinfo' => $twTool->getWeekInfo($weekinfo),
+            'createTime' => $createTime,
             'createdAt' => empty($weeklyInfo)? '无' : date('Y-m-d H:i', $weeklyInfo->created_at),
             'content' => empty($weeklyInfo)? '无' :$weeklyInfo->content,
             'annex' => $this->getCourseAnnex($model->id),
