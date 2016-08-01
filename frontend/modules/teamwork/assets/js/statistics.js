@@ -134,7 +134,7 @@
         this.chartOptions = {
             title: {
                 text: '世界人口总量',
-                subtext: '数据来自网络'
+                subtext: '数据来自课程中心平台'
             },
             tooltip: {
                 trigger: 'axis',
