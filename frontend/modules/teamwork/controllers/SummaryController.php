@@ -91,7 +91,7 @@ class SummaryController extends Controller
         if(!empty($result))
             return $this->redirect(['update', 'course_id' => $model->course_id, 'create_time' => $result->create_time]);
         
-        if(!$model->course->getIsNormal() || (!$twTool->getIsLeader() || $editorsPeople != \Yii::$app->user->id))
+        if(!$model->course->getIsNormal() || !($twTool->getIsLeader() || $editorsPeople == \Yii::$app->user->id))
             throw new NotAcceptableHttpException('无权限操作！');
        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -121,7 +121,7 @@ class SummaryController extends Controller
         $model->create_by = $model->weeklyCreateBy->weekly_editors_people;
         $editorsPeople = $model->course->weekly_editors_people;
         
-        if(!$model->course->getIsNormal() || (!$twTool->getIsLeader() || $editorsPeople != \Yii::$app->user->id))
+        if(!$model->course->getIsNormal() || !($twTool->getIsLeader() || $editorsPeople == \Yii::$app->user->id))
             throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

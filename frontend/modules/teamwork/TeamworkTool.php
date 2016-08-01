@@ -49,9 +49,10 @@ class TeamworkTool{
     /**
      * 计算一个月有多少周
      * @param type $month       月份
-     * @return type
+     * @return array
      */
-    public function getWeekInfo($month){
+    public function getWeekInfo($month)
+    {
         $weekinfo = [];
         $end_date = date('d',strtotime($month.' +1 month -1 day'));   //计算一个月有多少天 
         for ($i=1; $i <$end_date ; $i=$i+7) { 
@@ -62,8 +63,29 @@ class TeamworkTool{
             ];
         }
         return $weekinfo;
-    }			
-	
+    }
+    
+    /**
+     * 计算每个月的最后一个星期
+     * @param type $month   月份
+     * @return array
+     */
+    public function getMonthLastWeek($month)
+    {
+        $end_date = date('d',strtotime($month.' +1 month -1 day'));   //计算一个月有多少天 
+        $first = 1;     //周日是 0 周一到周六是 1 - 6
+        $w = date('w',strtotime($month.'-'.$end_date));      //获取每月最后一天是星期几
+        $lastWeekStart = date('Y-m-d', strtotime($month.'-'.$end_date.' -'.($w ? $w - $first : 6).' days'));     //计算每月最后一个星期的星期一
+        $lastWeekEnd = date('Y-m-d', strtotime("$lastWeekStart + 6 days"));     //计算每月的最后一个星期的星期天
+        
+        $lastWeek = [
+            'start' => $lastWeekStart,
+            'end' => $lastWeekEnd,
+        ];
+        
+        return  $lastWeek;
+    }
+
     /**
      * 获取周报信息
      * @param type $course_id   课程ID

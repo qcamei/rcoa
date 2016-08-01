@@ -59,6 +59,20 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <div class="row">
     <?php
+        echo Html::beginTag('div', ['class' => 'col-lg-2 col-md-10 col-sm-10 col-xs-12 weekinfo', 'style' => 'padding:0px;']);
+            echo  Select2::widget([
+                'name' => 'create_time',
+                'value' => $weeklyMonthValue,
+                'data' => $weeklyMonth,
+                'hideSearch' => true,
+                'options' => [
+                    'placeholder' => '请选择...',
+                ],
+                'pluginEvents' => [
+                    'change' => 'function(){ select2Log($(this).val());}'
+                ]
+             ]);
+        echo Html::endTag('div');
         echo Html::beginTag('div', ['class' => 'col-lg-7 col-md-10 col-sm-10 col-xs-12', 'style' => 'padding:0px;']);
             foreach ($weekinfo as $value) {
                 $result = $twTool->getWeeklyInfo($model->id, $value['start'], $value['end']);
@@ -125,8 +139,8 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php
-//$reflashUrl = Yii::$app->urlManager->createAbsoluteUrl(['/teamwork/default/view']);
-//id = "$model->id";
+$reflashUrl = Yii::$app->urlManager->createAbsoluteUrl(['/teamwork/default/view']);
+$id = "$model->id";
 $js = 
 <<<JS
     var reflashUrl = "",
@@ -143,9 +157,10 @@ JS;
 ?>
 
 <script type="text/javascript">
-
-    function select2Log(){
-        $("#form-summary-search").submit();
+    var reflashUrl = "<?= Yii::$app->urlManager->createAbsoluteUrl(['/teamwork/course/view']); ?>";
+        id = "<?= $model->id; ?>";
+    function select2Log(value){
+       location.href = reflashUrl+'?id='+id+'&month='+value;
     } 
 </script>
 

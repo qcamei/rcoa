@@ -100,26 +100,30 @@ class CourseController extends Controller
         /* @var $model CourseManage */
         $model = $twTool->getCourseProgressOne($id);
         $get = Yii::$app->request->queryParams;
+        
+        $weeklyMonth = $this->getWeeklyMonth($model);
+        
+        $lastWeek = $twTool->getMonthLastWeek(end($weeklyMonth));
+        
         $week = $twTool->getWeek(date('Y-m-d', time()));
         
         $weeklyInfo = !empty($get['start']) && !empty($get['end'])? 
                 $twTool->getWeeklyInfo($id, $get['start'], $get['end']) :
-                $twTool->getWeeklyInfo($id, $week['start'], $week['end']);
-        
-        if(empty($weeklyInfo) || $weeklyInfo->create_time < $week['start'])
-            $createTime = null;
-        else
-            $createTime = $weeklyInfo->create_time;
+                ($model->getIsNormal() ?  $twTool->getWeeklyInfo($id, $week['start'], $week['end']): 
+                        $twTool->getWeeklyInfo($id, $lastWeek['start'], $lastWeek['end']));
         
         return $this->render('view', [
             'model' => $model,
             'twTool' => $twTool,
             'producer' => $this->getAssignProducers($id),
-            'weekinfo' => $twTool->getWeekInfo(date('Y-m', time())),
-            'annex' => $this->getCourseAnnex($model->id),
-            'createTime' =>  $createTime,
+            'weeklyMonth' => $weeklyMonth,
+            'weeklyMonthValue' => empty($get['month']) ? end($weeklyMonth) : $get['month'],
+            'weekinfo' => $twTool->getWeekInfo(empty($get['month']) ? end($weeklyMonth) : $get['month']),
+            'createTime' =>  empty($weeklyInfo) || $weeklyInfo->create_time < ($model->getIsNormal() ? $week['start'] : $lastWeek['start']) ? 
+                            null : $weeklyInfo->create_time,
             'createdAt' => empty($weeklyInfo)? '无' : date('Y-m-d H:i', $weeklyInfo->created_at),
             'content' => empty($weeklyInfo)? '无' :$weeklyInfo->content,
+            'annex' => $this->getCourseAnnex($model->id),
         ]);
     }
 
@@ -393,6 +397,31 @@ class CourseController extends Controller
     }
     
     /**
+     * 计算课程开发周报月份
+     * @param type $model
+     * @return array
+     */
+    public function getWeeklyMonth($model)
+    {
+        $monthStart = strtotime(date('Y-m', $model->created_at));       //课程创建时间
+        $monthEnd = ($model->real_carry_out == '无') ? strtotime(date('Y-m', time())) :
+                    strtotime(date('Y-m', strtotime($model->real_carry_out)));      //课程实际完成时间
+       
+        $monthArray = [];
+        $monthArray[] = date('Y-m', $model->created_at); // 当前月;
+        while(($monthStart = strtotime('+1 month', $monthStart)) <= $monthEnd){
+            $monthArray[] = date('Y-m',$monthStart); // 取得递增月;  
+        }
+        $weeklyMonth = [];
+        foreach ($monthArray as $key => $value) {
+            $key = $value;
+            $weeklyMonth[$key] = $value;
+        }
+        
+        return $weeklyMonth;
+    }
+    
+    /**
      * 获取周报编辑人
      * @param type $courseId
      */
@@ -444,25 +473,10 @@ class CourseController extends Controller
                         ArrayHelper::getValue($element, 'producerOne.u.nickname').
                         '('.ArrayHelper::getValue($element, 'producerOne.position').')'. 
                    '</span>';
-            //$producers[ArrayHelper::getValue($element, 'producerOne.team.name')][$key] = $value;
             $producers[$key] = $value;
         }
         return $producers;
     }
-    
-    /**
-     * 获取总结创建时间
-     * @param type $condition   条件
-     * @return type
-     
-    public function getSummaryCreateTime($condition)
-    {
-        $createTime = CourseSummary::find()
-                      ->where($condition)
-                      ->orderBy('create_time asc')
-                      ->all();
-        return ArrayHelper::map($createTime, 'create_time', 'create_time');
-    }*/
     
     /**
      * 获取课程附件
