@@ -190,9 +190,9 @@ $items = json_encode($items);
 $itemChilds = json_encode($itemChilds);
 $teams = json_encode($teams);
 $js = <<<JS
-        var itemTypeChart = new teamwork.PicChart("按项目类型统计",document.getElementById('itemTypeCanvas'),$itemTypes);
-        var itemChart = new teamwork.PicChart("按项目统计",document.getElementById('itemsCanvas'),$items);
-        var itemChildChart = new teamwork.PicChart("按子项目统计",document.getElementById('itemChildCanvas'),$itemChilds);
+        var itemTypeChart = new teamwork.PicChart("按行业统计",document.getElementById('itemTypeCanvas'),$itemTypes);
+        var itemChart = new teamwork.PicChart("按层次/类型统计",document.getElementById('itemsCanvas'),$items);
+        var itemChildChart = new teamwork.PicChart("按专业/工种统计",document.getElementById('itemChildCanvas'),$itemChilds);
         var teamChart = new teamwork.BarChart("按团队统计",document.getElementById('teamCanvas'),$teams);
         
         var item_id = Number("$item_id") == "" ? -1 : Number("$item_id");
