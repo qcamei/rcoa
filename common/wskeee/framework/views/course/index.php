@@ -25,20 +25,19 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'name',
             [
                 'attribute' => 'parent.parent.name',
                 'label' => '所属项目',
-                'headerOptions' => ['class'=>'col-lg-4']
+                'headerOptions' => ['class'=>'col-lg-2']
             ],
             [
                 'attribute' => 'parent.name',
                 'label' => '所属子项目',
-                'headerOptions' => ['class'=>'col-lg-4']
+                'headerOptions' => ['class'=>'col-lg-2']
             ],
-            'des',
+            'name',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn', 'headerOptions' => ['class'=>'col-lg-1']],
         ],
     ]); ?>
 
