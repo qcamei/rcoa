@@ -4,11 +4,13 @@ namespace wskeee\framework;
 use linslin\yii2\curl\Curl;
 use wskeee\framework\models\FWItem;
 use wskeee\framework\models\Item;
+use wskeee\framework\models\ItemType;
 use Yii;
 use yii\base\Component;
 use yii\base\UserException;
 use yii\caching\Cache;
 use yii\di\Instance;
+use yii\helpers\ArrayHelper;
 
 
 
@@ -65,6 +67,85 @@ class FrameworkManager extends Component
         }
         $this->loadFromCache();
     }
+    /**
+     * 添加一个项目基础数据
+     * @param string $name              名称
+     * @param integer $level            等级 Item::LEVEL_COLLEGE / Item::LEVEL_PROJECT / Item::LEVEL_COURSE
+     * @param integer $parent_id        父级id
+     * @param string $des               描述
+     * @param boolean $clearCache       清除缓存    
+     * @return integer 新加或更新后id
+     */
+    public function addItem($name,$level,$parent_id,$des,$clearCache=1){
+        $item = Item::find(['name'=>$name]);
+        if(!$item)
+            $item = new Item ();
+        $item->name = $name;
+        $item->level = $level;
+        $item->parent_id = $parent_id;
+        $item->des = $des;
+        if($item->validate() && $item->sava()){
+            if($clearCache)
+                $this->invalidateCache ();
+            return $item->id;
+        }
+        return null;
+    }
+    
+    /**
+     * 添加多个项目基础数据
+     * @param array $names                          多个名称集
+     * @param array | integer $level                等级 Item::LEVEL_COLLEGE / Item::LEVEL_PROJECT / Item::LEVEL_COURSE
+     * @param array | integer $parent_id            父级id
+     * @param boolean $clearCache                   清除缓存 
+     */
+    public function addItems($names,$level,$parent_id,$clearCache=1){
+        $doneItems = Item::find()
+                        ->select(['id','name'])
+                        ->asArray()
+                        ->where(['name'=>$names])
+                        ->all();
+        //已经存在的数据
+        $doneNames = ArrayHelper::map($doneItems,'name','id');
+        //需要新建的数据
+        //$newNames = array_diff($doneNames, $names);
+        $rows = [];
+        foreach($names as $index=>$name){
+            if(!isset($doneNames[$name]))
+                $rows [] = [
+                    $name,  
+                    is_array ($level) ? $level[$index] : $level,//如果是array，添加对应值
+                    is_array ($parent_id) ? $parent_id[$index] : $parent_id//如果是array，添加对应值
+                ];
+        }
+        if(count($rows)==0)return;
+        Yii::$app->db->createCommand()->batchInsert(Item::tableName(), ['name','level','parent_id'], $rows)->execute();
+    }
+    
+    /**
+     * 创建类型
+     * @param array $names
+     * @param boolean $clearCashe
+     */
+    public function addItemType($names,$clearCashe){
+        $doneItems = ItemType::find()
+                        ->select(['id','name'])
+                        ->asArray()
+                        ->where(['name'=>$names])
+                        ->all();
+        //已经存在的数据
+        $doneNames = ArrayHelper::map($doneItems,'name','id');
+        //需要新建的数据
+        //$newNames = array_diff($doneNames, $names);
+        $rows = [];
+        foreach($names as $index=>$name){
+            if(!isset($doneNames[$name]))
+                $rows [] = [$name];
+        }
+        if(count($rows)==0)return;
+        Yii::$app->db->createCommand()->batchInsert(ItemType::tableName(), ['name'], $rows)->execute();
+    }
+    
     
     /**
      * 获取架构数据
