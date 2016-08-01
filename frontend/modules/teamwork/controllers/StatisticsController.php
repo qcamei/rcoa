@@ -33,29 +33,53 @@ class StatisticsController extends Controller
         
         /* @var $query Query */
         $query = (new Query())
-                ->andFilterWhere(['Course.status'=>($status == 0 || $status == 100) ? null : $status])
+                ->andFilterWhere(['Course.status'=>$status])
                 ->andFilterWhere(['Course.`team_id`'=>$team])
                 ->andFilterWhere(['Item.`item_type_id`'=>$item_type_id])
                 ->andFilterWhere(['Item.`item_id`'=>$item_id])
                 ->andFilterWhere(['Item.`item_child_id`'=>$item_child_id]);
-                
-        /** 
-         * 状态为【完成】，查找【完成时间】在【划定的时间】内
-         * 状态为【在线】，查找【计划开始时间】在【划定时间】内
-         * 如果状态为空，查找【完成时间】和【计划开始时间】都在【划定时间】内
-         **/
+        /* 当时间段参数不为空时 */
         if($dateRange = $request->getQueryParam('dateRange')){
             $dateRange_Arr = explode(" - ",$dateRange);
-            if($status == 100 || $status == ItemManage::STATUS_CARRY_OUT)
+            //下面所有例子设置时间段为 2016-08-01 到 2016-08-31
+            if($status == CourseManage::STATUS_WAIT_START)
+            {
+                /*
+                 * 状态=待开始 AND created_at(创建时间)<=指定时间段最大值
+                 * 如：统计 到 2016-08-31 号还没有【开始】的课程
+                 * 注：【去年建】的课程到 2016-08-31 还【未开始】也会统计在内。
+                 */
+                $query->andFilterWhere(['<=','Course.created_at',strtotime($dateRange_Arr[1])]);
+            }else if($status == CourseManage::STATUS_NORMAL)
+            {
+                /*
+                 * 状态=在建中 AND real_start_time(实际开始时间)<=指定时间段最大值
+                 * 如：统计 到 2016-08-31 号还在【建设中】的课程
+                 * 注：【去年开始】的课程到 2016-08-31 还【未完成】也会统计在内。
+                 */
+                //状态=在建中 AND real_start_time(实际开始时间)<=指定时间最大值，如：统计【指定最大值时间】还在【建设中】的课程
+                $query->andFilterWhere(['<=','Course.real_start_time',strtotime($dateRange_Arr[1])]);
+            }else if($status == CourseManage::STATUS_CARRY_OUT)
+            {
+                /*
+                 * 状态=已完成 AND 指定时间最小值<real_carry_out(实际完成时间)<指定时间段最大值
+                 * 如：统计 2016-08-01 到 2016-08-31 内完成的课程
+                 */
                 $query->andFilterWhere(['between','Course.real_carry_out',$dateRange_Arr[0],$dateRange_Arr[1]]);
-            if($status == 0 || $status == 100 || $status == ItemManage::STATUS_NORMAL)
-                $query->andFilterWhere(['between','Course.plan_start_time',$dateRange_Arr[0],$dateRange_Arr[1]]);
+            }else{
+                /**
+                 * 状态为空时，每个条件都加上对应状态
+                 * 条件为或者关系，只要满足其中一条规则即可统计在内
+                 */
+                $query->orFilterWhere(['and',"Course.status=".CourseManage::STATUS_WAIT_START,  ['<=','Course.created_at',strtotime($dateRange_Arr[1])]]);
+                $query->orFilterWhere(['and',"Course.status=".CourseManage::STATUS_NORMAL,      ['<=','Course.real_start_time',strtotime($dateRange_Arr[1])]]);
+                $query->orFilterWhere(['and',"Course.status=".CourseManage::STATUS_CARRY_OUT,   ['between','Course.real_carry_out',$dateRange_Arr[0],$dateRange_Arr[1]]]);
+            }
         }
         $model = new ItemManage();
-        $teams = $this->getStatisticsByTeam($query);
-        /** 总学时 */
-        $allCHours = array_sum(ArrayHelper::getColumn($teams, 'value'));
-        $allCourse = array_sum(ArrayHelper::getColumn($teams, 'total'));
+        $teams = $this->getStatisticsByTeam($query);//按团队统计
+        $allCHours = array_sum(ArrayHelper::getColumn($teams, 'value'));//总学时 
+        $allCourse = array_sum(ArrayHelper::getColumn($teams, 'total'));//总课程
         return $this->render('index',[
             'dateRange'=>$dateRange,
             'item_type_id'=>$item_type_id,
@@ -68,9 +92,9 @@ class StatisticsController extends Controller
             'allCourse'=>$allCourse,
             
             'twTool'=>Yii::$app->get('twTool'),
-            'itemTypes'=>$this->getStatisticsByItemType($query),
-            'items'=>$this->getStatisticsByItem($query),
-            'itemChilds'=>$this->getStatisticsByItemChild($query),
+            'itemTypes'=>$this->getStatisticsByItemType($query),//按行业统计
+            'items'=>$this->getStatisticsByItem($query),//按项目统计
+            'itemChilds'=>$this->getStatisticsByItemChild($query),//按子项目统计
             'teams'=>$teams,
             'item_type_ids'=>$this->getItemTyps(),
             'item_ids'=>$this->getItems(),
@@ -164,7 +188,7 @@ class StatisticsController extends Controller
      */
     private function getStatisticsByTeam($sourceQuery){
         $teamQuery = clone $sourceQuery;
-        $teamQuery->select(['Team.name','SUM(Course.lession_time) AS value','Count(*) AS total'])
+        $teamQuery->select(['Team.name','SUM(Course.lession_time) AS value','Count(Course.id) AS total'])
                 ->from(['Team'=> Team::tableName()])
                 ->leftJoin(['Course'=>CourseManage::tableName()],'Course.team_id = Team.id')
                 ->leftJoin(['Item'=>ItemManage::tableName()], 'Course.project_id = Item.id')
