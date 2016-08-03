@@ -151,6 +151,7 @@ class TeamworkTool{
 
     /**
      * 获取课程时长总和
+     * @param type $condition
      * @return type
      */
     public function getCourseLessionTimesSum($condition)
@@ -159,11 +160,12 @@ class TeamworkTool{
                         ->where($condition)
                         ->with('project')
                         ->all();
+           
         $lessionTime = [];
         foreach ($lessionTimes as $value)
             /* @var $value  CourseManage */
             $lessionTime[] = $value->lession_time;
-       
+        
         return array_sum($lessionTime);
     }
     

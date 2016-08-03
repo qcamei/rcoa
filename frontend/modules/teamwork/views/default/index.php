@@ -3,6 +3,7 @@
 use common\models\teamwork\ItemManage;
 use frontend\modules\teamwork\TeamworkTool;
 use frontend\modules\teamwork\TwAsset;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
 
@@ -23,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="lession-time">
                         <span>已完成学时：</span>
                         <span class="col-lg-6 col-md-6 col-sm-5 col-xs-4 completed-undone">
-                            <?= $completed; ?>
+                            <?= $totalCompleted; ?>
                         </span>
                         <?= Html::a('', ['course/index', 'status' => ItemManage::STATUS_CARRY_OUT], [
                             'class' => 'view_big',
@@ -32,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="lession-time">
                         <span>未完成学时：</span>
                         <span class="col-lg-6 col-md-6 col-sm-5 col-xs-4 completed-undone">
-                            <?= $undone; ?>
+                            <?= $totalUndone; ?>
                         </span>
                         <?= Html::a('', ['course/index', 'status' => ItemManage::STATUS_NORMAL], [
                             'class' => 'view_big',
@@ -76,8 +77,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
     <?php
         foreach ($teamMember as $value) {
-            $completed = $twTool->getCourseLessionTimesSum(['team_id' => $value->id, 'status' => ItemManage::STATUS_CARRY_OUT]);
-            $undone = $twTool->getCourseLessionTimesSum(['team_id' => $value->id, 'status' => ItemManage::STATUS_NORMAL]);
+            $teamMemberCompleted = $twTool->getCourseLessionTimesSum([
+                'team_id' => $value->id, 'status' => ItemManage::STATUS_CARRY_OUT]);
+            $teamMemberUndone = $twTool->getCourseLessionTimesSum([
+                'team_id' => $value->id, 'status' => ItemManage::STATUS_NORMAL]);
             echo '<center><div class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="padding-left:5px;padding-right:5px;">';
                  echo '<div class="team-lession-time">';
                     echo '<div class="team-lession-time-top" style="background:url('.$value->image.') no-repeat">';
@@ -91,14 +94,14 @@ $this->params['breadcrumbs'][] = $this->title;
                         echo '<center><p>'.$value->name.'</p></center>';
                         echo '<div class="lession-time">';
                             echo '<i class="icon completed-icon"></i><span>已完成学时：</span>'
-                            . '<span class="col-lg-4 col-md-4 col-sm-4 col-xs-4 completed" style="padding:0px;">'.$completed.'</span>'
+                            . '<span class="col-lg-4 col-md-4 col-sm-4 col-xs-4 completed" style="padding:0px;">'.$teamMemberCompleted.'</span>'
                             . Html::a('', ['course/index', 'team_id' => $value->id, 'status' => ItemManage::STATUS_CARRY_OUT], [
                                 'class' => 'view-small'
                             ]);
                         echo '</div>';
                         echo '<div class="lession-time">';
                             echo '<i class="icon undone-icon"></i><span>未完成学时：</span>'
-                            . '<span class="col-lg-4 col-md-4 col-sm-4 col-xs-4 undone" style="padding:0px;">'.$undone.'</span>'
+                            . '<span class="col-lg-4 col-md-4 col-sm-4 col-xs-4 undone" style="padding:0px;">'.$teamMemberUndone.'</span>'
                             . Html::a('', ['course/index', 'team_id' => $value->id, 'status' => ItemManage::STATUS_NORMAL], [
                                 'class' => 'view-small'
                             ]);
