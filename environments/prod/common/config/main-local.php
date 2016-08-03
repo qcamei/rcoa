@@ -8,6 +8,7 @@ return [
             'username' => 'ccoa',
             'password' => 'ccoa0405',
             'charset' => 'utf8',
+            'enableSchemaCache'=>true,
             'tablePrefix' => 'ccoa_'   //加入前缀名称fc_
         ],
         'mailer' => [
