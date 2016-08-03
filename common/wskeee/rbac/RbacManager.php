@@ -34,11 +34,7 @@ class RbacManager extends DbManager{
      */
     protected $childs;
     
-    /**
-     * 
-     * @var array [item_name => user]
-     */
-    protected $assignmentToUsers;
+    protected $assignmentsCache = [];
 
     public function loadFromCache()
     {
@@ -48,9 +44,9 @@ class RbacManager extends DbManager{
 
         $data = $this->cache->get($this->cacheKey);
         
-        if (is_array($data) && isset($data[0], $data[1], $data[2], $data[3])) {
+        if (is_array($data) && isset($data[0], $data[1], $data[2])) {
             list ($this->items, $this->rules, $this->parents) = $data;
-            //return;
+            return;
         }
         
         $query = (new Query)->from($this->itemTable);
@@ -79,16 +75,30 @@ class RbacManager extends DbManager{
         }
         
         //create roleToUsers;
-        $this->assignmentToUsers = [];
-         
+        //$this->$assignments = [];
+        /* 
         $query = (new Query)->from($this->assignmentTable);
         foreach ($query->all($this->db) as $row)
         {
             if(isset($this->items[$row['item_name']]))
-                $this->assignmentToUsers[$row['item_name']][] = $row['user_id'];
-        }
+                $this->$assignments[$row['user_id']][] = $row['item_name'];
+        }*/
         
         $this->cache->set($this->cacheKey, [$this->items, $this->rules, $this->parents]);
+    }
+    
+    /**
+     * @inheritdoc
+     */
+    public function getAssignments($userId)
+    {
+        if(isset($this->assignmentsCache[$userId]))
+            return $this->assignmentsCache[$userId];
+        else{
+            $assignments = parent::getAssignments($userId);
+            $this->assignmentsCache[$userId] = $assignments;
+            return $assignments;
+        }
     }
     
     /**
@@ -106,7 +116,7 @@ class RbacManager extends DbManager{
             foreach ($this->childs[$itemName] as $child)
                 $result = array_unique(ArrayHelper::merge($this->getItemUser($child,$result),$result));
         }
-        var_dump($itemName);
+       // var_dump($itemName);
         return $result;
     }
 
