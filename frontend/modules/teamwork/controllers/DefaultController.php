@@ -56,12 +56,14 @@ class DefaultController extends Controller
         $twTool = Yii::$app->get('twTool');
         $completed = $twTool->getCourseLessionTimesSum(['status' => ItemManage::STATUS_CARRY_OUT]);
         $undone = $twTool->getCourseLessionTimesSum(['status' => ItemManage::STATUS_NORMAL]);
-        $team = Team::find()->with('courseManages')->all();
+        $scienceFactory = Team::findOne(['type' => 2]);
+        $teamMember = Team::find()->where(['type' => 1])->with('courseManages')->all();
         return $this->render('index',[
             'twTool' => $twTool,
             'completed' => $completed,
             'undone' => $undone,
-            'team' => $team,
+            'scienceFactory' => $scienceFactory,
+            'teamMember' => $teamMember,
         ]);
     }
     
