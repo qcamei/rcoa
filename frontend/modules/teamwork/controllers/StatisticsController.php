@@ -55,6 +55,7 @@ class StatisticsController extends Controller
         $teams = $this->getStatisticsByTeam($query);
         /** 总学时 */
         $allCHours = array_sum(ArrayHelper::getColumn($teams, 'value'));
+        $allCourse = array_sum(ArrayHelper::getColumn($teams, 'total'));
         return $this->render('index',[
             'dateRange'=>$dateRange,
             'item_type_id'=>$item_type_id,
@@ -64,6 +65,7 @@ class StatisticsController extends Controller
             'status'=>$status,
             'model'=>$model,
             'allCHours'=>$allCHours,
+            'allCourse'=>$allCourse,
             
             'twTool'=>Yii::$app->get('twTool'),
             'itemTypes'=>$this->getStatisticsByItemType($query),
@@ -162,10 +164,10 @@ class StatisticsController extends Controller
      */
     private function getStatisticsByTeam($sourceQuery){
         $teamQuery = clone $sourceQuery;
-        $teamQuery->select(['Team.name','SUM(Course.lession_time) AS value'])
+        $teamQuery->select(['Team.name','SUM(Course.lession_time) AS value','Count(*) AS total'])
                 ->from(['Team'=> Team::tableName()])
                 ->leftJoin(['Course'=>CourseManage::tableName()],'Course.team_id = Team.id')
-                ->leftJoin(['Item'=>ItemManage::tableName()], 'Course.project_id = Item.id')
+                ->leftJoin(['FItem'=>ItemManage::tableName()], 'Course.course_id = FItem.id')
                 ->groupBy('Team.id');
         return $teamQuery->all(Yii::$app->db);
     }
