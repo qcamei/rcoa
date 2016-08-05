@@ -52,47 +52,11 @@ $this->params['breadcrumbs'][] = $this->title;
         }
     ?>
     
-    <h4> 开发周报：</h4>
-    <span style="color: blue;">本周开发者：<?= empty($model->weekly_editors_people)? '无' : 
-            $model->weeklyEditorsPeople->u->nickname.' ('.$model->weeklyEditorsPeople->position.')' ?>
-    </span>
-    
-    <div class="row">
-    <?php
-        echo Html::beginTag('div', ['class' => 'col-lg-2 col-md-10 col-sm-10 col-xs-12 weekinfo', 'style' => 'padding:0px;']);
-            echo  Select2::widget([
-                'name' => 'create_time',
-                'value' => $weeklyMonthValue,
-                'data' => $weeklyMonth,
-                'hideSearch' => true,
-                'options' => [
-                    'placeholder' => '请选择...',
-                ],
-                'pluginEvents' => [
-                    'change' => 'function(){ select2Log($(this).val());}'
-                ]
-             ]);
-        echo Html::endTag('div');
-        echo Html::beginTag('div', ['class' => 'col-lg-7 col-md-10 col-sm-10 col-xs-12', 'style' => 'padding:0px;']);
-            foreach ($weekinfo as $value) {
-                $result = $twTool->getWeeklyInfo($model->id, $value['start'], $value['end']);
-                echo Html::a(date('m-d',  strtotime($value['start'])).'～'.date('m-d',  strtotime($value['end'])), [
-                    'view', 'id' => $model->id, 'start' => $value['start'], 'end' => $value['end']
-                ], ['class' => !empty($result) ?  'btn btn-info weekinfo' : 'btn btn-info weekinfo disabled',]);
-            }
-        echo Html::endTag('div');
-        echo Html::beginTag('div', ['class' => 'col-lg-2 col-md-2 col-sm-2 col-xs-12', 'style' => 'padding:0px;']).
-             Html::a('编辑', [
-                'summary/update', 'course_id' => $model->id, 'create_time' => $createTime,], 
-                ['class' => 'btn btn-primary weekinfo']).' '.
-             Html::a('新增', ['summary/create', 'course_id' => $model->id], ['class' => 'btn btn-primary weekinfo']).Html::endTag('div');
-        /* @var $model CourseManage */
-        echo Html::beginTag('div', ['class' => 'col-lg-12 col-md-12 col-sm-4', 'style' => 'padding:0']).
-             Html::beginTag('div',['class' => 'summar']).'<p class ="time">时间：'.$createdAt.'</p>'.
-             $content. 
-             Html::endTag('div').Html::endTag('div');
-    ?>
-    </div>
+    <?= $this->render('/summary/index', [
+        'model' => $model,
+        'twTool' => $twTool,
+        'weeklyMonth' => $weeklyMonth,
+    ]); ?>
     
 </div>
 
@@ -139,30 +103,12 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php
-$reflashUrl = Yii::$app->urlManager->createAbsoluteUrl(['/teamwork/default/view']);
-$id = "$model->id";
 $js = 
 <<<JS
-    var reflashUrl = "",
-        
-    $('#create_time').change(function(){
-        select2Log($(this).val());
-    });
-    function select2Log(value)
-    {  
-        location.href = reflashUrl+'?id='+id+'&date='+value;
-    }
+    
 JS;
     //$this->registerJs($js,  View::POS_READY);
 ?>
-
-<script type="text/javascript">
-    var reflashUrl = "<?= Yii::$app->urlManager->createAbsoluteUrl(['/teamwork/course/view']); ?>";
-        id = "<?= $model->id; ?>";
-    function select2Log(value){
-       location.href = reflashUrl+'?id='+id+'&month='+value;
-    } 
-</script>
 
 <?php
     TwAsset::register($this);

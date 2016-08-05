@@ -54,14 +54,17 @@ class DefaultController extends Controller
     {
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
-        $completed = $twTool->getCourseLessionTimesSum(['status' => ItemManage::STATUS_CARRY_OUT]);
-        $undone = $twTool->getCourseLessionTimesSum(['status' => ItemManage::STATUS_NORMAL]);
-        $team = Team::find()->with('courseManages')->all();
+        $totalCompleted = $twTool->getCourseLessionTimesSum(['status' => ItemManage::STATUS_CARRY_OUT]);
+        $totalUndone = $twTool->getCourseLessionTimesSum(['status' => ItemManage::STATUS_NORMAL]);
+        $scienceFactory = Team::findOne(['type' => 2]);
+        $teamMember = Team::find()->where(['type' => 1])->with('courseManages')->all();
+         
         return $this->render('index',[
             'twTool' => $twTool,
-            'completed' => $completed,
-            'undone' => $undone,
-            'team' => $team,
+            'totalCompleted' => $totalCompleted,
+            'totalUndone' => $totalUndone,
+            'scienceFactory' => $scienceFactory,
+            'teamMember' => $teamMember,
         ]);
     }
     

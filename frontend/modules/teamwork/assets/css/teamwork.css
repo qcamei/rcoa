@@ -12,9 +12,6 @@ and open the template in the editor.
  * 公共部分样式
  */
 
-.content {
-    padding: 50px 5px 20px !important;
-}
 .container.item-manage{
     padding-left: 0px;
     padding-right: 0px;
@@ -72,143 +69,147 @@ and open the template in the editor.
 /**
  *  首页样式
  */
-.row {
-    margin: 0px !important;
+.item-manage-row {
+    margin: 0px -5px !important;
+    padding: 0px !important;
 }
-.row .item-manage-top-bg {
+.head-bg {
     width: 100%;
-    height: 250px;
-    margin-top: 25px;
-    background: url("/filedata/teamwork/image/item-manage-top-bg.jpg") no-repeat;
+    height: 196px;
+    background: url("/filedata/teamwork/image/head.jpg") no-repeat;
 }
-.item-manage-top-bg .container {
-    padding: 0px;
-}
-.row .item-manage-top-left {
-    margin-top: 75px;
-    margin-left: 15px;
+.total {
+    margin: 25px 15px;
     float: left;
 }
-.item-manage-top-left .lession-time {
+.lession-time {
     width: 100%;
     float: left;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin: 10px 0px;
 }
 .lession-time span {
-    font-size: 25px;
+    font-size: 20px;
     font-weight: 400;
+    color: #fff;
     display: block;
     float: left;
 }
 .lession-time .completed-undone {
-    font-size: 35px;
-    color: red;
+    font-size: 30px;
+    color: #f6ff00;
     margin-top: -10px;
     text-align: center;
     padding: 0px;
 }
-.lession-time .eye-icon-button {
-    width: 36px;
-    height: 36px;
+.lession-time .view_big {
+    width: 42px;
+    height: 53px;
     margin-left: 5px;
-    float: left;
+    margin-top: -5px;
+    float: right;
     display: block;
-    background: url("/filedata/teamwork/image/eye-icon-button-1.png") no-repeat;
+    background: url("/filedata/teamwork/image/view_small.png") no-repeat;
 }
-.item-manage-team {
+.science-factory {
     width: 100%;
-    height: 203px;
-    margin-top: 25px;
+    height: 196px;
+    margin-top: 10px;
 }
-.item-manage-team-left {
-    width: 25%;
-    height: 203px;
+.science-factory-left {
+    width: 15%;
     float: left;
 }
-.item-manage-team-left .item-manage-team-icon-1 {
-    width: 47px;
-    height: 49px;
-    margin: 75px 0;
-    //float: right;
-    display: block;
+.view-science-factory {
+    width:60px;
+    height: 56px;
+    margin-top: 65px;
 }
-.item-manage-team-right {
-    width: 75%;
+.science-factory-right {
+    width: 85%;
     color: #fff;
     float: left;
 }
-.item-manage-team-right .team-lession-time {
-    width: 100%;
-    float: left;
-    //margin-top: 5px;
-    //margin-bottom: 5px;
-}
-.item-manage-team-right p {
-    margin-top: 20px;
+.science-factory-right p {
+    margin-top: 15px;
     margin-left: 8px;
     font-size: 25px;
 }
-.item-manage-team-right span {
-    margin-top: 20px;
-    margin-left: 10px;
-    font-size: 14px;
+.science-factory-right span {
+    margin-top: -10px;
+    margin-left: 15px;
+    font-size: 16px;
     display: block;
     float: left;
 }
-.item-manage-team-right .completed {
-    color: #fff;
-    font-size: 27px;
-    margin-top: 10px;
-    margin-right: 5px;
-    text-align: right;
+.science-factory-right .completed-undone {
+    font-size: 22px;
+    color: #f6ff00;
+    margin-top: -15px;
+    text-align: left;
 }
-.item-manage-team-right .undone {
-    color: #fff;
-    font-size: 27px;
-    margin-top: 10px;
-    margin-right: 5px;
-    text-align: right;
+.team-lession-time {
+    width: 300px;
+    height: 342px;
+    margin: 10px 0px;
+    background: url("/filedata/teamwork/image/team-lession-time.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 1px #d1d1d1 solid;
 }
-.item-manage-team-right .item-manage-team-icon-2 {
-    width: 26px;
-    height: 28px;
-    margin-top: 15px;
-    margin-left: 5px;
+.team-lession-time-top {
+    width: 300px;
+    height: 150px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.team-lession-time-bottom {    
+}
+.team-lession-time-bottom p {
+    margin: 15px 0px;
+    color: #555555;
+    font-size: 25px;
+    font-weight: 400;
+}
+.team-lession-time-bottom span {
+    margin: 5px 0px;
+    color: #696969;
+    font-size: 16px;
     display: block;
     float: left;
 }
-.science-factory {
-    background-color: #5cadaa;
-    //background: url("/filedata/teamwork/image/science-factory.png") no-repeat;
+.icon {
+    width: 25px;
+    height: 24px;
+    float: left;
+    margin: 5px 15px;
 }
-.science-factory .science-factory-left {
-    background-color: #4b9f9c;
-    //background: url("/filedata/teamwork/image/science-factory-left.png") no-repeat;
+.completed-icon{
+    background: url("/filedata/teamwork/image/completed.png") no-repeat;
 }
-.science-factory-left .science-factory-icon-1 {
-    background: url("/filedata/teamwork/image/science-factory-icon-1.png") no-repeat;
+.undone-icon{
+    background: url("/filedata/teamwork/image/undone.png") no-repeat;
 }
-.science-factory .science-factory-icon-2 {
-    background: url("/filedata/teamwork/image/science-factory-icon-2.png") no-repeat;
+.view-team-member {
+    margin: 25px 0px;
 }
-.team-info {
-    background-color: #53d192;
-    //background: url("/filedata/teamwork/image/team-info.png") no-repeat;
+.view-small {
+    width: 25px;
+    height: 32px;
+    margin-top: 0px;
+    display: block;
+    float: left;
+    background: url("/filedata/teamwork/image/view_small.png") no-repeat;
 }
-.team-info .team-info-left {
-    background-color: #38b677;
-    //background: url("/filedata/teamwork/image/team-info-left.png") no-repeat;
+.completed {
+    margin: -3px 0 !important;;
+    font-size: 25px !important;;
+    color: #624cd8 !important;;
 }
-.team-info-left .team-info-icon-1 {
-    background: url("/filedata/teamwork/image/team-info-icon-1.png") no-repeat;
+.undone {
+    margin: -3px 0 !important;;
+    font-size: 25px !important;;
+    color: #696969 !important;;
 }
-.team-info .team-info-icon-2 {
-    background: url("/filedata/teamwork/image/team-info-icon-2.png") no-repeat;
-}
-
-
-
 /**
  * 团队成员页样式
  */
