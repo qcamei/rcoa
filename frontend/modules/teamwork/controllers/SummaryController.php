@@ -5,8 +5,8 @@ namespace frontend\modules\teamwork\controllers;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\CourseSummary;
 use frontend\modules\teamwork\TeamworkTool;
+use wskeee\framework\models\Item;
 use Yii;
-use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -47,15 +47,33 @@ class SummaryController extends Controller
      * Lists all CourseSummary models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($course_id, $date)
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => CourseSummary::find(),
-        ]);
-
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
+        Yii::$app->getResponse()->format = 'json';
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
+        $errors = [];
+        $weekinfo = [];
+        try
+        {
+            $weekinfo = $twTool->getWeekInfo($date);
+            foreach ($weekinfo as $value){
+                $result = $twTool->getWeeklyInfo($course_id, $value['start'], $value['end']);
+                $weekinfo[] = [
+                    'date' => date('m-d', strtotime($value['start'])).'～'.date('m-d', strtotime($value['end'])),
+                    'class' => !empty($result) ?  'btn btn-info weekinfo' : 'btn btn-info weekinfo disabled',
+                    'start' => $value['start'],
+                    'end' => $value['end']
+                ];
+            }
+        } catch (Exception $ex) {
+            $errors [] = $ex->getMessage();
+        }
+        return [
+            'type'=>'S',
+            'data' =>  $weekinfo,
+            'error' => $errors
+        ];
     }
 
     /**
@@ -63,11 +81,32 @@ class SummaryController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
+    public function actionView($course_id, $start, $end)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        Yii::$app->getResponse()->format = 'json';
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
+        $errors = [];
+        $weeklyInfo = [];
+        try
+        {
+            $weeklyInfo = $twTool->getWeeklyInfo($course_id, $start, $end);
+            $weeklyInfo = [
+                'course_id' => $weeklyInfo->course_id,
+                'create_time' => $weeklyInfo->create_time,
+                'content' => $weeklyInfo->content,
+                'create_by' => $weeklyInfo->weeklyCreateBy->weeklyEditorsPeople->u->nickname.
+                        '('.$weeklyInfo->weeklyCreateBy->weeklyEditorsPeople->position.')',
+                'created_at' => date('Y-m-d H:i', $weeklyInfo->created_at)
+            ];
+        } catch (Exception $ex) {
+            $errors [] = $ex->getMessage();
+        }
+        return [
+            'type'=>'S',
+            'data' => $weeklyInfo,
+            'error' => $errors
+        ];
     }
 
     /**
