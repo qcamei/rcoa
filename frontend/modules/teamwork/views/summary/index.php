@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
     foreach ($twTool->getWeekInfo(end($weeklyMonth)) as $value) {
         $result = $twTool->getWeeklyInfo($model->id, $value['start'], $value['end']);
         $weekinfo[] = [
-            'date' => date('m-d', strtotime($value['start'])).'～'.date('m-d', strtotime($value['end'])),
+            'date' => date('m/d', strtotime($value['start'])).'～'.date('m/d', strtotime($value['end'])),
             'class' => !empty($result) ?  'btn btn-info weekinfo' : 'btn btn-info weekinfo disabled',
             'start' => $value['start'],
             'end' => $value['end']

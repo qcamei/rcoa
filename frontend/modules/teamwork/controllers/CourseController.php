@@ -387,7 +387,7 @@ class CourseController extends Controller
     public function getWeeklyMonth($model)
     {
         $monthStart = strtotime(date('Y-m', $model->created_at));       //课程创建时间
-        $monthEnd = ($model->real_carry_out == '无') ? strtotime(date('Y-m', time())) :
+        $monthEnd = empty($model->real_carry_out) ? strtotime(date('Y-m', time())) :
                     strtotime(date('Y-m', strtotime($model->real_carry_out)));      //课程实际完成时间
        
         $monthArray = [];

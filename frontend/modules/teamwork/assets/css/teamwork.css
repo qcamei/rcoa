@@ -67,149 +67,128 @@ and open the template in the editor.
 }
 
 /**
- *  首页样式
+ *  主页样式
  */
 .item-manage-row {
     margin: 0px -5px !important;
     padding: 0px !important;
 }
-.head-bg {
+.head {
     width: 100%;
-    height: 196px;
-    background: url("/filedata/teamwork/image/head.jpg") no-repeat;
 }
-.total {
-    margin: 25px 15px;
-    float: left;
+.head-top {
+    width: 100%;
+    height: 166px;
+    background: url("/filedata/teamwork/image/head_image.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.head-bottom {
+    width: 100%;
+    background-color: #fff;
+}
+.head-bottom .total {
+    padding: 10px 15px;
 }
 .lession-time {
-    width: 100%;
-    float: left;
-    margin: 10px 0px;
-}
-.lession-time span {
-    font-size: 20px;
-    font-weight: 400;
-    color: #fff;
-    display: block;
-    float: left;
-}
-.lession-time .completed-undone {
-    font-size: 30px;
-    color: #f6ff00;
-    margin-top: -10px;
+    padding: 5px 15px;
     text-align: center;
-    padding: 0px;
+    border-right: 1px #eee solid;
 }
-.lession-time .view_big {
-    width: 42px;
-    height: 53px;
-    margin-left: 5px;
-    margin-top: -5px;
-    float: right;
-    display: block;
-    background: url("/filedata/teamwork/image/view_small.png") no-repeat;
+.course-door {
+    padding: 5px 15px;
+    text-align: center; 
+    border-right: 1px #eee solid;
 }
-.science-factory {
-    width: 100%;
-    height: 196px;
-    margin-top: 10px;
-}
-.science-factory-left {
-    width: 15%;
-    float: left;
-}
-.view-science-factory {
-    width:60px;
-    height: 56px;
-    margin-top: 65px;
-}
-.science-factory-right {
-    width: 85%;
-    color: #fff;
-    float: left;
-}
-.science-factory-right p {
-    margin-top: 15px;
-    margin-left: 8px;
-    font-size: 25px;
-}
-.science-factory-right span {
-    margin-top: -10px;
-    margin-left: 15px;
-    font-size: 16px;
-    display: block;
-    float: left;
-}
-.science-factory-right .completed-undone {
-    font-size: 22px;
-    color: #f6ff00;
-    margin-top: -15px;
-    text-align: left;
-}
-.team-lession-time {
-    width: 300px;
-    height: 342px;
-    margin: 10px 0px;
-    background: url("/filedata/teamwork/image/team-lession-time.jpg");
-    background-position: center;
-    background-repeat: no-repeat;
-    border: 1px #d1d1d1 solid;
-}
-.team-lession-time-top {
-    width: 300px;
-    height: 150px;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-.team-lession-time-bottom {    
-}
-.team-lession-time-bottom p {
-    margin: 15px 0px;
-    color: #555555;
-    font-size: 25px;
-    font-weight: 400;
-}
-.team-lession-time-bottom span {
-    margin: 5px 0px;
-    color: #696969;
-    font-size: 16px;
-    display: block;
-    float: left;
-}
-.icon {
-    width: 25px;
-    height: 24px;
-    float: left;
-    margin: 5px 15px;
-}
-.completed-icon{
-    background: url("/filedata/teamwork/image/completed.png") no-repeat;
-}
-.undone-icon{
-    background: url("/filedata/teamwork/image/undone.png") no-repeat;
-}
-.view-team-member {
-    margin: 25px 0px;
-}
-.view-small {
-    width: 25px;
+.total-icon {
+    width: 32px;
     height: 32px;
-    margin-top: 0px;
-    display: block;
-    float: left;
-    background: url("/filedata/teamwork/image/view_small.png") no-repeat;
 }
 .completed {
-    margin: -3px 0 !important;;
-    font-size: 25px !important;;
-    color: #624cd8 !important;;
+    font-family: Arial !important;
+    font-size: 28px !important;
+    color: #009944 !important;
+    margin-top: -5px !important;
+    margin-right: 5px;
+    text-align: center;
 }
 .undone {
-    margin: -3px 0 !important;;
-    font-size: 25px !important;;
-    color: #696969 !important;;
+    font-family: Arial !important;
+    font-size: 28px !important;
+    color: #666666 !important;
+    margin-top: -5px !important;
+    margin-right: 5px;
+    text-align: center;
 }
+.team {
+    width: 304px;
+    height: 220px;
+    margin: 25px 0px 0px;
+    background-color: #fff;
+    border-radius: 5px;
+}
+.team-top {
+    width: 304px;
+    height: 131px;
+    padding: 15px 0px;
+}
+.team-name {
+    font-size: 20px;
+    color: #fff;
+    margin-top: -10px;
+}
+.team-top a {
+    display: inline-block;
+    width: 89px;
+    height: 83px;
+    padding:10px;
+}
+.team-bottom {
+    width: 304px;
+    padding: 10px 15px;
+}
+.team-bottom-left {
+    width: 50%;
+    float: left;
+    margin-right: -1px;
+    border-right: 1px #eee solid;
+}
+.team-bottom-right {
+    width: 50%;
+    float: left;
+    border-left: 1px #eee solid;
+}
+.team-bottom p {
+    margin: 0 0 2px;
+}
+@media (max-width: 767px){
+    .head-bottom .total {
+        padding: 0;
+    }
+    .lession-time {
+        padding: 10px 0px;
+        text-align: left;
+        border-bottom: 1px #eee solid;
+        border-right: none;
+        margin-bottom: -1px;
+    }
+    .course-door {
+        padding: 10px 0px;
+        text-align: left; 
+        border-top: 1px #eee solid;
+        border-right: none
+    }
+    .total-xs {
+        width: 41.66666667%;
+    }
+    .head-bottom .completed {
+        text-align: right;
+    }
+    .head-bottom .undone {
+        text-align: right;
+    }
+}
+
 /**
  * 团队成员页样式
  */
