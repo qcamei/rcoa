@@ -24,10 +24,7 @@ use yii\widgets\ActiveForm;
         ], 
     ]); ?>
     <div class="col-lg-7 col-md-7">
-        <?php if($model->isNewRecord)
-            echo $form->field($model, 'username')->textInput(['maxlength'=>32]);
-        else    
-            echo $form->field($model, 'username')->textInput(['maxlength'=>32,'readonly'=>'']);?>
+        <?php echo $form->field($model, 'username')->textInput(['maxlength'=>32]);?>
 
         <?php echo $form->field($model, 'nickname')->textInput(['maxlength'=>32]); ?>
         

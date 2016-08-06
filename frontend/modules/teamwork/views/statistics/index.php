@@ -148,7 +148,11 @@ $this->params['breadcrumbs'][] = $this->title;
     </form>
     <hr/> 
     <div>
-        <div><h3><font><b>统计总学时：<?= $allCHours ?> 学时</b></font></h3></div>
+        <div class="summar-title">
+            <span class="summar-icon"></span>结果:
+            <span  class="num"><?= number_format($allCHours) ?></span>学时,
+            <span class="num"><?= number_format($allCourse) ?></span> 门课程
+        </div>
         <br/>
         <div id="itemTypeCanvas" class="chart"></div>
         <div id="itemsCanvas" class="chart"></div>
