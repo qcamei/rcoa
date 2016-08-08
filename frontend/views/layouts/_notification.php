@@ -20,7 +20,7 @@ $system = System::find()->with('jobs')->all();
 
 ?>
 <span class="badge badge-warning"><?php echo count($notification)?></span>
-<ul class="dropdown-menu extended notification job-notice-list">
+<ul class="dropdown-menu extended notification">
     <li>
         <p id="text">你总有<?php echo count($notification)?>个通知</p>
     </li>
@@ -29,6 +29,7 @@ $system = System::find()->with('jobs')->all();
             $jobId = ArrayHelper::getColumn($notification, 'job_id');
             $unReadyNotice = $jobManager->getHaveReadNotice($jobId, ['system_id' => $value->id]);
             if(empty($unReadyNotice)) continue;
+            echo '<div class="job-notice-list">';
             echo '<li>';
             echo '<p>【'.$value->name.'】</p>';   
             echo '</li>';
@@ -37,6 +38,7 @@ $system = System::find()->with('jobs')->all();
                 echo Html::a('<span>【'.$values->status.'】</span>'.$values->subject, [$values->link]);
                 echo '</li>';
             }
+            echo '</div>';
         }
         echo '<li>';
         echo Html::a('全部清除', '', ['id'=>'allRemove','style'=>'text-align: center']);
