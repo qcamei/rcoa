@@ -8,13 +8,11 @@
 
 namespace wskeee\rbac;
 
-use yii\rbac\DbManager;
-use yii\rbac\Item;
-use yii\db\Query;
-use yii\caching\Cache;
-use yii\helpers\ArrayHelper;
-
 use common\models\User;
+use yii\caching\Cache;
+use yii\db\Query;
+use yii\helpers\ArrayHelper;
+use yii\rbac\DbManager;
 /**
  * Description of RbacManager
  *
@@ -35,7 +33,7 @@ class RbacManager extends DbManager{
     protected $childs;
     
     protected $assignmentsCache = [];
-
+    
     public function loadFromCache()
     {
         if ($this->items !== null || !$this->cache instanceof Cache) {
@@ -116,7 +114,6 @@ class RbacManager extends DbManager{
             foreach ($this->childs[$itemName] as $child)
                 $result = array_unique(ArrayHelper::merge($this->getItemUser($child,$result),$result));
         }
-       // var_dump($itemName);
         return $result;
     }
 

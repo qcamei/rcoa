@@ -132,6 +132,7 @@ class CourseController extends Controller
         $courses = $this->getCourses($model->project->item_child_id);
         $existedCourses = $this->getExistedCourses($model->project_id);
         $model->scenario = CourseManage::SCENARIO_DEFAULT;
+       
         if ($model->load($post)) {
             $twTool->CreateTask($model, $post);         //创建任务操作
             return $this->redirect(['view', 'id' => $model->id]);
