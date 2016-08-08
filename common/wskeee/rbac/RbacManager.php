@@ -115,7 +115,6 @@ class RbacManager extends DbManager{
             foreach ($this->childs[$itemName] as $child)
                 $result = array_unique(ArrayHelper::merge($this->getItemUser($child,$result),$result));
         }
-       // var_dump($itemName);
         return $result;
     }
 
