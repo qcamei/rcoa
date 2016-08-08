@@ -34,7 +34,7 @@ class RbacManager extends DbManager{
     protected $childs;
     
     protected $assignmentsCache = [];
-
+    
     public function loadFromCache()
     {
         if ($this->items !== null || !$this->cache instanceof Cache) {

@@ -43,10 +43,10 @@ class BookdetailNoticeTool {
         //发送ee消息 
         EeManager::sendEeByView($views, $params, $receivers_ee, $subject);
         //发送邮件消息 
-        Yii::$app->mailer->compose($views, $params)
+        /*Yii::$app->mailer->compose($views, $params)
             ->setTo($receivers_mail)
             ->setSubject($subject)
-            ->send();
+            ->send();*/
     }
     
     /**
@@ -70,10 +70,10 @@ class BookdetailNoticeTool {
          //发送ee消息
         EeManager::sendEeByView($views, $params,$shootBooker_ee, $subject);
         //发送邮件消息
-        Yii::$app->mailer->compose($views, $params)
+        /*Yii::$app->mailer->compose($views, $params)
             ->setTo($shootBooker_mail)
             ->setSubject($subject)
-            ->send();
+            ->send();*/
     }
     
     /**
@@ -97,10 +97,10 @@ class BookdetailNoticeTool {
         //发送ee消息
         EeManager::sendEeByView($views, $params,$shootContacter_ee, $subject);
         //发送邮件消息 
-        Yii::$app->mailer->compose($views, $params)
+        /*Yii::$app->mailer->compose($views, $params)
             ->setTo($shootContacter_mail)
             ->setSubject($subject)
-            ->send();
+            ->send();*/
     }
     
     /**
@@ -127,10 +127,10 @@ class BookdetailNoticeTool {
         //发送ee消息 
         EeManager::sendEeByView($views, $params, $shootMan_ee, $subject);
         // 发送邮件消息
-         Yii::$app->mailer->compose($views, $params)
+        /*Yii::$app->mailer->compose($views, $params)
             ->setTo($shootMan_mail)
             ->setSubject($subject)
-            ->send();
+            ->send();*/
     }
     
     /**
@@ -155,10 +155,10 @@ class BookdetailNoticeTool {
         //发送ee消息 
         EeManager::sendEeByView($views, $params, $shootTeacher_ee, $subject);
         //发送邮件消息 
-        Yii::$app->mailer->compose($views, $params)
+        /*Yii::$app->mailer->compose($views, $params)
             ->setTo($shootTeacher_mail)
             ->setSubject($subject)
-            ->send();
+            ->send();*/
     }
     
     /**

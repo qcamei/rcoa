@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
     foreach ($twTool->getWeekInfo(end($weeklyMonth)) as $value) {
         $result = $twTool->getWeeklyInfo($model->id, $value['start'], $value['end']);
         $weekinfo[] = [
-            'date' => date('m-d', strtotime($value['start'])).'～'.date('m-d', strtotime($value['end'])),
+            'date' => date('m/d', strtotime($value['start'])).'～'.date('m/d', strtotime($value['end'])),
             'class' => !empty($result) ?  'btn btn-info weekinfo' : 'btn btn-info weekinfo disabled',
             'start' => $value['start'],
             'end' => $value['end']
@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <div class="row">
     <?php
-        echo Html::beginTag('div', ['class' => 'col-lg-2 col-md-10 col-sm-10 col-xs-12', 
+        echo Html::beginTag('div', ['class' => 'col-lg-2 col-md-2 col-sm-12 col-xs-12', 
             'style' => 'padding:0px;margin: 5px 5px 5px 0px;']);
             echo  Select2::widget([
                 'name' => 'create_time',
@@ -72,12 +72,12 @@ $this->params['breadcrumbs'][] = $this->title;
         
         echo Html::beginTag('div', [
             'id' => 'weekinfo',
-            'class' => 'col-lg-7 col-md-10 col-sm-10 col-xs-12', 
+            'class' => 'col-lg-7 col-md-8 col-sm-10 col-xs-12', 
             'style' => 'padding:0px;'
         ]);
         echo Html::endTag('div');
         
-        echo Html::beginTag('div', ['class' => 'col-lg-2 col-md-2 col-sm-2 col-xs-12', 'style' => 'padding:0px;']).
+        echo Html::beginTag('div', ['class' => 'col-lg-2 col-md-2 col-sm-2 col-xs-5', 'style' => 'padding:0px;']).
              Html::a('编辑', [
                 'summary/update', 'course_id' => $model->id, 'create_time' => $results['create_time'],], 
                 ['class' => 'btn btn-primary weekinfo']).' '.
@@ -86,7 +86,7 @@ $this->params['breadcrumbs'][] = $this->title;
         echo Html::endTag('div');
         
         /* @var $model CourseManage */
-        echo Html::beginTag('div', ['class' => 'col-lg-12 col-md-12 col-sm-4', 'style' => 'padding:0']).
+        echo Html::beginTag('div', ['class' => 'col-lg-12 col-md-12 col-sm-12 col-xs-12', 'style' => 'padding:0']).
              Html::beginTag('div',['class' => 'summar']).
                 
              Html::endTag('div');

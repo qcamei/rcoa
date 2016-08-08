@@ -4,6 +4,7 @@ namespace frontend\modules\teamwork\controllers;
 
 use common\models\team\Team;
 use common\models\team\TeamMember;
+use common\models\teamwork\CourseManage;
 use common\models\teamwork\ItemManage;
 use frontend\modules\teamwork\TeamworkTool;
 use wskeee\framework\FrameworkManager;
@@ -54,15 +55,19 @@ class DefaultController extends Controller
     {
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
-        $totalCompleted = $twTool->getCourseLessionTimesSum(['status' => ItemManage::STATUS_CARRY_OUT]);
-        $totalUndone = $twTool->getCourseLessionTimesSum(['status' => ItemManage::STATUS_NORMAL]);
+        $completedHours = $twTool->getCourseLessionTimesSum(['status' => ItemManage::STATUS_CARRY_OUT]);
+        $undoneHours = $twTool->getCourseLessionTimesSum(['status' => ItemManage::STATUS_NORMAL]);
+        $completedDoor = CourseManage::find()->where(['status' => ItemManage::STATUS_CARRY_OUT])->count();
+        $undoneDoor = CourseManage::find()->where(['status' => ItemManage::STATUS_NORMAL])->count();
         $scienceFactory = Team::findOne(['type' => 2]);
         $teamMember = Team::find()->where(['type' => 1])->with('courseManages')->all();
          
         return $this->render('index',[
             'twTool' => $twTool,
-            'totalCompleted' => $totalCompleted,
-            'totalUndone' => $totalUndone,
+            'completedHours' => $completedHours,
+            'undoneHours' => $undoneHours,
+            'completedDoor' => $completedDoor,
+            'undoneDoor' => $undoneDoor,
             'scienceFactory' => $scienceFactory,
             'teamMember' => $teamMember,
         ]);
