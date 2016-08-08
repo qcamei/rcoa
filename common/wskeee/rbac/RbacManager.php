@@ -9,6 +9,7 @@
 namespace wskeee\rbac;
 
 use common\models\User;
+use Yii;
 use yii\caching\Cache;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
@@ -125,10 +126,26 @@ class RbacManager extends DbManager{
      */
     public function getItemUsers($itemName)
     {
-        $userIds = isset($this->assignmentToUsers[$itemName]) ? $this->assignmentToUsers[$itemName] : [];
-        $result = User::findAll(['id'=>  $userIds]);
-        
+        $result = User::find()
+                ->leftJoin(['Assignment'=> $this->assignmentTable],"Assignment.user_id = id")
+                ->where(['Assignment.item_name'=>$itemName])
+                ->all();
         return $result;
+    }
+    /**
+     * 获取拥有该角色或者权限所有用户，<br/>
+     * 比如，获取所有【编导】，或者所有能【创建预约】的用户
+     * @param string $itemName  角色或者权限 [User]
+     * @return array [id=>name,id=>name]
+     */
+    public function getItemUserList($itemName){
+        $result = (new Query())
+                ->select(['User.id','User.nickname'])
+                ->from(['User'=>  User::tableName()])
+                ->leftJoin(['Assignment'=> $this->assignmentTable],"Assignment.user_id = User.id")
+                ->where(['Assignment.item_name'=>$itemName])
+                ->all(Yii::$app->db);
+        return ArrayHelper::map($result, 'id', 'nickname');
     }
     
     /**
