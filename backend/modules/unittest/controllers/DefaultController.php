@@ -3,8 +3,8 @@
 namespace backend\modules\unittest\controllers;
 
 use wskeee\ee\EeManager;
+use wskeee\rbac\RbacManager;
 use Yii;
-use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 
 /**
@@ -53,5 +53,15 @@ class DefaultController extends Controller
         ->setTextBody('邮件测试！！！')
         ->send();
         echo $mail ? '成功！': '失败！';
+    }
+    /**
+     * 获取角色下的所有用户
+     * @param type $itemName
+     */
+    public function actionGetUserByRole($itemName){
+        /* @var $authManager RbacManager */
+        $authManager = Yii::$app->authManager;
+        //var_dump(\yii\helpers\ArrayHelper::map($authManager->getItemUsers($itemName), 'id', 'nickname'));
+        var_dump($authManager->getItemUserList($itemName));
     }
 }
