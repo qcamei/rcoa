@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'producer' => $producer,
     ]) ?>
     
-    <span>课程附件：</span>
+    <span><?= Yii::t('rcoa/teamwork', 'Course Accessories').'：'; ?></span>
     <?php
         foreach ($annex as $value) {
             echo Html::a($value->name, ['annex/view', 'id' => $value->id], ['style' => 'margin-right:10px;']);

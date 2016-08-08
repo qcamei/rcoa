@@ -61,7 +61,6 @@ return [
     'Update Shoot Bookdetail' => '更新-课程预约拍摄',
     'Shoot Bookdetail Details' => '预约拍摄任务详情',
     //拍摄预约-字段
-    
     'Business' => '行业',
     'Fw College' => '层次/类型',
     'Fw Project' => '专业/工种',

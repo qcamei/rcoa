@@ -7,6 +7,7 @@
  */
 
 return[
+     // 团队工作模块 - 公共部分
     'Template Types' => '模版类型',
     'Create Template Type' => '创建-模版类型',
     'Update Template Type' => '更新-模版类型',
@@ -32,10 +33,17 @@ return[
     'Course Progress' => '课程进度',
     'Create Course Phase Link' => '课程配置-新增-阶段-环节',
     'Update Course Phase Link' => '课程配置-编辑-阶段-环节',
+    'Create Course' => '课程添加',
+    'Course Accessories' => '课程附件',
+    'Development Weekly' => '开发周报',
+    'This Week Weekly Developer' => '本周开发者',
+    'Create Weekly' => '新增',
+    'Updated Weekly' => '编辑',
+    
+    //团队工作 - 字段名称
     'Course Annexes' => '课程附件',
     'Items' => '项目',
     'Courses' => '课程',
-    'Create Course' => '课程添加',
     'Template Type' => '模版类型',
     'Weights' => '权重',
     'Progress' => '进度',
