@@ -27,4 +27,13 @@ and open the template in the editor.
     margin-top: 15px;
     margin-bottom: 10px;
 }
+.job-notice-list {
+    max-height: 315px;
+    overflow-y: auto;
+}
+.job-notice-list::-webkit-scrollbar { 
+    width:0px;
+    height:0px;
+}
+
 

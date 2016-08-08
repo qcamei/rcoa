@@ -28,4 +28,7 @@ class AppAsset extends AssetBundle
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
     ];
+    public $publishOptions = [
+        'forceCopy' => YII_DEBUG,
+    ];
 }

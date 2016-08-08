@@ -19,7 +19,7 @@ $system = System::find()->with('jobs')->all();
 
 ?>
 <span class="badge badge-important"><?php echo count($notification)?></span>
-<ul class="dropdown-menu extended tasks-bar">
+<ul class="dropdown-menu extended tasks-bar job-notice-list">
     <li>
         <p id="text">你共 <?php echo count($notification)?> 个任务正在进行中</p>
     </li>
