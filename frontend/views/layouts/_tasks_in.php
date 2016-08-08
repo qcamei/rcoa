@@ -27,6 +27,7 @@ $system = System::find()->with('jobs')->all();
         foreach ($system as $value) {
             $haveReadNotice = $jobManager->getHaveReadNotice(ArrayHelper::getColumn($notification, 'job_id'), ['system_id' => $value->id]);
             if(empty($haveReadNotice)) continue;
+            echo '<div class="job-notice-list">';
             echo '<li>';
             echo '<p>【'.$value->name.'】</p>';    
             echo '</li>';
@@ -41,6 +42,7 @@ $system = System::find()->with('jobs')->all();
                         . '<div class="bar" style="width:'.$values->progress.'%;"></div></div>', [$values->link]);
                 echo '</li>';
             }
+            echo '</div>';
         }
     ?>
     

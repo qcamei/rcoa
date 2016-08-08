@@ -113,7 +113,7 @@ use yii\widgets\DetailView;
                                 'name' => 'shoot_man',
                                 'value' => empty($model->u_shoot_man) ?  '' : $shootMansKey,
                                 'data' => empty($model->u_shoot_man) ? $shootmans : ArrayHelper::merge($assignedShootMans, $shootmans),
-                                'size' => 'lg',
+                                //'size' => 'lg',
                                 'maintainOrder' => true,
                                 'hideSearch' => true,
                                 'options' => [

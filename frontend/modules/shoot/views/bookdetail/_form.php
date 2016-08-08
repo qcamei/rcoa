@@ -99,7 +99,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'u_contacter')->widget(Select2::classname(), [
         'value' => !$model->getIsValid() ?  '' : $contactsKey,
         'data' => !$model->getIsValid() ? $contacts : ArrayHelper::merge($alreadyContacts, $contacts), //合并两个数组
-        'size' => 'lg',
+        //'size' => 'lg',
         'maintainOrder' => true,    //无序排列
         'hideSearch' => true,
         'options' => [

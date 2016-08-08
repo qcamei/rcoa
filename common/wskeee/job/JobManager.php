@@ -130,7 +130,9 @@ class JobManager {
                     //echo json_encode($rows);
                 }
                 
-                Yii::$app->db->createCommand()->batchInsert(JobNotification::tableName(), ['job_id','u_id'], $rows)->execute();
+                Yii::$app->db->createCommand()
+                        ->batchInsert(JobNotification::tableName(), ['job_id','u_id'], $rows)
+                        ->execute();
                 
             }else
                 throw new Exception ("找不到对应通知：systme_id:$systemId,relate_id:$relateId");
@@ -203,6 +205,7 @@ class JobManager {
       
         try {
             $job = Job::findOne(['system_id' => $systemId,'relate_id'=> $relateId]);
+            $jobNotification = JobNotification::findOne(['job_id'=>$job->id]);
             $users;
             $conditions = ['job_id'=>$job->id];
           
@@ -211,14 +214,14 @@ class JobManager {
                 if($user!=null)
                     $users = [$user];
                 if(isset($users) && count($users)>0){
-                    foreach ($users as $key => $value) {
-                         $conditions['u_id'] = $value;
-                    }
+                    foreach ($users as $key => $value) 
+                        $conditions['u_id'] = $value;
                 }
                 else
                     throw new Exception ("$user 不能为空！");
-                
-                Yii::$app->db->createCommand()->update(JobNotification::tableName(), ['status'=>  JobNotification::STATUS_END], $conditions)->execute();
+                Yii::$app->db->createCommand()
+                        ->update(JobNotification::tableName(), ['status'=>  JobNotification::STATUS_END], $conditions)
+                        ->execute();
                 return true;
             }else
                 throw new Exception ("找不到对应通知：systme_id:$systemId,relate_id:$relateId, user:$user");
@@ -244,12 +247,17 @@ class JobManager {
                 throw new Exception ("user 不能为null：systme_id:$systemId,relate_id:$relateId, user:$user");
             
             $job = $relateId == null ? null : Job::findOne(['system_id' => $systemId,'relate_id'=> $relateId]);
+          
             if($job == null)
                 $conditions = ['u_id'=>$user];
             else
                 $conditions = ['job_id'=>$job->id,'u_id'=>$user];
             
-            Yii::$app->db->createCommand()->update(JobNotification::tableName(), ['status'=>  JobNotification::STATUS_NORMAL], $conditions)->execute();
+            
+            Yii::$app->db->createCommand()
+                ->update(JobNotification::tableName(), ['status'=>  JobNotification::STATUS_NORMAL], $conditions)
+                ->execute();
+          
             
         } catch (Exception $ex) {
             Yii::error("删除通知关联失败！<br/>".$ex->getMessage(), __METHOD__);
@@ -300,7 +308,6 @@ class JobManager {
             ->andWhere(['id' => $jobId])
             ->andWhere($systemId)
             ->with('system')
-            ->limit(2)
             ->all();
         return $unReadyNotice;
     }
@@ -316,7 +323,6 @@ class JobManager {
             ->where(['id' => $jobId])
             ->andWhere($systemId)
             ->with('system')
-            ->limit(2)
             ->all();
         return $haveReadNotice;
     }

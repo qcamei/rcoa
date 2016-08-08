@@ -128,3 +128,19 @@ a.desc:after {
     padding: 10px 20px;
     margin: 0 0 15px 0;
 }
+/** 通知 */
+.job-notice-list {
+    max-height: 265px;
+    overflow-y: auto;
+}
+.dropdown-menu .job-notice-list a {
+    color: #000;
+}
+.job-notice-list a:hover, a:focus {
+    color: #000;
+    text-decoration: none;
+} 
+.job-notice-list::-webkit-scrollbar { 
+    width:0px;
+    height:0px;
+}

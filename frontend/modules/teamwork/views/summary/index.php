@@ -46,10 +46,13 @@ $this->params['breadcrumbs'][] = $this->title;
     }
 ?>
 
-<h4> 开发周报：</h4>
-    <span style="color: blue;">本周开发者：<?= empty($model->weekly_editors_people)? '无' : 
-            $model->weeklyEditorsPeople->u->nickname.' ('.$model->weeklyEditorsPeople->position.')' ?>
-    </span>
+<h4><?= Yii::t('rcoa/teamwork', 'Development Weekly').'：'; ?></h4>
+<span style="color: blue;">
+    <?php echo Yii::t('rcoa/teamwork', 'This Week Weekly Developer').'：'; 
+        echo empty($model->weekly_editors_people)? '无' : 
+            $model->weeklyEditorsPeople->u->nickname.' ('.$model->weeklyEditorsPeople->position.')' 
+    ?>
+</span>
     
     <div class="row">
     <?php
@@ -78,10 +81,10 @@ $this->params['breadcrumbs'][] = $this->title;
         echo Html::endTag('div');
         
         echo Html::beginTag('div', ['class' => 'col-lg-2 col-md-2 col-sm-2 col-xs-5', 'style' => 'padding:0px;']).
-             Html::a('编辑', [
+             Html::a(Yii::t('rcoa/teamwork', 'Updated Weekly'), [
                 'summary/update', 'course_id' => $model->id, 'create_time' => $results['create_time'],], 
                 ['class' => 'btn btn-primary weekinfo']).' '.
-             Html::a('新增', ['summary/create', 'course_id' => $model->id], [
+             Html::a(Yii::t('rcoa/teamwork', 'Create Weekly'), ['summary/create', 'course_id' => $model->id], [
                  'class' => 'btn btn-primary weekinfo']);
         echo Html::endTag('div');
         
@@ -97,10 +100,14 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 $weekinfo = json_encode($weekinfo);
 $results = json_encode($results);
+$createdAt = Yii::t('rcoa/teamwork', 'Created At');
+$createdBy = Yii::t('rcoa', 'Create By');
 $js = 
 <<<JS
     var weekinfo = $weekinfo,
-        result = $results;
+        result = $results,
+        createdAt = "$createdAt",
+        createdBy = "$createdBy";
     /** 每月周数列表 */
     $.each(weekinfo, function(){
        $('<a>').text(this['date']).addClass(this['class']).attr({
@@ -113,7 +120,7 @@ $js =
         clickWeekinfo($(this));
     });
     /** 周报详情 */
-    $('<p>').html('<span>时间：'+result['created_at']+'</span>&nbsp;&nbsp;<span>周报开发者：'+result['create_by']+'</span>').addClass('time').appendTo(".summar");
+    $('<p>').html('<span>'+createdAt+'：'+result['created_at']+'</span>&nbsp;&nbsp;<span>'+createdBy+'：'+result['create_by']+'</span>').addClass('time').appendTo(".summar");
     $('<p>').html(result['content']).addClass('content').insertAfter('.time');
         
     
@@ -140,7 +147,7 @@ $js =
         $.post("/teamwork/summary/view?course_id=$model->id&start="+start+"&end="+end, function(data)
         {
             $('.summar').html('');
-            $('<p>').html('<span>时间：'+data['data']['created_at']+'</span>&nbsp;&nbsp;<span>周报开发者：'+data['data']['create_by']+'</span>').addClass('time').appendTo(".summar");
+            $('<p>').html('<span>'+createdAt+'：'+data['data']['created_at']+'</span>&nbsp;&nbsp;<span>'+createdBy+'：'+data['data']['create_by']+'</span>').addClass('time').appendTo(".summar");
             $('<p>').html(data['data']['content']).addClass('content').insertAfter('.time')
         });
     }
