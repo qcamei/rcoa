@@ -167,6 +167,7 @@ class StatisticsController extends Controller
         $teamQuery->select(['Team.name','SUM(Course.lession_time) AS value','Count(*) AS total'])
                 ->from(['Team'=> Team::tableName()])
                 ->leftJoin(['Course'=>CourseManage::tableName()],'Course.team_id = Team.id')
+                ->leftJoin(['Item'=>ItemManage::tableName()], 'Course.project_id = Item.id')
                 ->leftJoin(['FItem'=>ItemManage::tableName()], 'Course.course_id = FItem.id')
                 ->groupBy('Team.id');
         return $teamQuery->all(Yii::$app->db);
