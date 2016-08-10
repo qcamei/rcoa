@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '60px' 
+                        'width' => '50px' 
                     ],
                 ],
                 'contentOptions' =>[
@@ -67,11 +67,11 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-sm hidden-xs',
                     ],
                     'style' => [
-                        'width' => '180px' 
+                        'width' => '90px' 
                     ],
                 ],
                 'contentOptions' =>[
-                    'class'=>'hidden-sm hidden-xs',
+                    'class'=>'hidden-sm hidden-xs course-name',
                 ],
             ],
             [
@@ -86,11 +86,11 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-sm hidden-xs',
                     ],
                     'style' => [
-                        'width' => '135px' 
+                        'width' => '100px' 
                     ],
                 ],
                 'contentOptions' =>[
-                    'class'=>'hidden-sm hidden-xs',
+                    'class'=>'hidden-sm hidden-xs course-name',
                 ],
             ],
             [
@@ -105,11 +105,11 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '300px' 
+                        'width' => '250px' 
                     ],
                 ],
                 'contentOptions' =>[
-                    'class' => 'course-name hidden-xs',
+                    'class' => 'course-name hidden-xs course-name',
                 ],
             ],
             [
@@ -124,14 +124,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'headerOptions' => [
                     'style' => [
-                        'max-width' => '321px',
+                        'max-width' => '300px',
                         'min-width' => '84px',
                     ],
                 ],
                 'contentOptions' =>[
                     'class' => 'course-name',
                     'style' => [
-                        'max-width' => '271px', 
+                        'max-width' => '300px', 
                         'max-width' => '84px', 
                     ],
                 ],
@@ -154,7 +154,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'headerOptions' => [
                     'style' => [
-                        'width' => '74px',
+                        'width' => '80px',
                     ],
                 ],
             ],
@@ -172,7 +172,32 @@ $this->params['breadcrumbs'][] = $this->title;
                         'width' => '125px',
                     ]
                 ],
-            ],            
+            ],
+            [
+                'class' => 'frontend\modules\teamwork\components\ItemListTd',
+                'label' => '',
+                'format' => 'raw',
+                'value' => function($model){
+                    /* @var $model CourseManage */
+                    /* @var $twTool TeamworkTool */
+                   $twTool = Yii::$app->get('twTool');
+                   $week = $twTool->getWeek(date('Y-m-d', time()));
+                   $result = $twTool->getWeeklyInfo($model->id, $week['start'], $week['end']);
+                   return empty($result) ? Html::img(['/filedata/teamwork/image/note_disable.png']) : 
+                          Html::img(['/filedata/teamwork/image/weekly_tasking.png']);
+                },
+                'headerOptions'=>[
+                   'style'=> [
+                       'width' => '30px',
+                   ]
+                ],
+                'contentOptions' =>[
+                    'style'=> [
+                        'width' => '30px',
+                        'padding' =>'4px',
+                    ],
+                 ],
+            ],     
         ],
     ]); ?>
 </div>

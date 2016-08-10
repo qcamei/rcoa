@@ -125,11 +125,10 @@ class JobManager {
                     throw new Exception ("用户不能为空：systme_id:$systemId,relate_id:$relateId");
                 else
                 {
-                    foreach($users as $user)
-                        $rows [] = [$job->id,$user];
+                    foreach(array_unique($users) as $user)
+                        $rows [] = [$job->id, $user];
                     //echo json_encode($rows);
                 }
-                
                 Yii::$app->db->createCommand()
                         ->batchInsert(JobNotification::tableName(), ['job_id','u_id'], $rows)
                         ->execute();
