@@ -357,13 +357,6 @@ and open the template in the editor.
 .leak-write {
     background: url('/filedata/teamwork/image/leak_write.png') no-repeat;
 }
-.selected{
-    color: #fff;
-    background-color: #000;
-    border-color: #000;
-    //background-color: #31b0d5;
-    //border-color: #269abc;
-}
 @media (min-width: 1200px) {
     .row  .col-lg-2 {
         width: 15.66666667%;

@@ -121,7 +121,9 @@ $js =
         }).appendTo($("#weekinfo"));
     });
     $('.btn-info').click(function(){
-        //$(this).addClass('selected');
+        if($('.btn-info').hasClass('active'))
+            $('.btn-info').removeClass('active')
+        $(this).addClass('active');
         clickWeekinfo($(this));
     });
     /** 周报详情 */
@@ -141,6 +143,9 @@ $js =
                  }).appendTo($("#weekinfo"));
             });
             $('.btn-info').click(function(){
+                if($('.btn-info').hasClass('active'))
+                    $('.btn-info').removeClass('active')
+                $(this).addClass('active');
                 clickWeekinfo($(this));
             }); 
 	});

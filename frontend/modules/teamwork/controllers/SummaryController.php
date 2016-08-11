@@ -90,6 +90,7 @@ class SummaryController extends Controller
         Yii::$app->getResponse()->format = 'json';
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
+        $get = Yii::$app->request->queryParams;
         $errors = [];
         $weeklyInfo = [];
         try
