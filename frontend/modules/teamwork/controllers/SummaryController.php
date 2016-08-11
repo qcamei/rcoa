@@ -54,14 +54,18 @@ class SummaryController extends Controller
         $twTool = Yii::$app->get('twTool');
         $errors = [];
         $weekinfo = [];
+        $currentTime = date('Y-m-d',  time());
         try
         {
-            $weekinfo = $twTool->getWeekInfo($date);
-            foreach ($weekinfo as $value){
+            foreach ($twTool->getWeekInfo($date) as $value){
                 $result = $twTool->getWeeklyInfo($course_id, $value['start'], $value['end']);
                 $weekinfo[] = [
                     'date' => date('m/d', strtotime($value['start'])).'～'.date('m/d', strtotime($value['end'])),
                     'class' => !empty($result) ?  'btn btn-info weekinfo' : 'btn btn-info weekinfo disabled',
+                    'icon' => $currentTime < $value['start'] ?  'not-to' : 
+                                (empty($result) && $currentTime > $value['end'] ? 'leak-write' : 
+                                    ($currentTime >= $value['start'] && $currentTime <= $value['end'] ? 
+                                         'this-week' : 'already-write')),
                     'start' => $value['start'],
                     'end' => $value['end']
                 ];

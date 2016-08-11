@@ -16,11 +16,16 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
     $weekinfo = [];
     $results = [];
+    $currentTime = date('Y-m-d',  time());
     foreach ($twTool->getWeekInfo(end($weeklyMonth)) as $value) {
         $result = $twTool->getWeeklyInfo($model->id, $value['start'], $value['end']);
         $weekinfo[] = [
             'date' => date('m/d', strtotime($value['start'])).'～'.date('m/d', strtotime($value['end'])),
             'class' => !empty($result) ?  'btn btn-info weekinfo' : 'btn btn-info weekinfo disabled',
+            'icon' => $currentTime < $value['start'] ?  'not-to' : 
+                        (empty($result) && $currentTime > $value['end'] ? 'leak-write' : 
+                            ($currentTime >= $value['start'] && $currentTime <= $value['end'] ? 
+                                'this-week' : 'already-write')),
             'start' => $value['start'],
             'end' => $value['end']
         ];
@@ -47,7 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <h4><?= Yii::t('rcoa/teamwork', 'Development Weekly').'：'; ?></h4>
-<span style="color: blue;">
+<span class="team-leader">
     <?php echo Yii::t('rcoa/teamwork', 'This Week Weekly Developer').'：'; 
         echo empty($model->weekly_editors_people)? '无' : 
             $model->weeklyEditorsPeople->u->nickname.' ('.$model->weeklyEditorsPeople->position.')' 
@@ -75,15 +80,15 @@ $this->params['breadcrumbs'][] = $this->title;
         
         echo Html::beginTag('div', [
             'id' => 'weekinfo',
-            'class' => 'col-lg-7 col-md-8 col-sm-10 col-xs-12', 
-            'style' => 'padding:0px;'
+            'class' => 'col-lg-8 col-md-10 col-sm-12 col-xs-12', 
+            'style' => 'padding:0px;',
         ]);
         echo Html::endTag('div');
         
         echo Html::beginTag('div', ['class' => 'col-lg-2 col-md-2 col-sm-2 col-xs-5', 'style' => 'padding:0px;']).
              Html::a(Yii::t('rcoa/teamwork', 'Updated Weekly'), [
                 'summary/update', 'course_id' => $model->id, 'create_time' => $results['create_time'],], 
-                ['class' => 'btn btn-primary weekinfo']).' '.
+                ['class' => 'btn btn-primary weekinfo']).
              Html::a(Yii::t('rcoa/teamwork', 'Create Weekly'), ['summary/create', 'course_id' => $model->id], [
                  'class' => 'btn btn-primary weekinfo']);
         echo Html::endTag('div');
@@ -110,13 +115,13 @@ $js =
         createdBy = "$createdBy";
     /** 每月周数列表 */
     $.each(weekinfo, function(){
-       $('<a>').text(this['date']).addClass(this['class']).attr({
+       $('<a>').html('<i class="state-icon '+this['icon']+'"></i>'+this['date']).addClass(this['class']).attr({
             "start": this['start'], 
             "end" : this['end']
-            //"onclick" : clickWeekinfo($(this))
         }).appendTo($("#weekinfo"));
     });
-    $('.weekinfo').click(function(){
+    $('.btn-info').click(function(){
+        //$(this).addClass('selected');
         clickWeekinfo($(this));
     });
     /** 周报详情 */
@@ -130,12 +135,12 @@ $js =
         $.post("/teamwork/summary/index?course_id=$model->id&date="+$(e).val(),function(data)
         {
             $.each(data['data'], function(){
-                $('<a>').text(this['date']).addClass(this['class']).attr({
+                $('<a>').html('<i class="state-icon '+this['icon']+'"></i>'+this['date']).addClass(this['class']).attr({
                      "start": this['start'], 
                      "end" : this['end']
                  }).appendTo($("#weekinfo"));
             });
-            $('.weekinfo').click(function(){
+            $('.btn-info').click(function(){
                 clickWeekinfo($(this));
             }); 
 	});
