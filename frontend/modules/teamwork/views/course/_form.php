@@ -150,6 +150,7 @@ use yii\widgets\ActiveForm;
                 ]).Yii::t('rcoa/teamwork', 'Weekly Editors People').Html::endTag('label');
              echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']);
                 echo Select2::widget([
+                    'id' => 'coursemanage-weekly_editors_people',
                     'name' => 'CourseManage[weekly_editors_people]',
                     'value' => $model->isNewRecord ? Yii::$app->user->id : $model->weekly_editors_people,
                     'data' => $weeklyEditors,
@@ -267,7 +268,11 @@ use yii\widgets\ActiveForm;
                             'type' => 'text',
                             'id' => 'courseannex-name',
                             'class' => 'form-control',
-                        ]);//.Html::img(['/filedata/teamwork/image/delete.png'], ['class' => 'form-img']);
+                            'style' => 'width:98%;float:left',
+                        ]).Html::img(['/filedata/teamwork/image/delete.png'], [
+                            'class' => 'form-img', 
+                            'onclick' => 'deleteAnnex($(this))',
+                        ]);
                         echo Html::hiddenInput('CourseAnnex[path][]', $value->path, [
                             'id' => 'courseannex-path',
                         ]);
@@ -319,11 +324,7 @@ $js =
             $("#coursemanage-weekly_editors_people").val("");  
             $("#select2-coursemanage-weekly_editors_people-container").html("请选择...");  
         }  
-    }    
-    $('.form-img').click(function(){
-        
-    });
-    
+    }
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>
@@ -362,8 +363,8 @@ function uploadFile(){
                         NameMD5List.push(fileList[i].FileMD5);
                     }
                     for(var i = 0; i < fileList.length; i++){
-                        var inputText = '<input type="text" name="CourseAnnex[name][]" id="courseannex-name" class="form-control">';
-                        //<img class="form-img" src="/filedata/teamwork/image/delete.png">';
+                        var inputText = '<input type="text" name="CourseAnnex[name][]" id="courseannex-name" class="form-control" style="width:98%;float:left">'+
+                            '<img class="form-img" src="/filedata/teamwork/image/delete.png" onclick="deleteAnnex($(this))">';
                         var inputHidden = '<input type="hidden" name="CourseAnnex[path][]" id="courseannex-path">';
                         if(i == 0){
                             $(inputText).val(fileName.join('')).appendTo($("#courseannex"));
@@ -381,6 +382,11 @@ function uploadFile(){
             focus : true
         }]
     });
+}
+function deleteAnnex(object){
+    $(object).prev().remove();
+    $(object).remove();
+    $(object).next().remove();
 }
 </script>
 

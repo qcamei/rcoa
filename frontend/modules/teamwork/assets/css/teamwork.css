@@ -286,9 +286,7 @@ and open the template in the editor.
  * 课程表单页样式
  */
 .form-img {
-    position: absolute ;
-    right: 10px;
-    top: -5px;
+    margin: 9.5px 0px;
 }
 /**
  * 任务详细页样式 
