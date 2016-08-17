@@ -99,8 +99,6 @@ class CourseController extends Controller
         $twTool = Yii::$app->get('twTool');
         /* @var $model CourseManage */
         $model = $twTool->getCourseProgressOne($id);
-        //$get = Yii::$app->request->queryParams;
-        
         return $this->render('view', [
             'model' => $model,
             'twTool' => $twTool,

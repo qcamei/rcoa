@@ -107,15 +107,17 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php
+$weights = [];
+foreach ($coursePhase as $value)
+    $weights[] = $value->weights;
+$weightsSum = array_sum($weights);
 $js = 
 <<<JS
-    $('#submit').click(function()
-    {
-        $('#course-manage-form').submit();
-    });
-    
+    var weightsSum = $weightsSum;
+    if(weightsSum < 1 || weightsSum > 1)
+        alert("权重总和不能小于或大于 1");
 JS;
-    //$this->registerJs($js,  View::POS_READY);
+    $this->registerJs($js,  View::POS_READY);
 ?>
 
 <?php
