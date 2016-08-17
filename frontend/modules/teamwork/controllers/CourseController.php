@@ -99,12 +99,15 @@ class CourseController extends Controller
         $twTool = Yii::$app->get('twTool');
         /* @var $model CourseManage */
         $model = $twTool->getCourseProgressOne($id);
+        $week = $twTool->getWeek(date('Y-m-d', time()));
+        
         return $this->render('view', [
             'model' => $model,
             'twTool' => $twTool,
             'team' => $this->getTeam(),
             'producer' => $this->getAssignProducers($id),
             'weeklyMonth' => $this->getWeeklyMonth($model), //周报月份列表
+            'weeklyInfoResult' => $twTool->getWeeklyInfo($id, $week['start'], $week['end']),
             'annex' => $this->getCourseAnnex($model->id),
         ]);
     }

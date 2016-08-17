@@ -1,22 +1,21 @@
 <?php
 
 use common\models\teamwork\CourseManage;
-use common\models\teamwork\CourseSummary;
 use frontend\modules\teamwork\TwAsset;
 use kartik\widgets\Select2;
+use wskeee\rbac\RbacName;
 use yii\helpers\Html;
 use yii\web\View;
 
 /* @var $this View */
 
-$this->title = Yii::t('rcoa/teamwork', 'Create Course Summary');
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <?php
-    $weekinfo = [];
-    $results = [];
-    $currentTime = date('Y-m-d',  time());
+    $weekinfo = [];     //每月的周数列表信息
+    $results = [];      //查询的结果数组
+    $currentTime = date('Y-m-d',  time());  //当前时间
+    $isAuthorization = Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER);    //是否为项目管理员
     foreach ($twTool->getWeekInfo(end($weeklyMonth)) as $value) {
         $result = $twTool->getWeeklyInfo($model->id, $value['start'], $value['end']);
         $weekinfo[] = [
@@ -32,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
         if(!empty($result)){
             $results = [
                 'course_id' => $result->course_id,
-                'create_time' => $result->create_time < $value['start'] ? null : $result->create_time,
+                'create_time' => $result->create_time,
                 'content' => $result->content,
                 'create_by' => $result->weeklyCreateBy->weeklyEditorsPeople->u->nickname.
                                 '('.$result->weeklyCreateBy->weeklyEditorsPeople->position.')',
@@ -61,6 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <div class="row">
     <?php
+        /** 下拉月份选择 */
         echo Html::beginTag('div', ['class' => 'col-lg-2 col-md-2 col-sm-12 col-xs-12', 
             'style' => 'padding:0px;margin: 5px 5px 5px 0px;']);
             echo  Select2::widget([
@@ -77,22 +77,24 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]
              ]);
         echo Html::endTag('div');
-        
+        /** 每月周数列表信息 */
         echo Html::beginTag('div', [
             'id' => 'weekinfo',
             'class' => 'col-lg-8 col-md-10 col-sm-12 col-xs-12', 
             'style' => 'padding:0px;',
         ]);
         echo Html::endTag('div');
-        
-        echo Html::beginTag('div', ['class' => 'col-lg-2 col-md-2 col-sm-2 col-xs-5', 'style' => 'padding:0px;']).
-             Html::a(Yii::t('rcoa/teamwork', 'Updated Weekly'), [
+        /** 编辑、新增按钮 */
+        echo Html::beginTag('div', ['class' => 'col-lg-2 col-md-2 col-sm-2 col-xs-5', 'style' => 'padding:0px;']);
+            if(!empty($weeklyInfoResult) || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)) 
+                echo Html::a(Yii::t('rcoa/teamwork', 'Updated Weekly'), [
                 'summary/update', 'course_id' => $model->id, 'create_time' => $results['create_time'],], 
-                ['class' => 'btn btn-primary weekinfo']).
-             Html::a(Yii::t('rcoa/teamwork', 'Create Weekly'), ['summary/create', 'course_id' => $model->id], [
+                ['id' => 'update', 'class' => 'btn btn-primary weekinfo']);
+            else
+                echo Html::a(Yii::t('rcoa/teamwork', 'Create Weekly'), ['summary/create', 'course_id' => $model->id], [
                  'class' => 'btn btn-primary weekinfo']);
         echo Html::endTag('div');
-        
+        /** 内容信息 */
         /* @var $model CourseManage */
         echo Html::beginTag('div', ['class' => 'col-lg-12 col-md-12 col-sm-12 col-xs-12', 'style' => 'padding:0']).
              Html::beginTag('div',['class' => 'summar']).
@@ -107,6 +109,7 @@ $weekinfo = json_encode($weekinfo);
 $results = json_encode($results);
 $createdAt = Yii::t('rcoa/teamwork', 'Created At');
 $createdBy = Yii::t('rcoa', 'Create By');
+$isAuthorization = $isAuthorization == true ? 1 : 0;
 $js = 
 <<<JS
     var weekinfo = $weekinfo,
@@ -120,11 +123,9 @@ $js =
             "end" : this['end']
         }).appendTo($("#weekinfo"));
     });
+    /** 单击选中 */
     $('.btn-info').click(function(){
-        if($('.btn-info').hasClass('active'))
-            $('.btn-info').removeClass('active')
-        $(this).addClass('active');
-        clickWeekinfo($(this));
+        clickSelect($(this));
     });
     /** 周报详情 */
     $('<p>').html('<span>'+createdAt+'：'+result['created_at']+'</span>&nbsp;&nbsp;<span>'+createdBy+'：'+result['create_by']+'</span>').addClass('time').appendTo(".summar");
@@ -142,24 +143,34 @@ $js =
                      "end" : this['end']
                  }).appendTo($("#weekinfo"));
             });
+            /** 单击选中 */
             $('.btn-info').click(function(){
-                if($('.btn-info').hasClass('active'))
-                    $('.btn-info').removeClass('active')
-                $(this).addClass('active');
-                clickWeekinfo($(this));
+                clickSelect($(this));
             }); 
 	});
     }
     /** 每周列表AJAX */          
     function clickWeekinfo(e){
         var start = $(e).attr("start"),
-            end = $(e).attr("end");
+            end = $(e).attr("end"),
+            isAuthorization = $isAuthorization; 
         $.post("/teamwork/summary/view?course_id=$model->id&start="+start+"&end="+end, function(data)
         {
+            if(isAuthorization)
+                $('#update').attr('href', '/teamwork/summary/update?course_id=$model->id&create_time='+data['data']['create_time'])
+            
+            /** 周报详情 */
             $('.summar').html('');
             $('<p>').html('<span>'+createdAt+'：'+data['data']['created_at']+'</span>&nbsp;&nbsp;<span>'+createdBy+'：'+data['data']['create_by']+'</span>').addClass('time').appendTo(".summar");
             $('<p>').html(data['data']['content']).addClass('content').insertAfter('.time')
         });
+    }
+    /** 按钮选中状态 */
+    function clickSelect(e){
+        if($('.btn-info').hasClass('active'))
+            $('.btn-info').removeClass('active')
+        $(e).addClass('active');
+        clickWeekinfo($(e));
     }
 JS;
     $this->registerJs($js,  View::POS_READY);

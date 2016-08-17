@@ -5,7 +5,7 @@ namespace frontend\modules\teamwork\controllers;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\CourseSummary;
 use frontend\modules\teamwork\TeamworkTool;
-use wskeee\framework\models\Item;
+use wskeee\rbac\RbacName;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -130,10 +130,6 @@ class SummaryController extends Controller
         $model->create_by = $course->weekly_editors_people;
         $model->create_time = date('Y-m-d', time());
         $editorsPeople = $model->course->weekly_editors_people;
-        $week = $twTool->getWeek($model->create_time);
-        $result = $twTool->getWeeklyInfo($model->course_id, $week['start'], $week['end']);
-        if(!empty($result))
-            return $this->redirect(['update', 'course_id' => $model->course_id, 'create_time' => $result->create_time]);
         
         if(!$model->course->getIsNormal() || !($twTool->getIsLeader() || $editorsPeople == \Yii::$app->user->id))
             throw new NotAcceptableHttpException('无权限操作！');
@@ -156,20 +152,17 @@ class SummaryController extends Controller
      */
     public function actionUpdate($course_id, $create_time = null)
     {
-        if($create_time == null)
-            return $this->redirect(['create', 'course_id' => $course_id]);
-        
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
         $model = $this->findModel($course_id, $create_time);
         $model->create_by = $model->weeklyCreateBy->weekly_editors_people;
         $editorsPeople = $model->course->weekly_editors_people;
         
-        if(!$model->course->getIsNormal() || !($twTool->getIsLeader() || $editorsPeople == \Yii::$app->user->id))
+        if(!$model->course->getIsNormal() || !($twTool->getIsLeader() || $editorsPeople == \Yii::$app->user->id || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
             throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['course/view', 'id' => $model->course_id]);
+            return $this->redirect(['course/view', 'id' => $model->course_id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -204,7 +197,7 @@ class SummaryController extends Controller
         if ($model !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            throw new NotFoundHttpException('所请求的页面不存在.');
         }
     }
     

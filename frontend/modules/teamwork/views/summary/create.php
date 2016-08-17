@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'options' => ['class' => 'breadcrumb','style'=> 'width:300px;'],
             'homeLink' => [
                 'label' => Yii::t('rcoa/teamwork', 'Courses'),
-                'url' => ['index'],
+                'url' => ['course/index'],
                 'template' => '<li class="course-name" style="width:30px;">{link}</li>',
             ],
             'links' => [

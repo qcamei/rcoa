@@ -57,6 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'twTool' => $twTool,
         'weeklyMonth' => $weeklyMonth,
+        'weeklyInfoResult' => $weeklyInfoResult
     ]); ?>
     
 </div>
