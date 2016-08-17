@@ -3,11 +3,11 @@
 namespace frontend\modules\teamwork\controllers;
 
 use common\models\expert\Expert;
+use common\models\team\Team;
 use common\models\team\TeamMember;
 use common\models\teamwork\CourseAnnex;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\CourseProducer;
-use common\models\teamwork\CourseSummary;
 use common\models\teamwork\ItemManage;
 use frontend\modules\teamwork\TeamworkTool;
 use wskeee\framework\models\Item;
@@ -102,6 +102,7 @@ class CourseController extends Controller
         return $this->render('view', [
             'model' => $model,
             'twTool' => $twTool,
+            'team' => $this->getTeam(),
             'producer' => $this->getAssignProducers($id),
             'weeklyMonth' => $this->getWeeklyMonth($model), //周报月份列表
             'annex' => $this->getCourseAnnex($model->id),
@@ -187,6 +188,22 @@ class CourseController extends Controller
         
     }
     
+    /**
+     * 更改团队
+     * @param type $id
+     * @return type
+     * @throws NotFoundHttpException
+     */
+    public function actionChangeTeam($id) {
+        $model = $this->findModel($id);
+        if (!Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER) && !$model->getIsNormal()) 
+            throw new NotFoundHttpException('无权限操作！');
+        if($model->load($post = Yii::$app->request->post()) && $model->save())
+            return $this->redirect(['view', 'id' => $model->id]);
+        else 
+            throw new NotFoundHttpException('操作失败！');
+    }
+
     /**
      * 更改状态为【在建】
      * Normal an existing ItemManage model.
@@ -332,6 +349,22 @@ class CourseController extends Controller
         return ArrayHelper::map($expert, 'u_id','user.nickname');
     }
     
+    /**
+     * 获取所有团队
+     * @return type
+     */
+    public function getTeam()
+    {
+        /* @var $team Team */
+        $team = Team::find()
+                ->with('teamMembers')
+                ->with('us')
+                ->with('courseManages')
+                ->with('itemManages')
+                ->all();
+        return ArrayHelper::map($team, 'id', 'name');
+    }
+
     /**
      * 获取团队成员
      * @return type

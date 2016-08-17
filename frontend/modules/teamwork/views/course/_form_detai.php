@@ -1,16 +1,23 @@
 <?php
 
+use common\models\team\Team;
 use common\models\teamwork\CourseManage;
+use kartik\widgets\Select2;
+use wskeee\rbac\RbacName;
 use wskeee\utils\DateUtil;
 use yii\web\View;
+use yii\widgets\ActiveForm;
 use yii\widgets\DetailView;
 
 /* @var $this View */
 /* @var $model CourseManage */
 
 ?>
-<div class="item-manage-view">
-    <?= DetailView::widget([
+<div class="course-manage-view">
+    <?php $form = ActiveForm::begin(['id' => 'form-change-team', 'action'=>'change-team?id='.$model->id]); ?>
+    
+    <?php
+    echo DetailView::widget([
         'model' => $model,
         //'options' => ['class' => 'table table-bordered detail-view'],
         'template' => '<tr><th class="viewdetail-th">{label}</th><td class="viewdetail-td">{value}</td></tr>',
@@ -63,7 +70,16 @@ use yii\widgets\DetailView;
             ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">开发信息</span>','value' => ''],
             [
                 'attribute' => 'team_id',
-                'value' => $model->team->name,
+                'format' => 'raw',
+                'value' => Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER) && $model->getIsNormal() ? 
+                    Select2::widget([
+                         'name' => 'CourseManage[team_id]',
+                         'value' => $model->team_id,
+                         'data' => $team,
+                         'options' => [
+                             'placeholder' => '选择团队...',
+                         ],
+                    ]) : $model->team->name,
             ],
             [
                 'attribute' => Yii::t('rcoa/teamwork', 'Resource People'),
@@ -122,4 +138,5 @@ use yii\widgets\DetailView;
         ],
     ]) ?>
 
+    <?php ActiveForm::end(); ?>
 </div>

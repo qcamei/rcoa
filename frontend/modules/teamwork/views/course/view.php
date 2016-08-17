@@ -42,6 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
    <?= $this->render('_form_detai', [
         'model' => $model,
+        'team' => $team,
         'producer' => $producer,
     ]) ?>
     
@@ -82,6 +83,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 echo Html::a('配置', ['/teamwork/courselink/index', 'course_id' => $model->id], ['class' => 'btn btn-primary']).' ';
            
             echo Html::a('进度', ['/teamwork/courselink/progress', 'course_id' => $model->id], ['class' => 'btn btn-primary']).' ';
+            
+            /**
+             * 提交 按钮显示必须满足以下条件：
+             * 1、必须是状态为【正常】
+             * 2、必须是【项目管理员】
+            */
+            if($model->getIsNormal() && Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))
+                echo Html::a('提交', 'javascript:;', ['id' => 'submit', 'class' => 'btn btn-danger']).' ';
+            
             /**
              * 完成 按钮显示必须满足以下条件：
              * 1、必须是状态为【正常】
@@ -93,7 +103,7 @@ $this->params['breadcrumbs'][] = $this->title;
             
             /**
              * 恢复 按钮显示必须满足以下条件：
-             * 1、必须是状态为【已经完成】
+             * 1、必须是状态为【已完成】
              * 2、必须是【项目管理员】
             */
             if($model->getIsCarryOut() && Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))
@@ -105,9 +115,11 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 $js = 
 <<<JS
-    
+    $('#submit').click(function(){
+        $('#form-change-team').submit();
+    });
 JS;
-    //$this->registerJs($js,  View::POS_READY);
+    $this->registerJs($js,  View::POS_READY);
 ?>
 
 <?php
