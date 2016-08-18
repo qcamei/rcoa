@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value'=> function($model){
                     /* @var $model CourseManage */
-                    return '<span>'.$model->team->name.'</span>';
+                    return '<span style="width:50px;">'.$model->team->name.'</span>';
                 },
                 'headerOptions' => [
                     'class'=>[
@@ -53,6 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'contentOptions' =>[
                     'class'=>'hidden-xs',
+                    'style' => 'white-space: nowrap;'
                 ],
             ],
             [
@@ -154,7 +155,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'headerOptions' => [
                     'style' => [
-                        'width' => '80px',
+                        'width' => '70px',
                     ],
                 ],
             ],
@@ -175,7 +176,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => '',
+                'label' => Yii::t('rcoa/teamwork', 'Weekly'),
                 'format' => 'raw',
                 'value' => function($model){
                     /* @var $model CourseManage */
@@ -183,17 +184,17 @@ $this->params['breadcrumbs'][] = $this->title;
                    $twTool = Yii::$app->get('twTool');
                    $week = $twTool->getWeek(date('Y-m-d', time()));
                    $result = $twTool->getWeeklyInfo($model->id, $week['start'], $week['end']);
-                   return empty($result) ? Html::img(['/filedata/teamwork/image/note_disable.png']) : 
-                          Html::img(['/filedata/teamwork/image/weekly_tasking.png']);
+                   return empty($result) ? '' : 
+                          Html::img(['/filedata/teamwork/image/already_write_weekly.png']);
                 },
                 'headerOptions'=>[
                    'style'=> [
-                       'width' => '30px',
+                       'width' => '20px',
                    ]
                 ],
                 'contentOptions' =>[
                     'style'=> [
-                        'width' => '30px',
+                        'width' => '20px',
                         'padding' =>'4px',
                     ],
                  ],

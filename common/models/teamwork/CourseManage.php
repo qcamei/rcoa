@@ -4,8 +4,8 @@ namespace common\models\teamwork;
 
 use common\models\team\Team;
 use common\models\team\TeamMember;
-use common\models\teamwork\ItemManage;
 use common\models\teamwork\CourseAnnex;
+use common\models\teamwork\ItemManage;
 use common\models\User;
 use wskeee\framework\models\Item;
 use Yii;
@@ -30,6 +30,7 @@ use yii\db\ActiveRecord;
  * @property integer $team_id                   创建者所在团队
  * @property string $course_ops                 课程运维负责人
  * @property string $create_by                  创建者
+ * @property string $course_principal           课程负责人
  * @property integer $created_at                创建于
  * @property string $plan_start_time            计划开始时间
  * @property string $plan_end_time              计划完成时间
@@ -41,6 +42,7 @@ use yii\db\ActiveRecord;
  *
  * @property CourseAnnex $courseAnnex               获取附件
  * @property CourseLink[] $courseLinks              获取所有课程环节
+ * @property TeamMember $coursePrincipal            获取课程负责人
  * @property TeamMember $courseOps                  获取课程运维负责人
  * @property Team $team                             获取团队
  * @property User $createBy                         获取创建者
@@ -56,12 +58,11 @@ use yii\db\ActiveRecord;
  */
 class CourseManage extends ActiveRecord
 {
-    /** 创建场景 */
-    const SCENARIO_CREATE = 'create';
-    /** 更新场景 */
-    const SCENARIO_UPDATE = 'update';
+   
     /** 已完成场景 */
     const SCENARIO_CARRYOUT = 'carry-out';
+    /** 更改团队和负责人场景 */
+    const SCENARIO_CHANGE = 'change';
     
     /** 进度 */
     public $progress;
@@ -83,19 +84,17 @@ class CourseManage extends ActiveRecord
     public function scenarios() 
     {
         return [
-            self::SCENARIO_CREATE => 
-                ['id', 'project_id', 'course_id', 'teacher', 'weekly_editors_people', 'credit', 'lession_time', 
-                'video_length','question_mete', 'case_number', 'activity_number', 'team_id', 'course_ops', 'create_by',
-                'plan_start_time', 'plan_end_time', 'real_carry_out', 'status','des', 'path'],
-            self::SCENARIO_UPDATE => 
-                ['id', 'project_id', 'course_id', 'teacher', 'weekly_editors_people', 'credit', 'lession_time', 
-                'video_length','question_mete', 'case_number', 'activity_number', 'team_id', 'course_ops', 'create_by',
-                'plan_start_time', 'plan_end_time', 'real_carry_out', 'status','des', 'path'],
-            self::SCENARIO_CARRYOUT => ['video_length', 'question_mete', 'case_number', 'activity_number', 'real_carry_out', 'path'],
-            self::SCENARIO_DEFAULT => 
-                ['id', 'project_id', 'course_id', 'teacher', 'weekly_editors_people', 'credit', 'lession_time', 
-                'video_length','question_mete', 'case_number', 'activity_number', 'team_id', 'course_ops', 'create_by',
-                'plan_start_time', 'plan_end_time', 'real_carry_out', 'status','des', 'path']
+            self::SCENARIO_CARRYOUT => [
+                'video_length', 'question_mete', 'case_number', 'activity_number', 'real_carry_out', 'path'
+            ],
+            self::SCENARIO_CHANGE => [
+                'course_principal'
+            ],
+            self::SCENARIO_DEFAULT => [
+                'id', 'project_id', 'course_id', 'teacher', 'weekly_editors_people', 'credit', 'lession_time', 
+                'video_length','question_mete', 'case_number', 'activity_number', 'team_id', 'course_ops', 'create_by', 
+                'plan_start_time', 'plan_end_time', 'real_carry_out', 'status','des', 'path'
+            ],
         ];
     }
     
@@ -115,16 +114,10 @@ class CourseManage extends ActiveRecord
             [['project_id', 'course_id', 'credit', 'lession_time', 'teacher',  'weekly_editors_people'], 'required'],
             [['video_length', 'question_mete', 'case_number', 'activity_number', 'real_carry_out', 'path'], 'required', 'on' => [self::SCENARIO_CARRYOUT]],
             [['teacher', 'create_by', 'weekly_editors_people', 'course_ops'], 'string', 'max' => 36],
+            [['course_principal'], 'string', 'max' => 36, 'on' => [self::SCENARIO_CHANG]],
             [['plan_start_time', 'plan_end_time', 'real_carry_out'], 'string', 'max' => 60],
             [['des','path'], 'string', 'max' => 255],
-            [['course_ops'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['course_ops' => 'u_id']],
-            [['weekly_editors_people'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['weekly_editors_people' => 'u_id']],
-            [['team_id'], 'exist', 'skipOnError' => true, 'targetClass' => Team::className(), 'targetAttribute' => ['team_id' => 'id']],
-            [['create_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['create_by' => 'id']],
-            [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Item::className(), 'targetAttribute' => ['course_id' => 'id']],
-            [['teacher'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['teacher' => 'id']],
-            [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => ItemManage::className(), 'targetAttribute' => ['project_id' => 'id']],
-            [['video_length'],'checkVideoLen'],
+            
         ];
     }
     /**
@@ -178,6 +171,7 @@ class CourseManage extends ActiveRecord
             'team_id' => Yii::t('rcoa/team', 'Team ID'),
             'course_ops' => Yii::t('rcoa/teamwork', 'Course Ops'),
             'create_by' => Yii::t('rcoa', 'Create By'),
+            'course_principal' => Yii::t('rcoa/teamwork', 'Course Principal'),
             'created_at' => Yii::t('rcoa/teamwork', 'Created At'),
             'updated_at' => Yii::t('rcoa/teamwork', 'Updated At'),
             'plan_start_time' => Yii::t('rcoa/teamwork', 'Plan Start Time'),
@@ -243,6 +237,15 @@ class CourseManage extends ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'create_by']);
     }
+    
+    /**
+     * 获取课程负责人
+     * @return ActiveQuery
+     */
+    public function getCoursePrincipal()
+    {
+        return $this->hasOne(TeamMember::className(), ['u_id' => 'course_principal']);
+    }
 
     /**
      * 获取课程
@@ -286,7 +289,7 @@ class CourseManage extends ActiveRecord
      */
     public function getCourseProducers()
     {
-        return $this->hasMany(TeamworkCourseProducer::className(), ['course_id' => 'id']);
+        return $this->hasMany(CourseProducer::className(), ['course_id' => 'id']);
     }
     
     /**

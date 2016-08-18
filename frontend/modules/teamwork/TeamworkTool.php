@@ -45,11 +45,11 @@ class TeamworkTool{
         SUM(Course_phase_progress.weights * Course_phase_progress.progress) AS progress FROM 
             (SELECT Course_phase.id, Course_phase.course_id, Course_phase.weights, 
                 SUM(Course_link_progress.progress) / COUNT(Course_link_progress.course_phase_id) AS progress FROM 
-                    (SELECT Course_link.course_phase_id, SUM(Course_link.completed) / SUM(Course_link.total) AS progress 
+                    (SELECT Course_link.course_phase_id, Course_link.is_delete,SUM(Course_link.completed) / SUM(Course_link.total) AS progress 
                     FROM ccoa_teamwork_course_link AS Course_link
                     WHERE Course_link.is_delete = 'N'
                     GROUP BY Course_link.id) AS Course_link_progress
-            LEFT JOIN ccoa_teamwork_course_phase AS Course_phase ON Course_phase.id = Course_link_progress.course_phase_id
+            LEFT JOIN ccoa_teamwork_course_phase AS Course_phase ON Course_phase.id = Course_link_progress.course_phase_id 
             GROUP BY Course_phase.id) AS Course_phase_progress
 	LEFT JOIN ccoa_teamwork_course_manage AS Course ON Course.id = Course_phase_progress.course_id
 	GROUP BY Course.id) AS Course_progress";
@@ -467,7 +467,7 @@ class TeamworkTool{
         $itemProgress = ItemManage::find()
                         ->select(['Item.*', 'SUM(Course_progress.progress) AS progress'])
                         ->from($this->itemProgress)
-                        ->leftJoin(['Item' => ItemManage::tableName()], 'Item.id = Course_progress.project_id')
+                        ->rightJoin(['Item' => ItemManage::tableName()], 'Item.id = Course_progress.project_id')
                         ->groupBy('Item.id')
                         ->with('courseManages')
                         ->with('createBy')
@@ -490,7 +490,7 @@ class TeamworkTool{
         $itemProgress = ItemManage::find()
                         ->select(['Item.*', 'SUM(Course_progress.progress) AS progress'])
                         ->from($this->itemProgress)
-                        ->leftJoin(['Item' => ItemManage::tableName()], 'Item.id = Course_progress.project_id')
+                        ->rightJoin(['Item' => ItemManage::tableName()], 'Item.id = Course_progress.project_id')
                         ->where(['Item.id' => $id])
                         ->one();
         

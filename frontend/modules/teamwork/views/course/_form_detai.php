@@ -14,7 +14,7 @@ use yii\widgets\DetailView;
 
 ?>
 <div class="course-manage-view">
-    <?php $form = ActiveForm::begin(['id' => 'form-change-team', 'action'=>'change-team?id='.$model->id]); ?>
+    <?php $form = ActiveForm::begin(['id' => 'form-change', 'action'=>'change?id='.$model->id]); ?>
     
     <?php
     echo DetailView::widget([
@@ -120,7 +120,20 @@ use yii\widgets\DetailView;
             ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">其它信息</span>','value' => ''],
             [
                 'attribute' => 'create_by',
-                'value' => $model->team->name.' ( '.$model->createBy->nickname.' )',
+                'value' => $model->createBy->nickname,
+            ],
+            [
+                'attribute' => 'course_principal',
+                'format' => 'raw',
+                'value' => Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER) && $model->getIsNormal() ? 
+                    Select2::widget([
+                         'name' => 'CourseManage[course_principal]',
+                         'value' => empty($model->course_principal)?  $model->create_by : $model->course_principal,
+                         'data' => $coursePrincipal,
+                         'options' => [
+                             'placeholder' => '选择课程负责人...',
+                         ],
+                    ]) : (empty($model->course_principal)?  $model->createBy->nickname : $model->coursePrincipal->u->nickname),
             ],
             [
                 'attribute' => 'created_at',

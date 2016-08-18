@@ -43,6 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
    <?= $this->render('_form_detai', [
         'model' => $model,
         'team' => $team,
+        'coursePrincipal' => $coursePrincipal,
         'producer' => $producer,
     ]) ?>
     
@@ -117,7 +118,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $js = 
 <<<JS
     $('#submit').click(function(){
-        $('#form-change-team').submit();
+        $('#form-change').submit();
     });
 JS;
     $this->registerJs($js,  View::POS_READY);

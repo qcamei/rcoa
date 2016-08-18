@@ -39,6 +39,7 @@ return[
     'This Week Weekly Developer' => '本周开发者',
     'Create Weekly' => '新增',
     'Updated Weekly' => '编辑',
+    'Weekly' => '周报',
     
     //团队工作 - 字段名称
     'Course Annexes' => '课程附件',
@@ -68,6 +69,7 @@ return[
     'Case Number' => '案例数',
     'Activity Number' => '活动数',
     'Weekly Editors People' => '周报编辑人',
+    'Course Principal' => '课程负责人',
     'Plan Start Time' => '计划开始时间',
     'Plan End Time' => '计划结束时间',
     'Des' => '课程描述',

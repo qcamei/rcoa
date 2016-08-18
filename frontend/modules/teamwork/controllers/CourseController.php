@@ -105,6 +105,7 @@ class CourseController extends Controller
             'model' => $model,
             'twTool' => $twTool,
             'team' => $this->getTeam(),
+            'coursePrincipal' => $this->getTeamMemberList(),
             'producer' => $this->getAssignProducers($id),
             'weeklyMonth' => $this->getWeeklyMonth($model), //周报月份列表
             'weeklyInfoResult' => $twTool->getWeeklyInfo($id, $week['start'], $week['end']),
@@ -133,8 +134,7 @@ class CourseController extends Controller
         $model->create_by = \Yii::$app->user->id;
         $courses = $this->getCourses($model->project->item_child_id);
         $existedCourses = $this->getExistedCourses($model->project_id);
-        $model->scenario = CourseManage::SCENARIO_DEFAULT;
-       
+        
         if ($model->load($post)) {
             $twTool->CreateTask($model, $post);         //创建任务操作
             return $this->redirect(['view', 'id' => $model->id]);
@@ -192,16 +192,18 @@ class CourseController extends Controller
     }
     
     /**
-     * 更改团队
+     * 更改团队/课程负责人
      * @param type $id
      * @return type
      * @throws NotFoundHttpException
      */
-    public function actionChangeTeam($id) {
+    public function actionChange($id) {
         $model = $this->findModel($id);
+        $post = Yii::$app->request->post();
+        $model->scenario = CourseManage::SCENARIO_CHANGE;
         if (!Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER) && !$model->getIsNormal()) 
             throw new NotFoundHttpException('无权限操作！');
-        if($model->load($post = Yii::$app->request->post()) && $model->save())
+        if($model->load($post) && $model->save())
             return $this->redirect(['view', 'id' => $model->id]);
         else 
             throw new NotFoundHttpException('操作失败！');

@@ -20,7 +20,8 @@ use yii\web\View;
         $result = $twTool->getWeeklyInfo($model->id, $value['start'], $value['end']);
         $weekinfo[] = [
             'date' => date('m/d', strtotime($value['start'])).'～'.date('m/d', strtotime($value['end'])),
-            'class' => !empty($result) ?  'btn btn-info weekinfo' : 'btn btn-info weekinfo disabled',
+            'class' => !empty($result) ?  'btn btn-info weekinfo' : (empty($result) && $currentTime > $value['end'] ? 
+                        'btn btn-danger weekinfo disabled' : 'btn btn-default weekinfo disabled'),
             'icon' => $currentTime < $value['start'] ?  'not-to' : 
                         (empty($result) && $currentTime > $value['end'] ? 'leak-write' : 
                             ($currentTime >= $value['start'] && $currentTime <= $value['end'] ? 
@@ -124,7 +125,7 @@ $js =
         }).appendTo($("#weekinfo"));
     });
     /** 单击选中 */
-    $('.btn-info').click(function(){
+    $('.weekinfo').click(function(){
         clickSelect($(this));
     });
     /** 周报详情 */
@@ -144,7 +145,7 @@ $js =
                  }).appendTo($("#weekinfo"));
             });
             /** 单击选中 */
-            $('.btn-info').click(function(){
+            $('.weekinfo').click(function(){
                 clickSelect($(this));
             }); 
 	});
