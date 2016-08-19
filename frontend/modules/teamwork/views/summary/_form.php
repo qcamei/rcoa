@@ -21,7 +21,7 @@ use yii\widgets\ActiveForm;
 
     <?php
         if(!$model->isNewRecord)
-            echo '<span style="color:#ccc">时间：'.date('Y-m-d H:i', $model->created_at).'</span>'
+            echo '<span class="team-leader">编辑-本周周报 ('.date('Y-m-d', $model->created_at).')</span>'
     ?>
      <?= $form->field($model, 'content')->textarea([
             'id' => 'container', 
