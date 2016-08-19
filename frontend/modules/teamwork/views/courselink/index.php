@@ -4,6 +4,7 @@ use common\models\teamwork\CourseLink;
 use common\models\teamwork\CoursePhase;
 use common\models\teamwork\Link;
 use frontend\modules\teamwork\TwAsset;
+use wskeee\rbac\RbacName;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\web\View;
@@ -59,9 +60,15 @@ $this->params['breadcrumbs'][] = $this->title;
         <tbody>
         <?php foreach ($coursePhase as $phase) {
             /* @var $phase CoursePhase */
-            $classUpdate = $phase->course->getIsNormal() && $twTool->getIsLeader() && $phase->course->create_by == Yii::$app->user->id ?
+            $classUpdate = $phase->course->getIsNormal()  
+                        && ($twTool->getIsLeader() && $phase->course->create_by == Yii::$app->user->id) 
+                        || $phase->course->course_principal == Yii::$app->user->id 
+                        || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER) ?
                          'btn btn-primary' : 'btn btn-primary disabled';
-            $classDeletee =$phase->course->getIsNormal() && $twTool->getIsLeader() && $phase->course->create_by == Yii::$app->user->id ?
+            $classDeletee =$phase->course->getIsNormal() 
+                        && ($twTool->getIsLeader() && $phase->course->create_by == Yii::$app->user->id) 
+                        || $phase->course->course_principal == Yii::$app->user->id 
+                        || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER) ?
                          'btn btn-danger' : 'btn btn-danger disabled';
             echo '<tr style="background-color:#eee">
                 <td>'.$phase->name.'</td>
@@ -99,7 +106,8 @@ $this->params['breadcrumbs'][] = $this->title;
              * 1、必须是【队长】
              * 2、创建者是自己
              */
-            if($model->course->getIsNormal() && $twTool->getIsLeader() && $model->course->create_by == Yii::$app->user->id)
+            if($model->course->getIsNormal() && (($twTool->getIsLeader() && $model->course->create_by == Yii::$app->user->id)
+                || $phase->course->course_principal == Yii::$app->user->id || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                echo Html::a('新增', ['create', 'course_id' => $course_id], ['class' => 'btn btn-primary']) 
         ?>
         <?php /* Html::a('进度', ['progress', 'course_id' => $course_id], ['class' => 'btn btn-primary'])*/ ?>

@@ -137,9 +137,9 @@ class TeamworkTool{
      */
     public function getHotelTeam($create_by)
     {
-        $create_by = TeamMember::findOne(['u_id' => $create_by]);
-        return $create_by->team_id;
-    }
+        $team = TeamMember::findOne(['u_id' => $create_by]);
+        return $team ->team_id;
+    } 
 
     /**
      * 获取当前用户是否为【队长】

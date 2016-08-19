@@ -6,6 +6,7 @@ use common\models\teamwork\CourseManage;
 use common\models\teamwork\ItemManage;
 use frontend\modules\teamwork\components\ItemListTd;
 use frontend\modules\teamwork\TeamworkTool;
+use wskeee\rbac\RbacName;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -59,7 +60,9 @@ class ItemActBtnCol extends ItemListTd {
         }
         /* @var $model CourseManage */
         /* @var $twTool TeamworkTool */
-        else if (!empty($model) && $controllerId == 'course' && $actionId == 'list' && $twTool->getIsLeader()){
+        else if (!empty($model) && $controllerId == 'course' && $actionId == 'list' && (
+                $twTool->getIsLeader() || $model->course_principal == \Yii::$app->user->id 
+                || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))){
             $url = [
                 'update' => 'update',
                 'delete' => 'delete',
@@ -76,8 +79,11 @@ class ItemActBtnCol extends ItemListTd {
                 ]
             ];
             $btnClass = [
-               'update' => $model->create_by == \Yii::$app->user->id ? 'btn btn-primary' : 'btn btn-primary disabled',
-               'delete' => $model->create_by == \Yii::$app->user->id ? 'btn btn-danger' : 'btn btn-danger disabled'
+               'update' => $model->create_by == \Yii::$app->user->id || $model->course_principal == \Yii::$app->user->id 
+                    || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER) ? 'btn btn-primary' : 'btn btn-primary disabled',
+               'delete' => $model->create_by == \Yii::$app->user->id || $model->course_principal == \Yii::$app->user->id 
+                    || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER) ? 
+                    'btn btn-danger' : 'btn btn-danger disabled'
             ];
         }
         /* @var $model CourseManage */

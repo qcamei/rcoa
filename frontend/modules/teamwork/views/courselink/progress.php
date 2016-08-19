@@ -4,6 +4,7 @@ use common\models\teamwork\CourseLink;
 use common\models\teamwork\CoursePhase;
 use frontend\modules\teamwork\TwAsset;
 use kartik\widgets\SwitchInput;
+use wskeee\rbac\RbacName;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\web\View;
@@ -48,7 +49,9 @@ $this->params['breadcrumbs'][] = $this->title;
         </thead>
         <tbody>
         <?php foreach ($coursePhase as $phase) {
-            $className = $twTool->getIsUserBelongTeam($phase->course_id) ?
+            $className = $twTool->getIsUserBelongTeam($phase->course_id) 
+                    || $phase->course->course_principal == Yii::$app->user->id 
+                    || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER) ?
                         'btn btn-primary' : 'btn btn-primary disabled';
             /* @var $phase CoursePhase */
             echo '<tr style="background-color:#eee">

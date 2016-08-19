@@ -142,7 +142,7 @@ $this->params['breadcrumbs'] = $this->title;
              * 1、必须是状态为【在建】
              * 2、必须是【队长】 or 【项目管理员】
              */
-            if($model->getIsNormal() && $twTool->getIsLeader())    
+            if($model->getIsNormal() && ($twTool->getIsLeader() /*|| Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)*/))    
                 echo Html::a('配置', ['/teamwork/course/list', 'project_id' => $model->id], ['class' => 'btn btn-primary']).' ';
             /**
              * 课程 按钮显示必须满足以下条件：

@@ -61,8 +61,9 @@ class SummaryController extends Controller
                 $result = $twTool->getWeeklyInfo($course_id, $value['start'], $value['end']);
                 $weekinfo[] = [
                     'date' => date('m/d', strtotime($value['start'])).'～'.date('m/d', strtotime($value['end'])),
-                    'class' => !empty($result) ?  'btn btn-info weekinfo' : (empty($result) && $currentTime > $value['end'] ? 
-                        'btn btn-danger weekinfo disabled' : 'btn btn-default weekinfo disabled'),
+                    'class' => !empty($result) ? 'btn btn-info weekinfo' : ($currentTime > $value['end'] ? 
+                        'btn btn-danger weekinfo disabled' : ($currentTime >= $value['start'] && $currentTime <= $value['end'] ? 
+                        'btn btn-info weekinfo' : 'btn btn-default weekinfo disabled')),
                     'icon' => $currentTime < $value['start'] ?  'not-to' : 
                                 (empty($result) && $currentTime > $value['end'] ? 'leak-write' : 
                                     ($currentTime >= $value['start'] && $currentTime <= $value['end'] ? 
@@ -127,12 +128,16 @@ class SummaryController extends Controller
         $twTool = Yii::$app->get('twTool');
         $params = Yii::$app->request->queryParams;
         $model->course_id = $params['course_id'];
+        /* @var $course CourseManage */
         $course = CourseManage::findOne(['id' => $model->course_id]);
         $model->create_by = $course->weekly_editors_people;
         $model->create_time = date('Y-m-d', time());
         $editorsPeople = $model->course->weekly_editors_people;
         
-        if(!$model->course->getIsNormal() || !($twTool->getIsLeader() || $editorsPeople == \Yii::$app->user->id))
+        if($model != null && !$model->course->getIsNormal() 
+            && !(($twTool->getIsLeader() && $course->create_by == \Yii::$app->user->id) 
+            || $editorsPeople == \Yii::$app->user->id || $course->course_principal == \Yii::$app->user->id
+            || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
             throw new NotAcceptableHttpException('无权限操作！');
        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -159,7 +164,9 @@ class SummaryController extends Controller
         $model->create_by = $model->weeklyCreateBy->weekly_editors_people;
         $editorsPeople = $model->course->weekly_editors_people;
         
-        if(!$model->course->getIsNormal() || !($twTool->getIsLeader() || $editorsPeople == \Yii::$app->user->id || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
+        if(!$model->course->getIsNormal() && !(($twTool->getIsLeader() && $model->course->create_by == \Yii::$app->user->id) 
+            || $editorsPeople == \Yii::$app->user->id || $model->course->course_principal == \Yii::$app->user->id
+            || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
             throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

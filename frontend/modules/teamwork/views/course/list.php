@@ -153,10 +153,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php
             /**
              * 添加课程 按钮显示必须满足以下条件：
-             * 1、必须是状态为【正常】
-             * 2、必须是【队长】  or 【项目管理员】
+             * 1、必须是【队长】  or 【项目管理员】
              */
-            if(/*$model->project->getIsNormal() && */$twTool->getIsLeader())
+            if($twTool->getIsLeader() /*|| Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)*/)
                 echo Html::a(Yii::t('rcoa/teamwork', 'Create Course'), ['create','project_id' => $model->project_id], 
                 ['class' => 'btn btn-primary']);
         ?>

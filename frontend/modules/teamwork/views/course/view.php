@@ -73,7 +73,8 @@ $this->params['breadcrumbs'][] = $this->title;
              * 2、必须是【队长】
              * 3、创建者是自己
              */
-            if($model->getIsNormal() && $twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
+            if($model->getIsNormal() && (($twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
+                || $model->course_principal == \Yii::$app->user->id) || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))
                 echo Html::a('编辑', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']).' ';
             /**
              * 配置 按钮显示必须满足以下条件：
@@ -81,7 +82,8 @@ $this->params['breadcrumbs'][] = $this->title;
              * 2、必须是【队长】
              * 3、创建者是自己
              */
-            if($model->getIsNormal() && $twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)    
+            if($model->getIsNormal() && (($twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
+                || $model->course_principal == \Yii::$app->user->id) || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))    
                 echo Html::a('配置', ['/teamwork/courselink/index', 'course_id' => $model->id], ['class' => 'btn btn-primary']).' ';
            
             echo Html::a('进度', ['/teamwork/courselink/progress', 'course_id' => $model->id], ['class' => 'btn btn-primary']).' ';
@@ -100,7 +102,8 @@ $this->params['breadcrumbs'][] = $this->title;
              * 2、必须是【队长】
              * 3、创建者是自己
              */
-            if($model->getIsNormal() && $twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
+            if($model->getIsNormal() && (($twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
+                || $model->course_principal == \Yii::$app->user->id) || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))
                 echo Html::a('完成', ['carry-out', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
             
             /**

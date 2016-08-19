@@ -88,7 +88,7 @@ class CourseManage extends ActiveRecord
                 'video_length', 'question_mete', 'case_number', 'activity_number', 'real_carry_out', 'path'
             ],
             self::SCENARIO_CHANGE => [
-                'course_principal'
+               'course_principal'
             ],
             self::SCENARIO_DEFAULT => [
                 'id', 'project_id', 'course_id', 'teacher', 'weekly_editors_people', 'credit', 'lession_time', 
@@ -114,7 +114,7 @@ class CourseManage extends ActiveRecord
             [['project_id', 'course_id', 'credit', 'lession_time', 'teacher',  'weekly_editors_people'], 'required'],
             [['video_length', 'question_mete', 'case_number', 'activity_number', 'real_carry_out', 'path'], 'required', 'on' => [self::SCENARIO_CARRYOUT]],
             [['teacher', 'create_by', 'weekly_editors_people', 'course_ops'], 'string', 'max' => 36],
-            [['course_principal'], 'string', 'max' => 36, 'on' => [self::SCENARIO_CHANG]],
+            [['course_principal'], 'string', 'max' => 36, 'on' => [self::SCENARIO_CHANGE]],
             [['plan_start_time', 'plan_end_time', 'real_carry_out'], 'string', 'max' => 60],
             [['des','path'], 'string', 'max' => 255],
             
