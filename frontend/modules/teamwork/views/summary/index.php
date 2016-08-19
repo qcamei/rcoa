@@ -23,7 +23,7 @@ use yii\web\View;
             'class' => !empty($result) ? 'btn btn-info weekinfo' : ($currentTime > $value['end'] ? 
                         (/*Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER) ? 'btn btn-danger weekinfo' :*/ 'btn btn-danger weekinfo disabled') : 
                         ($currentTime >= $value['start'] && $currentTime <= $value['end'] ? 
-                        'btn btn-info weekinfo' : 'btn btn-default weekinfo disabled')),
+                        'btn btn-info weekinfo disabled' : 'btn btn-default weekinfo disabled')),
             'icon' => $currentTime < $value['start'] ?  'not-to' : 
                         (empty($result) && $currentTime > $value['end'] ? 'leak-write' : 
                             ($currentTime >= $value['start'] && $currentTime <= $value['end'] ? 
