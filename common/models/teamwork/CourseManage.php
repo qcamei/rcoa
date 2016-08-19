@@ -88,7 +88,7 @@ class CourseManage extends ActiveRecord
                 'video_length', 'question_mete', 'case_number', 'activity_number', 'real_carry_out', 'path'
             ],
             self::SCENARIO_CHANGE => [
-               'course_principal'
+               'team_id', 'course_principal'
             ],
             self::SCENARIO_DEFAULT => [
                 'id', 'project_id', 'course_id', 'teacher', 'weekly_editors_people', 'credit', 'lession_time', 
