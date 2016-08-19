@@ -63,7 +63,7 @@ class SummaryController extends Controller
                     'date' => date('m/d', strtotime($value['start'])).'～'.date('m/d', strtotime($value['end'])),
                     'class' => !empty($result) ? 'btn btn-info weekinfo' : ($currentTime > $value['end'] ? 
                         'btn btn-danger weekinfo disabled' : ($currentTime >= $value['start'] && $currentTime <= $value['end'] ? 
-                        'btn btn-info weekinfo' : 'btn btn-default weekinfo disabled')),
+                        'btn btn-info weekinfo disabled' : 'btn btn-default weekinfo disabled')),
                     'icon' => $currentTime < $value['start'] ?  'not-to' : 
                                 (empty($result) && $currentTime > $value['end'] ? 'leak-write' : 
                                     ($currentTime >= $value['start'] && $currentTime <= $value['end'] ? 
