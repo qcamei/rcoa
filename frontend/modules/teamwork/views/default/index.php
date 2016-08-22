@@ -1,9 +1,9 @@
 <?php
 
+use common\models\teamwork\CourseManage;
 use common\models\teamwork\ItemManage;
 use frontend\modules\teamwork\TeamworkTool;
 use frontend\modules\teamwork\TwAsset;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
 
@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 '<span class="completed total-xs">'.number_format($completedHours).'</span>'.
                                 '<span>学时</span><p class="hidden-xs">'.
                                 Html::img(['/filedata/teamwork/image/view_completed.png ']).'</p></div>', [
-                                    'course/index', 'status' => ItemManage::STATUS_CARRY_OUT
+                                    'course/index', 'status' => CourseManage::STATUS_CARRY_OUT
                                 ]) ?>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 total">
@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 '<span class="completed total-xs">'.number_format($completedDoor).'</span>'.
                                 '<span>门</span><p class="hidden-xs">'.
                                 Html::img(['/filedata/teamwork/image/view_completed.png ']).'</p></div>', [
-                                    'course/index', 'status' => ItemManage::STATUS_CARRY_OUT
+                                    'course/index', 'status' => CourseManage::STATUS_CARRY_OUT
                                 ]) ?>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 total">
@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 '<span class="undone total-xs">'.number_format($undoneHours).'</span>'.
                                 '<span>学时</span><p class="hidden-xs">'.
                                 Html::img(['/filedata/teamwork/image/view_undone.png ']).'</p></div>', [
-                                    'course/index', 'status' => ItemManage::STATUS_NORMAL
+                                    'course/index', 'status' => CourseManage::STATUS_NORMAL
                                 ]) ?>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 total">
@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 '<span class="undone total-xs">'.number_format($undoneDoor).'</span>'.
                                 '<span>门</span><p class="hidden-xs">'.
                                 Html::img(['/filedata/teamwork/image/view_undone.png ']).'</p></div>', [
-                                    'course/index', 'status' => ItemManage::STATUS_NORMAL
+                                    'course/index', 'status' => CourseManage::STATUS_NORMAL
                                 ]) ?>
                 </div>
                 </div>
@@ -71,9 +71,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php
             foreach ($teamMember as $value) {
                 $completedHours = $twTool->getCourseLessionTimesSum([
-                    'team_id' => $value->id, 'status' => ItemManage::STATUS_CARRY_OUT]);
+                    'team_id' => $value->id, 'status' => CourseManage::STATUS_CARRY_OUT]);
                 $undoneHours = $twTool->getCourseLessionTimesSum([
-                    'team_id' => $value->id, 'status' => ItemManage::STATUS_NORMAL]);
+                    'team_id' => $value->id, 'status' => CourseManage::STATUS_NORMAL]);
                 echo '<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="padding:0px;">';
                      echo '<div class="team">';
                           echo '<div class="team-top" style="background:url('.$value->image.') no-repeat">';
@@ -86,12 +86,12 @@ $this->params['breadcrumbs'][] = $this->title;
                                 echo Html::a('<div class="team-bottom-left"><p><span class="completed" style="margin-right:5px;">'.
                                             number_format($completedHours).'</span><span>学时</span></p><p>'.
                                             Html::img(['/filedata/teamwork/image/view_completed.png']).'</p></div>', [
-                                                'course/index', 'team_id' => $value->id, 'status' => ItemManage::STATUS_CARRY_OUT
+                                                'course/index', 'team_id' => $value->id, 'status' => CourseManage::STATUS_CARRY_OUT
                                             ]);
                                 echo Html::a('<div class="team-bottom-right"><p><span class="undone" style="margin-right:5px;">'.
                                             number_format($undoneHours).'</span><span>学时</span></p><p>'.
                                             Html::img(['/filedata/teamwork/image/view_undone.png']).'</p></div>', [
-                                                'course/index', 'team_id' => $value->id, 'status' => ItemManage::STATUS_NORMAL
+                                                'course/index', 'team_id' => $value->id, 'status' => CourseManage::STATUS_NORMAL
                                             ]);        
                           echo '</div>';
                      echo '</div>';

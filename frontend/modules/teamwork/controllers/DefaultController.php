@@ -55,10 +55,10 @@ class DefaultController extends Controller
     {
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
-        $completedHours = $twTool->getCourseLessionTimesSum(['status' => ItemManage::STATUS_CARRY_OUT]);
-        $undoneHours = $twTool->getCourseLessionTimesSum(['status' => ItemManage::STATUS_NORMAL]);
-        $completedDoor = CourseManage::find()->where(['status' => ItemManage::STATUS_CARRY_OUT])->count();
-        $undoneDoor = CourseManage::find()->where(['status' => ItemManage::STATUS_NORMAL])->count();
+        $completedHours = $twTool->getCourseLessionTimesSum(['status' => CourseManage::STATUS_CARRY_OUT]);
+        $undoneHours = $twTool->getCourseLessionTimesSum(['status' => CourseManage::STATUS_NORMAL]);
+        $completedDoor = CourseManage::find()->where(['status' => CourseManage::STATUS_CARRY_OUT])->count();
+        $undoneDoor = CourseManage::find()->where(['status' => CourseManage::STATUS_NORMAL])->count();
         $scienceFactory = Team::findOne(['type' => 2]);
         $teamMember = Team::find()->where(['type' => 1])->with('courseManages')->all();
          
@@ -180,8 +180,8 @@ class DefaultController extends Controller
             throw new NotAcceptableHttpException('无权限操作！');
         
         $model = $this->findModel($id);
-        if(!$model->getIsNormal())
-            throw new NotAcceptableHttpException('该项目'.$model->getStatusName().'！');
+        /*if(!$model->getIsNormal())
+            throw new NotAcceptableHttpException('该项目'.$model->getStatusName().'！');*/
 
         $itemChild = $this->getFwItemForSelect($model->item_id);
         $existedItemChild = $this->getExistedItemForSelect($model->item_id);

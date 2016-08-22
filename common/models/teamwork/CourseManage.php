@@ -34,6 +34,7 @@ use yii\db\ActiveRecord;
  * @property integer $created_at                创建于
  * @property string $plan_start_time            计划开始时间
  * @property string $plan_end_time              计划完成时间
+ * @property string $real_start_time            实际开始时间
  * @property string $real_carry_out             实际完成时间
  * @property integer $status                    状态
  * @property string $des                        描述
@@ -58,19 +59,28 @@ use yii\db\ActiveRecord;
  */
 class CourseManage extends ActiveRecord
 {
-   
+    /** 待开始场景 */
+    const SCENARIO_WAITSTART = 'wait-start';
     /** 已完成场景 */
     const SCENARIO_CARRYOUT = 'carry-out';
     /** 更改团队和负责人场景 */
     const SCENARIO_CHANGE = 'change';
+    
+    /** 待开始 */
+    const STATUS_WAIT_START = 5;
+    /** 在建中 */
+    const STATUS_NORMAL = 10;
+    /** 已完成 */
+    const STATUS_CARRY_OUT = 15;
     
     /** 进度 */
     public $progress;
     
     /** 状态名 */
     public $statusName = [
-        ItemManage::STATUS_NORMAL => '在建',
-        ItemManage::STATUS_CARRY_OUT => '已完成',
+        self::STATUS_WAIT_START => '待开始',
+        self::STATUS_NORMAL => '在建中',
+        self::STATUS_CARRY_OUT => '已完成',
     ];
     
     /**
@@ -84,6 +94,9 @@ class CourseManage extends ActiveRecord
     public function scenarios() 
     {
         return [
+            self::SCENARIO_WAITSTART => [
+                'real_start_time',
+            ],
             self::SCENARIO_CARRYOUT => [
                 'video_length', 'question_mete', 'case_number', 'activity_number', 'real_carry_out', 'path'
             ],
@@ -93,7 +106,7 @@ class CourseManage extends ActiveRecord
             self::SCENARIO_DEFAULT => [
                 'id', 'project_id', 'course_id', 'teacher', 'weekly_editors_people', 'credit', 'lession_time', 
                 'video_length','question_mete', 'case_number', 'activity_number', 'team_id', 'course_ops', 'create_by', 
-                'plan_start_time', 'plan_end_time', 'real_carry_out', 'status','des', 'path'
+                'plan_start_time', 'plan_end_time', 'real_start_time', 'real_carry_out', 'status','des', 'path'
             ],
         ];
     }
@@ -116,6 +129,7 @@ class CourseManage extends ActiveRecord
             [['teacher', 'create_by', 'weekly_editors_people', 'course_ops'], 'string', 'max' => 36],
             [['course_principal'], 'string', 'max' => 36, 'on' => [self::SCENARIO_CHANGE]],
             [['plan_start_time', 'plan_end_time', 'real_carry_out'], 'string', 'max' => 60],
+            [['real_start_time'], 'string', 'max' => 60, 'on' => [self::SCENARIO_WAITSTART]],
             [['des','path'], 'string', 'max' => 255],
             
         ];
@@ -176,6 +190,7 @@ class CourseManage extends ActiveRecord
             'updated_at' => Yii::t('rcoa/teamwork', 'Updated At'),
             'plan_start_time' => Yii::t('rcoa/teamwork', 'Plan Start Time'),
             'plan_end_time' => Yii::t('rcoa/teamwork', 'Plan End Time'),
+            'real_start_time' => Yii::t('rcoa/teamwork', 'Real Start Time'),
             'real_carry_out' => Yii::t('rcoa/teamwork', 'Real Carry Out'),
             'status' => Yii::t('rcoa', 'Status'),
             'des' => Yii::t('rcoa/teamwork', 'Des'),
@@ -320,11 +335,19 @@ class CourseManage extends ActiveRecord
     }
     
     /**
-     * 获取状态是否为【在建】
+     * 获取状态是否为【待开始】
+     */
+    public function getIsWaitStart()
+    {
+        return $this->status == self::STATUS_WAIT_START;
+    }        
+
+    /**
+     * 获取状态是否为【在建中】
      */
     public function getIsNormal()
     {
-        return $this->status == ItemManage::STATUS_NORMAL;
+        return $this->status == self::STATUS_NORMAL;
     }
     
     /**
@@ -332,7 +355,7 @@ class CourseManage extends ActiveRecord
      */
     public function getIsCarryOut()
     {
-        return $this->status == ItemManage::STATUS_CARRY_OUT;
+        return $this->status == self::STATUS_CARRY_OUT;
     }
     
     /**

@@ -69,50 +69,68 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php
             /**
              * 编辑 按钮显示必须满足以下条件：
-             * 1、必须是状态为【正常】
+             * 1、状态非为【已完成】
              * 2、必须是【队长】
              * 3、创建者是自己
+             * 4、课程负责人是自己
+             * 5、必须是项目管理员
              */
-            if($model->getIsNormal() && (($twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
-                || $model->course_principal == \Yii::$app->user->id) || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))
+            if(!$model->getIsCarryOut() && (($twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
+                || $model->course_principal == \Yii::$app->user->id || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a('编辑', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']).' ';
             /**
              * 配置 按钮显示必须满足以下条件：
-             * 1、必须是状态为【正常】
+             * 1、状态非为【已完成】
              * 2、必须是【队长】
              * 3、创建者是自己
+             * 4、课程负责人是自己
+             * 5、必须是项目管理员
              */
-            if($model->getIsNormal() && (($twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
-                || $model->course_principal == \Yii::$app->user->id) || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))    
+            if(!$model->getIsCarryOut() && (($twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
+                || $model->course_principal == \Yii::$app->user->id || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))    
                 echo Html::a('配置', ['/teamwork/courselink/index', 'course_id' => $model->id], ['class' => 'btn btn-primary']).' ';
            
             echo Html::a('进度', ['/teamwork/courselink/progress', 'course_id' => $model->id], ['class' => 'btn btn-primary']).' ';
             
             /**
              * 提交 按钮显示必须满足以下条件：
-             * 1、必须是状态为【正常】
+             * 1、状态非为【已完成】
              * 2、必须是【项目管理员】
-            */
-            if($model->getIsNormal() && Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))
+             */
+            if(!$model->getIsCarryOut() && Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))
                 echo Html::a('提交', 'javascript:;', ['id' => 'submit', 'class' => 'btn btn-danger']).' ';
             
             /**
              * 完成 按钮显示必须满足以下条件：
-             * 1、必须是状态为【正常】
+             * 1、必须是状态为【在建中】
              * 2、必须是【队长】
              * 3、创建者是自己
+             * 4、课程负责人是自己
+             * 5、必须是项目管理员
              */
             if($model->getIsNormal() && (($twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
-                || $model->course_principal == \Yii::$app->user->id) || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))
+                || $model->course_principal == \Yii::$app->user->id || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a('完成', ['carry-out', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
             
             /**
              * 恢复 按钮显示必须满足以下条件：
              * 1、必须是状态为【已完成】
              * 2、必须是【项目管理员】
-            */
+             */
             if($model->getIsCarryOut() && Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))
                 echo Html::a('恢复', ['normal', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
+            
+            /**
+             * 开始 按钮显示必须满足以下条件：
+             * 1、必须是状态为【待开始】
+             * 2、必须是【队长】
+             * 3、创建者是自己
+             * 4、课程负责人是自己
+             * 5、必须是【项目管理员】
+             */
+            if($model->getIsWaitStart() && (($twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
+                || $model->course_principal == \Yii::$app->user->id || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
+                echo Html::a('开始', ['wait-start', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
         ?>
     </div>
 </div>

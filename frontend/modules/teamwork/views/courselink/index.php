@@ -65,7 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         || $phase->course->course_principal == Yii::$app->user->id 
                         || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER) ?
                          'btn btn-primary' : 'btn btn-primary disabled';
-            $classDeletee =$phase->course->getIsNormal() 
+            $classDeletee = $phase->course->getIsNormal() 
                         && ($twTool->getIsLeader() && $phase->course->create_by == Yii::$app->user->id) 
                         || $phase->course->course_principal == Yii::$app->user->id 
                         || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER) ?

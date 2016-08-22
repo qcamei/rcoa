@@ -78,10 +78,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'content' => function($model){
                         /* @var $model ItemManage */
-                        return Html::a($model->itemChild->name, ['view','id' => $model->id], [
-                            //'class' => 'course-name',
-                            'style' => 'color:#000',
-                        ]);
+                        return $model->itemChild->name;
                     },
                 'headerOptions' => [
                     'style' => [

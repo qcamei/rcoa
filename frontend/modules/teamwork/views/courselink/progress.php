@@ -49,9 +49,10 @@ $this->params['breadcrumbs'][] = $this->title;
         </thead>
         <tbody>
         <?php foreach ($coursePhase as $phase) {
-            $className = $twTool->getIsUserBelongTeam($phase->course_id) 
+            $className = $phase->course->getIsNormal()
+                    && ($twTool->getIsUserBelongTeam($phase->course_id) 
                     || $phase->course->course_principal == Yii::$app->user->id 
-                    || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER) ?
+                    || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)) ?
                         'btn btn-primary' : 'btn btn-primary disabled';
             /* @var $phase CoursePhase */
             echo '<tr style="background-color:#eee">

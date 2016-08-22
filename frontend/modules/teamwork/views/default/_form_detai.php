@@ -45,13 +45,13 @@ use yii\widgets\DetailView;
                 'format' => 'raw',
                 'value' => (int)($model->progress * 100).'%',
             ],
-            [
+            /*[
                 'attribute' => 'status',
                 'format' => 'raw',
                 'value' => $model->getIsTimeOut() ? 
                         '<span style="color:red">'.$model->statusName[$model->status].'</span>' : 
                         $model->statusName[$model->status],
-            ],
+            ],*/
             ['label' => '<span class="btn-block viewdetail-th-head">其它信息</span>','value'=>''],
             [
                 'attribute' => 'create_by',

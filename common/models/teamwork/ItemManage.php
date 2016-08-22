@@ -39,21 +39,16 @@ use yii\db\ActiveRecord;
  */
 class ItemManage extends ActiveRecord
 {
-    /** 暂停 */
-    const STATUS_TIME_OUT = 25;
-    /** 在建 */
-    const STATUS_NORMAL = 5;
-    /** 已完成 */
-    const STATUS_CARRY_OUT = 15;
+    
     /** 进度 */
     public $progress;
 
-    /** 状态名 */
+    /** 状态名 
     public $statusName = [
         self::STATUS_NORMAL => '在建',
         self::STATUS_CARRY_OUT => '已完成',
         self::STATUS_TIME_OUT => '暂停',
-    ];
+    ];*/
 
     /**
      * @inheritdoc
@@ -174,35 +169,35 @@ class ItemManage extends ActiveRecord
     
     /**
      * 获取状态是否为【在建】
-     */
+     
     public function getIsNormal()
     {
         return $this->status == self::STATUS_NORMAL;
-    }
+    }*/
     
     /**
      * 获取状态是否为【暂停】
-     */
+     
     public function getIsTimeOut()
     {
         return $this->status == self::STATUS_TIME_OUT;
-    }
+    }*/
     
     /**
      * 获取状态是否为【已完成】
-     */
+     
     public function getIsCarryOut()
     {
         return $this->status == self::STATUS_CARRY_OUT;
-    }
+    }*/
     
     /**
      * 获取状态名称
-     */
+     
     public function getStatusName()
     {
         return $this->statusName[$this->status];
-    }
+    }*/
     
     /**
      * 获取该条项目下所有课程是否为【完成】状态

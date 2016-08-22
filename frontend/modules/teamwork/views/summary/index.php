@@ -91,7 +91,7 @@ use yii\web\View;
         echo Html::beginTag('div', ['class' => 'col-lg-2 col-md-2 col-sm-2 col-xs-5', 'style' => 'padding:0px;']);
             /**
              * 提交 按钮显示必须满足以下条件：
-             * 1、必须是状态为【在建】
+             * 1、状态非为【已完成】
              * 2、周报必须不能为空
              * 3、(必须是【队长】 and 课程 【创建者】 是自己)
              * or 【周报编辑人】 or 【项目管理员】 or 【课程负责人】
@@ -100,14 +100,14 @@ use yii\web\View;
             if($model->getIsNormal() && !empty($weeklyInfoResult)
                 && (($twTool->getIsLeader() && $model->create_by == \Yii::$app->user->id) 
                 || $model->weekly_editors_people == \Yii::$app->user->id 
-                || $model->course_principal == \Yii::$app->user->id)
-                || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))
+                || $model->course_principal == \Yii::$app->user->id 
+                || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a(Yii::t('rcoa/teamwork', 'Updated Weekly'), [
-                    'summary/update', 'course_id' => $model->id, 'create_time' => $results['create_time'],], 
+                    'summary/update', 'course_id' => $model->id, 'create_time' => $results['create_time']], 
                     ['id' => 'update', 'class' => 'btn btn-primary weekinfo']);
             /**
              * 提交 按钮显示必须满足以下条件：
-             * 1、必须是状态为【在建】
+             * 1、状态非为【已完成】
              * 2、周报必须为空
              * 3、(必须是【队长】 and 课程 【创建者】 是自己)
              * or 【周报编辑人】 or 【项目管理员】 or 【课程负责人】
@@ -116,8 +116,8 @@ use yii\web\View;
             if($model->getIsNormal() && empty($weeklyInfoResult)
                 && (($twTool->getIsLeader() && $model->create_by == \Yii::$app->user->id) 
                 || $model->weekly_editors_people == \Yii::$app->user->id 
-                || $model->course_principal == \Yii::$app->user->id)
-                || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))
+                || $model->course_principal == \Yii::$app->user->id
+                || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a(Yii::t('rcoa/teamwork', 'Create Weekly'), ['summary/create', 'course_id' => $model->id], [
                  'class' => 'btn btn-primary weekinfo']);
         echo Html::endTag('div');

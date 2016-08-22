@@ -216,7 +216,7 @@ class CourselinkController extends Controller
             throw new NotAcceptableHttpException('无权限操作');
         
         if(!$model->course->getIsNormal() )
-            throw new NotAcceptableHttpException('该课程'.$phaseModel->course->getStatusName().'！');
+            throw new NotAcceptableHttpException('该课程'.$model->course->getStatusName().'！');
         
         $model->is_delete = 'Y';
         if($model->update() !== false){
@@ -280,7 +280,7 @@ class CourselinkController extends Controller
         
         $model = $this->findModel($id);
         if(!$model->course->getIsNormal() )
-            throw new NotAcceptableHttpException('该课程'.$phaseModel->course->getStatusName().'！');
+            throw new NotAcceptableHttpException('该课程'.$model->course->getStatusName().'！');
         
         $model->is_delete = 'Y';
         $model->update();

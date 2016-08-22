@@ -167,8 +167,9 @@ class CourseController extends Controller
             || $model->course_principal == \Yii::$app->user->id 
             || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
             throw new NotAcceptableHttpException('无权限操作！');
-        if(!$model->getIsNormal())
+        if($model->getIsCarryOut())
             throw new NotAcceptableHttpException('该课程'.$model->getStatusName().'！');
+        
         $post = Yii::$app->request->post();
         $courses = $this->getCourses($model->project->item_child_id);
         $existedCourses = $this->getExistedCourses(['project_id' => $model->project_id]);
@@ -203,7 +204,7 @@ class CourseController extends Controller
         $model = $this->findModel($id);
         $post = Yii::$app->request->post();
         $model->scenario = CourseManage::SCENARIO_CHANGE;
-        if (!Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER) && !$model->getIsNormal()) 
+        if ($model->getIsCarryOut() && !Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)) 
             throw new NotFoundHttpException('无权限操作！');
         
         if($model->load($post) && $model->save())
@@ -213,7 +214,32 @@ class CourseController extends Controller
     }
 
     /**
-     * 更改状态为【在建】
+     * 更改状态为【待开始】
+     * Normal an existing ItemManage model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionWaitStart($id)
+    {
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
+        $model = $this->findModel($id);
+        if(!(($twTool->getIsLeader() && $model->create_by == \Yii::$app->user->id)
+            || $model->course_principal == \Yii::$app->user->id 
+            || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
+            throw new NotFoundHttpException('无权限操作！');
+        if($model != null && !$model->getIsWaitStart())
+            throw new NotFoundHttpException('该课程'.$model->getStatusName().'！');
+        $model->scenario = CourseManage::SCENARIO_WAITSTART;
+        $model->real_start_time = date('Y-m-d H:i', time());
+        $model->status = CourseManage::STATUS_NORMAL;
+        $model->save();
+        $this->redirect(['view', 'id' => $model->id]);
+    }
+    
+    /**
+     * 更改状态为【在建中】
      * Normal an existing ItemManage model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
@@ -226,11 +252,11 @@ class CourseController extends Controller
         if (!Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)) 
             throw new NotFoundHttpException('无权限操作！');
         
-         $model = $this->findModel($id);
+        $model = $this->findModel($id);
         if($model != null && !$model->getIsCarryOut())
             throw new NotFoundHttpException('该课程'.$model->getStatusName().'！');
         
-        $model->status = ItemManage::STATUS_NORMAL;
+        $model->status = CourseManage::STATUS_NORMAL;
         $model->save();
         $this->redirect(['view', 'id' => $model->id]);
     }
@@ -257,11 +283,11 @@ class CourseController extends Controller
         if($model != null && $model->progress != 1)
             throw new NotFoundHttpException('当前进度必须为100%！');
         
-        if(!$model->getIsNormal())
+        if($model->getIsCarryOut())
             throw new NotFoundHttpException('该课程'.$model->getStatusName().'！');
         
         $model->real_carry_out = date('Y-m-d H:i', time());
-        $model->status = ItemManage::STATUS_CARRY_OUT;
+        $model->status = CourseManage::STATUS_CARRY_OUT;
         if ($model->validate() && $model->save()){
             $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -287,7 +313,7 @@ class CourseController extends Controller
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
         
-        if($model->getIsNormal() && (($twTool->getIsLeader() && $model->create_by == \Yii::$app->user->id)
+        if(!$model->getIsCarryOut() && (($twTool->getIsLeader() && $model->create_by == \Yii::$app->user->id)
             || $model->course_principal == \Yii::$app->user->id || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
             $model->delete();
         else 

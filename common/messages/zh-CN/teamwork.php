@@ -56,6 +56,7 @@ return[
     'Created At' => '创建时间',
     'Updated At' => '最后编辑时间',
     'Forecast Time' => '预计上线时间',
+    'Real Start Time' => '实际开始时间',
     'Real Carry Out' => '实际完成时间',
     'Now Progress' => '当前进度',
     'Background' => '项目背景',

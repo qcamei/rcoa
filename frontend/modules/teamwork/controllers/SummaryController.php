@@ -164,7 +164,8 @@ class SummaryController extends Controller
         $model->create_by = $model->weeklyCreateBy->weekly_editors_people;
         $editorsPeople = $model->course->weekly_editors_people;
         
-        if(!$model->course->getIsNormal() && !(($twTool->getIsLeader() && $model->course->create_by == \Yii::$app->user->id) 
+        if(!$model->course->getIsNormal() && 
+            !(($twTool->getIsLeader() && $model->course->create_by == \Yii::$app->user->id) 
             || $editorsPeople == \Yii::$app->user->id || $model->course->course_principal == \Yii::$app->user->id
             || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
             throw new NotAcceptableHttpException('无权限操作！');

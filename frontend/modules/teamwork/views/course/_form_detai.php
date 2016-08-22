@@ -71,7 +71,7 @@ use yii\widgets\DetailView;
             [
                 'attribute' => 'team_id',
                 'format' => 'raw',
-                'value' => Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER) && $model->getIsNormal() ? 
+                'value' => !$model->getIsCarryOut() && Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)? 
                     Select2::widget([
                          'name' => 'CourseManage[team_id]',
                          'value' => $model->team_id,
@@ -100,6 +100,10 @@ use yii\widgets\DetailView;
                 'value' => $model->plan_end_time,
             ],
             [
+                'attribute' => 'real_start_time',
+                'value' => $model->real_start_time,
+            ],
+            [
                 'attribute' => 'real_carry_out',
                 'value' => $model->real_carry_out,
             ],
@@ -110,7 +114,7 @@ use yii\widgets\DetailView;
             [
                 'attribute' => 'status',
                 'format' => 'raw',
-                'value' => $model->project->statusName[$model->status],
+                'value' => $model->statusName[$model->status],
             ],
             [
                 'attribute' => 'path',
@@ -125,7 +129,7 @@ use yii\widgets\DetailView;
             [
                 'attribute' => 'course_principal',
                 'format' => 'raw',
-                'value' => Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER) && $model->getIsNormal() ? 
+                'value' =>!$model->getIsCarryOut() &&  Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER) ? 
                     Select2::widget([
                          'name' => 'CourseManage[course_principal]',
                          'value' => empty($model->course_principal)?  $model->create_by : $model->course_principal,
