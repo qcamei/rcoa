@@ -62,6 +62,7 @@ return[
     'Background' => '项目背景',
     'Use' => '项目用途',
     'Course ID' => '课程名称',
+    'Course' => '课程',
     'Teacher' => '主讲讲师',
     'Credit' => '学分',
     'Lession Time' => '学时',

@@ -41,14 +41,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value'=> function($model){
                     /* @var $model CourseManage */
-                    return '<span style="width:50px;">'.$model->team->name.'</span>';
+                    return '<span style="width:45px;">'.$model->team->name.'</span>';
                 },
                 'headerOptions' => [
                     'class'=>[
                         //'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '50px' 
+                        'width' => '45px' 
                     ],
                 ],
                 'contentOptions' =>[
@@ -119,10 +119,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value'=> function($model){
                     /* @var $model CourseManage */
-                    return '<div>'.$model->course->name.'</div>'.
+                    return '<div class="course-name">'.$model->course->name.'</div>'.
                            Html::beginTag('div', [
                                     'class' => 'progress table-list-progress',
-                                    'style' => 'height: 12px;border-radius: 0px;margin:3px 0;',
+                                    'style' => 'height:12px;margin:2px 0;border-radius:0px;'
                                 ]).
                                 Html::beginTag('div', [
                                     'class' => 'progress-bar progress-bar',
@@ -135,15 +135,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'headerOptions' => [
                     'style' => [
                         'max-width' => '300px',
-                        'min-width' => '74px',
+                        'min-width' => '70px',
                     ],
                 ],
                 'contentOptions' =>[
-                    'class' => 'course-name',
                     'style' => [
                         'max-width' => '300px', 
-                        'max-width' => '74px',
-                        'padding' => '2px'
+                        'max-width' => '70px',
+                        'padding' => '2px 4px'
                     ],
                 ],
                 
@@ -162,38 +161,17 @@ $this->params['breadcrumbs'][] = $this->title;
                           Html::img(['/filedata/teamwork/image/already_write_weekly.png']);
                 },
                 'headerOptions'=>[
-                   'style'=> [
-                       'width' => '15px',
-                   ]
-                ],
-                'contentOptions' =>[
+                    'class'=>[
+                        'th'=>'hidden-xs',
+                    ],
                     'style'=> [
                         'width' => '15px',
-                        'padding' =>'4px',
-                    ],
+                    ]
+                ],
+                'contentOptions' =>[
+                    'class' => 'hidden-xs',
                 ],
             ],
-            /*[
-                'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => Yii::t('rcoa/teamwork', 'Progress'),
-                'format' => 'raw',
-                'value'=> function($model){
-                    /* @var $model CourseManage 
-                    return Html::beginTag('div', ['class' => 'progress table-list-progress']).
-                                Html::beginTag('div', [
-                                    'class' => 'progress-bar progress-bar',
-                                    'style' => 'width:'.(int)($model->progress * 100).'%',
-                                ]).
-                                (int)($model->progress * 100).'%'.
-                                Html::endTag('div').
-                            Html::endTag('div'); 
-                },
-                'headerOptions' => [
-                    'style' => [
-                        'width' => '70px',
-                    ],
-                ],
-            ],*/
             [
                 'class' => 'frontend\modules\teamwork\components\ItemActBtnCol',
                 'label' => Yii::t('rcoa', 'Operating'),
@@ -209,31 +187,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]
                 ],
             ],
-            /*[
-                'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => Yii::t('rcoa/teamwork', 'Weekly'),
-                'format' => 'raw',
-                'value' => function($model){
-                    /* @var $model CourseManage 
-                    /* @var $twTool TeamworkTool 
-                   $twTool = Yii::$app->get('twTool');
-                   $week = $twTool->getWeek(date('Y-m-d', time()));
-                   $result = $twTool->getWeeklyInfo($model->id, $week['start'], $week['end']);
-                   return empty($result) ? '' : 
-                          Html::img(['/filedata/teamwork/image/already_write_weekly.png']);
-                },
-                'headerOptions'=>[
-                   'style'=> [
-                       'width' => '20px',
-                   ]
-                ],
-                'contentOptions' =>[
-                    'style'=> [
-                        'width' => '20px',
-                        'padding' =>'4px',
-                    ],
-                 ],
-            ],*/ 
         ],
     ]); ?>
 </div>

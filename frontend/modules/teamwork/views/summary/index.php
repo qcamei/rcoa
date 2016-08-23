@@ -15,7 +15,7 @@ use yii\web\View;
     $weekinfo = [];     //每月的周数列表信息
     $results = [];      //查询的结果数组
     $currentTime = date('Y-m-d',  time());  //当前时间
-    $startTime = date('Y-m-d', strtotime($model->real_start_time));
+    $startTime = empty($model->real_start_time) ? $currentTime : date('Y-m-d', strtotime($model->real_start_time));
     $isAuthorization = Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER);    //是否为项目管理员
     foreach ($twTool->getWeekInfo($startTime, end($weeklyMonth)) as $value) {
         $result = $twTool->getWeeklyInfo($model->id, $value['start'], $value['end']);

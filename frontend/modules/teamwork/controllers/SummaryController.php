@@ -56,7 +56,7 @@ class SummaryController extends Controller
         $errors = [];
         $weekinfo = [];
         $currentTime = date('Y-m-d',  time());
-        $startTime = date('Y-m-d', strtotime($course->real_start_time));
+        $startTime = empty($course->real_start_time) ? $currentTime : date('Y-m-d', strtotime($course->real_start_time));
         try
         {
             foreach ($twTool->getWeekInfo($startTime, $date) as $value){

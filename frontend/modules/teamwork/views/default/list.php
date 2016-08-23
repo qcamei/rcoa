@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '126px'  
+                        'width' => '226px'  
                     ],
                 ],
                 'contentOptions' =>[
@@ -65,7 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '225px' 
+                        'width' => '325px' 
                     ],
                 ],
                 'contentOptions' =>[
@@ -78,41 +78,51 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'content' => function($model){
                         /* @var $model ItemManage */
-                        return $model->itemChild->name;
+                        return '<div class="course-name">'.$model->itemChild->name.'</div>'.
+                            Html::beginTag('div', [
+                                'class' => 'progress table-list-progress',
+                                'style' => 'height:12px;margin:2px 0;border-radius:0px;'
+                            ]).Html::beginTag('div', [
+                                    'class' => 'progress-bar', 
+                                    'style' => 'width:'.(int)($model->progress * 100).'%;line-height: 12px;font-size: 10px;',
+                                ]).
+                                (int)($model->progress * 100).'%'.
+                                Html::endTag('div').
+                            Html::endTag('div');
                     },
                 'headerOptions' => [
                     'style' => [
-                        'max-width' => '600px',
+                        'max-width' => '400px',
                         'min-width' => '84px',
                     ],
                 ],
                 'contentOptions' =>[
                     'class' => 'course-name',
                     'style' => [
-                        'max-width' => '600px', 
-                        'max-width' => '84px', 
+                        'max-width' => '400px', 
+                        'max-width' => '84px',
+                        'padding' => '2px 8px',
                     ],
                 ],
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => Yii::t('rcoa/teamwork', 'Progress'),
+                'label' => Yii::t('rcoa/teamwork', 'Course'),
                 'format' => 'raw',
                 'value' => function($model){
                     /* @var $model ItemManage */
-                    return Html::beginTag('div', ['class' => 'progress table-list-progress']).
-                                Html::beginTag('div', [
-                                    'class' => 'progress-bar', 
-                                    'style' => 'width:'.(int)($model->progress * 100).'%',
-                                ]).
-                                (int)($model->progress * 100).'%'.
-                                Html::endTag('div').
-                            Html::endTag('div');
+                    return count($model->courseManages).' 门';
                 },
                 'headerOptions' => [
+                    'class'=>[
+                        'th'=>'hidden-xs',
+                    ],
                     'style' => [
                         'width' => '74px',
                     ],
+                ],
+                'contentOptions' =>[
+                    'class' => 'hidden-xs',
                 ],
                
             ],

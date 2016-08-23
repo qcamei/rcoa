@@ -470,7 +470,7 @@ class TeamworkTool{
         
        
         $itemProgress = ItemManage::find()
-                        ->select(['Item.*', 'SUM(Course_progress.progress) AS progress'])
+                        ->select(['Item.*', '(SUM(Course_progress.progress) / COUNT(Course_progress.id)) AS progress'])
                         ->from($this->itemProgress)
                         ->rightJoin(['Item' => ItemManage::tableName()], 'Item.id = Course_progress.project_id')
                         ->groupBy('Item.id')
@@ -493,7 +493,7 @@ class TeamworkTool{
     public function getItemProgressOne($id)
     {        
         $itemProgress = ItemManage::find()
-                        ->select(['Item.*', 'SUM(Course_progress.progress) AS progress'])
+                        ->select(['Item.*', '(SUM(Course_progress.progress) / COUNT(Course_progress.id)) AS progress'])
                         ->from($this->itemProgress)
                         ->rightJoin(['Item' => ItemManage::tableName()], 'Item.id = Course_progress.project_id')
                         ->where(['Item.id' => $id])

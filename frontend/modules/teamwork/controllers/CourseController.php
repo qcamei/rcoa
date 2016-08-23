@@ -457,12 +457,14 @@ class CourseController extends Controller
     public function getWeeklyMonth($model)
     {
         /* @var $model  CourseManage*/
-        $monthStart = strtotime(date('Y-m', strtotime($model->real_start_time)));       //课程实际开始时间
+        $monthStart = empty($model->real_start_time) ? strtotime(date('Y-m', time())) : 
+                     strtotime(date('Y-m', strtotime($model->real_start_time)));       //课程实际开始时间
         $monthEnd = empty($model->real_carry_out) ? strtotime(date('Y-m', time())) :
                     strtotime(date('Y-m', strtotime($model->real_carry_out)));      //课程实际完成时间
        
         $monthArray = [];
-        $monthArray[] = date('Y-m', strtotime($model->real_start_time)); // 当前月;
+        $monthArray[] = empty($model->real_start_time) ? date('Y-m', time()) : 
+                        date('Y-m', strtotime($model->real_start_time)); // 当前月;
         while(($monthStart = strtotime('+1 month', $monthStart)) <= $monthEnd){
             $monthArray[] = date('Y-m',$monthStart); // 取得递增月;  
         }

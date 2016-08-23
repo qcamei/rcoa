@@ -30,9 +30,8 @@ and open the template in the editor.
 }
 .table-list .table-list-progress{
     height:20px;
-    margin-bottom:5px;
+    margin:5px 0px;
     border-radius:5px;
-    margin-top: 5px;
 }
 .table-list .progress {
     background-image: linear-gradient(to bottom, #ddd, #ccc);
