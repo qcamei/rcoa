@@ -122,11 +122,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     return '<div>'.$model->course->name.'</div>'.
                            Html::beginTag('div', [
                                     'class' => 'progress table-list-progress',
-                                    'style' => 'height: 15px;border-radius: 0px;margin:0px;',
+                                    'style' => 'height: 12px;border-radius: 0px;margin:3px 0;',
                                 ]).
                                 Html::beginTag('div', [
                                     'class' => 'progress-bar progress-bar',
-                                    'style' => 'width:'.(int)($model->progress * 100).'%;line-height: 15px;',
+                                    'style' => 'width:'.(int)($model->progress * 100).'%;line-height: 12px;font-size: 10px;',
                                 ]).
                                 (int)($model->progress * 100).'%'.
                                 Html::endTag('div').
@@ -143,7 +143,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'style' => [
                         'max-width' => '300px', 
                         'max-width' => '74px',
-                        'padding' => '0px'
+                        'padding' => '2px'
                     ],
                 ],
                 

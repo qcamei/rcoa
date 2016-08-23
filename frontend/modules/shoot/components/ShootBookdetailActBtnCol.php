@@ -68,9 +68,9 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
             'index' => $model->index
         ] : ['id' => $model->id];
         if($dayTomorrow < $bookTime && $bookTime < $dayEnd)
-            $buttonName = ($isNew || !$isValid) || $isAssign ? '预约' : $model->getStatusName();
+            $buttonName = $isNew ? '预约' : (!$isValid ? '预约中' : ($isAssign ? $model->getStatusName() : $model->getStatusName()));
         else 
-            $buttonName = $isNew || !$isValid ? '未预约' : $model->getStatusName();
+            $buttonName = $isNew ? '未预约' :(!$isValid ? '预约中' : ($isAssign ? $model->getStatusName() : $model->getStatusName()));
         
         $btnClass .= (!$isMe && $isBooking) ? ' disabled' : "";
         
@@ -83,11 +83,11 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
             $buttonName;
             if($dayTomorrow < $bookTime && $bookTime < $dayEnd)
                 $btnClass .= ($isBreakPromise ? ' btn-danger' : 
-                    (($isAssign && $isValid) ? ' btn-primary' : ' btn-default'));
+                    (($isAssign && $isValid) ? ' btn-primary' : ($isStausShootIng ? ' btn-info' : ' btn-default')));
             else
                 $btnClass .= ($isBreakPromise ? ' btn-danger' : 
-                    ($isNew ? ' btn-default disabled' : 
-                        ($isStausShootIng ? (!$isMe ? ' btn-default' :' btn-info' ): ' btn-primary')));
+                    ($isNew ? ' btn-default disabled' : ($isStausShootIng ? ' btn-info' : ' btn-primary')));
+                        
             
         //摄影师    
         }else if($authManager->isRole(RbacName::ROLE_SHOOT_MAN, Yii::$app->user->id))
@@ -98,11 +98,10 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
             $buttonName;
             if($dayTomorrow < $bookTime && $bookTime < $dayEnd)
                 $btnClass .= ($isBreakPromise ? ' btn-danger' : 
-                     (($isAssign && $isValid) ? ' btn-primary' : ' btn-default'));
+                     (($isAssign && $isValid) ? ' btn-primary disabled' : ($isStausShootIng ? ' btn-info' : ' btn-default')));
             else
                 $btnClass .= ($isBreakPromise ? ' btn-danger' : 
-                    ($isNew ? ' btn-default disabled' : 
-                        ($isStausShootIng && $isMe ? ' btn-info' : ' btn-default')));
+                    ($isNew ? ' btn-default disabled' : ($isStausShootIng ? ' btn-info' : ' btn-primary disabled')));
             
         }
         //编导
@@ -114,11 +113,10 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
             $buttonName;
             if($dayTomorrow < $bookTime && $bookTime < $dayEnd)
                 $btnClass .= ($isBreakPromise ? ' btn-danger' : 
-                     (($isNew) ? ' btn-primary' : ' btn-default'));
+                     ($isNew ? ' btn-primary' : ($isStausShootIng ? ' btn-info' : ' btn-default')));
             else
                 $btnClass .= ($isBreakPromise ? ' btn-danger' : 
-                    ($isNew ? ' btn-primary disabled' : 
-                        ($isStausShootIng && $isMe ? ' btn-info' : ' btn-default')));
+                    ($isNew ? ' btn-primary disabled' : ($isStausShootIng ? ' btn-info' : ' btn-default')));
         }
         
         $html = '';
