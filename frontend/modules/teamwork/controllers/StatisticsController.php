@@ -101,6 +101,7 @@ class StatisticsController extends Controller
             'teamIds'=>$this->getTeamIds(),
         ]);
     }
+    
     //--------------------------------------------------------------------------
     //
     // utils
