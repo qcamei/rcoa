@@ -41,7 +41,6 @@ class StatisticsController extends Controller
         /* 当时间段参数不为空时 */
         if($dateRange = $request->getQueryParam('dateRange')){
             $dateRange_Arr = explode(" - ",$dateRange);
-
             //下面所有例子设置时间段为 2016-08-01 到 2016-08-31
             if($status == CourseManage::STATUS_WAIT_START)
             {
@@ -66,9 +65,7 @@ class StatisticsController extends Controller
                  * 状态=已完成 AND 指定时间最小值<real_carry_out(实际完成时间)<指定时间段最大值
                  * 如：统计 2016-08-01 到 2016-08-31 内完成的课程
                  */
-
                 $query->andFilterWhere(['between','Course.real_carry_out',$dateRange_Arr[0],$dateRange_Arr[1]]);
-
             }else{
                 /**
                  * 状态为空时，每个条件都加上对应状态
@@ -78,31 +75,31 @@ class StatisticsController extends Controller
                 $query->orFilterWhere(['and',"Course.status=".CourseManage::STATUS_NORMAL,      ['<=','Course.real_start_time',strtotime($dateRange_Arr[1])]]);
                 $query->orFilterWhere(['and',"Course.status=".CourseManage::STATUS_CARRY_OUT,   ['between','Course.real_carry_out',$dateRange_Arr[0],$dateRange_Arr[1]]]);
             }
-            $model = new ItemManage();
-            $teams = $this->getStatisticsByTeam($query);//按团队统计
-            $allCHours = array_sum(ArrayHelper::getColumn($teams, 'value'));//总学时 
-            $allCourse = array_sum(ArrayHelper::getColumn($teams, 'total'));//总课程
-            return $this->render('index',[
-                'dateRange'=>$dateRange,
-                'item_type_id'=>$item_type_id,
-                'item_id'=>$item_id,
-                'item_child_id'=>$item_child_id,
-                'team'=>$team,
-                'status'=>$status,
-                'model'=>$model,
-                'allCHours'=>$allCHours,
-                'allCourse'=>$allCourse,
-
-                'twTool'=>Yii::$app->get('twTool'),
-                'itemTypes'=>$this->getStatisticsByItemType($query),//按行业统计
-                'items'=>$this->getStatisticsByItem($query),//按项目统计
-                'itemChilds'=>$this->getStatisticsByItemChild($query),//按子项目统计
-                'teams'=>$teams,
-                'item_type_ids'=>$this->getItemTyps(),
-                'item_ids'=>$this->getItems(),
-                'teamIds'=>$this->getTeamIds(),
-            ]);
         }
+        $model = new ItemManage();
+        $teams = $this->getStatisticsByTeam($query);//按团队统计
+        $allCHours = array_sum(ArrayHelper::getColumn($teams, 'value'));//总学时 
+        $allCourse = array_sum(ArrayHelper::getColumn($teams, 'total'));//总课程
+        return $this->render('index',[
+            'dateRange'=>$dateRange,
+            'item_type_id'=>$item_type_id,
+            'item_id'=>$item_id,
+            'item_child_id'=>$item_child_id,
+            'team'=>$team,
+            'status'=>$status,
+            'model'=>$model,
+            'allCHours'=>$allCHours,
+            'allCourse'=>$allCourse,
+            
+            'twTool'=>Yii::$app->get('twTool'),
+            'itemTypes'=>$this->getStatisticsByItemType($query),//按行业统计
+            'items'=>$this->getStatisticsByItem($query),//按项目统计
+            'itemChilds'=>$this->getStatisticsByItemChild($query),//按子项目统计
+            'teams'=>$teams,
+            'item_type_ids'=>$this->getItemTyps(),
+            'item_ids'=>$this->getItems(),
+            'teamIds'=>$this->getTeamIds(),
+        ]);
     }
     //--------------------------------------------------------------------------
     //
