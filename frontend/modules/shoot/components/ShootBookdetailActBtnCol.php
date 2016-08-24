@@ -72,8 +72,6 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
         else 
             $buttonName = $isNew ? '未预约' :(!$isValid ? '预约中' : ($isAssign ? $model->getStatusName() : $model->getStatusName()));
         
-        $btnClass .= (!$isMe && $isBooking) ? ' disabled' : "";
-        
         //摄影组长
         if($authManager->isRole(RbacName::ROLE_SHOOT_LEADER, Yii::$app->user->id))
         {   
@@ -88,7 +86,7 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
                 $btnClass .= ($isBreakPromise ? ' btn-danger' : 
                     ($isNew ? ' btn-default disabled' : ($isStausShootIng ? ' btn-info' : ' btn-primary')));
                         
-            
+            $btnClass .= (!$isMe && $isBooking) ? ' disabled' : "";
         //摄影师    
         }else if($authManager->isRole(RbacName::ROLE_SHOOT_MAN, Yii::$app->user->id))
         {
@@ -102,6 +100,7 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
             else
                 $btnClass .= ($isBreakPromise ? ' btn-danger' : 
                     ($isNew ? ' btn-default disabled' : ($isStausShootIng ? ' btn-info' : ' btn-primary disabled')));
+            $btnClass .= (!$isMe && $isBooking) ? ' disabled' : "";
             
         }
         //编导
@@ -117,6 +116,7 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
             else
                 $btnClass .= ($isBreakPromise ? ' btn-danger' : 
                     ($isNew ? ' btn-primary disabled' : ($isStausShootIng ? ' btn-info' : ' btn-default')));
+            $btnClass .= (!$isMe && $isBooking) ? ' disabled' : "";
         }
         
         $html = '';
