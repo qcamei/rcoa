@@ -320,10 +320,9 @@ class TeamworkTool{
     public function saveCourseAnnex($course_id, $post)
     {
         $values = [];
-        var_dump(array_unique($post['name']) || array_unique($post['path']));exit;
         /** 重组提交的数据为$values数组 */
         if(!empty($post)){
-            if(!array_unique($post['name']) || !array_unique($post['path'])){
+            if(!($this->isSameValue($post['name']) || $this->isSameValue($post['path']))){
                 foreach ($post['name'] as $key => $value) {
                    $values[] = [
                        'course_id' => $course_id,
@@ -507,5 +506,18 @@ class TeamworkTool{
                         ->one();
         
         return $itemProgress;
+    }
+    
+    /**
+     * 检查一个数组是否有重复值
+     * @param type $array
+     * @return boolean  ture为是
+     */
+    public function isSameValue($array)
+    {
+        if(count($array) != count(array_unique($array)))
+            return true;
+        else 
+            return false;
     }
 }

@@ -11,6 +11,9 @@ and open the template in the editor.
 /**
  * 公共部分样式
  */
+.wrap >.content {
+    padding: 50px 0px 20px !important;
+}
 .container.item-manage{
     padding-left: 0px;
     padding-right: 0px;
@@ -275,7 +278,8 @@ and open the template in the editor.
     background-color: #333;
     display: block;
     width: 40px;
-    padding: 3px;
+    padding: 2px;
+    font-size: 12px;
     text-align: center;
     color: #fff;
     border-radius: 5px;

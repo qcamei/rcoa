@@ -68,7 +68,6 @@ use yii\widgets\DetailView;
                 'attribute' => 'fw_course',
                 'value' => $model->fwCourse->name,
             ],
-            
             [
                 'attribute' => 'lession_time',
                 'value' => $model->lession_time,
@@ -98,8 +97,8 @@ use yii\widgets\DetailView;
             
             ['label' => '<span class="btn-block viewdetail-th-head">拍摄信息</span>','value'=>''],
             [
-                'attribute' => 'shoot_mode',
-                'value' => $model->getShootModeName(),
+                'attribute' => 'content_type',
+                'value' => $model->getContentTypeName(),
             ],
             [
                 'attribute' => 'photograph',

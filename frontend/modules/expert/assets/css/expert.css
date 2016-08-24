@@ -8,7 +8,9 @@ and open the template in the editor.
     Author     : Kiwi°
 */
 
-
+.wrap >.content {
+    padding: 50px 0px 20px !important;
+}
 .expert-type a {
     color: #000 !important;
     display: block !important; 

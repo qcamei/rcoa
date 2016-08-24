@@ -124,20 +124,18 @@ use yii\widgets\ActiveForm;
     
     <?= $form->field($model, 'remark')->textarea() ?>
     
-    <?= $form->field($model, 'shoot_mode')->radioList(ShootBookdetail::$shootModeMap,[
+    <?= $form->field($model, 'content_type')->radioList(ShootBookdetail::$contentTypeMap, [
         'separator'=>'',
          'itemOptions'=>[
             'labelOptions'=>[
                 'style'=>[
-                     'margin-right'=>'50px'
+                     'margin-right'=>'30px'
                 ]
             ]
         ],
     ]) ?>
 
     <?= $form->field($model, 'photograph')->checkbox()->label('') ?>
-    
-    <!--<?= $form->field($model, 'photograph')->checkboxList(ShootBookdetail::$timeIndexMap)->label('') ?>-->
     
     <!--隐藏的字段属性-->
     <?= Html::activeHiddenInput($model, 'ver') ?>

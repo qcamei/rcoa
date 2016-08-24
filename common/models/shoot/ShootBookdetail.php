@@ -23,42 +23,43 @@ use yii\db\Exception;
  * This is the model class for table "{{%shoot_bookdetail}}".
  *
  * @property integer $id
- * @property integer $site_id   场地ID
- * @property integer $fw_college 项目
- * @property integer $fw_project 子项目
- * @property integer $fw_course  课程
- * @property integer $lession_time  时长
- * @property string $u_teacher     老师
- * @property string $u_contacter   接洽人
- * @property string $u_booker      预约人
- * @property string $u_shoot_man   摄影师
- * @property integer $book_time     拍摄时间
- * @property integer $index         拍摄时段
- * @property integer $shoot_mode    
- * @property integer $photograph
- * @property integer $status        状态
- * @property string $create_by     创建者
- * @property integer $created_at    创建时间
- * @property integer $updated_at    修改时间
- * @property integer $ver
- * @property string $remark         备注
- * @property string $start_time     开始时间
- * @property integer $business_id    学历ID
+ * @property integer $site_id               场地ID
+ * @property integer $fw_college            层次/类型
+ * @property integer $fw_project            专业/工种
+ * @property integer $fw_course             课程
+ * @property integer $lession_time          时长
+ * @property string $u_teacher              老师
+ * @property string $u_contacter            接洽人
+ * @property string $u_booker               预约人
+ * @property string $u_shoot_man            摄影师
+ * @property integer $book_time             拍摄时间
+ * @property integer $index                 拍摄时段
+ * @property integer $content_type          内容类型
+ * @property integer $shoot_mode            拍摄模式
+ * @property integer $photograph            照片
+ * @property integer $status                状态
+ * @property string $create_by              创建者
+ * @property integer $created_at            创建时间
+ * @property integer $updated_at            修改时间
+ * @property integer $ver                   乐观锁
+ * @property string $remark                 备注
+ * @property string $start_time             开始时间
+ * @property integer $business_id           行业
  *
- * @property ShootAppraise[] $shootAppraises  评价题目
- * @property ShootAppraiseResult[] $shootAppraiseResults    评价结束
- * @property Item $business    获取学历
- * @property User $booker      获取预约人
- * @property FWItem $fwCollege    获取项目
- * @property User $contacter   获取接洽人
- * @property FWItem $fwCourse     获取课程
- * @property User $createBy     
- * @property FWItem $fwProject    获取子项目
- * @property User $shootMan        获取摄影师
- * @property ShootSite $site        获取场地
- * @property Expert $teacher        获取老师
- * @property ShootHistory $history    获取单条历史记录
- * @property ShootHistory[] $histories     获取历史记录
+ * @property ShootAppraise[] $shootAppraises                    获取所有评价题目
+ * @property ShootAppraiseResult[] $shootAppraiseResults        获取所有评价结束
+ * @property Item $business                                     获取行业
+ * @property User $booker                                       获取预约人
+ * @property FWItem $fwCollege                                  获取层次/类型
+ * @property User $contacter                                    获取接洽人
+ * @property FWItem $fwCourse                                   获取课程
+ * @property User $createBy                                     获取创建者
+ * @property FWItem $fwProject                                  获取专业/工种
+ * @property User $shootMan                                     获取摄影师
+ * @property ShootSite $site                                    获取场地
+ * @property Expert $teacher                                    获取老师
+ * @property ShootHistory $history                              获取单条历史记录
+ * @property ShootHistory[] $histories                          获取所有历史记录
  */
 class ShootBookdetail extends ActiveRecord
 {
@@ -89,6 +90,14 @@ class ShootBookdetail extends ActiveRecord
     /** 拍摄模式-高清 */
     const SHOOT_MODE_HD = 2;
     
+    /** 内容类型-板书 */
+    const CONTENT_TYPE_BOARDBOOK = 1;
+    /** 内容类型-蓝箱 */
+    const CONTENT_TYPE_BLUEBOX = 2;
+    /** 内容类型-外拍 */
+    const CONTENT_TYPE_WAIPAI = 3;
+
+
     /** 时段 上午 */
     const TIME_INDEX_MORNING = 0;
     /** 时段 下午 */
@@ -117,12 +126,19 @@ class ShootBookdetail extends ActiveRecord
     ];
     
     /** 拍摄模式列表 */
-    public static $shootModeMap =[
+    public static $shootModeMap = [
         self::SHOOT_MODE_SD => '标清',
         self::SHOOT_MODE_HD => '高清',
     ];
     
-    /** 时间段名称 */
+    /** 内容类型列表 */
+    public static $contentTypeMap = [
+        self::CONTENT_TYPE_BOARDBOOK => '板书',
+        self::CONTENT_TYPE_BLUEBOX => '蓝箱',
+        self::CONTENT_TYPE_WAIPAI => '外拍',
+    ];
+
+        /** 时间段名称 */
     public static $timeIndexMap = [
         self::TIME_INDEX_MORNING => '上',
         self::TIME_INDEX_AFTERNOON => '下',
@@ -149,12 +165,11 @@ class ShootBookdetail extends ActiveRecord
         return [
             self::SCENARIO_DEFAULT => ['site_id','fw_college', 'fw_project', 'fw_course', 
                 'lession_time', 'u_teacher', 'u_contacter', 
-                'u_booker','u_shoot_man' ,'book_time', 'index', 'shoot_mode',
+                'u_booker','u_shoot_man' ,'book_time', 'index', 'content_type',
                 'photograph', 'status', 'created_at', 'updated_at', 'ver','create_by','remark','start_time', 'business_id'],
             self::SCENARIO_TEMP_CREATE => ['site_id', 
-                'lession_time', 'u_contacter', 
-                'u_booker','book_time', 'index', 'shoot_mode',
-                'photograph', 'status', 'created_at', 'updated_at', 'ver','create_by'],
+                'u_booker','book_time', 'index',
+                'status', 'ver','create_by'],
         ];
     }
     
@@ -170,7 +185,7 @@ class ShootBookdetail extends ActiveRecord
     public function rules()
     {
         return [
-            [['site_id', 'lession_time',  'book_time', 'index', 'shoot_mode', 'photograph', 'status', 'created_at', 'updated_at', 'ver'], 'integer'],
+            [['site_id', 'fw_college', 'fw_project', 'fw_course', 'lession_time', 'book_time', 'index', 'content_type', 'shoot_mode', 'photograph', 'status', 'created_at', 'updated_at', 'ver', 'business_id'], 'integer'],
             [['u_teacher', 'u_contacte', 'u_booker', 'u_shoot_man', 'create_by'], 'string', 'max' => 36],
             [['fw_college', 'fw_project', 'fw_course', 'business_id'], 'integer'],
             [['u_booker',  'create_by', 'u_teacher', 'fw_college', 'fw_project', 'fw_course', 'business_id'], 'required'],
@@ -200,6 +215,7 @@ class ShootBookdetail extends ActiveRecord
             'u_shoot_man' => Yii::t('rcoa', 'Shoot Man'),
             'book_time' => Yii::t('rcoa', 'Book Time'),
             'index' => Yii::t('rcoa', 'Index'),
+            'content_type' => Yii::t('rcoa', 'Content Type'),
             'shoot_mode' => Yii::t('rcoa', 'Shoot Mode'),
             'photograph' => Yii::t('rcoa', 'Photograph'),
             'status' => Yii::t('rcoa', 'Status'),
@@ -212,8 +228,12 @@ class ShootBookdetail extends ActiveRecord
             'business_id' => Yii::t('rcoa', 'Business'),
         ];
     }
-
-     public function optimisticLock() {
+    
+    /**
+     * 版本号
+     * @return string
+     */
+    public function optimisticLock() {
         return 'ver';
     }
     
@@ -284,7 +304,7 @@ class ShootBookdetail extends ActiveRecord
     
     
     /**
-     * 获取学历
+     * 获取行业
      * @return ActiveQuery
      */
     public function getBusiness()
@@ -314,7 +334,7 @@ class ShootBookdetail extends ActiveRecord
     }
 
     /**
-     * 获取子项目
+     * 获取专业/工种
      * @return FWItem
      */
     public function getFwProject()
@@ -325,7 +345,7 @@ class ShootBookdetail extends ActiveRecord
     }
     
     /**
-     * 获取项目
+     * 获取层次/类型
      * @return FWItem
      */
     public function getFwCollege()
@@ -352,6 +372,7 @@ class ShootBookdetail extends ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'u_contacter']);
     }
+    
     /**
      * 获取老师
      * @return ActiveQuery
@@ -390,7 +411,6 @@ class ShootBookdetail extends ActiveRecord
     /**
      * 获取评价详细数据
      * @return array(u_contacter=>['hasDo'=>true,sum=>0,all=>1],u_shoot_man=>[...])
-     * 
      */
     public function getAppraiseInfo()
     {
@@ -519,9 +539,8 @@ class ShootBookdetail extends ActiveRecord
             return 0;
     }
     
-    
     /**
-     * 获取是否在可以执行指派操作
+     * 获取是否在可以执行【指派】操作
      */
     public function canAssign()
     {
@@ -529,7 +548,7 @@ class ShootBookdetail extends ActiveRecord
     }
     
     /**
-     * 获取是否可以执行更新操作
+     * 获取是否可以执行【更新】操作
      */
     public function canEdit()
     {
@@ -542,6 +561,15 @@ class ShootBookdetail extends ActiveRecord
     public function canAppraise()
     {
         return $this->status >= self::STATUS_SHOOTING;
+    }
+    
+    /**
+     * 获取内容类型
+     * @return string
+     */
+    public function getContentTypeName()
+    {
+        return self::$contentTypeMap[$this->content_type];
     }
     
     /**

@@ -38,11 +38,12 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail');
                     'rowspan' => 3, 
                     'style'=>[
                         'vertical-align' => 'middle',
+                        'padding' => '4px',
                     ]
                 ],
                 'headerOptions' => [
                      'style'=>[
-                        'width' => '60px',
+                        'width' => '45px',
                          'padding' => '4px'
                     ]
                 ]
@@ -54,20 +55,45 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail');
                 'contentOptions' =>[
                    'style'=>[
                         'vertical-align' => 'middle',
-                        'padding' => '4px',
+                        'padding' => '2px',
                     ]
                 ],
                 'headerOptions' => [
                      'style'=>[
-                        'width' => '29px',
-                         'padding' => '4px',
+                        'width' => '15px',
+                         'padding' => '2px',
                     ]
                 ]
             ],
             [
                 'class' => 'frontend\modules\shoot\components\ShootBookdetailListTd',
-                'attribute' => 'shoot_mode',
+                'attribute' => 'photograph',
                 'label' => '',
+                'headerOptions'=>[
+                    'class'=>[
+                        //'th'=>'hidden-xs',
+                    ],
+                    'style' => [
+                        'width' => '24px',
+                        'padding' => '2px',
+                    ]
+                ],
+                'contentOptions' =>[
+                    //'class'=>'hidden-xs',
+                    'style'=>[
+                        'vertical-align' => 'middle',
+                        'padding' => '2px',
+                    ],
+                ], 
+                'content' => function($model,$key,$index,$e)
+                {
+                   return $model->photograph == 1 ? '<span class="rcoa-icon rcoa-icon-camera" style="margin:12px 0 0;"/>' : "";
+                }
+            ],
+            [
+                'class' => 'frontend\modules\shoot\components\ShootBookdetailListTd',
+                'attribute' => 'content_type',
+                'label' => Yii::t('rcoa', 'Type'),
                 'contentOptions' =>[
                    //'class'=>'hidden-xs',
                    'style'=>[
@@ -80,7 +106,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail');
                         //'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '29px',
+                        'width' => '35px',
                         'padding' => '4px',
                     ]
                 ],
@@ -88,32 +114,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail');
                 {
                    /*@var $model ShootBookdetail*/ 
                     if(!$model->getIsValid())return '';
-                    return '<span class="rcoa-icon rcoa-icon-'.($model->shoot_mode == ShootBookdetail::SHOOT_MODE_SD ? 'sd' : 'hd').'"/>' ;
-                }
-            ],
-            [
-                'class' => 'frontend\modules\shoot\components\ShootBookdetailListTd',
-                'attribute' => 'photograph',
-                'label' => '',
-                'headerOptions'=>[
-                    'class'=>[
-                        //'th'=>'hidden-xs',
-                    ],
-                    'style' => [
-                        'width' => '24px',
-                        'padding' => '4px',
-                    ]
-                ],
-                'contentOptions' =>[
-                    //'class'=>'hidden-xs',
-                    'style'=>[
-                        'vertical-align' => 'middle',
-                        'padding' => '4px',
-                    ],
-                ], 
-                'content' => function($model,$key,$index,$e)
-                {
-                   return $model->photograph == 1 ? '<span class="rcoa-icon rcoa-icon-camera"/>' : "";
+                        return '<span class="content-type">'.$model->getContentTypeName().'</span>' ;
                 }
             ],
             [
@@ -121,9 +122,18 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail');
                 'label' => '【课程名 x 课时】',
                 'headerOptions'=>[
                     'style'=>[
-                       'min-width' => '100px',
+                        'max-width' => '350px;',
+                        'min-width' => '100px',
                         'padding' => '4px',
                     ],
+                ],
+                'contentOptions' =>[
+                    'style'=> [
+                        'vertical-align' => 'middle',
+                        'max-width' => '350x;',
+                        'min-width' => '100px',
+                        'padding' => '4px',
+                    ]
                 ],
                 
                 'content' => function($model,$key,$index,$e)
@@ -135,7 +145,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail');
                         return '';
                     $str = '【'.($model->getFwCourse() ? $model->getFwCourse()->name : 'NULL');
                     $time = ' x '.$model->lession_time.'】';
-                    return '<p class="course-name">'.$str.$time.'</p>';
+                    return '<p class="course-name" style="margin:0px;">'.$str.$time.'</p>';
                 }
             ],
             [
@@ -154,6 +164,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail');
                     'class'=>'hidden-xs',
                     'style'=> [
                         'white-space' => 'nowrap',
+                        'vertical-align' => 'middle',
                         'padding' => '4px',
                     ],
                 ], 
@@ -184,13 +195,14 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail');
                 'label' => '操作',
                 'contentOptions' =>[
                     'style'=> [
-                        'width' => '60px',
+                        'width' => '70px',
                         'padding' =>'4px',
+                        'vertical-align' => 'middle',
                     ]
                 ],
                 'headerOptions'=>[
                     'style'=> [
-                        'width' => '60px',
+                        'width' => '70px',
                         'padding' => '4px',
                     ]
                 ],

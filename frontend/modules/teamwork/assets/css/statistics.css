@@ -1,3 +1,6 @@
+.wrap >.content {
+    padding: 50px 0px 20px !important;
+}
 .statistics-content{
     padding-top: 20px;
 }

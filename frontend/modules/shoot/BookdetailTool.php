@@ -24,6 +24,7 @@ class BookdetailTool{
      * @param type $post
      */
     public function setNewBookdetailProperty($model, $post){
+        /* @var $model ShootBookdetail */
         $model->status = ShootBookdetail::STATUS_BOOKING;
         $model->u_booker = Yii::$app->user->id;
         $model->create_by = Yii::$app->user->id;
@@ -32,9 +33,9 @@ class BookdetailTool{
         !isset($post['book_time']) ? : $model->book_time = $post['book_time'];
         !isset($post['index']) ? : $model->index = $post['index'];
 
-        $model->setScenario(ShootBookdetail::SCENARIO_TEMP_CREATE);
+        $model->scenario = ShootBookdetail::SCENARIO_TEMP_CREATE;
         $model->save();
-        $model->setScenario(ShootBookdetail::SCENARIO_DEFAULT);
+        $model->scenario = ShootBookdetail::SCENARIO_DEFAULT;
 
         /** 设置上下晚预约的默认开始时间 */
         $model->index == $model::TIME_INDEX_MORNING ? $model->start_time = $model::START_TIME_MORNING :'';

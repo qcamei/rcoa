@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value'=> function($model){
                     /* @var $model CourseManage */
-                    return '<span style="width:45px;">'.$model->team->name.'</span>';
+                    return '<span>'.$model->team->name.'</span>';
                 },
                 'headerOptions' => [
                     'class'=>[
