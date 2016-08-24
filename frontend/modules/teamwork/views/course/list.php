@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'links' => [
                 [
                     'label' => Yii::t('rcoa', 'Detail'),
-                    'url' => ['view', 'id' => $model->project_id],
+                    'url' => ['default/view', 'id' => $model->project_id],
                     'template' => '<li class="course-name">{link}</li>',
                 ],
                 [
