@@ -64,4 +64,4 @@ class DefaultController extends Controller
         //var_dump(\yii\helpers\ArrayHelper::map($authManager->getItemUsers($itemName), 'id', 'nickname'));
         var_dump($authManager->getItemUserList($itemName));
     }
-}
+    }

@@ -131,7 +131,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 echo Select2::widget([
                     'value'=> $status,
                     'name' => 'status',
-                    'data' => [0=>'已建',  CourseManage::STATUS_CARRY_OUT=>'已完成',CourseManage::STATUS_NORMAL=>'在建',100=>'在建 和 已完成'],
+                    'data' => [CourseManage::STATUS_WAIT_START=>'待开始', CourseManage::STATUS_NORMAL=>'在建中',  CourseManage::STATUS_CARRY_OUT=>'已完成'],
                     'options' => [
                         'placeholder' => Yii::t('rcoa/teamwork', 'Statistics-Team-prompt'),
                     ],

@@ -266,16 +266,12 @@ use yii\widgets\ActiveForm;
                     foreach ($annex as $value) {
                         echo  Html::textInput('CourseAnnex[name][]', $value->name, [
                             'type' => 'text',
-                            'id' => 'courseannex-name',
-                            'class' => 'form-control',
-                            'style' => 'width:98%;float:left',
+                            'class' => 'form-control col-lg-12 col-md-11 col-sm-10 col-xs-9',
                         ]).Html::img(['/filedata/teamwork/image/delete.png'], [
                             'class' => 'form-img', 
                             'onclick' => 'deleteAnnex($(this))',
                         ]);
-                        echo Html::hiddenInput('CourseAnnex[path][]', $value->path, [
-                            'id' => 'courseannex-path',
-                        ]);
+                        echo Html::hiddenInput('CourseAnnex[path][]', $value->path);
                     }
                 }
             echo Html::endTag('div');
@@ -363,9 +359,9 @@ function uploadFile(){
                         NameMD5List.push(fileList[i].FileMD5);
                     }
                     for(var i = 0; i < fileList.length; i++){
-                        var inputText = '<input type="text" name="CourseAnnex[name][]" id="courseannex-name" class="form-control" style="width:98%;float:left">'+
+                        var inputText = '<input type="text" name="CourseAnnex[name][]"class="form-control col-lg-12 col-md-11 col-sm-10 col-xs-9">'+
                             '<img class="form-img" src="/filedata/teamwork/image/delete.png" onclick="deleteAnnex($(this))">';
-                        var inputHidden = '<input type="hidden" name="CourseAnnex[path][]" id="courseannex-path">';
+                        var inputHidden = '<input type="hidden" name="CourseAnnex[path][]">';
                         if(i == 0){
                             $(inputText).val(fileName.join('')).appendTo($("#courseannex"));
                             $("#courseannex").append($(inputHidden).val(filelist.join('')));
@@ -385,8 +381,8 @@ function uploadFile(){
 }
 function deleteAnnex(object){
     $(object).prev().remove();
-    $(object).remove();
     $(object).next().remove();
+    $(object).remove();
 }
 </script>
 

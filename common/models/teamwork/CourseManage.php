@@ -131,7 +131,14 @@ class CourseManage extends ActiveRecord
             [['plan_start_time', 'plan_end_time', 'real_carry_out'], 'string', 'max' => 60],
             [['real_start_time'], 'string', 'max' => 60, 'on' => [self::SCENARIO_WAITSTART]],
             [['des','path'], 'string', 'max' => 255],
-            
+            [['course_ops'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['course_ops' => 'u_id']],
+            [['weekly_editors_people'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['weekly_editors_people' => 'u_id']],
+            [['team_id'], 'exist', 'skipOnError' => true, 'targetClass' => Team::className(), 'targetAttribute' => ['team_id' => 'id']],
+            [['create_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['create_by' => 'id']],
+            [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Item::className(), 'targetAttribute' => ['course_id' => 'id']],
+            [['teacher'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['teacher' => 'id']],
+            [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => ItemManage::className(), 'targetAttribute' => ['project_id' => 'id']],
+            [['video_length'],'checkVideoLen'],
         ];
     }
     /**

@@ -14,6 +14,7 @@ use common\models\teamwork\Link;
 use common\models\teamwork\Phase;
 use Yii;
 use yii\db\Query;
+use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
 
 class TeamworkTool{
@@ -319,23 +320,28 @@ class TeamworkTool{
     public function saveCourseAnnex($course_id, $post)
     {
         $values = [];
+        var_dump(array_unique($post['name']) || array_unique($post['path']));exit;
         /** 重组提交的数据为$values数组 */
         if(!empty($post)){
-            foreach ($post['name'] as $key => $value) {
-               $values[] = [
-                   'course_id' => $course_id,
-                   'name' => $value,
-                   'path' => $post['path'][$key],
-               ];
+            if(!array_unique($post['name']) || !array_unique($post['path'])){
+                foreach ($post['name'] as $key => $value) {
+                   $values[] = [
+                       'course_id' => $course_id,
+                       'name' => $value,
+                       'path' => $post['path'][$key],
+                   ];
+                }
+
+                /** 添加$values数组到表里 */
+                Yii::$app->db->createCommand()->batchInsert(CourseAnnex::tableName(), 
+                [
+                    'course_id',
+                    'name',
+                    'path',
+                ], $values)->execute();
+            }else{
+                throw new NotAcceptableHttpException('请不要重复上传相同附件！');
             }
-        
-            /** 添加$values数组到表里 */
-            Yii::$app->db->createCommand()->batchInsert(CourseAnnex::tableName(), 
-            [
-                'course_id',
-                'name',
-                'path',
-            ], $values)->execute();
         }
     }
 
@@ -379,6 +385,7 @@ class TeamworkTool{
         $trans = Yii::$app->db->beginTransaction();
         try
         {  
+            /* @var $model CourseManage */
             if($model->save()){
                 CourseProducer::deleteAll(['course_id' => $model->id]);
                 CourseAnnex::deleteAll(['course_id' => $model->id]);

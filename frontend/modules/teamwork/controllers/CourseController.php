@@ -174,9 +174,8 @@ class CourseController extends Controller
         $courses = $this->getCourses($model->project->item_child_id);
         $existedCourses = $this->getExistedCourses(['project_id' => $model->project_id]);
         $existedCoursesOne = $this->getExistedCourses(['id' => $id]);    //获取已经存在的单条课程
-       
+        
         if ($model->load($post) && $model->validate()) {
-            $model->video_length = $post['CourseManage']['video_length'];
             $twTool->UpdateTask($model, $post);         //更新任务操作
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -255,7 +254,7 @@ class CourseController extends Controller
         $model = $this->findModel($id);
         if($model != null && !$model->getIsCarryOut())
             throw new NotFoundHttpException('该课程'.$model->getStatusName().'！');
-        
+        $model->real_carry_out = '';
         $model->status = CourseManage::STATUS_NORMAL;
         $model->save();
         $this->redirect(['view', 'id' => $model->id]);

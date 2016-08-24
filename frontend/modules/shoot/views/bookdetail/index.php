@@ -42,7 +42,8 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail');
                 ],
                 'headerOptions' => [
                      'style'=>[
-                        'width' => '60px'
+                        'width' => '60px',
+                         'padding' => '4px'
                     ]
                 ]
             ],
@@ -58,7 +59,8 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail');
                 ],
                 'headerOptions' => [
                      'style'=>[
-                        'width' => '29px'
+                        'width' => '29px',
+                         'padding' => '4px',
                     ]
                 ]
             ],
@@ -67,7 +69,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail');
                 'attribute' => 'shoot_mode',
                 'label' => '',
                 'contentOptions' =>[
-                   'class'=>'hidden-xs',
+                   //'class'=>'hidden-xs',
                    'style'=>[
                         'vertical-align' => 'middle',
                         'padding' => '4px',
@@ -75,10 +77,11 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail');
                 ],
                 'headerOptions'=>[
                     'class'=>[
-                        'th'=>'hidden-xs',
+                        //'th'=>'hidden-xs',
                     ],
                     'style' => [
                         'width' => '29px',
+                        'padding' => '4px',
                     ]
                 ],
                 'content' => function($model,$key,$index,$e)
@@ -94,14 +97,15 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail');
                 'label' => '',
                 'headerOptions'=>[
                     'class'=>[
-                        'th'=>'hidden-xs',
+                        //'th'=>'hidden-xs',
                     ],
                     'style' => [
                         'width' => '24px',
+                        'padding' => '4px',
                     ]
                 ],
                 'contentOptions' =>[
-                    'class'=>'hidden-xs',
+                    //'class'=>'hidden-xs',
                     'style'=>[
                         'vertical-align' => 'middle',
                         'padding' => '4px',
@@ -118,6 +122,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail');
                 'headerOptions'=>[
                     'style'=>[
                        'min-width' => '100px',
+                        'padding' => '4px',
                     ],
                 ],
                 
@@ -142,12 +147,14 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail');
                     ],
                     'style'=>[
                         'width' => '305px',
+                        'padding' => '4px',
                     ]
                 ],
                 'contentOptions' =>[
                     'class'=>'hidden-xs',
                     'style'=> [
                         'white-space' => 'nowrap',
+                        'padding' => '4px',
                     ],
                 ], 
                 'content' => function($model,$key,$index,$e)
@@ -172,19 +179,19 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail');
                     return '【'.$teacherName.' / '.$contacterGood.$contacterName .' / '.$shootManGood.$shootManName.'】';
                 }
             ],
-            
             [
                 'class' => 'frontend\modules\shoot\components\ShootBookdetailActBtnCol',
                 'label' => '操作',
                 'contentOptions' =>[
                     'style'=> [
-                        'width' => '90px',
+                        'width' => '60px',
                         'padding' =>'4px',
                     ]
                 ],
                 'headerOptions'=>[
                     'style'=> [
-                        'width' => '90px',
+                        'width' => '60px',
+                        'padding' => '4px',
                     ]
                 ],
             ],

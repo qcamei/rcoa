@@ -285,8 +285,36 @@ and open the template in the editor.
  * 课程表单页样式
  */
 .form-img {
-    margin: 9.5px 0px;
+    margin: 10px 0px;
+    float: left;
 }
+@media (min-width: 320px){
+    #courseannex .col-xs-9 {
+        width: 94%;
+        float: left;
+    }
+}
+@media (min-width: 768px){
+    #courseannex .col-sm-10 {
+        width: 96.33333333%;
+        float: left;
+    }
+}
+@media (min-width: 992px){
+    #courseannex .col-md-11 {
+        width: 97.66666667%;
+        float: left;
+    }
+}
+@media (min-width: 1200px){
+    #courseannex .col-lg-12 {
+        width: 98%;
+        float: left;
+    }
+}
+
+
+
 /**
  * 任务详细页样式 
  */
