@@ -55,13 +55,13 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail');
                 'contentOptions' =>[
                    'style'=>[
                         'vertical-align' => 'middle',
-                        'padding' => '2px',
+                        'padding' => '4px 2px',
                     ]
                 ],
                 'headerOptions' => [
                      'style'=>[
                         'width' => '15px',
-                         'padding' => '2px',
+                         'padding' => '4px 2px',
                     ]
                 ]
             ],
@@ -75,19 +75,19 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail');
                     ],
                     'style' => [
                         'width' => '24px',
-                        'padding' => '2px',
+                        'padding' => '4px 2px',
                     ]
                 ],
                 'contentOptions' =>[
                     //'class'=>'hidden-xs',
                     'style'=>[
                         'vertical-align' => 'middle',
-                        'padding' => '2px',
+                        'padding' => '4px 2px',
                     ],
                 ], 
                 'content' => function($model,$key,$index,$e)
                 {
-                   return $model->photograph == 1 ? '<span class="rcoa-icon rcoa-icon-camera" style="margin:12px 0 0;"/>' : "";
+                   return $model->photograph == 1 ? '<span class="rcoa-icon rcoa-icon-camera" style="margin:10px 0 0;"/>' : "";
                 }
             ],
             [
