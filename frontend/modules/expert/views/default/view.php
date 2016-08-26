@@ -12,7 +12,7 @@ use yii\widgets\DetailView;
 /* @var $this View */
 /* @var $model Expert */
 
-$this->title = Yii::t('rcoa', 'Expert Details') . ' : ' .$model->u_id;
+$this->title = Yii::t('rcoa', 'Expert Details') . ' : ' .$model->user->nickname;
 $this->params['breadcrumbs'][] = ['label' => 'Experts', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $this->title?>
     </div>
 </div>
-<div class="container expert-view bookdetail-list has-title">
+<div class="container expert-view has-title">
 
     <?= DetailView::widget([
         'model' => $model,
@@ -32,7 +32,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format'=>'raw',
                 'value'=> Html::a(Html::img(Yii::$app->request->hostInfo.$model->personal_image,['width'=>'128px']), $model->personal_image),
             ],
-            //'u_id',
             'user.username',
             'user.nickname',
             [
@@ -85,13 +84,15 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <div class="controlbar">
-    <div class="container">
+    <div class="container expert-form">
         <div class="row ">
-            <div class="col-sm-9 col-md-10 col-xs-7">
+            <div class="col-lg-10 col-md-10 col-sm-9 col-xs-7" style="padding: 0px;">
                 <?= $this->render('_form_search')?>
             </div>
-            <?= Html::a(Yii::t('rcoa', 'Search'), 'javascript:;', ['id'=>'submit', 'class' => 'glyphicon glyphicon-search btn btn-default',]) ?>
-            <?= Html::a(Yii::t('rcoa', 'Back'), ['type', 'id' => $model->type], ['class' => 'btn btn-default']) ?>
+            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-5" style="padding: 0px;">
+                <?= Html::a(Yii::t('rcoa', 'Search'), 'javascript:;', ['id'=>'submit', 'class' => 'glyphicon glyphicon-search btn btn-default',]) ?>
+                <?= Html::a(Yii::t('rcoa', 'Back'), ['type', 'id' => $model->type], ['class' => 'btn btn-default']) ?>
+            </div>
         </div>
     </div>
 </div>

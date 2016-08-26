@@ -33,6 +33,11 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail Details') . ' : ' . $model->id;
 </div>
 <div class="controlbar">
     <div class="container">
+        <?= Html::a('返回', [
+            'index', 
+            'date'=>  date('Y-m-d',$model->book_time), 
+            'site'=>$model->site_id
+        ], ['class' => 'btn btn-default']) ?>
         <?php
             /**
              * 提交 按钮显示必须满足以下条件：
@@ -68,7 +73,6 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail Details') . ' : ' . $model->id;
             if(($model->getIsAssign() || $model->getIsStausShootIng()) && Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model]) && $model->book_time > strtotime('+1 day'))
                 echo Html::a('取消', 'javascript::', ['id'=>'cancel', 'class' => 'btn btn-warning']).' ';
         ?>
-        <?= Html::a('返回', ['index','date'=>  date('Y-m-d',$model->book_time), 'site'=>$model->site_id], ['class' => 'btn btn-default']) ?>
     </div>
 </div>
 <?php

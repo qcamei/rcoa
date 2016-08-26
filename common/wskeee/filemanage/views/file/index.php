@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?= $this->render('_title',['get' => $get, 'bread' => $bread]) ?>
 
-<div class="container file-manage  has-title">
+<div class="container file-manage-index file-manage has-title">
     <div class="row">
         <div id="cbp-spmenu-s1" class="col-xs-3 col-sm-3 col-md-3 cbp-spmenu cbp-spmenu-open">
             <?= $this->render('_leftList',['get' => $get, 'list' => $list]) ?>

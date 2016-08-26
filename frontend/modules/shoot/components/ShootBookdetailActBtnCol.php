@@ -72,8 +72,18 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
         else 
             $buttonName = $isNew ? '未预约' :(!$isValid ? '预约中' : ($isAssign ? $model->getStatusName() : $model->getStatusName()));
         
+        //管理员
+        if($authManager->isRole(RbacName::ROLE_ADMIN, Yii::$app->user->id))
+        {
+            $url;
+            $params;
+            $buttonName = $isNew ? '预约' : (!$isValid ? '预约中' : ($isAssign ? $model->getStatusName() : $model->getStatusName()));
+            $btnClass .= ($isBreakPromise ? ' btn-danger' : 
+                    (($isAssign && $isValid) ? ' btn-primary' : ($isStausShootIng ? ' btn-info' : ' btn-default')));
+            $btnClass .= (!Yii::$app->user->id && $isBooking) ? ' disabled' : "";
+        }
         //摄影组长
-        if($authManager->isRole(RbacName::ROLE_SHOOT_LEADER, Yii::$app->user->id))
+        else if($authManager->isRole(RbacName::ROLE_SHOOT_LEADER, Yii::$app->user->id))
         {   
             $isMe = !$isNew && ($model->u_shoot_man && $model->shootMan->id == Yii::$app->user->id);
             $url;
@@ -99,7 +109,7 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
                      (($isAssign && $isValid) ? ' btn-primary disabled' : ($isStausShootIng ? ' btn-info' : ' btn-default')));
             else
                 $btnClass .= ($isBreakPromise ? ' btn-danger' : 
-                    ($isNew ? ' btn-default disabled' : ($isStausShootIng ? ' btn-info' : ' btn-primary disabled')));
+                    ($isNew ? ' btn-default disabled' : ($isStausShootIng ? ' btn-info' : ' btn-primary')));
             $btnClass .= (!$isMe && $isBooking) ? ' disabled' : "";
             
         }

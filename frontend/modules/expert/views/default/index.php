@@ -37,12 +37,14 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <div class="controlbar">
-    <div class="container">
+    <div class="container expert-form">
         <div class="row ">
-            <div class="col-sm-10 col-md-11 col-xs-9">
+            <div class="col-lg-11 col-md-11 col-sm-11 col-xs-9" style="padding: 0px;">
                 <?= $this->render('_form_search')?>
             </div>
-            <?= Html::a(Yii::t('rcoa', 'Search'), 'javascript:;', ['id'=>'submit', 'class' => 'glyphicon glyphicon-search btn btn-default',]) ?>
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-3" style="padding: 0px;">
+                <?= Html::a(Yii::t('rcoa', 'Search'), 'javascript:;', ['id'=>'submit', 'class' => 'glyphicon glyphicon-search btn btn-default',]) ?>
+            </div>
         </div>
     </div>
 </div>

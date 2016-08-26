@@ -18,7 +18,7 @@ $this->title =  Yii::t('rcoa', 'Expert Search') . ' : ' .$categories;
     </div>
 </div>
 
-<div class="container expert-type bookdetail-list has-title">
+<div class="container expert-searchs has-title">
     <?php 
         if(count($modelKey) == 0)
             echo '<h2>未找到有关<span style="color:blue"> '. $categories .' </span>的专家资源！</h2>';
@@ -39,13 +39,15 @@ $this->title =  Yii::t('rcoa', 'Expert Search') . ' : ' .$categories;
 </div>
 
 <div class="controlbar">
-    <div class="container">
+    <div class="container expert-form">
         <div class="row ">
-            <div class="col-sm-9 col-md-10 col-xs-7">
+            <div class="col-lg-10 col-md-10 col-sm-9 col-xs-7" style="padding: 0px;">
                 <?= $this->render('_form_search')?>
             </div>
-            <?= Html::a(Yii::t('rcoa', 'Search'), 'javascript:;', ['id'=>'submit', 'class' => 'glyphicon glyphicon-search btn btn-default',]) ?>
-            <?= Html::a(Yii::t('rcoa', 'Back'), '', ['class' => 'btn btn-default', 'onclick'=>'history.go(-1)']) ?>
+            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-5" style="padding: 0px;">
+                <?= Html::a(Yii::t('rcoa', 'Search'), 'javascript:;', ['id'=>'submit', 'class' => 'glyphicon glyphicon-search btn btn-default',]) ?>
+                <?= Html::a(Yii::t('rcoa', 'Back'), '', ['class' => 'btn btn-default', 'onclick'=>'history.go(-1)']) ?>
+            </div>
         </div>
     </div>
 </div>

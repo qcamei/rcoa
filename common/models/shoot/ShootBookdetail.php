@@ -190,7 +190,8 @@ class ShootBookdetail extends ActiveRecord
             [['fw_college', 'fw_project', 'fw_course', 'business_id'], 'integer'],
             [['u_booker',  'create_by', 'u_teacher', 'fw_college', 'fw_project', 'fw_course', 'business_id'], 'required'],
             [['remark'], 'string', 'max' => 255],
-            [['start_time'], 'string', 'max' => 20]
+            [['start_time'], 'string', 'max' => 20],
+            //[['u_contacter'],'checkContacter'],
         ];
     }
 
@@ -237,8 +238,15 @@ class ShootBookdetail extends ActiveRecord
         return 'ver';
     }
     
-     public function afterFind() {
-        
+    /*public function checkContacter($attribute, $params)
+    {
+        $contacter = $this->u_contacter;
+        //$contacters = $this->getContacters();
+        if($contacter == null)
+            $this->addError($attribute, Yii::t('rcoa', 'Contacter').'不能为空');
+    }*/
+
+    public function afterFind() {
         if($this->getIsBooking() && (time() - $this->updated_at > self::BOOKING_TIMEOUT))
             $this->status = self::STATUS_DEFAULT;
         
@@ -371,6 +379,15 @@ class ShootBookdetail extends ActiveRecord
     public function getContacter()
     {
         return $this->hasOne(User::className(), ['id' => 'u_contacter']);
+    }
+    
+    /**
+     * 获取接洽人
+     * @return ActiveQuery
+     */
+    public function getContacters()
+    {
+        return $this->hasMany(ShootBookdetailRoleName::className(), ['b_id' => 'id', 'role_nam' => RbacName::ROLE_CONTACT]);
     }
     
     /**

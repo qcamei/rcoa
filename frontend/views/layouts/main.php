@@ -15,6 +15,8 @@ use yii\helpers\Html;
 use yii\web\View;
 
 AppAsset::register($this);
+
+$system = System::find()->with('jobs')->all();
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -83,12 +85,12 @@ AppAsset::register($this);
                 'width'=>'20',
                 'height'=>'20'
             ]), '', ['class'=>'dropdown-toggle', 'style'=>'height:50px', 'data-toggle'=>'dropdown'])
-            .$this->render('_tasks_in').'</li>';
+            .$this->render('_tasks_in', ['system' => $system]).'</li>';
         echo '<li class="dropdown">'.Html::a(Html::img('/filedata/image/u21.png',[
                 'width'=>'20',
                 'height'=>'20'
             ]), '', ['class'=>'dropdown-toggle', 'style'=>'height:50px', 'data-toggle'=>'dropdown'])
-            .$this->render('_notification').'</li>';
+            .$this->render('_notification', ['system' => $system]).'</li>';
         echo '<li class="dropdown">'.Html::a(Html::img(Yii::$app->user->identity->avatar,[
             'width'=> '25', 
             'height' => '25',

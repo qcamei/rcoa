@@ -425,7 +425,6 @@ class TeamworkTool{
     
     /**
      * 获取所有课程进度
-     * @param type $id          ID
      * @param type $projectId   项目ID
      * @param type $status      状态
      * @param type $teamId      团队ID

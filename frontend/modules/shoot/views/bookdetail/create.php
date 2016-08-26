@@ -35,11 +35,16 @@ $this->title = Yii::t('rcoa', 'Create Shoot Bookdetail');
 <!-- 添加 controlbar 等同标题样式，位置 固定到页面底部 -->
 <div class="controlbar">
     <div class="container">
+        <?= Html::a(Yii::t('rcoa', 'Back'), [
+            'exit-create', 
+            'date' => date('Y-m-d', $model->book_time), 
+            'b_id' => $model->id, 
+            'site'=> $model->site_id
+        ], ['class' => 'btn btn-default']) ?>
         <?= Html::a(
-                !$model->getIsValid() ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'),
-                'javascript:;', 
-                ['id'=>'submit','class' => (!$model->getIsValid()) ? 'btn btn-success' : 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('rcoa', 'Back'), ['exit-create', 'date' => date('Y-m-d', $model->book_time), 'b_id' => $model->id, 'site'=> $model->site_id], ['class' => 'btn btn-default']) ?>
+            !$model->getIsValid() ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'),
+            'javascript:;', 
+            ['id'=>'submit','class' => (!$model->getIsValid()) ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 </div>
 <?php

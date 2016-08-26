@@ -23,4 +23,7 @@ class ResourceAsset extends AssetBundle
     public $depends = [
         'yii\web\YiiAsset'
     ];
+    public $publishOptions = [
+        'forceCopy' => YII_DEBUG,
+    ];
 }

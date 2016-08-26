@@ -76,15 +76,15 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $banner = Banner::find()
+        /*$banner = Banner::find()
                 ->where(['isdisplay' => Banner::DISPLAY])
                 ->orderBy('index ASC')
-                ->all();
-        $system = System::find()->with('jobs')->all();
+                ->all();*/
+        $system = System::find()->all();
         $user = User::findOne(Yii::$app->user->id);
         return $this->render('index',[
-            'banner' => $banner,
-            'video' => $video = ['ogg','mpeg4','mp4','webm'],
+            //'banner' => $banner,
+            //'video' => $video = ['ogg','mpeg4','mp4','webm'],
             'system' => $system,
             'user' => $user,
         ]);

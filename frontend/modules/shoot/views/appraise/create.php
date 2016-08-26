@@ -33,6 +33,7 @@ use yii\web\View;
 </div>
 <div class="controlbar">
     <div class="container">
+        <?= Html::a('返回',['bookdetail/view','id'=>$bookdetail->id] , ['class' => 'btn btn-default']) ?>
         <?php
             /*
              * 提交 按钮显示必须满足以下条件：
@@ -48,8 +49,6 @@ use yii\web\View;
                     && count(ShootAppraiseResult::findAll(['b_id'=>$bookdetail->id,'u_id'=>Yii::$app->user->id]))==0)
                 echo Html::a('提交', 'javascript:;', ['id'=>'submit', 'class' => 'btn btn-danger']).' ';
         ?>
-        
-        <?= Html::a('返回',['bookdetail/view','id'=>$bookdetail->id] , ['class' => 'btn btn-default']) ?>
     </div>
 </div>
 <?php

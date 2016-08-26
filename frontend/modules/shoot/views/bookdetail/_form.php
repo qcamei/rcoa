@@ -96,31 +96,45 @@ use yii\widgets\ActiveForm;
     
     <?= $form->field($model, 'u_booker')->dropDownList($bookers, ['prompt'=>'请选择...']) ?>
     
-    <?= $form->field($model, 'u_contacter')->widget(Select2::classname(), [
-        'value' => !$model->getIsValid() ?  '' : $contactsKey,
-        'data' => !$model->getIsValid() ? $contacts : ArrayHelper::merge($alreadyContacts, $contacts), //合并两个数组
-        //'size' => 'lg',
-        'maintainOrder' => true,    //无序排列
-        'hideSearch' => true,
-        'options' => [
-            'placeholder' => '选择接洽人...',
-            'multiple' => true,     //设置多选
-        ],
-        'toggleAllSettings' => [
-            'selectLabel' => '<i class="glyphicon glyphicon-ok-circle"></i> 添加全部',
-            'unselectLabel' => '<i class="glyphicon glyphicon-remove-circle"></i> 取消全部',
-            'selectOptions' => ['class' => 'text-success'],
-            'unselectOptions' => ['class' => 'text-danger'],
-        ],
-        'pluginOptions' => [
-            'tags' => false,
-            'maximumInputLength' => 10,
-            'allowClear' => true,
-        ],
-        'pluginEvents' => [
-            'change' => 'function(){ select2Log();}'
-        ]
-    ])?>
+    <?php
+        echo Html::beginTag('div', ['class' => 'form-group field-shootbookdetail-u_contacter']);
+            echo Html::beginTag('label', [
+                 'class' => 'col-lg-1 col-md-1 control-label',
+                 'style' => 'color: #999999; font-weight: normal;',
+                 'for' => 'shootbookdetail-u_contacter'
+                ]).Yii::t('rcoa', 'Contacter').Html::endTag('label');
+             echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']);
+                echo Select2::widget([
+                    'name' => 'ShootBookdetail[u_contacter][]',
+                    'value' => !$model->getIsValid() ? Yii::$app->user->id : array_keys($alreadyContacts),
+                    'data' => !$model->getIsValid() ? $contacts : ArrayHelper::merge($alreadyContacts, $contacts), //合并两个数组
+                    'maintainOrder' => true,    //无序排列
+                    'hideSearch' => true,
+                    'options' => [
+                        'placeholder' => '选择接洽人...',
+                        'multiple' => true,     //设置多选
+                    ],
+                    'toggleAllSettings' => [
+                        'selectLabel' => '<i class="glyphicon glyphicon-ok-circle"></i> 添加全部',
+                        'unselectLabel' => '<i class="glyphicon glyphicon-remove-circle"></i> 取消全部',
+                        'selectOptions' => ['class' => 'text-success'],
+                        'unselectOptions' => ['class' => 'text-danger'],
+                    ],
+                    'pluginOptions' => [
+                        'tags' => false,
+                        'maximumInputLength' => 10,
+                        'allowClear' => true,
+                    ],
+                    'pluginEvents' => [
+                        'change' => 'function(){ select2Log();}'
+                    ]
+                ]);
+                
+             echo Html::endTag('div');           
+             echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']).Html::beginTag('div', ['class' => 'help-block']).
+                    Html::endTag('div').Html::endTag('div');
+        echo Html::endTag('div');
+    ?>
     
     <?= $form->field($model, 'remark')->textarea() ?>
     

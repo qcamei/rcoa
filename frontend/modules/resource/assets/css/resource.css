@@ -25,14 +25,12 @@ and open the template in the editor.
     padding-left: 2px !important;
     padding-right: 2px !important;
 }
-
 .resource-index-a{
     color:#ccc !important;
     float: left; 
     margin: 10px auto;
     
 }
-
 .resource-type-a{
     color:#ccc !important; 
     float: left; 
@@ -40,7 +38,6 @@ and open the template in the editor.
     margin-bottom:10px;
     margin-left: 10px;
 }
-
 .resource-type-relative{
     width: 100%;
     overflow:hidden;
@@ -66,10 +63,6 @@ and open the template in the editor.
     padding-right: 5px; 
     line-height: 33px;
 }
-/*.modal-header{
-    padding: 5px !important;
-}*/
-
 .modal-body {
     position: relative;
     padding: 0 !important; 
@@ -101,7 +94,6 @@ and open the template in the editor.
 }
 .content .carousel{
     position:relative !important;
-    /*margin-bottom:20px !important;*/
     line-height:1 !important;
 }
 .carousel .carousel-indicators{

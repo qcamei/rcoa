@@ -16,8 +16,11 @@ use yii\web\View;
 /* @var $jobManager JobManager */
 $jobManager = Yii::$app->get('jobManager');
 $notification = $jobManager->getUnReadyNotification(Yii::$app->user->id);
-$system = System::find()->with('jobs')->all();
 
+$jobId = ArrayHelper::getColumn($notification, 'job_id');
+$systemId = ArrayHelper::getColumn($system, 'id');
+$unReadyNotice = $jobManager->getHaveReadNotice($jobId, ['system_id' => $systemId]);
+$notice = ArrayHelper::getColumn($unReadyNotice, 'system_id');
 ?>
 <span class="badge badge-warning"><?php echo count($notification)?></span>
 <ul class="dropdown-menu extended notification">
@@ -25,21 +28,20 @@ $system = System::find()->with('jobs')->all();
         <p id="text">你总有<?php echo count($notification)?>个通知</p>
     </li>
     <?php 
-        foreach ($system as $value) {
-            $jobId = ArrayHelper::getColumn($notification, 'job_id');
-            $unReadyNotice = $jobManager->getHaveReadNotice($jobId, ['system_id' => $value->id]);
-            if(empty($unReadyNotice)) continue;
-            echo '<div class="job-notice-list">';
-            echo '<li>';
-            echo '<p>【'.$value->name.'】</p>';   
-            echo '</li>';
-            foreach ($unReadyNotice as $values) {
+        echo '<div class="job-notice-list">';
+            foreach ($system as $value) {
+                if(!in_array($value->id, $notice)) continue;
                 echo '<li>';
-                echo Html::a('<span>【'.$values->status.'】</span>'.$values->subject, [$values->link]);
+                echo '<p>【'.$value->name.'】</p>';   
                 echo '</li>';
+                foreach ($unReadyNotice as $values) {
+                    if($values->system_id != $value->id) continue;
+                    echo '<li>';
+                    echo Html::a('<span>【'.$values->status.'】</span>'.$values->subject, [$values->link]);
+                    echo '</li>';
+                }
             }
-            echo '</div>';
-        }
+        echo '</div>';
         echo '<li>';
         echo Html::a('全部清除', '', ['id'=>'allRemove','style'=>'text-align: center']);
         echo '</li>';
@@ -71,8 +73,6 @@ function hasReday(){
                 console.warn("请求失败...！");
                 return;
             }
-            
-            //console.log(data); //在console页面打印数据 
         }
     });
 }

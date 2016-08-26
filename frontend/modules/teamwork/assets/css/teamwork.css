@@ -71,7 +71,7 @@ and open the template in the editor.
  *  主页样式
  */
 .item-manage-row {
-    margin: 0px -5px !important;
+    margin: 0px  !important;
     padding: 0px !important;
 }
 .head {

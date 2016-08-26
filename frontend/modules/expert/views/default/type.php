@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 
-<div class="container expert-type bookdetail-list has-title" id="expert-type">
+<div class="container expert-type has-title" id="expert-type">
     <?php foreach ($modelExpert as $expert){
         echo Html::a('<div class="expert"><div class="personal-image">'
                     .Html::img($expert['personal_image'], [
@@ -39,13 +39,15 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 <div class="controlbar">
-    <div class="container">
+    <div class="container expert-form">
         <div class="row ">
-            <div class="col-sm-9 col-md-10 col-xs-7">
+            <div class="col-lg-10 col-md-10 col-sm-9 col-xs-7" style="padding: 0px;">
                 <?= $this->render('_form_search')?>
             </div>
-            <?= Html::a(Yii::t('rcoa', 'Search'), 'javascript:;', ['id'=>'submit', 'class' => 'glyphicon glyphicon-search btn btn-default',]) ?>
-            <?= Html::a(Yii::t('rcoa', 'Back'), ['index'], ['class' => 'btn btn-default']) ?>
+            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-5" style="padding: 0px;">
+                <?= Html::a(Yii::t('rcoa', 'Search'), 'javascript:;', ['id'=>'submit', 'class' => 'glyphicon glyphicon-search btn btn-default',]) ?>
+                <?= Html::a(Yii::t('rcoa', 'Back'), ['index'], ['class' => 'btn btn-default']) ?>
+            </div>
         </div>
     </div>
 </div>

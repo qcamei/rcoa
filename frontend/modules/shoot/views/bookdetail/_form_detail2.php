@@ -24,6 +24,7 @@ use yii\widgets\DetailView;
     <?php
     /* @var $authManager RbacManager */
     $authManager = Yii::$app->authManager;
+    $isRoleAdmin = $authManager->isRole(RbacName::ROLE_ADMIN, Yii::$app->user->id);
     $isShootManLeader = $authManager->isRole(RbacName::ROLE_SHOOT_LEADER, Yii::$app->user->id);
     
     echo DetailView::widget([
@@ -107,7 +108,7 @@ use yii\widgets\DetailView;
             [
                 'attribute' => 'u_shoot_man', 
                 'format' => 'raw',
-                'value' => $isShootManLeader && ($model->getIsAssign() || $model->getIsStausShootIng())?
+                'value' => ($isRoleAdmin || $isShootManLeader) && ($model->getIsAssign() || $model->getIsStausShootIng())?
                             Select2::widget([
                                 'name' => 'shoot_man',
                                 'value' => empty($model->u_shoot_man) ?  '' : $shootMansKey,

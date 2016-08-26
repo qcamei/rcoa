@@ -92,6 +92,77 @@ class BookdetailController extends Controller
     }
 
     /**
+     * Displays a single ShootBookdetail model.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionView($id)
+    {
+        $model = $this->findModel($id);
+        
+        /* @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
+        
+        if($model->getIsAssign() || $model->getIsStausShootIng()){
+            //设置用户对通知已读
+            $jobManager->setNotificationHasReady(2, Yii::$app->user->id, $id);  
+        }  else {
+            //取消用户与任务通知的关联
+            $jobManager->cancelNotification(2, $model->id, Yii::$app->user->id); 
+        }
+        
+        
+        //被指派了的摄影师
+        $alreadyShootMansArray = $this->getIsRoleNames(RbacName::ROLE_SHOOT_MAN, $model->book_time, $model->index); 
+        //所有摄影师
+        $allShootMansArray = $this->getRoleToUsers(RbacName::ROLE_SHOOT_MAN); 
+        /** 修改时设置Select2 value值*/
+        $assignedShootMans = $this->getShootBookdetailRoleNames($id, RbacName::ROLE_SHOOT_MAN); //已经被指派的摄影师
+        $shootMansKey = [];
+        foreach ($assignedShootMans as $key => $value)
+            $shootMansKey[] = $key;
+        
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+            'reloadShootMans' =>$this->getReloadRoleNames($id, RbacName::ROLE_SHOOT_MAN),
+            'reloadContacts' =>$this->getReloadRoleNames($id, RbacName::ROLE_CONTACT),
+            'assignedShootMans' => $assignedShootMans,
+            'shootMansKey' => $shootMansKey,
+            'shootmans' => $this->isRole(RbacName::ROLE_SHOOT_LEADER) ?
+                    array_diff($allShootMansArray, $alreadyShootMansArray) : [],
+        ]);
+    }
+    
+    /**
+     * 指派摄影师
+     * @param int $id           任务id
+     * @param int $shoot_man_id 指派摄影师id
+     */
+    public function actionAssign($id)
+    {
+        $post = Yii::$app->getRequest()->getBodyParams();
+        $model = $this->findModel($id);
+        if(!$model->canAssign() && !$model->getIsAssign())
+            throw new NotAcceptableHttpException('该任务'.$model->getStatusName());
+        /* @var $bookdetailTool BookdetailTool */
+        $bookdetailTool = Yii::$app->get('bookdetailTool');
+        $oldShootMan = $model->u_shoot_man;
+        $model->u_shoot_man = $post['shoot_man'][0];
+        if(!empty($model->u_shoot_man))
+           $model->status = $model::STATUS_SHOOTING;
+        $assignedShootMans = $this->getShootBookdetailRoleNames($id, RbacName::ROLE_SHOOT_MAN);
+        $isIntersection = $this->isTwoArrayIntersection($model, RbacName::ROLE_SHOOT_MAN, $post['shoot_man']);
+        
+        $bookdetailTool->saveAssignTask($model, $oldShootMan, $assignedShootMans, $post['shoot_man'], $isIntersection);
+        
+        $this->redirect(['index',
+            'date' => date('Y-m-d', $model->book_time), 
+            'b_id' => $model->id, 
+            'site'=> $model->site_id
+        ]);
+    }
+    
+    /**
      * Creates a new ShootBookdetail model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
@@ -174,77 +245,6 @@ class BookdetailController extends Controller
     }
     
     /**
-     * Displays a single ShootBookdetail model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        $model = $this->findModel($id);
-        
-        /* @var $jobManager JobManager */
-        $jobManager = Yii::$app->get('jobManager');
-        
-        if($model->getIsAssign() || $model->getIsStausShootIng()){
-            //设置用户对通知已读
-            $jobManager->setNotificationHasReady(2, Yii::$app->user->id, $id);  
-        }  else {
-            //取消用户与任务通知的关联
-            $jobManager->cancelNotification(2, $model->id, Yii::$app->user->id); 
-        }
-        
-        
-        //被指派了的摄影师
-        $alreadyShootMansArray = $this->getIsRoleNames(RbacName::ROLE_SHOOT_MAN, $model->book_time, $model->index); 
-        //所有摄影师
-        $allShootMansArray = $this->getRoleToUsers(RbacName::ROLE_SHOOT_MAN); 
-        /** 修改时设置Select2 value值*/
-        $assignedShootMans = $this->getShootBookdetailRoleNames($id, RbacName::ROLE_SHOOT_MAN); //已经被指派的摄影师
-        $shootMansKey = [];
-        foreach ($assignedShootMans as $key => $value)
-            $shootMansKey[] = $key;
-        
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-            'reloadShootMans' =>$this->getReloadRoleNames($id, RbacName::ROLE_SHOOT_MAN),
-            'reloadContacts' =>$this->getReloadRoleNames($id, RbacName::ROLE_CONTACT),
-            'assignedShootMans' => $assignedShootMans,
-            'shootMansKey' => $shootMansKey,
-            'shootmans' => $this->isRole(RbacName::ROLE_SHOOT_LEADER) ?
-                    array_diff($allShootMansArray, $alreadyShootMansArray) : [],
-        ]);
-    }
-    
-    /**
-     * 指派摄影师
-     * @param int $id           任务id
-     * @param int $shoot_man_id 指派摄影师id
-     */
-    public function actionAssign($id)
-    {
-        $post = Yii::$app->getRequest()->getBodyParams();
-        $model = $this->findModel($id);
-        if(!$model->canAssign() && !$model->getIsAssign())
-            throw new NotAcceptableHttpException('该任务'.$model->getStatusName());
-        /* @var $bookdetailTool BookdetailTool */
-        $bookdetailTool = Yii::$app->get('bookdetailTool');
-        $oldShootMan = $model->u_shoot_man;
-        $model->u_shoot_man = $post['shoot_man'][0];
-        if(!empty($model->u_shoot_man))
-           $model->status = $model::STATUS_SHOOTING;
-        $assignedShootMans = $this->getShootBookdetailRoleNames($id, RbacName::ROLE_SHOOT_MAN);
-        $isIntersection = $this->isTwoArrayIntersection($model, RbacName::ROLE_SHOOT_MAN, $post['shoot_man']);
-        
-        $bookdetailTool->saveAssignTask($model, $oldShootMan, $assignedShootMans, $post['shoot_man'], $isIntersection);
-        
-        $this->redirect(['index',
-            'date' => date('Y-m-d', $model->book_time), 
-            'b_id' => $model->id, 
-            'site'=> $model->site_id
-        ]);
-    }
-    
-    /**
      * Updates an existing ShootBookdetail model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
@@ -258,34 +258,33 @@ class BookdetailController extends Controller
             throw new NotAcceptableHttpException('该任务'.$model->getStatusName());
         /* @var $bookdetailTool BookdetailTool */
         $bookdetailTool = Yii::$app->get('bookdetailTool');
-        /** 修改时设置Select2 value值*/
         $alreadyContacts = $this->getShootBookdetailRoleNames($id, RbacName::ROLE_CONTACT);
-        $contacts = [];
+        /*$contacts = [];
         foreach ($alreadyContacts as $key => $value)
-            $contacts[] = (string)$key;
+            $contacts[] = (string)$key;*/
         
         if ($model->load(Yii::$app->request->post())) {
             $model->u_contacter = $post['ShootBookdetail']['u_contacter'][0];
             $model->status = ShootBookdetail::STATUS_ASSIGN ;
             $isIntersection = $this->isTwoArrayIntersection($model, RbacName::ROLE_CONTACT, $post['ShootBookdetail']['u_contacter']);
             
-            $bookdetailTool->saveUpdateTask($model, $post['ShootBookdetail']['u_contacter'], $contacts, $isIntersection);
+            $bookdetailTool->saveUpdateTask($model, $post['ShootBookdetail']['u_contacter'], array_keys($alreadyContacts), $isIntersection);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             //已指派了的接洽人
             $alreadyContactsArray = $this->getIsRoleNames(RbacName::ROLE_CONTACT, $model->book_time, $model->index); 
             //所有接洽人
             $allContactsArray = $this->getRoleToUsers(RbacName::ROLE_CONTACT); 
-            $contactsKey = [];
+            /*$contactsKey = [];
             foreach ($alreadyContacts as $key => $value)
                 $contactsKey[] = $key;
-            $model->u_contacter = $contactsKey;
+            $model->u_contacter = $contactsKey;*/
             return $this->render('update', [
                 'model' => $model,
                 'bookers' => $this->getRoleToUsers(RbacName::ROLE_WD),   //编导
                 'contacts' => array_diff($allContactsArray,$alreadyContactsArray), //接洽人
                 'alreadyContacts' => $alreadyContacts,
-                'contactsKey' => $contactsKey,
+                //'contactsKey' => $contactsKey,
                 'teachers' => $this->getExpert(),
                 'colleges' => $this->getCollegesForSelect(),
                 'projects' => $this->getFwItemForSelect($model->fw_college),
