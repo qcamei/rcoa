@@ -166,7 +166,7 @@ class ShootBookdetail extends ActiveRecord
             self::SCENARIO_DEFAULT => ['site_id','fw_college', 'fw_project', 'fw_course', 
                 'lession_time', 'u_teacher', 'u_contacter', 
                 'u_booker','u_shoot_man' ,'book_time', 'index', 'content_type',
-                'photograph', 'status', 'created_at', 'updated_at', 'ver','create_by','remark','start_time', 'business_id'],
+                'photograph', 'status', 'created_at', 'updated_at', 'ver','create_by','remark','start_time', 'business_id', 'remark'],
             self::SCENARIO_TEMP_CREATE => ['site_id', 
                 'u_booker','book_time', 'index',
                 'status', 'ver','create_by'],
@@ -186,15 +186,22 @@ class ShootBookdetail extends ActiveRecord
     {
         return [
             [['site_id', 'fw_college', 'fw_project', 'fw_course', 'lession_time', 'book_time', 'index', 'content_type', 'shoot_mode', 'photograph', 'status', 'created_at', 'updated_at', 'ver', 'business_id'], 'integer'],
-            [['u_teacher', 'u_contacte', 'u_booker', 'u_shoot_man', 'create_by'], 'string', 'max' => 36],
+            [['u_teacher', 'u_booker', 'u_shoot_man', 'create_by'], 'string', 'max' => 36],
             [['fw_college', 'fw_project', 'fw_course', 'business_id'], 'integer'],
             [['u_booker',  'create_by', 'u_teacher', 'fw_college', 'fw_project', 'fw_course', 'business_id'], 'required'],
+            //[['u_contacter'],'checkContacter'],
             [['remark'], 'string', 'max' => 255],
             [['start_time'], 'string', 'max' => 20],
-            //[['u_contacter'],'checkContacter'],
         ];
     }
-
+    
+    /*public function checkContacter($attribute, $params)
+    {
+        $contacter = $this->u_contacter;
+        if($contacter == null)
+            $this->addError($attribute, Yii::t('rcoa', 'Contacter').'不能为空');
+    }*/
+    
     /**
      * @inheritdoc
      */
@@ -238,14 +245,6 @@ class ShootBookdetail extends ActiveRecord
         return 'ver';
     }
     
-    /*public function checkContacter($attribute, $params)
-    {
-        $contacter = $this->u_contacter;
-        //$contacters = $this->getContacters();
-        if($contacter == null)
-            $this->addError($attribute, Yii::t('rcoa', 'Contacter').'不能为空');
-    }*/
-
     public function afterFind() {
         if($this->getIsBooking() && (time() - $this->updated_at > self::BOOKING_TIMEOUT))
             $this->status = self::STATUS_DEFAULT;

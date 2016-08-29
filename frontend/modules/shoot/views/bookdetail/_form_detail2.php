@@ -51,7 +51,6 @@ use yii\widgets\DetailView;
                 'value' => $model->start_time,
             ],
             
-            
             ['label' => '<span class="btn-block viewdetail-th-head">课程信息</span>','value'=>''],
             [
                 'attribute' => 'business_id',
@@ -74,7 +73,6 @@ use yii\widgets\DetailView;
                 'value' => $model->lession_time,
             ],
             
-            
             ['label' => '<span class="btn-block viewdetail-th-head">老师信息</span>','value'=>''],
             [
                 'attribute' => 'personal_image',
@@ -95,7 +93,6 @@ use yii\widgets\DetailView;
                 'value' => Html::a($model->teacher->user->email, 'mailto:'.$model->teacher->user->email),
             ],
             
-            
             ['label' => '<span class="btn-block viewdetail-th-head">拍摄信息</span>','value'=>''],
             [
                 'attribute' => 'content_type',
@@ -111,9 +108,8 @@ use yii\widgets\DetailView;
                 'value' => ($isRoleAdmin || $isShootManLeader) && ($model->getIsAssign() || $model->getIsStausShootIng())?
                             Select2::widget([
                                 'name' => 'shoot_man',
-                                'value' => empty($model->u_shoot_man) ?  '' : $shootMansKey,
+                                'value' => empty($model->u_shoot_man) ? '' : array_keys($assignedShootMans),
                                 'data' => empty($model->u_shoot_man) ? $shootmans : ArrayHelper::merge($assignedShootMans, $shootmans),
-                                //'size' => 'lg',
                                 'maintainOrder' => true,
                                 'hideSearch' => true,
                                 'options' => [

@@ -32,16 +32,16 @@ class BookdetailTool{
         !isset($post['site_id']) ? : $model->site_id = $post['site_id'];
         !isset($post['book_time']) ? : $model->book_time = $post['book_time'];
         !isset($post['index']) ? : $model->index = $post['index'];
-
         $model->scenario = ShootBookdetail::SCENARIO_TEMP_CREATE;
         $model->save();
         $model->scenario = ShootBookdetail::SCENARIO_DEFAULT;
-
         /** 设置上下晚预约的默认开始时间 */
-        $model->index == $model::TIME_INDEX_MORNING ? $model->start_time = $model::START_TIME_MORNING :'';
-        $model->index == $model::TIME_INDEX_AFTERNOON ? $model->start_time = $model::START_TIME_AFTERNOON : '';
-        $model->index == $model::TIME_INDEX_NIGHT ? $model->start_time = $model::START_TIME_NIGHT : '';
-
+        if($model->index == $model::TIME_INDEX_MORNING)
+            $model->start_time = $model::START_TIME_MORNING;
+        else if($model->index == $model::TIME_INDEX_AFTERNOON)
+            $model->start_time = $model::START_TIME_AFTERNOON;
+        else if($model->index == $model::TIME_INDEX_NIGHT)
+            $model->start_time = $model::START_TIME_NIGHT;
     }
     
     /**

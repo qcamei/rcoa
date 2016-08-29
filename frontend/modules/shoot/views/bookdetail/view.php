@@ -9,6 +9,7 @@ use yii\web\View;
 /* @var $model ShootBookdetail */
 
 $this->title = Yii::t('rcoa', 'Shoot Bookdetail Details') . ' : ' . $model->id;
+
 ?>
 
 <div class="title">
@@ -24,7 +25,6 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail Details') . ' : ' . $model->id;
         'shootmans' => $shootmans,
         'reloadShootMans' => $reloadShootMans,
         'assignedShootMans' => $assignedShootMans,
-        'shootMansKey' => $shootMansKey,
         'reloadContacts' => $reloadContacts,
     ]) ?>
     <?= $this->render('_form_model',[
