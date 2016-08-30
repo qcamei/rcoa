@@ -54,7 +54,7 @@ class Item extends ActiveRecord
             [['name'],'required'],
             [['level', 'created_at', 'updated_at', 'parent_id'], 'integer'],
             [['name', 'des'], 'string', 'max' => 255],
-            [['name'], 'unique']
+            [['name', 'parent_id'], 'unique', 'targetAttribute' => ['name', 'parent_id']],
         ];
     }
 
