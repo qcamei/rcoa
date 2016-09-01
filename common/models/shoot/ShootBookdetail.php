@@ -166,7 +166,7 @@ class ShootBookdetail extends ActiveRecord
             self::SCENARIO_DEFAULT => ['site_id','fw_college', 'fw_project', 'fw_course', 
                 'lession_time', 'u_teacher', 'u_contacter', 
                 'u_booker','u_shoot_man' ,'book_time', 'index', 'content_type',
-                'photograph', 'status', 'created_at', 'updated_at', 'ver','create_by','remark','start_time', 'business_id', 'remark'],
+                'photograph', 'status', 'created_at', 'updated_at', 'ver','create_by','remark','start_time', 'business_id'],
             self::SCENARIO_TEMP_CREATE => ['site_id', 
                 'u_booker','book_time', 'index',
                 'status', 'ver','create_by'],
