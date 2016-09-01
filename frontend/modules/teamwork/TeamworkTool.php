@@ -12,6 +12,8 @@ use common\models\teamwork\CourseSummary;
 use common\models\teamwork\ItemManage;
 use common\models\teamwork\Link;
 use common\models\teamwork\Phase;
+use wskeee\framework\models\Item;
+use wskeee\framework\models\ItemType;
 use Yii;
 use yii\db\Query;
 use yii\web\NotAcceptableHttpException;
@@ -469,15 +471,22 @@ class TeamworkTool{
     
     /**
      * 获取所有项目进度
+     * @param type $keyword 搜索关键字
      * @return type
      */
-    public function getItemProgressAll(){
-        
-       
+    public function getItemProgressAll($keyword = null){
         $itemProgress = ItemManage::find()
-                        ->select(['Item.*', '(SUM(Course_progress.progress) / COUNT(Course_progress.id)) AS progress'])
+                        ->select([
+                            'Item.*', 
+                            'Fw_item_type.name AS item_type_name',
+                            'Fw_item.name AS item_name',
+                            '(SUM(Course_progress.progress) / COUNT(Course_progress.id)) AS progress'])
                         ->from($this->itemProgress)
                         ->rightJoin(['Item' => ItemManage::tableName()], 'Item.id = Course_progress.project_id')
+                        ->leftJoin(['Fw_item_type' => ItemType::tableName()], 'Fw_item_type.id = Item.item_type_id')
+                        ->leftJoin(['Fw_item' => Item::tableName()], '(Fw_item.id = Item.item_id OR Fw_item.id = Item.item_child_id)')
+                        ->orFilterWhere(['like', 'Fw_item_type.name', $keyword])
+                        ->orFilterWhere(['like', 'Fw_item.name', $keyword])
                         ->groupBy('Item.id')
                         ->with('courseManages')
                         ->with('createBy')

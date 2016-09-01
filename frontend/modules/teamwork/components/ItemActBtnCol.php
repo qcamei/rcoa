@@ -40,7 +40,7 @@ class ItemActBtnCol extends ItemListTd {
         $btnClass = [];     //按钮样式类名
         /* @var $model ItemManage */
         /* @var $twTool TeamworkTool */
-        if (!empty($model) && $controllerId == 'default' && $actionId == 'list'){
+        if (!empty($model) && $controllerId == 'default' && ($actionId == 'list' || $actionId == 'search')){
             $url = [
                 'view' => 'view',
                 'course' => 'course/index',
@@ -88,7 +88,7 @@ class ItemActBtnCol extends ItemListTd {
         }
         /* @var $model CourseManage */
         /* @var $twTool TeamworkTool */
-        else if (!empty($model) && $controllerId == 'course' && $actionId == 'index') {
+        else if (!empty($model) && $controllerId == 'course' && ($actionId == 'index' || $actionId == 'search')) {
             $url = [
                 'view' => 'view',
                 'deploy' => 'courselink/index',

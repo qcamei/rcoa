@@ -49,7 +49,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->createBy->nickname;
                 }
             ],*/
-
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

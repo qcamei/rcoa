@@ -93,29 +93,37 @@ class DefaultController extends Controller
     }
     
     /**
-     * Statistics all ItemManage models.
-     * @return mixed
-     */
-    public function actionStatistics()
-    {
-        return $this->render('statistics');
-    }
-    
-    /**
      * Lists all ItemManage models.
      * @return mixed
      */
     public function actionList()
     {
-        $model = new ItemManage();
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
         $dataProvider = new ArrayDataProvider([
             'allModels' => $twTool->getItemProgressAll(), 
         ]);
+        
         return $this->render('list', [
-            'model' => $model,
             'twTool' => $twTool,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+    
+    /**
+     * Search all ItemManage models.
+     * @return mixed
+     */
+    public function actionSearch($keyword)
+    {
+        /* @var $twTool TeamworkTool */
+        $twTool = Yii::$app->get('twTool');
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $twTool->getItemProgressAll($keyword), 
+        ]);
+        return $this->render('list', [
+            'twTool' => $twTool,
+            'keyword' => $keyword,
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -261,23 +269,23 @@ class DefaultController extends Controller
     }*/
     
     /**
-     * 获取项目子项
+     * 获取专业/工种
      * @param type $id
      * @return type JSON
      */
-    public function actionSearch($id)
+    public function actionSearchSelect($id, $mark = null)
     {
         Yii::$app->getResponse()->format = 'json';
-        $itemChildId = ItemManage::find()  
+        $itemChildId = $mark == null ? ItemManage::find()  
                         ->select('item_child_id')  
-                        ->where(['item_id'=> $id]);         
+                        ->where(['item_id'=> $id]) : null;         
         $errors = [];
         $items = [];
         try
         {
             $items = Item::find()  
-                ->where(['parent_id'=>$id])  
-                ->andWhere(['not in','id',$itemChildId])  
+                ->where(['parent_id'=>$id])
+                ->andFilterWhere(['not in','id',$itemChildId])
                 ->all(); 
         } catch (Exception $ex) {
             $errors [] = $ex->getMessage();
@@ -321,7 +329,7 @@ class DefaultController extends Controller
     }
     
     /**
-     * 获取项目类别
+     * 获取行业
      * @return type
      */
     public function getItemType()
@@ -331,7 +339,7 @@ class DefaultController extends Controller
     }
     
     /**
-     * 获取项目
+     * 获取层次/类型
      * @return type
      */
     public function getCollegesForSelect()
@@ -342,7 +350,7 @@ class DefaultController extends Controller
     }
     
     /**
-     * 获取子项目
+     * 获取专业/工种
      * @param int $itemId
      */
     public function getFwItemForSelect($itemId)
@@ -353,7 +361,7 @@ class DefaultController extends Controller
     }
     
     /**
-     * 获取项目已存在的所有子项目
+     * 获取项目已存在的所有专业/工种
      * @param type $itemId
      * @return type
      */
@@ -366,7 +374,7 @@ class DefaultController extends Controller
     }
     
     /**
-     * 获取已经存在的单条子项目
+     * 获取已经存在的单条专业/工种
      * @param type $itemChildId
      * @return type
      */

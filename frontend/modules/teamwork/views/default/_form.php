@@ -107,7 +107,7 @@ $this->registerJs($js,  View::POS_READY);
 <script type="text/javascript">
     function wx_one(e){
 	$("#itemmanage-item_child_id").html("");
-	$.post("/teamwork/default/search?id="+$(e).val(),function(data)
+	$.post("/teamwork/default/search-select?id="+$(e).val(),function(data)
         {
             $('<option/>').appendTo($("#itemmanage-item_child_id"));
             $.each(data['data'],function()

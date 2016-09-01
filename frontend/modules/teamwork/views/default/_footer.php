@@ -22,10 +22,12 @@ use yii\helpers\Html;
                     ? 'footer-item-xs footer-item-bg visible-xs-inline-block' : 'footer-item-xs visible-xs-inline-block']);
             
             echo Html::a(Html::img(['/filedata/teamwork/image/project.png']), ['default/list'],  
-                    ['class' => $actionId == 'list' ? 'footer-item-xs footer-item-bg visible-xs-inline-block' : 'footer-item-xs visible-xs-inline-block']);
+                    ['class' => $controllerId == 'default' && ($actionId == 'list' || $actionId == 'search') ? 
+                        'footer-item-xs footer-item-bg visible-xs-inline-block' : 'footer-item-xs visible-xs-inline-block']);
             
             echo Html::a(Html::img(['/filedata/teamwork/image/course.png']), ['course/index'], [
-                    'class' => $controllerId == 'course' ? 'footer-item-xs footer-item-bg visible-xs-inline-block' : 'footer-item-xs visible-xs-inline-block']);
+                    'class' => $controllerId == 'course' && ($actionId == 'index' || $actionId == 'search') ? 
+                        'footer-item-xs footer-item-bg visible-xs-inline-block' : 'footer-item-xs visible-xs-inline-block']);
             
             echo Html::a(Html::img(['/filedata/teamwork/image/statistics.png']), ['/teamwork/statistics'], 
                     ['class' => $controllerId == 'statistics' ? 'footer-item-xs footer-item-bg visible-xs-inline-block' : 'footer-item-xs visible-xs-inline-block']);
@@ -44,10 +46,12 @@ use yii\helpers\Html;
                     ? 'footer-item footer-item-bg hidden-xs' : 'footer-item hidden-xs']);
             
             echo Html::a(Html::img(['/filedata/teamwork/image/project.png']).'项目', ['default/list'],  
-                    ['class' => $actionId == 'list' ? 'footer-item footer-item-bg hidden-xs' : 'footer-item hidden-xs']);
+                    ['class' => $controllerId == 'default' && ($actionId == 'list' || $actionId == 'search') ? 
+                        'footer-item footer-item-bg hidden-xs' : 'footer-item hidden-xs']);
             
             echo Html::a(Html::img(['/filedata/teamwork/image/course.png']).'课程', ['course/index'], [
-                    'class' => $controllerId == 'course' ? 'footer-item footer-item-bg hidden-xs' : 'footer-item hidden-xs']);
+                    'class' =>  $controllerId == 'course' && ($actionId == 'index' || $actionId == 'search') ? 
+                        'footer-item footer-item-bg hidden-xs' : 'footer-item hidden-xs']);
             
             echo Html::a(Html::img(['/filedata/teamwork/image/statistics.png']).'统计', ['/teamwork/statistics'], 
                     ['class' => $controllerId == 'statistics' ? 'footer-item footer-item-bg hidden-xs' : 'footer-item hidden-xs']);
