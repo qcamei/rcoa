@@ -281,8 +281,12 @@ class BookdetailController extends Controller
         $model = $this->findModel($id);
         /* @var $bookdetailTool BookdetailTool */
         $bookdetailTool = Yii::$app->get('bookdetailTool');
-        if((!$model->getIsAssign() || !$model->getIsStausShootIng()) && !Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model]))
-            throw new NotAcceptableHttpException('该任务'.$model->getStatusName());
+        if(!Yii::$app->user->can(RbacName::ROLE_SHOOT_MANAGER)){
+            if(!Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model]) && $model->book_time > strtotime('+1 day'))
+                 throw new NotAcceptableHttpException('无权限操作');
+            if((!$model->getIsAssign() || !$model->getIsStausShootIng()))
+                throw new NotAcceptableHttpException('该任务'.$model->getStatusName());
+        }
         else{
             $model->status =  $model::STATUS_CANCEL;
             $u_contacter = $this->getShootBookdetailRoleNames($id, RbacName::ROLE_CONTACT);

@@ -18,6 +18,8 @@ class RbacName {
     const ROLE_ADMIN = 'r_admin';
     /** 所有用户 平台所有合法的账号 */
     const ROLE_USERS = 'r_users';
+    /** 预约拍摄系统管理员 */
+    const ROLE_SHOOT_MANAGER = 'r_shoot_manager';
     /** 课程中心组 课程中心所有用户，不包括外聘老师账号 */
     const ROLE_CC_USERS = 'r_cc_users';
     /** 接洽人 */
@@ -40,7 +42,7 @@ class RbacName {
     const ROLE_WD_LEADER = 'r_wd_leader';
     /** 老师 */
     const ROLE_TEACHERS = 'r_teachers';
-    /** 项目管理员 */
+    /** 项目系统管理员 */
     const ROLE_PROJECT_MANAGER = 'r_project_manager';
     
     

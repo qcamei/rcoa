@@ -68,9 +68,12 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail Details') . ' : ' . $model->id;
              * 1、拥有【取消】权限（编导自己和管理员）
              * 2、必须是在24小时之前
              * 3、必须为【待指派】 or 【待评价】状态
+             * 4、必须是【预约拍摄系统管理员】
              */
             
-            if(($model->getIsAssign() || $model->getIsStausShootIng()) && Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model]) && $model->book_time > strtotime('+1 day'))
+            if((($model->getIsAssign() || $model->getIsStausShootIng())
+                    && (Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model]) && $model->book_time > strtotime('+1 day'))) 
+                    || Yii::$app->user->can(RbacName::ROLE_SHOOT_MANAGER))
                 echo Html::a('取消', 'javascript::', ['id'=>'cancel', 'class' => 'btn btn-warning']).' ';
         ?>
     </div>

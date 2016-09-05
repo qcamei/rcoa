@@ -73,7 +73,7 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
             $buttonName = $isNew ? '未预约' :(!$isValid ? '预约中' : ($isAssign ? $model->getStatusName() : $model->getStatusName()));
         
         //管理员
-        if($authManager->isRole(RbacName::ROLE_ADMIN, Yii::$app->user->id))
+        if($authManager->isRole(RbacName::ROLE_SHOOT_MANAGER, Yii::$app->user->id))
         {
             $url;
             $params;

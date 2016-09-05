@@ -134,25 +134,28 @@ class CourseController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($project_id)
     {
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
-        /* @var $model CourseManage */
-        $model = new CourseManage();
+        $post = Yii::$app->request->post();
         if(!($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
             throw new NotAcceptableHttpException('无权限操作！');
+        $course_id = ArrayHelper::getValue($post, 'CourseManage.course_id');
         
-        $params = Yii::$app->request->queryParams;
-        $post = Yii::$app->request->post();
+        /* @var $model CourseManage */
+        $model = new CourseManage();
         $model->loadDefaultValues();
-        $model->project_id = $params['project_id'];
+        $model->project_id = $project_id;
         $model->team_id = $twTool->getHotelTeam(\Yii::$app->user->id);
         $model->create_by = \Yii::$app->user->id;
         $courses = $this->getCourses($model->project->item_child_id);
         $existedCourses = $this->getExistedCourses($model->project_id);
         
         if ($model->load($post)) {
+            if($this->getIsSameValue($project_id, $course_id))
+                throw new NotAcceptableHttpException('请勿重复提交相同的数据！');   
+            
             $twTool->CreateTask($model, $post);         //创建任务操作
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -583,6 +586,22 @@ class CourseController extends Controller
                 ->all();
         return $annex;
     }
+
+    public function getIsSameValue($project_id, $course_id)
+    {
+        $courses = CourseManage::findAll(['project_id' => $project_id]);
+        
+        $course = [];
+        foreach ($courses as $value) {
+            $course[] = $value->course_id;
+        }
+       
+        if(in_array($course_id, $course))
+            return true;
+        else 
+            return false;
+    }
+
 
     /**
      * 重组 $model->statusName 数组
