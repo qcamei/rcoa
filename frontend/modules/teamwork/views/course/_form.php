@@ -42,15 +42,15 @@ use yii\widgets\ActiveForm;
     <h5><b>基础信息</b></h5>
     
     <?= $form->field($model, 'project.item_type_id')->textInput([
-        'value' => $model->project->itemType->name, 'disabled' => 'disabled'
+        'value' => !empty($model->project->item_type_id) ? $model->project->itemType->name : '', 'disabled' => 'disabled'
     ]) ?>
     
     <?= $form->field($model, 'project.item_id')->textInput([
-        'value' => $model->project->item->name, 'disabled' => 'disabled'
+        'value' => !empty($model->project->item_id) ? $model->project->item->name : '', 'disabled' => 'disabled'
     ]) ?>
     
     <?= $form->field($model, 'project.item_child_id')->textInput([
-        'value' => $model->project->itemChild->name, 'disabled' => 'disabled'
+        'value' => !empty($model->project->item_child_id) ? $model->project->itemChild->name : '', 'disabled' => 'disabled'
     ]) ?>
     
     <?= $form->field($model, 'course_id')->widget(Select2::classname(), [
