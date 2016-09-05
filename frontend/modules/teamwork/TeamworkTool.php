@@ -132,9 +132,8 @@ class TeamworkTool{
      */
     public function getWeeklyInfo($course_id, $weekStart, $WeekEnd) 
     {
-        $result = CourseSummary::find()->where(['course_id' => $course_id])
-                ->andWhere('create_time >="'. $weekStart.'"')
-                ->andWhere('create_time <="'. $WeekEnd.'"')
+        $result = CourseSummary::find()->where(['and', 'course_id='.$course_id,
+                    'create_time >="'. $weekStart.'"', 'create_time <="'. $WeekEnd.'"'])
                 ->one();
         return $result;
     }

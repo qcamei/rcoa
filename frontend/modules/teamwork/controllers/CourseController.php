@@ -586,11 +586,16 @@ class CourseController extends Controller
                 ->all();
         return $annex;
     }
-
+    
+    /**
+     * 判断是否重复提交数据
+     * @param type $project_id      项目ID
+     * @param type $course_id       课程ID
+     * @return boolean
+     */
     public function getIsSameValue($project_id, $course_id)
     {
         $courses = CourseManage::findAll(['project_id' => $project_id]);
-        
         $course = [];
         foreach ($courses as $value) {
             $course[] = $value->course_id;
