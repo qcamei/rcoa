@@ -30,11 +30,11 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <?php ActiveForm::end(); ?>  
         <div class="search-btn-bg">
-            <?= Html::a(Yii::t('rcoa', 'Search'), 'javascript:;', ['id' => 'submit', 'class' => 'btn', 'style' => 'float: left;']); ?>
-            <div class="search-arrow-box" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            <?= Html::a(Yii::t('rcoa', 'Search'), 'javascript:;', ['id' => 'submit', 'class' => 'btn', 'style' => 'float: left; width:100%']); ?>
+            <!--<div class="search-arrow-box" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                 <span id="down" style="display: block;">▼</span>
                 <span id="up" style="display: none;">▲</span>
-            </div>
+            </div>-->
         </div>
     </div>
     <div id="item-manage-list">
