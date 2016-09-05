@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'label' => Yii::t('rcoa/teamwork', 'Item Type'),
                     'value'=> function($model){
                         /* @var $model ItemManage */
-                        return $model->itemType->name;
+                        return !empty($model->item_type_id) ? $model->itemType->name : 'null';
                     },
                     'headerOptions' => [
                         'class'=>[
@@ -67,7 +67,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'label' => Yii::t('rcoa/teamwork', 'Item'),
                     'value' => function ($model){
                         /* @var $model ItemManage */
-                        return $model->item->name;
+                        return !empty($model->item_id) ? $model->item->name : 'null';
                     },
                     'headerOptions' => [
                         'class'=>[
@@ -87,7 +87,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'format' => 'raw',
                     'content' => function($model){
                             /* @var $model ItemManage */
-                            return '<div class="course-name">'.$model->itemChild->name.'</div>'.
+                            return '<div class="course-name">'.(!empty($model->item_child_id) ? $model->itemChild->name : 'null').'</div>'.
                                 Html::beginTag('div', [
                                     'class' => 'progress table-list-progress',
                                     'style' => 'height:12px;margin:2px 0;border-radius:0px;'
