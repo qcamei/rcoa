@@ -50,7 +50,9 @@ use yii\widgets\ActiveForm;
         ]); ?>
     
     <h5><b>课程信息：</b></h5>
-    <?= $form->field($model, 'business_id')->dropDownList($business,['prompt'=>'请选择...',]) ?>
+    <?= $form->field($model, 'business_id')->widget(Select2::classname(),[
+        'data' => $business, 'options' => ['prompt'=>'请选择...',]
+     ]) ?>
     
     <?= $form->field($model, 'fw_college')->widget(Select2::classname(), [
         'data' => $colleges, 'options' => ['placeholder' => '请选择...', 'onchange'=>'wx_one(this)']
