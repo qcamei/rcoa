@@ -22,14 +22,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'action' => ['search'],
             'method' => 'get',
         ]); ?>
-        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11 search-text-input">
+        <div class="search-text-input">
             <?= Html::textInput('keyword', !empty($keyword)? $keyword : '', [
                 'class' => 'form-control search-input',
                 'placeholder' => '请输入关键字...'
             ]); ?>
         </div>
         <?php ActiveForm::end(); ?>  
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 search-btn-bg">
+        <div class="search-btn-bg">
             <?= Html::a(Yii::t('rcoa', 'Search'), 'javascript:;', ['id' => 'submit', 'class' => 'btn', 'style' => 'float: left;']); ?>
             <div class="search-arrow-box" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                 <span id="down" style="display: block;">▼</span>
@@ -165,9 +165,6 @@ $js =
 <<<JS
     $('#submit').click(function(){
         $('#item-manage-search').submit();
-        /*$.get('$url', function(data){
-            $('#item-manage-list').html(data);
-        });*/
     });
 JS;
     $this->registerJs($js,  View::POS_READY);

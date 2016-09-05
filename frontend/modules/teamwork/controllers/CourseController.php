@@ -8,9 +8,10 @@ use common\models\team\TeamMember;
 use common\models\teamwork\CourseAnnex;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\CourseProducer;
-use common\models\teamwork\ItemManage;
 use frontend\modules\teamwork\TeamworkTool;
+use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\Item;
+use wskeee\framework\models\ItemType;
 use wskeee\rbac\RbacName;
 use Yii;
 use yii\data\ArrayDataProvider;
@@ -55,15 +56,30 @@ class CourseController extends Controller
      * Index all CourseManage models.
      * @return mixed
      */
-    public function actionIndex($project_id = null, $status = null, $team_id = null)
+    public function actionIndex($project_id = null, $status = null, $team_id = null, $item_type_id = null,
+            $item_id =null, $item_child_id = null, $course_id = null, $keyword = null, $time = null, $mark = null)
     {
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
         $dataProvider = new ArrayDataProvider([
-            'allModels' => $twTool->getCourseProgressAll($project_id, $status, $team_id),
+            'allModels' => $twTool->getCourseProgressAll($project_id, $status, $team_id, $item_type_id, $item_id, $item_child_id, $course_id, $keyword, $time),
         ]);
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'itemType' => $this->getItemType(),
+            'items' => $this->getCollegesForSelect(),
+            'itemChild' => [],
+            'course' => [],
+            'team' => $this->getTeam(),
+            'itemTypeId' => !empty($item_type_id) ? $item_type_id : null,
+            'itemId' => !empty($item_id) ? $item_id : null,
+            'itemChildId' => !empty($item_child_id) ? $item_child_id : null,
+            'courseId' => !empty($course_id) ? $course_id : null,
+            'keyword' => !empty($keyword)? $keyword : '',
+            'time' => !empty($time) ? $time : null,
+            'status' => !empty($status) ? $status : null,
+            'team_id' => !empty($team_id) ? $team_id : null,
+            'mark' => !empty($mark) ? $mark : 0,
         ]);
     }
     
@@ -351,6 +367,27 @@ class CourseController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    
+    /**
+     * 获取行业
+     * @return type
+     */
+    public function getItemType()
+    {
+        $itemType = ItemType::find()->with('itemManages')->all();
+        return ArrayHelper::map($itemType, 'id', 'name');
+    }
+    
+    /**
+     * 获取层次/类型
+     * @return type
+     */
+    public function getCollegesForSelect()
+    {
+        /* @var $fwManager FrameworkManager */
+        $fwManager = Yii::$app->get('fwManager');
+        return ArrayHelper::map($fwManager->getColleges(), 'id', 'name');
     }
     
     /**

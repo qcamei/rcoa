@@ -128,7 +128,7 @@ $system = System::find()->with('jobs')->all();
     -->
 </div>
 
-<footer class="footer">
+    <footer class="footer">
     <div class="container">
         <p class="pull-left">&copy; 广州远程教育中心有限公司 </p>
 

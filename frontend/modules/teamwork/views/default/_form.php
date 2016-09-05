@@ -40,7 +40,7 @@ use yii\widgets\ActiveForm;
     ]) ?>
 
     <?= $form->field($model, 'item_id')->widget(Select2::classname(), [
-        'data' => $items, 'options' => ['placeholder' => '请选择...', 'onchange'=>'wx_one(this)']
+        'data' => $items, 'options' => ['placeholder' => '请选择...',]
     ]) ?>
     
     <?= $form->field($model, 'item_child_id')->widget(Select2::classname(), [
@@ -88,32 +88,16 @@ use yii\widgets\ActiveForm;
 </div>
 
 <?php
-/**
- * 通过外部提交按钮控制 form 提交
- */
 $js = 
 <<<JS
     $('#itemmanage-item_id').change(function(){
-        $('#select2-itemmanage-item_child_id-container').html("");
+        var url = "/teamwork/default/search-select?id="+$(this).val(),
+            element = $('#itemmanage-item_child_id');
+        $("#itemmanage-item_child_id").html("");
+        $('#select2-itemmanage-item_child_id-container').html('<span class="select2-selection__placeholder">请选择...</span>');
+        wx(url, element, '请选择...');
     });
      
 JS;
-/**
- * 注册 $js 到 ready 函数，以页面加载完成才执行 js
- */
-$this->registerJs($js,  View::POS_READY);
+    $this->registerJs($js,  View::POS_READY);
 ?>
-
-<script type="text/javascript">
-    function wx_one(e){
-	$("#itemmanage-item_child_id").html("");
-	$.post("/teamwork/default/search-select?id="+$(e).val(),function(data)
-        {
-            $('<option/>').appendTo($("#itemmanage-item_child_id"));
-            $.each(data['data'],function()
-            {
-                $('<option>').val(this['id']).text(this['name']).appendTo($("#itemmanage-item_child_id"));
-            });
-	});
-    }
-</script>

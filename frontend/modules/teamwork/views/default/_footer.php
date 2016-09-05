@@ -11,7 +11,7 @@ use yii\helpers\Html;
  */
 ?>
 
-<div class="controlbar footer-item-list" style="height: 60px;padding-top:0px; ">
+<div class="controlbar footer-item-list" style="height: 50px;padding-top:0px; ">
     <div class="container">
         <?php
             $controllerId = Yii::$app->controller->id;          //当前控制器

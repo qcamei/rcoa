@@ -91,7 +91,7 @@ use yii\web\View;
         /** 编辑、新增按钮 */
         echo Html::beginTag('div', ['class' => 'col-lg-2 col-md-2 col-sm-2 col-xs-5', 'style' => 'padding:0px;']);
             /**
-             * 提交 按钮显示必须满足以下条件：
+             * 编辑 按钮显示必须满足以下条件：
              * 1、状态非为【已完成】
              * 2、周报必须不能为空
              * 3、(必须是【队长】 and 课程 【创建者】 是自己)
@@ -107,7 +107,7 @@ use yii\web\View;
                     'summary/update', 'course_id' => $model->id, 'create_time' => $results['create_time']], 
                     ['id' => 'update', 'class' => 'btn btn-primary weekinfo']);
             /**
-             * 提交 按钮显示必须满足以下条件：
+             * 新增 按钮显示必须满足以下条件：
              * 1、状态非为【已完成】
              * 2、周报必须为空
              * 3、(必须是【队长】 and 课程 【创建者】 是自己)

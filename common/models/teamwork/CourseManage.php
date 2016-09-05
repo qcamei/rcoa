@@ -77,7 +77,7 @@ class CourseManage extends ActiveRecord
     public $progress;
     
     /** 状态名 */
-    public $statusName = [
+    public static $statusName = [
         self::STATUS_WAIT_START => '待开始',
         self::STATUS_NORMAL => '在建中',
         self::STATUS_CARRY_OUT => '已完成',
@@ -370,7 +370,7 @@ class CourseManage extends ActiveRecord
      */
     public function getStatusName()
     {
-        return $this->statusName[$this->status];
+        return self::$statusName[$this->status];
     }
     
 }

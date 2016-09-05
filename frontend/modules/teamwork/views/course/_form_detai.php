@@ -114,7 +114,7 @@ use yii\widgets\DetailView;
             [
                 'attribute' => 'status',
                 'format' => 'raw',
-                'value' => $model->statusName[$model->status],
+                'value' => CourseManage::$statusName[$model->status],
             ],
             [
                 'attribute' => 'path',

@@ -17,7 +17,7 @@ class TwAsset extends AssetBundle
        'css/teamwork.css',
     ];
     public $js = [
-       
+       'js/search-select.js'
     ];
     public $depends = [
         'yii\web\YiiAsset'
