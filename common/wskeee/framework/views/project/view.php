@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'des',
             [
                 'attribute'=> 'parent.name',
-                'label' => '所属学院,',                
+                'label' => Yii::t('rcoa/framework', 'Items'),                
             ],
             [
                 'attribute' => 'created_at',

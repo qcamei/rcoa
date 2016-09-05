@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
             
             [
                 'attribute' => 'parent.name',
-                'label' => '所属项目',
+                'label' => Yii::t('rcoa/framework', 'Items'),
                 'headerOptions' => ['class'=>'col-lg-4']
             ],
             'name',

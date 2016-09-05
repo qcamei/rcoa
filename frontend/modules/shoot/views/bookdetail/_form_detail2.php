@@ -54,19 +54,19 @@ use yii\widgets\DetailView;
             ['label' => '<span class="btn-block viewdetail-th-head">课程信息</span>','value'=>''],
             [
                 'attribute' => 'business_id',
-                'value' => $model->business->name,
+                'value' => !empty($model->business_id) ? $model->business->name : '空',
             ],
             [
                 'attribute' => 'fw_college',
-                'value' => $model->fwCollege->name,
+                'value' => !empty($model->fw_college) ? $model->fwCollege->name : '空',
             ],
             [
                 'attribute' => 'fw_project',
-                'value' => $model->fwProject->name,
+                'value' => !empty($model->fw_project) ? $model->fwProject->name : '空',
             ],
             [
                 'attribute' => 'fw_course',
-                'value' => $model->fwCourse->name,
+                'value' => !empty($model->fw_course) ? $model->fwCourse->name : '空',
             ],
             [
                 'attribute' => 'lession_time',

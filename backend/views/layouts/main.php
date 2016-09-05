@@ -76,11 +76,11 @@ AppAsset::register($this);
         $menuItems[] = [
             'label' => '项目管理',
             'items' => [
-                ['label' => '类别', 'url' => '/framework/type'],
-                ['label' => '项目', 'url' => '/framework/college'],
-                ['label' => '子项目', 'url' => '/framework/project'],
-                ['label' => '课程', 'url' => '/framework/course'],
-                ['label' => '阶段', 'url' => '/teamwork/phase'],
+                ['label' => Yii::t('rcoa/framework', 'Item Types'), 'url' => '/framework/type'],
+                ['label' => Yii::t('rcoa/framework', 'Items'), 'url' => '/framework/college'],
+                ['label' => Yii::t('rcoa/framework', 'Projects'), 'url' => '/framework/project'],
+                ['label' => Yii::t('rcoa/framework', 'Courses'), 'url' => '/framework/course'],
+                ['label' => Yii::t('rcoa/teamwork', 'Phases'), 'url' => '/teamwork/phase'],
             ]
         ];
         $menuItems[] = [

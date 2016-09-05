@@ -17,41 +17,29 @@ use yii\widgets\DetailView;
             ['label' => '<span class="btn-block viewdetail-th-head">基本信息</span>','value' => ''],
             [
                 'attribute' => 'item_type_id',
-                'value' => $model->itemType->name,
+                'value' => !empty($model->item_type_id) ? $model->itemType->name : '空',
             ],
             [
                 'attribute' => 'item_id',
-                'value' => $model->item->name,
+                'value' => !empty($model->item_id) ? $model->item->name : '空',
             ],
             [
                 'attribute' => 'item_child_id',
-                'value' => $model->itemChild->name,
+                'value' => !empty($model->item_child_id) ? $model->itemChild->name : '空',
             ],
-            /*[
-                'attribute' => 'team_id',
-                'value' => $model->team->name,
-            ],*/
+           
             ['label' => '<span class="btn-block viewdetail-th-head">开发信息</span>','value'=>''],
             [
                 'attribute' => 'forecast_time',
                 'value' => $model->forecast_time,
             ],
-            /*[
-                'attribute' => 'real_carry_out',
-                'value' => $model->real_carry_out,
-            ],*/
+            
             [
                 'label' => Yii::t('rcoa/teamwork', 'Now Progress'),
                 'format' => 'raw',
                 'value' => (int)($model->progress * 100).'%',
             ],
-            /*[
-                'attribute' => 'status',
-                'format' => 'raw',
-                'value' => $model->getIsTimeOut() ? 
-                        '<span style="color:red">'.$model->statusName[$model->status].'</span>' : 
-                        $model->statusName[$model->status],
-            ],*/
+            
             ['label' => '<span class="btn-block viewdetail-th-head">其它信息</span>','value'=>''],
             [
                 'attribute' => 'create_by',

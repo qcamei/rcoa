@@ -25,19 +25,19 @@ use yii\widgets\DetailView;
             ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">基本信息</span>','value' => ''],
             [
                 'attribute' => 'project.item_type_id',
-                'value' => $model->project->itemType->name,
+                'value' => !empty($model->project->item_type_id) ? $model->project->itemType->name : '空',
             ],
             [
                 'attribute' => 'project.item_id',
-                'value' => $model->project->item->name,
+                'value' => !empty($model->project->item_id) ? $model->project->item->name : '空',
             ],
             [
                 'attribute' => 'project.item_child_id',
-                'value' => $model->project->itemChild->name,
+                'value' => !empty($model->project->item_child_id) ? $model->project->itemChild->name : '空',
             ],
             [
                 'attribute' => 'course_id',
-                'value' => $model->course->name,
+                'value' => !empty($model->course_id) ? $model->course->name : '空',
             ],
             [
                 'attribute' => 'teacher',

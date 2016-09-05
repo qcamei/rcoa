@@ -27,12 +27,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
             [
                 'attribute' => 'parent.parent.name',
-                'label' => '所属项目',
+                'label' => Yii::t('rcoa/framework', 'Items'),
                 'headerOptions' => ['class'=>'col-lg-2']
             ],
             [
                 'attribute' => 'parent.name',
-                'label' => '所属子项目',
+                'label' => Yii::t('rcoa/framework', 'Projects'),
                 'headerOptions' => ['class'=>'col-lg-2']
             ],
             'name',
