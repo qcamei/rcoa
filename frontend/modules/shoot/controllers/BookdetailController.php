@@ -281,20 +281,25 @@ class BookdetailController extends Controller
         $model = $this->findModel($id);
         /* @var $bookdetailTool BookdetailTool */
         $bookdetailTool = Yii::$app->get('bookdetailTool');
-        if(!Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL) || ($model->u_booker == \Yii::$app->user->id 
-                && $model->book_time > strtotime('+1 day')))
-             throw new NotAcceptableHttpException('无权限操作');
-        if(!($model->getIsAssign() || $model->getIsStausShootIng()))
-            throw new NotAcceptableHttpException('该任务'.$model->getStatusName());
-        else{
-            $model->status =  $model::STATUS_CANCEL;
-            $u_contacter = $this->getShootBookdetailRoleNames($id, RbacName::ROLE_CONTACT);
-            $u_shoot_man = $this->getShootBookdetailRoleNames($id, RbacName::ROLE_SHOOT_MAN);
-            //全并两个数组的值
-            $roleNmaeAll = ArrayHelper::merge($u_contacter, $u_shoot_man);
+      
+        if(Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL) || ($model->u_booker == \Yii::$app->user->id && $model->book_time > strtotime('+1 day')))
+        {
+            if(!($model->getIsAssign() || $model->getIsStausShootIng()))
+                throw new NotAcceptableHttpException('该任务'.$model->getStatusName());
+            else{
+                $model->status =  $model::STATUS_CANCEL;
+                $u_contacter = $this->getShootBookdetailRoleNames($id, RbacName::ROLE_CONTACT);
+                $u_shoot_man = $this->getShootBookdetailRoleNames($id, RbacName::ROLE_SHOOT_MAN);
+                //全并两个数组的值
+                $roleNmaeAll = ArrayHelper::merge($u_contacter, $u_shoot_man);
 
-            $bookdetailTool->saveCancelTask($model, $roleNmaeAll);
+                $bookdetailTool->saveCancelTask($model, $roleNmaeAll);
+            }
+        }else
+        {
+            throw new NotAcceptableHttpException('无权操作！');
         }
+        
         return $this->redirect(['index', 'date' => date('Y-m-d', $model->book_time), 'b_id' => $model->id, 'site'=> $model->site_id]);
     }
 
