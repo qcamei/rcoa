@@ -31,6 +31,7 @@ class CourseSummary extends ActiveRecord
         return '{{%teamwork_course_summary}}';
     }
     
+    
     public function behaviors() {
         return [
             TimestampBehavior::className()
@@ -68,6 +69,18 @@ class CourseSummary extends ActiveRecord
         ];
     }
     
+    public function beforeSave($insert) {
+        if(parent::beforeSave($insert))
+        {
+            $this->content = htmlentities($this->content);
+            return true;
+        }
+    }
+    public function afterFind() {
+        
+        $this->content = html_entity_decode($this->content);
+    }
+
     /**
      * @return ActiveQuery
      */

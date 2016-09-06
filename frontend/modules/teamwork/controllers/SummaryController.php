@@ -9,6 +9,7 @@ use wskeee\rbac\RbacName;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
@@ -123,13 +124,12 @@ class SummaryController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($course_id)
     {
         $model = new CourseSummary();
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
-        $params = Yii::$app->request->queryParams;
-        $model->course_id = $params['course_id'];
+        $model->course_id = $course_id;
         /* @var $course CourseManage */
         $course = CourseManage::findOne(['id' => $model->course_id]);
         $model->create_by = $course->weekly_editors_people;
