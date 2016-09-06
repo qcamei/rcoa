@@ -72,8 +72,8 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail Details') . ' : ' . $model->id;
              */
             
             if((($model->getIsAssign() || $model->getIsStausShootIng())
-                    && (Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL, ['job'=>$model]) && $model->book_time > strtotime('+1 day'))) 
-                    || Yii::$app->user->can(RbacName::ROLE_SHOOT_MANAGER))
+                    && ($model->u_booker == Yii::$app->user->id && $model->book_time > strtotime('+1 day'))) 
+                    || Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL))
                 echo Html::a('取消', 'javascript::', ['id'=>'cancel', 'class' => 'btn btn-warning']).' ';
         ?>
     </div>
