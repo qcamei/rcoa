@@ -12,7 +12,7 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
     
-    <?= $form->field($model, 'parent_id')->dropDownList($parents,['prompt'=>'Select...'])->label('所属子项目') ?>
+    <?= $form->field($model, 'parent_id')->dropDownList($parents,['prompt'=>'Select...'])->label(Yii::t('rcoa/framework', 'Projects')) ?>
     
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
