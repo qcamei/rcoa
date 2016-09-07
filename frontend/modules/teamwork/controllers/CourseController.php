@@ -149,9 +149,7 @@ class CourseController extends Controller
         $model->project_id = $project_id;
         $model->team_id = $twTool->getHotelTeam(\Yii::$app->user->id);
         $model->create_by = \Yii::$app->user->id;
-        $courses = $this->getCourses($model->project->item_child_id);
-        $existedCourses = $this->getExistedCourses($model->project_id);
-        
+       
         if ($model->load($post)) {
             if($this->getIsSameValue($project_id, $course_id))
                 throw new NotAcceptableHttpException('请勿重复提交相同的数据！');   
@@ -162,7 +160,7 @@ class CourseController extends Controller
             return $this->render('create', [
                 'model' => $model,
                 'twTool' => $twTool,
-                'courses' => array_diff($courses, $existedCourses),
+                'courses' => $this->getCourses($project_id, $model->project->item_child_id),
                 'teachers' => $this->getExpert(),
                 'producerList' => $this->getTeamMemberList(),
                 'weeklyEditors' => $this->getSameTeamMember(\Yii::$app->user->id),
@@ -190,9 +188,7 @@ class CourseController extends Controller
             throw new NotAcceptableHttpException('该课程'.$model->getStatusName().'！');
         
         $post = Yii::$app->request->post();
-        $courses = $this->getCourses($model->project->item_child_id);
-        $existedCourses = $this->getExistedCourses(['project_id' => $model->project_id]);
-        $existedCoursesOne = $this->getExistedCourses(['id' => $id]);    //获取已经存在的单条课程
+        $courses = $this->getCourses($model->project_id, $model->project->item_child_id);
         
         if ($model->load($post) && $model->validate()) {
             $twTool->UpdateTask($model, $post);         //更新任务操作
@@ -201,7 +197,7 @@ class CourseController extends Controller
             return $this->render('update', [
                 'model' => $model,
                 'twTool' => $twTool,
-                'courses' => ArrayHelper::merge($existedCoursesOne, array_diff($courses, $existedCourses)),
+                'courses' => ArrayHelper::merge([$model->course_id => $model->course->name], $courses),
                 'teachers' => $this->getExpert(),
                 'weeklyEditors' => $this->getAssignWeeklyEditors($model->id),
                 'producerList' => $this->getTeamMemberList(),
@@ -398,22 +394,16 @@ class CourseController extends Controller
      * @param type $model
      * @return type
      */
-    public function getCourses($model)
+    public function getCourses($projectId, $itemChildId)
     {
-        $courses = Item::findAll(['parent_id' => $model]);
-        return ArrayHelper::map($courses, 'id', 'name');
-    }
-    
-    /**
-     * 获取已存在的所有课程
-     * @param type $condition
-     * @return type
-     */
-    public function getExistedCourses($condition)
-    {
-        $courses = CourseManage::find()->where($condition)
+        $existedCourses = CourseManage::find()->where(['project_id' => $projectId])
                 ->with('project')->with('course')->all();
-        return ArrayHelper::map($courses, 'course_id', 'course.name');
+        $courses = Item::find()
+                ->where(['parent_id' => $itemChildId])
+                ->andFilterWhere(['NOT IN', 'id', ArrayHelper::getColumn($existedCourses, 'course_id')])
+                ->with('projects')
+                ->all();
+        return ArrayHelper::map($courses, 'id', 'name');
     }
     
     /**
