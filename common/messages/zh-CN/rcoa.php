@@ -75,7 +75,6 @@ return [
     'Shoot Mode' => "拍摄模式",
     'Photograph' => "照相",
     'Shoot Appraises' => '评价题目',
-    'Shoot Appraises' => '评价题目',
     'Remark' => '备注',
     //拍摄预约-编辑历史
     'History' =>'原因',
@@ -122,5 +121,8 @@ return [
     'Module Image' => '模块图片',
     'Module Link' => '模块链接',
     'Isjump' => '是否跳转页面',
+    
+    //提示消息
+    'Are you sure you want to delete this item?' => '你确定要删除此项目？',
     
 ];

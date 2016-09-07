@@ -20,6 +20,7 @@ return [
                         'rcoa/team' => 'team.php',
                         'rcoa/framework' => 'framework.php',
                         'rcoa/teamwork' => 'teamwork.php',
+                        'rcoa/position' => 'position.php',
                     ],
                 ],
                

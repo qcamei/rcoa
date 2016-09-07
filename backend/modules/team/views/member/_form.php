@@ -32,7 +32,9 @@ use yii\widgets\ActiveForm;
             ],
     ])?>
 
-    <?= $form->field($model, 'position')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'position_id')->widget(Select2::classname(), [
+        'data' => $position, 'hideSearch'=>false, 'options' => ['placeholder' => '请选择...'],
+    ]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a(Yii::t('rcoa', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => Yii::t('rcoa/team', 'Are you sure you want to delete this item?'),
+                'confirm' => Yii::t('rcoa', 'Are you sure you want to delete this item?'),
                 'method' => 'post',
             ],
         ]) ?>
@@ -67,7 +67,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'团员职称',
                 'value'=>function($model){
                     /* @var $model TeamMember */
-                    return $model->position;
+                    return !empty($model->position_id) ? $model->position->name : '空';
                 }   
             ],
             [

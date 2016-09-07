@@ -17,6 +17,7 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa', 'Update');
     <?= $this->render('_form', [
         'model' => $model,
         'member' => $member,
+        'position' => $position,
     ]) ?>
 
 </div>

@@ -89,7 +89,7 @@ use yii\widgets\DetailView;
             [
                 'attribute' => 'course_ops',
                 'value' => empty($model->course_ops) ? '无'
-                           :$model->courseOps->u->nickname.' ( '.$model->courseOps->position.' ) ',
+                           :$model->courseOps->u->nickname.' ( '.$model->courseOps->position->name.' ) ',
             ],
             [
                 'attribute' => 'plan_start_time',

@@ -1,10 +1,12 @@
 <?php
 
+use common\models\team\TeamMember;
 use yii\helpers\Html;
+use yii\web\View;
 
 
-/* @var $this yii\web\View */
-/* @var $model common\models\team\TeamMember */
+/* @var $this View */
+/* @var $model TeamMember */
 
 $this->title = Yii::t('rcoa/team', 'Create Team Member');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/team', 'Teams'), 'url' => ['/teammanage/team/view', 'id' => $model->team_id]];
@@ -17,6 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $this->render('_form', [
         'model' => $model,
         'member' => $member,
+        'position' => $position,
     ]) ?>
 
 </div>

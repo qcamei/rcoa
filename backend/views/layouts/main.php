@@ -52,7 +52,7 @@ AppAsset::register($this);
         $menuItems[] = [
             'label' => '拍摄',
             'items' => [
-                 ['label' => '评价题目', 'url' => '/shoot/appraise'],
+                 ['label' => Yii::t('rcoa', 'Shoot Appraises'), 'url' => '/shoot/appraise'],
                  ['label' => '场地管理', 'url' => '/shoot/site'],
             ]
         ];
@@ -70,6 +70,7 @@ AppAsset::register($this);
                  ['label' => '用户', 'url' => '/user'],
                  ['label' => '角色', 'url' => '/rbac/role'],
                  ['label' => '权限', 'url' => '/rbac/permission'],
+                 ['label' => Yii::t('rcoa/position', 'Positions'), 'url' => '/position'],
                  ['label' => '规则', 'url' => '/rbac/rule'],
             ]
         ];

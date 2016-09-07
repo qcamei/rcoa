@@ -458,7 +458,7 @@ class CourseController extends Controller
         $producers = [];
         foreach ($teamMember as $element) {
             $key = ArrayHelper::getValue($element, 'u_id');
-            $value = ArrayHelper::getValue($element, 'u.nickname').' ('.ArrayHelper::getValue($element, 'position').')';
+            $value = ArrayHelper::getValue($element, 'u.nickname').' ('.ArrayHelper::getValue($element, 'position.name').')';
             $producers[ArrayHelper::getValue($element, 'team.name')][$key] = $value;
         }
         
@@ -482,7 +482,7 @@ class CourseController extends Controller
         $sameTeamMember = [];
         foreach ($sameTeamMembers as $element) {
             $key = ArrayHelper::getValue($element, 'u_id');
-            $value = ArrayHelper::getValue($element, 'u.nickname').' ('.ArrayHelper::getValue($element, 'position').')';
+            $value = ArrayHelper::getValue($element, 'u.nickname').' ('.ArrayHelper::getValue($element, 'position.name').')';
             $sameTeamMember[$key] = $value;
         }
         return $sameTeamMember;
@@ -534,7 +534,7 @@ class CourseController extends Controller
         $weeklyEditors = [];
         foreach ($assignWeeklyEditors as $element) {
             $key = ArrayHelper::getValue($element, 'producer');
-            $value = ArrayHelper::getValue($element, 'producerOne.u.nickname').' ('.ArrayHelper::getValue($element, 'producerOne.position').')';
+            $value = ArrayHelper::getValue($element, 'producerOne.u.nickname').' ('.ArrayHelper::getValue($element, 'producerOne.position.name').')';
             $weeklyEditors[$key] = $value;
         }
         return $weeklyEditors;
@@ -562,11 +562,11 @@ class CourseController extends Controller
             $value = ArrayHelper::getValue($element, 'producerOne.is_leader') == 'Y' ? 
                     '<span class="team-leader developer">'.
                         ArrayHelper::getValue($element, 'producerOne.u.nickname').
-                        '('.ArrayHelper::getValue($element, 'producerOne.position').')'.
+                        '('.ArrayHelper::getValue($element, 'producerOne.position.name').')'.
                      '</span>' : 
                     '<span class="developer">'.
                         ArrayHelper::getValue($element, 'producerOne.u.nickname').
-                        '('.ArrayHelper::getValue($element, 'producerOne.position').')'. 
+                        '('.ArrayHelper::getValue($element, 'producerOne.position.name').')'. 
                    '</span>';
             $producers[$key] = $value;
         }

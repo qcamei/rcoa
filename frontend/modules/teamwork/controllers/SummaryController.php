@@ -106,7 +106,7 @@ class SummaryController extends Controller
                 'create_time' => $weeklyInfo->create_time,
                 'content' => $weeklyInfo->content,
                 'create_by' => $weeklyInfo->weeklyCreateBy->weeklyEditorsPeople->u->nickname.
-                        '('.$weeklyInfo->weeklyCreateBy->weeklyEditorsPeople->position.')',
+                        '('.$weeklyInfo->weeklyCreateBy->weeklyEditorsPeople->position->name.')',
                 'created_at' => date('Y-m-d H:i', $weeklyInfo->created_at)
             ];
         } catch (Exception $ex) {

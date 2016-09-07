@@ -1,6 +1,7 @@
 <?php
 
 use common\models\teamwork\CourseManage;
+use common\models\teamwork\CourseSummary;
 use frontend\modules\teamwork\TwAsset;
 use kartik\widgets\Select2;
 use wskeee\rbac\RbacName;
@@ -12,6 +13,7 @@ use yii\web\View;
 ?>
 
 <?php
+    /* @var $result CourseSummary */
     $weekinfo = [];     //每月的周数列表信息
     $results = [];      //查询的结果数组
     $currentTime = date('Y-m-d',  time());  //当前时间
@@ -38,7 +40,7 @@ use yii\web\View;
                 'create_time' => $result->create_time,
                 'content' => $result->content,
                 'create_by' => $result->weeklyCreateBy->weeklyEditorsPeople->u->nickname.
-                                '('.$result->weeklyCreateBy->weeklyEditorsPeople->position.')',
+                                '('.$result->weeklyCreateBy->weeklyEditorsPeople->position->name.')',
                 'created_at' => date('Y-m-d H:i', $result->created_at)
             ];
         }
@@ -58,7 +60,7 @@ use yii\web\View;
 <span class="team-leader">
     <?php echo Yii::t('rcoa/teamwork', 'This Week Weekly Developer').'：'; 
         echo empty($model->weekly_editors_people)? '无' : 
-            $model->weeklyEditorsPeople->u->nickname.' ('.$model->weeklyEditorsPeople->position.')' 
+            $model->weeklyEditorsPeople->u->nickname.' ('.$model->weeklyEditorsPeople->position->name.')' 
     ?>
 </span>
     
@@ -99,9 +101,9 @@ use yii\web\View;
              */
             
             if($model->getIsNormal() && !empty($weeklyInfoResult)
-                && (($twTool->getIsLeader() && $model->create_by == \Yii::$app->user->id) 
-                || $model->weekly_editors_people == \Yii::$app->user->id 
-                || $model->course_principal == \Yii::$app->user->id 
+                && (($twTool->getIsLeader() && $model->create_by == Yii::$app->user->id) 
+                || $model->weekly_editors_people == Yii::$app->user->id 
+                || $model->course_principal == Yii::$app->user->id 
                 || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a(Yii::t('rcoa/teamwork', 'Updated Weekly'), [
                     'summary/update', 'course_id' => $model->id, 'create_time' => $results['create_time']], 
@@ -115,9 +117,9 @@ use yii\web\View;
              */
            
             if($model->getIsNormal() && empty($weeklyInfoResult)
-                && (($twTool->getIsLeader() && $model->create_by == \Yii::$app->user->id) 
-                || $model->weekly_editors_people == \Yii::$app->user->id 
-                || $model->course_principal == \Yii::$app->user->id
+                && (($twTool->getIsLeader() && $model->create_by == Yii::$app->user->id) 
+                || $model->weekly_editors_people == Yii::$app->user->id 
+                || $model->course_principal == Yii::$app->user->id
                 || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a(Yii::t('rcoa/teamwork', 'Create Weekly'), ['summary/create', 'course_id' => $model->id], [
                  'class' => 'btn btn-primary weekinfo']);

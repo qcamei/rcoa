@@ -2,6 +2,7 @@
 
 namespace backend\modules\team\controllers;
 
+use common\models\Position;
 use common\models\team\TeamMember;
 use common\models\User;
 use Yii;
@@ -72,16 +73,17 @@ class MemberController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($team_id)
     {
         $model = new TeamMember();
-        $model->team_id = Yii::$app->request->queryParams['team_id'];
+        $model->team_id = $team_id;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['/teammanage/team/view', 'id' => $model->team_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
                 'member' => ArrayHelper::map(User::find()->all(), 'id', 'nickname'),
+                'position' => ArrayHelper::map(Position::find()->all(), 'id', 'name')
             ]);
         }
     }
@@ -103,6 +105,7 @@ class MemberController extends Controller
             return $this->render('update', [
                 'model' => $model,
                 'member' => ArrayHelper::map(User::find()->all(), 'id', 'nickname'),
+                'position' => ArrayHelper::map(Position::find()->all(), 'id', 'name')
             ]);
         }
     }
