@@ -74,7 +74,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'队长 / 队员',
                 'value'=>function($model){
                     /* @var $model TeamMember */
-                    return $model->is_leaders[$model->is_leader];
+                    return TeamMember::$is_leaders[$model->is_leader];
                 }   
             ],
             [

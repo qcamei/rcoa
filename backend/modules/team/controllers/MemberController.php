@@ -2,6 +2,7 @@
 
 namespace backend\modules\team\controllers;
 
+use common\models\expert\Expert;
 use common\models\Position;
 use common\models\team\TeamMember;
 use common\models\User;
@@ -76,13 +77,15 @@ class MemberController extends Controller
     public function actionCreate($team_id)
     {
         $model = new TeamMember();
+        $model->loadDefaultValues();
         $model->team_id = $team_id;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['/teammanage/team/view', 'id' => $model->team_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'member' => ArrayHelper::map(User::find()->all(), 'id', 'nickname'),
+                'member' => $this->getTeamMember(),
+                'isExist' => $this->getIsExistLeader($team_id),
                 'position' => ArrayHelper::map(Position::find()->all(), 'id', 'name')
             ]);
         }
@@ -104,7 +107,8 @@ class MemberController extends Controller
         } else {
             return $this->render('update', [
                 'model' => $model,
-                'member' => ArrayHelper::map(User::find()->all(), 'id', 'nickname'),
+                'member' => $this->getTeamMember(),
+                'isExist' => $this->getIsExistLeader($team_id),
                 'position' => ArrayHelper::map(Position::find()->all(), 'id', 'name')
             ]);
         }
@@ -139,5 +143,36 @@ class MemberController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    
+    /**
+     * 获取团队成员
+     * @return type
+     */
+    public function getTeamMember(){
+        $expert = Expert::find()->all();
+        $member = User::find()
+                ->where(['not in', 'id', ArrayHelper::getColumn($expert, 'u_id')])
+                ->all();
+        return ArrayHelper::map($member, 'id', 'nickname');
+    }
+
+    /**
+     * 获取团队下是否已经存在队长
+     * @param type $teamId  团队ID
+     * @return type
+     */
+    public function getIsExistLeader($teamId)
+    {
+        $teamMember = TeamMember::findAll(['team_id' => $teamId]);
+        $isExist = [];
+        if(!empty($teamMember) || isset($teamMember)){
+            foreach ($teamMember as $value){
+                $isExist[] = $value->is_leader;
+            }
+            if(in_array('Y', $isExist))
+                return 1;
+        }
+        return 0;
     }
 }

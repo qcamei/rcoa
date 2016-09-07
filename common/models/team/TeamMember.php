@@ -34,7 +34,7 @@ class TeamMember extends ActiveRecord
     const TEAMMEMBER = 'N';
     
     /** 队长 or 队员 */
-    public $is_leaders = [
+    public static $is_leaders = [
         self::TEAMLEADER => '队长',
         self::TEAMMEMBER => '队员'
     ];
@@ -57,6 +57,7 @@ class TeamMember extends ActiveRecord
             [['index', 'position_id'], 'integer'],
             [['u_id'], 'string', 'max' => 36],
             [['is_leader'], 'string', 'max' => 4],
+            [['u_id', 'team_id'], 'unique', 'targetAttribute' => ['u_id', 'team_id']],
             [['position_id'], 'exist', 'skipOnError' => true, 'targetClass' => Position::className(), 'targetAttribute' => ['position_id' => 'id']],
             [['team_id'], 'exist', 'skipOnError' => true, 'targetClass' => Team::className(), 'targetAttribute' => ['team_id' => 'id']],
             [['u_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['u_id' => 'id']],

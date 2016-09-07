@@ -22,7 +22,7 @@ use yii\widgets\ActiveForm;
         'data' => $member, 'hideSearch'=>false, 'options' => ['placeholder' => '请选择...'],
     ]) ?>
 
-    <?= $form->field($model, 'is_leader')->radioList($model->is_leaders)->label('') ?>
+    <?= $form->field($model, 'is_leader')->radioList(TeamMember::$is_leaders)->label('') ?>
     
     <?= $form->field($model, 'index')->widget(TouchSpin::classname(),  [
             'pluginOptions' => [
@@ -49,7 +49,8 @@ use yii\widgets\ActiveForm;
 $js =   
 <<<JS
     var isNewRecord = "$model->isNewRecord";
-    if(isNewRecord)     
+    var isExist = $isExist;
+    if(isNewRecord && !isExist)     
         $("input:radio").eq(0).attr("checked",true);
 JS;
     $this->registerJs($js,  View::POS_READY); 
