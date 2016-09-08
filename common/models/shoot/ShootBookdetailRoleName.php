@@ -23,6 +23,11 @@ use common\models\User;
 class ShootBookdetailRoleName extends ActiveRecord
 {
     /**
+     * 评价分数值
+     * @var integer
+     */
+    public $value;  
+    /**
      * @inheritdoc
      */
     public static function tableName()

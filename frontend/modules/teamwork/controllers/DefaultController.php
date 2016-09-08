@@ -135,9 +135,9 @@ class DefaultController extends Controller
      */
     public function actionView($id)
     {
-        /* @var $model ItemManage */
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
+        /* @var $model ItemManage */
         $model = $twTool->getItemProgressOne($id);
         return $this->render('view', [
             'model' => !empty($model->progress) ? $model : $this->findModel($id),
@@ -160,7 +160,6 @@ class DefaultController extends Controller
         
         $model = new ItemManage();
         $model->loadDefaultValues();
-        //$model->team_id = $twTool->getHotelTeam(Yii::$app->user->id);
         $model->create_by = Yii::$app->user->id;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -188,13 +187,7 @@ class DefaultController extends Controller
             throw new NotAcceptableHttpException('无权限操作！');
         
         $model = $this->findModel($id);
-        /*if(!$model->getIsNormal())
-            throw new NotAcceptableHttpException('该项目'.$model->getStatusName().'！');*/
-
-        $itemChild = $this->getFwItemForSelect($model->item_id);
-        $existedItemChild = $this->getExistedItemForSelect($model->item_id);
-        $existedItemChildOne = $this->getExistedItemChild($model->item_child_id);
-        
+        $itemChild = $this->getItemChild($model->item_id);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -202,71 +195,10 @@ class DefaultController extends Controller
                 'model' => $model,
                 'itemType' => $this->getItemType(),
                 'items' => $this->getCollegesForSelect(),
-                'itemChilds' => ArrayHelper::merge($existedItemChildOne, array_diff($itemChild, $existedItemChild)),
+                'itemChilds' => ArrayHelper::merge([$model->item_child_id => $model->itemChild->name], $itemChild),
             ]);
         }
     }
-    
-    /**
-     * 更改状态为【暂停】
-     * TimeOut an existing ItemManage model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
-    /*public function actionTimeOut($id)
-    {
-        $model = $this->findModel($id);
-        /* @var $twTool TeamworkTool
-        $twTool = Yii::$app->get('twTool');
-        if ($model != null && $model->getIsNormal() && ($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))) 
-        {
-            $model->status = ItemManage::STATUS_TIME_OUT;
-            $model->save();
-        }
-        $this->redirect(['view', 'id' => $model->id]);
-    }*/
-    
-    /**
-     * 更改状态为【在建】
-     * Normal an existing ItemManage model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
-    /*public function actionNormal($id)
-    {
-        $model = $this->findModel($id);
-        /* @var $twTool TeamworkTool 
-        $twTool = Yii::$app->get('twTool');
-        if ($model != null && $model->getIsTimeOut() && ($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))) 
-        {
-            $model->status = ItemManage::STATUS_NORMAL;
-            $model->save();
-        }
-        $this->redirect(['view', 'id' => $model->id]);
-    }*/
-    
-    /**
-     * 更改状态为【已完成】
-     * CarryOut an existing ItemManage model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
-    /*public function actionCarryOut($id)
-    {
-        $model = $this->findModel($id);
-        /* @var $twTool TeamworkTool
-        $twTool = Yii::$app->get('twTool');
-        if ($model != null && $model->getIsNormal() && ($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)) && $model->getIsCoursesStatus()) 
-        {
-            $model->status = ItemManage::STATUS_CARRY_OUT;
-            $model->save();
-        }else
-            throw new NotAcceptableHttpException('该项目下有课程未完成！');
-        $this->redirect(['view', 'id' => $model->id]);
-    }*/
     
     /**
      * 获取专业/工种
@@ -285,7 +217,7 @@ class DefaultController extends Controller
         {
             $items = Item::find()  
                 ->where(['parent_id'=>$id])
-                ->andFilterWhere(['not in','id',$itemChildId])
+                ->andFilterWhere(['NOT IN','id',$itemChildId])
                 ->all(); 
         } catch (Exception $ex) {
             $errors [] = $ex->getMessage();
@@ -353,52 +285,18 @@ class DefaultController extends Controller
      * 获取专业/工种
      * @param int $itemId
      */
-    public function getFwItemForSelect($itemId)
-    {
-        /* @var $fwManager FrameworkManager */
-        $fwManager = Yii::$app->get('fwManager');
-        return ArrayHelper::map($fwManager->getChildren($itemId), 'id', 'name');
-    }
-    
-    /**
-     * 获取项目已存在的所有专业/工种
-     * @param type $itemId
-     * @return type
-     */
-    public function getExistedItemForSelect($itemId)
+    public function getItemChild($itemId)
     {
         $itemChild = ItemManage::find() ->where(['item_id' => $itemId])
                 ->with('itemChild')->with('item')->all();
         
-        return ArrayHelper::map($itemChild, 'item_child_id', 'itemChild.name');
+        $item = Item::find()  
+                ->where(['AND', 
+                   ['parent_id'=>$itemId], 
+                   ['NOT IN','id', ArrayHelper::getColumn($itemChild, 'item_child_id')]
+                ])
+                ->all(); 
+        
+        return ArrayHelper::map($item, 'id', 'name');
     }
-    
-    /**
-     * 获取已经存在的单条专业/工种
-     * @param type $itemChildId
-     * @return type
-     */
-    public function getExistedItemChild($itemChildId)
-    {
-        $itemChild = ItemManage::find()->where(['item_child_id' => $itemChildId])
-                ->with('itemChild')->all();
-       
-        return ArrayHelper::map($itemChild, 'item_child_id', 'itemChild.name');
-    }
-
-
-    /**
-     * 重组 $model->statusName 数组
-     * @param type $model
-     * @return type
-     */
-    /*public function AgainStatusName($model){
-        $statusName = [];
-        /* @var $model ItemManage 
-        foreach ($model->statusName as $value) {
-            $statusName[] = $model->statusName[$model->status] == $value ? 
-                    '<span style="color:red">'.$value.'</span>' : $value;
-        }
-        return $statusName;
-    }*/
 }

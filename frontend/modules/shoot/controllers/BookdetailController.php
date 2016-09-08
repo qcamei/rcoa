@@ -138,7 +138,7 @@ class BookdetailController extends Controller
         /* @var $bookdetailTool BookdetailTool */
         $bookdetailTool = Yii::$app->get('bookdetailTool');
         $oldShootMan = $model->u_shoot_man;
-        $model->u_shoot_man = $post['shoot_man'][0];
+        $model->u_shoot_man = $post['shoot_man'][0] ;
         if(!empty($model->u_shoot_man))
            $model->status = ShootBookdetail::STATUS_SHOOTING;
         else 

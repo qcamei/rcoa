@@ -7,11 +7,13 @@ use common\models\shoot\ShootAppraise;
 use common\models\shoot\ShootAppraiseResult;
 use common\models\shoot\ShootAppraiseWork;
 use common\models\shoot\ShootBookdetail;
+use common\models\shoot\ShootBookdetailRoleName;
 use common\wskeee\job\JobManager;
 use wskeee\rbac\RbacName;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotAcceptableHttpException;
@@ -131,9 +133,6 @@ class AppraiseController extends Controller
                 'u_id' => $u_id,
             ])->execute();
             
-            $count = ShootAppraiseResult::find()
-                    ->where(['b_id'=>$b_id])
-                    ->count();
             /** 添加新记录 */
             \Yii::$app->db->createCommand()->batchInsert(ShootAppraiseResult::tableName(), 
             [
@@ -145,14 +144,13 @@ class AppraiseController extends Controller
             ], $values)->execute();
             
             $bookdetail = $this->findBookdetail($b_id);
-            
+            $appraiseResult = $this->getAppraiseResult($b_id);
             /**设置【接洽人】【摄影师】都评价后【状态】为【已完成】*/
-            if($count>0)
-            {
+            if(count($appraiseResult) ==  count(array_filter($appraiseResult))){
                 $bookdetail->status = ShootBookdetail::STATUS_COMPLETED;
                 $jobManager->updateJob(2,$b_id,['progress'=> 100, 'status'=>$bookdetail->getStatusName()]); 
                 $bookdetail->save();
-            }            
+            }
             $tran->commit();
         } catch (\Exception $ex) {
             $tran->rollBack();
@@ -229,5 +227,25 @@ class AppraiseController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    
+    /**
+     * 获取评价结果数据
+     * @param type $b_id
+     * @return type
+     */
+    public function getAppraiseResult ($b_id)
+    {
+        $result = ShootBookdetailRoleName::find()
+                  ->select(['Book_Role.b_id', 'Book_Role.u_id', 'Appraise.value'])
+                  ->from(['Book_Role' => ShootBookdetailRoleName::tableName()])
+                  ->leftJoin(['Book' => ShootBookdetail::tableName()], 'Book.id = Book_Role.b_id')
+                  ->leftJoin(['Appraise' => ShootAppraiseResult::tableName()], '(Book.id = Appraise.b_id AND Book_Role.u_id = Appraise.u_id)')
+                  ->where(['Book.id' => $b_id])
+                  ->andWhere(['and', 'Book_Role.iscancel = "N"', 'Book_Role.primary_foreign = 1'])
+                  ->groupBy('Book_Role.u_id,Book_Role.role_name')
+                  ->all();
+        
+        return ArrayHelper::getColumn($result, 'value');
     }
 }

@@ -107,7 +107,7 @@ use yii\widgets\DetailView;
                 'format' => 'raw',
                 'value' => ($isRoleAdmin || $isShootManLeader) && ($model->getIsAssign() || $model->getIsStausShootIng())?
                             Select2::widget([
-                                'name' => 'shoot_man',
+                                'name' => 'shoot_man[]',
                                 'value' => empty($model->u_shoot_man) ? '' : array_keys($assignedShootMans),
                                 'data' => empty($model->u_shoot_man) ? $shootmans : ArrayHelper::merge($assignedShootMans, $shootmans),
                                 'maintainOrder' => true,
@@ -140,6 +140,7 @@ use yii\widgets\DetailView;
         ],
     ]);
     ?>
+    
     <?= Html::hiddenInput('b_id',$model->id) ?>
     
     <?= Html::hiddenInput('editreason') ?>

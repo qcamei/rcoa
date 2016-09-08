@@ -94,7 +94,7 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
                     (($isAssign && $isValid) ? ' btn-primary' : ($isStausShootIng ? ' btn-info' : ' btn-default')));
             else
                 $btnClass .= ($isBreakPromise ? ' btn-danger' : 
-                    ($isNew ? ' btn-default disabled' : ($isStausShootIng ? ' btn-info' : ' btn-primary')));
+                    ($isNew ? ' btn-default disabled' : ($isStausShootIng ? ' btn-info' : ' btn-default')));
                         
             $btnClass .= (!$isMe && $isBooking) ? ' disabled' : "";
         //摄影师    
@@ -109,7 +109,7 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
                      (($isAssign && $isValid) ? ' btn-primary disabled' : ($isStausShootIng ? ' btn-info' : ' btn-default')));
             else
                 $btnClass .= ($isBreakPromise ? ' btn-danger' : 
-                    ($isNew ? ' btn-default disabled' : ($isStausShootIng ? ' btn-info' : ' btn-primary')));
+                    ($isNew ? ' btn-default disabled' : ($isStausShootIng ? ' btn-info' : ' btn-default')));
             $btnClass .= (!$isMe && $isBooking) ? ' disabled' : "";
             
         }
