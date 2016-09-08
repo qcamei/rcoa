@@ -482,6 +482,10 @@ class TeamworkTool{
                 ->with('producers')
                 ->with('speakerTeacher')
                 ->with('project')
+                ->with('project.item')
+                ->with('project.itemChild')
+                ->with('project.itemType')
+                ->with('team')
                 ->all();
                
         return $results;

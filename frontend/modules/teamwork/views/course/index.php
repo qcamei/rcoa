@@ -41,7 +41,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'tableOptions' => ['class' => 'table table-striped table-list'],
             'columns' => [
                 [
-                    'class' => 'frontend\modules\teamwork\components\ItemListTd',
                     'label' => '',
                     'format' => 'raw',
                     'value'=> function($model){
@@ -62,7 +61,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
                 [
-                    'class' => 'frontend\modules\teamwork\components\ItemListTd',
                     'label' => Yii::t('rcoa/teamwork', 'Item Type'),
                     'value'=> function($model){
                         /* @var $model CourseManage */
@@ -81,7 +79,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
                 [
-                    'class' => 'frontend\modules\teamwork\components\ItemListTd',
                     'label' => Yii::t('rcoa/teamwork', 'Item'),
                     'value'=> function($model){
                         /* @var $model CourseManage */
@@ -100,7 +97,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
                 [
-                    'class' => 'frontend\modules\teamwork\components\ItemListTd',
                     'label' => Yii::t('rcoa/teamwork', 'Item Child'),
                     'value'=> function($model){
                         /* @var $model CourseManage */
@@ -119,7 +115,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
                 [
-                    'class' => 'frontend\modules\teamwork\components\ItemListTd',
                     'label' => Yii::t('rcoa/teamwork', 'Course ID'),
                     'format' => 'raw',
                     'value'=> function($model){
@@ -153,7 +148,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 ],
                 [
-                    'class' => 'frontend\modules\teamwork\components\ItemListTd',
                     'label' => Yii::t('rcoa/teamwork', 'Weekly'),
                     'format' => 'raw',
                     'value' => function($model){
