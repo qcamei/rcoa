@@ -1,6 +1,8 @@
 <?php
 defined('YII_DEBUG') or define('YII_DEBUG', true);
 defined('YII_ENV') or define('YII_ENV', 'dev');
+//设置开发 tt 测试开发环境
+defined('YII_ENV_TT') or define('YII_ENV_TT', true);
 
 require(__DIR__ . '/../../vendor/autoload.php');
 require(__DIR__ . '/../../vendor/yiisoft/yii2/Yii.php');
