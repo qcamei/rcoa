@@ -80,15 +80,15 @@ class TeamworkTool{
     
     /**
      * 计算一个月有多少周
-     * @param type $date        日期
-     * @param type $month       月份
+     * @param type $date        实际开始日期
+     * @param type $month       开发周期月份
      * @return array
      */
     public function getWeekInfo($date, $month)
     {
         $weekinfo = [];
-        //实际开始月份如果小于开发周期月份，那么开始时间就为1 否则为实际开始日期
-        $start_date = date('m', strtotime($month)) > date('m', strtotime($date)) ? 1 : date('d', strtotime($date));
+        //开发周期月份$month如果大于实际开始月份$date，那么开始时间就为1 否则为实际开始日期
+        $start_date = date('m', strtotime($month)) > date('m', strtotime($date)) ?  1 : date('d', strtotime($date));
         $end_date = date('d',strtotime($month.' +1 month -1 day'));   //计算一个月有多少天 
         //计算实际开始时间or每个月1号在一个星期是第几天
         $w = date('m', strtotime($month)) > date('m', strtotime($date)) ? 
@@ -127,13 +127,15 @@ class TeamworkTool{
      * 获取周报信息
      * @param type $course_id   课程ID
      * @param type $weekStart   一周开始日期
-     * @param type $WeekEnd     一周结束日期
+     * @param type $weekEnd   一周结束日期
      * @return type
      */
-    public function getWeeklyInfo($course_id, $weekStart, $WeekEnd) 
+    public function getWeeklyInfo($course_id, $weekStart, $weekEnd) 
     {
-        $result = CourseSummary::find()->where(['and', 'course_id='.$course_id,
-                    'create_time >="'. $weekStart.'"', 'create_time <="'. $WeekEnd.'"'])
+        $result = CourseSummary::find()
+                ->where('create_time >="'. $weekStart.'"')
+                ->andWhere('create_time <="'. $weekEnd.'"')
+                ->andWhere(['course_id' => $course_id])
                 ->one();
         return $result;
     }
@@ -157,7 +159,6 @@ class TeamworkTool{
     {
         //查出成员表里面所有队长
         $isLeader = TeamMember::findAll(['u_id' => Yii::$app->user->id]);
-        
         if(!empty($isLeader) || isset($isLeader)){
             foreach ($isLeader as $value){
                 if($value->is_leader == 'Y')
@@ -463,7 +464,7 @@ class TeamworkTool{
                     'Item.item_child_id' => $itemChildId,
                     'Course.project_id'=> $projectId,
                     'Course.course_id' => $courseId,
-                    'Course.`status`'=> $status == null && $time == null ? CourseManage::STATUS_NORMAL : $status,
+                    'Course.`status`'=> $status,
                     'Course.team_id'=> $teamId,
                 ])
                 ->andfilterWhere(

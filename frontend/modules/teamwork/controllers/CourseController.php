@@ -59,13 +59,18 @@ class CourseController extends Controller
     public function actionIndex($project_id = null, $status = null, $team_id = null, $item_type_id = null,
             $item_id =null, $item_child_id = null, $course_id = null, $keyword = null, $time = null, $mark = null)
     {
+                       
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
         $dataProvider = new ArrayDataProvider([
             'allModels' => $twTool->getCourseProgressAll($project_id, $status, $team_id, $item_type_id, $item_id, $item_child_id, $course_id, $keyword, $time),
         ]);
+        $courseId = ArrayHelper::getColumn($dataProvider->allModels, 'id');
+        $week = $twTool->getWeek(date('Y-m-d', time()));
+        
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'weeklyInfo' => $twTool->getWeeklyInfo($courseId, $week['start'], $week['end']),
             'itemType' => $this->getItemType(),
             'items' => $this->getCollegesForSelect(),
             'itemChild' => [],
@@ -443,6 +448,7 @@ class CourseController extends Controller
                     ->orderBy(['index' => 'asc', 'team_id' => 'asc'])
                     ->with('u')
                     ->with('team')
+                    ->with('position')
                     ->all();
        
         $producers = [];
@@ -468,6 +474,7 @@ class CourseController extends Controller
                         ->orderBy('index asc')
                         ->with('u')
                         ->with('team')
+                        ->with('position')
                         ->all();
         $sameTeamMember = [];
         foreach ($sameTeamMembers as $element) {
@@ -520,6 +527,7 @@ class CourseController extends Controller
                             ->orderBy(['Member.`index`' => 'ASC', 'Member.team_id' => 'ASC'])
                             ->with('producerOne')
                             ->with('course')
+                            ->with('producerOne.u')
                             ->all();
         $weeklyEditors = [];
         foreach ($assignWeeklyEditors as $element) {
@@ -544,6 +552,8 @@ class CourseController extends Controller
                            ->where(['Producer.course_id' => $courseId])
                            ->orderBy(['Member.`index`' => 'ASC', 'Member.team_id' => 'ASC'])
                            ->with('producerOne')
+                           ->with('producerOne.u')
+                           ->with('producerOne.position')
                            ->with('course')
                            ->all();
         $producers = [];

@@ -1,5 +1,6 @@
 <?php
 
+use common\models\teamwork\CourseManage;
 use frontend\modules\teamwork\TwAsset;
 use wskeee\rbac\RbacName;
 use yii\helpers\Html;
@@ -25,7 +26,7 @@ use yii\helpers\Html;
                     ['class' => $controllerId == 'default' && ($actionId == 'list' || $actionId == 'search') ? 
                         'footer-item-xs footer-item-bg visible-xs-inline-block' : 'footer-item-xs visible-xs-inline-block']);
             
-            echo Html::a(Html::img(['/filedata/teamwork/image/course.png']), ['course/index'], [
+            echo Html::a(Html::img(['/filedata/teamwork/image/course.png']), ['course/index', 'status' => CourseManage::STATUS_NORMAL], [
                     'class' => $controllerId == 'course' && ($actionId == 'index' || $actionId == 'search') ? 
                         'footer-item-xs footer-item-bg visible-xs-inline-block' : 'footer-item-xs visible-xs-inline-block']);
             
@@ -49,7 +50,7 @@ use yii\helpers\Html;
                     ['class' => $controllerId == 'default' && ($actionId == 'list' || $actionId == 'search') ? 
                         'footer-item footer-item-bg hidden-xs' : 'footer-item hidden-xs']);
             
-            echo Html::a(Html::img(['/filedata/teamwork/image/course.png']).'课程', ['course/index'], [
+            echo Html::a(Html::img(['/filedata/teamwork/image/course.png']).'课程', ['course/index', 'status' => CourseManage::STATUS_NORMAL], [
                     'class' =>  $controllerId == 'course' && ($actionId == 'index' || $actionId == 'search') ? 
                         'footer-item footer-item-bg hidden-xs' : 'footer-item hidden-xs']);
             

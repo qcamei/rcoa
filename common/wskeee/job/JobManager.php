@@ -272,8 +272,6 @@ class JobManager {
     {
         $notification = JobNotification::find()
                         ->where(['u_id'=>$user,'status'=> JobNotification::STATUS_INIT])
-                        ->with('u')
-                        ->with('job')
                         ->with('jobs')
                         ->all();
         return $notification;
@@ -287,8 +285,6 @@ class JobManager {
     {
         $notification = JobNotification::find()
                         ->where(['u_id'=>$user,'status'=> JobNotification::STATUS_NORMAL])
-                        ->with('u')
-                        ->with('job')
                         ->with('jobs')
                         ->all();
         return $notification;

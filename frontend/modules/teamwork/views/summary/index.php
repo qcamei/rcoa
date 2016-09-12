@@ -1,7 +1,6 @@
 <?php
 
 use common\models\teamwork\CourseManage;
-use common\models\teamwork\CourseSummary;
 use frontend\modules\teamwork\TwAsset;
 use kartik\widgets\Select2;
 use wskeee\rbac\RbacName;
@@ -13,11 +12,10 @@ use yii\web\View;
 ?>
 
 <?php
-    /* @var $result CourseSummary */
     $weekinfo = [];     //每月的周数列表信息
     $results = [];      //查询的结果数组
     $currentTime = date('Y-m-d',  time());  //当前时间
-    $startTime = empty($model->real_start_time) ? $currentTime : date('Y-m-d', strtotime($model->real_start_time));
+    $startTime = date('Y-m-d', strtotime($model->real_start_time));
     $isAuthorization = Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER);    //是否为项目管理员
     foreach ($twTool->getWeekInfo($startTime, end($weeklyMonth)) as $value) {
         $result = $twTool->getWeeklyInfo($model->id, $value['start'], $value['end']);
@@ -93,7 +91,7 @@ use yii\web\View;
         /** 编辑、新增按钮 */
         echo Html::beginTag('div', ['class' => 'col-lg-2 col-md-2 col-sm-2 col-xs-5', 'style' => 'padding:0px;']);
             /**
-             * 编辑 按钮显示必须满足以下条件：
+             * 提交 按钮显示必须满足以下条件：
              * 1、状态非为【已完成】
              * 2、周报必须不能为空
              * 3、(必须是【队长】 and 课程 【创建者】 是自己)
@@ -101,15 +99,15 @@ use yii\web\View;
              */
             
             if($model->getIsNormal() && !empty($weeklyInfoResult)
-                && (($twTool->getIsLeader() && $model->create_by == Yii::$app->user->id) 
-                || $model->weekly_editors_people == Yii::$app->user->id 
-                || $model->course_principal == Yii::$app->user->id 
+                && (($twTool->getIsLeader() && $model->create_by == \Yii::$app->user->id) 
+                || $model->weekly_editors_people == \Yii::$app->user->id 
+                || $model->course_principal == \Yii::$app->user->id 
                 || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a(Yii::t('rcoa/teamwork', 'Updated Weekly'), [
                     'summary/update', 'course_id' => $model->id, 'create_time' => $results['create_time']], 
                     ['id' => 'update', 'class' => 'btn btn-primary weekinfo']);
             /**
-             * 新增 按钮显示必须满足以下条件：
+             * 提交 按钮显示必须满足以下条件：
              * 1、状态非为【已完成】
              * 2、周报必须为空
              * 3、(必须是【队长】 and 课程 【创建者】 是自己)
@@ -117,9 +115,9 @@ use yii\web\View;
              */
            
             if($model->getIsNormal() && empty($weeklyInfoResult)
-                && (($twTool->getIsLeader() && $model->create_by == Yii::$app->user->id) 
-                || $model->weekly_editors_people == Yii::$app->user->id 
-                || $model->course_principal == Yii::$app->user->id
+                && (($twTool->getIsLeader() && $model->create_by == \Yii::$app->user->id) 
+                || $model->weekly_editors_people == \Yii::$app->user->id 
+                || $model->course_principal == \Yii::$app->user->id
                 || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a(Yii::t('rcoa/teamwork', 'Create Weekly'), ['summary/create', 'course_id' => $model->id], [
                  'class' => 'btn btn-primary weekinfo']);
