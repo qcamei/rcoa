@@ -17,6 +17,14 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
     
     <?= $form->field($model, 'aliases')->textInput(['maxlength' => true]) ?>
+    
+    <?= $form->field($model, 'index')->widget(TouchSpin::classname(),  [
+            'pluginOptions' => [
+                'placeholder' => '顺序 ...',
+                'min' => 1,
+                'max' => 10,
+            ],
+    ])?>
 
     <?= $form->field($model, 'module_image')->textInput(['maxlength' => true,'placeholder'=> '/图片路径/图片名称']) ?>
     

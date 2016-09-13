@@ -119,6 +119,9 @@ return [
         ],
         'datecontrol' =>  [
             'class' => '\kartik\datecontrol\Module',
-        ]
+        ],
+        'multimedia' => [
+            'class' => 'frontend\modules\multimedia\Module',
+        ],
     ],
 ];

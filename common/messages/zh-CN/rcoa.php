@@ -121,6 +121,7 @@ return [
     'Module Image' => '模块图片',
     'Module Link' => '模块链接',
     'Isjump' => '是否跳转页面',
+    'Parent Id' => '上一级ID',
     
     //提示消息
     'Are you sure you want to delete this item?' => '你确定要删除此项目？',

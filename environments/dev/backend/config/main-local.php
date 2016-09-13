@@ -44,6 +44,9 @@ $config = [
         'unittest' => [
             'class' => 'backend\modules\unittest\Module',
         ],
+        'multimedia' => [
+            'class' => 'backend\modules\multimedia\Module',
+        ],
     ],
 ];
 

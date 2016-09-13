@@ -47,7 +47,7 @@ $system = System::find()->with('jobs')->all();
             'url' => ['/site/login'], 
         ];
     } else {
-        $system = System::find()->all();
+        $system = System::find()->orderBy('index asc')->all();
         $user = User::findOne(Yii::$app->user->id);
         foreach ($system as $key => $value) {
             $menuItems[] = [

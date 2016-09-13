@@ -27,7 +27,7 @@ use yii\helpers\Html;
                         'footer-item-xs footer-item-bg visible-xs-inline-block' : 'footer-item-xs visible-xs-inline-block']);
             
             echo Html::a(Html::img(['/filedata/teamwork/image/course.png']), ['course/index', 'status' => CourseManage::STATUS_NORMAL], [
-                    'class' => $controllerId == 'course' && ($actionId == 'index' || $actionId == 'search') ? 
+                    'class' => $controllerId == 'course' && $actionId == 'index' ? 
                         'footer-item-xs footer-item-bg visible-xs-inline-block' : 'footer-item-xs visible-xs-inline-block']);
             
             echo Html::a(Html::img(['/filedata/teamwork/image/statistics.png']), ['/teamwork/statistics'], 
@@ -51,7 +51,7 @@ use yii\helpers\Html;
                         'footer-item footer-item-bg hidden-xs' : 'footer-item hidden-xs']);
             
             echo Html::a(Html::img(['/filedata/teamwork/image/course.png']).'课程', ['course/index', 'status' => CourseManage::STATUS_NORMAL], [
-                    'class' =>  $controllerId == 'course' && ($actionId == 'index' || $actionId == 'search') ? 
+                    'class' =>  $controllerId == 'course' && $actionId == 'index' ? 
                         'footer-item footer-item-bg hidden-xs' : 'footer-item hidden-xs']);
             
             echo Html::a(Html::img(['/filedata/teamwork/image/statistics.png']).'统计', ['/teamwork/statistics'], 

@@ -349,7 +349,7 @@ class BookdetailController extends Controller
     }
     
     /**
-     * 获取项目
+     * 获取层次/类型
      * @return type
      */
     protected function getCollegesForSelect()
@@ -361,7 +361,7 @@ class BookdetailController extends Controller
     
     
     /**
-     * 获取子项目
+     * 获取专业/工种 or 课程
      * @param int $itemId
      */
     protected function getFwItemForSelect($itemId)
@@ -401,8 +401,9 @@ class BookdetailController extends Controller
                 ->all();
          return ArrayHelper::map($expert, 'u_id','user.nickname');
     }
+    
     /**
-     * 获取类别
+     * 获取行业
      * @return type
      */
     protected function getBusiness(){

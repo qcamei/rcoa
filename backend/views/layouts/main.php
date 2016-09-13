@@ -85,6 +85,13 @@ AppAsset::register($this);
             ]
         ];
         $menuItems[] = [
+            'label' => Yii::t('rcoa/multimedia', 'Multimedia'),
+            'items' => [
+                ['label' => Yii::t('rcoa/multimedia', 'Multimedia Proportions'), 'url' => '/multimedia/proportion'],
+                ['label' => Yii::t('rcoa/multimedia', 'Multimedia Assign Teams'), 'url' => '/multimedia/assignteam'],
+            ]
+        ];
+        $menuItems[] = [
             'label' => '题库',
             'items' => [
                 ['label' => '题目管理', 'url' => '/question'],

@@ -1,0 +1,55 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2016-9-13, 13:59:34
+    Author     : Kiwi°
+*/
+
+/** 
+ *  footer 导航样式
+ */
+.footer-multimedia-navbar .footer-multimedia {
+    display: block;
+    width: 100px;
+    height: 50px;
+    text-align: center;
+    line-height: 45px;
+    float: left;
+    font-weight: bold;
+    color: #000;
+}
+.footer-multimedia-navbar .footer-multimedia-xs{
+    display: block;
+    width: 50px;
+    height: 50px;
+    float: left;
+    text-align: center;
+    line-height: 45px;
+}
+.footer-multimedia-navbar .footer-multimedia-bg{
+    background-color: #fff;
+}
+.footer-multimedia-navbar .footer-multimedia-right{
+    float: right;
+    font-weight: initial;
+    background-color: #2e6da4 !important;
+}
+.footer-multimedia-navbar .footer-multimedia img{
+    width: 24px;
+    height: 24px;
+    margin-top: -5px;
+    margin-right: 5px;
+}
+.footer-multimedia-navbar .footer-multimedia-xs img{
+    width: 36px;
+    height: 36px;
+    margin-top: -5px;
+    margin-right: 5px;
+}
+.footer-multimedia-navbar a:hover, a:focus {
+    background-color: rgba(255, 255, 255, 0.46);;
+    text-decoration: blink;
+}
