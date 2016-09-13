@@ -174,7 +174,7 @@ use yii\widgets\ActiveForm;
             </div>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding: 5px 15px;">
-            <a id="export" role="button" class="col-lg-3 btn btn-primary">导入详细</a>
+            <a id="export" role="button" class="col-lg-3 btn btn-primary">导出详细</a>
         </div>
     </div>
 </div>
