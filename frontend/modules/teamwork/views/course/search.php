@@ -173,6 +173,9 @@ use yii\widgets\ActiveForm;
                 ]); ?>
             </div>
         </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding: 5px 15px;">
+            <a id="export" role="button" class="col-lg-3 btn btn-primary">导入详细</a>
+        </div>
     </div>
 </div>
 
@@ -215,8 +218,11 @@ $js =
         $("#select2-select2-course_id-container").html('<span class="select2-selection__placeholder">全部</span>');
         wx(url, element, '全部');
     });
-    
         
+    $('#export').click(function(){
+        location.href = "/teamwork/export/run?" + $('#course-manage-search').serialize();
+    });
+     
     /*var datas = $('#course-manage-search').serialize();
     $('#course-manage-search').keydown(function(e){
         if(e.keyCode==13){
