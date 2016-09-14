@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         Html::img([$value->u->avatar], ['class' => 'img-circle']).Html::endTag('div');
                     echo Html::beginTag('div', ['class' => 'right']).
                         '<p><span class="span-name">'.$value->u->nickname.'</span></p>
-                         <p><span class="span-position">'.$value->position.'</span></p>' .Html::endTag('div');
+                         <p><span class="span-position">'.$value->position->name.'</span></p>' .Html::endTag('div');
                 echo Html::endTag('div');
             echo Html::endTag('div');
         }
