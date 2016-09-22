@@ -125,7 +125,7 @@ class ShootBookdetailActBtnCol extends ShootBookdetailListTd
                      ($isNew ? ' btn-primary' : ($isStausShootIng ? ' btn-info' : ' btn-default')));
             else
                 $btnClass .= ($isBreakPromise ? ' btn-danger' : 
-                    ($isNew ? ' btn-primary disabled' : ($isStausShootIng ? ' btn-info' : ' btn-default')));
+                    ($isNew ? ' btn-default disabled' : ($isStausShootIng ? ' btn-info' : ' btn-default')));
             $btnClass .= (!$isMe && $isBooking) ? ' disabled' : "";
         }
         
