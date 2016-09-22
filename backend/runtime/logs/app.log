@@ -1,0 +1,137 @@
+2016-09-19 14:41:01 [127.0.0.1][-][-][error][yii\base\ErrorException:1] exception 'yii\base\ErrorException' with message 'Class 'GridView' not found' in D:\wamp64\www\rcoa\backend\modules\multimedia\views\contenttype\view.php:45
+Stack trace:
+#0 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(247): yii\base\View->renderPhpFile()
+#1 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(149): yii\base\View->renderFile()
+#2 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(371): yii\base\View->render()
+#3 D:\wamp64\www\rcoa\backend\modules\multimedia\controllers\ContenttypeController.php(56): yii\base\Controller->render()
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): backend\modules\multimedia\controllers\ContenttypeController->actionView()
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): ::call_user_func_array:{D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php:55}()
+#6 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(151): yii\base\InlineAction->runWithParams()
+#7 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(455): yii\base\Controller->runAction()
+#8 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(84): yii\base\Module->runAction()
+#9 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest()
+#10 D:\wamp64\www\rcoa\backend\web\index.php(20): yii\base\Application->run()
+#11 {main}
+2016-09-19 14:41:01 [127.0.0.1][-][-][info][application] $_GET = [
+    'id' => '1'
+]
+
+$_COOKIE = [
+    '_csrf' => 'a3ad364ffdd005f12e7a8ab6d71c0449ee21615607dc3446278b048eda6b5701a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"GXlZTL_4mTGXbgOKHZ4dfJCMQ7PS_DgK\";}'
+    'PHPSESSID' => 'hg1mls8t1kkius5ni0smhav8e0'
+    '_identity' => '493e0db6c3a8830a7c278bfc99d29028b74ac34091f94094cd65dc5c15d50b61a:2:{i:0;s:9:\"_identity\";i:1;s:49:\"[\"59\",\"ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK\",2592000]\";}'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoaadmin.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoaadmin.gzedu.net/multimedia/contenttype/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => '_csrf=a3ad364ffdd005f12e7a8ab6d71c0449ee21615607dc3446278b048eda6b5701a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22GXlZTL_4mTGXbgOKHZ4dfJCMQ7PS_DgK%22%3B%7D; PHPSESSID=hg1mls8t1kkius5ni0smhav8e0; _identity=493e0db6c3a8830a7c278bfc99d29028b74ac34091f94094cd65dc5c15d50b61a%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A49%3A%22%5B%2259%22%2C%22ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK%22%2C2592000%5D%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoaadmin.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoaadmin.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/backend/web/index.php'
+    'REMOTE_PORT' => '60337'
+    'REDIRECT_QUERY_STRING' => 'id=1'
+    'REDIRECT_URL' => 'http://tt.ccoaadmin.gzedu.net/multimedia/contenttype/view?id=1'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => 'id=1'
+    'REQUEST_URI' => '/multimedia/contenttype/view?id=1'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1474267261.27
+    'REQUEST_TIME' => 1474267261
+]
+2016-09-19 14:41:08 [127.0.0.1][-][-][error][yii\base\UnknownPropertyException] exception 'yii\base\UnknownPropertyException' with message 'Getting unknown property: common\models\multimedia\MultimediaContentType::expertProjects' in D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Component.php:143
+Stack trace:
+#0 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\BaseActiveRecord.php(247): yii\base\Component->__get('expertProjects')
+#1 D:\wamp64\www\rcoa\backend\modules\multimedia\views\contenttype\view.php(51): yii\db\BaseActiveRecord->__get('expertProjects')
+#2 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(325): require('D:\\wamp64\\www\\r...')
+#3 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(247): yii\base\View->renderPhpFile('D:\\wamp64\\www\\r...', Array)
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(149): yii\base\View->renderFile('D:\\wamp64\\www\\r...', Array, Object(backend\modules\multimedia\controllers\ContenttypeController))
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(371): yii\base\View->render('view', Array, Object(backend\modules\multimedia\controllers\ContenttypeController))
+#6 D:\wamp64\www\rcoa\backend\modules\multimedia\controllers\ContenttypeController.php(56): yii\base\Controller->render('view', Array)
+#7 [internal function]: backend\modules\multimedia\controllers\ContenttypeController->actionView('1')
+#8 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): call_user_func_array(Array, Array)
+#9 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(151): yii\base\InlineAction->runWithParams(Array)
+#10 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(455): yii\base\Controller->runAction('view', Array)
+#11 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(84): yii\base\Module->runAction('multimedia/cont...', Array)
+#12 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#13 D:\wamp64\www\rcoa\backend\web\index.php(20): yii\base\Application->run()
+#14 {main}
+2016-09-19 14:41:08 [127.0.0.1][-][-][info][application] $_GET = [
+    'id' => '1'
+]
+
+$_COOKIE = [
+    '_csrf' => 'a3ad364ffdd005f12e7a8ab6d71c0449ee21615607dc3446278b048eda6b5701a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"GXlZTL_4mTGXbgOKHZ4dfJCMQ7PS_DgK\";}'
+    'PHPSESSID' => 'hg1mls8t1kkius5ni0smhav8e0'
+    '_identity' => '493e0db6c3a8830a7c278bfc99d29028b74ac34091f94094cd65dc5c15d50b61a:2:{i:0;s:9:\"_identity\";i:1;s:49:\"[\"59\",\"ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK\",2592000]\";}'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoaadmin.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoaadmin.gzedu.net/multimedia/contenttype/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => '_csrf=a3ad364ffdd005f12e7a8ab6d71c0449ee21615607dc3446278b048eda6b5701a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22GXlZTL_4mTGXbgOKHZ4dfJCMQ7PS_DgK%22%3B%7D; PHPSESSID=hg1mls8t1kkius5ni0smhav8e0; _identity=493e0db6c3a8830a7c278bfc99d29028b74ac34091f94094cd65dc5c15d50b61a%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A49%3A%22%5B%2259%22%2C%22ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK%22%2C2592000%5D%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoaadmin.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoaadmin.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/backend/web/index.php'
+    'REMOTE_PORT' => '60352'
+    'REDIRECT_QUERY_STRING' => 'id=1'
+    'REDIRECT_URL' => 'http://tt.ccoaadmin.gzedu.net/multimedia/contenttype/view?id=1'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => 'id=1'
+    'REQUEST_URI' => '/multimedia/contenttype/view?id=1'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1474267268.462
+    'REQUEST_TIME' => 1474267268
+]

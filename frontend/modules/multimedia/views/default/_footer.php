@@ -1,6 +1,5 @@
 <?php
 
-use common\models\multimedia\CourseManage;
 use frontend\modules\multimedia\MultimediaAsset;
 use wskeee\rbac\RbacName;
 use yii\helpers\Html;
@@ -33,11 +32,11 @@ use yii\helpers\Html;
             echo Html::a(Html::img(['/filedata/multimedia/image/statistics.png']), ['/multimedia/statistics'], 
                     ['class' => $controllerId == 'statistics' ? 'footer-multimedia-xs footer-multimedia-bg visible-xs-inline-block' : 'footer-multimedia-xs visible-xs-inline-block']);
             /**
-             * 创建项目 按钮必须满足以下条件：
-             * 1、操作方法必须是 【list】
-             * 2、必须是【队长】 or 【项目管理员】
+             * 创建任务 按钮必须满足以下条件：
+             * 1、操作方法必须是 【personal】
+             * 2、必须拥有创建权限
              */
-            if($actionId == 'personal' /*&& ($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))*/)
+            if($actionId == 'personal' && Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CREATE))
                 echo Html::a(Html::img(['/filedata/multimedia/image/create.png']), ['create'], [
                     'class' => 'footer-multimedia-xs footer-multimedia-right visible-xs-inline-block']);
             
@@ -58,11 +57,11 @@ use yii\helpers\Html;
             echo Html::a(Html::img(['/filedata/multimedia/image/statistics.png']).'统计', ['/multimedia/statistics'], 
                     ['class' => $controllerId == 'statistics' ? 'footer-multimedia footer-multimedia-bg hidden-xs' : 'footer-multimedia hidden-xs']);
             /**
-             * 创建项目 按钮必须满足以下条件：
-             * 1、操作方法必须是 【list】
-             * 2、必须是【队长】 or 【项目管理员】
+             * 创建任务 按钮必须满足以下条件：
+             * 1、操作方法必须是 【personal】
+             * 2、必须拥有创建权限
              */
-            if($actionId == 'personal' /*&& ($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))*/)
+            if($actionId == 'personal' && Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CREATE))
                 echo Html::a(Html::img(['/filedata/multimedia/image/create.png']).'创建任务', ['create'], [
                     'class' => 'footer-multimedia footer-multimedia-right hidden-xs']);
         ?>

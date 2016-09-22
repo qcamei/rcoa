@@ -125,5 +125,6 @@ return [
     
     //提示消息
     'Are you sure you want to delete this item?' => '你确定要删除此项目？',
+    'The requested page does not exist.' => '所请求的页面不存在。',
     
 ];

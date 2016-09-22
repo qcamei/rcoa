@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\multimedia\MultimediaProportion */
+/* @var $model common\models\multimedia\MultimediaTypeProportion */
 
-$this->title = $model->name_type;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/multimedia', 'Multimedia Proportions'), 'url' => ['index']];
+$this->title = $model->id;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/multimedia', 'Multimedia Type Proportions'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="multimedia-proportion-view">
+<div class="multimedia-type-proportion-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -29,9 +29,23 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'name_type',
-            'proportion',
-            'des',
+            [
+                'attribute' => 'content_type',
+                'value' => $model->contentType->name,
+            ],
+            [
+                'attribute' => 'proportion',
+                'value' => $model->proportion,
+            ],
+            [
+                'attribute' => 'created_at',
+                'value' => date('Y-m', $model->created_at),
+            ],
+            [
+                'attribute' => 'updated_at',
+                'value' => date('Y-m', $model->updated_at),
+            ],
+            
         ],
     ]) ?>
 

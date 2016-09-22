@@ -44,7 +44,7 @@ $this->params['breadcrumbs'] = $this->title;
     ]) ?>
     
     <h4>课程配置信息</h4>
-     <?= GridView::widget([
+    <?= GridView::widget([
         'dataProvider' => new ArrayDataProvider([
             'allModels' => $model->courseManages,
         ]),

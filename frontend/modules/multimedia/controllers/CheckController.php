@@ -2,12 +2,16 @@
 
 namespace frontend\modules\multimedia\controllers;
 
-use Yii;
 use common\models\multimedia\MultimediaCheck;
 use common\models\multimedia\searchs\MultimediaCheckSearch;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
+use frontend\modules\multimedia\MultimediaTool;
+use wskeee\rbac\RbacName;
+use Yii;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\web\Controller;
+use yii\web\NotAcceptableHttpException;
+use yii\web\NotFoundHttpException;
 
 /**
  * CheckController implements the CRUD actions for MultimediaCheck model.
@@ -26,6 +30,16 @@ class CheckController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+             //access验证是否有登录
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ],
         ];
     }
 
@@ -38,10 +52,10 @@ class CheckController extends Controller
         $searchModel = new MultimediaCheckSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
+        /*return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-        ]);
+        ]);*/
     }
 
     /**
@@ -61,15 +75,23 @@ class CheckController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($task_id)
     {
+        /* @var $multimedia MultimediaTool */
+        $multimedia = \Yii::$app->get('multimedia');
+        if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CREATE_CHECK))
+            throw new NotAcceptableHttpException('无权限操作！');
+        
         $model = new MultimediaCheck();
-
+        $model->task_id = $task_id;
+        $model->create_by = \Yii::$app->user->id;
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['default/view', 'id' => $model->task_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'task_id' => $task_id,
             ]);
         }
     }
@@ -83,7 +105,9 @@ class CheckController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_UPDATE_CHECK) && $model->create_by != Yii::$app->user->id)
+            throw new NotAcceptableHttpException('无权限操作！');
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -101,9 +125,12 @@ class CheckController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        $model = $this->findModel($id);
+        if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_DELETE_CHECK) && $model->create_by != Yii::$app->user->id)
+            throw new NotAcceptableHttpException('无权限操作！');
+        
+        $model->delete();
+        return $this->redirect(['default/view', 'id' => $model->task_id]);
     }
 
     /**
@@ -118,7 +145,7 @@ class CheckController extends Controller
         if (($model = MultimediaCheck::findOne($id)) !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            throw new NotFoundHttpException(\Yii::t('rcoa', 'The requested page does not exist.'));
         }
     }
 }

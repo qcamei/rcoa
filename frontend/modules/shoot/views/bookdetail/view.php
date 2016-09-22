@@ -119,6 +119,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail Details') . ' : ' . $model->id;
         }
         $('#form-assign-shoot_man').submit();
     });
+    
     /** 取消操作 */        
     $('#cancel').click(function(){
         $('#myModal').modal()

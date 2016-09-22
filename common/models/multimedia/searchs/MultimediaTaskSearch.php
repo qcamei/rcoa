@@ -5,12 +5,12 @@ namespace common\models\multimedia\searchs;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\multimedia\MultimediaManage;
+use common\models\multimedia\MultimediaTask;
 
 /**
- * MultimediaManageSearch represents the model behind the search form about `common\models\multimedia\MultimediaManage`.
+ * MultimediaTaskSearch represents the model behind the search form about `common\models\multimedia\MultimediaTask`.
  */
-class MultimediaManageSearch extends MultimediaManage
+class MultimediaTaskSearch extends MultimediaTask
 {
     /**
      * @inheritdoc
@@ -18,9 +18,8 @@ class MultimediaManageSearch extends MultimediaManage
     public function rules()
     {
         return [
-            [['id', 'item_type_id', 'item_id', 'item_child_id', 'course_id', 'video_length', 'progress', 'content_type', 'level', 'make_team', 'status', 'create_team', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'item_type_id', 'item_id', 'item_child_id', 'course_id', 'material_video_length', 'production_video_length', 'progress', 'content_type', 'level', 'make_team', 'status', 'create_team', 'created_at', 'updated_at'], 'integer'],
             [['name', 'carry_out_time', 'path', 'create_by', 'des'], 'safe'],
-            [['proportion'], 'number'],
         ];
     }
 
@@ -42,7 +41,7 @@ class MultimediaManageSearch extends MultimediaManage
      */
     public function search($params)
     {
-        $query = MultimediaManage::find();
+        $query = MultimediaTask::find();
 
         // add conditions that should always apply here
 
@@ -65,9 +64,9 @@ class MultimediaManageSearch extends MultimediaManage
             'item_id' => $this->item_id,
             'item_child_id' => $this->item_child_id,
             'course_id' => $this->course_id,
-            'video_length' => $this->video_length,
+            'material_video_length' => $this->material_video_length,
+            'production_video_length' => $this->production_video_length,
             'progress' => $this->progress,
-            'proportion' => $this->proportion,
             'content_type' => $this->content_type,
             'level' => $this->level,
             'make_team' => $this->make_team,

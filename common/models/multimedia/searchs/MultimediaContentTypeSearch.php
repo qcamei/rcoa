@@ -5,12 +5,12 @@ namespace common\models\multimedia\searchs;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\multimedia\MultimediaProportion;
+use common\models\multimedia\MultimediaContentType;
 
 /**
- * MultimediaProportionSearch represents the model behind the search form about `common\models\multimedia\MultimediaProportion`.
+ * MultimediaContentTypeSearch represents the model behind the search form about `common\models\multimedia\MultimediaContentType`.
  */
-class MultimediaProportionSearch extends MultimediaProportion
+class MultimediaContentTypeSearch extends MultimediaContentType
 {
     /**
      * @inheritdoc
@@ -19,8 +19,7 @@ class MultimediaProportionSearch extends MultimediaProportion
     {
         return [
             [['id'], 'integer'],
-            [['name_type', 'des'], 'safe'],
-            [['proportion'], 'number'],
+            [['name', 'des'], 'safe'],
         ];
     }
 
@@ -42,7 +41,7 @@ class MultimediaProportionSearch extends MultimediaProportion
      */
     public function search($params)
     {
-        $query = MultimediaProportion::find();
+        $query = MultimediaContentType::find();
 
         // add conditions that should always apply here
 
@@ -61,10 +60,9 @@ class MultimediaProportionSearch extends MultimediaProportion
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'proportion' => $this->proportion,
         ]);
 
-        $query->andFilterWhere(['like', 'name_type', $this->name_type])
+        $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'des', $this->des]);
 
         return $dataProvider;

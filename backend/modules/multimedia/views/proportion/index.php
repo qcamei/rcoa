@@ -1,22 +1,26 @@
 <?php
 
-use yii\helpers\Html;
+use common\models\multimedia\MultimediaTypeProportion;
+use common\models\multimedia\searchs\MultimediaTypeProportionSearch;
+use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
+use yii\helpers\Html;
+use yii\web\View;
 
-/* @var $this yii\web\View */
-/* @var $searchModel common\models\multimedia\searchs\MultimediaProportionSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $this View */
+/* @var $searchModel MultimediaTypeProportionSearch */
+/* @var $dataProvider ActiveDataProvider */
 
-$this->title = Yii::t('rcoa/multimedia', 'Multimedia Proportions');
+$this->title = Yii::t('rcoa/multimedia', 'Multimedia Type Proportions');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="multimedia-proportion-index">
+<div class="multimedia-type-proportion-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('rcoa/multimedia', 'Create Multimedia Proportion'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('rcoa/multimedia', 'Create Multimedia Type Proportion'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -25,10 +29,29 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'name_type',
+            [
+                'attribute' => 'content_type',
+                'value' => function($model){
+                    /* @var $model MultimediaTypeProportion*/
+                    return $model->contentType->name;
+                }
+            ],
             'proportion',
-            'des',
-
+            [
+                'attribute' => 'created_at',
+                'value' => function($model){
+                    /* @var $model MultimediaTypeProportion*/
+                    return date('Y-m', $model->created_at);
+                }
+            ],
+            [
+                'attribute' => 'updated_at',
+                'value' => function($model){
+                    /* @var $model MultimediaTypeProportion*/
+                    return date('Y-m', $model->updated_at);
+                }
+            ],
+           
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

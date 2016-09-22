@@ -87,7 +87,7 @@ AppAsset::register($this);
         $menuItems[] = [
             'label' => Yii::t('rcoa/multimedia', 'Multimedia'),
             'items' => [
-                ['label' => Yii::t('rcoa/multimedia', 'Multimedia Proportions'), 'url' => '/multimedia/proportion'],
+                ['label' => Yii::t('rcoa/multimedia', 'Multimedia Content Types'), 'url' => '/multimedia/contenttype'],
                 ['label' => Yii::t('rcoa/multimedia', 'Multimedia Assign Teams'), 'url' => '/multimedia/assignteam'],
             ]
         ];

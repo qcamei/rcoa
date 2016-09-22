@@ -2,15 +2,18 @@
 
 namespace backend\modules\multimedia\controllers;
 
+use common\models\multimedia\MultimediaContentType;
+use common\models\multimedia\MultimediaTypeProportion;
+use common\models\multimedia\searchs\MultimediaTypeProportionSearch;
 use Yii;
-use common\models\multimedia\MultimediaProportion;
-use common\models\multimedia\searchs\MultimediaProportionSearch;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
- * ProportionController implements the CRUD actions for MultimediaProportion model.
+ * ProportionController implements the CRUD actions for MultimediaTypeProportion model.
  */
 class ProportionController extends Controller
 {
@@ -26,16 +29,26 @@ class ProportionController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+             //access验证是否有登录
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ],
         ];
     }
 
     /**
-     * Lists all MultimediaProportion models.
+     * Lists all MultimediaTypeProportion models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new MultimediaProportionSearch();
+        $searchModel = new MultimediaTypeProportionSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +58,7 @@ class ProportionController extends Controller
     }
 
     /**
-     * Displays a single MultimediaProportion model.
+     * Displays a single MultimediaTypeProportion model.
      * @param integer $id
      * @return mixed
      */
@@ -57,25 +70,27 @@ class ProportionController extends Controller
     }
 
     /**
-     * Creates a new MultimediaProportion model.
+     * Creates a new MultimediaTypeProportion model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($content_type)
     {
-        $model = new MultimediaProportion();
+        $model = new MultimediaTypeProportion();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['contenttype/view', 'id' => $model->content_type]);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'contentType' => $content_type,
+                'contentTypes' => $this->getContentType(),
             ]);
         }
     }
 
     /**
-     * Updates an existing MultimediaProportion model.
+     * Updates an existing MultimediaTypeProportion model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -85,40 +100,52 @@ class ProportionController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['contenttype/view', 'id' => $model->content_type]);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'contentTypes' => $this->getContentType(),
             ]);
         }
     }
 
     /**
-     * Deletes an existing MultimediaProportion model.
+     * Deletes an existing MultimediaTypeProportion model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['contenttype/view', 'id' => $model->content_type]);
     }
 
     /**
-     * Finds the MultimediaProportion model based on its primary key value.
+     * Finds the MultimediaTypeProportion model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return MultimediaProportion the loaded model
+     * @return MultimediaTypeProportion the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = MultimediaProportion::findOne($id)) !== null) {
+        if (($model = MultimediaTypeProportion::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    
+    /**
+     * 获取内容类型
+     * @return type
+     */
+    public function getContentType()
+    {
+        $contentType = MultimediaContentType::find()->all();
+        return ArrayHelper::map($contentType, 'id', 'name');
     }
 }

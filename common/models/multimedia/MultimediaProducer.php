@@ -14,7 +14,7 @@ use yii\db\ActiveRecord;
  * @property string $u_id                       制作人
  *
  * @property TeamMember $producer               获取团队制作人
- * @property MultimediaManage $task             获取制作任务
+ * @property MultimediaTask $task             获取制作任务
  */
 class MultimediaProducer extends ActiveRecord
 {
@@ -32,11 +32,10 @@ class MultimediaProducer extends ActiveRecord
     public function rules()
     {
         return [
-            [['task_id', 'u_id'], 'required'],
             [['task_id'], 'integer'],
             [['u_id'], 'string', 'max' => 36],
             [['u_id'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['u_id' => 'u_id']],
-            [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => MultimediaManage::className(), 'targetAttribute' => ['task_id' => 'id']],
+            [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => MultimediaTask::className(), 'targetAttribute' => ['task_id' => 'id']],
         ];
     }
 
@@ -66,6 +65,6 @@ class MultimediaProducer extends ActiveRecord
      */
     public function getTask()
     {
-        return $this->hasOne(MultimediaManage::className(), ['id' => 'task_id']);
+        return $this->hasOne(MultimediaTask::className(), ['id' => 'task_id']);
     }
 }
