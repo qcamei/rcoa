@@ -79,7 +79,8 @@ class CheckController extends Controller
     {
         /* @var $multimedia MultimediaTool */
         $multimedia = \Yii::$app->get('multimedia');
-        if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CREATE_CHECK))
+        if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CREATE_CHECK) 
+            && !$multimedia->getIsCheckStatus($task_id))
             throw new NotAcceptableHttpException('无权限操作！');
         
         $model = new MultimediaCheck();

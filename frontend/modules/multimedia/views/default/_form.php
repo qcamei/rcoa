@@ -1,14 +1,15 @@
 <?php
 
-use common\models\multimedia\MultimediaManage;
+use common\models\multimedia\MultimediaTask;
 use kartik\datecontrol\DateControl;
 use kartik\widgets\Select2;
+use wskeee\utils\DateUtil;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
 
 /* @var $this View */
-/* @var $model MultimediaManage */
+/* @var $model MultimediaTask */
 /* @var $form ActiveForm */
 ?>
 
@@ -16,7 +17,7 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin([
         'options'=>[
-            'id' => 'multimedia-manage-form',
+            'id' => 'multimedia-test-form',
             'class'=>'form-horizontal',
         ],
         'fieldConfig' => [  
@@ -51,7 +52,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'placeholder' => '请输入任务名称...']) ?>
 
-    <?= $form->field($model, 'video_length', [
+    <?= $form->field($model, 'material_video_length', [
         'labelOptions'=> [
             'style' => [
                 'color'=>'#999999',
@@ -60,21 +61,26 @@ use yii\widgets\ActiveForm;
                 'padding-left' => '0',
             ]
         ]
-    ])->textInput(['placeholder' => '00:00:00']) ?>
+    ])->textInput([
+        'value' => DateUtil::intToTime($model->material_video_length),
+        'placeholder' => '00:00:00'
+    ]) ?>
     
     <h5><b>开发信息</b></h5>
-    <?= $form->field($model, 'content_type')->textInput() ?>
+    <?= $form->field($model, 'content_type')->widget(Select2::className(), [
+        'data' => $contentType, 'hideSearch' => true, 'options' => ['placeholder' => '请选择内容类型...']
+    ]) ?>
 
     <?php
-        echo Html::beginTag('div', ['class' => 'form-group field-multimediamanage-carry_out_time has-success']);
+        echo Html::beginTag('div', ['class' => 'form-group field-MultimediaTask-carry_out_time has-success']);
             echo Html::beginTag('label', [
                     'class' => 'col-lg-1 col-md-1 control-label', 
                     'style' => 'color: #999999; font-weight: normal; padding-right: 0; padding-left: 0',
-                    'for' => 'multimediamanage-carry_out_time'
+                    'for' => 'MultimediaTask-carry_out_time'
                 ]).Yii::t('rcoa/multimedia', 'Carry Out Time').Html::endTag('label');
             echo Html::beginTag('div', ['class' => 'col-sm-4']);
                 echo DateControl::widget([
-                    'name' => 'MultimediaManage[carry_out_time]',
+                    'name' => 'MultimediaTask[carry_out_time]',
                     'value' => $model->isNewRecord ? date('Y-m-d H:i', strtotime('+1 days')) : $model->carry_out_time, 
                     'type'=> DateControl::FORMAT_DATETIME,
                     'displayFormat' => 'yyyy-MM-dd H:i',
@@ -98,7 +104,7 @@ use yii\widgets\ActiveForm;
         'placeholder' => '请输入框架表路径...'
     ]) ?>
     
-    <?= $form->field($model, 'level')->radioList(MultimediaManage::$levelName, [
+    <?= $form->field($model, 'level')->radioList(MultimediaTask::$levelName, [
         'separator'=>'',
         'itemOptions'=>[
             'labelOptions'=>[
@@ -122,19 +128,19 @@ use yii\widgets\ActiveForm;
 $js = 
 <<<JS
     /** 下拉选择【专业/工种】 */
-    $('#multimediamanage-item_id').change(function(){
+    $('#multimediatask-item_id').change(function(){
         var url = "/framework/api/search?id="+$(this).val(),
-            element = $('#multimediamanage-item_child_id');
-        $("#multimediamanage-item_child_id").html("");
-        $('#select2-multimediamanage-item_child_id-container').html('<span class="select2-selection__placeholder">请选择...</span>');
+            element = $('#multimediatask-item_child_id');
+        $("#multimediatask-item_child_id").html("");
+        $('#select2-multimediatask-item_child_id-container').html('<span class="select2-selection__placeholder">请选择...</span>');
         wx(url, element, '请选择...');
     });
     /** 下拉选择【课程】 */
-    $('#multimediamanage-item_child_id').change(function(){
+    $('#multimediatask-item_child_id').change(function(){
         var url = "/framework/api/search?id="+$(this).val(),
-            element = $('#multimediamanage-course_id');
-        $("#multimediamanage-course_id").html("");
-        $('#select2-multimediamanage-course_id-container').html('<span class="select2-selection__placeholder">请选择...</span>');
+            element = $('#multimediatask-course_id');
+        $("#multimediatask-course_id").html("");
+        $('#select2-multimediatask-course_id-container').html('<span class="select2-selection__placeholder">请选择...</span>');
         wx(url, element, '请选择...');
     });
      

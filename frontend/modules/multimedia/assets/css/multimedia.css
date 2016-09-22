@@ -1,12 +1,43 @@
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/* 
-    Created on : 2016-9-13, 13:59:34
-    Author     : Kiwi°
-*/
+/**
+ * 公共样式
+ */
+.wrap .multimedia-task{
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.team-span {
+    background-color: #333;
+    display: block;
+    width: 40px;
+    padding: 2px;
+    font-size: 12px;
+    text-align: center;
+    color: #fff;
+    border-radius: 5px;
+}
+.content-type {
+    background-color: rgba(243, 123, 83, 1);
+    display: block;
+    width: 30px;
+    font-size: 12px;
+    padding: 2px;
+    text-align: center;
+    color: #fff;
+    border-radius: 5px;
+}
+.course-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.table-list .table-list-progress{
+    height:20px;
+    margin:5px 0px;
+    border-radius:5px;
+}
+.table-list .progress {
+    background-image: linear-gradient(to bottom, #ddd, #ccc);
+}
 
 /** 
  *  footer 导航样式
@@ -52,4 +83,38 @@ and open the template in the editor.
 .footer-multimedia-navbar a:hover, a:focus {
     background-color: rgba(255, 255, 255, 0.46);;
     text-decoration: blink;
+}
+
+/**
+ * 任务详细页样式 
+ */
+.viewdetail-th
+{
+    color: #666666;
+    width: 20%;
+    font-weight: normal;
+    text-align: right;
+    min-width: 73px;
+}
+.viewdetail-th-head
+{
+    color: #000000;
+    width: 20%;
+    text-align: left;
+    font-weight: bold;
+}
+.viewdetail td
+{
+    width: 80%;
+    min-width: 100px;
+}
+.level {
+    color: #ff0000;
+}
+.proportion {
+    color: #999;
+    margin-left: 10px;
+}
+.complete-time {
+    color: #ff0000;
 }

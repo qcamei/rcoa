@@ -2,21 +2,31 @@
 
 namespace frontend\modules\multimedia\controllers;
 
-use common\models\multimedia\MultimediaManage;
-use common\models\multimedia\searchs\MultimediaManageSearch;
+use common\models\multimedia\MultimediaContentType;
+use common\models\multimedia\MultimediaProducer;
+use common\models\multimedia\MultimediaTask;
+use common\models\multimedia\MultimediaTypeProportion;
+use common\models\multimedia\searchs\MultimediaTaskSearch;
+use common\models\team\Team;
+use common\models\team\TeamMember;
+use frontend\modules\multimedia\MultimediaTool;
 use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\ItemType;
+use wskeee\rbac\RbacName;
 use Yii;
+use yii\data\ArrayDataProvider;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
+use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
 
 /**
- * DefaultController implements the CRUD actions for MultimediaManage model.
+ * DefaultController implements the CRUD actions for MultimediaTask model.
  */
 class DefaultController extends Controller
-{
+{    
     /**
      * @inheritdoc
      */
@@ -29,16 +39,26 @@ class DefaultController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+             //access验证是否有登录
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ],
         ];
     }
 
     /**
-     * Lists all MultimediaManage models.
+     * Lists all MultimediaTask models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new MultimediaManageSearch();
+        $searchModel = new MultimediaTaskSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -48,57 +68,93 @@ class DefaultController extends Controller
     }
     
     /**
-     * Personal Lists all MultimediaManage models.
+     * Personal Lists all MultimediaTask models.
      * @return mixed
      */
     public function actionPersonal()
     {
-        $searchModel = new MultimediaManageSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => MultimediaTask::find()->all(), 
+        ]);
+        
+        return $this->render('personal', [
             'dataProvider' => $dataProvider,
         ]);
     }
     
     /**
-     * Team Lists all MultimediaManage models.
+     * Team Lists all MultimediaTask models.
      * @return mixed
      */
     public function actionTeam()
     {
-        $searchModel = new MultimediaManageSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => MultimediaTask::find()->all(), 
+        ]);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
+        return $this->render('team', [
             'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Displays a single MultimediaManage model.
+     * Displays a single MultimediaTask model.
      * @param integer $id
      * @return mixed
      */
     public function actionView($id)
     {
+        /* @var $multimedia MultimediaTool */
+        $multimedia = \Yii::$app->get('multimedia');
+        $model = $this->findModel($id);
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'multimedia' => $multimedia,
+            'teams' => $this->getTeams(),
+            'workload' => $this->getWorkload($model, $model->content_type),
+            'producerList' => $this->getProducerList($model->make_team),
+            'producer' => $this->getAlreadyProducer($id),
         ]);
+    }
+    
+    /**
+     * 指派制作人员
+     * @param int $id           
+     */
+    public function actionAssign($id)
+    {
+        $model = $this->findModel($id);
+        $post = Yii::$app->request->post();
+        /* @var $multimedia MultimediaTool */
+        $multimedia = \Yii::$app->get('multimedia');
+        $model->status = MultimediaTask::STATUS_TOSTART;
+        $model->progress = MultimediaTask::$statusProgress[$model->status];
+        
+        if(\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_ASSIGN) && $multimedia->getIsAssignPerson($model->make_team)){
+            $multimedia->saveAssignTask($model, $post);
+            $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            throw new NotAcceptableHttpException('无权限操作！');
+        }
     }
 
     /**
-     * Creates a new MultimediaManage model.
+     * Creates a new MultimediaTask model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new MultimediaManage();
+        if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CREATE))
+            throw new NotAcceptableHttpException('无权限操作！');
+        $model = new MultimediaTask();
         $model->loadDefaultValues();
-        
+        /* @var $multimedia MultimediaTool */
+        $multimedia = \Yii::$app->get('multimedia');
+        $model->create_by = \Yii::$app->user->id;
+        $model->create_team = $multimedia->getHotelTeam($model->create_by);
+        $model->make_team = $model->create_team;
+        $model->progress = MultimediaTask::$statusProgress[$model->status];
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -108,12 +164,13 @@ class DefaultController extends Controller
                 'item' => $this->getItem(),
                 'itemChild' => [],
                 'course' => [],
+                'contentType' => $this->getContentType(),
             ]);
         }
     }
 
     /**
-     * Updates an existing MultimediaManage model.
+     * Updates an existing MultimediaTask model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -121,6 +178,8 @@ class DefaultController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_UPDATE) && $model->create_by != \Yii::$app->user->id)
+            throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -131,12 +190,153 @@ class DefaultController extends Controller
                 'item' => $this->getItem(),
                 'itemChild' => $this->getChildren($model->item_id),
                 'course' => $this->getChildren($model->item_child_id),
+                'contentType' => $this->getContentType(),
             ]);
         }
     }
+    
+    /**
+     * 寻求支撑
+     * @param type $id
+     * @return type
+     * @throws NotAcceptableHttpException
+     */
+    public function actionSeekBrace($id)
+    {
+        $model = $this->findModel($id);
+        /* @var $multimedia MultimediaTool */
+        $multimedia = \Yii::$app->get('multimedia');
+        if(!$multimedia->getIsAssignPerson($model->create_team))
+            throw new NotAcceptableHttpException('无权限操作！');
+        
+        $model->brace_mark = MultimediaTask::SEEK_BRACE_MARK;
+        if ($model->load(Yii::$app->request->post()) && $model->save(false, ['make_team', 'brace_mark']))
+            return $this->redirect(['view', 'id' => $model->id]);
+    }
+    
+    /**
+     * 取消支撑
+     * @param type $id
+     * @return type
+     * @throws NotAcceptableHttpException
+     */
+    public function actionCancelBrace($id)
+    {
+        $model = $this->findModel($id);
+        /* @var $multimedia MultimediaTool */
+        $multimedia = \Yii::$app->get('multimedia');
+        if(!$multimedia->getIsAssignPerson($model->create_team))
+            throw new NotAcceptableHttpException('无权限操作！');
+        
+        $model->brace_mark = MultimediaTask::CANCEL_BRACE_MARK;
+        $model->make_team = $model->create_team;
+        $model->save(false, ['brace_mark', 'make_team']);
+        return $this->redirect(['view', 'id' => $model->id]);
+    }
+    
+    /**
+     * 开始制作
+     * @param type $id
+     * @return type
+     * @throws NotAcceptableHttpException
+     */
+    public function actionStart($id)
+    {
+        $model = $this->findModel($id);
+        /* @var $multimedia MultimediaTool */
+        $multimedia = \Yii::$app->get('multimedia');
+        if(!$multimedia->getIsProducer($model->id))
+            throw new NotAcceptableHttpException('无权限操作！');
+        
+        $model->status = MultimediaTask::STATUS_WORKING;
+        $model->progress = MultimediaTask::$statusProgress[$model->status];
+        $model->save(false, ['status', 'progress']);
+        return $this->redirect(['view', 'id' => $model->id]);
+    }
+    
+    /**
+     * 完成制作, 提交制作任务
+     * @param type $id
+     * @return type
+     * @throws NotAcceptableHttpException
+     */
+    public function actionSubmit($id)
+    {
+        $model = $this->findModel($id);
+        /* @var $multimedia MultimediaTool */
+        $multimedia = \Yii::$app->get('multimedia');
+        if(!$multimedia->getIsProducer($model->id))
+            throw new NotAcceptableHttpException('无权限操作！');
+        
+        $model->status = MultimediaTask::STATUS_WAITCHECK;
+        $model->progress = MultimediaTask::$statusProgress[$model->status];
+        $model->save(false, ['status', 'progress']);
+        return $this->redirect(['view', 'id' => $model->id]);
+    }
+    
+    /**
+     * 完成任务操作
+     * @param type $id
+     * @return type
+     * @throws NotAcceptableHttpException
+     */
+    public function actionComplete($id)
+    {
+        $model = $this->findModel($id);
+        $model->scenario = MultimediaTask::SCENARIO_COMPLETE;
+        /* @var $multimedia MultimediaTool */
+        $multimedia = \Yii::$app->get('multimedia');
+        if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_COMPLETE) && $model->create_by != \Yii::$app->user->id)
+            throw new NotAcceptableHttpException('无权限操作！');
+        
+        $model->status = MultimediaTask::STATUS_COMPLETED;
+        $model->progress = MultimediaTask::$statusProgress[$model->status];
+        if ($model->load(Yii::$app->request->post()) && $model->save())        
+            return $this->redirect(['view', 'id' => $model->id]);
+    }
+    
+    /**
+     * 恢复任务制作操作
+     * @param type $id
+     * @return type
+     * @throws NotAcceptableHttpException
+     */
+    public function actionRecovery($id)
+    {
+        $model = $this->findModel($id);
+        /* @var $multimedia MultimediaTool */
+        $multimedia = \Yii::$app->get('multimedia');
+        if($model->create_by != \Yii::$app->user->id)
+            throw new NotAcceptableHttpException('无权限操作！');
+        
+        $model->status = MultimediaTask::STATUS_WAITCHECK;
+        //$model->progress = MultimediaTask::$statusProgress[$model->status];
+        $model->save(false, ['status']);
+        return $this->redirect(['view', 'id' => $model->id]);
+    }
+    
+    /**
+     * 取消任务
+     * @param type $id
+     * @return type
+     * @throws NotAcceptableHttpException
+     */
+    public function actionCancel($id)
+    {
+        $model = $this->findModel($id);
+        /* @var $multimedia MultimediaTool */
+        $multimedia = \Yii::$app->get('multimedia');
+        if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CANCEL) && $model->create_by != \Yii::$app->user->id)
+            throw new NotAcceptableHttpException('无权限操作！');
+        
+        $model->status = MultimediaTask::STATUS_CANCEL;
+        $model->progress = MultimediaTask::$statusProgress[$model->status];
+        $model->save();
+        return $this->redirect(['view', 'id' => $model->id]);
+    }
 
     /**
-     * Deletes an existing MultimediaManage model.
+     * Deletes an existing MultimediaTask model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -149,18 +349,18 @@ class DefaultController extends Controller
     }
 
     /**
-     * Finds the MultimediaManage model based on its primary key value.
+     * Finds the MultimediaTask model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return MultimediaManage the loaded model
+     * @return MultimediaTask the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = MultimediaManage::findOne($id)) !== null) {
+        if (($model = MultimediaTask::findOne($id)) !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            throw new NotFoundHttpException(\Yii::t('rcoa', 'The requested page does not exist.'));
         }
     }
     
@@ -195,5 +395,76 @@ class DefaultController extends Controller
         /* @var $fwManager FrameworkManager */
         $fwManager = Yii::$app->get('fwManager');
         return ArrayHelper::map($fwManager->getChildren($itemId), 'id', 'name');
+    }
+    
+    /**
+     * 获取内容类型
+     * @return type
+     */
+    public function getContentType()
+    {
+        $contentType = MultimediaContentType::find()
+                       ->with('multimediaTasks')
+                       ->with('proportions')
+                       ->all();
+        return ArrayHelper::map($contentType, 'id', 'name');
+    }
+    
+    /**
+     * 获取标准工作量
+     * @param type $model     
+     * @param type $contentType     任务内容类型
+     * @return array 
+     */
+    public function getWorkload($model, $contentType)
+    {
+        $proportionAll = MultimediaTypeProportion::find()
+                      ->where(['content_type' => $contentType])
+                      ->andWhere(['<=', 'created_at', $model->created_at])
+                      //->with('contentType')
+                      ->all();
+        $proportion = end($proportionAll);
+        $workload = $model->material_video_length * $proportion['proportion'];
+        return [$workload, $proportion];
+    }
+    
+    /**
+     * 获取所有团队
+     * @return type
+     */
+    public function getTeams(){
+        $team = Team::find()
+                ->where(['type' => 1])
+                ->all();
+        return ArrayHelper::map($team, 'id', 'name');
+    }
+
+    /**
+     * 获取制作团队下的所有制作人员
+     * @param type $makeTeam        制作团队
+     * @return type
+     */
+    public function getProducerList($makeTeam)
+    {
+        $producer = TeamMember::find()
+                    ->where(['team_id' => $makeTeam])
+                    ->andWhere(['position_id' => 3])
+                    ->with('u')
+                    ->all();
+        return ArrayHelper::map($producer, 'u_id', 'u.nickname');
+    }
+    
+    /**
+     * 获取已经指派的制作人
+     * @param type $taskId      任务ID
+     * @return type
+     */
+    public function getAlreadyProducer($taskId)
+    {
+        $producer = MultimediaProducer::find()
+                           ->where(['task_id' => $taskId])
+                           ->with('producer')
+                           ->all();
+        return ArrayHelper::map($producer, 'u_id', 'producer.u.nickname');
     }
 }

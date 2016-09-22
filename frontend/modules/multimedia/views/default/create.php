@@ -1,13 +1,13 @@
 <?php
 
-use common\models\multimedia\MultimediaManage;
+use common\models\multimedia\MultimediaTask;
 use frontend\modules\multimedia\MultimediaAsset;
 use yii\helpers\Html;
 use yii\web\View;
 
 
 /* @var $this View */
-/* @var $model MultimediaManage */
+/* @var $model MultimediaTask */
 
 $this->title = Yii::t('rcoa/multimedia', 'Create Multimedia Manage');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/multimedia', 'Multimedia Manages'), 'url' => ['index']];
@@ -28,6 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'item' => $item,
         'itemChild' => $itemChild,
         'course' => $course,
+        'contentType' => $contentType,
     ]) ?>
 
 </div>
@@ -47,7 +48,7 @@ $js =
 <<<JS
     $('#submit').click(function()
     {
-        $('#multimedia-manage-form').submit();
+        $('#multimedia-test-form').submit();
     });
     
 JS;
