@@ -79,8 +79,7 @@ class CheckController extends Controller
     {
         /* @var $multimedia MultimediaTool */
         $multimedia = \Yii::$app->get('multimedia');
-        if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CREATE_CHECK) 
-            && !$multimedia->getIsCheckStatus($task_id))
+        if($multimedia->getIsCheckStatus($task_id) || !\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CREATE_CHECK))
             throw new NotAcceptableHttpException('无权限操作！');
         
         $model = new MultimediaCheck();
@@ -132,6 +131,29 @@ class CheckController extends Controller
         
         $model->delete();
         return $this->redirect(['default/view', 'id' => $model->task_id]);
+    }
+    
+    /**
+     * 提交审核记录
+     * @param type $task_id     任务ID
+     * @throws NotAcceptableHttpException
+     */
+    public function actionSubmit($task_id)
+    {
+        /* @var $multimedia MultimediaTool */
+        $multimedia = \Yii::$app->get('multimedia');
+        if(!$multimedia->getIsProducer($task_id))
+            throw new NotAcceptableHttpException('无权限操作！');
+        
+        /* @var $model MultimediaCheck */
+        $model = MultimediaCheck::find()
+                 ->where(['task_id' => $task_id])
+                 ->andWhere(['status' => MultimediaCheck::STATUS_NOTCOMPLETE])
+                 ->one();
+        $model->carry_out_time = date('Y-m-d H:i', time());
+        $model->status = MultimediaCheck::STATUS_COMPLETE;
+        $model->save(false, ['carry_out_time', 'status']);
+        $this->redirect(['default/view', 'id' => $model->task_id]);
     }
 
     /**

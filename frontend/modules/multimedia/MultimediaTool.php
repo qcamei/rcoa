@@ -56,16 +56,16 @@ class MultimediaTool {
     }
     
     /**
-     * 获取审核记录是否完成
-     * @param type $taskId
-     * @return boolean
+     * 获取已存在的审核记录是否有未完成
+     * @param type $taskId      任务
+     * @return boolean          true 为是      
      */
     public function getIsCheckStatus ($taskId)
     {
         $status = MultimediaCheck::findAll(['task_id' => $taskId]);
         if(!empty($status) || isset($status)){
             foreach ($status as $value) {
-                if($value->status == MultimediaCheck::STATUS_COMPLETE)
+                if($value->status == MultimediaCheck::STATUS_NOTCOMPLETE)
                     return true;
             }
         }

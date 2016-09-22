@@ -68,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                     'style' => [
                         //'min-width' => '40px',
-                        'width' => '156px',
+                        'width' => '110px',
                         'padding' => '8px 2px'
                     ],
                 ],
@@ -76,7 +76,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     //'class'=> 'hidden-xs',
                     'style' => [
                         //'min-width' => '40px',
-                        'width' => '156px',
                         'padding' => '8px 2px'
                     ],
                 ],
@@ -112,14 +111,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'headerOptions' => [
                     'class'=>[
-                        'th'=>'hidden-xs',
+                        'th'=>'hidden-xs hidden-sm hidden-md',
                     ],
                     'style' => [
-                        'width' => '130px'  
+                        'width' => '110px'  
                     ],
                 ],
                 'contentOptions' =>[
-                    'class'=>'hidden-xs course-name',
+                    'class'=>'hidden-xs course-name hidden-sm hidden-md',
                 ],
             ],
             [
@@ -130,14 +129,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'headerOptions' => [
                     'class'=>[
-                        'th'=>'hidden-xs',
+                        'th'=>'hidden-xs hidden-sm hidden-md',
                     ],
                     'style' => [
-                        'width' => '130px'  
+                        'width' => '100px'  
                     ],
                 ],
                 'contentOptions' =>[
-                    'class'=>'hidden-xs course-name',
+                    'class'=>'hidden-xs course-name hidden-sm hidden-md',
                 ],
             ],
             [
@@ -148,14 +147,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'headerOptions' => [
                     'class'=>[
-                        'th'=>'hidden-xs',
+                        'th'=>'hidden-xs hidden-sm',
                     ],
                     'style' => [
-                        'width' => '145px'  
+                        'width' => '135px'  
                     ],
                 ],
                 'contentOptions' =>[
-                    'class'=>'hidden-xs course-name',
+                    'class'=>'hidden-xs course-name hidden-sm',
                 ],
             ],
             [
@@ -166,14 +165,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'headerOptions' => [
                     'class'=>[
-                        'th'=>'hidden-xs',
+                        'th'=>'hidden-xs hidden-sm',
                     ],
                     'style' => [
                         'width' => '145px'  
                     ],
                 ],
                 'contentOptions' =>[
-                    'class'=>'hidden-xs course-name',
+                    'class'=>'hidden-xs course-name hidden-sm',
                 ],
             ],
             [
@@ -198,16 +197,16 @@ $this->params['breadcrumbs'][] = $this->title;
                         //'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'min-width' => '74px',
-                        //'max-width' => '173px',
+                        //'min-width' => '74px',
+                        'max-width' => '160px',
                         'padding' => '8px 4px',
                     ],
                 ],
                 'contentOptions' =>[
                     //'class'=>'course-name',
                     'style' => [
-                        'min-width' => '74px',
-                        //'max-width' => '173px',
+                        //'min-width' => '74px',
+                        'max-width' => '160px',
                         'padding' => '2px 4px',
                     ],
                 ],
@@ -290,8 +289,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     'view' => function ($url, $model) {
                         /* @var $model MultimediaTask */
                         $options = [
-                            'class' => $model->getIsStatusAssign() ? 'btn btn-primary' : ($model->getIsStatusWaitCheck() ? 'btn btn-info'
-                                    : ($model->getIsStatusTostart() ? 'btn btn-success' : ($model->getIsStatusCompleted() ? 'btn btn-danger' : 'btn btn-default'))),
+                            'class' => $model->getIsStatusAssign() ? 'btn btn-primary btn-sm' : ($model->getIsStatusWaitCheck() ? 'btn btn-info btn-sm'
+                                    : ($model->getIsStatusTostart() ? 'btn btn-success btn-sm'  
+                                    : ($model->getIsStatusCompleted() ? 'btn btn-danger btn-sm' : 'btn btn-default btn-sm'))),
+                            'style' => 'width: 55px;'
                         ];
                         return Html::a(MultimediaTask::$statusNmae[$model->status], 
                             ['view', 'id' => $model->id], $options);
