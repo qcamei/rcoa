@@ -18,13 +18,16 @@ and open the template in the editor.
 .jumbotron .row {
     margin: 0px;
 }
-@media (min-width: 1200px){
+/*@media (min-width: 1200px){
     .row .col-lg-2 {
         width: 19.66666667%;
     }
-}
+}*/
 .row .modules-list {
     margin-top: 15px;
     margin-bottom: 10px;
 }
+/*.row .center-block {
+    margin: 0 20px;
+}*/
 

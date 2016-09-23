@@ -470,3 +470,78 @@ $_SERVER = [
     'REQUEST_TIME_FLOAT' => 1474610208.142
     'REQUEST_TIME' => 1474610208
 ]
+2016-09-23 14:19:59 [127.0.0.1][59][botkflqml2lok7rvq37d3tfcd7][error][yii\base\ErrorException:1] exception 'yii\base\ErrorException' with message 'Class 'TouchSpin' not found' in D:\wamp64\www\rcoa\backend\modules\news\views\default\_form.php:21
+Stack trace:
+#0 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(247): yii\base\View->renderPhpFile()
+#1 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(149): yii\base\View->renderFile()
+#2 D:\wamp64\www\rcoa\backend\modules\news\views\default\update.php(21): yii\base\View->render()
+#3 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(325): ::unknown()
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(247): yii\base\View->renderPhpFile()
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(149): yii\base\View->renderFile()
+#6 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(371): yii\base\View->render()
+#7 D:\wamp64\www\rcoa\backend\modules\news\controllers\DefaultController.php(103): yii\base\Controller->render()
+#8 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): backend\modules\news\controllers\DefaultController->actionUpdate()
+#9 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): ::call_user_func_array:{D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php:55}()
+#10 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(151): yii\base\InlineAction->runWithParams()
+#11 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(455): yii\base\Controller->runAction()
+#12 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(84): yii\base\Module->runAction()
+#13 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest()
+#14 D:\wamp64\www\rcoa\backend\web\index.php(20): yii\base\Application->run()
+#15 {main}
+2016-09-23 14:19:58 [127.0.0.1][59][botkflqml2lok7rvq37d3tfcd7][info][application] $_GET = [
+    'id' => '10'
+]
+
+$_COOKIE = [
+    '_csrf' => '2ec38e70ebbeff37ba9ab024e5e6d60369eb9d38838580a3bf0a6eeae4e6b659a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"vUxiAHDBZJWBtpgu76QpEm4zQTZhDQiw\";}'
+    'PHPSESSID' => 'botkflqml2lok7rvq37d3tfcd7'
+    '_identity' => 'd5cffe156f2dad9ac5eec6de6f0642beb5e3a218128a956d3647588cf54749aea:2:{i:0;s:9:\"_identity\";i:1;s:49:\"[\"59\",\"ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK\",2592000]\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => '59'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoaadmin.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.113 Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoaadmin.gzedu.net/news/default'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => '_csrf=2ec38e70ebbeff37ba9ab024e5e6d60369eb9d38838580a3bf0a6eeae4e6b659a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22vUxiAHDBZJWBtpgu76QpEm4zQTZhDQiw%22%3B%7D; PHPSESSID=botkflqml2lok7rvq37d3tfcd7; _identity=d5cffe156f2dad9ac5eec6de6f0642beb5e3a218128a956d3647588cf54749aea%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A49%3A%22%5B%2259%22%2C%22ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK%22%2C2592000%5D%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoaadmin.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoaadmin.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/backend/web/index.php'
+    'REMOTE_PORT' => '50112'
+    'REDIRECT_QUERY_STRING' => 'id=10'
+    'REDIRECT_URL' => 'http://tt.ccoaadmin.gzedu.net/news/default/update?id=10'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => 'id=10'
+    'REQUEST_URI' => '/news/default/update?id=10'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1474611598.743
+    'REQUEST_TIME' => 1474611598
+]

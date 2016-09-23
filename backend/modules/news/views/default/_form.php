@@ -1,6 +1,7 @@
 <?php
 
 use common\models\System;
+use kartik\widgets\TouchSpin;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
