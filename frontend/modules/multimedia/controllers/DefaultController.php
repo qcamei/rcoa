@@ -58,12 +58,15 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
+        /* @var $multimedia MultimediaTool */
+        $multimedia = \Yii::$app->get('multimedia');
         $searchModel = new MultimediaTaskSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'multimedia' => $multimedia,
         ]);
     }
     
@@ -71,14 +74,17 @@ class DefaultController extends Controller
      * Personal Lists all MultimediaTask models.
      * @return mixed
      */
-    public function actionPersonal()
+    public function actionPersonal($create_by, $producer, $assignPerson)
     {
+        /* @var $multimedia MultimediaTool */
+        $multimedia = \Yii::$app->get('multimedia');
         $dataProvider = new ArrayDataProvider([
-            'allModels' => MultimediaTask::find()->all(), 
+            'allModels' => $multimedia->getMultimediaTask($create_by, $producer, $assignPerson),
         ]);
         
         return $this->render('personal', [
             'dataProvider' => $dataProvider,
+            'multimedia' => $multimedia,
         ]);
     }
     
@@ -86,14 +92,18 @@ class DefaultController extends Controller
      * Team Lists all MultimediaTask models.
      * @return mixed
      */
-    public function actionTeam()
+    public function actionTeam($make_team = null, $create_team = null)
     {
+        /* @var $multimedia MultimediaTool */
+        $multimedia = \Yii::$app->get('multimedia');
         $dataProvider = new ArrayDataProvider([
-            'allModels' => MultimediaTask::find()->all(), 
+            'allModels' => $multimedia->getMultimediaTask($createBy = null, 
+                    $producer = null, $assignPerson = null, $make_team, $create_team), 
         ]);
 
         return $this->render('team', [
             'dataProvider' => $dataProvider,
+            'multimedia' => $multimedia,
         ]);
     }
 
@@ -420,7 +430,7 @@ class DefaultController extends Controller
     {
         $proportionAll = MultimediaTypeProportion::find()
                       ->where(['content_type' => $contentType])
-                      ->andWhere(['<=', 'created_at', $model->created_at])
+                      ->andWhere(['<=', 'target_month', date('Y-m', $model->created_at)])
                       //->with('contentType')
                       ->all();
         $proportion = end($proportionAll);

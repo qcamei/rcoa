@@ -1,14 +1,11 @@
 <?php
 
 use frontend\modules\multimedia\MultimediaAsset;
+use frontend\modules\multimedia\MultimediaTool;
 use wskeee\rbac\RbacName;
 use yii\helpers\Html;
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/* @var $multimedia MultimediaTool */
 ?>
 
 <div class="controlbar footer-multimedia-navbar" style="height: 50px;padding-top:0px; ">
@@ -21,12 +18,14 @@ use yii\helpers\Html;
                     ['class' => $actionId == 'index' 
                     ? 'footer-multimedia-xs footer-multimedia-bg visible-xs-inline-block' : 'footer-multimedia-xs visible-xs-inline-block']);
             
-            echo Html::a(Html::img(['/filedata/multimedia/image/personal.png']), ['personal'],  
+            echo Html::a(Html::img(['/filedata/multimedia/image/personal.png']), [
+                'personal', 'personal', 'create_by' => Yii::$app->user->id, 'producer' => Yii::$app->user->id, 'assignPerson' => Yii::$app->user->id],  
                     ['class' => $actionId == 'personal'? 
                         'footer-multimedia-xs footer-multimedia-bg visible-xs-inline-block' : 'footer-multimedia-xs visible-xs-inline-block']);
             
-            echo Html::a(Html::img(['/filedata/multimedia/image/team.png']), ['team'], [
-                    'class' => $actionId == 'team'? 
+            echo Html::a(Html::img(['/filedata/multimedia/image/team.png']), [
+                'team', 'make_team' => $multimedia->getHotelTeam(Yii::$app->user->id), 'create_team' => $multimedia->getHotelTeam(Yii::$app->user->id)], 
+                    ['class' => $actionId == 'team'? 
                         'footer-multimedia-xs footer-multimedia-bg visible-xs-inline-block' : 'footer-multimedia-xs visible-xs-inline-block']);
             
             echo Html::a(Html::img(['/filedata/multimedia/image/statistics.png']), ['/multimedia/statistics'], 
@@ -46,12 +45,14 @@ use yii\helpers\Html;
                     ['class' => $actionId == 'index' 
                     ? 'footer-multimedia footer-multimedia-bg hidden-xs' : 'footer-multimedia hidden-xs']);
             
-            echo Html::a(Html::img(['/filedata/multimedia/image/personal.png']).'个人', ['personal'],  
+            echo Html::a(Html::img(['/filedata/multimedia/image/personal.png']).'个人', [
+                'personal', 'create_by' => Yii::$app->user->id, 'producer' => Yii::$app->user->id, 'assignPerson' => Yii::$app->user->id],  
                     ['class' => $actionId == 'personal' ? 
                         'footer-multimedia footer-multimedia-bg hidden-xs' : 'footer-multimedia hidden-xs']);
             
-            echo Html::a(Html::img(['/filedata/multimedia/image/team.png']).'团队', ['team'], [
-                    'class' =>  $actionId == 'team' ? 
+            echo Html::a(Html::img(['/filedata/multimedia/image/team.png']).'团队', [
+                    'team', 'make_team' => $multimedia->getHotelTeam(Yii::$app->user->id), 'create_team' => $multimedia->getHotelTeam(Yii::$app->user->id)], 
+                    ['class' =>  $actionId == 'team' ? 
                         'footer-multimedia footer-multimedia-bg hidden-xs' : 'footer-multimedia hidden-xs']);
             
             echo Html::a(Html::img(['/filedata/multimedia/image/statistics.png']).'统计', ['/multimedia/statistics'], 

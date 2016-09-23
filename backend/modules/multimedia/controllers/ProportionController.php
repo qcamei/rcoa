@@ -76,9 +76,12 @@ class ProportionController extends Controller
      */
     public function actionCreate($content_type)
     {
+        if($this->getIsExistenceTargetMonth($content_type))
+            throw new NotFoundHttpException('在同一个月份请勿重复创建比例！');
+        
         $model = new MultimediaTypeProportion();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $model->target_month = date('Y-m', time());
+        if ($model->load(Yii::$app->request->post()) &&  $model->save()) {
             return $this->redirect(['contenttype/view', 'id' => $model->content_type]);
         } else {
             return $this->render('create', [
@@ -135,7 +138,7 @@ class ProportionController extends Controller
         if (($model = MultimediaTypeProportion::findOne($id)) !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            throw new NotFoundHttpException(\Yii::t('rcoa', 'The requested page does not exist.'));
         }
     }
     
@@ -147,5 +150,24 @@ class ProportionController extends Controller
     {
         $contentType = MultimediaContentType::find()->all();
         return ArrayHelper::map($contentType, 'id', 'name');
+    }
+    
+    /**
+     * 判断同一类型是否存在相同的月份
+     * @param type $contentType     任务内容类型
+     * @return type
+     * @throws NotFoundHttpException
+     */
+    public function getIsExistenceTargetMonth($contentType)
+    {
+        $proportion = MultimediaTypeProportion::findAll(['content_type' => $contentType]);
+        $targetMonth = [];
+        foreach ($proportion as $value) 
+            $targetMonth[] = $value->target_month;
+        
+        if(in_array(date('Y-m', time()), $targetMonth))
+            return true;
+        else
+            return false;
     }
 }

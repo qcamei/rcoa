@@ -169,7 +169,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         $options = [
                             'class' => 'btn btn-default',
                         ];
-                        return Html::a(Yii::t('rcoa', 'View'), 
+                        $icon = $model->status == MultimediaCheck::STATUS_COMPLETE ? 'icon task-complete' : 'icon working';
+                        return Html::a('<i class="'.$icon.'"></i>'.Yii::t('rcoa', 'View'), 
                             ['check/view', 'id' => $model->id], $options);
                     },
                 ],

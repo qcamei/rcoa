@@ -67,17 +67,24 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [
+                'label' => Yii::t('rcoa/multimedia', 'Target Month'),
+                'value' => function($model){
+                    /* @var $model MultimediaTypeProportion */
+                    return $model->target_month;
+                }
+            ],
+            [
                 'label' => Yii::t('rcoa/multimedia', 'Created At'),
                 'value' => function($model){
                     /* @var $model MultimediaTypeProportion */
-                    return date('Y-m', $model->created_at);
+                    return date('Y-m-d H:i', $model->created_at);
                 }
             ],
             [
                 'label' => Yii::t('rcoa/multimedia', 'Updated At'),
                 'value' => function($model){
                     /* @var $model MultimediaTypeProportion */
-                    return date('Y-m', $model->updated_at);
+                    return date('Y-m-d H:i', $model->updated_at);
                 }
             ],
             [

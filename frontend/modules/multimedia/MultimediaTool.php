@@ -13,6 +13,69 @@ use yii\web\NotFoundHttpException;
 
 class MultimediaTool {
     
+     /**
+     * 多媒体任务指派时
+     * @param type $model
+     * @param type $post
+     * @throws NotFoundHttpException
+     * @throws Exception
+     */
+    public function saveAssignTask($model, $post)
+    {
+        /* @var $model MultimediaTask */
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {
+            if($model->save(true, ['status', 'progress'])){
+                $this->emptyMultimediaProducer($model->id);
+                $this->saveMultimediaProducer($model->id, $post['producer']);
+            }else {
+                throw new Exception(json_encode($model->getErrors()));
+            }
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        } catch (Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            throw new NotFoundHttpException('保存任务失败！');//.$ex->getMessage());
+        }
+    }
+    
+    public function getMultimediaTask($createBy = null, $producer = null, $assignPerson = null, 
+        $makeTeam = null, $createTeam = null)
+    {
+        $result = MultimediaTask::find()
+                ->select(['Task.id', 'Task.item_type_id', 'Task.item_id', 'Task.item_child_id', 'Task.course_id',
+                    'Task.name', 'Task.progress', 'Task.content_type', 'Task.carry_out_time', 'Task.level',
+                    'Task.make_team', 'Task.status', 'Task.create_team', 'Task.create_by', 'AssignTeam.u_id',
+                    'Producer.u_id AS producer'
+                ])
+                ->from(['Task' => MultimediaTask::tableName()])
+                ->leftJoin(['AssignTeam' => MultimediaAssignTeam::tableName()], 
+                    '(Task.make_team = AssignTeam.team_id OR Task.create_team = AssignTeam.team_id)'
+                )
+                ->leftJoin(['Producer' => MultimediaProducer::tableName()], 'Task.id = Producer.task_id')
+                ->orFilterWhere(['Task.create_by' => $createBy])
+                ->orFilterWhere(['Producer.u_id' => $producer])
+                ->orFilterWhere(['AssignTeam.u_id' => $assignPerson])
+                ->orFilterWhere(['Task.make_team' => $makeTeam])
+                ->orFilterWhere(['Task.create_team' => $createTeam])
+                ->orderBy('Task.level desc')
+                ->with('contentType')
+                ->with('createTeam')
+                ->with('itemChild')
+                ->with('item')
+                ->with('itemType')
+                ->with('makeTeam')
+                ->with('course')
+                ->with('createBy')
+                ->with('multimediaChecks')
+                ->with('producers')
+                ->with('teamMember')
+                ->all();
+        return $result;
+    }
+
     /**
      * 获取当前用户所在的团队
      * @param type $uId         用户ID
@@ -20,7 +83,10 @@ class MultimediaTool {
      */
     public function getHotelTeam($uId){
         $team = TeamMember::findOne(['u_id' => $uId]);
-        return $team->team_id;
+        if(!empty($team))
+            return $team->team_id;
+        else 
+            return null;
     }
     
     /**
@@ -72,35 +138,6 @@ class MultimediaTool {
         return false;
     }
 
-
-    /**
-     * 多媒体任务指派时
-     * @param type $model
-     * @param type $post
-     * @throws NotFoundHttpException
-     * @throws Exception
-     */
-    public function saveAssignTask($model, $post)
-    {
-        /* @var $model MultimediaTask */
-        /** 开启事务 */
-        $trans = Yii::$app->db->beginTransaction();
-        try
-        {
-            if($model->save(true, ['status', 'progress'])){
-                $this->emptyMultimediaProducer($model->id);
-                $this->saveMultimediaProducer($model->id, $post['producer']);
-            }else {
-                throw new Exception(json_encode($model->getErrors()));
-            }
-            $trans->commit();  //提交事务
-            Yii::$app->getSession()->setFlash('success','操作成功！');
-        } catch (Exception $ex) {
-            $trans ->rollBack(); //回滚事务
-            throw new NotFoundHttpException('保存任务失败！');//.$ex->getMessage());
-        }
-    }
-    
     /**
      * 保存制作人到表里
      * @param type $taskId    任务ID

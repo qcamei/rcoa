@@ -12,7 +12,8 @@ use yii\db\ActiveRecord;
  *
  * @property integer $id                            ID
  * @property integer $content_type                  任务内容类型
- * @property string $proportion                     比例
+ * @property integer $proportion                    比例
+ * @property string $target_month                   目标月份
  * @property integer $created_at                    创建于
  * @property integer $updated_at                    更新于
  *
@@ -42,6 +43,7 @@ class MultimediaTypeProportion extends ActiveRecord
         return [
             [['content_type', 'created_at', 'updated_at'], 'integer'],
             [['proportion'], 'number'],
+            [['target_month'], 'string', 'max' => 10],
             [['content_type'], 'exist', 'skipOnError' => true, 'targetClass' => MultimediaContentType::className(), 'targetAttribute' => ['content_type' => 'id']],
         ];
     }
@@ -55,6 +57,7 @@ class MultimediaTypeProportion extends ActiveRecord
             'id' => Yii::t('rcoa/multimedia', 'ID'),
             'content_type' => Yii::t('rcoa/multimedia', 'Content Type'),
             'proportion' => Yii::t('rcoa/multimedia', 'Proportion'),
+            'target_month' => Yii::t('rcoa/multimedia', 'Target Month'),
             'created_at' => Yii::t('rcoa/multimedia', 'Created At'),
             'updated_at' => Yii::t('rcoa/multimedia', 'Updated At'),
         ];

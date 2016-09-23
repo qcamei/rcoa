@@ -316,7 +316,9 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
 </div>
 
-<?= $this->render('_footer'); ?>
+<?= $this->render('_footer', [
+    'multimedia' => $multimedia,
+]); ?>
 
 <?php
     MultimediaAsset::register($this);

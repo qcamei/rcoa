@@ -41,7 +41,7 @@ return[
     'Carry Out Time' => '要求完成时间',
     'Level' => '等级',
     'Make Team' => '制作团队',
-    'Producer' => '制作人员',
+    'Producer' => '制作人',
     'Status' => '状态',
     'Path' => '框架表路径',
     'Create Team' => '创建团队',
@@ -56,4 +56,5 @@ return[
     'Title' => '标题',
     'Task Name' => '任务名称',
     'Complete Time' => '完成时间',
+    'Target Month' => '目标月份'
 ];

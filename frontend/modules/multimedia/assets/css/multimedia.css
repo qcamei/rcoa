@@ -118,3 +118,24 @@
 .complete-time {
     color: #ff0000;
 }
+.icon {
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+    display: inline-block;
+    line-height: 1;
+    font-style: normal;
+    font-weight: normal;
+    color: #ccc;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-size: 15px 15px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.task-complete {
+    background-image: url('/filedata/multimedia/image/task_complete.png');
+}
+.working {
+    background-image: url('/filedata/multimedia/image/working.png');
+}
