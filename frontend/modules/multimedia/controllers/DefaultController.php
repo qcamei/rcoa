@@ -120,7 +120,7 @@ class DefaultController extends Controller
     {
         /* @var $multimedia MultimediaTool */
         $multimedia = \Yii::$app->get('multimedia');
-        $this->getTaskWorkloadAll();
+        //$this->getTaskWorkloadAll();
         $model = $this->findModel($id);
         return $this->render('view', [
             'model' => $model,

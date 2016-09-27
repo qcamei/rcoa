@@ -4,6 +4,10 @@
 .wrap .multimedia-task{
     padding-left: 0px;
     padding-right: 0px;
+    
+}
+.multimedia-task .table{
+    table-layout: fixed;
 }
 .team-span {
     background-color: #333;

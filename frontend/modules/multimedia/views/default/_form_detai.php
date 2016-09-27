@@ -109,7 +109,9 @@ foreach (MultimediaTask::$statusNmae as $key => $value) {
                 'label' => Yii::t('rcoa/multimedia', 'Producer'),
                 'format' => 'raw',
                 'value' =>  Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_ASSIGN) && $model->getIsStatusAssign()
-                            && ($multimedia->getIsAssignPerson($model->make_team) || $model->brace_mark == MultimediaTask::CANCEL_BRACE_MARK) ? 
+                            && $multimedia->getIsAssignPerson($model->make_team) 
+                            && ($model->brace_mark == MultimediaTask::CANCEL_BRACE_MARK 
+                            || $model->make_team != $model->create_team) ? 
                             Select2::widget([
                                 'id' => 'producer-select',
                                 'name' => 'producer[]',
