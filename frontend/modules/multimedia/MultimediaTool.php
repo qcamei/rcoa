@@ -6,9 +6,14 @@ use common\models\multimedia\MultimediaAssignTeam;
 use common\models\multimedia\MultimediaCheck;
 use common\models\multimedia\MultimediaProducer;
 use common\models\multimedia\MultimediaTask;
+use common\models\multimedia\MultimediaTypeProportion;
+use common\models\team\Team;
 use common\models\team\TeamMember;
+use wskeee\utils\DateUtil;
 use Yii;
 use yii\db\Exception;
+use yii\db\Query;
+use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 
 class MultimediaTool {
@@ -41,8 +46,18 @@ class MultimediaTool {
         }
     }
     
+    /**
+     * 查询所有任务
+     * @param type $createBy            创建者
+     * @param type $producer            制作人员
+     * @param type $assignPerson        指派人
+     * @param type $makeTeam            制作团队
+     * @param type $createTeam          创建团队
+     * @param array $status             状态
+     * @return type
+     */
     public function getMultimediaTask($createBy = null, $producer = null, $assignPerson = null, 
-        $makeTeam = null, $createTeam = null)
+        $makeTeam = null, $createTeam = null, $status = [])
     {
         $result = MultimediaTask::find()
                 ->select(['Task.id', 'Task.item_type_id', 'Task.item_id', 'Task.item_child_id', 'Task.course_id',
@@ -60,6 +75,7 @@ class MultimediaTool {
                 ->orFilterWhere(['AssignTeam.u_id' => $assignPerson])
                 ->orFilterWhere(['Task.make_team' => $makeTeam])
                 ->orFilterWhere(['Task.create_team' => $createTeam])
+                ->andFilterWhere(['IN', 'Task.status', $status])
                 ->orderBy('Task.level desc')
                 ->with('contentType')
                 ->with('createTeam')
@@ -136,6 +152,40 @@ class MultimediaTool {
             }
         }
         return false;
+    }
+    
+    /**
+     * 获取所有团队的标准工作量
+     * @param boolean $isRecommend     true为推荐, false为统计
+     * @param type $team               团队
+     * @return type
+     */
+    public function getTeamTaskWorkload($isRecommend = true, $team = null)
+    {
+        $query = (new Query());
+                 $query->select([
+                    'Team.id',
+                    '(Task_workload.video_length * Task_workload.proportion) AS total',
+                    'FORMAT((Task_workload.video_length * Task_workload.proportion) * (Task_workload.progress / 100),2) AS surplus'
+                 ])
+                 ->from(['Team' => Team::tableName()])
+                 ->leftJoin([
+                    'Task_workload' => $this->getTaskWorkloadAll()
+                ], 'Task_workload.make_team = Team.id')
+                 ->where(['Team.type' => 1])
+                 ->andFilterWhere(['Team.id' => $team]);
+      
+        if($isRecommend && $team == null){
+            $query->groupBy('Task_workload.id');
+            $result = $query->all();
+            
+            $total = ArrayHelper::getColumn($result, 'total');
+            var_dump($total);
+            var_dump(array_sum($total));exit;
+        }else {
+            $query->groupBy('Team.id, Workload.content_type');
+            return $query->all();
+        }
     }
 
     /**

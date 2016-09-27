@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="title">
-    <div class="container">
+    <div class="container course-name">
         <?= $this->title ?>
     </div>
 </div>

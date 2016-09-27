@@ -12,6 +12,29 @@ use yii\widgets\DetailView;
 /* @var $this View */
 /* @var $model MultimediaTask */
 
+$statusProgress = '';
+foreach (MultimediaTask::$statusNmae as $key => $value) {
+    $isHidden = $key != $model->status ? ' hidden-xs' : '';
+    $isHiddenCancel = $key == MultimediaTask::STATUS_CANCEL ? ' hidden-lg hidden-md hidden-sm' : '';
+    $progress = $key != MultimediaTask::STATUS_CANCEL ? MultimediaTask::$statusProgress[$key] : $model->progress;
+    if($model->status == MultimediaTask::STATUS_CANCEL){
+        $statusProgress =  '<div class="status-progress-div have-to">'
+                            .'<p class="have-to-status">'.$value.'</p><p class="progress-strip">('
+                            .$progress.'%)</p></div>';
+    }else if($key <= $model->status) {
+        $statusProgress .=  '<div class="status-progress-div have-to'.$isHidden.$isHiddenCancel.'">'
+                            .'<p class="have-to-status">'.$value.'</p><p class="progress-strip">('
+                            .$progress.'%)</p></div>';
+    }else{
+        $statusProgress .=  '<div class="status-progress-div not-to'.$isHidden.$isHiddenCancel.'">'
+                            .'<p class="not-to-status">'.$value.'</p></div>';
+    }
+    if($key == MultimediaTask::STATUS_COMPLETED || $key == MultimediaTask::STATUS_CANCEL)
+        $statusProgress .= '';
+    else
+        $statusProgress .= '<img src="/filedata/multimedia/image/direction-arrow.png" class="direction-arrow hidden-xs" />';
+        
+}
 ?>
 <?php $form = ActiveForm::begin(['id' => 'form-assign', 'action'=>'assign?id='.$model->id]); ?>
 
@@ -86,7 +109,7 @@ use yii\widgets\DetailView;
                 'label' => Yii::t('rcoa/multimedia', 'Producer'),
                 'format' => 'raw',
                 'value' =>  Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_ASSIGN) && $model->getIsStatusAssign()
-                            && $multimedia->getIsAssignPerson($model->make_team) && $model->brace_mark == MultimediaTask::CANCEL_BRACE_MARK ? 
+                            && ($multimedia->getIsAssignPerson($model->make_team) || $model->brace_mark == MultimediaTask::CANCEL_BRACE_MARK) ? 
                             Select2::widget([
                                 'id' => 'producer-select',
                                 'name' => 'producer[]',
@@ -94,7 +117,7 @@ use yii\widgets\DetailView;
                                 'data' => $producerList,
                                 'options' => [
                                     'placeholder' => '请选择制作人...',
-                                    'multiple' => true
+                                    //'multiple' => true
                                 ],
                                 'toggleAllSettings' => [
                                     'selectLabel' => '<i class="glyphicon glyphicon-ok-circle"></i> 添加全部',
@@ -110,13 +133,9 @@ use yii\widgets\DetailView;
                             ]) : (!empty($producer) ? implode(',', $producer) : '空'),
             ],
             [
-                'attribute' => 'progress',
+                'label' => Yii::t('rcoa/multimedia', 'Status').Yii::t('rcoa/multimedia', 'Progress'),
                 'format' => 'raw',
-                'value' => $model->progress.'%',
-            ],
-            [
-                'attribute' => 'status',
-                'value' => MultimediaTask::$statusNmae[$model->status],
+                'value' => $statusProgress,
             ],
             [
                 'attribute' => 'path',
@@ -143,7 +162,7 @@ use yii\widgets\DetailView;
             [
                 'attribute' => 'des',
                 'format' => 'raw',
-                'value' => '<div style="height:65px;">'.$model->des.'</div>',
+                'value' => '<div style="height:65px; vertical-align:middle; display:table-cell">'.$model->des.'</div>',
             ],
         ]   
     ]); 

@@ -15,6 +15,7 @@ use wskeee\framework\models\ItemType;
 use wskeee\rbac\RbacName;
 use Yii;
 use yii\data\ArrayDataProvider;
+use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -74,12 +75,14 @@ class DefaultController extends Controller
      * Personal Lists all MultimediaTask models.
      * @return mixed
      */
-    public function actionPersonal($create_by, $producer, $assignPerson)
+    public function actionPersonal($create_by, $producer, $assignPerson, $status = null)
     {
         /* @var $multimedia MultimediaTool */
         $multimedia = \Yii::$app->get('multimedia');
+        $status = $status == null ? MultimediaTask::$defaultStatus : $status;
         $dataProvider = new ArrayDataProvider([
-            'allModels' => $multimedia->getMultimediaTask($create_by, $producer, $assignPerson),
+            'allModels' => $multimedia->getMultimediaTask($create_by, $producer, $assignPerson, 
+                    $makeTeam = null, $createTeam = null, $status),
         ]);
         
         return $this->render('personal', [
@@ -92,13 +95,14 @@ class DefaultController extends Controller
      * Team Lists all MultimediaTask models.
      * @return mixed
      */
-    public function actionTeam($make_team = null, $create_team = null)
+    public function actionTeam($make_team = null, $create_team = null, $status = null)
     {
         /* @var $multimedia MultimediaTool */
         $multimedia = \Yii::$app->get('multimedia');
+        $status = $status == null ? MultimediaTask::$defaultStatus : $status;
         $dataProvider = new ArrayDataProvider([
             'allModels' => $multimedia->getMultimediaTask($createBy = null, 
-                    $producer = null, $assignPerson = null, $make_team, $create_team), 
+                    $producer = null, $assignPerson = null, $make_team, $create_team, $status), 
         ]);
 
         return $this->render('team', [
@@ -116,12 +120,13 @@ class DefaultController extends Controller
     {
         /* @var $multimedia MultimediaTool */
         $multimedia = \Yii::$app->get('multimedia');
+        $this->getTaskWorkloadAll();
         $model = $this->findModel($id);
         return $this->render('view', [
             'model' => $model,
             'multimedia' => $multimedia,
             'teams' => $this->getTeams(),
-            'workload' => $this->getWorkload($model, $model->content_type),
+            'workload' => $this->getWorkloadOne($model, $model->content_type),
             'producerList' => $this->getProducerList($model->make_team),
             'producer' => $this->getAlreadyProducer($id),
         ]);
@@ -340,8 +345,7 @@ class DefaultController extends Controller
             throw new NotAcceptableHttpException('无权限操作！');
         
         $model->status = MultimediaTask::STATUS_CANCEL;
-        $model->progress = MultimediaTask::$statusProgress[$model->status];
-        $model->save();
+        $model->save(false, ['status']);
         return $this->redirect(['view', 'id' => $model->id]);
     }
 
@@ -421,22 +425,60 @@ class DefaultController extends Controller
     }
     
     /**
+     * 获取所有任务的标准工作量
+     * @return type
+     
+    public function getTaskWorkloadAll() 
+    {
+        $result = (new Query())
+                  ->select(['id', 'material_video_length', 'progress'])
+                  ->from(MultimediaTask::tableName())
+                  ->where(['NOT IN', 'status', [ MultimediaTask::STATUS_COMPLETED, MultimediaTask::STATUS_CANCEL]])
+                  ->andWhere(['IN', 'content_type', ArrayHelper::getColumn($this->getProportion(), 'content_type')])
+                  ->all();
+        
+        $workload = [];
+        //var_dump(ArrayHelper::getColumn($this->getProportion(), 'proportion'));exit;
+        /*foreach ($result as $value) {
+            $workload[$value['id']] = [
+                'total' => (int)($value['material_video_length'] * ArrayHelper::getColumn($this->getProportion(), 'proportion')),
+                //'surplus' => (int)(($value['video_length'] * $value['proportion']) * ($value['progress'] / 100)),
+            ];
+        }
+        //var_dump($result);
+        //return $workload;
+    }*/
+    
+    /**
+     * 获取所有内容类型比例
+     * @return type
+     
+    public function getProportion()
+    {
+        $result = (new Query())
+                     ->select(['content_type', 'proportion'])
+                     ->from(MultimediaTypeProportion::tableName())
+                     ->orderBy('target_month desc')
+                     ->all();
+        return $result;   
+    }*/
+    
+    /**
      * 获取标准工作量
      * @param type $model     
      * @param type $contentType     任务内容类型
      * @return array 
      */
-    public function getWorkload($model, $contentType)
+    public function getWorkloadOne($model = null, $contentType = null)
     {
         $proportionAll = MultimediaTypeProportion::find()
-                      ->where(['content_type' => $contentType])
-                      ->andWhere(['<=', 'target_month', date('Y-m', $model->created_at)])
-                      //->with('contentType')
+                      ->filterWhere(['content_type' => $contentType])
+                      ->andFilterWhere(['<=', 'target_month', date('Y-m', $model->created_at)])
                       ->all();
         $proportion = end($proportionAll);
         $workload = $model->material_video_length * $proportion['proportion'];
         return [$workload, $proportion];
-    }
+    }    
     
     /**
      * 获取所有团队

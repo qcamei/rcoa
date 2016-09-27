@@ -76,12 +76,32 @@ class MultimediaTask extends ActiveRecord
     const STATUS_CANCEL = 99;
     
     /**
+     * 总的标准工作量
+     * @var number 
+     
+    public $total_workloa;*/
+    /**
+     * 剩余的标准工作量
+     * @var number 
+     
+    public $surplus_workloa;*/
+    /**
      * 等级名称
      * @var  array
      */
     public static $levelName = [
         self::LEVEL_ORDINARY => '普通',
         self::LEVEL_URGENT => '加急',
+    ];
+    /**
+     * 默认状态
+     * @var array 
+     */
+    public static $defaultStatus = [
+        self::STATUS_ASSIGN,
+        self::STATUS_TOSTART,
+        self::STATUS_WORKING,
+        self::STATUS_WAITCHECK,
     ];
     /**
      * 状态名称
@@ -105,7 +125,6 @@ class MultimediaTask extends ActiveRecord
         self::STATUS_WORKING => 10,
         self::STATUS_WAITCHECK => 80,
         self::STATUS_COMPLETED => 100,
-        self::STATUS_CANCEL => '',
     ];
 
     /**
