@@ -33,11 +33,11 @@ use yii\helpers\Html;
             /**
              * 取消 按钮显示必须满足以下条件：
              * 1、拥有取消的权限
-             * 2、状态必须是在【制作中】
+             * 2、状态必须非在【待审核】or【已完成】or【已取消】
              * 3、创建者是自己
              */
             if(Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CANCEL) 
-               && !($model->getIsStatusCompleted() || $model->getIsStatusCancel() || $model->getIsStatusWaitCheck()) 
+               && !($model->getIsStatusWaitCheck() || $model->getIsStatusCompleted() || $model->getIsStatusCancel()) 
                && $model->create_by == Yii::$app->user->id)
                 echo Html::a('取消', 'javascript:;', ['id' => 'cancel', 'class' =>'btn btn-danger']).' ';
             /**

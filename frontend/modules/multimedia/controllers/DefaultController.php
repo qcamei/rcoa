@@ -326,10 +326,9 @@ class DefaultController extends Controller
         
         $model->status = MultimediaTask::STATUS_COMPLETED;
         $model->progress = $model->getStatusProgress();
-        if ($model->load(Yii::$app->request->post()) && $model->save()){
-            $jobManager->updateJob(10, $model->id, ['progress'=> $model->progress, 'status'=>$model->getStatusName()]);
-            return $this->redirect(['personal', 'create_by' => $model->create_by]);
-        }
+        if($model->load(Yii::$app->request->post()))
+            $multimedia->saveCompleteTask($model);
+        return $this->redirect(['personal', 'create_by' => $model->create_by]);
     }
     
     /**
@@ -347,7 +346,6 @@ class DefaultController extends Controller
             throw new NotAcceptableHttpException('无权限操作！');
         
         $model->status = MultimediaTask::STATUS_WAITCHECK;
-        //$model->progress = MultimediaTask::$statusProgress[$model->status];
         $model->save(false, ['status']);
         return $this->redirect(['view', 'id' => $model->id]);
     }
