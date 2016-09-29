@@ -37,7 +37,8 @@ use yii\helpers\Html;
              * 3、创建者是自己
              */
             if(Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CANCEL) 
-               && !($model->getIsStatusCompleted() || $model->getIsStatusCancel()) && $model->create_by == Yii::$app->user->id)
+               && !($model->getIsStatusCompleted() || $model->getIsStatusCancel() || $model->getIsStatusWaitCheck()) 
+               && $model->create_by == Yii::$app->user->id)
                 echo Html::a('取消', 'javascript:;', ['id' => 'cancel', 'class' =>'btn btn-danger']).' ';
             /**
              * 添加审核 按钮显示必须满足以下条件：

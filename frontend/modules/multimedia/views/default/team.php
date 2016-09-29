@@ -53,9 +53,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value'=> function($model){
                     /* @var $model MultimediaTask */
                     return $model->make_team != $model->create_team ? 
-                           '<span class="team-span hidden-xs" style="float: left;">'.$model->createTeam->name.'</span>'.
+                           '<span class="team-span" style="float: left;">'.$model->createTeam->name.'</span>'.
                            Html::img(['/filedata/multimedia/image/brace.png'], [
-                               'class' => 'hidden-xs', 
                                'width' => '15', 
                                'height' => '15', 
                                'style' => 'float: left; margin: 3px 3px;'
@@ -68,7 +67,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                     'style' => [
                         //'min-width' => '40px',
-                        'width' => '110px',
+                        'width' => '105px',
                         'padding' => '8px 2px'
                     ],
                 ],

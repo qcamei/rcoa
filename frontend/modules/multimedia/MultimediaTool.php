@@ -157,6 +157,36 @@ class MultimediaTool {
     }
     
     /**
+     * 多媒体任务开始制作时
+     * @param MultimediaTask $model
+     * @throws NotFoundHttpException
+     * @throws Exception
+     */
+    public function saveStartMakeTask($model)
+    {
+        /* @var $model MultimediaTask */
+        /* @var $multimediaNotice MultimediaNoticeTool */
+        $multimediaNotice = \Yii::$app->get('multimediaNotice');
+        /* @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {
+            if($model->save(false, ['status', 'progress'])){
+                $jobManager->updateJob(10, $model->id, ['progress'=> $model->progress, 'status'=>$model->getStatusName()]);
+            }else {
+                throw new Exception(json_encode($model->getErrors()));
+            }
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        } catch (Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            throw new NotFoundHttpException('保存任务失败！');//.$ex->getMessage());
+        }
+    }
+    
+    /**
      * 多媒体任务提交制作时
      * @param MultimediaTask $model
      * @throws NotFoundHttpException

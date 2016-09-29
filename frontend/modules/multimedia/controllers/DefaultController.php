@@ -283,8 +283,7 @@ class DefaultController extends Controller
         
         $model->status = MultimediaTask::STATUS_WORKING;
         $model->progress = $model->getStatusProgress();
-        if($model->save(false, ['status', 'progress']))
-            $jobManager->updateJob(10, $model->id, ['progress'=> $model->progress, 'status'=>$model->getStatusName()]);
+        $multimedia->saveStartMakeTask($model);
         return $this->redirect(['view', 'id' => $model->id]);
     }
     
