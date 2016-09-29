@@ -40,6 +40,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
     ])?>
     
+    <?= $this->render('_form_cancel_model', [
+        'model' => $model,
+    ])?>
+    
     <h4>审核记录</h4>
     <?= GridView::widget([
         'dataProvider' => new ArrayDataProvider([
@@ -204,7 +208,12 @@ $js =
     /** 指派操作 */
     $('#submit').click(function()
     {
-        $('#form-assign').submit();
+        var  myselect = document.getElementById("producer-select");
+        var index = myselect.selectedIndex;
+        if(index > 0)
+            $('#form-assign').submit();
+        else
+            alert('请选择制作人！');
     });
         
     /** 支撑操作 close关闭模态款的 */
@@ -251,6 +260,29 @@ $js =
     $("#completeModal .modal-footer #complete-save").click(function()
     {
         $('#form-complete').submit();
+    });
+    
+    /** 取消操作 close关闭模态款的 */
+    $("#cancelModal .modal-header .close").click(function()
+    {
+        window.location.reload();
+    });
+    /** 取消操作 关闭模态框后重新加载页面 */
+    $("#cancelModal .modal-footer #cancel-close").click(function()
+    {
+        window.location.reload();
+    });
+        
+    /** 取消操作 弹出模态框 */
+    $('#cancel').click(function()
+    {
+        $('#cancelModal').modal();
+    });
+        
+    /** 取消操作 提交表单 */
+    $("#cancelModal .modal-footer #cancel-save").click(function()
+    {
+        $('#form-cancel').submit();
     });
 JS;
     $this->registerJs($js,  View::POS_READY);

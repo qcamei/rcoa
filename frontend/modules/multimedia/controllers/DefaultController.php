@@ -126,12 +126,12 @@ class DefaultController extends Controller
         $model = $this->findModel($id);
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
-        if(!$model->getIsStatusCompleted() || !$model->getIsStatusCancel() ){
-            //设置用户对通知已读
-            $jobManager->setNotificationHasReady(10, Yii::$app->user->id, $model->id);  
-        }else {
+        if($model->getIsStatusCompleted() || $model->getIsStatusCancel() ){
             //取消用户与任务通知的关联
             $jobManager->cancelNotification(10, $model->id, Yii::$app->user->id); 
+        }else {
+            //设置用户对通知已读
+            $jobManager->setNotificationHasReady(10, Yii::$app->user->id, $model->id);  
         }
         
         return $this->render('view', [
@@ -276,12 +276,14 @@ class DefaultController extends Controller
         $model = $this->findModel($id);
         /* @var $multimedia MultimediaTool */
         $multimedia = \Yii::$app->get('multimedia');
+        /* @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
         if(!$multimedia->getIsProducer($model->id))
             throw new NotAcceptableHttpException('无权限操作！');
         
         $model->status = MultimediaTask::STATUS_WORKING;
         $model->progress = $model->getStatusProgress();
-        $model->save(false, ['status', 'progress']);
+        $multimedia->saveStartMakeTask($model);
         return $this->redirect(['view', 'id' => $model->id]);
     }
     
@@ -301,8 +303,8 @@ class DefaultController extends Controller
         
         $model->status = MultimediaTask::STATUS_WAITCHECK;
         $model->progress = $model->getStatusProgress();
-        $model->save(false, ['status', 'progress']);
-        return $this->redirect(['view', 'id' => $model->id]);
+        $multimedia->saveSubmitMakeTask($model);
+        return $this->redirect(['personal', 'producer' => Yii::$app->user->id]);
     }
     
     /**
@@ -317,13 +319,17 @@ class DefaultController extends Controller
         $model->scenario = MultimediaTask::SCENARIO_COMPLETE;
         /* @var $multimedia MultimediaTool */
         $multimedia = \Yii::$app->get('multimedia');
+        /* @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
         if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_COMPLETE) && $model->create_by != \Yii::$app->user->id)
             throw new NotAcceptableHttpException('无权限操作！');
         
         $model->status = MultimediaTask::STATUS_COMPLETED;
         $model->progress = $model->getStatusProgress();
-        if ($model->load(Yii::$app->request->post()) && $model->save())        
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post()) && $model->save()){
+            $jobManager->updateJob(10, $model->id, ['progress'=> $model->progress, 'status'=>$model->getStatusName()]);
+            return $this->redirect(['personal', 'create_by' => $model->create_by]);
+        }
     }
     
     /**
@@ -360,9 +366,10 @@ class DefaultController extends Controller
         if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CANCEL) && $model->create_by != \Yii::$app->user->id)
             throw new NotAcceptableHttpException('无权限操作！');
         
+        $cancel = ArrayHelper::getValue(Yii::$app->request->post(), 'reason');
         $model->status = MultimediaTask::STATUS_CANCEL;
-        $model->save(false, ['status']);
-        return $this->redirect(['view', 'id' => $model->id]);
+        $multimedia->saveCancelTask($model, $cancel);
+        return $this->redirect(['personal', 'create_by' => $model->create_by]);
     }
 
     /**
@@ -439,45 +446,6 @@ class DefaultController extends Controller
                        ->all();
         return ArrayHelper::map($contentType, 'id', 'name');
     }
-    
-    /**
-     * 获取所有任务的标准工作量
-     * @return type
-     
-    public function getTaskWorkloadAll() 
-    {
-        $result = (new Query())
-                  ->select(['id', 'material_video_length', 'progress'])
-                  ->from(MultimediaTask::tableName())
-                  ->where(['NOT IN', 'status', [ MultimediaTask::STATUS_COMPLETED, MultimediaTask::STATUS_CANCEL]])
-                  ->andWhere(['IN', 'content_type', ArrayHelper::getColumn($this->getProportion(), 'content_type')])
-                  ->all();
-        
-        $workload = [];
-        //var_dump(ArrayHelper::getColumn($this->getProportion(), 'proportion'));exit;
-        /*foreach ($result as $value) {
-            $workload[$value['id']] = [
-                'total' => (int)($value['material_video_length'] * ArrayHelper::getColumn($this->getProportion(), 'proportion')),
-                //'surplus' => (int)(($value['video_length'] * $value['proportion']) * ($value['progress'] / 100)),
-            ];
-        }
-        //var_dump($result);
-        //return $workload;
-    }*/
-    
-    /**
-     * 获取所有内容类型比例
-     * @return type
-     
-    public function getProportion()
-    {
-        $result = (new Query())
-                     ->select(['content_type', 'proportion'])
-                     ->from(MultimediaTypeProportion::tableName())
-                     ->orderBy('target_month desc')
-                     ->all();
-        return $result;   
-    }*/
     
     /**
      * 获取标准工作量

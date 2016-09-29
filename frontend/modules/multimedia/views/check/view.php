@@ -54,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'remark',
                 'format' => 'raw',
-                'value' => '<div style="height:65px;">'.$model->remark.'</div>',
+                'value' => '<div style="height:65px; vertical-align:middle; display:table-cell">'.$model->remark.'</div>',
             ],
         ],
     ]) ?>
