@@ -294,8 +294,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     : ($model->getIsStatusCompleted() ? 'btn btn-danger btn-sm' : 'btn btn-default btn-sm'))),
                             'style' => 'width: 55px;'
                         ];
-                        return Html::a(MultimediaTask::$statusNmae[$model->status], 
-                            ['view', 'id' => $model->id], $options);
+                        return Html::a($model->getStatusName(), ['view', 'id' => $model->id], $options);
                     },
                 ],
                 'headerOptions' => [

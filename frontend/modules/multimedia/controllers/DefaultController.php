@@ -9,13 +9,14 @@ use common\models\multimedia\MultimediaTypeProportion;
 use common\models\multimedia\searchs\MultimediaTaskSearch;
 use common\models\team\Team;
 use common\models\team\TeamMember;
+use common\wskeee\job\JobManager;
+use frontend\modules\multimedia\MultimediaNoticeTool;
 use frontend\modules\multimedia\MultimediaTool;
 use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\ItemType;
 use wskeee\rbac\RbacName;
 use Yii;
 use yii\data\ArrayDataProvider;
-use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -75,7 +76,7 @@ class DefaultController extends Controller
      * Personal Lists all MultimediaTask models.
      * @return mixed
      */
-    public function actionPersonal($create_by, $producer, $assignPerson, $status = null)
+    public function actionPersonal($create_by = null, $producer = null, $assignPerson = null, $status = null)
     {
         /* @var $multimedia MultimediaTool */
         $multimedia = \Yii::$app->get('multimedia');
@@ -120,8 +121,19 @@ class DefaultController extends Controller
     {
         /* @var $multimedia MultimediaTool */
         $multimedia = \Yii::$app->get('multimedia');
-        //$this->getTaskWorkloadAll();
+        /* @var $multimediaNotice MultimediaNoticeTool */
+        $multimediaNotice = \Yii::$app->get('multimediaNotice');
         $model = $this->findModel($id);
+        /* @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
+        if(!$model->getIsStatusCompleted() || !$model->getIsStatusCancel() ){
+            //设置用户对通知已读
+            $jobManager->setNotificationHasReady(10, Yii::$app->user->id, $model->id);  
+        }else {
+            //取消用户与任务通知的关联
+            $jobManager->cancelNotification(10, $model->id, Yii::$app->user->id); 
+        }
+        
         return $this->render('view', [
             'model' => $model,
             'multimedia' => $multimedia,
@@ -147,7 +159,7 @@ class DefaultController extends Controller
         
         if(\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_ASSIGN) && $multimedia->getIsAssignPerson($model->make_team)){
             $multimedia->saveAssignTask($model, $post);
-            $this->redirect(['view', 'id' => $model->id]);
+            $this->redirect(['personal', 'assignPerson' => Yii::$app->user->id]);
         } else {
             throw new NotAcceptableHttpException('无权限操作！');
         }
@@ -169,9 +181,11 @@ class DefaultController extends Controller
         $model->create_by = \Yii::$app->user->id;
         $model->create_team = $multimedia->getHotelTeam($model->create_by);
         $model->make_team = $model->create_team;
-        $model->progress = MultimediaTask::$statusProgress[$model->status];
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $model->progress = $model->getStatusProgress();
+        
+        if ($model->load(Yii::$app->request->post())) {
+            $multimedia->saveCreateTask($model);
+            return $this->redirect(['personal', 'create_by' => $model->create_by]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -225,8 +239,9 @@ class DefaultController extends Controller
             throw new NotAcceptableHttpException('无权限操作！');
         
         $model->brace_mark = MultimediaTask::SEEK_BRACE_MARK;
-        if ($model->load(Yii::$app->request->post()) && $model->save(false, ['make_team', 'brace_mark']))
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post()))
+            $multimedia->saveSeekBraceTask ($model);
+        return $this->redirect(['view', 'id' => $model->id]);
     }
     
     /**
@@ -243,9 +258,10 @@ class DefaultController extends Controller
         if(!$multimedia->getIsAssignPerson($model->create_team))
             throw new NotAcceptableHttpException('无权限操作！');
         
+        $oldMakeTeam = $model->make_team;
         $model->brace_mark = MultimediaTask::CANCEL_BRACE_MARK;
         $model->make_team = $model->create_team;
-        $model->save(false, ['brace_mark', 'make_team']);
+        $multimedia->saveCancelBraceTask($model, $oldMakeTeam);
         return $this->redirect(['view', 'id' => $model->id]);
     }
     
@@ -264,7 +280,7 @@ class DefaultController extends Controller
             throw new NotAcceptableHttpException('无权限操作！');
         
         $model->status = MultimediaTask::STATUS_WORKING;
-        $model->progress = MultimediaTask::$statusProgress[$model->status];
+        $model->progress = $model->getStatusProgress();
         $model->save(false, ['status', 'progress']);
         return $this->redirect(['view', 'id' => $model->id]);
     }
@@ -284,7 +300,7 @@ class DefaultController extends Controller
             throw new NotAcceptableHttpException('无权限操作！');
         
         $model->status = MultimediaTask::STATUS_WAITCHECK;
-        $model->progress = MultimediaTask::$statusProgress[$model->status];
+        $model->progress = $model->getStatusProgress();
         $model->save(false, ['status', 'progress']);
         return $this->redirect(['view', 'id' => $model->id]);
     }
@@ -305,7 +321,7 @@ class DefaultController extends Controller
             throw new NotAcceptableHttpException('无权限操作！');
         
         $model->status = MultimediaTask::STATUS_COMPLETED;
-        $model->progress = MultimediaTask::$statusProgress[$model->status];
+        $model->progress = $model->getStatusProgress();
         if ($model->load(Yii::$app->request->post()) && $model->save())        
             return $this->redirect(['view', 'id' => $model->id]);
     }
@@ -471,12 +487,14 @@ class DefaultController extends Controller
      */
     public function getWorkloadOne($model = null, $contentType = null)
     {
+        /* @var $model MultimediaTask */
         $proportionAll = MultimediaTypeProportion::find()
                       ->filterWhere(['content_type' => $contentType])
                       ->andFilterWhere(['<=', 'target_month', date('Y-m', $model->created_at)])
                       ->all();
         $proportion = end($proportionAll);
-        $workload = $model->material_video_length * $proportion['proportion'];
+        $video_length = empty($model->production_video_length) ? $model->material_video_length : $model->production_video_length;
+        $workload = $video_length * $proportion['proportion'];
         return [$workload, $proportion];
     }    
     

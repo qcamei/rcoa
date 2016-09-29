@@ -133,6 +133,8 @@ $js =
             element = $('#multimediatask-item_child_id');
         $("#multimediatask-item_child_id").html("");
         $('#select2-multimediatask-item_child_id-container').html('<span class="select2-selection__placeholder">请选择...</span>');
+        $("#multimediatask-course_id").html("");
+        $('#select2-multimediatask-course_id-container').html('<span class="select2-selection__placeholder">请选择...</span>');
         wx(url, element, '请选择...');
     });
     /** 下拉选择【课程】 */

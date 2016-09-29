@@ -6,21 +6,18 @@ use common\models\multimedia\MultimediaAssignTeam;
 use common\models\multimedia\MultimediaCheck;
 use common\models\multimedia\MultimediaProducer;
 use common\models\multimedia\MultimediaTask;
-use common\models\multimedia\MultimediaTypeProportion;
-use common\models\team\Team;
 use common\models\team\TeamMember;
-use wskeee\utils\DateUtil;
+use common\wskeee\job\JobManager;
 use Yii;
 use yii\db\Exception;
-use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 
 class MultimediaTool {
     
-     /**
+    /**
      * 多媒体任务指派时
-     * @param type $model
+     * @param MultimediaTask $model
      * @param type $post
      * @throws NotFoundHttpException
      * @throws Exception
@@ -28,13 +25,30 @@ class MultimediaTool {
     public function saveAssignTask($model, $post)
     {
         /* @var $model MultimediaTask */
+        /* @var $multimediaNotice MultimediaNoticeTool */
+        $multimediaNotice = \Yii::$app->get('multimediaNotice');
+        /* @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
+        $postProducer = ArrayHelper::getValue($post, 'producer'); //获取传上来的制作人
+        $producer = ArrayHelper::getColumn($multimediaNotice->getProducer($model->id), 'u_id');
+        $makeTeam = ArrayHelper::getValue($multimediaNotice->getAssignPerson($model->make_team), 'u_id');
+        $createTeam = ArrayHelper::getValue($multimediaNotice->getAssignPerson($model->create_team), 'u_id');
+        
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
         {
             if($model->save(true, ['status', 'progress'])){
                 $this->emptyMultimediaProducer($model->id);
-                $this->saveMultimediaProducer($model->id, $post['producer']);
+                $this->saveMultimediaProducer($model->id, $postProducer);
+                $jobManager->removeNotification(10, $model->id, [$createTeam, $makeTeam]);
+                if($createTeam == $model->create_by){
+                    $jobManager->addNotification (10, $model->id, $createTeam);
+                    $jobManager->setNotificationHasReady(10, $createTeam, $model->id);
+                }
+                $multimediaNotice->setAssignNotification($model, $postProducer);
+                $multimediaNotice->sendAssignPersonNotification($model, '新任务', 'multimedia/AssignProducer-htm');
+                $multimediaNotice->sendCreateByNotification($model, '任务已指派', 'multimedia/AssignCreateBy-html');
             }else {
                 throw new Exception(json_encode($model->getErrors()));
             }
@@ -46,6 +60,102 @@ class MultimediaTool {
         }
     }
     
+    /**
+     * 多媒体任务创建时
+     * @param MultimediaTask $model
+     * @throws NotFoundHttpException
+     * @throws Exception
+     */
+    public function saveCreateTask($model)
+    {
+        /* @var $model MultimediaTask */
+        /* @var $multimediaNotice MultimediaNoticeTool */
+        $multimediaNotice = \Yii::$app->get('multimediaNotice');
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {
+            if($model->save()){
+                $multimediaNotice->saveJobManager($model);
+                $multimediaNotice->sendAssignPersonNotification($model, '新任务', 'multimedia/Create-html');
+            }else {
+                throw new Exception(json_encode($model->getErrors()));
+            }
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        } catch (Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            throw new NotFoundHttpException('保存任务失败！');//.$ex->getMessage());
+        }
+    }
+    
+    /**
+     * 多媒体任务寻求支撑时
+     * @param MultimediaTask $model
+     * @throws NotFoundHttpException
+     * @throws Exception
+     */
+    public function saveSeekBraceTask($model)
+    {
+        /* @var $model MultimediaTask */
+        /* @var $multimediaNotice MultimediaNoticeTool */
+        $multimediaNotice = \Yii::$app->get('multimediaNotice');
+        /* @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
+        $assignPerson = $multimediaNotice->getAssignPerson($model->make_team);
+        $assignPersonId = ArrayHelper::getValue($assignPerson, 'u_id');
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {
+            if($model->save(false, ['make_team', 'brace_mark'])){
+                $jobManager->addNotification(10, $model->id, $assignPersonId);      //添加通知
+                $multimediaNotice->sendAssignPersonNotification($model, '支撑请求', 'multimedia/SeekBrace-html');
+            }else {
+                throw new Exception(json_encode($model->getErrors()));
+            }
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        } catch (Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            throw new NotFoundHttpException('保存任务失败！');//.$ex->getMessage());
+        }
+    }
+    
+    /**
+     * 多媒体任务取消支撑时
+     * @param MultimediaTask $model
+     * @param type $oldMakeTeam             旧的制作团队
+     * @throws NotFoundHttpException
+     * @throws Exception
+     */
+    public function saveCancelBraceTask($model, $oldMakeTeam)
+    {
+        /* @var $model MultimediaTask */
+        /* @var $multimediaNotice MultimediaNoticeTool */
+        $multimediaNotice = \Yii::$app->get('multimediaNotice');
+        /* @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
+        $assignPerson = $multimediaNotice->getAssignPerson($oldMakeTeam);
+        $assignPersonId = ArrayHelper::getValue($assignPerson, 'u_id');
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {
+            if($model->save(false, ['brace_mark', 'make_team'])){
+                $jobManager->removeNotification(10, $model->id, $assignPersonId);
+                $multimediaNotice->sendAssignPersonNotification ($model, '取消支撑', 'multimedia/CancelBrace-html');
+            }else {
+                throw new Exception(json_encode($model->getErrors()));
+            }
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        } catch (Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            throw new NotFoundHttpException('保存任务失败！');//.$ex->getMessage());
+        }
+    }
+
     /**
      * 查询所有任务
      * @param type $createBy            创建者
@@ -76,7 +186,7 @@ class MultimediaTool {
                 ->orFilterWhere(['Task.make_team' => $makeTeam])
                 ->orFilterWhere(['Task.create_team' => $createTeam])
                 ->andFilterWhere(['IN', 'Task.status', $status])
-                ->orderBy('Task.level desc')
+                ->orderBy('Task.level desc, Task.id asc')
                 ->with('contentType')
                 ->with('createTeam')
                 ->with('itemChild')
@@ -159,7 +269,7 @@ class MultimediaTool {
      * @param boolean $isRecommend     true为推荐, false为统计
      * @param type $team               团队
      * @return type
-     */
+     
     public function getTeamTaskWorkload($isRecommend = true, $team = null)
     {
         $query = (new Query());
@@ -186,7 +296,7 @@ class MultimediaTool {
             $query->groupBy('Team.id, Workload.content_type');
             return $query->all();
         }
-    }
+    }*/
 
     /**
      * 保存制作人到表里

@@ -56,7 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         //'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '30px'  
+                        'width' => '40px'  
                     ],
                 ],
                 'contentOptions' =>[
@@ -250,8 +250,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     : ($model->getIsStatusTostart() ? 'btn btn-success btn-sm'  
                                     : ($model->getIsStatusCompleted() ? 'btn btn-danger btn-sm' : 'btn btn-default btn-sm'))),
                         ];
-                        return Html::a(MultimediaTask::$statusNmae[$model->status], 
-                            ['view', 'id' => $model->id], $options);
+                        return Html::a($model->getStatusName(), ['view', 'id' => $model->id], $options);
                     },
                 ],
                 'headerOptions' => [

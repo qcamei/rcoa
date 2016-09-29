@@ -5,7 +5,9 @@ namespace common\wskeee\job;
 use common\wskeee\job\models\Job;
 use common\wskeee\job\models\JobNotification;
 use Yii;
+use yii\db\Exception;
 use yii\web\NotFoundHttpException;
+
 
 /*
  * 1、管理平台所有任务

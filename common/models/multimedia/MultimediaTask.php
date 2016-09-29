@@ -164,8 +164,7 @@ class MultimediaTask extends ActiveRecord
         return [
             [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'name', 'material_video_length', 'content_type', 'level', 'path'], 'required'],
             [['production_video_length'], 'required', 'on' => [self::SCENARIO_COMPLETE]],
-            [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'progress', 'content_type', 'level', 'make_team', 'status', 'create_team', 'created_at', 'updated_at'], 'integer'],
-            [['brace_mark'], 'number'],
+            [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'progress', 'content_type', 'level', 'make_team', 'status', 'create_team', 'created_at', 'updated_at', 'brace_mark'], 'integer'],
             [['material_video_length', 'production_video_length'], 'checkVideoLen'],
             [['name', 'path', 'des'], 'string', 'max' => 255],
             [['carry_out_time'], 'string', 'max' => 60],
@@ -199,23 +198,24 @@ class MultimediaTask extends ActiveRecord
                 $times = $this->scenario == self::SCENARIO_DEFAULT ? explode(":", $material) : explode(":", $production);
             }else
             {
-                $this->addError($attribute, "格式不正确，请按 00:00:00 格式录入!");
+                $this->addError($attribute, "格式不正确，请按 00:00:00 格式录入！");
                 return;
             }
             $h = (int)$times[0] ;
             $m = (int)$times[1];
             $s = count($times) == 3 ? (int)$times[2] : 0;
             $videolength = $h*3600+$m*60+$s;
-            
-            if($videolength >= 0){
+
+            if($videolength > 0){
                 if($this->scenario == self::SCENARIO_DEFAULT)
                     $this->material_video_length = $videolength;
                 else
                     $this->production_video_length = $videolength;
             }
             else
-                $this->addError($attribute, Yii::t('rcoa/teamwork', 'ID')."不可以小于0");
+                $this->addError($attribute, "视频时长不可以为0。");
         }
+        
     }
     
     /**
@@ -399,5 +399,23 @@ class MultimediaTask extends ActiveRecord
     public function getIsStatusCancel()
     {
         return $this->status == self::STATUS_CANCEL;
+    }
+    
+    /**
+     * 获取状态名称
+     * @return type
+     */
+    public function getStatusName()
+    {
+        return self::$statusNmae[$this->status];
+    }
+    
+    /**
+     * 获取状态下对应的进度
+     * @return type
+     */
+    public function getStatusProgress()
+    {
+        return self::$statusProgress[$this->status];
     }
 }

@@ -93,7 +93,7 @@ Website: http://thevectorlab.net/
 }
 
 .dropdown-menu.extended li a:hover {
-    background-color: #f3f3f3 !important;
+    background-color: rgba(243, 243, 243, 0.5) !important;
 }
 
 .dropdown-menu.extended li p{
