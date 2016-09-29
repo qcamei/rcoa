@@ -14,17 +14,17 @@ use yii\helpers\Html;
             $controllerId = Yii::$app->controller->id;          //当前控制器
             $actionId = Yii::$app->controller->action->id;      //当前行为方法
             /** 小屏幕显示 */
-            echo Html::a(Html::img(['/filedata/multimedia/image/home.png']), ['index'], 
+            echo Html::a(Html::img(['/filedata/multimedia/image/home.png']), ['/multimedia/home'], 
                     ['class' => $actionId == 'index' 
                     ? 'footer-multimedia-xs footer-multimedia-bg visible-xs-inline-block' : 'footer-multimedia-xs visible-xs-inline-block']);
             
             echo Html::a(Html::img(['/filedata/multimedia/image/personal.png']), [
-                'personal', 'personal', 'create_by' => Yii::$app->user->id, 'producer' => Yii::$app->user->id, 'assignPerson' => Yii::$app->user->id],  
+                'default/personal', 'personal', 'create_by' => Yii::$app->user->id, 'producer' => Yii::$app->user->id, 'assignPerson' => Yii::$app->user->id],  
                     ['class' => $actionId == 'personal'? 
                         'footer-multimedia-xs footer-multimedia-bg visible-xs-inline-block' : 'footer-multimedia-xs visible-xs-inline-block']);
             
             echo Html::a(Html::img(['/filedata/multimedia/image/team.png']), [
-                'team', 'make_team' => $multimedia->getHotelTeam(Yii::$app->user->id), 'create_team' => $multimedia->getHotelTeam(Yii::$app->user->id)], 
+                'default/team', 'make_team' => $multimedia->getHotelTeam(Yii::$app->user->id), 'create_team' => $multimedia->getHotelTeam(Yii::$app->user->id)], 
                     ['class' => $actionId == 'team'? 
                         'footer-multimedia-xs footer-multimedia-bg visible-xs-inline-block' : 'footer-multimedia-xs visible-xs-inline-block']);
             
@@ -41,17 +41,17 @@ use yii\helpers\Html;
             
             
             /** 大屏幕上显示 */
-            echo Html::a(Html::img(['/filedata/multimedia/image/home.png']).'主页', ['index'], 
+            echo Html::a(Html::img(['/filedata/multimedia/image/home.png']).'主页', ['/multimedia/home'], 
                     ['class' => $actionId == 'index' 
                     ? 'footer-multimedia footer-multimedia-bg hidden-xs' : 'footer-multimedia hidden-xs']);
             
             echo Html::a(Html::img(['/filedata/multimedia/image/personal.png']).'个人', [
-                'personal', 'create_by' => Yii::$app->user->id, 'producer' => Yii::$app->user->id, 'assignPerson' => Yii::$app->user->id],  
+                'default/personal', 'create_by' => Yii::$app->user->id, 'producer' => Yii::$app->user->id, 'assignPerson' => Yii::$app->user->id],  
                     ['class' => $actionId == 'personal' ? 
                         'footer-multimedia footer-multimedia-bg hidden-xs' : 'footer-multimedia hidden-xs']);
             
             echo Html::a(Html::img(['/filedata/multimedia/image/team.png']).'团队', [
-                    'team', 'make_team' => $multimedia->getHotelTeam(Yii::$app->user->id), 'create_team' => $multimedia->getHotelTeam(Yii::$app->user->id)], 
+                    'default/team', 'make_team' => $multimedia->getHotelTeam(Yii::$app->user->id), 'create_team' => $multimedia->getHotelTeam(Yii::$app->user->id)], 
                     ['class' =>  $actionId == 'team' ? 
                         'footer-multimedia footer-multimedia-bg hidden-xs' : 'footer-multimedia hidden-xs']);
             

@@ -55,24 +55,6 @@ class DefaultController extends Controller
     }
 
     /**
-     * Lists all MultimediaTask models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        /* @var $multimedia MultimediaTool */
-        $multimedia = \Yii::$app->get('multimedia');
-        $searchModel = new MultimediaTaskSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-            'multimedia' => $multimedia,
-        ]);
-    }
-    
-    /**
      * Personal Lists all MultimediaTask models.
      * @return mixed
      */
