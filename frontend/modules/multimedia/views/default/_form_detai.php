@@ -177,10 +177,8 @@ foreach (MultimediaTask::$statusNmae as $key => $value) {
 $js = 
 <<<JS
     var producerList = '';
-    //console.log(producerList);
     $('#producer-select').change(function()
     {
-        console.log(111);
         //$('<option/>').val('').text('请选择...').appendTo($(this));
         $.each(producerList, function(i, e)
         {

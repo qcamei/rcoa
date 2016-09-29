@@ -65,13 +65,15 @@ class MultimediaNoticeTool {
      * @param type $model
      * @param type $mode        标题模式
      * @param type $views       视图
+     * @param type $cancel       临时变量
      */
-    public function sendAssignPersonNotification($model, $mode, $views){
+    public function sendAssignPersonNotification($model, $mode, $views, $cancel = null){
         /* @var $model MultimediaTask */
         $assignPerson = $this->getAssignPerson($model->make_team);
         //传进view 模板参数
         $params = [
             'model' => $model,
+            'cancel' => $cancel,
         ];
         //主题 
         $subject = "多媒体-".$mode;
@@ -93,14 +95,16 @@ class MultimediaNoticeTool {
      * @param type $model
      * @param type $mode        标题模式
      * @param type $views       视图
+     * @param type $cancel       临时变量
      */
-    public  function sendCreateByNotification($model, $mode, $views){
+    public  function sendCreateByNotification($model, $mode, $views, $cancel = null){
         /* @var $model MultimediaTask */
         $producer = ArrayHelper::getColumn($this->getProducer($model->id), 'name');
         //传进view 模板参数
         $params = [
             'model' => $model,
             'producer' => $producer,
+            'cancel' => $cancel,
         ];
         //主题
         $subject = "多媒体-".$mode;
@@ -121,16 +125,18 @@ class MultimediaNoticeTool {
      * @param type $model
      * @param type $mode        标题模式
      * @param type $views       视图
+     * @param type $cancel       临时变量
      */
-    public  function sendProducerNotification($model, $mode, $views){
+    public  function sendProducerNotification($model, $mode, $views, $cancel = null){
         /* @var $model MultimediaTask */
         $producers = $this->getProducer($model->id);
         //传进view 模板参数 
          $params = [
             'model' => $model,
+            'cancel' => $cancel,
         ];
         //主题 
-        $subject = "拍摄-".$mode."-".$model->fwCourse->name;
+        $subject = "拍摄-".$mode;
         //查找接洽人ee和mail 
         $producer_ee = array_filter(ArrayHelper::getColumn($producers, 'ee'));
         $producer_mail = array_filter(ArrayHelper::getColumn($producers, 'email'));
@@ -190,12 +196,12 @@ class MultimediaNoticeTool {
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
         /* @var $model MultimediaTask */
-        $assignPerson = $this->getAssignPerson($model->make_team);
-        $assignPersonId = ArrayHelper::getValue($assignPerson, 'u_id');
+        $makeTeamId = ArrayHelper::getValue($this->getAssignPerson($model->make_team), 'u_id');
+        $createTeamId = ArrayHelper::getValue($this->getAssignPerson($model->create_team), 'u_id');
         $producer = $this->getProducer($model->id);
         $producerId = array_filter(ArrayHelper::getColumn($producer, 'id'));
         //全并两个数组的值
-        $jobUserAll = ArrayHelper::merge([$model->create_by, $assignPersonId], $producerId);
+        $jobUserAll = ArrayHelper::merge([$model->create_by, $makeTeamId, $createTeamId], $producerId);
         
         //修改job表任务
         $jobManager->updateJob(10,$model->id,['progress'=> $model->progress, 'status'=>$model->getStatusName()]); 

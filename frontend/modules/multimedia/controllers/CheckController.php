@@ -85,8 +85,8 @@ class CheckController extends Controller
         $model = new MultimediaCheck();
         $model->task_id = $task_id;
         $model->create_by = \Yii::$app->user->id;
-        
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $multimedia->saveCreateCheckTask($model);
             return $this->redirect(['default/view', 'id' => $model->task_id]);
         } else {
             return $this->render('create', [
@@ -152,7 +152,7 @@ class CheckController extends Controller
                  ->one();
         $model->carry_out_time = date('Y-m-d H:i', time());
         $model->status = MultimediaCheck::STATUS_COMPLETE;
-        $model->save(false, ['carry_out_time', 'status']);
+        $multimedia->saveSubmitCheckTask($model);
         $this->redirect(['default/view', 'id' => $model->task_id]);
     }
 
