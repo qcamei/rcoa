@@ -31,7 +31,7 @@
          //重新计算图标的高度，高度由显示的数据相关
         var len=0;
         for(var i in datas)len++;
-        $(this.canvas).css('height',(len*(40+10)-10+60)+"px");
+        $(this.canvas).css('height',(len*(40+10)-10+80)+"px");
         
         this.chart = echarts.init(dom);
         this.chart.on('legendselectchanged', function(params){_this.legendselectchanged(params,datas,legend)});
