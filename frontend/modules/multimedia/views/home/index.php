@@ -24,7 +24,8 @@ $this->params['breadcrumbs'][] = $this->title;
             <span>
                 <?php
                     foreach($rules as $id => $name)
-                        echo "<span class='rule-name'>$name</span><span class='rule-proportion'>(1 : ".MultimediaConvertRule::getInstance()->getRuleProportion($id).")</span>";
+                        echo "<span class='rule-name'>$name</span><span class='rule-proportion'>(1 : ".
+                            MultimediaConvertRule::getInstance()->getRuleProportion($id).")</span>";
                 ?>
             </span>
         </div>

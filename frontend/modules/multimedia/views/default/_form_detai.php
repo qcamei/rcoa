@@ -44,7 +44,7 @@ foreach (MultimediaTask::$statusNmae as $key => $value) {
         //'options' => ['class' => 'table table-bordered detail-view'],
         'template' => '<tr><th class="viewdetail-th">{label}</th><td class="viewdetail-td">{value}</td></tr>',
         'attributes' => [
-            ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">基本信息</span>','value' => ''],
+            ['label' => '<span class="btn-block viewdetail-th-head">基本信息</span>','value' => ''],
             [
                 'attribute' => 'item_type_id',
                 'value' => !empty($model->item_type_id) ? $model->itemType->name: '空',
@@ -76,14 +76,14 @@ foreach (MultimediaTask::$statusNmae as $key => $value) {
             [
                 'label' => Yii::t('rcoa/multimedia', 'Workload'),
                 'format' => 'raw',
-                'value' => DateUtil::intToTime($workload[0]).'<span class="proportion">(1:'.$workload[1]['proportion'].')</span>',
+                'value' => DateUtil::intToTime($workload[0]).'<span class="proportion">(1:'.$workload[1].')</span>',
             ],
             [
                 'attribute' => 'content_type',
                 'value' => !empty($model->content_type) ? $model->contentType->name : '空',
             ],
             
-            ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">开发信息</span>','value' => ''],
+            ['label' => '<span class="btn-block viewdetail-th-head">开发信息</span>','value' => ''],
             [
                 'attribute' => 'carry_out_time',
                 'format' => 'raw',
@@ -144,7 +144,7 @@ foreach (MultimediaTask::$statusNmae as $key => $value) {
                 'value' => $model->path,
             ],
             
-            ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">其它信息</span>','value' => ''],
+            ['label' => '<span class="btn-block viewdetail-th-head">其它信息</span>','value' => ''],
             [
                 'attribute' => 'create_team',
                 'value' => $model->createTeam->name,

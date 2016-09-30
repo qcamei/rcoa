@@ -56,5 +56,6 @@ return[
     'Title' => '标题',
     'Task Name' => '任务名称',
     'Complete Time' => '完成时间',
-    'Target Month' => '目标月份'
+    'Target Month' => '目标月份',
+    'Team Brace' => '创建 → 支撑'
 ];

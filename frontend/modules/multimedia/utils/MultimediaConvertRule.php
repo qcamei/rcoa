@@ -57,7 +57,7 @@ class MultimediaConvertRule {
         $query = (new Query())
                 ->select([
                     'Proportion.content_type',
-                    'FORMAT(Proportion.proportion,1) AS proportion',
+                    'FORMAT(Proportion.proportion * 10,0) / 10 AS proportion',
                     'Proportion.target_month',
                     'CT.name'])
                 ->from(['Proportion'=>  MultimediaTypeProportion::tableName()])

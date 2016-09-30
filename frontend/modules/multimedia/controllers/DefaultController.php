@@ -5,13 +5,12 @@ namespace frontend\modules\multimedia\controllers;
 use common\models\multimedia\MultimediaContentType;
 use common\models\multimedia\MultimediaProducer;
 use common\models\multimedia\MultimediaTask;
-use common\models\multimedia\MultimediaTypeProportion;
-use common\models\multimedia\searchs\MultimediaTaskSearch;
 use common\models\team\Team;
 use common\models\team\TeamMember;
 use common\wskeee\job\JobManager;
 use frontend\modules\multimedia\MultimediaNoticeTool;
 use frontend\modules\multimedia\MultimediaTool;
+use frontend\modules\multimedia\utils\MultimediaConvertRule;
 use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\ItemType;
 use wskeee\rbac\RbacName;
@@ -68,7 +67,7 @@ class DefaultController extends Controller
                     $makeTeam = null, $createTeam = null, $status),
         ]);
         
-        return $this->render('personal', [
+        return $this->render('team', [
             'dataProvider' => $dataProvider,
             'multimedia' => $multimedia,
         ]);
@@ -120,7 +119,7 @@ class DefaultController extends Controller
             'model' => $model,
             'multimedia' => $multimedia,
             'teams' => $this->getTeams(),
-            'workload' => $this->getWorkloadOne($model, $model->content_type),
+            'workload' => $this->getWorkloadOne($model),
             'producerList' => $this->getProducerList($model->make_team),
             'producer' => $this->getAlreadyProducer($id),
         ]);
@@ -136,15 +135,16 @@ class DefaultController extends Controller
         $post = Yii::$app->request->post();
         /* @var $multimedia MultimediaTool */
         $multimedia = \Yii::$app->get('multimedia');
+        if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_ASSIGN) 
+          && !$multimedia->getIsAssignPerson($model->make_team))
+           throw new NotAcceptableHttpException('无权限操作！');
+        if(!$model->getIsStatusAssign())
+            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
+        
         $model->status = MultimediaTask::STATUS_TOSTART;
         $model->progress = MultimediaTask::$statusProgress[$model->status];
-        
-        if(\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_ASSIGN) && $multimedia->getIsAssignPerson($model->make_team)){
-            $multimedia->saveAssignTask($model, $post);
-            $this->redirect(['personal', 'assignPerson' => Yii::$app->user->id]);
-        } else {
-            throw new NotAcceptableHttpException('无权限操作！');
-        }
+        $multimedia->saveAssignTask($model, $post);
+        $this->redirect(['personal', 'assignPerson' => Yii::$app->user->id]);
     }
 
     /**
@@ -191,6 +191,8 @@ class DefaultController extends Controller
         $model = $this->findModel($id);
         if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_UPDATE) && $model->create_by != \Yii::$app->user->id)
             throw new NotAcceptableHttpException('无权限操作！');
+        if(!$model->getIsStatusAssign())
+            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -219,6 +221,8 @@ class DefaultController extends Controller
         $multimedia = \Yii::$app->get('multimedia');
         if(!$multimedia->getIsAssignPerson($model->create_team))
             throw new NotAcceptableHttpException('无权限操作！');
+        if(!$model->getIsStatusAssign())
+            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
         
         $model->brace_mark = MultimediaTask::SEEK_BRACE_MARK;
         if ($model->load(Yii::$app->request->post()))
@@ -239,6 +243,8 @@ class DefaultController extends Controller
         $multimedia = \Yii::$app->get('multimedia');
         if(!$multimedia->getIsAssignPerson($model->create_team))
             throw new NotAcceptableHttpException('无权限操作！');
+        if(!$model->getIsStatusAssign())
+            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
         
         $oldMakeTeam = $model->make_team;
         $model->brace_mark = MultimediaTask::CANCEL_BRACE_MARK;
@@ -262,6 +268,8 @@ class DefaultController extends Controller
         $jobManager = Yii::$app->get('jobManager');
         if(!$multimedia->getIsProducer($model->id))
             throw new NotAcceptableHttpException('无权限操作！');
+        if(!$model->getIsStatusTostart())
+            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
         
         $model->status = MultimediaTask::STATUS_WORKING;
         $model->progress = $model->getStatusProgress();
@@ -282,6 +290,8 @@ class DefaultController extends Controller
         $multimedia = \Yii::$app->get('multimedia');
         if(!$multimedia->getIsProducer($model->id))
             throw new NotAcceptableHttpException('无权限操作！');
+        if(!$model->getIsStatusWorking())
+            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
         
         $model->status = MultimediaTask::STATUS_WAITCHECK;
         $model->progress = $model->getStatusProgress();
@@ -305,6 +315,8 @@ class DefaultController extends Controller
         $jobManager = Yii::$app->get('jobManager');
         if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_COMPLETE) && $model->create_by != \Yii::$app->user->id)
             throw new NotAcceptableHttpException('无权限操作！');
+        if(!$model->getIsStatusWaitCheck())
+            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
         
         $model->status = MultimediaTask::STATUS_COMPLETED;
         $model->progress = $model->getStatusProgress();
@@ -326,6 +338,8 @@ class DefaultController extends Controller
         $multimedia = \Yii::$app->get('multimedia');
         if($model->create_by != \Yii::$app->user->id)
             throw new NotAcceptableHttpException('无权限操作！');
+        if(!$model->getIsStatusCompleted())
+            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
         
         $model->status = MultimediaTask::STATUS_WAITCHECK;
         $model->save(false, ['status']);
@@ -345,6 +359,8 @@ class DefaultController extends Controller
         $multimedia = \Yii::$app->get('multimedia');
         if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CANCEL) && $model->create_by != \Yii::$app->user->id)
             throw new NotAcceptableHttpException('无权限操作！');
+        if(!($model->getIsStatusAssign() || $model->getIsStatusTostart() || $model->getIsStatusWorking()))
+            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
         
         $cancel = ArrayHelper::getValue(Yii::$app->request->post(), 'reason');
         $model->status = MultimediaTask::STATUS_CANCEL;
@@ -429,20 +445,16 @@ class DefaultController extends Controller
     
     /**
      * 获取标准工作量
-     * @param type $model     
-     * @param type $contentType     任务内容类型
+     * @param MultimediaTask $model     
      * @return array 
      */
-    public function getWorkloadOne($model = null, $contentType = null)
+    public function getWorkloadOne($model)
     {
-        /* @var $model MultimediaTask */
-        $proportionAll = MultimediaTypeProportion::find()
-                      ->filterWhere(['content_type' => $contentType])
-                      ->andFilterWhere(['<=', 'target_month', date('Y-m', $model->created_at)])
-                      ->all();
-        $proportion = end($proportionAll);
-        $video_length = empty($model->production_video_length) ? $model->material_video_length : $model->production_video_length;
-        $workload = $video_length * $proportion['proportion'];
+        $proportion = MultimediaConvertRule::getInstance()
+                      ->getRuleProportion($model->content_type, date('Y-m', $model->created_at));
+        $video_length = empty($model->production_video_length) ? 
+                        $model->material_video_length : $model->production_video_length;
+        $workload = $video_length * $proportion;
         return [$workload, $proportion];
     }    
     

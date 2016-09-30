@@ -10,7 +10,7 @@ use yii\widgets\ActiveForm;
 
 
 
-<div class="modal fade" id="completeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade myModal" id="completeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">

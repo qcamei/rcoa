@@ -5,17 +5,43 @@ namespace frontend\modules\multimedia\controllers;
 use common\models\multimedia\MultimediaContentType;
 use common\models\multimedia\MultimediaProducer;
 use common\models\multimedia\MultimediaTask;
-use common\models\multimedia\MultimediaTypeProportion;
 use common\models\User;
 use frontend\modules\multimedia\MultimediaTool;
 use frontend\modules\multimedia\utils\MultimediaConvertRule;
 use Yii;
 use yii\db\Query;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 
 class HomeController extends Controller
 {
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+             //access验证是否有登录
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ],
+        ];
+    }
+    
     public function actionIndex()
     {
         //[content_type:[content_type,proportion,name],...]

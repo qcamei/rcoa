@@ -12,6 +12,7 @@ use yii\web\View;
 
 $this->title = Yii::t('rcoa/multimedia', 'Multimedia Manages');
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="container multimedia-task-index multimedia-task">
 
@@ -32,23 +33,19 @@ $this->params['breadcrumbs'][] = $this->title;
                             ]) : '';
                 },
                 'headerOptions' => [
-                    'class'=>[
-                        //'th'=>'hidden-xs',
-                    ],
                     'style' => [
-                        'width' => '16px',
+                        'width' => '20px',
                         'padding' => '8px 2px',
                     ],
                 ],
                 'contentOptions' =>[
-                    //'class'=>'hidden-xs',
                     'style' => [
                         'padding' => '8px 2px',
                     ]
                 ],
             ],
             [
-                'label' => '',
+                'label' => Yii::t('rcoa/multimedia', 'Team Brace'),
                 'format' => 'raw',
                 'value'=> function($model){
                     /* @var $model MultimediaTask */
@@ -62,19 +59,14 @@ $this->params['breadcrumbs'][] = $this->title;
                            :'<span class="team-span">'.$model->makeTeam->name.'</span>';
                 },
                 'headerOptions' => [
-                    'class'=>[
-                        //'th'=>'hidden-xs',
-                    ],
                     'style' => [
-                        //'min-width' => '40px',
                         'width' => '105px',
-                        'padding' => '8px 2px'
+                        'padding' => '8px 2px',
+                        'text-align' => 'center;'
                     ],
                 ],
                 'contentOptions' =>[
-                    //'class'=> 'hidden-xs',
                     'style' => [
-                        //'min-width' => '40px',
                         'padding' => '8px 2px'
                     ],
                 ],
@@ -87,16 +79,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     return !empty($model->content_type) ? '<span class="content-type">'.$model->contentType->name.'</span>' : '';
                 },
                 'headerOptions' => [
-                    'class'=>[
-                        //'th'=>'hidden-xs',
-                    ],
                     'style' => [
-                        'width' => '30px',
+                        'width' => '34px',
                         'padding' => '8px 2px;'  
                     ],
                 ],
                 'contentOptions' =>[
-                    //'class'=>'hidden-xs',
                     'style' => [
                         'padding' => '8px 2px;'  
                     ],
@@ -167,7 +155,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs hidden-sm',
                     ],
                     'style' => [
-                        'width' => '145px'  
+                        'width' => '150px'  
                     ],
                 ],
                 'contentOptions' =>[
@@ -192,20 +180,13 @@ $this->params['breadcrumbs'][] = $this->title;
                             Html::endTag('div');
                 },
                 'headerOptions' => [
-                    'class'=>[
-                        //'th'=>'hidden-xs',
-                    ],
                     'style' => [
-                        //'min-width' => '74px',
-                        'max-width' => '160px',
+                        'min-width' => '84px',
                         'padding' => '8px 4px',
                     ],
                 ],
                 'contentOptions' =>[
-                    //'class'=>'course-name',
                     'style' => [
-                        //'min-width' => '74px',
-                        'max-width' => '160px',
                         'padding' => '2px 4px',
                     ],
                 ],
@@ -215,7 +196,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value'=> function($model){
                     /* @var $model MultimediaTask */
-                    //return '<span class="complete-time">'.$model->carry_out_time.'</span>';
                     return $model->carry_out_time;
                 },
                 'headerOptions' => [
@@ -223,7 +203,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '90px'  
+                        'width' => '85px'  
                     ],
                 ],
                 'contentOptions' =>[
@@ -245,15 +225,11 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '83px'  
+                        'width' => '58px'  
                     ],
                 ],
                 'contentOptions' =>[
                     'class'=>'hidden-xs',
-                    'style' => [
-                        //'font-size' => '10px;',
-                        //'padding' => '2px 8px'
-                    ],
                 ],
             ],
             [
@@ -270,15 +246,11 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '95px'  
+                        'width' => '75px'  
                     ],
                 ],
                 'contentOptions' =>[
                     'class'=>'hidden-xs course-name',
-                    'style' => [
-                        //'font-size' => '10px;',
-                        //'padding' => '2px 8px'
-                    ],
                 ],
             ],
             [
@@ -287,10 +259,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'buttons' => [
                     'view' => function ($url, $model) {
                         /* @var $model MultimediaTask */
+                        $actionId = Yii::$app->controller->action->id;      //当前行为方法
                         $options = [
-                            'class' => $model->getIsStatusAssign() ? 'btn btn-primary btn-sm' : ($model->getIsStatusWaitCheck() ? 'btn btn-info btn-sm'
+                            'class' => $actionId == 'team' ? 'btn btn-default btn-sm' : 
+                                    ($model->getIsStatusAssign() ? 'btn btn-primary btn-sm' : ($model->getIsStatusWaitCheck() ? 'btn btn-info btn-sm'
                                     : ($model->getIsStatusTostart() ? 'btn btn-success btn-sm'  
-                                    : ($model->getIsStatusCompleted() ? 'btn btn-danger btn-sm' : 'btn btn-default btn-sm'))),
+                                    : ($model->getIsStatusCompleted() ? 'btn btn-danger btn-sm' : 'btn btn-default btn-sm')))),
                             'style' => 'width: 55px;'
                         ];
                         return Html::a($model->getStatusName(), ['view', 'id' => $model->id], $options);

@@ -61,14 +61,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'headerOptions' => [
                     'style' => [
-                        'width' => '134px',
+                        'width' => '95px',
+                        'padding' => '8px;'
                     ],
                 ],
                 'contentOptions' =>[
                     'class' => 'course-name',
-                    'style' => [
-                        //'width' => '114px', 
-                    ],
                 ],
             ],
             [
@@ -80,16 +78,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'headerOptions' => [
                     'style' => [
-                        'max-width' => '154px',
-                        //'min-width' => '84px',
+                        'min-width' => '134px',
+                        'padding' => '8px;'
                     ],
                 ],
                 'contentOptions' =>[
                     'class' => 'course-name',
-                    'style' => [
-                        'max-width' => '154px',
-                        //'min-width' => '84px',
-                    ],
                 ],
             ],
             [
@@ -103,13 +97,13 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '114px',
+                        'width' => '117px',
+                        'padding' => '8px;'
                     ],
                 ],
                 'contentOptions' =>[
                     'class' => 'hidden-xs',
                     'style' => [
-                        'width' => '114px',
                         'font-size' => '10px;',
                         'color' => '#ccc',
                         'padding' => '4px 8px'
@@ -127,13 +121,13 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '114px',
+                        'width' => '117px',
+                        'padding' => '8px;'
                     ],
                 ],
                 'contentOptions' =>[
                     'class' => 'hidden-xs',
                     'style' => [
-                        'width' => '114px',
                         'font-size' => '10px;',
                         'color' => '#ccc',
                         'padding' => '4px 8px'
@@ -151,13 +145,13 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '114px',
+                        'width' => '117px',
+                        'padding' => '8px;'
                     ],
                 ],
                 'contentOptions' =>[
                     'class' => 'hidden-xs',
                     'style' => [
-                        'width' => '114px',
                         'font-size' => '10px;',
                         'color' => '#ccc',
                         'padding' => '4px 8px'
@@ -180,7 +174,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'headerOptions' => [
                     'style' => [
-                        'width' => '84px'  
+                        'width' => '84px',
+                        'padding' => '8px;'
                     ],
                 ],
                 'contentOptions' =>[
@@ -215,18 +210,7 @@ $js =
         else
             alert('请选择制作人！');
     });
-        
-    /** 支撑操作 close关闭模态款的 */
-    $("#braceModal .modal-header .close").click(function()
-    {
-        window.location.reload();
-    });
-    /** 支撑操作 关闭模态框后重新加载页面 */
-    $("#braceModal .modal-footer #brace-close").click(function()
-    {
-        window.location.reload();
-    });
-        
+      
     /** 寻求支撑 弹出模态框*/
     $('#seek-brace').click(function()
     {
@@ -238,18 +222,7 @@ $js =
     {
         $('#form-seek-brace').submit();
     });
-        
-    /** 完成操作 close关闭模态款的 */
-    $("#completeModal .modal-header .close").click(function()
-    {
-        window.location.reload();
-    });
-    /** 完成操作 关闭模态框后重新加载页面 */
-    $("#completeModal .modal-footer #complete-close").click(function()
-    {
-        window.location.reload();
-    });
-        
+     
     /** 完成操作 弹出模态框 */
     $('#complete').click(function()
     {
@@ -262,17 +235,6 @@ $js =
         $('#form-complete').submit();
     });
     
-    /** 取消操作 close关闭模态款的 */
-    $("#cancelModal .modal-header .close").click(function()
-    {
-        window.location.reload();
-    });
-    /** 取消操作 关闭模态框后重新加载页面 */
-    $("#cancelModal .modal-footer #cancel-close").click(function()
-    {
-        window.location.reload();
-    });
-        
     /** 取消操作 弹出模态框 */
     $('#cancel').click(function()
     {

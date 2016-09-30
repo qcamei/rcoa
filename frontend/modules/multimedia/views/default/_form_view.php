@@ -12,6 +12,7 @@ use yii\helpers\Html;
 
 <div class="controlbar">
     <div class="container">
+        <div class="footer-view-btn">
         <?= Html::a(Yii::t('rcoa', 'Back'), '#', ['class' => 'btn btn-default','onclick'=>'history.go(-1)']) ?>
         <?php
             /**
@@ -35,11 +36,12 @@ use yii\helpers\Html;
              * 1、拥有取消的权限
              * 2、状态必须非在【待审核】or【已完成】or【已取消】
              * 3、创建者是自己
+             * 4、必须是在取消支撑下
              */
             if(Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CANCEL) 
                && !($model->getIsStatusWaitCheck() || $model->getIsStatusCompleted() || $model->getIsStatusCancel()) 
-               && $model->create_by == Yii::$app->user->id)
-                echo Html::a('取消', 'javascript:;', ['id' => 'cancel', 'class' =>'btn btn-danger']).' ';
+               && $model->create_by == Yii::$app->user->id /*&& $model->brace_mark == MultimediaTask::CANCEL_BRACE_MARK*/)
+                echo Html::a('取消', 'javascript:;', ['id' => 'cancel', 'class' =>'btn btn-danger', 'style' => 'margin-right:15px;']).' ';
             /**
              * 添加审核 按钮显示必须满足以下条件：
              * 1、必须拥有添加审核权限
@@ -68,15 +70,17 @@ use yii\helpers\Html;
              */
             if(Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_ASSIGN) && $model->getIsStatusAssign()
                && $multimedia->getIsAssignPerson($model->make_team))
-                echo Html::a('指派', 'javascript:;', ['id' => 'submit', 'class' =>'btn btn-primary']).' ';
+                echo Html::a('指派', 'javascript:;', ['id' => 'submit', 'class' =>'btn btn-success']).' ';
             /**
              * 寻求支撑 按钮显示必须满足以下条件：
-             * 1、状态必须是在【待指派】
-             * 2、必须是创建者所在团队的指派人
-             * 3、制作人员必须为空
+             * 1、必须是在取消支撑下
+             * 2、状态必须是在【待指派】
+             * 3、必须是创建者所在团队的指派人
+             * 4、制作人员必须为空
              */
-            if($model->getIsStatusAssign() && $multimedia->getIsAssignPerson($model->create_team) && empty($producer))
-                echo Html::a('寻求支撑', 'javascript:;',  ['id' => 'seek-brace', 'class' =>'btn btn-danger']);
+            if($model->brace_mark == MultimediaTask::CANCEL_BRACE_MARK && $model->getIsStatusAssign() 
+              && $multimedia->getIsAssignPerson($model->create_team) && empty($producer))
+                echo Html::a('寻求支撑', 'javascript:;',  ['id' => 'seek-brace', 'class' =>'btn btn-danger']).' ';
             /**
              * 取消支撑 按钮显示必须满足以下条件：
              * 1、必须是在已经寻求支撑下
@@ -111,5 +115,6 @@ use yii\helpers\Html;
                && !empty($model->multimediaChecks) && $multimedia->getIsCheckStatus($model->id))
                 echo Html::a('提交审核', ['check/submit', 'task_id' => $model->id], ['class' =>'btn btn-danger']).' ';
         ?>
+        </div>
     </div>
 </div>
