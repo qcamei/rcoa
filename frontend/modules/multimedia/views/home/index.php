@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="head-top"></div>
     <div class="container content">
         <div class="main-title">
-            本月已完成视频标准工作量统计!
+            <span class="icon statistics-disable-icon"></span>本月已完成标准工作量( 分钟 )
         </div>
         <div class="title">
             换算规则：
