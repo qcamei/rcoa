@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="container course-manage-index item-manage">
     
-    <?= $this->render('search',[
+    <?= $this->render('_search_detai',[
         'itemType' => $itemType,
         'items' => $items,
         'itemChild' => $itemChild,
