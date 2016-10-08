@@ -354,7 +354,7 @@ class MultimediaTool {
     {
         $result = MultimediaTask::find()
                 ->select(['Task.id', 'Task.item_type_id', 'Task.item_id', 'Task.item_child_id', 'Task.course_id',
-                    'Task.name', 'Task.progress', 'Task.content_type', 'Task.carry_out_time', 'Task.level',
+                    'Task.name', 'Task.progress', 'Task.content_type', 'Task.plan_end_time', 'Task.level',
                     'Task.make_team', 'Task.status', 'Task.create_team', 'Task.create_by', 'AssignTeam.u_id',
                     'Producer.u_id AS producer'
                 ])

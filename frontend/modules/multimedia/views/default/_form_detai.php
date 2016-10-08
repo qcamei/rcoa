@@ -84,9 +84,9 @@ foreach (MultimediaTask::$statusNmae as $key => $value) {
             
             ['label' => '<span class="btn-block viewdetail-th-head">开发信息</span>','value' => ''],
             [
-                'attribute' => 'carry_out_time',
+                'attribute' => 'plan_end_time',
                 'format' => 'raw',
-                'value' => '<span class="complete-time">'.$model->carry_out_time.'</span>',
+                'value' => '<span class="complete-time">'.$model->plan_end_time.'</span>',
             ],
             [
                 'attribute' => 'level',
@@ -135,6 +135,10 @@ foreach (MultimediaTask::$statusNmae as $key => $value) {
             [
                 'attribute' => 'updated_at',
                 'value' => date('Y-m-d H:i', $model->updated_at),
+            ],
+            [
+                'attribute' => 'real_carry_out',
+                'value' => $model->real_carry_out,
             ],
             [
                 'attribute' => 'des',

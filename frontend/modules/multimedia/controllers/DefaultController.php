@@ -321,6 +321,7 @@ class DefaultController extends Controller
         
         $model->status = MultimediaTask::STATUS_COMPLETED;
         $model->progress = $model->getStatusProgress();
+        $model->real_carry_out = date('Y-m-d H:i', time());
         if($model->load(Yii::$app->request->post()))
             $multimedia->saveCompleteTask($model);
         return $this->redirect(['personal', 'create_by' => $model->create_by]);

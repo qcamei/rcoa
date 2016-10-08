@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ],
             [
-                'label' => Yii::t('rcoa/multimedia', 'Team Brace'),
+                'label' => Yii::t('rcoa/multimedia', 'Create Brace'),
                 'format' => 'raw',
                 'value'=> function($model){
                     /* @var $model MultimediaTask */
@@ -101,7 +101,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs hidden-sm hidden-md',
                     ],
                     'style' => [
-                        'width' => '110px'  
+                        'width' => '110px',
+                        'padding' => '8px'
                     ],
                 ],
                 'contentOptions' =>[
@@ -119,7 +120,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs hidden-sm hidden-md',
                     ],
                     'style' => [
-                        'width' => '100px'  
+                        'width' => '100px',
+                        'padding' => '8px'
                     ],
                 ],
                 'contentOptions' =>[
@@ -137,7 +139,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs hidden-sm',
                     ],
                     'style' => [
-                        'width' => '135px'  
+                        'width' => '135px',
+                        'padding' => '8px'
                     ],
                 ],
                 'contentOptions' =>[
@@ -155,7 +158,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs hidden-sm',
                     ],
                     'style' => [
-                        'width' => '150px'  
+                        'width' => '150px',
+                        'padding' => '8px'
                     ],
                 ],
                 'contentOptions' =>[
@@ -196,14 +200,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value'=> function($model){
                     /* @var $model MultimediaTask */
-                    return $model->carry_out_time;
+                    return $model->plan_end_time;
                 },
                 'headerOptions' => [
                     'class'=>[
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '85px'  
+                        'width' => '85px',
+                        'padding' => '8px'
                     ],
                 ],
                 'contentOptions' =>[
@@ -225,7 +230,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '58px'  
+                        'width' => '58px',
+                        'padding' => '8px'
                     ],
                 ],
                 'contentOptions' =>[
@@ -246,7 +252,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '75px'  
+                        'width' => '75px',
+                        'padding' => '8px'
                     ],
                 ],
                 'contentOptions' =>[

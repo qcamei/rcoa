@@ -9,7 +9,7 @@ use yii\web\View;
 /* @var $this View */
 /* @var $model MultimediaTask */
 
-$this->title = Yii::t('rcoa/multimedia', 'Create Multimedia Manage');
+$this->title = Yii::t('rcoa/multimedia', 'Create Multimedia Task');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/multimedia', 'Multimedia Manages'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

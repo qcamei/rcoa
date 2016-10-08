@@ -8,7 +8,7 @@ use yii\web\View;
 /* @var $this View */
 /* @var $model MultimediaTask */
 
-$this->title = Yii::t('rcoa/multimedia', 'Update Multimedia Manage').': '.$model->name;
+$this->title = Yii::t('rcoa/multimedia', 'Update Multimedia Task').': '.$model->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/multimedia', 'Multimedia Manages'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('rcoa', 'Update');

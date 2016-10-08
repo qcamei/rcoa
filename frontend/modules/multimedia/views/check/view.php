@@ -10,14 +10,14 @@ use yii\widgets\DetailView;
 /* @var $this View */
 /* @var $model MultimediaCheck */
 
-$this->title = $model->title;
+$this->title = Yii::t('rcoa/multimedia', 'Multimedia Check View').':'.$model->title;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/multimedia', 'Multimedia Checks'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <h4 class="modal-title" id="myModalLabel"><?= $model->title?></h4>
+    <h4 class="modal-title" id="myModalLabel"><?= $this->title ?></h4>
 </div>
 <div class="modal-body">
     
@@ -47,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'label' => Yii::t('rcoa/multimedia', 'Complete Time'),
-                'value' => $model->carry_out_time,
+                'value' => $model->real_carry_out,
             ],
             [
                 'attribute' => 'remark',

@@ -161,7 +161,7 @@ class CheckController extends Controller
         if(!$model->task->getIsStatusWaitCheck())
             throw new NotAcceptableHttpException('该任务状态为'.$model->task->getStatusName().'！');
         
-        $model->carry_out_time = date('Y-m-d H:i', time());
+        $model->real_carry_out = date('Y-m-d H:i', time());
         $model->status = MultimediaCheck::STATUS_COMPLETE;
         $multimedia->saveSubmitCheckTask($model);
         $this->redirect(['default/view', 'id' => $model->task_id]);

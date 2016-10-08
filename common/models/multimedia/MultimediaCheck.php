@@ -18,8 +18,8 @@ use yii\db\ActiveRecord;
  * @property string $create_by                      创建者
  * @property integer $created_at                    创建于
  * @property integer $updated_at                    更新于
- * @property string $carry_out_time                 完成时间
- * @property integer $status                         状态
+ * @property string $real_carry_out                 完成时间
+ * @property integer $status                        状态
  *      
  * @property User $createBy                         获取创建者
  * @property MultimediaTask $task                   获取任务
@@ -56,7 +56,7 @@ class MultimediaCheck extends ActiveRecord
             [['remark'], 'string'],
             [['title'], 'string', 'max' => 255],
             [['create_by'], 'string', 'max' => 36],
-            [['carry_out_time'], 'string', 'max' => 60],
+            [['real_carry_out'], 'string', 'max' => 60],
             [['create_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['create_by' => 'id']],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => MultimediaTask::className(), 'targetAttribute' => ['task_id' => 'id']],
         ];
@@ -88,7 +88,7 @@ class MultimediaCheck extends ActiveRecord
             'create_by' => Yii::t('rcoa', 'Create By'),
             'created_at' => Yii::t('rcoa/multimedia', 'Created At'),
             'updated_at' => Yii::t('rcoa/multimedia', 'Updated At'),
-            'carry_out_time' => Yii::t('rcoa/multimedia', 'Complete Time'),
+            'real_carry_out' => Yii::t('rcoa/multimedia', 'Complete Time'),
             'status' => Yii::t('rcoa/multimedia', 'Status'),
         ];
     }

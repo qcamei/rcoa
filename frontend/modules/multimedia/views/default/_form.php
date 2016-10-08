@@ -72,16 +72,16 @@ use yii\widgets\ActiveForm;
     ]) ?>
 
     <?php
-        echo Html::beginTag('div', ['class' => 'form-group field-MultimediaTask-carry_out_time has-success']);
+        echo Html::beginTag('div', ['class' => 'form-group field-MultimediaTask-plan_end_time has-success']);
             echo Html::beginTag('label', [
                     'class' => 'col-lg-1 col-md-1 control-label', 
                     'style' => 'color: #999999; font-weight: normal; padding-right: 0; padding-left: 0',
-                    'for' => 'MultimediaTask-carry_out_time'
-                ]).Yii::t('rcoa/multimedia', 'Carry Out Time').Html::endTag('label');
+                    'for' => 'MultimediaTask-plan_end_time'
+                ]).Yii::t('rcoa/multimedia', 'Plan End Time').Html::endTag('label');
             echo Html::beginTag('div', ['class' => 'col-sm-4']);
                 echo DateControl::widget([
-                    'name' => 'MultimediaTask[carry_out_time]',
-                    'value' => $model->isNewRecord ? date('Y-m-d H:i', strtotime('+1 days')) : $model->carry_out_time, 
+                    'name' => 'MultimediaTask[plan_end_time]',
+                    'value' => $model->isNewRecord ? date('Y-m-d H:i', strtotime('+1 days')) : $model->plan_end_time, 
                     'type'=> DateControl::FORMAT_DATETIME,
                     'displayFormat' => 'yyyy-MM-dd H:i',
                     'saveFormat' => 'yyyy-MM-dd H:i',

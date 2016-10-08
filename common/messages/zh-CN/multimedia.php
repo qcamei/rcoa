@@ -20,11 +20,13 @@ return[
     'Create Multimedia Assign Team' => '创建-指派团队人',
     'Update Multimedia Assign Team' => '更新-指派团队人',
     'Multimedia Manages' => '多媒体管理',
-    'Create Multimedia Manage' => '创建任务',
-    'Update Multimedia Manage' => '更新任务',
+    'Create Multimedia Task' => '创建任务',
+    'Update Multimedia Task' => '更新任务',
+    'Multimedia Task View' => '任务详情',
     'Multimedia Checks' => '审核记录',
     'Create Multimedia Check' => '创建审核',
     'Update Multimedia Check' => '更新审核',
+    'Multimedia Check View' => '审核详情',
     
     
     //多媒体模块 - 字段名称
@@ -38,7 +40,7 @@ return[
     'Workload' => '标准工作量',
     'Progress' => '进度',
     'Content Type' => '类型',
-    'Carry Out Time' => '要求完成时间',
+    'Plan End Time' => '要求完成时间',
     'Level' => '等级',
     'Make Team' => '制作团队',
     'Producer' => '制作人',
@@ -47,6 +49,7 @@ return[
     'Create Team' => '创建团队',
     'Created At' => '创建时间',
     'Updated At' => '编辑时间',
+    'Real Carry Out' => '完成时间',
     'Des' => '备注',
     'Name Type' => '类型名称',
     'Proportion' => '比例',
@@ -57,5 +60,5 @@ return[
     'Task Name' => '任务名称',
     'Complete Time' => '完成时间',
     'Target Month' => '目标月份',
-    'Team Brace' => '创建 → 支撑'
+    'Create Brace' => '创建 → 支撑'
 ];

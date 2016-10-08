@@ -25,7 +25,7 @@ use yii\db\ActiveRecord;
  * @property integer $production_video_length           成品视频时长
  * @property integer $progress                          进度
  * @property integer $content_type                      任务类型
- * @property string $carry_out_time                     要求完成时间
+ * @property string $plan_end_time                      要求完成时间
  * @property integer $level                             等级
  * @property integer $make_team                         制作团队
  * @property integer $status                            状态
@@ -34,6 +34,7 @@ use yii\db\ActiveRecord;
  * @property string $create_by                          创建者
  * @property integer $created_at                        创建于
  * @property integer $updated_at                        更新于
+ * @property string $real_carry_out                     完成时间
  * @property string $des                                描述
  * @property integer $brace_mark                        支撑标识
  *
@@ -145,7 +146,7 @@ class MultimediaTask extends ActiveRecord
             self::SCENARIO_DEFAULT => [
                 'id', 'item_type_id', 'item_id', 'item_child_id', 'course_id', 'name', 'material_video_length', 
                 'content_type','level', 'path', 'make_team', 'status', 'create_team', 'created_at', 
-                'updated_at', 'brace_mark', 'name', 'des', 'carry_out_time','create_by'
+                'updated_at', 'brace_mark', 'name', 'des', 'plan_end_time', 'real_carry_out', 'create_by'
             ],
         ];
     }
@@ -167,7 +168,7 @@ class MultimediaTask extends ActiveRecord
             [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'progress', 'content_type', 'level', 'make_team', 'status', 'create_team', 'created_at', 'updated_at', 'brace_mark'], 'integer'],
             [['material_video_length', 'production_video_length'], 'checkVideoLen'],
             [['name', 'path', 'des'], 'string', 'max' => 255],
-            [['carry_out_time'], 'string', 'max' => 60],
+            [['plan_end_time', 'real_carry_out'], 'string', 'max' => 60],
             [['create_by'], 'string', 'max' => 36],
             [['content_type'], 'exist', 'skipOnError' => true, 'targetClass' => MultimediaContentType::className(), 'targetAttribute' => ['content_type' => 'id']],
             [['create_team'], 'exist', 'skipOnError' => true, 'targetClass' => Team::className(), 'targetAttribute' => ['create_team' => 'id']],
@@ -234,7 +235,7 @@ class MultimediaTask extends ActiveRecord
             'production_video_length' => Yii::t('rcoa/multimedia', 'Production Video Length'),
             'progress' => Yii::t('rcoa/multimedia', 'Progress'),
             'content_type' => Yii::t('rcoa/multimedia', 'Content Type'),
-            'carry_out_time' => Yii::t('rcoa/multimedia', 'Carry Out Time'),
+            'plan_end_time' => Yii::t('rcoa/multimedia', 'Plan End Time'),
             'level' => Yii::t('rcoa/multimedia', 'Level'),
             'make_team' => Yii::t('rcoa/multimedia', 'Make Team'),
             'status' => Yii::t('rcoa/multimedia', 'Status'),
@@ -243,6 +244,7 @@ class MultimediaTask extends ActiveRecord
             'create_by' => Yii::t('rcoa', 'Create By'),
             'created_at' => Yii::t('rcoa/multimedia', 'Created At'),
             'updated_at' => Yii::t('rcoa/multimedia', 'Updated At'),
+            'real_carry_out' => Yii::t('rcoa/multimedia', 'Real Carry Out'),
             'des' => Yii::t('rcoa/multimedia', 'Des'),
             'brace_mark' => Yii::t('rcoa/multimedia', 'Brace Mark'),
         ];

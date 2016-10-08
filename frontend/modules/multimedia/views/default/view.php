@@ -11,8 +11,8 @@ use yii\web\View;
 /* @var $this View */
 /* @var $model MultimediaTask */
 
-$this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/multimedia', 'Multimedia Manages'), 'url' => ['index']];
+$this->title = Yii::t('rcoa/multimedia', 'Multimedia Check View').':'.$model->name;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/multimedia', 'Multimedia T'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -144,7 +144,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => Yii::t('rcoa/multimedia', 'Complete Time'),
                 'value'=> function($model){
                     /* @var $model MultimediaCheck */
-                    return $model->carry_out_time;
+                    return $model->real_carry_out;
                 },
                 'headerOptions' => [
                     'class'=>[

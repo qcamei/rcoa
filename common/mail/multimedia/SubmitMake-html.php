@@ -35,7 +35,7 @@ use yii\helpers\Html;
     
     <p><b>任务名称</b>：<?= Html::encode($model->name) ?></p>
     
-    <p><b>需求时间</b>：<span style="color:red"><?= Html::encode($model->carry_out_time) ?></span></p>
+    <p><b>需求时间</b>：<span style="color:red"><?= Html::encode($model->plan_end_time) ?></span></p>
     
     <?= Html::a('马上查看', 
             Yii::$app->urlManager->createAbsoluteUrl(['/multimedia/default/view','id' => $model->id]), 
