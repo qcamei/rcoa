@@ -19,7 +19,7 @@ class MultimediaTaskSearch extends MultimediaTask
     {
         return [
             [['id', 'item_type_id', 'item_id', 'item_child_id', 'course_id', 'material_video_length', 'production_video_length', 'progress', 'content_type', 'level', 'make_team', 'status', 'create_team', 'created_at', 'updated_at'], 'integer'],
-            [['name', 'carry_out_time', 'path', 'create_by', 'des'], 'safe'],
+            [['name', 'plan_end_time', 'real_carry_out', 'path', 'create_by', 'des'], 'safe'],
         ];
     }
 
@@ -77,7 +77,8 @@ class MultimediaTaskSearch extends MultimediaTask
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'carry_out_time', $this->carry_out_time])
+            ->andFilterWhere(['like', 'carry_out_time', $this->plan_end_time])
+            ->andFilterWhere(['like', 'carry_out_time', $this->real_carry_out])
             ->andFilterWhere(['like', 'path', $this->path])
             ->andFilterWhere(['like', 'create_by', $this->create_by])
             ->andFilterWhere(['like', 'des', $this->des]);
