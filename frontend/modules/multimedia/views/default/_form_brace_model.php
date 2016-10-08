@@ -8,8 +8,6 @@ use yii\widgets\ActiveForm;
 
 ?>
 
-
-
 <div class="modal fade myModal" id="braceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -36,7 +34,6 @@ use yii\widgets\ActiveForm;
                 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" id="brace-close" data-dismiss="modal">关闭</button>
                 <button type="button" class="btn btn-primary" id="brace-save">确认</button>
             </div>
         </div>

@@ -27,7 +27,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'multimedia' => $multimedia,
         'workload' => $workload,
-        'producerList' => $producerList,
         'producer' => $producer
     ]) ?>
     
@@ -43,6 +42,13 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $this->render('_form_cancel_model', [
         'model' => $model,
     ])?>
+    
+    <?= $this->render('_form_assign_model', [
+        'model' => $model,
+        'producerList' => $producerList,
+    ])?>
+    
+    <?= $this->render('/check/_form_model')?>
     
     <h4>审核记录</h4>
     <?= GridView::widget([
@@ -165,6 +171,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'view' => function ($url, $model) {
                         /* @var $model MultimediaCheck */
                         $options = [
+                            'id' => 'view-check', 
                             'class' => 'btn btn-default',
                         ];
                         $icon = $model->status == MultimediaCheck::STATUS_COMPLETE ? 'icon task-complete' : 'icon working';
@@ -194,29 +201,36 @@ $this->params['breadcrumbs'][] = $this->title;
 <?= $this->render('_form_view',[
     'model' => $model,
     'multimedia' => $multimedia,
+    'sign' => $sign,
 ])?>
-
 
 <?php
 $js = 
 <<<JS
-    /** 指派操作 */
-    $('#submit').click(function()
+    /** 添加审核操作 弹出模态框 */
+    $('#check-create').click(function()
     {
-        var  myselect = document.getElementById("producer-select");
-        var index = myselect.selectedIndex;
-        if(index > 0)
-            $('#form-assign').submit();
-        else
-            alert('请选择制作人！');
+        var urlf = $(this).attr("href");
+        $('#myModal').modal({remote:urlf});
+        return false;
     });
-      
+    
+    /** 指派操作 弹出模态框 */
+    $('#assign').click(function()
+    {
+        $('#assignModal').modal();
+    });
+    /** 指派操作 提交表单 */
+    $("#assignModal .modal-footer #assign-save").click(function()
+    {
+        $('#form-assign').submit();            
+    });    
+    
     /** 寻求支撑 弹出模态框*/
     $('#seek-brace').click(function()
     {
         $('#braceModal').modal();
     });
-        
     /** 支撑操作 提交表单 */
     $("#braceModal .modal-footer #brace-save").click(function()
     {
@@ -228,7 +242,6 @@ $js =
     {
         $('#completeModal').modal();
     });
-        
     /** 完成操作 提交表单 */
     $("#completeModal .modal-footer #complete-save").click(function()
     {
@@ -240,12 +253,40 @@ $js =
     {
         $('#cancelModal').modal();
     });
-        
     /** 取消操作 提交表单 */
     $("#cancelModal .modal-footer #cancel-save").click(function()
     {
         $('#form-cancel').submit();
     });
+        
+    /** 查看审核 */   
+    $('#view-check').click(function(){
+        var urlf = $(this).attr("href");
+        $("#myModal").modal({remote:urlf});
+        return false;
+    });
+    /** 审核操作 */
+    $('#myModal').on('loaded.bs.modal', function ()
+    {
+        /** 编辑审核操作 */
+        $('#check-update').click(function()
+        {
+            var urlf = $(this).attr("href");
+            var a = $('#updateModal').modal({remote:urlf});
+            return false;
+        });
+        /** 审核操作 提交表单 */
+        $("#myModal .modal-footer #create-check-save").click(function()
+        {
+            $('#multimedia-check-form').submit();            
+        });
+        /** 审核操作 提交表单 */
+        $("#updateModal .modal-footer #update-check-save").click(function()
+        {
+            $('#multimedia-check-form').submit();            
+        });
+    });
+    
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>

@@ -267,7 +267,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                     : ($model->getIsStatusCompleted() ? 'btn btn-danger btn-sm' : 'btn btn-default btn-sm')))),
                             'style' => 'width: 55px;'
                         ];
-                        return Html::a($model->getStatusName(), ['view', 'id' => $model->id], $options);
+                        return Html::a($model->getStatusName(), [
+                            'view', 'id' => $model->id, 'sign' => $actionId == 'team' ? '1' : '0'], $options);
                     },
                 ],
                 'headerOptions' => [

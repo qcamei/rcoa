@@ -14,13 +14,11 @@ $this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'i
 $this->params['breadcrumbs'][] = Yii::t('rcoa', 'Update');
 ?>
 
-<div class="title">
-    <div class="container">
-        <?= $this->title ?>
-    </div>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title" id="myModalLabel">编辑审核</h4>
 </div>
-
-<div class="container multimedia-check-update has-title">
+<div class="modal-body">
 
     <?= $this->render('_form', [
         'model' => $model,
@@ -28,14 +26,8 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa', 'Update');
 
 </div>
 
-<div class="controlbar">
-    <div class="container">
-        <?= Html::a(Yii::t('rcoa', 'Back'), ['view', 'id' => $model->id], ['class' => 'btn btn-default']) ?>
-        <?= Html::a(
-                $model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'),
-                'javascript:;', 
-                ['id'=>'submit', 'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" id="update-check-save">确认</button>
 </div>
 
 <?php
@@ -47,7 +39,7 @@ $js =
     });
     
 JS;
-    $this->registerJs($js,  View::POS_READY);
+    //$this->registerJs($js,  View::POS_READY);
 ?>
 
 <?php

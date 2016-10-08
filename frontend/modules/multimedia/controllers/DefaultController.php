@@ -98,7 +98,7 @@ class DefaultController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
+    public function actionView($id, $sign = null)
     {
         /* @var $multimedia MultimediaTool */
         $multimedia = \Yii::$app->get('multimedia');
@@ -118,7 +118,8 @@ class DefaultController extends Controller
         return $this->render('view', [
             'model' => $model,
             'multimedia' => $multimedia,
-            'teams' => $this->getTeams(),
+            'sign' => $sign,
+            'teams' => $this->getTeams($model->create_team),
             'workload' => $this->getWorkloadOne($model),
             'producerList' => $this->getProducerList($model->make_team),
             'producer' => $this->getAlreadyProducer($id),
@@ -460,11 +461,13 @@ class DefaultController extends Controller
     
     /**
      * 获取所有团队
+     * @param type $teamId  团队ID
      * @return type
      */
-    public function getTeams(){
+    public function getTeams($teamId){
         $team = Team::find()
                 ->where(['type' => 1])
+                ->andWhere(['not in', 'id', $teamId])
                 ->all();
         return ArrayHelper::map($team, 'id', 'name');
     }

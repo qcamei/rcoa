@@ -8,12 +8,26 @@ use yii\helpers\Html;
 /* @var $model MultimediaTask */
 /* @var $multimedia MultimediaTool */
 
+if($sign == 0){
+    $page = [
+        'personal', 
+        'create_by' => Yii::$app->user->id, 
+        'producer' => Yii::$app->user->id, 
+        'assignPerson' => Yii::$app->user->id
+    ];
+} else{
+    $page = [
+        'team', 
+        'make_team' => $multimedia->getHotelTeam(Yii::$app->user->id), 
+        'create_team' => $multimedia->getHotelTeam(Yii::$app->user->id)];
+}
+
 ?>
 
 <div class="controlbar">
     <div class="container">
         <div class="footer-view-btn">
-        <?= Html::a(Yii::t('rcoa', 'Back'), '#', ['class' => 'btn btn-default','onclick'=>'history.go(-1)']) ?>
+        <?= Html::a(Yii::t('rcoa', 'Back'), $page, ['class' => 'btn btn-default', /*'onclick'=> 'history.go(-1)'*/]) ?>
         <?php
             /**
              * 编辑 按钮显示必须满足以下条件：
@@ -53,7 +67,7 @@ use yii\helpers\Html;
             if(Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CREATE_CHECK) 
                && $model->getIsStatusWaitCheck() && $model->create_by == Yii::$app->user->id
                && (empty($model->multimediaChecks) || !$multimedia->getIsCheckStatus($model->id)))
-                echo Html::a('添加审核', ['check/create', 'task_id' => $model->id], ['class' =>'btn btn-info']).' ';
+                echo Html::a('添加审核', ['check/create', 'task_id' => $model->id], ['id' => 'check-create', 'class' =>'btn btn-info']).' ';
             /**
              * 恢复制作 按钮显示必须满足以下条件：
              * 1、状态必须是在【已完成】
@@ -70,7 +84,7 @@ use yii\helpers\Html;
              */
             if(Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_ASSIGN) && $model->getIsStatusAssign()
                && $multimedia->getIsAssignPerson($model->make_team))
-                echo Html::a('指派', 'javascript:;', ['id' => 'submit', 'class' =>'btn btn-success']).' ';
+                echo Html::a('指派', 'javascript:;', ['id' => 'assign', 'class' =>'btn btn-success']).' ';
             /**
              * 寻求支撑 按钮显示必须满足以下条件：
              * 1、必须是在取消支撑下

@@ -294,7 +294,7 @@ and open the template in the editor.
     width: 100px;
     height: 50px;
     text-align: center;
-    line-height: 45px;
+    line-height: 50px;
     float: left;
     font-weight: bold;
     color: #000;
@@ -305,7 +305,7 @@ and open the template in the editor.
     height: 50px;
     float: left;
     text-align: center;
-    line-height: 45px;
+    line-height: 50px;
 }
 .footer-item-list .footer-item-bg{
     background-color: #fff;
@@ -322,10 +322,9 @@ and open the template in the editor.
     margin-right: 5px;
 }
 .footer-item-list .footer-item-xs img{
-    width: 30px;
-    height: 30px;
-    margin-top: -5px;
-    margin-right: 5px;
+    width: 24px;
+    height: 24px;
+    margin-top: 2px;
 }
 .footer-item-list a:hover, a:focus {
     background-color: rgba(255, 255, 255, 0.46);;

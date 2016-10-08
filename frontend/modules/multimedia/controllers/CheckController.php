@@ -65,7 +65,7 @@ class CheckController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
+        return $this->renderPartial('view', [
             'model' => $this->findModel($id),
         ]);
     }
@@ -91,7 +91,7 @@ class CheckController extends Controller
             $multimedia->saveCreateCheckTask($model);
             return $this->redirect(['default/view', 'id' => $model->task_id]);
         } else {
-            return $this->render('create', [
+            return $this->renderPartial('create', [
                 'model' => $model,
                 'task_id' => $task_id,
             ]);
@@ -114,9 +114,9 @@ class CheckController extends Controller
             throw new NotAcceptableHttpException('该任务状态为'.$model->task->getStatusName().'！');
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['default/view', 'id' => $model->task_id]);
         } else {
-            return $this->render('update', [
+            return $this->renderPartial('update', [
                 'model' => $model,
             ]);
         }

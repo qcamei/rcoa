@@ -36,7 +36,6 @@ foreach (MultimediaTask::$statusNmae as $key => $value) {
         
 }
 ?>
-<?php $form = ActiveForm::begin(['id' => 'form-assign', 'action'=>'assign?id='.$model->id]); ?>
 
 <?php 
     echo DetailView::widget([
@@ -108,31 +107,7 @@ foreach (MultimediaTask::$statusNmae as $key => $value) {
             [
                 'label' => Yii::t('rcoa/multimedia', 'Producer'),
                 'format' => 'raw',
-                'value' =>  Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_ASSIGN) && $model->getIsStatusAssign()
-                            && $multimedia->getIsAssignPerson($model->make_team) 
-                            && ($model->brace_mark == MultimediaTask::CANCEL_BRACE_MARK 
-                            || $model->make_team != $model->create_team) ? 
-                            Select2::widget([
-                                'id' => 'producer-select',
-                                'name' => 'producer[]',
-                                'value' => !empty($producer) ? array_keys($producer) : '',
-                                'data' => $producerList,
-                                'options' => [
-                                    'placeholder' => '请选择制作人...',
-                                    //'multiple' => true
-                                ],
-                                'toggleAllSettings' => [
-                                    'selectLabel' => '<i class="glyphicon glyphicon-ok-circle"></i> 添加全部',
-                                    'unselectLabel' => '<i class="glyphicon glyphicon-remove-circle"></i> 取消全部',
-                                    'selectOptions' => ['class' => 'text-success'],
-                                    'unselectOptions' => ['class' => 'text-danger'],
-                                ],
-                                'pluginOptions' => [
-                                    'tags' => false,
-                                    'maximumInputLength' => 10,
-                                    'allowClear' => true,
-                                ],
-                            ]) : (!empty($producer) ? implode(',', $producer) : '空'),
+                'value' =>  !empty($producer) ? implode(',', $producer) : '空',
             ],
             [
                 'label' => Yii::t('rcoa/multimedia', 'Status').Yii::t('rcoa/multimedia', 'Progress'),
@@ -169,8 +144,6 @@ foreach (MultimediaTask::$statusNmae as $key => $value) {
         ]   
     ]); 
 ?>
-
-<?php ActiveForm::end(); ?>
 
 <?php
 //$producerList = json_encode($producerList);
