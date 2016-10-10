@@ -330,7 +330,7 @@ class MultimediaTool {
         $trans = Yii::$app->db->beginTransaction();
         try
         {
-            if($model->save(false, ['carry_out_time', 'status'])){
+            if($model->save(false, ['real_carry_out', 'status'])){
                 $multimediaNotice->sendCreateByNotification ($model, '审核提交', 'multimedia/SubmitCheck-html');
             }else {
                 throw new Exception(json_encode($model->getErrors()));
