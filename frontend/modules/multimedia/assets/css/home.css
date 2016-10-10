@@ -26,16 +26,16 @@
     color: #555;
 }
 
-.multimedia-home .content .title .icon{
-    width: 16px;
-    height: 16px;
+.multimedia-home .content .main-title .icon{
+    width: 24px;
+    height: 24px;
     display: inline-block;
     background-position: center;
     background-repeat: no-repeat;
 }
 
-.multimedia-home .content .title .tag-detailed-icon{
-    background: url('../imgs/tag_detailed_16x16.png');
+.multimedia-home .content .main-title .statistics-disable-icon{
+    background: url('../imgs/statistics_disable_24x24.png');
 }
 
 /*----------------------

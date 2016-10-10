@@ -111,7 +111,8 @@ class HomeController extends Controller
                 ->leftJoin(['Producer'=>  MultimediaProducer::tableName()], 'Producer.task_id = Task.id')
                 ->leftJoin(['CreateUser'=> User::tableName()], 'CreateUser.id = Task.create_by')
                 ->leftJoin(['ProducerUser'=>  User::tableName()], 'ProducerUser.id = Producer.u_id')
-                ->where(['Task.status' => MultimediaTask::STATUS_COMPLETED]);
+                ->where(['Task.status' => MultimediaTask::STATUS_COMPLETED])
+                ->andWhere(['between','Task.real_carry_out',date('Y-m-01', time()),date('Y-m-t', time())]);
         return $query->all(Yii::$app->db);
     }
 }
