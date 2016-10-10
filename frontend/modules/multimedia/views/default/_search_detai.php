@@ -1,6 +1,6 @@
 <?php
 
-use common\models\teamwork\CourseManage;
+use common\models\multimedia\MultimediaTask;
 use kartik\daterange\DateRangePicker;
 use kartik\widgets\Select2;
 use yii\helpers\Html;
@@ -10,8 +10,8 @@ use yii\widgets\ActiveForm;
 ?>
 
 <?php $form = ActiveForm::begin([
-    'id' => 'course-manage-search',
-    'action' => ['index'],
+    'id' => 'multimedia-task-search',
+    'action' => ['list'],
     'method' => 'get',
 ]); ?>
 
@@ -33,13 +33,70 @@ use yii\widgets\ActiveForm;
 <div class="collapse" id="collapseExample">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 search-list">
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding: 5px 0px;">
+            <label id="label-team_id" for="team_id" class="col-lg-3 col-xs-12 control-label" style="padding-right: 0px;">
+                <?= Yii::t('rcoa/multimedia', 'Create Brace'); ?>
+            </label>
+            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5" style="padding-right: 0px;">
+                <?= Select2::widget([
+                    'id' => 'select2-team_id',
+                    'value'=> $create_team,
+                    'name' => 'create_team',
+                    'data' => $team,
+                    'options' => [
+                        'placeholder' => '全部',
+                    ],
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
+                ]); ?>
+            </div>
+            <?=  Html::img(['/filedata/multimedia/image/brace.png'], [
+                'width' => '15', 
+                'height' => '15', 
+                'style' => 'float: left; margin: 9px 0px;'
+            ])?>
+            <div class="col-lg-4 col-md-6 col-sm-5 col-xs-6" style="padding-right: 0px;">
+                <?= Select2::widget([
+                    'id' => 'select2-brace_team_id',
+                    'value'=> $make_team,
+                    'name' => 'make_team',
+                    'data' => $team,
+                    'options' => [
+                        'placeholder' => '全部',
+                    ],
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
+                ]); ?>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding: 5px 0px;">
+            <label id="label-item_type_id" for="content_type" class="col-lg-3 control-label">
+                <?= Yii::t('rcoa/multimedia', 'Content Type'); ?>
+            </label>
+            <div class="col-lg-9">
+                <?= Select2::widget([
+                    'id' => 'select2-content_type',
+                    'value'=> $content_type,
+                    'name' => 'content_type',
+                    'data' => $contentType,
+                    'options' => [
+                        'placeholder' => '全部',
+                    ],
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
+                ]); ?>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding: 5px 0px;">
             <label id="label-item_type_id" for="item_type_id" class="col-lg-3 control-label">
-                <?= Yii::t('rcoa/teamwork', 'Item Type'); ?>
+                <?= Yii::t('rcoa/multimedia', 'Item Type'); ?>
             </label>
             <div class="col-lg-9">
                 <?= Select2::widget([
                     'id' => 'select2-item_type_id',
-                    'value'=> $itemTypeId,
+                    'value'=> $item_type_id,
                     'name' => 'item_type_id',
                     'data' => $itemType,
                     'options' => [
@@ -53,12 +110,12 @@ use yii\widgets\ActiveForm;
         </div>
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding: 5px 0px;">
             <label id="label-item_id" for="item_id" class="col-lg-3 control-label">
-                <?= Yii::t('rcoa/teamwork', 'Item'); ?>
+                <?= Yii::t('rcoa/multimedia', 'Item'); ?>
             </label>
             <div class="col-lg-9">
                 <?= Select2::widget([
                     'id' => 'select2-item_id',
-                    'value'=> $itemId,
+                    'value'=> $item_id,
                     'name' => 'item_id',
                     'data' => $items,
                     'options' => [
@@ -72,12 +129,12 @@ use yii\widgets\ActiveForm;
         </div>
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding: 5px 0px;">
             <label id="label-item_child_id" for="item_child_id" class="col-lg-3 control-label">
-                <?= Yii::t('rcoa/teamwork', 'Item Child'); ?>
+                <?= Yii::t('rcoa/multimedia', 'Item Child'); ?>
             </label>
             <div class="col-lg-9">
                 <?= Select2::widget([
                     'id' => 'select2-item_child_id',
-                    'value'=> $itemChildId,
+                    'value'=> $item_child_id,
                     'name' => 'item_child_id',
                     'data' => $itemChild,
                     'options' => [
@@ -91,12 +148,12 @@ use yii\widgets\ActiveForm;
         </div>
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding: 5px 0px;">
             <label id="label-course_id" for="course_id" class="col-lg-3 control-label">
-                <?= Yii::t('rcoa/teamwork', 'Course ID'); ?>
+                <?= Yii::t('rcoa/multimedia', 'Course'); ?>
             </label>
             <div class="col-lg-9">
                 <?= Select2::widget([
                     'id' => 'select2-course_id',
-                    'value'=> $courseId,
+                    'value'=> $course_id,
                     'name' => 'course_id',
                     'data' => $course,
                     'options' => [
@@ -109,15 +166,34 @@ use yii\widgets\ActiveForm;
             </div>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding: 5px 0px;">
-            <label id="label-team_id" for="team_id" class="col-lg-3 control-label">
-                <?= Yii::t('rcoa/team', 'Team ID'); ?>
+            <label id="label-status" for="create_by" class="col-lg-3 control-label">
+                <?= Yii::t('rcoa', 'Create By'); ?>
             </label>
             <div class="col-lg-9">
                 <?= Select2::widget([
-                    'id' => 'select2-team_id',
-                    'value'=> $team_id,
-                    'name' => 'team_id',
-                    'data' => $team,
+                    'id' => 'select2-create_by',
+                    'value'=> $create_by,
+                    'name' => 'create_by',
+                    'data' => $createBy,
+                    'options' => [
+                        'placeholder' => '全部',
+                    ],
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
+                ]); ?>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding: 5px 0px;">
+            <label id="label-status" for="producer" class="col-lg-3 control-label">
+                <?= Yii::t('rcoa/multimedia', 'Producer'); ?>
+            </label>
+            <div class="col-lg-9">
+                <?= Select2::widget([
+                    'id' => 'select2-producer',
+                    'value'=> $producer,
+                    'name' => 'producer',
+                    'data' => $producers,
                     'options' => [
                         'placeholder' => '全部',
                     ],
@@ -136,9 +212,14 @@ use yii\widgets\ActiveForm;
                     'id' => 'select2-status',
                     'value'=> $status,
                     'name' => 'status',
-                    'data' => CourseManage::$statusName,
+                    'data' => [
+                        1 => '未完成', 
+                        MultimediaTask::STATUS_COMPLETED => '已完成', 
+                        MultimediaTask::STATUS_CANCEL => '已取消'
+                    ],
                     'options' => [
                         'placeholder' => '全部',
+                        //'multiple' => true
                     ],
                     'pluginOptions' => [
                         'allowClear' => true
@@ -174,7 +255,7 @@ use yii\widgets\ActiveForm;
             </div>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding: 5px 15px;">
-            <a id="export" role="button" class="col-lg-3 btn btn-primary">导出详细</a>
+            <a id="export" role="button" class="col-lg-3 btn btn-primary disabled">导出详细</a>
         </div>
     </div>
 </div>
@@ -200,7 +281,7 @@ $js =
         $('#up').toggleClass('up');
     });
     $('#submit').click(function(){
-        $('#course-manage-search').submit();
+        $('#multimedia-task-search').submit();
     });
     $('#select2-item_id').change(function(){
         var url = "/framework/api/search?id="+$(this).val(),
@@ -223,21 +304,6 @@ $js =
         location.href = "/teamwork/export/run?" + $('#course-manage-search').serialize();
     });
      
-    /*var datas = $('#course-manage-search').serialize();
-    $('#course-manage-search').keydown(function(e){
-        if(e.keyCode==13){
-            submitFeom(datas);
-            return false;
-        }
-    });
-    $('#submit').click(function(){
-        submitFeom(datas);
-    });
-    function submitFeom(datas){
-        $.get('', datas, function(data){
-            $('#course-manage-index').html(data);
-        });
-    }*/
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>

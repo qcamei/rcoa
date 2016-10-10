@@ -13,6 +13,7 @@ use frontend\modules\multimedia\MultimediaTool;
 use frontend\modules\multimedia\utils\MultimediaConvertRule;
 use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\ItemType;
+use wskeee\rbac\RbacManager;
 use wskeee\rbac\RbacName;
 use Yii;
 use yii\data\ArrayDataProvider;
@@ -54,51 +55,54 @@ class DefaultController extends Controller
     }
 
     /**
-     * Personal Lists all MultimediaTask models.
+     * Task Lists all MultimediaTask models.
      * @return mixed
      */
-    public function actionPersonal($create_by = null, $producer = null, $assignPerson = null, $status = null)
+    public function actionList($create_by = null, $producer = null, $assignPerson = null, $create_team = null,
+        $make_team = null, $content_type = null, $item_type_id = null, $item_id = null, $item_child_id = null, $course_id = null,
+        $status = 1, $time = null, $keyword = null, $mark = null)
     {
         /* @var $multimedia MultimediaTool */
         $multimedia = \Yii::$app->get('multimedia');
-        $status = $status == null ? MultimediaTask::$defaultStatus : $status;
         $dataProvider = new ArrayDataProvider([
             'allModels' => $multimedia->getMultimediaTask($create_by, $producer, $assignPerson, 
-                    $makeTeam = null, $createTeam = null, $status),
+                    $create_team, $make_team, $content_type, $item_type_id, $item_id, $item_child_id, $course_id,
+                    $status, $time, $keyword, $mark),
         ]);
         
-        return $this->render('team', [
+        return $this->render('list', [
             'dataProvider' => $dataProvider,
             'multimedia' => $multimedia,
+            'team' => $this->getTeams(),
+            'contentType' => $this->getContentType(),
+            'itemType' => $this->getItemType(),
+            'items' => $this->getItem(),
+            'itemChild' => $item_id != null ? $this->getChildren($item_id) : [],
+            'course' => $item_child_id != null ? $this->getChildren($item_child_id) : [],
+            'createBy' => $this->getCreateBys(),
+            'producers' => $this->getProducerList(),
+            'create_team' => $create_team,
+            'make_team' => $make_team,
+            'content_type' => $content_type,
+            'item_type_id' => $item_type_id,
+            'item_id' => $item_id,
+            'item_child_id' => $item_child_id,
+            'course_id' => $course_id,
+            'create_by' => $create_by,
+            'producer' => $producer,
+            'status' => $status,
+            'time' => $time != null ? $time : null,
+            'keyword' => $keyword != null ? $keyword : '',
+            'mark' => $mark != null ? $mark : 0,
         ]);
     }
     
-    /**
-     * Team Lists all MultimediaTask models.
-     * @return mixed
-     */
-    public function actionTeam($make_team = null, $create_team = null, $status = null)
-    {
-        /* @var $multimedia MultimediaTool */
-        $multimedia = \Yii::$app->get('multimedia');
-        $status = $status == null ? MultimediaTask::$defaultStatus : $status;
-        $dataProvider = new ArrayDataProvider([
-            'allModels' => $multimedia->getMultimediaTask($createBy = null, 
-                    $producer = null, $assignPerson = null, $make_team, $create_team, $status), 
-        ]);
-
-        return $this->render('team', [
-            'dataProvider' => $dataProvider,
-            'multimedia' => $multimedia,
-        ]);
-    }
-
     /**
      * Displays a single MultimediaTask model.
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id, $sign = null)
+    public function actionView($id)
     {
         /* @var $multimedia MultimediaTool */
         $multimedia = \Yii::$app->get('multimedia');
@@ -118,10 +122,9 @@ class DefaultController extends Controller
         return $this->render('view', [
             'model' => $model,
             'multimedia' => $multimedia,
-            'sign' => $sign,
             'teams' => $this->getTeams($model->create_team),
             'workload' => $this->getWorkloadOne($model),
-            'producerList' => $this->getProducerList($model->make_team),
+            'producerList' => $this->getProducerList(empty($model->make_team) ? $model->create_team : $model->make_team),
             'producer' => $this->getAlreadyProducer($id),
         ]);
     }
@@ -137,7 +140,7 @@ class DefaultController extends Controller
         /* @var $multimedia MultimediaTool */
         $multimedia = \Yii::$app->get('multimedia');
         if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_ASSIGN) 
-          && !$multimedia->getIsAssignPerson($model->make_team))
+          && !$multimedia->getIsAssignPerson(empty($model->make_team) ? $model->create_team : $model->make_team))
            throw new NotAcceptableHttpException('无权限操作！');
         if(!$model->getIsStatusAssign())
             throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
@@ -145,7 +148,7 @@ class DefaultController extends Controller
         $model->status = MultimediaTask::STATUS_TOSTART;
         $model->progress = MultimediaTask::$statusProgress[$model->status];
         $multimedia->saveAssignTask($model, $post);
-        $this->redirect(['personal', 'assignPerson' => Yii::$app->user->id]);
+        $this->redirect(['list', 'create_by' => Yii::$app->user->id, 'assignPerson' => Yii::$app->user->id]);
     }
 
     /**
@@ -163,12 +166,11 @@ class DefaultController extends Controller
         $multimedia = \Yii::$app->get('multimedia');
         $model->create_by = \Yii::$app->user->id;
         $model->create_team = $multimedia->getHotelTeam($model->create_by);
-        $model->make_team = $model->create_team;
         $model->progress = $model->getStatusProgress();
         
         if ($model->load(Yii::$app->request->post())) {
             $multimedia->saveCreateTask($model);
-            return $this->redirect(['personal', 'create_by' => $model->create_by]);
+            return $this->redirect(['list', 'create_by' => $model->create_by, 'assignPerson' => Yii::$app->user->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -249,7 +251,7 @@ class DefaultController extends Controller
         
         $oldMakeTeam = $model->make_team;
         $model->brace_mark = MultimediaTask::CANCEL_BRACE_MARK;
-        $model->make_team = $model->create_team;
+        $model->make_team = null;
         $multimedia->saveCancelBraceTask($model, $oldMakeTeam);
         return $this->redirect(['view', 'id' => $model->id]);
     }
@@ -297,7 +299,7 @@ class DefaultController extends Controller
         $model->status = MultimediaTask::STATUS_WAITCHECK;
         $model->progress = $model->getStatusProgress();
         $multimedia->saveSubmitMakeTask($model);
-        return $this->redirect(['personal', 'producer' => Yii::$app->user->id]);
+        return $this->redirect(['list', 'producer' => Yii::$app->user->id]);
     }
     
     /**
@@ -324,7 +326,7 @@ class DefaultController extends Controller
         $model->real_carry_out = date('Y-m-d H:i', time());
         if($model->load(Yii::$app->request->post()))
             $multimedia->saveCompleteTask($model);
-        return $this->redirect(['personal', 'create_by' => $model->create_by]);
+        return $this->redirect(['list', 'create_by' => $model->create_by]);
     }
     
     /**
@@ -367,7 +369,7 @@ class DefaultController extends Controller
         $cancel = ArrayHelper::getValue(Yii::$app->request->post(), 'reason');
         $model->status = MultimediaTask::STATUS_CANCEL;
         $multimedia->saveCancelTask($model, $cancel);
-        return $this->redirect(['personal', 'create_by' => $model->create_by]);
+        return $this->redirect(['list', 'create_by' => $model->create_by]);
     }
 
     /**
@@ -380,7 +382,7 @@ class DefaultController extends Controller
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['list']);
     }
 
     /**
@@ -465,12 +467,24 @@ class DefaultController extends Controller
      * @param type $teamId  团队ID
      * @return type
      */
-    public function getTeams($teamId){
+    public function getTeams($teamId = null){
         $team = Team::find()
                 ->where(['type' => 1])
-                ->andWhere(['not in', 'id', $teamId])
+                ->andFilterWhere(['not in', 'id', $teamId])
                 ->all();
         return ArrayHelper::map($team, 'id', 'name');
+    }
+
+    /**
+     * 获取所有创建者
+     * @return type
+     */
+    public function getCreateBys()
+    {
+        /* @var $rbacManager RbacManager */
+        $rbacManager = Yii::$app->authManager;
+        $createBys = $rbacManager->getItemUsers(RbacName::ROLE_MULTIMEDIA_PROMULGATOR);
+        return ArrayHelper::map($createBys, 'id', 'nickname');
     }
 
     /**
@@ -478,11 +492,11 @@ class DefaultController extends Controller
      * @param type $makeTeam        制作团队
      * @return type
      */
-    public function getProducerList($makeTeam)
+    public function getProducerList($makeTeam = null)
     {
         $producer = TeamMember::find()
-                    ->where(['team_id' => $makeTeam])
-                    ->andWhere(['position_id' => 3])
+                    ->where(['position_id' => 3])
+                    ->andFilterWhere(['team_id' => $makeTeam])
                     ->with('u')
                     ->all();
         return ArrayHelper::map($producer, 'u_id', 'u.nickname');

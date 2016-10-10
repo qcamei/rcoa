@@ -458,7 +458,7 @@ class TeamworkTool{
                 ->andfilterWhere(['like', 'Fw_item_type.name', $keyword])
                 ->orFilterWhere(['like', 'Fw_item.name', $keyword])
                 ->orFilterWhere(['like', 'Team.name', $keyword])
-                ->andfilterWhere([
+                ->andFilterWhere([
                     'Item.item_type_id' => $itemTypeId,
                     'Item.item_id' => $itemId,
                     'Item.item_child_id' => $itemChildId,
@@ -467,7 +467,7 @@ class TeamworkTool{
                     'Course.`status`'=> $status,
                     'Course.team_id'=> $teamId,
                 ])
-                ->andfilterWhere(
+                ->andFilterWhere(
                     $time != null ? ($status == CourseManage::STATUS_WAIT_START ? ['<=','Course.created_at', strtotime($time[1]) ]: 
                         ($status == CourseManage::STATUS_NORMAL ? ['<=','Course.real_start_time',$time[1]] : 
                             ($status == CourseManage::STATUS_CARRY_OUT ? ['between','Course.real_carry_out',$time[0],$time[1]] : 

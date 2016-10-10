@@ -11,8 +11,8 @@ use yii\web\View;
 /* @var $this View */
 /* @var $model MultimediaTask */
 
-$this->title = Yii::t('rcoa/multimedia', 'Multimedia Check View').':'.$model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/multimedia', 'Multimedia T'), 'url' => ['index']];
+$this->title = Yii::t('rcoa/multimedia', 'Multimedia Task View').' : '.$model->name;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/multimedia', 'Multimedia Tasks'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -201,7 +201,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <?= $this->render('_form_view',[
     'model' => $model,
     'multimedia' => $multimedia,
-    'sign' => $sign,
 ])?>
 
 <?php

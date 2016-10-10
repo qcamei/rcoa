@@ -19,23 +19,18 @@ use yii\helpers\Html;
                     ? 'footer-multimedia-xs footer-multimedia-bg visible-xs-inline-block' : 'footer-multimedia-xs visible-xs-inline-block']);
             
             echo Html::a(Html::img(['/filedata/multimedia/image/personal.png']), [
-                'default/personal', 'personal', 'create_by' => Yii::$app->user->id, 'producer' => Yii::$app->user->id, 'assignPerson' => Yii::$app->user->id],  
-                    ['class' => $actionId == 'personal'? 
-                        'footer-multimedia-xs footer-multimedia-bg visible-xs-inline-block' : 'footer-multimedia-xs visible-xs-inline-block']);
-            
-            echo Html::a(Html::img(['/filedata/multimedia/image/team.png']), [
-                'default/team', 'make_team' => $multimedia->getHotelTeam(Yii::$app->user->id), 'create_team' => $multimedia->getHotelTeam(Yii::$app->user->id)], 
-                    ['class' => $actionId == 'team'? 
+                'default/list', 'personal', 'create_by' => Yii::$app->user->id, 'producer' => Yii::$app->user->id, 'assignPerson' => Yii::$app->user->id],  
+                    ['class' => $actionId == 'list'? 
                         'footer-multimedia-xs footer-multimedia-bg visible-xs-inline-block' : 'footer-multimedia-xs visible-xs-inline-block']);
             
             echo Html::a(Html::img(['/filedata/multimedia/image/statistics.png']), ['/multimedia/statistics'], 
                     ['class' => $controllerId == 'statistics' ? 'footer-multimedia-xs footer-multimedia-bg visible-xs-inline-block' : 'footer-multimedia-xs visible-xs-inline-block']);
             /**
              * 创建任务 按钮必须满足以下条件：
-             * 1、操作方法必须是 【personal】
+             * 1、操作方法必须是 【list】
              * 2、必须拥有创建权限
              */
-            if($actionId == 'personal' && Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CREATE))
+            if($actionId == 'list' && Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CREATE))
                 echo Html::a(Html::img(['/filedata/multimedia/image/create.png']), ['create'], [
                     'class' => 'footer-multimedia-xs footer-multimedia-right visible-xs-inline-block']);
             
@@ -45,24 +40,19 @@ use yii\helpers\Html;
                     ['class' => $actionId == 'index' 
                     ? 'footer-multimedia footer-multimedia-bg hidden-xs' : 'footer-multimedia hidden-xs']);
             
-            echo Html::a(Html::img(['/filedata/multimedia/image/personal.png']).'个人', [
-                'default/personal', 'create_by' => Yii::$app->user->id, 'producer' => Yii::$app->user->id, 'assignPerson' => Yii::$app->user->id],  
-                    ['class' => $actionId == 'personal' ? 
-                        'footer-multimedia footer-multimedia-bg hidden-xs' : 'footer-multimedia hidden-xs']);
-            
-            echo Html::a(Html::img(['/filedata/multimedia/image/team.png']).'团队', [
-                    'default/team', 'make_team' => $multimedia->getHotelTeam(Yii::$app->user->id), 'create_team' => $multimedia->getHotelTeam(Yii::$app->user->id)], 
-                    ['class' =>  $actionId == 'team' ? 
+            echo Html::a(Html::img(['/filedata/multimedia/image/personal.png']).'任务', [
+                'default/list', 'create_by' => Yii::$app->user->id, 'producer' => Yii::$app->user->id, 'assignPerson' => Yii::$app->user->id],  
+                    ['class' => $actionId == 'list' ? 
                         'footer-multimedia footer-multimedia-bg hidden-xs' : 'footer-multimedia hidden-xs']);
             
             echo Html::a(Html::img(['/filedata/multimedia/image/statistics.png']).'统计', ['/multimedia/statistics'], 
                     ['class' => $controllerId == 'statistics' ? 'footer-multimedia footer-multimedia-bg hidden-xs' : 'footer-multimedia hidden-xs']);
             /**
              * 创建任务 按钮必须满足以下条件：
-             * 1、操作方法必须是 【personal】
+             * 1、操作方法必须是 【list】
              * 2、必须拥有创建权限
              */
-            if($actionId == 'personal' && Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CREATE))
+            if($actionId == 'list' && Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CREATE))
                 echo Html::a(Html::img(['/filedata/multimedia/image/create.png']).'创建任务', ['create'], [
                     'class' => 'footer-multimedia footer-multimedia-right hidden-xs']);
         ?>

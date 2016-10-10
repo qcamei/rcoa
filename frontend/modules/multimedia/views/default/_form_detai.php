@@ -79,7 +79,9 @@ foreach (MultimediaTask::$statusNmae as $key => $value) {
             ],
             [
                 'attribute' => 'content_type',
-                'value' => !empty($model->content_type) ? $model->contentType->name : '空',
+                'format' => 'raw',
+                'value' => !empty($model->content_type) ? 
+                           '<span style="color:rgba(243, 123, 83, 1)">'.$model->contentType->name.'</span>' : '空' ,
             ],
             
             ['label' => '<span class="btn-block viewdetail-th-head">开发信息</span>','value' => ''],
@@ -97,12 +99,12 @@ foreach (MultimediaTask::$statusNmae as $key => $value) {
             [
                 'attribute' => 'make_team',
                 'format' => 'raw',
-                'value' => $model->make_team != $model->create_team ? 
+                'value' => !empty($model->make_team) ? 
                            '<span class="team-span" style="float: left;">'.$model->createTeam->name.'</span>'.
                            Html::img(['/filedata/multimedia/image/brace.png'], [
                                'width' => '20', 'height' => '20', 'style' => 'float: left; margin: 0 3px;'
                            ]).'<span class="team-span" style="float: left;">'.$model->makeTeam->name.'</span>'
-                           :'<span class="team-span">'.$model->makeTeam->name.'</span>',
+                           :'<span class="team-span">'.$model->createTeam->name.'</span>',
             ],
             [
                 'label' => Yii::t('rcoa/multimedia', 'Producer'),

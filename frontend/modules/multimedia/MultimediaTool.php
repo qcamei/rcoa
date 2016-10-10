@@ -7,7 +7,10 @@ use common\models\multimedia\MultimediaCheck;
 use common\models\multimedia\MultimediaProducer;
 use common\models\multimedia\MultimediaTask;
 use common\models\team\TeamMember;
+use common\models\teamwork\CourseManage;
 use common\wskeee\job\JobManager;
+use wskeee\framework\models\Item;
+use wskeee\framework\models\ItemType;
 use Yii;
 use yii\db\Exception;
 use yii\helpers\ArrayHelper;
@@ -31,7 +34,8 @@ class MultimediaTool {
         $jobManager = Yii::$app->get('jobManager');
         $postProducer = ArrayHelper::getValue($post, 'producer'); //获取传上来的制作人
         $producer = ArrayHelper::getColumn($multimediaNotice->getProducer($model->id), 'u_id');
-        $makeTeam = ArrayHelper::getValue($multimediaNotice->getAssignPerson($model->make_team), 'u_id');
+        $makeTeam = !empty($model->make_team) ? 
+                ArrayHelper::getValue($multimediaNotice->getAssignPerson($model->make_team), 'u_id') : null;
         $createTeam = ArrayHelper::getValue($multimediaNotice->getAssignPerson($model->create_team), 'u_id');
         
         /** 开启事务 */
@@ -47,7 +51,7 @@ class MultimediaTool {
                     $jobManager->setNotificationHasReady(10, $createTeam, $model->id);
                 }
                 $multimediaNotice->setAssignNotification($model, $postProducer);
-                $multimediaNotice->sendAssignPersonNotification($model, '新任务', 'multimedia/AssignProducer-htm');
+                $multimediaNotice->sendProducerNotification($model, $model->id, '新任务', 'multimedia/AssignProducer-htm');
                 $multimediaNotice->sendCreateByNotification($model, '任务已指派', 'multimedia/AssignCreateBy-html');
             }else {
                 throw new Exception(json_encode($model->getErrors()));
@@ -144,7 +148,7 @@ class MultimediaTool {
         {
             if($model->save(false, ['brace_mark', 'make_team'])){
                 $jobManager->removeNotification(10, $model->id, $assignPersonId);
-                $multimediaNotice->sendAssignPersonNotification ($model, '取消支撑', 'multimedia/CancelBrace-html');
+                $multimediaNotice->sendAssignPersonNotification ($model, '取消支撑', 'multimedia/CancelBrace-html', $oldMakeTeam);
             }else {
                 throw new Exception(json_encode($model->getErrors()));
             }
@@ -271,7 +275,7 @@ class MultimediaTool {
                 if(empty($model->producers))
                     $multimediaNotice->sendAssignPersonNotification ($model, '任务取消', 'multimedia/Cancel-html', $cancel);
                 else
-                    $multimediaNotice->sendProducerNotification ($model, '任务取消', 'multimedia/Cancel-html', $cancel);
+                    $multimediaNotice->sendProducerNotification ($model, $model->id, '任务取消', 'multimedia/Cancel-html', $cancel);
             }else {
                 throw new Exception(json_encode($model->getErrors()));
             }
@@ -299,7 +303,7 @@ class MultimediaTool {
         try
         {
             if($model->save()){
-                $multimediaNotice->sendProducerNotification ($model, '审核意见', 'multimedia/CreateCheck-html');
+                $multimediaNotice->sendProducerNotification ($model, $model->task_id, '审核意见', 'multimedia/CreateCheck-html');
             }else {
                 throw new Exception(json_encode($model->getErrors()));
             }
@@ -341,34 +345,74 @@ class MultimediaTool {
     
     /**
      * 查询所有任务
-     * @param type $createBy            创建者
-     * @param type $producer            制作人员
-     * @param type $assignPerson        指派人
-     * @param type $makeTeam            制作团队
-     * @param type $createTeam          创建团队
-     * @param array $status             状态
-     * @return type
+     * @param type $createBy        创建者
+     * @param type $producer        制作人
+     * @param type $assignPerson    指派人
+     * @param type $createTeam      创建团队
+     * @param type $makeTeam        制作团队
+     * @param type $contentType     类型
+     * @param type $itemTypeId      行业
+     * @param type $itemId          层次/类型
+     * @param type $itemChildId     专业/工种
+     * @param type $courseId        课程
+     * @param type $status          状态
+     * @param type $time            时间段
+     * @param type $keyword         关键字
+     * @param type $mark            标识
+     * @return type                 
      */
-    public function getMultimediaTask($createBy = null, $producer = null, $assignPerson = null, 
-        $makeTeam = null, $createTeam = null, $status = [])
+    public function getMultimediaTask($createBy = null, $producer = null, $assignPerson = null, $createTeam = null, 
+        $makeTeam = null, $contentType = null, $itemTypeId = null, $itemId = null, $itemChildId = null, $courseId = null,
+        $status = 1, $time = null, $keyword = null, $mark = null)
     {
+        if($time != null)
+            $time = explode(" - ",$time);
+        
         $result = MultimediaTask::find()
                 ->select(['Task.id', 'Task.item_type_id', 'Task.item_id', 'Task.item_child_id', 'Task.course_id',
                     'Task.name', 'Task.progress', 'Task.content_type', 'Task.plan_end_time', 'Task.level',
                     'Task.make_team', 'Task.status', 'Task.create_team', 'Task.create_by', 'AssignTeam.u_id',
-                    'Producer.u_id AS producer'
+                    'Producer.u_id AS producer', 'ItemType.name AS ItemTypeName','Item.name AS ItemName'
                 ])
                 ->from(['Task' => MultimediaTask::tableName()])
                 ->leftJoin(['AssignTeam' => MultimediaAssignTeam::tableName()], 
                     '(Task.make_team = AssignTeam.team_id OR Task.create_team = AssignTeam.team_id)'
                 )
                 ->leftJoin(['Producer' => MultimediaProducer::tableName()], 'Task.id = Producer.task_id')
-                ->orFilterWhere(['Task.create_by' => $createBy])
-                ->orFilterWhere(['Producer.u_id' => $producer])
-                ->orFilterWhere(['AssignTeam.u_id' => $assignPerson])
-                ->orFilterWhere(['Task.make_team' => $makeTeam])
-                ->orFilterWhere(['Task.create_team' => $createTeam])
-                ->andFilterWhere(['IN', 'Task.status', $status])
+                ->leftJoin(['ItemType' => ItemType::tableName()], 'ItemType.id = Task.item_type_id')
+                ->leftJoin(['Item' => Item::tableName()], 
+                  '(Item.id = Task.item_id OR Item.id = Task.item_child_id OR Item.id = Task.course_id)')
+                ->andFilterWhere(['or',
+                    [$mark == null ? 'or' : 'and', ['Task.create_by' => $createBy], ['Producer.u_id' => $producer]],
+                    ['AssignTeam.u_id' => $assignPerson],
+                ])
+                ->andFilterWhere([
+                    'Task.create_team' => $createTeam,
+                    'Task.make_team' => $makeTeam,
+                    'Task.content_type' => $contentType,
+                    'Task.item_type_id' => $itemTypeId,
+                    'Task.item_id' => $itemId,
+                    'Task.item_child_id' => $itemChildId,
+                    'Task.course_id' => $courseId,
+                ])
+                ->andFilterWhere(['IN', 'Task.status', 
+                    ($status == 1 ? MultimediaTask::$defaultStatus : $status)
+                ])
+                ->andFilterWhere(
+                    $time != null ? ($status == 1 ? ['<=', 'Task.created_at', strtotime($time[1])] : 
+                        ($status == MultimediaTask::STATUS_COMPLETED ? ['between', 'Task.real_carry_out', $time[0],$time[1]] : 
+                            ($status == MultimediaTask::STATUS_CANCEL ? ['between', 'Task.created_at', strtotime($time[0]),strtotime($time[1])] : 
+                                ['or', ['between', 'Task.created_at', strtotime($time[0]),strtotime($time[1])], 
+                                ['between', 'Task.real_carry_out', $time[0],$time[1]]]
+                            )
+                        )
+                    ) : []
+                )
+                ->andFilterWhere(['or',
+                    ['like', 'Task.name', $keyword],
+                    ['like', 'ItemType.name', $keyword],
+                    ['like', 'Item.name', $keyword]
+                ])
                 ->orderBy('Task.level desc, Task.id asc')
                 ->with('contentType')
                 ->with('createTeam')
@@ -378,7 +422,7 @@ class MultimediaTool {
                 ->with('makeTeam')
                 ->with('course')
                 ->with('createBy')
-                ->with('multimediaChecks')
+                //->with('multimediaChecks')
                 ->with('producers')
                 ->with('teamMember')
                 ->all();

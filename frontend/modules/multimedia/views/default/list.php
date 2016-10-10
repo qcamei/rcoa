@@ -4,6 +4,7 @@ use common\models\multimedia\MultimediaTask;
 use frontend\modules\multimedia\MultimediaAsset;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
 
@@ -14,8 +15,33 @@ $this->title = Yii::t('rcoa/multimedia', 'Multimedia Manages');
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
-<div class="container multimedia-task-index multimedia-task">
+<div class="container multimedia-task-list multimedia-task">
+    
+    <?= $this->render('_search_detai',[
+        'team' => $team,
+        'contentType' => $contentType,
+        'itemType' => $itemType,
+        'items' => $items,
+        'itemChild' => $itemChild,
+        'course' => $course,
+        'createBy' => $createBy,
+        'producers' => $producers,
+        'create_team' => $create_team,
+        'make_team' => $make_team,
+        'content_type' => $content_type,
+        'item_type_id' => $item_type_id,
+        'item_id' => $item_id,
+        'item_child_id' => $item_child_id,
+        'course_id' => $course_id,
+        'create_by' => $create_by,
+        'producer' => $producer,
+        'status' => $status,
+        'time' => $time,
+        'keyword' => $keyword,
+        'mark' => $mark,
+    ]); ?>
 
+    <div id="multimedia-task-list">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'summary' => false,
@@ -49,14 +75,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value'=> function($model){
                     /* @var $model MultimediaTask */
-                    return $model->make_team != $model->create_team ? 
+                    return !empty($model->make_team) ? 
                            '<span class="team-span" style="float: left;">'.$model->createTeam->name.'</span>'.
                            Html::img(['/filedata/multimedia/image/brace.png'], [
                                'width' => '15', 
                                'height' => '15', 
                                'style' => 'float: left; margin: 3px 3px;'
                            ]).'<span class="team-span" style="float: left;">'.$model->makeTeam->name.'</span>'
-                           :'<span class="team-span">'.$model->makeTeam->name.'</span>';
+                           :'<span class="team-span">'.$model->createTeam->name.'</span>';
                 },
                 'headerOptions' => [
                     'style' => [
@@ -106,7 +132,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
                 'contentOptions' =>[
-                    'class'=>'hidden-xs course-name hidden-sm hidden-md',
+                    'class'=>'hidden-xs course-name list-td hidden-sm hidden-md',
                 ],
             ],
             [
@@ -125,7 +151,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
                 'contentOptions' =>[
-                    'class'=>'hidden-xs course-name hidden-sm hidden-md',
+                    'class'=>'hidden-xs course-name list-td hidden-sm hidden-md',
                 ],
             ],
             [
@@ -144,7 +170,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
                 'contentOptions' =>[
-                    'class'=>'hidden-xs course-name hidden-sm',
+                    'class'=>'hidden-xs course-name list-td hidden-sm',
                 ],
             ],
             [
@@ -163,7 +189,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
                 'contentOptions' =>[
-                    'class'=>'hidden-xs course-name hidden-sm',
+                    'class'=>'hidden-xs course-name list-td hidden-sm',
                 ],
             ],
             [
@@ -190,6 +216,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
                 'contentOptions' =>[
+                    'class' => 'list-td',
                     'style' => [
                         'padding' => '2px 4px',
                     ],
@@ -235,16 +262,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
                 'contentOptions' =>[
-                    'class'=>'hidden-xs',
+                    'class'=>'list-td hidden-xs',
                 ],
             ],
             [
                 'label' => Yii::t('rcoa/multimedia', 'Producer'),
                 'value'=> function($model){
-                    /* @var $model MultimediaTask */
-                    $producer = [];
-                    foreach ($model->producers as $value) 
-                        $producer[] = $value->producer->u->nickname;
+                    $producer = ArrayHelper::map($model->teamMember, 'u_id', 'u.nickname');
                     return !empty($producer) ? implode(',', $producer) : '';
                 },
                 'headerOptions' => [
@@ -257,7 +281,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
                 'contentOptions' =>[
-                    'class'=>'hidden-xs course-name',
+                    'class'=>'list-td hidden-xs course-name',
                 ],
             ],
             [
@@ -275,7 +299,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'style' => 'width: 55px;'
                         ];
                         return Html::a($model->getStatusName(), [
-                            'view', 'id' => $model->id, 'sign' => $actionId == 'team' ? '1' : '0'], $options);
+                            'view', 'id' => $model->id], $options);
                     },
                 ],
                 'headerOptions' => [
@@ -294,6 +318,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
     ]); ?>
+    </div>
 </div>
 
 <?= $this->render('_footer', [

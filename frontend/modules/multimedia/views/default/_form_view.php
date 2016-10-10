@@ -8,20 +8,12 @@ use yii\helpers\Html;
 /* @var $model MultimediaTask */
 /* @var $multimedia MultimediaTool */
 
-if($sign == 0){
-    $page = [
-        'personal', 
-        'create_by' => Yii::$app->user->id, 
-        'producer' => Yii::$app->user->id, 
-        'assignPerson' => Yii::$app->user->id
-    ];
-} else{
-    $page = [
-        'team', 
-        'make_team' => $multimedia->getHotelTeam(Yii::$app->user->id), 
-        'create_team' => $multimedia->getHotelTeam(Yii::$app->user->id)];
-}
-
+$page = [
+    'list', 
+    'create_by' => Yii::$app->user->id, 
+    'producer' => Yii::$app->user->id, 
+    'assignPerson' => Yii::$app->user->id,
+];
 ?>
 
 <div class="controlbar">
@@ -83,7 +75,7 @@ if($sign == 0){
              * 4、必须是在取消支撑下
              */
             if(Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_ASSIGN) && $model->getIsStatusAssign()
-               && $multimedia->getIsAssignPerson($model->make_team))
+               && $multimedia->getIsAssignPerson(empty($model->make_team) ? $model->create_team : $model->make_team))
                 echo Html::a('指派', 'javascript:;', ['id' => 'assign', 'class' =>'btn btn-success']).' ';
             /**
              * 寻求支撑 按钮显示必须满足以下条件：

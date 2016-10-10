@@ -63,13 +63,19 @@ class MultimediaNoticeTool {
     /**
      * 给所在团队指派人 发送 ee通知 email
      * @param type $model
-     * @param type $mode        标题模式
-     * @param type $views       视图
-     * @param type $cancel       临时变量
+     * @param type $mode            标题模式
+     * @param type $views           视图
+     * @param type $oldMakeTeam     旧的制作团队
+     * @param type $cancel          临时变量
      */
-    public function sendAssignPersonNotification($model, $mode, $views, $cancel = null){
+    public function sendAssignPersonNotification($model, $mode, $views, $oldMakeTeam = null, $cancel = null){
         /* @var $model MultimediaTask */
-        $assignPerson = $this->getAssignPerson($model->make_team);
+        if(empty($model->make_team) && $oldMakeTeam == null)
+            $assignPerson = $this->getAssignPerson ($model->create_team);
+        else if(!empty ($model->make_team) && $oldMakeTeam == null)
+            $assignPerson = $this->getAssignPerson ($model->make_team);
+        else 
+            $assignPerson = $this->getAssignPerson ($oldMakeTeam);
         //传进view 模板参数
         $params = [
             'model' => $model,
@@ -123,15 +129,16 @@ class MultimediaNoticeTool {
     /**
      * 给制作人 发送 ee通知 email
      * @param type $model
+     * @param type $taskId      任务ID
      * @param type $mode        标题模式
      * @param type $views       视图
-     * @param type $cancel       临时变量
+     * @param type $cancel      临时变量
      */
-    public  function sendProducerNotification($model, $mode, $views, $cancel = null){
+    public  function sendProducerNotification($model, $taskId, $mode, $views, $cancel = null){
         /* @var $model MultimediaTask */
-        $producers = $this->getProducer($model->id);
+        $producers = $this->getProducer($taskId);
         //传进view 模板参数 
-         $params = [
+        $params = [
             'model' => $model,
             'cancel' => $cancel,
         ];
@@ -158,7 +165,7 @@ class MultimediaNoticeTool {
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
         /* @var $model MultimediaTask */
-        $assignPerson = $this->getAssignPerson($model->make_team);
+        $assignPerson = $this->getAssignPerson($model->create_team);
         $assignPersonId = ArrayHelper::getValue($assignPerson, 'u_id');
         
         //创建job表任务
@@ -169,7 +176,7 @@ class MultimediaNoticeTool {
     }
     
     /**
-     * 设置指派摄影师用户任务通知关联
+     * 设置指派制作人用户任务通知关联
      * @param type $model
      * @param type $post
      */
