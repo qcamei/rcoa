@@ -18,7 +18,7 @@ use yii\helpers\Html;
                     ['class' => $actionId == 'index' 
                     ? 'footer-multimedia-xs footer-multimedia-bg visible-xs-inline-block' : 'footer-multimedia-xs visible-xs-inline-block']);
             
-            echo Html::a(Html::img(['/filedata/multimedia/image/personal.png']), [
+            echo Html::a(Html::img(['/filedata/multimedia/image/list-check.png']), [
                 'default/list', 'personal', 'create_by' => Yii::$app->user->id, 'producer' => Yii::$app->user->id, 'assignPerson' => Yii::$app->user->id],  
                     ['class' => $actionId == 'list'? 
                         'footer-multimedia-xs footer-multimedia-bg visible-xs-inline-block' : 'footer-multimedia-xs visible-xs-inline-block']);
@@ -40,7 +40,7 @@ use yii\helpers\Html;
                     ['class' => $actionId == 'index' 
                     ? 'footer-multimedia footer-multimedia-bg hidden-xs' : 'footer-multimedia hidden-xs']);
             
-            echo Html::a(Html::img(['/filedata/multimedia/image/personal.png']).'任务', [
+            echo Html::a(Html::img(['/filedata/multimedia/image/list-check.png']).'任务', [
                 'default/list', 'create_by' => Yii::$app->user->id, 'producer' => Yii::$app->user->id, 'assignPerson' => Yii::$app->user->id],  
                     ['class' => $actionId == 'list' ? 
                         'footer-multimedia footer-multimedia-bg hidden-xs' : 'footer-multimedia hidden-xs']);

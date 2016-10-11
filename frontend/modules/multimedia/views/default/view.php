@@ -171,8 +171,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'view' => function ($url, $model) {
                         /* @var $model MultimediaCheck */
                         $options = [
-                            'id' => 'view-check', 
-                            'class' => 'btn btn-default',
+                            'class' => 'btn btn-default view-check',
                         ];
                         $icon = $model->status == MultimediaCheck::STATUS_COMPLETE ? 'icon task-complete' : 'icon working';
                         return Html::a('<i class="'.$icon.'"></i>'.Yii::t('rcoa', 'View'), 
@@ -257,16 +256,21 @@ $js =
     {
         $('#form-cancel').submit();
     });
-        
+    
+    /** 此事件在模态框被隐藏（并且同时在 CSS 过渡效果完成）之后被触发。 */
+    $('#myModal').on('hidden.bs.modal', function(){
+        window.location.reload();
+    });
     /** 查看审核 */   
-    $('#view-check').click(function(){
+    $('.view-check').click(function(){
         var urlf = $(this).attr("href");
         $("#myModal").modal({remote:urlf});
         return false;
     });
-    /** 审核操作 */
+    /** 审核操作 从远端的数据源加载完数据之后触发该事件*/
     $('#myModal').on('loaded.bs.modal', function ()
     {
+        
         /** 编辑审核操作 */
         $('#check-update').click(function()
         {

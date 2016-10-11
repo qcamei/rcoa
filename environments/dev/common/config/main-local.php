@@ -93,21 +93,6 @@ return [
                 'class' => 'yii\caching\FileCache',
             ]
         ],
-        'multimedia'=>[
-            'class'=>'frontend\modules\multimedia\MultimediaTool',
-            //'url'=>'http://rcoaadmin.tt.gzedu.net/framework/api/list',
-            'cache' => [
-                'class' => 'yii\caching\FileCache',
-            ]
-        ],
-        'multimediaNotice'=>[
-            'class'=>'frontend\modules\multimedia\MultimediaNoticeTool',
-            //'url'=>'http://rcoaadmin.tt.gzedu.net/framework/api/list',
-            'cache' => [
-                'class' => 'yii\caching\FileCache',
-            ]
-        ],
-        
     ],
     'modules' => [
         'rbac' => [

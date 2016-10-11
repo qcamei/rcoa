@@ -1,5 +1,5 @@
 <?php
-namespace frontend\modules\multimedia;
+namespace frontend\modules\multimedia\utils;
 
 use common\models\multimedia\MultimediaAssignTeam;
 use common\models\multimedia\MultimediaProducer;
@@ -16,9 +16,11 @@ use yii\helpers\ArrayHelper;
  */
 class MultimediaNoticeTool {
    
+    private static $instance = null;
+    
     /**
      * 获取团队指派人
-     * @param type $team        团队Id
+     * @param integer|array $teamId        团队Id
      * @return type
      */
     public function getAssignPerson($teamId)
@@ -26,12 +28,14 @@ class MultimediaNoticeTool {
         /* @var $assignPerson MultimediaAssignTeam */
         $assignPerson = MultimediaAssignTeam::find()
                         ->where(['team_id' => $teamId])
-                        ->one();
+                        ->with('assignUser')
+                        ->all();
         $assignUser = [
-            'u_id' => $assignPerson->u_id,
-            'ee' => $assignPerson->assignUser->ee,
-            'email' => $assignPerson->assignUser->email
+            'u_id' => ArrayHelper::getColumn($assignPerson, 'u_id'),
+            'ee' => ArrayHelper::getColumn($assignPerson, 'assignUser.ee'),
+            'email' => ArrayHelper::getColumn($assignPerson, 'assignUser.email')
         ];
+        
         return $assignUser;
     }
     
@@ -44,7 +48,7 @@ class MultimediaNoticeTool {
     {
         $producers = MultimediaProducer::find()
                     ->where(['task_id' => $taskId])
-                    ->with('producer')
+                    ->with('producer.u')
                     ->with('task')
                     ->all();
         $producer = [];
@@ -63,19 +67,14 @@ class MultimediaNoticeTool {
     /**
      * 给所在团队指派人 发送 ee通知 email
      * @param type $model
-     * @param type $mode            标题模式
-     * @param type $views           视图
-     * @param type $oldMakeTeam     旧的制作团队
-     * @param type $cancel          临时变量
+     * @param integer|array $teamId     团队ID
+     * @param type $mode                标题模式
+     * @param type $views               视图
+     * @param type $cancel              临时变量
      */
-    public function sendAssignPersonNotification($model, $mode, $views, $oldMakeTeam = null, $cancel = null){
+    public function sendAssignPersonNotification($model, $teamId, $mode, $views, $cancel = null){
         /* @var $model MultimediaTask */
-        if(empty($model->make_team) && $oldMakeTeam == null)
-            $assignPerson = $this->getAssignPerson ($model->create_team);
-        else if(!empty ($model->make_team) && $oldMakeTeam == null)
-            $assignPerson = $this->getAssignPerson ($model->make_team);
-        else 
-            $assignPerson = $this->getAssignPerson ($oldMakeTeam);
+        $assignPerson = $this->getAssignPerson ($teamId);
         //传进view 模板参数
         $params = [
             'model' => $model,
@@ -84,9 +83,9 @@ class MultimediaNoticeTool {
         //主题 
         $subject = "多媒体-".$mode;
         //团队指派人ee
-        $assignPerson_ee = ArrayHelper::getValue($assignPerson, 'ee');
+        $assignPerson_ee = array_filter(ArrayHelper::getValue($assignPerson, 'ee'));
         //团队指派人邮箱地址
-        $assignPerson_email = ArrayHelper::getValue($assignPerson, 'email');
+        $assignPerson_email = array_filter(ArrayHelper::getValue($assignPerson, 'email'));
         //发送ee消息 
         EeManager::sendEeByView($views, $params, $assignPerson_ee, $subject);
         //发送邮件消息 
@@ -172,7 +171,7 @@ class MultimediaNoticeTool {
         $jobManager->createJob(10, $model->id, $model->name, 
                 '/multimedia/default/view?id='.$model->id, $model->getStatusName(), $model->progress);
         //添加通知
-        $jobManager->addNotification(10, $model->id, [$model->create_by, $assignPersonId]);
+        $jobManager->addNotification(10, $model->id, ArrayHelper::merge([$model->create_by], $assignPersonId));
     }
     
     /**
@@ -198,21 +197,31 @@ class MultimediaNoticeTool {
     /**
      * jobManager 取消用户任务通知关联
      * @param type $model
+     * @param integer|array $teamId     团队ID
      */
-    public  function cancelJobManager($model){
+    public  function cancelJobManager($model, $teamId){
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
         /* @var $model MultimediaTask */
-        $makeTeamId = ArrayHelper::getValue($this->getAssignPerson($model->make_team), 'u_id');
-        $createTeamId = ArrayHelper::getValue($this->getAssignPerson($model->create_team), 'u_id');
+        $team = array_filter(ArrayHelper::getValue($this->getAssignPerson($teamId), 'u_id'));
         $producer = $this->getProducer($model->id);
         $producerId = array_filter(ArrayHelper::getColumn($producer, 'id'));
         //全并两个数组的值
-        $jobUserAll = ArrayHelper::merge([$model->create_by, $makeTeamId, $createTeamId], $producerId);
-        
+        $jobUserAll = ArrayHelper::merge(ArrayHelper::merge([$model->create_by], $team), $producerId);
         //修改job表任务
         $jobManager->updateJob(10,$model->id,['progress'=> $model->progress, 'status'=>$model->getStatusName()]); 
         //修改通知
         $jobManager->cancelNotification(10, $model->id, $jobUserAll);
+    }
+    
+    /**
+     * 获取单例
+     * @return MultimediaTool
+     */
+    public static function getInstance() {
+        if (self::$instance == null) {
+            self::$instance = new MultimediaNoticeTool();
+        }
+        return self::$instance;
     }
 }

@@ -280,6 +280,7 @@ $js =
         $('#down').toggleClass('down');
         $('#up').toggleClass('up');
     });
+    /** 提交表单数据 */
     $('#submit').click(function(){
         $('#multimedia-task-search').submit();
     });

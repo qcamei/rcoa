@@ -1,13 +1,13 @@
 <?php
 
-namespace frontend\modules\multimedia;
+namespace frontend\modules\multimedia\utils;
 
 use common\models\multimedia\MultimediaAssignTeam;
 use common\models\multimedia\MultimediaCheck;
 use common\models\multimedia\MultimediaProducer;
 use common\models\multimedia\MultimediaTask;
+use frontend\modules\multimedia\utils\MultimediaNoticeTool;
 use common\models\team\TeamMember;
-use common\models\teamwork\CourseManage;
 use common\wskeee\job\JobManager;
 use wskeee\framework\models\Item;
 use wskeee\framework\models\ItemType;
@@ -17,6 +17,8 @@ use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 
 class MultimediaTool {
+    
+    private static $instance = null;
     
     /**
      * 多媒体任务指派时
@@ -29,14 +31,11 @@ class MultimediaTool {
     {
         /* @var $model MultimediaTask */
         /* @var $multimediaNotice MultimediaNoticeTool */
-        $multimediaNotice = \Yii::$app->get('multimediaNotice');
+        $multimediaNotice = MultimediaNoticeTool::getInstance();
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
         $postProducer = ArrayHelper::getValue($post, 'producer'); //获取传上来的制作人
-        $producer = ArrayHelper::getColumn($multimediaNotice->getProducer($model->id), 'u_id');
-        $makeTeam = !empty($model->make_team) ? 
-                ArrayHelper::getValue($multimediaNotice->getAssignPerson($model->make_team), 'u_id') : null;
-        $createTeam = ArrayHelper::getValue($multimediaNotice->getAssignPerson($model->create_team), 'u_id');
+        $teamUid = ArrayHelper::getValue($multimediaNotice->getAssignPerson([$model->create_team, $model->make_team]), 'u_id');
         
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
@@ -45,10 +44,10 @@ class MultimediaTool {
             if($model->save(true, ['status', 'progress'])){
                 $this->emptyMultimediaProducer($model->id);
                 $this->saveMultimediaProducer($model->id, $postProducer);
-                $jobManager->removeNotification(10, $model->id, [$createTeam, $makeTeam]);
-                if($createTeam == $model->create_by){
-                    $jobManager->addNotification (10, $model->id, $createTeam);
-                    $jobManager->setNotificationHasReady(10, $createTeam, $model->id);
+                $jobManager->removeNotification(10, $model->id, $teamUid);
+                if(in_array($model->create_by, $teamUid)){
+                    $jobManager->addNotification (10, $model->id, $model->create_by);
+                    $jobManager->setNotificationHasReady(10, $model->create_by, $model->id);
                 }
                 $multimediaNotice->setAssignNotification($model, $postProducer);
                 $multimediaNotice->sendProducerNotification($model, $model->id, '新任务', 'multimedia/AssignProducer-htm');
@@ -74,14 +73,42 @@ class MultimediaTool {
     {
         /* @var $model MultimediaTask */
         /* @var $multimediaNotice MultimediaNoticeTool */
-        $multimediaNotice = \Yii::$app->get('multimediaNotice');
+        $multimediaNotice = MultimediaNoticeTool::getInstance();
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
         {
             if($model->save()){
                 $multimediaNotice->saveJobManager($model);
-                $multimediaNotice->sendAssignPersonNotification($model, '新任务', 'multimedia/Create-html');
+                $multimediaNotice->sendAssignPersonNotification($model, $model->create_team, '新任务', 'multimedia/Create-html');
+            }else {
+                throw new Exception(json_encode($model->getErrors()));
+            }
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        } catch (Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            throw new NotFoundHttpException('保存任务失败！');//.$ex->getMessage());
+        }
+    }
+    
+    /**
+     * 多媒体任务更新时
+     * @param MultimediaTask $model
+     * @throws NotFoundHttpException
+     * @throws Exception
+     */
+    public function saveUpdateTask($model)
+    {
+        /* @var $model MultimediaTask */
+        /* @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {
+            if($model->save()){
+                $jobManager->updateJob(10, $model->id, ['subject' => $model->name]);
             }else {
                 throw new Exception(json_encode($model->getErrors()));
             }
@@ -103,7 +130,7 @@ class MultimediaTool {
     {
         /* @var $model MultimediaTask */
         /* @var $multimediaNotice MultimediaNoticeTool */
-        $multimediaNotice = \Yii::$app->get('multimediaNotice');
+        $multimediaNotice = MultimediaNoticeTool::getInstance();
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
         $assignPerson = $multimediaNotice->getAssignPerson($model->make_team);
@@ -114,7 +141,7 @@ class MultimediaTool {
         {
             if($model->save(false, ['make_team', 'brace_mark'])){
                 $jobManager->addNotification(10, $model->id, $assignPersonId);      //添加通知
-                $multimediaNotice->sendAssignPersonNotification($model, '支撑请求', 'multimedia/SeekBrace-html');
+                $multimediaNotice->sendAssignPersonNotification($model, $model->make_team, '支撑请求', 'multimedia/SeekBrace-html');
             }else {
                 throw new Exception(json_encode($model->getErrors()));
             }
@@ -137,7 +164,7 @@ class MultimediaTool {
     {
         /* @var $model MultimediaTask */
         /* @var $multimediaNotice MultimediaNoticeTool */
-        $multimediaNotice = \Yii::$app->get('multimediaNotice');
+        $multimediaNotice = MultimediaNoticeTool::getInstance();
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
         $assignPerson = $multimediaNotice->getAssignPerson($oldMakeTeam);
@@ -148,7 +175,7 @@ class MultimediaTool {
         {
             if($model->save(false, ['brace_mark', 'make_team'])){
                 $jobManager->removeNotification(10, $model->id, $assignPersonId);
-                $multimediaNotice->sendAssignPersonNotification ($model, '取消支撑', 'multimedia/CancelBrace-html', $oldMakeTeam);
+                $multimediaNotice->sendAssignPersonNotification ($model, $oldMakeTeam, '取消支撑', 'multimedia/CancelBrace-html');
             }else {
                 throw new Exception(json_encode($model->getErrors()));
             }
@@ -170,7 +197,7 @@ class MultimediaTool {
     {
         /* @var $model MultimediaTask */
         /* @var $multimediaNotice MultimediaNoticeTool */
-        $multimediaNotice = \Yii::$app->get('multimediaNotice');
+        $multimediaNotice = MultimediaNoticeTool::getInstance();
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
         /** 开启事务 */
@@ -200,7 +227,7 @@ class MultimediaTool {
     {
         /* @var $model MultimediaTask */
         /* @var $multimediaNotice MultimediaNoticeTool */
-        $multimediaNotice = \Yii::$app->get('multimediaNotice');
+        $multimediaNotice = MultimediaNoticeTool::getInstance();
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
         /** 开启事务 */
@@ -231,7 +258,7 @@ class MultimediaTool {
     {
         /* @var $model MultimediaTask */
         /* @var $multimediaNotice MultimediaNoticeTool */
-        $multimediaNotice = \Yii::$app->get('multimediaNotice');
+        $multimediaNotice = MultimediaNoticeTool::getInstance();
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
         /** 开启事务 */
@@ -262,8 +289,9 @@ class MultimediaTool {
     public function saveCancelTask($model, $cancel)
     {
         /* @var $model MultimediaTask */
+        $team = [$model->create_team, $model->make_team];
         /* @var $multimediaNotice MultimediaNoticeTool */
-        $multimediaNotice = \Yii::$app->get('multimediaNotice');
+        $multimediaNotice = MultimediaNoticeTool::getInstance();
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
         /** 开启事务 */
@@ -271,9 +299,9 @@ class MultimediaTool {
         try
         {
             if($model->save(false, ['status'])){
-                $multimediaNotice->cancelJobManager($model);
+                $multimediaNotice->cancelJobManager($model, $team);
                 if(empty($model->producers))
-                    $multimediaNotice->sendAssignPersonNotification ($model, '任务取消', 'multimedia/Cancel-html', $cancel);
+                    $multimediaNotice->sendAssignPersonNotification ($model, $team,'任务取消', 'multimedia/Cancel-html', $cancel);
                 else
                     $multimediaNotice->sendProducerNotification ($model, $model->id, '任务取消', 'multimedia/Cancel-html', $cancel);
             }else {
@@ -297,7 +325,7 @@ class MultimediaTool {
     {
         /* @var $model MultimediaCheck */
         /* @var $multimediaNotice MultimediaNoticeTool */
-        $multimediaNotice = \Yii::$app->get('multimediaNotice');
+        $multimediaNotice = MultimediaNoticeTool::getInstance();
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
@@ -325,7 +353,7 @@ class MultimediaTool {
     {
         /* @var $model MultimediaCheck */
         /* @var $multimediaNotice MultimediaNoticeTool */
-        $multimediaNotice = \Yii::$app->get('multimediaNotice');
+        $multimediaNotice = MultimediaNoticeTool::getInstance();
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
@@ -518,5 +546,16 @@ class MultimediaTool {
      */
     public function emptyMultimediaProducer($taskId){
         return MultimediaProducer::deleteAll(['task_id' => $taskId]);
+    }
+    
+    /**
+     * 获取单例
+     * @return MultimediaTool
+     */
+    public static function getInstance() {
+        if (self::$instance == null) {
+            self::$instance = new MultimediaTool();
+        }
+        return self::$instance;
     }
 }

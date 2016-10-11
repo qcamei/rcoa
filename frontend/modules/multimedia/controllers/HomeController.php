@@ -6,8 +6,8 @@ use common\models\multimedia\MultimediaContentType;
 use common\models\multimedia\MultimediaProducer;
 use common\models\multimedia\MultimediaTask;
 use common\models\User;
-use frontend\modules\multimedia\MultimediaTool;
 use frontend\modules\multimedia\utils\MultimediaConvertRule;
+use frontend\modules\multimedia\utils\MultimediaTool;
 use Yii;
 use yii\db\Query;
 use yii\filters\AccessControl;
@@ -74,7 +74,7 @@ class HomeController extends Controller
             $target[$rule[$result['content_type']]] += $result['production_video_length'] * MultimediaConvertRule::getInstance()->getRuleProportion($result['content_type']);
         }
         /* @var $multimedia MultimediaTool */
-        $multimedia = \Yii::$app->get('multimedia');
+        $multimedia = MultimediaTool::getInstance();
         return $this->render('index',[
             'multimedia'=>$multimedia,
             'rules' => $rule,
