@@ -329,7 +329,7 @@ class DefaultController extends Controller
         $model->real_carry_out = date('Y-m-d H:i', time());
         if($model->load(Yii::$app->request->post()))
             $multimedia->saveCompleteTask($model);
-        return $this->redirect(['list', 'create_by' => $model->create_by]);
+        return $this->redirect(['list', 'create_by' => $model->create_by, 'assignPerson' => Yii::$app->user->id]);
     }
     
     /**
