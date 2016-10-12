@@ -5,6 +5,7 @@ namespace frontend\modules\multimedia\controllers;
 use common\models\multimedia\MultimediaContentType;
 use common\models\multimedia\MultimediaProducer;
 use common\models\multimedia\MultimediaTask;
+use common\models\team\TeamMember;
 use common\models\User;
 use frontend\modules\multimedia\utils\MultimediaConvertRule;
 use frontend\modules\multimedia\utils\MultimediaTool;
@@ -110,7 +111,8 @@ class HomeController extends Controller
                 ->from(['Task'=>  MultimediaTask::tableName()])
                 ->leftJoin(['Producer'=>  MultimediaProducer::tableName()], 'Producer.task_id = Task.id')
                 ->leftJoin(['CreateUser'=> User::tableName()], 'CreateUser.id = Task.create_by')
-                ->leftJoin(['ProducerUser'=>  User::tableName()], 'ProducerUser.id = Producer.u_id')
+                ->leftJoin(['TeamMember' => TeamMember::tableName()], 'Producer.producer = TeamMember.id')
+                ->leftJoin(['ProducerUser'=>  User::tableName()], 'ProducerUser.id = TeamMember.u_id')
                 ->where(['Task.status' => MultimediaTask::STATUS_COMPLETED])
                 ->andWhere(['between','Task.real_carry_out',date('Y-m-01', time()),date('Y-m-t', time())]);
         return $query->all(Yii::$app->db);

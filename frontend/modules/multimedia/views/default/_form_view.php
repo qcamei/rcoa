@@ -58,7 +58,7 @@ $page = [
              */
             if(Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CREATE_CHECK) 
                && $model->getIsStatusWaitCheck() && $model->create_by == Yii::$app->user->id
-               && (empty($model->multimediaChecks) || !$multimedia->getIsCheckStatus($model->id)))
+               && (empty($model->multimediaChecks) || !$multimedia->getIsCompleteCheck($model->id)))
                 echo Html::a('添加审核', ['check/create', 'task_id' => $model->id], ['id' => 'check-create', 'class' =>'btn btn-info']).' ';
             /**
              * 恢复制作 按钮显示必须满足以下条件：
@@ -118,7 +118,7 @@ $page = [
              * 4、审核记录状态必须未完成
              */
             if($model->getIsStatusWaitCheck() && $multimedia->getIsProducer($model->id) 
-               && !empty($model->multimediaChecks) && $multimedia->getIsCheckStatus($model->id))
+               && !empty($model->multimediaChecks) && $multimedia->getIsCompleteCheck($model->id))
                 echo Html::a('提交审核', ['check/submit', 'task_id' => $model->id], ['class' =>'btn btn-danger']).' ';
         ?>
         </div>

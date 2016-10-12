@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="team-member-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1><?= Html::encode($this->title.': '.$model->team->name) ?></h1>
 
     <?= $this->render('_form', [
         'model' => $model,

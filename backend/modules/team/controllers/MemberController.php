@@ -4,6 +4,7 @@ namespace backend\modules\team\controllers;
 
 use common\models\expert\Expert;
 use common\models\Position;
+use common\models\team\Team;
 use common\models\team\TeamMember;
 use common\models\User;
 use Yii;
@@ -107,6 +108,7 @@ class MemberController extends Controller
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'team' => ArrayHelper::map(Team::find()->all(), 'id', 'name'),
                 'member' => $this->getTeamMember(),
                 'isExist' => $this->getIsExistLeader($team_id),
                 'position' => ArrayHelper::map(Position::find()->all(), 'id', 'name')

@@ -268,7 +268,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label' => Yii::t('rcoa/multimedia', 'Producer'),
                 'value'=> function($model){
-                    $producer = ArrayHelper::map($model->teamMember, 'u_id', 'u.nickname');
+                    $producer = ArrayHelper::map($model->teamMember, 'u_id', 'user.nickname');
                     return !empty($producer) ? implode(',', $producer) : '';
                 },
                 'headerOptions' => [

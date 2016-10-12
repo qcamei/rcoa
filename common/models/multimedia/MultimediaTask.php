@@ -346,9 +346,9 @@ class MultimediaTask extends ActiveRecord
      */
     public function getTeamMember()
     {
-        return $this->hasMany(TeamMember::className(), ['u_id' => 'u_id'])
+        return $this->hasMany(TeamMember::className(), ['id' => 'producer'])
                ->viaTable('{{%multimedia_producer}}', ['task_id' => 'id'])
-               ->with('u');
+               ->with('user');
     }
     
     /**

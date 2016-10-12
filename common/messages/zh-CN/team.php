@@ -20,4 +20,7 @@ return[
     'U ID' => '成员',
     'Is Leader' => '是否为队长',
     'Position' => '职位',
+    
+    'Under the same team please do not repeat to add the same members' => '在同一个团队请不要重复添加相同的成员。',
+    'Already exist team leader' => '已存在队长。'
 ];

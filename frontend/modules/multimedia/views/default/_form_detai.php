@@ -11,7 +11,6 @@ use yii\widgets\DetailView;
 
 /* @var $this View */
 /* @var $model MultimediaTask */
-
 $statusProgress = '';
 foreach (MultimediaTask::$statusNmae as $key => $value) {
     $isHidden = $key != $model->status ? ' hidden-xs' : '';
@@ -112,7 +111,7 @@ foreach (MultimediaTask::$statusNmae as $key => $value) {
                 'value' =>  !empty($producer) ? implode(',', $producer) : '空',
             ],
             [
-                'label' => Yii::t('rcoa/multimedia', 'Status').Yii::t('rcoa/multimedia', 'Progress'),
+                'label' => Yii::t('rcoa/multimedia', 'Status').'/'.Yii::t('rcoa/multimedia', 'Progress'),
                 'format' => 'raw',
                 'value' => $statusProgress,
             ],

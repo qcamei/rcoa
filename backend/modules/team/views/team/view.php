@@ -60,7 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'团员名称',
                 'value'=>function($model){
                     /* @var $model TeamMember */
-                    return $model->u->nickname;
+                    return $model->user->nickname;
                 }   
             ],
             [

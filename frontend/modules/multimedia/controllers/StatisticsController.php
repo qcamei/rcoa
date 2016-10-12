@@ -2,12 +2,15 @@
 
 namespace frontend\modules\multimedia\controllers;
 
-class StatisticsController extends \yii\web\Controller
+use frontend\modules\multimedia\utils\MultimediaTool;
+use yii\web\Controller;
+
+class StatisticsController extends Controller
 {
     public function actionIndex()
     {
         return $this->render('index',[
-            'multimedia'=>\Yii::$app->get('multimedia')
+            'multimedia'=> MultimediaTool::getInstance(),
         ]);
     }
 

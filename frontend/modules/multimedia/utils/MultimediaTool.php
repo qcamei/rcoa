@@ -49,7 +49,8 @@ class MultimediaTool {
                     $jobManager->addNotification (10, $model->id, $model->create_by);
                     $jobManager->setNotificationHasReady(10, $model->create_by, $model->id);
                 }
-                $multimediaNotice->setAssignNotification($model, $postProducer);
+                $producer = ArrayHelper::getValue($multimediaNotice->getProducer($model->id), 'u_id');
+                $multimediaNotice->setAssignNotification($model, $producer);
                 $multimediaNotice->sendProducerNotification($model, $model->id, '新任务', 'multimedia/AssignProducer-htm');
                 $multimediaNotice->sendCreateByNotification($model, '任务已指派', 'multimedia/AssignCreateBy-html');
             }else {
@@ -400,18 +401,19 @@ class MultimediaTool {
                 ->select(['Task.id', 'Task.item_type_id', 'Task.item_id', 'Task.item_child_id', 'Task.course_id',
                     'Task.name', 'Task.progress', 'Task.content_type', 'Task.plan_end_time', 'Task.level',
                     'Task.make_team', 'Task.status', 'Task.create_team', 'Task.create_by', 'AssignTeam.u_id',
-                    'Producer.u_id AS producer', 'ItemType.name AS ItemTypeName','Item.name AS ItemName'
+                    'ItemType.name AS ItemTypeName','Item.name AS ItemName'
                 ])
                 ->from(['Task' => MultimediaTask::tableName()])
                 ->leftJoin(['AssignTeam' => MultimediaAssignTeam::tableName()], 
                     '(Task.make_team = AssignTeam.team_id OR Task.create_team = AssignTeam.team_id)'
                 )
                 ->leftJoin(['Producer' => MultimediaProducer::tableName()], 'Task.id = Producer.task_id')
+                ->leftJoin(['TeamMember' => TeamMember::tableName()], 'Producer.producer = TeamMember.id')
                 ->leftJoin(['ItemType' => ItemType::tableName()], 'ItemType.id = Task.item_type_id')
-                ->leftJoin(['Item' => Item::tableName()], 
+                ->leftJoin(['Item' => Item::tableName()],
                   '(Item.id = Task.item_id OR Item.id = Task.item_child_id OR Item.id = Task.course_id)')
                 ->andFilterWhere(['or',
-                    [$mark == null ? 'or' : 'and', ['Task.create_by' => $createBy], ['Producer.u_id' => $producer]],
+                    [$mark == null ? 'or' : 'and', ['Task.create_by' => $createBy], ['TeamMember.u_id' => $producer]],
                     ['AssignTeam.u_id' => $assignPerson],
                 ])
                 ->andFilterWhere([
@@ -492,12 +494,14 @@ class MultimediaTool {
      */
     public function getIsProducer($taskId)
     {
-        $producer = MultimediaProducer::findAll(['task_id' => $taskId]);
-        if(!empty($producer) && isset($producer)){
-            foreach ($producer as $value) {
-                if($value->u_id == \Yii::$app->user->id)
-                    return true;
-            }
+        $producers = MultimediaProducer::find()
+                    ->where(['task_id' => $taskId])
+                    ->with('multimediaProducer')
+                    ->all();
+        if(!empty($producers) && isset($producers)){
+            $isProducer = ArrayHelper::getColumn($producers, 'multimediaProducer.u_id');
+            if(in_array(\Yii::$app->user->id, $isProducer))
+                return true;
         }
         return false;
     }
@@ -507,14 +511,15 @@ class MultimediaTool {
      * @param type $taskId      任务
      * @return boolean          true 为是      
      */
-    public function getIsCheckStatus ($taskId)
+    public function getIsCompleteCheck ($taskId)
     {
-        $status = MultimediaCheck::findAll(['task_id' => $taskId]);
-        if(!empty($status) || isset($status)){
-            foreach ($status as $value) {
-                if($value->status == MultimediaCheck::STATUS_NOTCOMPLETE)
-                    return true;
-            }
+        $check = MultimediaCheck::find()
+                  ->where(['task_id' => $taskId])
+                  ->all();
+        if(!empty($check) || isset($check)){
+            $isComplete = ArrayHelper::getColumn($check, 'status');
+            if(in_array(MultimediaCheck::STATUS_NOTCOMPLETE, $isComplete))
+                return true;  
         }
         return false;
     }
@@ -531,12 +536,12 @@ class MultimediaTool {
         {
             $values[] = [
                 'task_id' => $taskId,
-                'u_id' => $value,
+                'producer' => $value,
             ];
         }
         /** 添加$values数组到表里 */
         Yii::$app->db->createCommand()->batchInsert(MultimediaProducer::tableName(), 
-        ['task_id', 'u_id',], $values)->execute();
+        ['task_id', 'producer',], $values)->execute();
     }
     
     /**

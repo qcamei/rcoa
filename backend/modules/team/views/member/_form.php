@@ -15,14 +15,17 @@ use yii\widgets\ActiveForm;
 <div class="team-member-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model, 'team_id')->textInput(['value' => $model->team->name, 'disabled' => 'disabled']) ?>
+    
+    <?php
+        if(!$model->isNewRecord)
+            echo $form->field($model, 'team_id')->widget(Select2::classname(), [
+                'data' => $team, 'hideSearch'=>false, 'options' => ['placeholder' => '请选择...'],
+            ]) 
+    ?>
 
     <?= $form->field($model, 'u_id')->widget(Select2::classname(), [
         'data' => $member, 'hideSearch'=>false, 'options' => ['placeholder' => '请选择...'],
     ]) ?>
-
-    <?= $form->field($model, 'is_leader')->radioList(TeamMember::$is_leaders)->label('') ?>
     
     <?= $form->field($model, 'index')->widget(TouchSpin::classname(),  [
             'pluginOptions' => [
@@ -36,6 +39,8 @@ use yii\widgets\ActiveForm;
         'data' => $position, 'hideSearch'=>false, 'options' => ['placeholder' => '请选择...'],
     ]) ?>
 
+    <?= $form->field($model, 'is_leader')->radioList(TeamMember::$is_leaders)->label('') ?>
+    
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

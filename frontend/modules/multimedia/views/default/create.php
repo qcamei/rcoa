@@ -35,7 +35,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="controlbar">
     <div class="container">
-        <?= Html::a(Yii::t('rcoa', 'Back'), ['personal', 'create_by' => $model->create_by], ['class' => 'btn btn-default']) ?>
+        <?= Html::a(Yii::t('rcoa', 'Back'), ['list', 
+            'create_by' => Yii::$app->user->id, 
+            'assignPerson' => Yii::$app->user->id], ['class' => 'btn btn-default']) 
+        ?>
         <?= Html::a(
                 $model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'),
                 'javascript:;', 

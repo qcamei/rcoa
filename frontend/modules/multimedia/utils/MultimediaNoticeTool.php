@@ -30,6 +30,7 @@ class MultimediaNoticeTool {
                         ->where(['team_id' => $teamId])
                         ->with('assignUser')
                         ->all();
+        
         $assignUser = [
             'u_id' => ArrayHelper::getColumn($assignPerson, 'u_id'),
             'ee' => ArrayHelper::getColumn($assignPerson, 'assignUser.ee'),
@@ -48,19 +49,17 @@ class MultimediaNoticeTool {
     {
         $producers = MultimediaProducer::find()
                     ->where(['task_id' => $taskId])
-                    ->with('producer.u')
+                    ->with('multimediaProducer.user')
                     ->with('task')
                     ->all();
-        $producer = [];
-        foreach ($producers as $value) {
-            /* @var $value MultimediaProducer */
-            $producer[] = [
-                'u_id' => $value->u_id,
-                'name' => $value->producer->u->nickname,
-                'ee' => $value->producer->u->ee,
-                'email' => $value->producer->u->email
-            ];
-        }
+       
+        $producer = [
+            'u_id' => ArrayHelper::getColumn($producers, 'multimediaProducer.u_id'),
+            'name' => ArrayHelper::getColumn($producers, 'multimediaProducer.user.nickname'),
+            'ee' => ArrayHelper::getColumn($producers, 'multimediaProducer.user.ee'),
+            'email' => ArrayHelper::getColumn($producers, 'multimediaProducer.user.email')
+        ];
+        
         return $producer;
     }
 
@@ -104,7 +103,7 @@ class MultimediaNoticeTool {
      */
     public  function sendCreateByNotification($model, $mode, $views, $cancel = null){
         /* @var $model MultimediaTask */
-        $producer = ArrayHelper::getColumn($this->getProducer($model->id), 'name');
+        $producer = ArrayHelper::getValue($this->getProducer($model->id), 'name');
         //传进view 模板参数
         $params = [
             'model' => $model,
@@ -144,8 +143,8 @@ class MultimediaNoticeTool {
         //主题 
         $subject = "拍摄-".$mode;
         //查找接洽人ee和mail 
-        $producer_ee = array_filter(ArrayHelper::getColumn($producers, 'ee'));
-        $producer_mail = array_filter(ArrayHelper::getColumn($producers, 'email'));
+        $producer_ee = array_filter(ArrayHelper::getValue($producers, 'ee'));
+        $producer_mail = array_filter(ArrayHelper::getValue($producers, 'email'));
         //发送ee消息
         EeManager::sendEeByView($views, $params,$producer_ee, $subject);
         //发送邮件消息 
@@ -205,7 +204,7 @@ class MultimediaNoticeTool {
         /* @var $model MultimediaTask */
         $team = array_filter(ArrayHelper::getValue($this->getAssignPerson($teamId), 'u_id'));
         $producer = $this->getProducer($model->id);
-        $producerId = array_filter(ArrayHelper::getColumn($producer, 'id'));
+        $producerId = array_filter(ArrayHelper::getValue($producer, 'u_id'));
         //全并两个数组的值
         $jobUserAll = ArrayHelper::merge(ArrayHelper::merge([$model->create_by], $team), $producerId);
         //修改job表任务

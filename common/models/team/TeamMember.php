@@ -9,22 +9,25 @@ use common\models\User;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
+use yii\web\NotFoundHttpException;
 
 /**
  * This is the model class for table "{{%team_member}}".
  *
+ * @property integer $id                ID
  * @property integer $team_id           团队ID
  * @property string $u_id               用户ID
  * @property string $is_leader          是否为队长
  * @property integer $index             索引
  * @property integer $position_id       职位ID
  *
- * @property Position $position                 获取职位
- * @property Team $team                         获取团队
- * @property User $u                            获取用户
- * @property CourseManage[] $courseManages      获取所有课程管理
- * @property CourseProducer[] $courseProducers  获取所有资源制作人
- * @property CourseManage[] $courses            获取所有课程
+ * @property Position $position                     获取职位
+ * @property Team $team                             获取团队
+ * @property User $user                             获取用户
+ * @property CourseManage[] $weeklyEditorsPeople    获取所有周报编辑人
+ * @property CourseProducer[] $courseProducers      获取所有资源制作人
+ * @property CourseManage[] $courses                获取所有课程指定制作人
  */
 class TeamMember extends ActiveRecord
 {
@@ -46,6 +49,19 @@ class TeamMember extends ActiveRecord
     {
         return '{{%team_member}}';
     }
+    
+    public function beforeSave($insert) {
+        if(parent::beforeSave($insert)){
+            $teamMember = TeamMember::findAll(['team_id' => $this->team_id, 'is_leader' => 'Y']);
+            if(!empty($teamMember) || isset($teamMember)){
+                $leader = ArrayHelper::getColumn($teamMember, 'is_leader');
+                if(in_array($this->is_leader, $leader))
+                    throw new NotFoundHttpException($this->team->name.Yii::t('rcoa/team', 'Already exist team leader'));
+                else 
+                    return true;
+            }
+        }
+    }
 
     /**
      * @inheritdoc
@@ -53,23 +69,24 @@ class TeamMember extends ActiveRecord
     public function rules()
     {
         return [
-            [['team_id', 'u_id'], 'required'],
+            [['team_id', 'u_id', 'position_id'], 'required'],
             [['index', 'position_id'], 'integer'],
             [['u_id'], 'string', 'max' => 36],
             [['is_leader'], 'string', 'max' => 4],
-            [['u_id', 'team_id'], 'unique', 'targetAttribute' => ['u_id', 'team_id']],
+            [['team_id', 'u_id'], 'unique', 'targetAttribute' => ['u_id'], 'message' => \Yii::t('rcoa/team', 'Under the same team please do not repeat to add the same members')],
             [['position_id'], 'exist', 'skipOnError' => true, 'targetClass' => Position::className(), 'targetAttribute' => ['position_id' => 'id']],
             [['team_id'], 'exist', 'skipOnError' => true, 'targetClass' => Team::className(), 'targetAttribute' => ['team_id' => 'id']],
             [['u_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['u_id' => 'id']],
         ];
     }
-
+    
     /**
      * @inheritdoc
      */
     public function attributeLabels()
     {
         return [
+            'id' => Yii::t('rcoa/team', 'ID'),
             'team_id' => Yii::t('rcoa/team', 'Team ID'),
             'u_id' => Yii::t('rcoa/team', 'U ID'),
             'is_leader' => Yii::t('rcoa/team', 'Is Leader'),
@@ -100,7 +117,7 @@ class TeamMember extends ActiveRecord
      * 获取用户
      * @return ActiveQuery
      */
-    public function getU()
+    public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'u_id']);
     }
@@ -109,9 +126,9 @@ class TeamMember extends ActiveRecord
      * 获取所有课程周报编辑人
      * @return ActiveQuery
      */
-    public function getCourseManages()
+    public function getWeeklyEditorsPeople()
     {
-        return $this->hasMany(CourseManage::className(), ['weekly_editors_people' => 'u_id']);
+        return $this->hasMany(CourseManage::className(), ['weekly_editors_people' => 'id']);
     }
 
     /**
@@ -120,15 +137,15 @@ class TeamMember extends ActiveRecord
      */
     public function getCourseProducers()
     {
-        return $this->hasMany(CourseProducer::className(), ['producer' => 'u_id']);
+        return $this->hasMany(CourseProducer::className(), ['producer' => 'id']);
     }
 
     /**
-     * 获取所有课程
+     * 获取所有课程指定制作人
      * @return ActiveQuery
      */
     public function getCourses()
     {
-        return $this->hasMany(CourseManage::className(), ['id' => 'course_id'])->viaTable('{{%teamwork_course_producer}}', ['producer' => 'u_id']);
+        return $this->hasMany(CourseManage::className(), ['id' => 'course_id'])->viaTable('{{%teamwork_course_producer}}', ['producer' => 'id']);
     }
 }

@@ -4,7 +4,7 @@ namespace frontend\modules\multimedia\controllers;
 
 use common\models\multimedia\MultimediaCheck;
 use common\models\multimedia\searchs\MultimediaCheckSearch;
-use frontend\modules\multimedia\MultimediaTool;
+use frontend\modules\multimedia\utils\MultimediaTool;
 use wskeee\rbac\RbacName;
 use Yii;
 use yii\filters\AccessControl;
@@ -79,8 +79,8 @@ class CheckController extends Controller
     {
         $model = new MultimediaCheck();
         /* @var $multimedia MultimediaTool */
-        $multimedia = \Yii::$app->get('multimedia');
-        if($multimedia->getIsCheckStatus($task_id) || !\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CREATE_CHECK))
+        $multimedia = MultimediaTool::getInstance();
+        if($multimedia->getIsCompleteCheck($task_id) || !\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CREATE_CHECK))
             throw new NotAcceptableHttpException('无权限操作！');
         $model->task_id = $task_id;
         $model->create_by = \Yii::$app->user->id;
@@ -107,8 +107,10 @@ class CheckController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_UPDATE_CHECK)
-           && $model->create_by != Yii::$app->user->id)
+        /* @var $multimedia MultimediaTool */
+        $multimedia = MultimediaTool::getInstance();
+        if((!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_UPDATE_CHECK)
+           && $model->create_by != Yii::$app->user->id) || !$multimedia->getIsCompleteCheck($model->task_id))
             throw new NotAcceptableHttpException('无权限操作！');
         if(!$model->task->getIsStatusWaitCheck())
             throw new NotAcceptableHttpException('该任务状态为'.$model->task->getStatusName().'！');
@@ -131,8 +133,10 @@ class CheckController extends Controller
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
-        if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_DELETE_CHECK) 
-           && $model->create_by != Yii::$app->user->id)
+        /* @var $multimedia MultimediaTool */
+        $multimedia = MultimediaTool::getInstance();
+        if((!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_DELETE_CHECK) 
+           && $model->create_by != Yii::$app->user->id) || !$multimedia->getIsCompleteCheck($model->task_id))
             throw new NotAcceptableHttpException('无权限操作！');
         if(!$model->task->getIsStatusWaitCheck())
             throw new NotAcceptableHttpException('该任务状态为'.$model->task->getStatusName().'！');
@@ -149,14 +153,16 @@ class CheckController extends Controller
     public function actionSubmit($task_id)
     {
         /* @var $multimedia MultimediaTool */
-        $multimedia = \Yii::$app->get('multimedia');
-        if(!$multimedia->getIsProducer($task_id))
+        $multimedia = MultimediaTool::getInstance();
+        if(!$multimedia->getIsProducer($task_id) || !$multimedia->getIsCompleteCheck($task_id))
             throw new NotAcceptableHttpException('无权限操作！');
         
         /* @var $model MultimediaCheck */
         $model = MultimediaCheck::find()
-                 ->where(['task_id' => $task_id])
-                 ->andWhere(['status' => MultimediaCheck::STATUS_NOTCOMPLETE])
+                 ->where([
+                     'task_id' => $task_id,
+                     'status' => MultimediaCheck::STATUS_NOTCOMPLETE
+                ])
                  ->one();
         if(!$model->task->getIsStatusWaitCheck())
             throw new NotAcceptableHttpException('该任务状态为'.$model->task->getStatusName().'！');

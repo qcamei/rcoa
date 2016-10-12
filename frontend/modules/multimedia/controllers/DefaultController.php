@@ -380,13 +380,13 @@ class DefaultController extends Controller
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
-     */
+     
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
         return $this->redirect(['list']);
-    }
+    }*/
 
     /**
      * Finds the MultimediaTask model based on its primary key value.
@@ -409,7 +409,9 @@ class DefaultController extends Controller
      * @return type
      */
     protected function getItemType(){
-        $itemType = ItemType::find()->all();
+        $itemType = ItemType::find()
+                    ->all();
+        
         return ArrayHelper::map($itemType, 'id','name');
     }
     
@@ -447,6 +449,7 @@ class DefaultController extends Controller
                        ->with('multimediaTasks')
                        ->with('proportions')
                        ->all();
+        
         return ArrayHelper::map($contentType, 'id', 'name');
     }
     
@@ -462,6 +465,7 @@ class DefaultController extends Controller
         $video_length = empty($model->production_video_length) ? 
                         $model->material_video_length : $model->production_video_length;
         $workload = $video_length * $proportion;
+        
         return [$workload, $proportion];
     }    
     
@@ -475,6 +479,7 @@ class DefaultController extends Controller
                 ->where(['type' => 1])
                 ->andFilterWhere(['not in', 'id', $teamId])
                 ->all();
+        
         return ArrayHelper::map($team, 'id', 'name');
     }
 
@@ -487,22 +492,27 @@ class DefaultController extends Controller
         /* @var $rbacManager RbacManager */
         $rbacManager = Yii::$app->authManager;
         $createBys = $rbacManager->getItemUsers(RbacName::ROLE_MULTIMEDIA_PROMULGATOR);
+        
         return ArrayHelper::map($createBys, 'id', 'nickname');
     }
 
     /**
      * 获取制作团队下的所有制作人员
-     * @param type $makeTeam        制作团队
+     * @param type $team        制作团队
      * @return type
      */
-    public function getProducerList($makeTeam = null)
+    public function getProducerList($team = null)
     {
         $producer = TeamMember::find()
                     ->where(['position_id' => 3])
-                    ->andFilterWhere(['team_id' => $makeTeam])
-                    ->with('u')
+                    ->andFilterWhere(['team_id' => $team])
+                    ->with('user')
                     ->all();
-        return ArrayHelper::map($producer, 'u_id', 'u.nickname');
+        
+        if($team != null)
+            return ArrayHelper::map($producer, 'id', 'user.nickname');
+        else
+            return ArrayHelper::map($producer, 'u_id', 'user.nickname');
     }
     
     /**
@@ -512,10 +522,11 @@ class DefaultController extends Controller
      */
     public function getAlreadyProducer($taskId)
     {
-        $producer = MultimediaProducer::find()
-                           ->where(['task_id' => $taskId])
-                           ->with('producer')
-                           ->all();
-        return ArrayHelper::map($producer, 'u_id', 'producer.u.nickname');
+        $producers = MultimediaProducer::find()
+                    ->where(['task_id' => $taskId])
+                    ->with('multimediaProducer.user')
+                    ->all();
+        
+        return ArrayHelper::getColumn($producers, 'multimediaProducer.user.nickname');
     }
 }

@@ -142,13 +142,16 @@ class TeamworkTool{
 
     /**
      * 获取创建者所在团队
-     * @param type $create_by   创建者
+     * @param type $uId     用户ID
      * @return type
      */
-    public function getHotelTeam($create_by)
+    public function getHotelTeam($uId)
     {
-        $team = TeamMember::findOne(['u_id' => $create_by]);
-        return $team ->team_id;
+        $team = TeamMember::findOne(['u_id' => $uId]);
+        if(!empty($team))
+            return $team ->team_id;
+        else
+            return null;
     } 
 
     /**
