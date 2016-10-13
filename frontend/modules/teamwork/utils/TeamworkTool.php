@@ -152,17 +152,18 @@ class TeamworkTool{
     }
     
     /**
-     * 获取当前用户是否隶属于该课程下的团队成员
+     * 获取当前用户是否隶属于该课程下的制作人员
      * @param type $course_id   课程id
      * @return boolean          true 为是
      */
-    public function getIsUserBelongTeam($course_id)
+    public function getIsUserBelongProducer($course_id)
     {
-        $currentUser = TeamMember::findAll(['u_id' => Yii::$app->user->id]);
-        $courseTeam = CourseManage::findOne(['id' => $course_id]);
+        $producer = CourseProducer::findAll(['course_id' => $course_id]);
+        $producerId = ArrayHelper::getColumn($producer, 'producer');
+        $teamMember = TeamMember::findAll(['id' => $producerId]);
+        $uId = ArrayHelper::getColumn($teamMember, 'u_id');
         if(!empty($currentUser) || isset($currentUser) || !empty($course_id)){
-            $isBelong = ArrayHelper::getColumn($currentUser, 'team_id');
-            if(in_array($courseTeam->team_id, $isBelong))
+            if(in_array(\Yii::$app->user->id, $uId))
                 return true;
         }
         return false;

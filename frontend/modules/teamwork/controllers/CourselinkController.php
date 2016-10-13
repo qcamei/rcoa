@@ -182,7 +182,7 @@ class CourselinkController extends Controller
         $model = $this->findModel($id);
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
-        if(!($twTool->getIsUserBelongTeam($model->course_id) 
+        if(!($twTool->getIsUserBelongProducer($model->course_id) 
             || $twTool->getIsAuthority('id', $model->course->course_principal) 
             || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
             throw new NotAcceptableHttpException('无权限操作');
