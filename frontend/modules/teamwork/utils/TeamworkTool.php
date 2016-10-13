@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\modules\teamwork;
+namespace frontend\modules\teamwork\utils;
 
 use common\models\team\Team;
 use common\models\team\TeamMember;
@@ -17,10 +17,13 @@ use wskeee\framework\models\Item;
 use wskeee\framework\models\ItemType;
 use Yii;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
 
 class TeamworkTool{
+    
+    private static $instance = null;
     
     /**
      * 模版类型
@@ -28,35 +31,6 @@ class TeamworkTool{
      */
     public $templateType = 1;
     
-    /**
-     * 课程阶段进度
-     * @var type 
-     */
-    private $courseProgress = "(SELECT Course_phase.id, Course_phase.course_id, Course_phase.weights, 
-        SUM(Course_link_progress.progress) / COUNT(Course_link_progress.course_phase_id) AS progress FROM 
-            (SELECT Course_link.course_phase_id, SUM(Course_link.completed) / SUM(Course_link.total) AS progress 
-            FROM ccoa_teamwork_course_link AS Course_link
-            WHERE Course_link.is_delete = 'N'
-            GROUP BY Course_link.id) AS Course_link_progress
-	LEFT JOIN ccoa_teamwork_course_phase AS Course_phase ON Course_phase.id = Course_link_progress.course_phase_id
-	GROUP BY Course_phase.id) AS Course_phase_progress";
-    
-    /**
-     * 课程进度
-     * @var type 
-     */
-    private $itemProgress = "(SELECT Course.id,Course.project_id, 
-        SUM(Course_phase_progress.weights * Course_phase_progress.progress) AS progress FROM 
-            (SELECT Course_phase.id, Course_phase.course_id, Course_phase.weights, 
-                SUM(Course_link_progress.progress) / COUNT(Course_link_progress.course_phase_id) AS progress FROM 
-                    (SELECT Course_link.course_phase_id, Course_link.is_delete,SUM(Course_link.completed) / SUM(Course_link.total) AS progress 
-                    FROM ccoa_teamwork_course_link AS Course_link
-                    WHERE Course_link.is_delete = 'N'
-                    GROUP BY Course_link.id) AS Course_link_progress
-            LEFT JOIN ccoa_teamwork_course_phase AS Course_phase ON Course_phase.id = Course_link_progress.course_phase_id 
-            GROUP BY Course_phase.id) AS Course_phase_progress
-	LEFT JOIN ccoa_teamwork_course_manage AS Course ON Course.id = Course_phase_progress.course_id
-	GROUP BY Course.id) AS Course_progress";
     /**
      * 获取一周时间
      * @param type $date            日期
@@ -142,32 +116,38 @@ class TeamworkTool{
 
     /**
      * 获取创建者所在团队
-     * @param type $uId     用户ID
-     * @return type
+     * @param type $uId         用户ID
+     * @return integer|array    
      */
     public function getHotelTeam($uId)
     {
-        $team = TeamMember::findOne(['u_id' => $uId]);
-        if(!empty($team))
-            return $team ->team_id;
+        $teamMember = TeamMember::find()
+                      ->where(['u_id' => $uId])
+                      ->with('team')
+                      ->all();
+        $team = ArrayHelper::getColumn($teamMember, 'team_id');
+        if(!empty($team) && count($team) == 1)
+            return $team[0];
         else
-            return null;
+            return ArrayHelper::map($teamMember, 'team.id', 'team.name');
     } 
 
     /**
-     * 获取当前用户是否为【队长】
-     * @return boolean  true为是
-     */
-    public function getIsLeader()
+     * 获取当前用户是否有权限
+     * @param string $keyName       数组键值名称
+     * @param mixed $value          判断条件的值
+     * @return boolean              true 为是
+     */ 
+    public function getIsAuthority($keyName, $value)
     {
         //查出成员表里面所有队长
-        $isLeader = TeamMember::findAll(['u_id' => Yii::$app->user->id]);
-        if(!empty($isLeader) || isset($isLeader)){
-            foreach ($isLeader as $value){
-                if($value->is_leader == 'Y')
-                    return true;
-            }
+        $teamMember = TeamMember::findAll(['u_id' => Yii::$app->user->id]);
+        if(!empty($teamMember) || isset($teamMember)){
+            $authority = ArrayHelper::getColumn($teamMember, $keyName);
+            if(in_array($value, $authority))
+               return true;
         }
+        
         return false;
     }
     
@@ -181,14 +161,26 @@ class TeamworkTool{
         $currentUser = TeamMember::findAll(['u_id' => Yii::$app->user->id]);
         $courseTeam = CourseManage::findOne(['id' => $course_id]);
         if(!empty($currentUser) || isset($currentUser) || !empty($course_id)){
-            foreach ($currentUser as $value) {
-                if($value->team_id == $courseTeam->team_id)
-                    return true;
-            }
+            $isBelong = ArrayHelper::getColumn($currentUser, 'team_id');
+            if(in_array($courseTeam->team_id, $isBelong))
+                return true;
         }
         return false;
     }
-
+    
+    /**
+     * 检查一个数组是否有重复值
+     * @param type $array
+     * @return boolean  ture为是
+     */
+    public function isSameValue($array)
+    {
+        if(count($array) != count(array_unique($array)))
+            return true;
+        else 
+            return false;
+    }
+    
     /**
      * 获取课程时长总和
      * @param type $condition
@@ -209,7 +201,7 @@ class TeamworkTool{
         return array_sum($lessionTime);
     }
     
-     /**
+    /**
      * 保存制作人到表里面
      * @param type $course_id  任务id
      * @param type $post 
@@ -559,15 +551,53 @@ class TeamworkTool{
     }
     
     /**
-     * 检查一个数组是否有重复值
-     * @param type $array
-     * @return boolean  ture为是
+     * 课程阶段进度
+     * @var type 
      */
-    public function isSameValue($array)
+    private $courseProgress = "(SELECT Course_phase.id, Course_phase.course_id, Course_phase.weights, 
+        SUM(Course_link_progress.progress) / COUNT(Course_link_progress.course_phase_id) AS progress FROM 
+            (SELECT Course_link.course_phase_id, SUM(Course_link.completed) / SUM(Course_link.total) AS progress 
+            FROM ccoa_teamwork_course_link AS Course_link
+            WHERE Course_link.is_delete = 'N'
+            GROUP BY Course_link.id) AS Course_link_progress
+	LEFT JOIN ccoa_teamwork_course_phase AS Course_phase ON Course_phase.id = Course_link_progress.course_phase_id
+	GROUP BY Course_phase.id) AS Course_phase_progress";
+    
+    /**
+     * 课程进度
+     * @var type 
+     */
+    private $itemProgress = "(SELECT Course.id,Course.project_id, 
+        SUM(Course_phase_progress.weights * Course_phase_progress.progress) AS progress FROM 
+            (SELECT Course_phase.id, Course_phase.course_id, Course_phase.weights, 
+                SUM(Course_link_progress.progress) / COUNT(Course_link_progress.course_phase_id) AS progress FROM 
+                    (SELECT Course_link.course_phase_id, Course_link.is_delete,SUM(Course_link.completed) / SUM(Course_link.total) AS progress 
+                    FROM ccoa_teamwork_course_link AS Course_link
+                    WHERE Course_link.is_delete = 'N'
+                    GROUP BY Course_link.id) AS Course_link_progress
+            LEFT JOIN ccoa_teamwork_course_phase AS Course_phase ON Course_phase.id = Course_link_progress.course_phase_id 
+            GROUP BY Course_phase.id) AS Course_phase_progress
+	LEFT JOIN ccoa_teamwork_course AS Course ON Course.id = Course_phase_progress.course_id
+	GROUP BY Course.id) AS Course_progress";
+    
+    /*private function getCourseProgress()
     {
-        if(count($array) != count(array_unique($array)))
-            return true;
-        else 
-            return false;
+        $query = (new Query())
+                 ->select(['Course.id', 'Course.project_id', 
+                    'SUM(Course_phase_progress.weights * Course_phase_progress.progress) AS progress',
+                ])
+                ->from();
+                          
+    }*/
+    
+    /**
+     * 获取单例
+     * @return MultimediaTool
+     */
+    public static function getInstance() {
+        if (self::$instance == null) {
+            self::$instance = new TeamworkTool();
+        }
+        return self::$instance;
     }
 }

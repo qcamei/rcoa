@@ -98,4 +98,6 @@ return[
     'Annex' => '附件上传',
     'Annex Name' => '附件名称',
     'Annex Path' => '附件路径',
+    
+    'Do not repeat the same data' => '请勿重复提交相同的数据！', 
 ];

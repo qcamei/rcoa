@@ -43,7 +43,6 @@ use yii\widgets\DetailView;
             ['label' => '<span class="btn-block viewdetail-th-head">其它信息</span>','value'=>''],
             [
                 'attribute' => 'create_by',
-                //'value' => $model->teamMember->team->name.' ( '.$model->createBy->nickname.' )',
                 'value' => $model->createBy->nickname,
             ],
             [

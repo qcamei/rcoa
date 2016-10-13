@@ -34,6 +34,7 @@ use yii\widgets\ActiveForm;
     ]); ?>
     
     <h5><b>基本信息</b></h5>
+    
     <?= $form->field($model, 'item_type_id')->widget(Select2::className(), [
         'data' => $itemType, 'options' => ['placeholder' => '请选择...']
     ]) ?>
@@ -67,6 +68,18 @@ use yii\widgets\ActiveForm;
     ]) ?>
     
     <h5><b>开发信息</b></h5>
+    
+    <?php
+        if(is_array($team)){
+            echo $form->field($model, 'create_team')->widget(Select2::classname(), [
+                'data' => $team, 'options' => ['placeholder' => '请选择...']
+            ]);
+        }
+        else{
+            echo Html::hiddenInput('CourseManage[team_id]', $team);
+        }
+    ?>
+    
     <?= $form->field($model, 'content_type')->widget(Select2::className(), [
         'data' => $contentType, 'hideSearch' => true, 'options' => ['placeholder' => '请选择内容类型...']
     ]) ?>
@@ -117,6 +130,7 @@ use yii\widgets\ActiveForm;
     ]) ?>
 
     <h5><b>其它信息</b></h5>
+    
     <?= $form->field($model, 'des')->textarea(['rows' => 4]) ?>
 
     <?php ActiveForm::end(); ?>

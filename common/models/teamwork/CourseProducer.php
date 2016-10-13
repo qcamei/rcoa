@@ -12,7 +12,7 @@ use yii\db\ActiveRecord;
  * This is the model class for table "{{%teamwork_course_producer}}".
  *
  * @property integer $course_id     课程ID
- * @property string $producer       制作人
+ * @property integer $producer       制作人
  *
  * @property TeamMember $producerOne    获取团队成员
  * @property CourseManage $course       获取课程
@@ -34,9 +34,8 @@ class CourseProducer extends ActiveRecord
     {
         return [
             [['course_id', 'producer'], 'required'],
-            [['course_id'], 'integer'],
-            [['producer'], 'string', 'max' => 36],
-            [['producer'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['producer' => 'u_id']],
+            [['course_id', 'producer'], 'integer'],
+            [['producer'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['producer' => 'id']],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => CourseManage::className(), 'targetAttribute' => ['course_id' => 'id']],
         ];
     }
@@ -57,7 +56,7 @@ class CourseProducer extends ActiveRecord
      */
     public function getProducerOne()
     {
-        return $this->hasOne(TeamMember::className(), ['u_id' => 'producer']);
+        return $this->hasOne(TeamMember::className(), ['id' => 'producer']);
     }
 
     /**

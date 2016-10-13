@@ -115,7 +115,7 @@ class StatisticsController extends Controller
             'allCHours'=>$allCHours,
             'allCourse'=>$allCourse,
             
-            'twTool'=>Yii::$app->get('twTool'),
+            'twTool'=>TeamworkTool::getInstance(),
             'itemTypes'=>$this->getStatisticsByItemType($query),//按行业统计
             'items'=>$this->getStatisticsByItem($query),//按项目统计
             'itemChilds'=>$this->getStatisticsByItemChild($query),//按子项目统计

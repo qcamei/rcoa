@@ -1,8 +1,8 @@
 <?php
 
 use common\models\teamwork\CourseManage;
-use frontend\modules\teamwork\TeamworkTool;
 use frontend\modules\teamwork\TwAsset;
+use frontend\modules\teamwork\utils\TeamworkTool;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -151,9 +151,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     'label' => Yii::t('rcoa/teamwork', 'Weekly'),
                     'format' => 'raw',
                     'value' => function($model){
-                        /* @var $model CourseManage */
-                        /* @var $twTool TeamworkTool */
-                       $twTool = Yii::$app->get('twTool');
+                       /* @var $model CourseManage */
+                       /* @var $twTool TeamworkTool */
+                       $twTool = TeamworkTool::getInstance();
                        $week = $twTool->getWeek(date('Y-m-d', time()));
                        $result = $twTool->getWeeklyInfo($model->id, $week['start'], $week['end']);
                        return empty($result) ? '' : 

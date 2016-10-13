@@ -8,7 +8,7 @@ use common\models\team\TeamMember;
 use common\models\teamwork\CourseAnnex;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\CourseProducer;
-use frontend\modules\teamwork\TeamworkTool;
+use frontend\modules\teamwork\utils\TeamworkTool;
 use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\Item;
 use wskeee\framework\models\ItemType;
@@ -61,7 +61,7 @@ class CourseController extends Controller
     {
                        
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
+        $twTool = TeamworkTool::getInstance();
         $dataProvider = new ArrayDataProvider([
             'allModels' => $twTool->getCourseProgressAll($project_id, $status, $team_id, $item_type_id, $item_id, $item_child_id, $course_id, $keyword, $time),
         ]);
@@ -76,14 +76,15 @@ class CourseController extends Controller
             'itemChild' => [],
             'course' => [],
             'team' => $this->getTeam(),
-            'itemTypeId' => !empty($item_type_id) ? $item_type_id : null,
-            'itemId' => !empty($item_id) ? $item_id : null,
-            'itemChildId' => !empty($item_child_id) ? $item_child_id : null,
-            'courseId' => !empty($course_id) ? $course_id : null,
-            'keyword' => !empty($keyword)? $keyword : '',
+            //搜索默认字段值
+            'itemTypeId' => $item_type_id,
+            'itemId' => $item_id,
+            'itemChildId' => $item_child_id,
+            'courseId' => $course_id,
+            'keyword' => $keyword,
+            'status' => $status,
+            'team_id' => $team_id,
             'time' => !empty($time) ? $time : null,
-            'status' => !empty($status) ? $status : null,
-            'team_id' => !empty($team_id) ? $team_id : null,
             'mark' => !empty($mark) ? $mark : 0,
         ]);
     }
@@ -95,7 +96,7 @@ class CourseController extends Controller
     public function actionList($project_id)
     {
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
+        $twTool = TeamworkTool::getInstance();
         $allModels = $this->findItemModel($project_id);
         foreach ($allModels as $value)
             $model = $this->findModel($value->id);
@@ -117,7 +118,7 @@ class CourseController extends Controller
     public function actionView($id)
     {
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
+        $twTool = TeamworkTool::getInstance();
         /* @var $model CourseManage */
         $model = $twTool->getCourseProgressOne($id);
         $week = $twTool->getWeek(date('Y-m-d', time()));
@@ -142,9 +143,9 @@ class CourseController extends Controller
     public function actionCreate($project_id)
     {
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
+        $twTool = TeamworkTool::getInstance();
         $post = Yii::$app->request->post();
-        if(!($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
+        if(!($twTool->getIsAuthority('is_leader', 'Y') || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
             throw new NotAcceptableHttpException('无权限操作！');
         $course_id = ArrayHelper::getValue($post, 'CourseManage.course_id');
         
@@ -152,13 +153,12 @@ class CourseController extends Controller
         $model = new CourseManage();
         $model->loadDefaultValues();
         $model->project_id = $project_id;
-        $model->team_id = $twTool->getHotelTeam(\Yii::$app->user->id);
+        //$model->team_id = $twTool->getHotelTeam(\Yii::$app->user->id);
         $model->create_by = \Yii::$app->user->id;
        
         if ($model->load($post)) {
-            if($this->getIsSameValue($project_id, $course_id))
-                throw new NotAcceptableHttpException('请勿重复提交相同的数据！');   
-            
+            /*if($this->getIsSameValue($project_id, $course_id))
+                throw new NotAcceptableHttpException('请勿重复提交相同的数据！');   */
             $twTool->CreateTask($model, $post);         //创建任务操作
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -167,6 +167,7 @@ class CourseController extends Controller
                 'twTool' => $twTool,
                 'courses' => $this->getCourses($project_id, $model->project->item_child_id),
                 'teachers' => $this->getExpert(),
+                'team' => $twTool->getHotelTeam(\Yii::$app->user->id),
                 'producerList' => $this->getTeamMemberList(),
                 'weeklyEditors' => $this->getSameTeamMember(\Yii::$app->user->id),
                 'producer' => $this->getSameTeamMember(\Yii::$app->user->id),
@@ -184,9 +185,9 @@ class CourseController extends Controller
     {
         $model = $this->findModel($id);
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
-        if(!(($twTool->getIsLeader() && $model->create_by == \Yii::$app->user->id)
-            || $model->course_principal == \Yii::$app->user->id 
+        $twTool = TeamworkTool::getInstance();
+        if(!(($twTool->getIsAuthority('is_leader', 'Y') && $model->create_by == \Yii::$app->user->id)
+            || $twTool->getIsAuthority('id', $model->course_principal)
             || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
             throw new NotAcceptableHttpException('无权限操作！');
         if($model->getIsCarryOut())
@@ -204,6 +205,7 @@ class CourseController extends Controller
                 'twTool' => $twTool,
                 'courses' => ArrayHelper::merge([$model->course_id => $model->course->name], $courses),
                 'teachers' => $this->getExpert(),
+                'team' => $twTool->getHotelTeam(\Yii::$app->user->id),
                 'weeklyEditors' => $this->getAssignWeeklyEditors($model->id),
                 'producerList' => $this->getTeamMemberList(),
                 'producer' => $this->getAssignProducers($model->id),
@@ -242,10 +244,10 @@ class CourseController extends Controller
     public function actionWaitStart($id)
     {
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
+        $twTool = TeamworkTool::getInstance();
         $model = $this->findModel($id);
-        if(!(($twTool->getIsLeader() && $model->create_by == \Yii::$app->user->id)
-            || $model->course_principal == \Yii::$app->user->id 
+        if(!(($twTool->getIsAuthority('is_leader', 'Y') && $model->create_by == \Yii::$app->user->id)
+            || $twTool->getIsAuthority('id', $model->course_principal)
             || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
             throw new NotFoundHttpException('无权限操作！');
         if($model != null && !$model->getIsWaitStart())
@@ -267,7 +269,7 @@ class CourseController extends Controller
     public function actionNormal($id)
     {
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
+        $twTool = TeamworkTool::getInstance();
         if (!Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)) 
             throw new NotFoundHttpException('无权限操作！');
         
@@ -290,12 +292,12 @@ class CourseController extends Controller
     public function actionCarryOut($id)
     {
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
+        $twTool = TeamworkTool::getInstance();
         /* @var $model CourseManage */
         $model = $twTool->getCourseProgressOne($id);
         $model->scenario = CourseManage::SCENARIO_CARRYOUT;
-        if(!(($twTool->getIsLeader() && $model->create_by == \Yii::$app->user->id)
-            || $model->course_principal == \Yii::$app->user->id 
+        if(!(($twTool->getIsAuthority('is_leader', 'Y') && $model->create_by == \Yii::$app->user->id)
+            || $twTool->getIsAuthority('id', $model->course_principal)
             || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
             throw new NotFoundHttpException('无权限操作！');
         
@@ -330,10 +332,10 @@ class CourseController extends Controller
     {
         $model = $this->findModel(['id' => $id, 'project_id' => $project_id]);
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
+        $twTool = TeamworkTool::getInstance();
         
-        if(!$model->getIsCarryOut() && (($twTool->getIsLeader() && $model->create_by == \Yii::$app->user->id)
-            || $model->course_principal == \Yii::$app->user->id || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
+        if(!$model->getIsCarryOut() && (($twTool->getIsAuthority('is_leader', 'Y') && $model->create_by == \Yii::$app->user->id)
+            || $twTool->getIsAuthority('id', $model->course_principal)|| Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
             $model->delete();
         else 
             throw new NotFoundHttpException('无权限操作！');
@@ -446,15 +448,15 @@ class CourseController extends Controller
         /* @var $teamMember TeamMember */
         $teamMember = TeamMember::find()
                     ->orderBy(['index' => 'asc', 'team_id' => 'asc'])
-                    ->with('u')
+                    ->with('user')
                     ->with('team')
                     ->with('position')
                     ->all();
        
         $producers = [];
         foreach ($teamMember as $element) {
-            $key = ArrayHelper::getValue($element, 'u_id');
-            $value = ArrayHelper::getValue($element, 'u.nickname').' ('.ArrayHelper::getValue($element, 'position.name').')';
+            $key = ArrayHelper::getValue($element, 'id');
+            $value = ArrayHelper::getValue($element, 'user.nickname').' ('.ArrayHelper::getValue($element, 'position.name').')';
             $producers[ArrayHelper::getValue($element, 'team.name')][$key] = $value;
         }
         
@@ -468,18 +470,19 @@ class CourseController extends Controller
      */
     public function getSameTeamMember($u_id)
     {
-        $teamMember = TeamMember::find()->where(['u_id' => $u_id])->one();
+        /* @var $twTool TeamworkTool */
+        $twTool = TeamworkTool::getInstance();
         $sameTeamMembers = TeamMember::find()
-                        ->where(['team_id' => $teamMember->team_id])
+                        ->where(['team_id' => $twTool->getHotelTeam($u_id)])
                         ->orderBy('index asc')
-                        ->with('u')
+                        ->with('user')
                         ->with('team')
                         ->with('position')
                         ->all();
         $sameTeamMember = [];
         foreach ($sameTeamMembers as $element) {
-            $key = ArrayHelper::getValue($element, 'u_id');
-            $value = ArrayHelper::getValue($element, 'u.nickname').' ('.ArrayHelper::getValue($element, 'position.name').')';
+            $key = ArrayHelper::getValue($element, 'id');
+            $value = ArrayHelper::getValue($element, 'user.nickname').' ('.ArrayHelper::getValue($element, 'position.name').')';
             $sameTeamMember[$key] = $value;
         }
         return $sameTeamMember;
@@ -527,12 +530,12 @@ class CourseController extends Controller
                             ->orderBy(['Member.`index`' => 'ASC', 'Member.team_id' => 'ASC'])
                             ->with('producerOne')
                             ->with('course')
-                            ->with('producerOne.u')
+                            ->with('producerOne.user')
                             ->all();
         $weeklyEditors = [];
         foreach ($assignWeeklyEditors as $element) {
             $key = ArrayHelper::getValue($element, 'producer');
-            $value = ArrayHelper::getValue($element, 'producerOne.u.nickname').' ('.ArrayHelper::getValue($element, 'producerOne.position.name').')';
+            $value = ArrayHelper::getValue($element, 'producerOne.user.nickname').' ('.ArrayHelper::getValue($element, 'producerOne.position.name').')';
             $weeklyEditors[$key] = $value;
         }
         return $weeklyEditors;
@@ -546,13 +549,13 @@ class CourseController extends Controller
     public function getAssignProducers($courseId){
         
         $assignProducers = CourseProducer::find()
-                           ->select(['Producer.*','Member.`index`'])
+                           ->select(['Producer.*', 'Member.`index`'])
                            ->from(['Producer' => CourseProducer::tableName()])
-                           ->leftJoin(['Member' => TeamMember::tableName()], 'Member.u_id = Producer.producer')
+                           ->leftJoin(['Member' => TeamMember::tableName()], 'Member.id = Producer.producer')
                            ->where(['Producer.course_id' => $courseId])
-                           ->orderBy(['Member.`index`' => 'ASC', 'Member.team_id' => 'ASC'])
+                           ->orderBy('Member.`index` asc, Member.team_id asc')
                            ->with('producerOne')
-                           ->with('producerOne.u')
+                           ->with('producerOne.user')
                            ->with('producerOne.position')
                            ->with('course')
                            ->all();
@@ -561,11 +564,11 @@ class CourseController extends Controller
             $key = ArrayHelper::getValue($element, 'producer');
             $value = ArrayHelper::getValue($element, 'producerOne.is_leader') == 'Y' ? 
                     '<span class="team-leader developer">'.
-                        ArrayHelper::getValue($element, 'producerOne.u.nickname').
+                        ArrayHelper::getValue($element, 'producerOne.user.nickname').
                         '('.ArrayHelper::getValue($element, 'producerOne.position.name').')'.
                      '</span>' : 
                     '<span class="developer">'.
-                        ArrayHelper::getValue($element, 'producerOne.u.nickname').
+                        ArrayHelper::getValue($element, 'producerOne.user.nickname').
                         '('.ArrayHelper::getValue($element, 'producerOne.position.name').')'. 
                    '</span>';
             $producers[$key] = $value;
@@ -592,7 +595,7 @@ class CourseController extends Controller
      * @param type $project_id      项目ID
      * @param type $course_id       课程ID
      * @return boolean
-     */
+     
     public function getIsSameValue($project_id, $course_id)
     {
         $courses = CourseManage::findAll(['project_id' => $project_id]);
@@ -605,7 +608,7 @@ class CourseController extends Controller
             return true;
         else 
             return false;
-    }
+    }*/
 
 
     /**
@@ -624,4 +627,5 @@ class CourseController extends Controller
         unset($array_pop);
         return $statusName;
     }*/
+    
 }

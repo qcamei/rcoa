@@ -6,7 +6,7 @@ use common\models\team\Team;
 use common\models\team\TeamMember;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\ItemManage;
-use frontend\modules\teamwork\TeamworkTool;
+use frontend\modules\teamwork\utils\TeamworkTool;
 use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\Item;
 use wskeee\framework\models\ItemType;
@@ -54,7 +54,7 @@ class DefaultController extends Controller
     public function actionIndex()
     {
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
+        $twTool = TeamworkTool::getInstance();
         $completedHours = $twTool->getCourseLessionTimesSum(['status' => CourseManage::STATUS_CARRY_OUT]);
         $undoneHours = $twTool->getCourseLessionTimesSum(['status' => CourseManage::STATUS_NORMAL]);
         $completedDoor = CourseManage::find()->where(['status' => CourseManage::STATUS_CARRY_OUT])->count();
@@ -99,7 +99,7 @@ class DefaultController extends Controller
     public function actionList()
     {
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
+        $twTool = TeamworkTool::getInstance();
         $dataProvider = new ArrayDataProvider([
             'allModels' => $twTool->getItemProgressAll(), 
         ]);
@@ -117,7 +117,7 @@ class DefaultController extends Controller
     public function actionSearch($keyword)
     {
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
+        $twTool = TeamworkTool::getInstance();
         $dataProvider = new ArrayDataProvider([
             'allModels' => $twTool->getItemProgressAll($keyword), 
         ]);
@@ -136,7 +136,7 @@ class DefaultController extends Controller
     public function actionView($id)
     {
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
+        $twTool = TeamworkTool::getInstance();
         /* @var $model ItemManage */
         $model = $twTool->getItemProgressOne($id);
         return $this->render('view', [
@@ -154,8 +154,8 @@ class DefaultController extends Controller
     public function actionCreate()
     {
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
-        if(!($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
+        $twTool = TeamworkTool::getInstance();
+        if(!($twTool->getIsAuthority('is_leader', 'Y') || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
             throw new NotAcceptableHttpException('无权限操作！');
         
         $model = new ItemManage();
@@ -182,8 +182,8 @@ class DefaultController extends Controller
     public function actionUpdate($id)
     {
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
-        if(!($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
+        $twTool = TeamworkTool::getInstance();
+        if(!($twTool->getIsAuthority('is_leader', 'Y') || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
             throw new NotAcceptableHttpException('无权限操作！');
         
         $model = $this->findModel($id);
@@ -238,7 +238,7 @@ class DefaultController extends Controller
     public function actionDelete($id)
     {
         $model =  $this->findModel($id);
-        if ($model != null && $model->getIsNormal() && $model->getIsLeader() && $model->create_by == Yii::$app->user->id)
+        if ($model != null && $model->getIsNormal() && $model->getIsAuthority('is_leader', 'Y') && $model->create_by == Yii::$app->user->id)
             $model->delete();
 
         return $this->redirect(['index']);

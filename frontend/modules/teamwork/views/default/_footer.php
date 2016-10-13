@@ -37,7 +37,7 @@ use yii\helpers\Html;
              * 1、操作方法必须是 【list】
              * 2、必须是【队长】 or 【项目管理员】
              */
-            if($actionId == 'list' && ($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
+            if($actionId == 'list' && ($twTool->getIsAuthority('is_leader', 'Y') || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a(Html::img(['/filedata/teamwork/image/create.png']), ['create'], [
                     'class' => 'footer-item-xs footer-item-right visible-xs-inline-block']);
             
@@ -61,7 +61,7 @@ use yii\helpers\Html;
              * 1、操作方法必须是 【list】
              * 2、必须是【队长】 or 【项目管理员】
              */
-            if($actionId == 'list' && ($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
+            if($actionId == 'list' && ($twTool->getIsAuthority('is_leader', 'Y') || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a(Html::img(['/filedata/teamwork/image/create.png']).'创建项目', ['create'], [
                     'class' => 'footer-item footer-item-right hidden-xs']);
         ?>

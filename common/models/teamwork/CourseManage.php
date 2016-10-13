@@ -14,7 +14,7 @@ use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
- * This is the model class for table "{{%teamwork_course_manage}}".
+ * This is the model class for table "{{%teamwork_course}}".
  *
  * @property integer $id                        ID
  * @property integer $project_id                项目Id
@@ -88,7 +88,7 @@ class CourseManage extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%teamwork_course_manage}}';
+        return '{{%teamwork_course}}';
     }
     
     public function scenarios() 
@@ -131,8 +131,10 @@ class CourseManage extends ActiveRecord
             [['plan_start_time', 'plan_end_time', 'real_carry_out'], 'string', 'max' => 60],
             [['real_start_time'], 'string', 'max' => 60, 'on' => [self::SCENARIO_WAITSTART]],
             [['des','path'], 'string', 'max' => 255],
-            [['course_ops'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['course_ops' => 'u_id']],
-            [['weekly_editors_people'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['weekly_editors_people' => 'u_id']],
+            [['project_id', 'course_id'], 'unique', 'targetAttribute' => ['course_id'], 'message' => \Yii::t('rcoa/teamwork', 'Do not repeat the same data')],
+            [['course_ops'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['course_ops' => 'id']],
+            [['weekly_editors_people'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['weekly_editors_people' => 'id']],
+            [['course_principal'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['course_principal' => 'id']],
             [['team_id'], 'exist', 'skipOnError' => true, 'targetClass' => Team::className(), 'targetAttribute' => ['team_id' => 'id']],
             [['create_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['create_by' => 'id']],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Item::className(), 'targetAttribute' => ['course_id' => 'id']],
@@ -229,7 +231,7 @@ class CourseManage extends ActiveRecord
      */
     public function getCourseOps()
     {
-        return $this->hasOne(TeamMember::className(), ['u_id' => 'course_ops']);
+        return $this->hasOne(TeamMember::className(), ['id' => 'course_ops']);
     }
 
     
@@ -239,7 +241,7 @@ class CourseManage extends ActiveRecord
      */
     public function getWeeklyEditorsPeople()
     {
-        return $this->hasOne(TeamMember::className(), ['u_id' => 'weekly_editors_people']);
+        return $this->hasOne(TeamMember::className(), ['id' => 'weekly_editors_people']);
     }
     
     /**
@@ -266,7 +268,7 @@ class CourseManage extends ActiveRecord
      */
     public function getCoursePrincipal()
     {
-        return $this->hasOne(TeamMember::className(), ['u_id' => 'course_principal']);
+        return $this->hasOne(TeamMember::className(), ['id' => 'course_principal']);
     }
 
     /**

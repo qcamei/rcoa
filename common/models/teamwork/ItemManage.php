@@ -13,7 +13,7 @@ use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
- * This is the model class for table "{{%teamwork_item_manage}}".
+ * This is the model class for table "{{%teamwork_item}}".
  *
  * @property integer $id                ID
  * @property integer $item_type_id      项目类别
@@ -55,7 +55,7 @@ class ItemManage extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%teamwork_item_manage}}';
+        return '{{%teamwork_item}}';
     }
     
     public function behaviors() {
