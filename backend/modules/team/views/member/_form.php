@@ -20,7 +20,7 @@ use yii\widgets\ActiveForm;
         if(!$model->isNewRecord)
             echo $form->field($model, 'team_id')->widget(Select2::classname(), [
                 'data' => $team, 'hideSearch'=>false, 'options' => ['placeholder' => '请选择...'],
-            ]) 
+            ]);
     ?>
 
     <?= $form->field($model, 'u_id')->widget(Select2::classname(), [

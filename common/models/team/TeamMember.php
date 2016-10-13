@@ -73,7 +73,7 @@ class TeamMember extends ActiveRecord
             [['index', 'position_id'], 'integer'],
             [['u_id'], 'string', 'max' => 36],
             [['is_leader'], 'string', 'max' => 4],
-            [['team_id', 'u_id'], 'unique', 'targetAttribute' => ['u_id'], 'message' => \Yii::t('rcoa/team', 'Under the same team please do not repeat to add the same members')],
+            [['team_id', 'u_id'], 'unique', 'targetAttribute' => ['team_id', 'u_id'], 'message' => \Yii::t('rcoa/team', 'Under the same team please do not repeat to add the same members')],
             [['position_id'], 'exist', 'skipOnError' => true, 'targetClass' => Position::className(), 'targetAttribute' => ['position_id' => 'id']],
             [['team_id'], 'exist', 'skipOnError' => true, 'targetClass' => Team::className(), 'targetAttribute' => ['team_id' => 'id']],
             [['u_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['u_id' => 'id']],
