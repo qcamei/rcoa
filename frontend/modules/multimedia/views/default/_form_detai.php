@@ -103,7 +103,7 @@ foreach (MultimediaTask::$statusNmae as $key => $value) {
                            Html::img(['/filedata/multimedia/image/brace.png'], [
                                'width' => '20', 'height' => '20', 'style' => 'float: left; margin: 0 3px;'
                            ]).'<span class="team-span" style="float: left;">'.$model->makeTeam->name.'</span>'
-                           :'<span class="team-span">'.$model->createTeam->name.'</span>',
+                           : (!empty($model->create_team) ? '<span class="team-span">'.$model->createTeam->name.'</span>' : ''),
             ],
             [
                 'label' => Yii::t('rcoa/multimedia', 'Producer'),
@@ -123,11 +123,11 @@ foreach (MultimediaTask::$statusNmae as $key => $value) {
             ['label' => '<span class="btn-block viewdetail-th-head">其它信息</span>','value' => ''],
             [
                 'attribute' => 'create_team',
-                'value' => $model->createTeam->name,
+                'value' => !empty($model->create_team) ? $model->createTeam->name : '',
             ],
             [
                 'attribute' => 'create_by',
-                'value' => $model->createBy->nickname,
+                'value' => !empty($model->create_by) ? $model->createBy->nickname : '',
             ],
             [
                 'attribute' => 'created_at',

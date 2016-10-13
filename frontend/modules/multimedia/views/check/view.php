@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             [
                 'attribute' => 'task_id',
-                'value' => $model->task->name,
+                'value' => !empty($model->task_id) ? $model->task->name : '',
             ],
             [
                 'attribute' => 'title',
@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'create_by',
-                'value' => $model->createBy->nickname,
+                'value' => !empty($model->create_by) ? $model->createBy->nickname : '',
             ],
             [
                 'attribute' => 'created_at',

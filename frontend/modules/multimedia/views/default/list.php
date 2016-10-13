@@ -82,7 +82,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                'height' => '15', 
                                'style' => 'float: left; margin: 3px 3px;'
                            ]).'<span class="team-span" style="float: left;">'.$model->makeTeam->name.'</span>'
-                           :'<span class="team-span">'.$model->createTeam->name.'</span>';
+                           : (!empty($model->create_team) ? '<span class="team-span">'.$model->createTeam->name.'</span>' : '');
                 },
                 'headerOptions' => [
                     'style' => [
@@ -120,7 +120,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => Yii::t('rcoa/multimedia', 'Item Type'),
                 'value'=> function($model){
                     /* @var $model MultimediaTask */
-                    return !empty($model->item_type_id) ? $model->itemType->name : 'null';
+                    return !empty($model->item_type_id) ? $model->itemType->name : '';
                 },
                 'headerOptions' => [
                     'class'=>[
@@ -139,7 +139,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => Yii::t('rcoa/multimedia', 'Item'),
                 'value'=> function($model){
                     /* @var $model MultimediaTask */
-                    return !empty($model->item_id) ? $model->item->name : 'null';
+                    return !empty($model->item_id) ? $model->item->name : '';
                 },
                 'headerOptions' => [
                     'class'=>[
@@ -158,7 +158,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => Yii::t('rcoa/multimedia', 'Item Child'),
                 'value'=> function($model){
                     /* @var $model MultimediaTask */
-                    return !empty($model->item_child_id) ? $model->itemChild->name : 'null';
+                    return !empty($model->item_child_id) ? $model->itemChild->name : '';
                 },
                 'headerOptions' => [
                     'class'=>[
@@ -177,7 +177,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => Yii::t('rcoa/multimedia', 'Course'),
                 'value'=> function($model){
                     /* @var $model MultimediaTask */
-                    return !empty($model->course_id) ? $model->course->name : 'null';
+                    return !empty($model->course_id) ? $model->course->name : '';
                 },
                 'headerOptions' => [
                     'class'=>[
@@ -250,7 +250,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => Yii::t('rcoa', 'Create By'),
                 'value'=> function($model){
                     /* @var $model MultimediaTask */
-                    return $model->createBy->nickname;
+                    return !empty($model->create_by) ? $model->createBy->nickname : '';
                 },
                 'headerOptions' => [
                     'class'=>[

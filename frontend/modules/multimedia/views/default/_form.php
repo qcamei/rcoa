@@ -76,7 +76,7 @@ use yii\widgets\ActiveForm;
             ]);
         }
         else{
-            echo Html::hiddenInput('CourseManage[team_id]', $team);
+            echo Html::hiddenInput('MultimediaTask[create_team]', $team);
         }
     ?>
     
