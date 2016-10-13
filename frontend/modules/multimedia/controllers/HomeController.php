@@ -55,24 +55,14 @@ class HomeController extends Controller
         
         /** 换算为标准工作量 */
         foreach ($results as $index => $result){            
-            //重组创建者数据 [user1:[type1:xx,type2:xx,type3:xx],user2...]
-            if(!isset($datas_create_by[$result['create_by']]))
-                $datas_create_by[$result['create_by']] = [];
-            $target = &$datas_create_by[$result['create_by']];
-            //累加同类型的视频时长
-            if(!isset($target[$rule[$result['content_type']]]))
-                $target[$rule[$result['content_type']]] = 0;
-            $target[$rule[$result['content_type']]] += $result['production_video_length'] * MultimediaConvertRule::getInstance()->getRuleProportion($result['content_type']);
-            
-            //重组制作人数据 [user1:[type1:xx,type2:xx,type3:xx],user2...]
-            if(!isset($datas_producer[$result['producer']]))
-                $datas_producer[$result['producer']] = [];
-            $target = &$datas_producer[$result['producer']];
-            
-            //累加同类型的视频时长
-            if(!isset($target[$rule[$result['content_type']]]))
-                $target[$rule[$result['content_type']]] = 0;
-            $target[$rule[$result['content_type']]] += $result['production_video_length'] * MultimediaConvertRule::getInstance()->getRuleProportion($result['content_type']);
+            //标准工作时间
+            $type = $rule[$result['content_type']];
+            $value = $result['production_video_length'] * MultimediaConvertRule::getInstance()->getRuleProportion($result['content_type']);
+
+            //添加到创建者（编导）数组
+            $this->addData($datas_create_by, $result['create_by'], $type, $value);
+            //添加到制作者（制作人）数组
+            $this->addData($datas_producer, $result['producer'], $type, $value);
         }
         /* @var $multimedia MultimediaTool */
         $multimedia = MultimediaTool::getInstance();
@@ -82,6 +72,25 @@ class HomeController extends Controller
             'datas_create_by'=>$datas_create_by,
             'datas_producer'=>$datas_producer,
             ]);
+    }
+    
+    /**
+     * 添加 数据项
+     * @param type $target  目标数组
+     * @param type $item    项名称
+     * @param type $type    数据类型
+     * @param type $value   数据值
+     */
+    private function addData(&$target,$item,$type,$value){
+        //创建 item 数组
+        if(!isset($target[$item]))
+            $target[$item] = [];
+        $item_target = &$target[$item];
+        
+        //创建 不同类型数组并且累加
+        if(!isset($item_target[$type]))
+            $item_target[$type] = 0;
+        $item_target[$type] += $value;
     }
     
     /** 

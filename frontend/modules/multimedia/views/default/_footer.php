@@ -15,7 +15,7 @@ use yii\helpers\Html;
             $actionId = Yii::$app->controller->action->id;      //当前行为方法
             /** 小屏幕显示 */
             echo Html::a(Html::img(['/filedata/multimedia/image/home.png']), ['/multimedia/home'], 
-                    ['class' => $actionId == 'index' 
+                    ['class' => $controllerId == 'home' 
                     ? 'footer-multimedia-xs footer-multimedia-bg visible-xs-inline-block' : 'footer-multimedia-xs visible-xs-inline-block']);
             
             echo Html::a(Html::img(['/filedata/multimedia/image/list-check.png']), [
@@ -37,7 +37,7 @@ use yii\helpers\Html;
             
             /** 大屏幕上显示 */
             echo Html::a(Html::img(['/filedata/multimedia/image/home.png']).'主页', ['/multimedia/home'], 
-                    ['class' => $actionId == 'index' 
+                    ['class' => $controllerId == 'home' 
                     ? 'footer-multimedia footer-multimedia-bg hidden-xs' : 'footer-multimedia hidden-xs']);
             
             echo Html::a(Html::img(['/filedata/multimedia/image/list-check.png']).'任务', [

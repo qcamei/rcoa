@@ -5,7 +5,19 @@
      * 创建表
      * @param {Dom} dom
      * @param {Array} datas
+        data = [
+            nameA => [
+                typeA => 1222,
+                typeB => 123    
+            ],
+            nameB => [
+                typeA => 323,
+                typeB =>11    
+            ],...
+        ]
+        
      * @param {Object[Array]} legend 分类说明
+        legend = [typeA,typeB,..]
      * @returns
      */
     var BarChart = function(dom,datas,legend){
@@ -31,7 +43,7 @@
          //重新计算图标的高度，高度由显示的数据相关
         var len=0;
         for(var i in datas)len++;
-        $(this.canvas).css('height',(len*(40+10)-10+80)+"px");
+        $(this.canvas).css('height',(len*(30+10)-10+100)+"px");
         
         this.chart = echarts.init(dom);
         this.chart.on('legendselectchanged', function(params){_this.legendselectchanged(params,datas,legend)});

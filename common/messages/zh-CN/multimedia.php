@@ -60,5 +60,10 @@ return[
     'Task Name' => '任务名称',
     'Complete Time' => '完成时间',
     'Target Month' => '目标月份',
-    'Create Brace' => '创建 → 支撑'
+    'Create Brace' => '创建 → 支撑',
+    
+    //统计
+    'Statistics-Year' => '年份',
+    'Statistics-Month' => '月份',
+    'Statistics-Submit' => '统计',
 ];

@@ -17,15 +17,15 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="head-top"></div>
     <div class="container content">
         <div class="main-title">
-            <span class="icon statistics-disable-icon"></span>本月已完成标准工作量( 分钟 )
+            <span class="icon statistics-disable-icon"></span>本月已完成标准工作量统计
         </div>
         <div class="title">
             换算规则：
             <span>
                 <?php
                     foreach($rules as $id => $name)
-                        echo "<span class='rule-name'>$name</span><span class='rule-proportion'>(1 : ".
-                            MultimediaConvertRule::getInstance()->getRuleProportion($id).")</span>";
+                        echo "<span class='rule-name'>$name</span><span class='rule-proportion'>(1分钟成品 = ".
+                            MultimediaConvertRule::getInstance()->getRuleProportion($id)."个标准工作量)</span>";
                 ?>
             </span>
         </div>
