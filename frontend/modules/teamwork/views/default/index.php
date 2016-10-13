@@ -97,7 +97,7 @@ $this->params['breadcrumbs'][] = $this->title;
                      echo '</div>';
                 echo '</div>';
             }
-            /** 学工厂 */
+            /** 学工厂 
             echo '<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="padding:0px;">';
                 echo '<div class="team">';
                      echo '<div class="team-top" style="background:url('.$scienceFactory->image.') no-repeat">';
@@ -115,7 +115,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                '</div>';
                      echo '</div>';
                 echo '</div>';
-            echo '</div>';
+            echo '</div>';*/
         ?>
     </div></center>
 </div>

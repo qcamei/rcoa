@@ -38,6 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'courses' => $courses,
         'teachers' => $teachers,
+        'team' => $team,
         'producerList' => $producerList,
         'weeklyEditors' => $weeklyEditors,
         'producer' => $producer,

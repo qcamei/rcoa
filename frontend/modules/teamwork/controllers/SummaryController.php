@@ -4,12 +4,11 @@ namespace frontend\modules\teamwork\controllers;
 
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\CourseSummary;
-use frontend\modules\teamwork\TeamworkTool;
+use frontend\modules\teamwork\utils\TeamworkTool;
 use wskeee\rbac\RbacName;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
@@ -52,7 +51,7 @@ class SummaryController extends Controller
     {
         Yii::$app->getResponse()->format = 'json';
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
+        $twTool = TeamworkTool::getInstance();
         $course = $this->findCourseModel($course_id);
         $errors = [];
         $weekinfo = [];
@@ -94,7 +93,7 @@ class SummaryController extends Controller
     {
         Yii::$app->getResponse()->format = 'json';
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
+        $twTool = TeamworkTool::getInstance();
         $get = Yii::$app->request->queryParams;
         $errors = [];
         $weeklyInfo = [];
@@ -105,7 +104,7 @@ class SummaryController extends Controller
                 'course_id' => $weeklyInfo->course_id,
                 'create_time' => $weeklyInfo->create_time,
                 'content' => $weeklyInfo->content,
-                'create_by' => $weeklyInfo->weeklyCreateBy->weeklyEditorsPeople->u->nickname.
+                'create_by' => $weeklyInfo->weeklyCreateBy->weeklyEditorsPeople->user->nickname.
                         '('.$weeklyInfo->weeklyCreateBy->weeklyEditorsPeople->position->name.')',
                 'created_at' => date('Y-m-d H:i', $weeklyInfo->created_at)
             ];
@@ -128,10 +127,10 @@ class SummaryController extends Controller
     {
         $model = new CourseSummary();
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
-        $model->course_id = $course_id;
+        $twTool = TeamworkTool::getInstance();
         /* @var $course CourseManage */
-        $course = CourseManage::findOne(['id' => $model->course_id]);
+        $course = CourseManage::findOne(['id' => $course_id]);
+        $model->course_id = $course_id;
         $model->create_by = $course->weekly_editors_people;
         $model->create_time = date('Y-m-d', time());
         $editorsPeople = $model->course->weekly_editors_people;
@@ -139,11 +138,11 @@ class SummaryController extends Controller
         if($model != null && !$model->course->getIsNormal())
             throw new NotAcceptableHttpException('该课程'.$model->course->getStatusName().'！');
         
-        if(!(($twTool->getIsLeader() && $course->create_by == \Yii::$app->user->id) 
-            || $editorsPeople == \Yii::$app->user->id || $course->course_principal == \Yii::$app->user->id
+        if(!(($twTool->getIsAuthority('is_leader', 'Y') && $course->create_by == \Yii::$app->user->id) 
+            || $twTool->getIsAuthority('id', $editorsPeople) || $twTool->getIsAuthority('id', $course->course_principal)
             || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
             throw new NotAcceptableHttpException('无权限操作！');
-       
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['course/view', 'id' => $model->course_id]);
         } else {
@@ -163,7 +162,7 @@ class SummaryController extends Controller
     public function actionUpdate($course_id, $create_time = null)
     {
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
+        $twTool = TeamworkTool::getInstance();
         $model = $this->findModel($course_id, $create_time);
         $model->create_by = $model->weeklyCreateBy->weekly_editors_people;
         $editorsPeople = $model->course->weekly_editors_people;
@@ -171,8 +170,8 @@ class SummaryController extends Controller
         if(!$model->course->getIsNormal())
             throw new NotAcceptableHttpException('该课程'.$model->course->getStatusName().'！');
         
-        if( !(($twTool->getIsLeader() && $model->course->create_by == \Yii::$app->user->id) 
-            || $editorsPeople == \Yii::$app->user->id || $model->course->course_principal == \Yii::$app->user->id
+        if( !(($twTool->getIsAuthority('is_leader', 'Y') && $model->course->create_by == \Yii::$app->user->id) 
+            || $model->create_by == $editorsPeople || $twTool->getIsAuthority('id', $model->course->course_principal)
             || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
             throw new NotAcceptableHttpException('无权限操作！');
         

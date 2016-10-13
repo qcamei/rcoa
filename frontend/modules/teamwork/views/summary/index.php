@@ -37,7 +37,7 @@ use yii\web\View;
                 'course_id' => $result->course_id,
                 'create_time' => $result->create_time,
                 'content' => $result->content,
-                'create_by' => $result->weeklyCreateBy->weeklyEditorsPeople->u->nickname.
+                'create_by' => $result->weeklyCreateBy->weeklyEditorsPeople->user->nickname.
                                 '('.$result->weeklyCreateBy->weeklyEditorsPeople->position->name.')',
                 'created_at' => date('Y-m-d H:i', $result->created_at)
             ];
@@ -58,7 +58,7 @@ use yii\web\View;
 <span class="team-leader">
     <?php echo Yii::t('rcoa/teamwork', 'This Week Weekly Developer').'：'; 
         echo empty($model->weekly_editors_people)? '无' : 
-            $model->weeklyEditorsPeople->u->nickname.' ('.$model->weeklyEditorsPeople->position->name.')' 
+            $model->weeklyEditorsPeople->user->nickname.' ('.$model->weeklyEditorsPeople->position->name.')' 
     ?>
 </span>
     
@@ -99,9 +99,9 @@ use yii\web\View;
              */
             
             if($model->getIsNormal() && !empty($weeklyInfoResult)
-                && (($twTool->getIsLeader() && $model->create_by == \Yii::$app->user->id) 
-                || $model->weekly_editors_people == \Yii::$app->user->id 
-                || $model->course_principal == \Yii::$app->user->id 
+                && (($twTool->getIsAuthority('is_leader', 'Y') && $model->create_by == \Yii::$app->user->id) 
+                || $twTool->getIsAuthority('id', $model->weekly_editors_people)
+                || $twTool->getIsAuthority('id', $model->course_principal)
                 || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a(Yii::t('rcoa/teamwork', 'Updated Weekly'), [
                     'summary/update', 'course_id' => $model->id, 'create_time' => $results['create_time']], 
@@ -115,9 +115,9 @@ use yii\web\View;
              */
            
             if($model->getIsNormal() && empty($weeklyInfoResult)
-                && (($twTool->getIsLeader() && $model->create_by == \Yii::$app->user->id) 
-                || $model->weekly_editors_people == \Yii::$app->user->id 
-                || $model->course_principal == \Yii::$app->user->id
+                && (($twTool->getIsAuthority('is_leader', 'Y') && $model->create_by == \Yii::$app->user->id) 
+                || $twTool->getIsAuthority('id', $model->weekly_editors_people)
+                || $twTool->getIsAuthority('id', $model->course_principal)
                 || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a(Yii::t('rcoa/teamwork', 'Create Weekly'), ['summary/create', 'course_id' => $model->id], [
                  'class' => 'btn btn-primary weekinfo']);

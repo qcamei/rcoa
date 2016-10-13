@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'options' => ['class' => 'breadcrumb'],
             'homeLink' => [
                 'label' => Yii::t('rcoa/teamwork', 'Courses'),
-                'url' => ['index'],
+                'url' => ['index', 'status' => CourseManage::STATUS_NORMAL],
                 'template' => '<li class="course-name">{link}</li>',
             ],
             'links' => [
@@ -75,8 +75,8 @@ $this->params['breadcrumbs'][] = $this->title;
              * 4、课程负责人是自己
              * 5、必须是项目管理员
              */
-            if(!$model->getIsCarryOut() && (($twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
-                || $model->course_principal == \Yii::$app->user->id || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
+            if(!$model->getIsCarryOut() && (($twTool->getIsAuthority('is_leader', 'Y') && $model->create_by == Yii::$app->user->id)
+                || $twTool->getIsAuthority('id', $model->course_principal) || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a('编辑', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']).' ';
             /**
              * 配置 按钮显示必须满足以下条件：
@@ -86,8 +86,8 @@ $this->params['breadcrumbs'][] = $this->title;
              * 4、课程负责人是自己
              * 5、必须是项目管理员
              */
-            if(!$model->getIsCarryOut() && (($twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
-                || $model->course_principal == \Yii::$app->user->id || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))    
+            if(!$model->getIsCarryOut() && (($twTool->getIsAuthority('is_leader', 'Y') && $model->create_by == Yii::$app->user->id)
+                || $twTool->getIsAuthority('id', $model->course_principal) || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))    
                 echo Html::a('配置', ['/teamwork/courselink/index', 'course_id' => $model->id], ['class' => 'btn btn-primary']).' ';
            
             echo Html::a('进度', ['/teamwork/courselink/progress', 'course_id' => $model->id], ['class' => 'btn btn-primary']).' ';
@@ -108,8 +108,8 @@ $this->params['breadcrumbs'][] = $this->title;
              * 4、课程负责人是自己
              * 5、必须是项目管理员
              */
-            if($model->getIsNormal() && (($twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
-                || $model->course_principal == \Yii::$app->user->id || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
+            if($model->getIsNormal() && (($twTool->getIsAuthority('is_leader', 'Y') && $model->create_by == Yii::$app->user->id)
+                || $twTool->getIsAuthority('id', $model->course_principal) || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a('完成', ['carry-out', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
             
             /**
@@ -128,8 +128,8 @@ $this->params['breadcrumbs'][] = $this->title;
              * 4、课程负责人是自己
              * 5、必须是【项目管理员】
              */
-            if($model->getIsWaitStart() && (($twTool->getIsLeader() && $model->create_by == Yii::$app->user->id)
-                || $model->course_principal == \Yii::$app->user->id || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
+            if($model->getIsWaitStart() && (($twTool->getIsAuthority('is_leader', 'Y') && $model->create_by == Yii::$app->user->id)
+                || $twTool->getIsAuthority('id', $model->course_principal) || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a('开始', ['wait-start', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
         ?>
     </div>

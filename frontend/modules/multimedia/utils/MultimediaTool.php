@@ -465,11 +465,15 @@ class MultimediaTool {
      * @return type
      */
     public function getHotelTeam($uId){
-        $team = TeamMember::findOne(['u_id' => $uId]);
-        if(!empty($team))
-            return $team->team_id;
-        else 
-            return null;
+        $teamMember = TeamMember::find()
+                      ->where(['u_id' => $uId])
+                      ->with('team')
+                      ->all();
+        $team = ArrayHelper::getColumn($teamMember, 'team_id');
+        if(!empty($team) && count($team) == 1)
+            return $team[0];
+        else
+            return ArrayHelper::map($teamMember, 'team.id', 'team.name');
     }
     
     /**

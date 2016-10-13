@@ -5,7 +5,7 @@ namespace frontend\modules\teamwork\components;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\ItemManage;
 use frontend\modules\teamwork\components\ItemListTd;
-use frontend\modules\teamwork\TeamworkTool;
+use frontend\modules\teamwork\utils\TeamworkTool;
 use wskeee\rbac\RbacName;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -29,7 +29,7 @@ class ItemActBtnCol extends ItemListTd {
     public function getDataCellValue($model, $key, $index) 
     {
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
+        $twTool = TeamworkTool::getInstance();
         $controllerId = Yii::$app->controller->id;              //当前控制器
         $actionId = Yii::$app->controller->action->id;      //当前行为方法
         $url = [];          //href
@@ -61,7 +61,7 @@ class ItemActBtnCol extends ItemListTd {
         /* @var $model CourseManage */
         /* @var $twTool TeamworkTool */
         else if (!empty($model) && $controllerId == 'course' && $actionId == 'list' && (
-                $twTool->getIsLeader() || $model->course_principal == \Yii::$app->user->id 
+                $twTool->getIsAuthority('is_leader', 'Y') || $twTool->getIsAuthority('id', $model->course_principal) 
                 || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))){
             $url = [
                 'update' => 'update',
@@ -79,9 +79,9 @@ class ItemActBtnCol extends ItemListTd {
                 ]
             ];
             $btnClass = [
-               'update' => $model->create_by == \Yii::$app->user->id || $model->course_principal == \Yii::$app->user->id 
+               'update' => $model->create_by == Yii::$app->user->id || $twTool->getIsAuthority('id', $model->course_principal) 
                     || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER) ? 'btn btn-primary' : 'btn btn-primary disabled',
-               'delete' => $model->create_by == \Yii::$app->user->id || $model->course_principal == \Yii::$app->user->id 
+               'delete' => $model->create_by == Yii::$app->user->id || $twTool->getIsAuthority('id', $model->course_principal) 
                     || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER) ? 
                     'btn btn-danger' : 'btn btn-danger disabled'
             ];
@@ -106,7 +106,7 @@ class ItemActBtnCol extends ItemListTd {
             ];
             $btnClass = [
                'view' => 'btn btn-primary',
-               //'deploy' => $twTool->getIsLeader() ? 'btn btn-primary' : 'btn btn-primary disabled',
+               //'deploy' => $twTool->getIsAuthority('is_leader', 'Y') ? 'btn btn-primary' : 'btn btn-primary disabled',
                'progress' => 'btn btn-primary',
             ];
         }

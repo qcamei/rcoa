@@ -4,7 +4,7 @@ namespace frontend\modules\teamwork\controllers;
 
 use common\models\teamwork\CourseLink;
 use common\models\teamwork\CoursePhase;
-use frontend\modules\teamwork\TeamworkTool;
+use frontend\modules\teamwork\utils\TeamworkTool;
 use wskeee\rbac\RbacName;
 use Yii;
 use yii\filters\AccessControl;
@@ -51,7 +51,7 @@ class CourselinkController extends Controller
     public function actionIndex($course_id)
     {
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
+        $twTool = TeamworkTool::getInstance();
         $coursePhase = CoursePhase::findAll(['course_id' => $course_id, 'is_delete' => 'N']);
         
         return $this->render('index', [
@@ -69,7 +69,7 @@ class CourselinkController extends Controller
     public function actionProgress($course_id)
     {
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
+        $twTool = TeamworkTool::getInstance();
         $coursePhase = $twTool->getCoursePhaseProgressAll($course_id);
         return $this->render('progress', [
             'twTool' => $twTool,
@@ -100,13 +100,13 @@ class CourselinkController extends Controller
     {
         $phaseModel = new CoursePhase();
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
+        $twTool = TeamworkTool::getInstance();
         $phaseModel->loadDefaultValues();
         $post = Yii::$app->request->post();
         $phaseModel->course_id = $course_id;
         
-        if(!(($twTool->getIsLeader() && $phaseModel->course->create_by == Yii::$app->user->id) 
-            || $phaseModel->course->course_principal == \Yii::$app->user->id 
+        if(!(($twTool->getIsAuthority('is_leader', 'Y') && $phaseModel->course->create_by == Yii::$app->user->id) 
+            || $twTool->getIsAuthority('id', $phaseModel->course->course_principal)
             || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
             throw new NotAcceptableHttpException('无权限操作');
         
@@ -145,9 +145,9 @@ class CourselinkController extends Controller
     {
         $phaseModel = CoursePhase::findOne($id);
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
-        if(!(($twTool->getIsLeader() && $phaseModel->course->create_by == Yii::$app->user->id) 
-            || $phaseModel->course->course_principal == \Yii::$app->user->id 
+        $twTool = TeamworkTool::getInstance();
+        if(!(($twTool->getIsAuthority('is_leader', 'Y') && $phaseModel->course->create_by == Yii::$app->user->id) 
+            || $twTool->getIsAuthority('id', $phaseModel->course->course_principal)
             || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
             throw new NotAcceptableHttpException('无权限操作');
          
@@ -181,9 +181,9 @@ class CourselinkController extends Controller
     {
         $model = $this->findModel($id);
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
+        $twTool = TeamworkTool::getInstance();
         if(!($twTool->getIsUserBelongTeam($model->course_id) 
-            || $model->course->course_principal == Yii::$app->user->id 
+            || $twTool->getIsAuthority('id', $model->course->course_principal) 
             || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
             throw new NotAcceptableHttpException('无权限操作');
         
@@ -209,9 +209,9 @@ class CourselinkController extends Controller
     {
         $model = CoursePhase::findOne($id);
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
-        if(!(($twTool->getIsLeader() && $model->course->create_by == Yii::$app->user->id) 
-            || $model->course->course_principal == \Yii::$app->user->id 
+        $twTool = TeamworkTool::getInstance();
+        if(!(($twTool->getIsAuthority('is_leader', 'Y') && $model->course->create_by == Yii::$app->user->id) 
+            || $twTool->getIsAuthority('id', $model->course->course_principal) 
             || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
             throw new NotAcceptableHttpException('无权限操作');
         
@@ -272,9 +272,9 @@ class CourselinkController extends Controller
     {
         $model = $this->findModel($id);
         /* @var $twTool TeamworkTool */
-        $twTool = Yii::$app->get('twTool');
-        if(!(($twTool->getIsLeader() && $model->course->create_by == Yii::$app->user->id) 
-            || $model->course->course_principal == \Yii::$app->user->id 
+        $twTool = TeamworkTool::getInstance();
+        if(!(($twTool->getIsAuthority('is_leader', 'Y') && $model->course->create_by == Yii::$app->user->id) 
+            || $twTool->getIsAuthority('id', $model->course->course_principal)
             || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
             throw new NotAcceptableHttpException('无权限操作');
         

@@ -109,6 +109,17 @@ use yii\widgets\ActiveForm;
     <h5><b>开发信息</b></h5>
     
     <?php
+        if(is_array($team)){
+            echo $form->field($model, 'team_id')->widget(Select2::classname(), [
+                'id' => 'coursemanage-team_id', 'data' => $team, 'options' => ['placeholder' => '请选择...']
+            ]);
+        }
+        else{
+            echo Html::hiddenInput('CourseManage[team_id]', $team);
+        }
+    ?>  
+    
+    <?php
         echo Html::beginTag('div', ['class' => 'form-group field-courseproducer-producer has-success']);
              echo Html::beginTag('label', [
                  'class' => 'col-lg-1 col-md-1 control-label',
@@ -117,8 +128,10 @@ use yii\widgets\ActiveForm;
                 ]).Yii::t('rcoa/teamwork', 'Resource People').Html::endTag('label');
              echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']);
                 echo Select2::widget([
+                    'id' => 'courseproducer-producer',
+                    //'maintainOrder' => true,
                     'name' => 'producer',
-                    'value' => array_keys($producer),
+                    'value' => is_array($team) ? '' : array_keys($producer),
                     'data' => $producerList,
                     'options' => [
                         'placeholder' => '请选择...',
@@ -152,8 +165,8 @@ use yii\widgets\ActiveForm;
                 echo Select2::widget([
                     'id' => 'coursemanage-weekly_editors_people',
                     'name' => 'CourseManage[weekly_editors_people]',
-                    'value' => $model->isNewRecord ? Yii::$app->user->id : $model->weekly_editors_people,
-                    'data' => $weeklyEditors,
+                    'value' => $model->isNewRecord ? '' : $model->weekly_editors_people,
+                    'data' => is_array($team) ? [] : $weeklyEditors,
                     'options' => [
                         'placeholder' => '请选择...',
                     ],
@@ -305,6 +318,17 @@ $sourceProducers = [];
 $sourceProducers = json_encode($sourceProducers);
 $js =   
 <<<JS
+    /*$('#coursemanage-team_id').change(function(){
+        var li = '<li class="select2-search select2-search--inline">'
+            +'<input class="select2-search__field" type="search" style="width: 943px;" placeholder="请选择..."></li>',
+            option = '<option value="">请选择...</option>',
+            span = '<span class="select2-selection__placeholder">请选择...</span>';
+        $('.select2-selection--multiple ul').html(li);
+        $('#select2-courseproducer-producer-results .select2-results__option').attr('aria-selected', 'false');
+        $("#coursemanage-weekly_editors_people").html(option);
+        $('#select2-coursemanage-weekly_editors_people-container').html(span);
+    });*/ 
+        
     var sourceProducers = $sourceProducers; 
     function log(value){   
         var hasSelected = $("#coursemanage-weekly_editors_people").val();    

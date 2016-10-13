@@ -14,7 +14,7 @@ use yii\db\ActiveRecord;
  * @property integer $course_id     课程ID
  * @property string $create_time    创建时间
  * @property string $content        内容
- * @property string $create_by      周报开发人
+ * @property integer $create_by     周报开发人
  * @property integer $created_at    创建于
  * @property integer $updated_at    更新于
  *
@@ -45,10 +45,9 @@ class CourseSummary extends ActiveRecord
     {
         return [
             [['course_id', 'create_time'], 'required'],
-            [['course_id', 'created_at', 'updated_at'], 'integer'],
+            [['course_id', 'create_by', 'created_at', 'updated_at'], 'integer'],
             [['create_time'], 'string', 'max' => 60],
             [['content'], 'string'],
-            [['create_by'], 'string', 'max' => 36],
             [['create_by'], 'exist', 'skipOnError' => true, 'targetClass' => CourseManage::className(), 'targetAttribute' => ['create_by' => 'weekly_editors_people']],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => CourseManage::className(), 'targetAttribute' => ['course_id' => 'id']],
         ];

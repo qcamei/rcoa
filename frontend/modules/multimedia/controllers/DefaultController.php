@@ -81,6 +81,7 @@ class DefaultController extends Controller
             'course' => $item_child_id != null ? $this->getChildren($item_child_id) : [],
             'createBy' => $this->getCreateBys(),
             'producers' => $this->getProducerList(),
+            //搜索默认字段值
             'create_team' => $create_team,
             'make_team' => $make_team,
             'content_type' => $content_type,
@@ -91,8 +92,8 @@ class DefaultController extends Controller
             'create_by' => $create_by,
             'producer' => $producer,
             'status' => $status,
+            'keyword' => $keyword,
             'time' => $time != null ? $time : null,
-            'keyword' => $keyword != null ? $keyword : '',
             'mark' => $mark != null ? $mark : 0,
         ]);
     }
@@ -165,15 +166,14 @@ class DefaultController extends Controller
         /* @var $multimedia MultimediaTool */
         $multimedia = MultimediaTool::getInstance();
         $model->create_by = \Yii::$app->user->id;
-        $model->create_team = $multimedia->getHotelTeam($model->create_by);
         $model->progress = $model->getStatusProgress();
-        
         if ($model->load(Yii::$app->request->post())) {
             $multimedia->saveCreateTask($model);
             return $this->redirect(['list', 'create_by' => $model->create_by, 'assignPerson' => Yii::$app->user->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'team' => $multimedia->getHotelTeam(\Yii::$app->user->id),
                 'itemType' => $this->getItemType(),
                 'item' => $this->getItem(),
                 'itemChild' => [],
@@ -205,6 +205,7 @@ class DefaultController extends Controller
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'team' => $multimedia->getHotelTeam(\Yii::$app->user->id),
                 'itemType' => $this->getItemType(),
                 'item' => $this->getItem(),
                 'itemChild' => $this->getChildren($model->item_id),

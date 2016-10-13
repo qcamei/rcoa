@@ -135,14 +135,14 @@ $this->params['breadcrumbs'] = $this->title;
              * 1、必须是状态为【在建】
              * 2、必须是【队长】 or 【项目管理员】
              */
-            if(/*$model->getIsNormal() && */($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
+            if(/*$model->getIsNormal() && */($twTool->getIsAuthority('is_leader', 'Y') || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a('编辑', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']).' ';
             /**
              * 配置 按钮显示必须满足以下条件：
              * 1、必须是状态为【在建】
              * 2、必须是【队长】 or 【项目管理员】
              */
-            if(/*$model->getIsNormal() && */($twTool->getIsLeader() /*|| Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)*/))    
+            if(/*$model->getIsNormal() && */($twTool->getIsAuthority('is_leader', 'Y') /*|| Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)*/))    
                 echo Html::a('配置', ['/teamwork/course/list', 'project_id' => $model->id], ['class' => 'btn btn-primary']).' ';
             /**
              * 课程 按钮显示必须满足以下条件：
@@ -155,7 +155,7 @@ $this->params['breadcrumbs'] = $this->title;
              * 1、必须是状态为【在建】
              * 2、必须是【队长】 or 【项目管理员】
              
-            if($model->getIsNormal() && ($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
+            if($model->getIsNormal() && ($twTool->getIsAuthority('is_leader', 'Y') || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a('完成', ['carry-out', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
             */
             /**
@@ -163,7 +163,7 @@ $this->params['breadcrumbs'] = $this->title;
              * 1、必须是状态为【在建】
              * 2、必须是【队长】 or 【项目管理员】
              
-            if($model->getIsNormal() && ($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
+            if($model->getIsNormal() && ($twTool->getIsAuthority('is_leader', 'Y') || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a('暂停', ['time-out', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
              */
             /**
@@ -171,7 +171,7 @@ $this->params['breadcrumbs'] = $this->title;
              * 1、必须是状态为【在建】
              * 2、必去是【队长】 or 【项目管理员】
              
-            if($model->getIsTimeOut() && ($twTool->getIsLeader() || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
+            if($model->getIsTimeOut() && ($twTool->getIsAuthority('is_leader', 'Y') || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
                 echo Html::a('恢复', ['normal', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
              */
         ?>
