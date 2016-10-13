@@ -92,7 +92,8 @@ class ExportController extends Controller
                 ->leftJoin(['FwItemC'=> Item::tableName()], 'Course.course_id = FwItemC.id')            //课程名
                 
                 ->leftJoin(['TeacherUser'=> User::tableName()], 'Course.teacher = TeacherUser.id')      //老师
-                ->leftJoin(['OpsUser'=> User::tableName()], 'Course.course_ops = OpsUser.id')           //运维人
+                ->leftJoin(['TeamMember'=> TeamMember::tableName()], 'Course.course_ops = TeamMember.id')           //团队成员
+                ->leftJoin(['OpsUser'=> User::tableName()], 'TeamMember.u_id = OpsUser.id')             //运维人
                 
                 ->andFilterWhere(['Course.status'=>$status])
                 ->andFilterWhere(['Course.`team_id`'=>$team])
@@ -155,7 +156,7 @@ class ExportController extends Controller
                     "GROUP_CONCAT(DevUser.nickname,'（',Position.`name`,'）' ORDER BY TeamMember.`index`) AS course_dev",   //合并分组里所有开发人员： 名称（岗位）,,,名称（岗位）
                     ])
                 ->from(['Producer'=>CourseProducer::tableName()])                                               //课程关联开发员工
-                ->leftJoin(['TeamMember'=> TeamMember::tableName()], 'Producer.producer = TeamMember.u_id')     //团队成员
+                ->leftJoin(['TeamMember'=> TeamMember::tableName()], 'Producer.producer = TeamMember.id')     //团队成员
                 ->leftJoin(['Position'=> Position::tableName()], 'Position.id = TeamMember.position_id')        //岗位
                 ->leftJoin(['DevUser'=> User::tableName()], 'DevUser.id = TeamMember.u_id')                     //开发人账号信息
                 ->where(['in','Producer.course_id',  $courseIds])
