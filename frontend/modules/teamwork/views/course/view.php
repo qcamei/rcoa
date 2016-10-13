@@ -42,8 +42,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
    <?= $this->render('_form_detai', [
         'model' => $model,
-        'team' => $team,
-        'coursePrincipal' => $coursePrincipal,
         'producer' => $producer,
     ]) ?>
     
@@ -60,6 +58,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'weeklyMonth' => $weeklyMonth,
         'weeklyInfoResult' => $weeklyInfoResult
     ]); ?>
+    
+    <?= $this->render('_form_change_model', [
+        'model' => $model,
+        'team' => $team,
+        'coursePrincipal' => $coursePrincipal,
+    ])?>
     
 </div>
 
@@ -98,7 +102,7 @@ $this->params['breadcrumbs'][] = $this->title;
              * 2、必须是【项目管理员】
              */
             if(!$model->getIsCarryOut() && Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))
-                echo Html::a('提交', 'javascript:;', ['id' => 'submit', 'class' => 'btn btn-danger']).' ';
+                echo Html::a('移交', 'javascript:;', ['id' => 'change', 'class' => 'btn btn-danger']).' ';
             
             /**
              * 完成 按钮显示必须满足以下条件：
@@ -138,8 +142,13 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 $js = 
 <<<JS
-    $('#submit').click(function(){
-        $('#form-change').submit();
+    $('#change').click(function(){
+        $('#myModal').modal();
+    });
+    /** 提交表单 */
+    $("#myModal .modal-footer #save").click(function()
+    {
+        $('#form-change').submit();       
     });
 JS;
     $this->registerJs($js,  View::POS_READY);

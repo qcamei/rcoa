@@ -223,12 +223,10 @@ class CourseController extends Controller
      */
     public function actionChange($id) {
         $model = $this->findModel($id);
-        $post = Yii::$app->request->post();
         $model->scenario = CourseManage::SCENARIO_CHANGE;
         if ($model->getIsCarryOut() && !Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)) 
             throw new NotFoundHttpException('无权限操作！');
-        
-        if($model->load($post) && $model->save())
+        if($model->load(Yii::$app->request->post()) && $model->save())
             return $this->redirect(['view', 'id' => $model->id]);
         else 
             throw new NotFoundHttpException('操作失败！');

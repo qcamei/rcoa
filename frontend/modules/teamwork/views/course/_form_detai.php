@@ -14,7 +14,6 @@ use yii\widgets\DetailView;
 
 ?>
 <div class="course-manage-view">
-    <?php $form = ActiveForm::begin(['id' => 'form-change', 'action'=>'change?id='.$model->id]); ?>
     
     <?php
     echo DetailView::widget([
@@ -71,15 +70,7 @@ use yii\widgets\DetailView;
             [
                 'attribute' => 'team_id',
                 'format' => 'raw',
-                'value' => !$model->getIsCarryOut() && Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)? 
-                    Select2::widget([
-                         'name' => 'CourseManage[team_id]',
-                         'value' => $model->team_id,
-                         'data' => $team,
-                         'options' => [
-                             'placeholder' => '选择团队...',
-                         ],
-                    ]) : $model->team->name,
+                'value' => !empty($model->team_id) ? $model->team->name : '',
             ],
             [
                 'attribute' => Yii::t('rcoa/teamwork', 'Resource People'),
@@ -124,20 +115,12 @@ use yii\widgets\DetailView;
             ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">其它信息</span>','value' => ''],
             [
                 'attribute' => 'create_by',
-                'value' => $model->createBy->nickname,
+                'value' => !empty($model->create_by) ? $model->createBy->nickname : '',
             ],
             [
                 'attribute' => 'course_principal',
                 'format' => 'raw',
-                'value' =>!$model->getIsCarryOut() &&  Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER) ? 
-                    Select2::widget([
-                         'name' => 'CourseManage[course_principal]',
-                         'value' => empty($model->course_principal)?  $model->create_by : $model->course_principal,
-                         'data' => $coursePrincipal,
-                         'options' => [
-                             'placeholder' => '选择课程负责人...',
-                         ],
-                    ]) : (empty($model->course_principal)?  $model->createBy->nickname : $model->coursePrincipal->u->nickname),
+                'value' =>empty($model->course_principal)?  (empty($model->create_by) ? '' : $model->createBy->nickname) : $model->coursePrincipal->user->nickname,
             ],
             [
                 'attribute' => 'created_at',
@@ -155,5 +138,4 @@ use yii\widgets\DetailView;
         ],
     ]) ?>
 
-    <?php ActiveForm::end(); ?>
 </div>

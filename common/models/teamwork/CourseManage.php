@@ -128,6 +128,7 @@ class CourseManage extends ActiveRecord
             [['video_length', 'question_mete', 'case_number', 'activity_number', 'real_carry_out', 'path'], 'required', 'on' => [self::SCENARIO_CARRYOUT]],
             [['teacher', 'create_by', 'weekly_editors_people', 'course_ops'], 'string', 'max' => 36],
             [['course_principal'], 'string', 'max' => 36, 'on' => [self::SCENARIO_CHANGE]],
+            [['team_id', 'course_principal'], 'required', 'on' => [self::SCENARIO_CHANGE]],
             [['plan_start_time', 'plan_end_time', 'real_carry_out'], 'string', 'max' => 60],
             [['real_start_time'], 'string', 'max' => 60, 'on' => [self::SCENARIO_WAITSTART]],
             [['des','path'], 'string', 'max' => 255],
