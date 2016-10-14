@@ -477,7 +477,6 @@ class DefaultController extends Controller
      */
     public function getTeams($teamId = null){
         $team = Team::find()
-                ->where(['type' => 1])
                 ->andFilterWhere(['not in', 'id', $teamId])
                 ->all();
         
