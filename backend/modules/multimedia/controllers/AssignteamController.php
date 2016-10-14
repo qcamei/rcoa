@@ -151,8 +151,7 @@ class AssignteamController extends Controller
      */
     public function getAssignTeam()
     {
-        $team = Team::find()->where(['type' => 1])->all();
-        return ArrayHelper::map($team, 'id', 'name');
+        return ArrayHelper::map(Team::find()->all(), 'id', 'name');
     }
     
     /**

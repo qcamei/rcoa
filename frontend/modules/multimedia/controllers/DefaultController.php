@@ -505,7 +505,7 @@ class DefaultController extends Controller
     public function getProducerList($team = null)
     {
         $producer = TeamMember::find()
-                    ->where(['position_id' => 3])
+                    ->where(['position_id' => 4])
                     ->andFilterWhere(['team_id' => $team])
                     ->with('user')
                     ->all();
