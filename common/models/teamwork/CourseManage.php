@@ -144,6 +144,7 @@ class CourseManage extends ActiveRecord
             [['video_length'],'checkVideoLen'],
         ];
     }
+    
     /**
      * 检验视频时长格式是否正确
      * @param string $attribute     video_length
@@ -151,28 +152,35 @@ class CourseManage extends ActiveRecord
      */
     public function checkVideoLen($attribute, $params)
     {
-        $videolength = $this->video_length;
-        if(!is_numeric($videolength))
-        {
-            if(strpos($videolength ,":"))
-            {
-                $times = explode(":", $videolength);
-            }else if(strpos($videolength ,'：')){
-                $times = explode(":", $videolength);
-            }else
-            {
-                $this->addError($attribute, "格式不正确，请按 00:00:00 格式录入!");
-                return;
-            }
-            $h = (int)$times[0] ;
-            $m = (int)$times[1];
-            $s = count($times) == 3 ? (int)$times[2] : 0;
-            $videolength = $h*3600+$m*60+$s;
-            if($videolength>=0)
-                $this->video_length = $videolength;
-            else
-                $this->addError($attribute, Yii::t('rcoa/teamwork', 'ID')."不可以小于0");
-        }
+        $format = $this->getAttribute($attribute);  
+        if(!is_numeric($format))  
+        {  
+            if(strpos($format ,":"))  
+            {  
+                $times =  explode(":", $format);  
+            }else if(strpos($format ,'：')){  
+                $times =  explode(":", $format);  
+            }else  
+            {  
+                $this->addError($attribute, "格式不正确，请按 00:00:00 格式录入！");  
+                return false;  
+            }  
+            $h = (int)$times[0] ;  
+            $m = (int)$times[1];  
+            $s = count($times) == 3 ? (int)$times[2] : 0;  
+            $videolength = $h*3600+$m*60+$s;  
+   
+            if($videolength > 0){  
+                $this->setAttribute($attribute, $videolength);  
+            }  
+            else  
+            {  
+                $this->addError($attribute, Yii::t('rcoa/teamwork', 'Video Length')."不可以小于0。");  
+                return false;  
+            }  
+        }  
+        return true; 
+        
     }
 
     /**

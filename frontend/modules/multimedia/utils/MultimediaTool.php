@@ -266,7 +266,7 @@ class MultimediaTool {
         $trans = Yii::$app->db->beginTransaction();
         try
         {
-            if ($model->save()){
+            if ($model->save() && $model->validate()){
                 $jobManager->updateJob(10, $model->id, ['progress'=> $model->progress, 'status'=>$model->getStatusName()]);
                 $jobManager->cancelNotification(10, $model->id, $model->create_by);
             }else {
@@ -276,7 +276,7 @@ class MultimediaTool {
             Yii::$app->getSession()->setFlash('success','操作成功！');
         } catch (Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            throw new NotFoundHttpException('保存任务失败！');//.$ex->getMessage());
+            throw new NotFoundHttpException('保存任务失败！格式不正确，请按 00:00:00 格式录入！');//.$ex->getMessage());
         }
     }
     
