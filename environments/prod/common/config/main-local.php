@@ -82,13 +82,6 @@ return [
                 'class' => 'yii\caching\FileCache',
             ]
         ],
-        'twTool'=>[
-            'class'=>'frontend\modules\teamwork\TeamworkTool',
-            //'url'=>'http://rcoaadmin.tt.gzedu.net/framework/api/list',
-            'cache' => [
-                'class' => 'yii\caching\FileCache',
-            ]
-        ],
     ],
     'modules' => [
         'rbac' => [
@@ -114,6 +107,9 @@ return [
         ],
         'datecontrol' =>  [
             'class' => '\kartik\datecontrol\Module',
-        ]
+        ],
+        'multimedia' => [
+            'class' => 'frontend\modules\multimedia\Module',
+        ],
     ],
 ];
