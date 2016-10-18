@@ -562,15 +562,19 @@ class MultimediaTool {
                    ->orderBy('id desc')
                    ->with('task')
                    ->one();
-        $isBelong = MultimediaOperationUser::find()
-                    ->where(['operation_id' => $operate->id])
-                    ->with('operation')
-                    ->all();
-        /* @var $value MultimediaOperationUser */
-        foreach ($isBelong as $value) {
-            if(($user == $value->u_id || $value->brace_mark == MultimediaTask::SEEK_BRACE_MARK) 
-                && $status == $value->operation->task_statu)
-                return true;
+        if(!empty($operate) || isset($operate)){
+            $isBelong = MultimediaOperationUser::find()
+                        ->where(['operation_id' => $operate->id])
+                        ->with('operation')
+                        ->all();
+            if(!empty($isBelong) || isset($isBelong)){
+                /* @var $value MultimediaOperationUser */
+                foreach ($isBelong as $value) {
+                    if(($user == $value->u_id || $value->brace_mark == MultimediaTask::SEEK_BRACE_MARK) 
+                        && $status == $value->operation->task_statu)
+                        return true;
+                }
+            }
         }
         return false;
     }
