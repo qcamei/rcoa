@@ -47,7 +47,7 @@ class StatisticsController extends Controller
         foreach ($results as $index => $result){            
             //标准工作时间
             $type = $rule[$result['content_type']];
-            $value = (int)$result['production_video_length']/60 * MultimediaConvertRule::getInstance()->getRuleProportion($result['content_type']);
+            $value = (int)($result['production_video_length']/60) * MultimediaConvertRule::getInstance()->getRuleProportion($result['content_type']);
             $allWorkload += $value;
             //添加到创建者（编导）数组
             $this->addData($datas_create_by, $result['create_by'], $type, $value);
