@@ -92,7 +92,7 @@ class StatisticsController extends Controller
         foreach ($results as $index => $result){            
             //标准工作时间
             $type = $rule[$result['content_type']];
-            $value = $result['production_video_length'];
+            $value = (int)($result['production_video_length']/60);
             $allWorkload += $value;
             
             //所有部门
