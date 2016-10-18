@@ -64,6 +64,7 @@ class HomeController extends Controller
             //添加到制作者（制作人）数组
             $this->addData($datas_producer, $result['producer'], $type, $value);
         }
+        ArrayHelper::multisort($rule, function($item){return $item == '板书' ? -1 : 1; });
         /* @var $multimedia MultimediaTool */
         $multimedia = MultimediaTool::getInstance();
         return $this->render('index',[

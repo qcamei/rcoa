@@ -6,7 +6,7 @@
 }
 @media (max-width: 480px) {
     .statistics-content{
-        padding-top: 0px;
+        padding-top: 10px;
     }
 }
 
@@ -39,11 +39,33 @@
     color: #333;
 }
 
+/*----------------------
+  本月规则
+----------------------*/
+/* 比例名称 */
+.statistics-content .rule .rule-name{
+    font-size: 14px;
+}
+/* 比例值 */
+.statistics-content .rule .rule-proportion{
+    font-family:"Arial";
+    font-size:14px;
+    color: #ABA8A8;
+    margin: 0px 15px 0px 5px;
+    font-weight: normal;
+}
+
 .statistics-content .chart-title{
     font-size: 16px;
     font-weight: bold;
+    margin: 40px 0px 5px;
 }
 
 .statistics-content .chart{
     width: 100%;
+}
+
+.statistics-content .team-chart{
+    height: 200px;
+    margin: 60px 0px;
 }

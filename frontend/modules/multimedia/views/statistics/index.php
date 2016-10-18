@@ -1,46 +1,43 @@
 <?php
 
 use frontend\modules\multimedia\assets\StatisticsAsset;
+use frontend\modules\multimedia\utils\MultimediaConvertRule;
 use kartik\widgets\DatePicker;
+use yii\helpers\ArrayHelper;
+use yii\helpers\BaseHtml;
+use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\View;
 /* @var $this View */
 ?>
 <div class="container statistics-content">
+    <div class="btn-group">
+        <?php echo Html::a('标准工作量', Url::to('/multimedia/statistics?type=0'), ['class'=>'btn btn-default active']); ?>
+        <?php echo Html::a('成品时长', Url::to('/multimedia/statistics?type=1'), ['class'=>'btn btn-default']); ?>
+    </div>
+    <hr/> 
     <form class="form-horizontal">
+        <input type="hidden" name="type" value="0"/>
         <div class="form-group">
           <label for="dateRange" class="col-sm-2 control-label"><?php echo Yii::t('rcoa/multimedia', 'Statistics-Year') ?></label>
           <div class="col-sm-10">
               <?php
               echo DatePicker::widget([
                         'id' => 'date',
-                        'name' => 'year',
+                        'name' => 'date',
                         'type' => DatePicker::TYPE_COMPONENT_APPEND,
-                        'value' => $year,
+                        'value' => $date,
                         'readonly' => true,
                         'options' => [
                             'placeholder' => 'Select issue date ...',
                             //'onchange'=>'dateChange($(this).val())',
                             ],
                         'pluginOptions' => [
-                            'format' => 'yyyy',
+                            'format' => 'yyyy-m',
                             'todayHighlight' => true,
-                            'minViewMode' => 2,
+                            'minViewMode' => 1,
                         ]
                     ]);
-              ?>
-          </div>
-        </div>
-        
-        
-        <div class="form-group">
-          <label for="item_type_id" class="col-sm-2 control-label"><?php echo Yii::t('rcoa/multimedia', 'Statistics-Month') ?></label>
-          <div class="col-sm-10 months">
-              <?php
-                  for ($i = 0, $len = 12; $i < $len; $i++) {
-                      echo '<input id="m'.$i.'" class="month" type="checkbox" name="months[]" '.(isset($months[$i+1])?'checked':"").' value="'.($i+1).'">'
-                              . '<label for="m'.$i.'">'.($i+1).'月</label>'
-                              . '</input>';
-                  }
               ?>
           </div>
         </div>
@@ -57,14 +54,24 @@ use yii\web\View;
             <span class="summar-icon"></span>总工作量:
             <span  class="num"><?= $allWorkload ?></span>
         </div>
+        <div class="rule">
+            换算规则：
+            <span>
+                <?php
+                    foreach($rules as $id => $name)
+                        echo "<span class='rule-name'>$name</span><span class='rule-proportion'>(1分钟成品 = ".
+                            MultimediaConvertRule::getInstance()->getRuleProportion($id)."个标准工作量)</span>";
+                ?>
+            </span>
+        </div>
         <br/>
-        <span class="chart-title">团队</span>
+        <div class="chart-title">团队</div>
         <div id="datas_team" class="chart"></div>
-        <span class="chart-title">支撑</span>
+        <div class="chart-title">支撑</div>
         <div id="datas_team_own_aid" class="chart"></div>
-        <span class="chart-title">编导</span>
+        <div class="chart-title">编导</div>
         <div id="producer_canvas" class="chart"></div>
-        <span class="chart-title">制作人</span>
+        <div class="chart-title">制作人</div>
         <div id="create_by_canvas" class="chart"></div>
     </div>
 </div>
