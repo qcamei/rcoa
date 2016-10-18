@@ -167,7 +167,7 @@ class DefaultController extends Controller
         $multimedia = MultimediaTool::getInstance();
         $model->create_by = \Yii::$app->user->id;
         $model->progress = $model->getStatusProgress();
-        if ($model->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $multimedia->saveCreateTask($model);
             return $this->redirect(['list', 'create_by' => $model->create_by, 'assignPerson' => Yii::$app->user->id]);
         } else {
@@ -199,7 +199,7 @@ class DefaultController extends Controller
         if(!$model->getIsStatusAssign())
             throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
         
-        if ($model->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $multimedia->saveUpdateTask($model);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {

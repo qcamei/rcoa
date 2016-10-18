@@ -21,7 +21,7 @@ use yii\db\ActiveRecord;
  * @property integer $item_child_id                     专业/工种ID
  * @property integer $course_id                         课程ID
  * @property string $name                               任务名称
- * @property integer $material_video_length             素材视频时长
+ * @property integer $format_video_length             素材视频时长
  * @property integer $production_video_length           成品视频时长
  * @property integer $progress                          进度
  * @property integer $content_type                      任务类型
@@ -188,34 +188,34 @@ class MultimediaTask extends ActiveRecord
      */
     public function checkVideoLen($attribute, $params)
     {
-        $material = $this->material_video_length;
-        $production = $this->production_video_length;
-        if(!is_numeric($material) || !is_numeric($production))
-        {
-            if(strpos($material ,":") || strpos($production ,":"))
-            {
-                $times = $this->scenario == self::SCENARIO_DEFAULT ? explode(":", $material) : explode(":", $production);
-            }else if(strpos($material ,'：') || strpos($production ,'：')){
-                $times = $this->scenario == self::SCENARIO_DEFAULT ? explode(":", $material) : explode(":", $production);
-            }else
-            {
-                $this->addError($attribute, "格式不正确，请按 00:00:00 格式录入！");
-                return;
-            }
-            $h = (int)$times[0] ;
-            $m = (int)$times[1];
-            $s = count($times) == 3 ? (int)$times[2] : 0;
-            $videolength = $h*3600+$m*60+$s;
-
-            if($videolength > 0){
-                if($this->scenario == self::SCENARIO_DEFAULT)
-                    $this->material_video_length = $videolength;
-                else
-                    $this->production_video_length = $videolength;
-            }
-            else
-                $this->addError($attribute, "视频时长不可以为0。");
-        }
+        $format = $this->getAttribute($attribute);  
+        if(!is_numeric($format))  
+        {  
+            if(strpos($format ,":"))  
+            {  
+                $times =  explode(":", $format);  
+            }else if(strpos($format ,'：')){  
+                $times =  explode(":", $format);  
+            }else  
+            {  
+                $this->addError($attribute, "格式不正确，请按 00:00:00 格式录入！");  
+                return false;  
+            }  
+            $h = (int)$times[0] ;  
+            $m = (int)$times[1];  
+            $s = count($times) == 3 ? (int)$times[2] : 0;  
+            $videolength = $h*3600+$m*60+$s;  
+   
+            if($videolength > 0){  
+                $this->setAttribute($attribute, $videolength);  
+            }  
+            else  
+            {  
+                $this->addError($attribute, "视频时长不可以为0。");  
+                return false;  
+            }  
+        }  
+        return true; 
         
     }
     

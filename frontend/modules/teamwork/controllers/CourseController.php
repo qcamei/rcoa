@@ -156,7 +156,7 @@ class CourseController extends Controller
         //$model->team_id = $twTool->getHotelTeam(\Yii::$app->user->id);
         $model->create_by = \Yii::$app->user->id;
        
-        if ($model->load($post)) {
+        if ($model->load($post) && $model->validate()) {
             /*if($this->getIsSameValue($project_id, $course_id))
                 throw new NotAcceptableHttpException('请勿重复提交相同的数据！');   */
             $twTool->CreateTask($model, $post);         //创建任务操作
