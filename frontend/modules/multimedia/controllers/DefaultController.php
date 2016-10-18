@@ -176,8 +176,8 @@ class DefaultController extends Controller
                 'team' => $multimedia->getHotelTeam(\Yii::$app->user->id),
                 'itemType' => $this->getItemType(),
                 'item' => $this->getItem(),
-                'itemChild' => [],
-                'course' => [],
+                'itemChild' => $model->item_id == null ? [] : $this->getChildren($model->item_id),  
+                'course' => $model->item_child_id == null ? [] : $this->getChildren($model->item_child_id), 
                 'contentType' => $this->getContentType(),
             ]);
         }
@@ -505,6 +505,7 @@ class DefaultController extends Controller
     {
         $producer = TeamMember::find()
                     ->where(['position_id' => 4])
+                    ->andFilterWhere(['!=', 'is_delete', $team != null ? TeamMember::SURE_DELETE : null])
                     ->andFilterWhere(['team_id' => $team])
                     ->with('user')
                     ->all();

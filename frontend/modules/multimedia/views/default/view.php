@@ -111,7 +111,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'class' => 'hidden-xs',
                     'style' => [
                         'font-size' => '10px;',
-                        'color' => '#ccc',
+                        'color' => '#777',
                         'padding' => '4px 8px'
                     ],
                 ],
@@ -135,7 +135,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'class' => 'hidden-xs',
                     'style' => [
                         'font-size' => '10px;',
-                        'color' => '#ccc',
+                        'color' => '#777',
                         'padding' => '4px 8px'
                     ],
                 ],
@@ -144,7 +144,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => Yii::t('rcoa/multimedia', 'Complete Time'),
                 'value'=> function($model){
                     /* @var $model MultimediaCheck */
-                    return $model->real_carry_out;
+                    return empty($model->real_carry_out) ? '' : $model->real_carry_out;
                 },
                 'headerOptions' => [
                     'class'=>[
@@ -159,7 +159,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'class' => 'hidden-xs',
                     'style' => [
                         'font-size' => '10px;',
-                        'color' => '#ccc',
+                        'color' => '#777',
                         'padding' => '4px 8px'
                     ],
                 ],

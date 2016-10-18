@@ -9,7 +9,7 @@ use yii\web\View;
 
 $this->title = Yii::t('rcoa/multimedia', 'Update Multimedia Assign Team').': '.$model->team->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/multimedia', 'Multimedia Assign Teams'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->team_id, 'url' => ['view', 'team_id' => $model->team_id, 'u_id' => $model->u_id]];
+$this->params['breadcrumbs'][] = ['label' => $model->team->name, 'url' => ['view', 'team_id' => $model->team_id, 'u_id' => $model->u_id]];
 $this->params['breadcrumbs'][] = Yii::t('rcoa', 'Update');
 ?>
 <div class="multimedia-assign-team-update">

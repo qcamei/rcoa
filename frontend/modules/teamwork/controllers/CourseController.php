@@ -445,6 +445,7 @@ class CourseController extends Controller
     {
         /* @var $teamMember TeamMember */
         $teamMember = TeamMember::find()
+                    ->where(['!=', 'is_delete', TeamMember::SURE_DELETE])
                     ->orderBy(['index' => 'asc', 'team_id' => 'asc'])
                     ->with('user')
                     ->with('team')
@@ -472,6 +473,7 @@ class CourseController extends Controller
         $twTool = TeamworkTool::getInstance();
         $sameTeamMembers = TeamMember::find()
                         ->where(['team_id' => $twTool->getHotelTeam($u_id)])
+                        ->andWhere(['!=', 'is_delete', TeamMember::SURE_DELETE])
                         ->orderBy('index asc')
                         ->with('user')
                         ->with('team')
@@ -484,34 +486,6 @@ class CourseController extends Controller
             $sameTeamMember[$key] = $value;
         }
         return $sameTeamMember;
-    }
-    
-    /**
-     * 计算课程开发周报月份
-     * @param type $model
-     * @return array
-     */
-    public function getWeeklyMonth($model)
-    {
-        /* @var $model  CourseManage*/
-        $monthStart = empty($model->real_start_time) ? strtotime(date('Y-m', time())) : 
-                     strtotime(date('Y-m', strtotime($model->real_start_time)));       //课程实际开始时间
-        $monthEnd = empty($model->real_carry_out) ? strtotime(date('Y-m', time())) :
-                    strtotime(date('Y-m', strtotime($model->real_carry_out)));      //课程实际完成时间
-       
-        $monthArray = [];
-        $monthArray[] = empty($model->real_start_time) ? date('Y-m', time()) : 
-                        date('Y-m', strtotime($model->real_start_time)); // 当前月;
-        while(($monthStart = strtotime('+1 month', $monthStart)) <= $monthEnd){
-            $monthArray[] = date('Y-m',$monthStart); // 取得递增月;  
-        }
-        $weeklyMonth = [];
-        foreach ($monthArray as $key => $value) {
-            $key = $value;
-            $weeklyMonth[$key] = $value;
-        }
-        
-        return $weeklyMonth;
     }
     
     /**
@@ -586,6 +560,34 @@ class CourseController extends Controller
                 ->with('course')
                 ->all();
         return $annex;
+    }
+    
+    /**
+     * 计算课程开发周报月份
+     * @param type $model
+     * @return array
+     */
+    public function getWeeklyMonth($model)
+    {
+        /* @var $model  CourseManage*/
+        $monthStart = empty($model->real_start_time) ? strtotime(date('Y-m', time())) : 
+                     strtotime(date('Y-m', strtotime($model->real_start_time)));       //课程实际开始时间
+        $monthEnd = empty($model->real_carry_out) ? strtotime(date('Y-m', time())) :
+                    strtotime(date('Y-m', strtotime($model->real_carry_out)));      //课程实际完成时间
+       
+        $monthArray = [];
+        $monthArray[] = empty($model->real_start_time) ? date('Y-m', time()) : 
+                        date('Y-m', strtotime($model->real_start_time)); // 当前月;
+        while(($monthStart = strtotime('+1 month', $monthStart)) <= $monthEnd){
+            $monthArray[] = date('Y-m',$monthStart); // 取得递增月;  
+        }
+        $weeklyMonth = [];
+        foreach ($monthArray as $key => $value) {
+            $key = $value;
+            $weeklyMonth[$key] = $value;
+        }
+        
+        return $weeklyMonth;
     }
     
     /**

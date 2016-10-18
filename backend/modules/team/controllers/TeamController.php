@@ -114,9 +114,12 @@ class TeamController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        $model = $this->findModel($id);
+        $model->is_delete = Team::SURE_DELETE;
+        if($model->update() != false)
+            return $this->redirect(['index']);
+        else
+            throw new NotFoundHttpException('删除失败！');
     }
 
     /**

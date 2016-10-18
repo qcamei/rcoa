@@ -36,7 +36,17 @@ $this->params['breadcrumbs'][] = $this->title;
     <div id="item-manage-list">
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
-            'summary' => false,
+            'layout' => "{items}\n{summary}\n{pager}",
+            'summaryOptions' => [
+                'class' => 'summary',
+                'style' => 'float: left'
+            ],
+            'pager' => [
+                'options' => [
+                    'class' => 'pagination',
+                    'style' => 'float: right; margin: 0px;'
+                ]
+            ],
             'tableOptions' => ['class' => 'table table-striped table-list'],
             'columns' => [
                 [

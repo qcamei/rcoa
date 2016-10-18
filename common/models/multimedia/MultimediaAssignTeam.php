@@ -37,8 +37,7 @@ class MultimediaAssignTeam extends ActiveRecord
             [['team_id', 'u_id'], 'required'],
             [['team_id'], 'integer'],
             [['u_id'], 'string', 'max' => 36],
-            [['team_id'], 'unique'],
-            [['u_id'], 'unique'],
+            [['team_id', 'u_id'], 'unique', 'targetAttribute' => ['team_id', 'u_id'], 'comboNotUnique' => \Yii::t('rcoa/multimedia', 'The same team refers to send people can not repeat')],
             [['u_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['u_id' => 'id']],
             [['team_id'], 'exist', 'skipOnError' => true, 'targetClass' => Team::className(), 'targetAttribute' => ['team_id' => 'id']],
         ];

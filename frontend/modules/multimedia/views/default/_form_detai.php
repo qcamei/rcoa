@@ -80,7 +80,7 @@ foreach (MultimediaTask::$statusNmae as $key => $value) {
                 'attribute' => 'content_type',
                 'format' => 'raw',
                 'value' => !empty($model->content_type) ? 
-                           '<span style="color:rgba(243, 123, 83, 1)">'.$model->contentType->name.'</span>' : '空' ,
+                           '<span class="content-type">'.$model->contentType->name.'</span>' : '空' ,
             ],
             
             ['label' => '<span class="btn-block viewdetail-th-head">开发信息</span>','value' => ''],
@@ -139,7 +139,7 @@ foreach (MultimediaTask::$statusNmae as $key => $value) {
             ],
             [
                 'attribute' => 'real_carry_out',
-                'value' => $model->real_carry_out,
+                'value' => !empty($model->real_carry_out) ? $model->real_carry_out : '空',
             ],
             [
                 'attribute' => 'des',

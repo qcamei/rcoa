@@ -170,7 +170,7 @@ class CheckController extends Controller
         $model->real_carry_out = date('Y-m-d H:i', time());
         $model->status = MultimediaCheck::STATUS_COMPLETE;
         $multimedia->saveSubmitCheckTask($model);
-        $this->redirect(['default/view', 'id' => $model->task_id]);
+        $this->redirect(['default/list', 'producer' => Yii::$app->user->id]);
     }
 
     /**

@@ -19,7 +19,7 @@ class TeamMemberSearch extends TeamMember
     {
         return [
             [['team_id'], 'integer'],
-            [['u_id', 'role_name', 'is_leader'], 'safe'],
+            [['u_id', 'role_name', 'is_leader', 'is_delete'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class TeamMemberSearch extends TeamMember
      */
     public function search($params)
     {
-        $query = TeamMember::find();
+        $query = TeamMember::find()->where(['!=', 'is_delete', 'Y']);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

@@ -4,11 +4,13 @@ namespace frontend\modules\multimedia\utils;
 
 use common\models\multimedia\MultimediaAssignTeam;
 use common\models\multimedia\MultimediaCheck;
+use common\models\multimedia\MultimediaOperation;
+use common\models\multimedia\MultimediaOperationUser;
 use common\models\multimedia\MultimediaProducer;
 use common\models\multimedia\MultimediaTask;
-use frontend\modules\multimedia\utils\MultimediaNoticeTool;
 use common\models\team\TeamMember;
 use common\wskeee\job\JobManager;
+use frontend\modules\multimedia\utils\MultimediaNoticeTool;
 use wskeee\framework\models\Item;
 use wskeee\framework\models\ItemType;
 use Yii;
@@ -50,6 +52,8 @@ class MultimediaTool {
                     $jobManager->setNotificationHasReady(10, $model->create_by, $model->id);
                 }
                 $producer = ArrayHelper::getValue($multimediaNotice->getProducer($model->id), 'u_id');
+                $this->saveMultimediaOperation($model->id, $model->status);
+                $this->saveOperationUser($model->id, $producer);
                 $multimediaNotice->setAssignNotification($model, $producer);
                 $multimediaNotice->sendProducerNotification($model, $model->id, '新任务', 'multimedia/AssignProducer-htm');
                 $multimediaNotice->sendCreateByNotification($model, '任务已指派', 'multimedia/AssignCreateBy-html');
@@ -75,11 +79,14 @@ class MultimediaTool {
         /* @var $model MultimediaTask */
         /* @var $multimediaNotice MultimediaNoticeTool */
         $multimediaNotice = MultimediaNoticeTool::getInstance();
+        $user = ArrayHelper::getValue($multimediaNotice->getAssignPerson($model->create_team), 'u_id');
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
         {
             if($model->save()){
+                $this->saveMultimediaOperation($model->id, $model->status);
+                $this->saveOperationUser($model->id, $user);
                 $multimediaNotice->saveJobManager($model);
                 $multimediaNotice->sendAssignPersonNotification($model, $model->create_team, '新任务', 'multimedia/Create-html');
             }else {
@@ -141,6 +148,8 @@ class MultimediaTool {
         try
         {
             if($model->save(false, ['make_team', 'brace_mark'])){
+                $this->saveMultimediaOperation($model->id, $model->status);
+                $this->saveOperationUser($model->id, $assignPersonId, MultimediaTask::SEEK_BRACE_MARK);
                 $jobManager->addNotification(10, $model->id, $assignPersonId);      //添加通知
                 $multimediaNotice->sendAssignPersonNotification($model, $model->make_team, '支撑请求', 'multimedia/SeekBrace-html');
             }else {
@@ -170,11 +179,14 @@ class MultimediaTool {
         $jobManager = Yii::$app->get('jobManager');
         $assignPerson = $multimediaNotice->getAssignPerson($oldMakeTeam);
         $assignPersonId = ArrayHelper::getValue($assignPerson, 'u_id');
+        $user = ArrayHelper::getValue($multimediaNotice->getAssignPerson($model->create_team), 'u_id');
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
         {
             if($model->save(false, ['brace_mark', 'make_team'])){
+                $this->saveMultimediaOperation($model->id, $model->status);
+                $this->saveOperationUser($model->id, $user);
                 $jobManager->removeNotification(10, $model->id, $assignPersonId);
                 $multimediaNotice->sendAssignPersonNotification ($model, $oldMakeTeam, '取消支撑', 'multimedia/CancelBrace-html');
             }else {
@@ -236,6 +248,8 @@ class MultimediaTool {
         try
         {
             if($model->save(false, ['status', 'progress'])){
+                $this->saveMultimediaOperation($model->id, $model->status);
+                $this->saveOperationUser($model->id, [$model->create_by]);
                 $jobManager->updateJob(10, $model->id, ['progress'=> $model->progress, 'status'=>$model->getStatusName()]);
                 $multimediaNotice->sendCreateByNotification ($model, '任务提交', 'multimedia/SubmitMake-html');
             }else {
@@ -327,11 +341,14 @@ class MultimediaTool {
         /* @var $model MultimediaCheck */
         /* @var $multimediaNotice MultimediaNoticeTool */
         $multimediaNotice = MultimediaNoticeTool::getInstance();
+        $producer = ArrayHelper::getValue($multimediaNotice->getProducer($model->task_id), 'u_id');
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
         {
             if($model->save()){
+                $this->saveMultimediaOperation($model->task_id, $model->task->status);
+                $this->saveOperationUser($model->task_id, $producer);
                 $multimediaNotice->sendProducerNotification ($model, $model->task_id, '审核意见', 'multimedia/CreateCheck-html');
             }else {
                 throw new Exception(json_encode($model->getErrors()));
@@ -360,6 +377,8 @@ class MultimediaTool {
         try
         {
             if($model->save(false, ['real_carry_out', 'status'])){
+                $this->saveMultimediaOperation($model->task_id, $model->task->status);
+                $this->saveOperationUser($model->task_id, [$model->task->create_by]);
                 $multimediaNotice->sendCreateByNotification ($model, '审核提交', 'multimedia/SubmitCheck-html');
             }else {
                 throw new Exception(json_encode($model->getErrors()));
@@ -483,9 +502,9 @@ class MultimediaTool {
      */
     public function getIsAssignPerson($teamId)
     {
-        $assignPerson = MultimediaAssignTeam::findOne(['team_id' => $teamId]);
-        if(!empty($assignPerson) && isset($assignPerson)){
-            if(Yii::$app->user->id == $assignPerson->u_id)
+        $assign = MultimediaAssignTeam::findOne(['team_id' => $teamId]);
+        if(!empty($assign) && isset($assign)){
+            if(Yii::$app->user->id == $assign->u_id)
                 return true;
         }
         return false;
@@ -526,6 +545,79 @@ class MultimediaTool {
                 return true;  
         }
         return false;
+    }
+    
+    /**
+     * 获取是否属于自己操作
+     * @param type $taskId                          任务ID
+     * @param type $user                            用户
+     * @param type $status                          状态
+     * @return boolean                              true为是
+     */ 
+    public function getIsBelongToOwnOperate($taskId, $user, $status)
+    {
+        /* @var $operate MultimediaOperation */
+        $operate = MultimediaOperation::find()
+                   ->where(['task_id' => $taskId])
+                   ->orderBy('id desc')
+                   ->with('task')
+                   ->one();
+        $isBelong = MultimediaOperationUser::find()
+                    ->where(['operation_id' => $operate->id])
+                    ->with('operation')
+                    ->all();
+        /* @var $value MultimediaOperationUser */
+        foreach ($isBelong as $value) {
+            if(($user == $value->u_id || $value->brace_mark == MultimediaTask::SEEK_BRACE_MARK) 
+                && $status == $value->operation->task_statu)
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * 保存操作到表里
+     * @param type $taskId              任务ID
+     * @param type $status              状态
+     */
+    public function saveMultimediaOperation($taskId, $status){
+        $values[] = [
+            'task_id' => $taskId,
+            'task_statu' => $status,
+            'action_id' => Yii::$app->controller->action->id,
+            'create_by' => \Yii::$app->user->id,
+            'created_at' => time(),
+            'updated_at' => time(),
+        ];
+        /** 添加$values数组到表里 */
+        Yii::$app->db->createCommand()->batchInsert(MultimediaOperation::tableName(), 
+        ['task_id', 'task_statu', 'action_id', 'create_by', 'created_at', 'updated_at'], $values)->execute();
+    }
+    
+    /**
+     * 保存操作用户到表里
+     * @param type $taskId            多媒体任务ID
+     * @param array $uId              用户ID
+     * @param type $brace             支撑标识
+     */
+    public function saveOperationUser($taskId, $uId, $brace = null){
+        $operation = MultimediaOperation::find()
+                     ->where(['task_id' => $taskId])
+                     ->orderBy('id desc')
+                     ->one();
+        $values = [];
+        /** 重组提交的数据为$values数组 */
+        foreach($uId as $key => $value)
+        {
+            $values[] = [
+                'operation_id' => $operation->id,
+                'u_id' => $value,
+                'brace_mark' => $brace == null ? MultimediaTask::CANCEL_BRACE_MARK : $brace
+            ];
+        }
+        /** 添加$values数组到表里 */
+        Yii::$app->db->createCommand()->batchInsert(MultimediaOperationUser::tableName(), 
+        ['operation_id', 'u_id', 'brace_mark'], $values)->execute();
     }
     
     /**

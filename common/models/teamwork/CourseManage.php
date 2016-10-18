@@ -20,7 +20,7 @@ use yii\db\ActiveRecord;
  * @property integer $project_id                项目Id
  * @property integer $course_id                 课程Id
  * @property string $teacher                    主讲教师
- * @property string $weekly_editors_people      周报编辑人
+ * @property integer $weekly_editors_people     周报编辑人
  * @property integer $credit                    学分
  * @property integer $lession_time              学时
  * @property double $video_length               视频时长
@@ -28,9 +28,9 @@ use yii\db\ActiveRecord;
  * @property integer $case_number               案例数
  * @property integer $activity_number           活动数
  * @property integer $team_id                   创建者所在团队
- * @property string $course_ops                 课程运维负责人
+ * @property integer $course_ops                课程运维负责人
  * @property string $create_by                  创建者
- * @property string $course_principal           课程负责人
+ * @property integer $course_principal          课程负责人
  * @property integer $created_at                创建于
  * @property string $plan_start_time            计划开始时间
  * @property string $plan_end_time              计划完成时间
@@ -123,16 +123,16 @@ class CourseManage extends ActiveRecord
     public function rules()
     {
         return [
-            [['project_id', 'course_id', 'credit', 'lession_time',  'question_mete', 'case_number', 'activity_number', 'team_id', 'created_at', 'updated_at', 'status'], 'integer'],
+            [['project_id', 'course_id', 'credit', 'lession_time',  'question_mete', 'case_number', 'activity_number', 'team_id', 'created_at', 'updated_at', 'status', 'weekly_editors_people', 'course_ops'], 'integer'],
             [['project_id', 'course_id', 'credit', 'lession_time', 'teacher',  'weekly_editors_people'], 'required'],
             [['video_length', 'question_mete', 'case_number', 'activity_number', 'real_carry_out', 'path'], 'required', 'on' => [self::SCENARIO_CARRYOUT]],
-            [['teacher', 'create_by', 'weekly_editors_people', 'course_ops'], 'string', 'max' => 36],
-            [['course_principal'], 'string', 'max' => 36, 'on' => [self::SCENARIO_CHANGE]],
+            [['teacher', 'create_by'], 'string', 'max' => 36],
+            [['course_principal'], 'integer','on' => [self::SCENARIO_CHANGE]],
             [['team_id', 'course_principal'], 'required', 'on' => [self::SCENARIO_CHANGE]],
             [['plan_start_time', 'plan_end_time', 'real_carry_out'], 'string', 'max' => 60],
             [['real_start_time'], 'string', 'max' => 60, 'on' => [self::SCENARIO_WAITSTART]],
             [['des','path'], 'string', 'max' => 255],
-            [['project_id', 'course_id'], 'unique', 'targetAttribute' => ['course_id'], 'message' => \Yii::t('rcoa/teamwork', 'Do not repeat the same data')],
+            [['project_id', 'course_id'], 'unique', 'targetAttribute' => ['project_id', 'course_id'], 'comboNotUnique' => \Yii::t('rcoa/teamwork', 'Do not repeat the same data')],
             [['course_ops'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['course_ops' => 'id']],
             [['weekly_editors_people'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['weekly_editors_people' => 'id']],
             [['course_principal'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['course_principal' => 'id']],

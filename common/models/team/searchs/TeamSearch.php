@@ -19,7 +19,7 @@ class TeamSearch extends Team
     {
         return [
             [['id', 'type'], 'integer'],
-            [['name', 'des'], 'safe'],
+            [['name', 'des', 'is_delete'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class TeamSearch extends Team
      */
     public function search($params)
     {
-        $query = Team::find();
+        $query = Team::find()->where(['!=', 'is_delete', 'Y']);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

@@ -87,7 +87,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'data-pjax' => '0',
                         ];
                         return Html::a('<span class="glyphicon glyphicon-pencil"></span>', 
-                            ['/teammanage/member/update', 'team_id' => $model->team_id, 'u_id' => $model->u_id], $options);
+                            ['/teammanage/member/update', 'id' => $model->id], $options);
                     },
                     'delete' => function ($url, $model, $key) {
                         $options = [
@@ -100,7 +100,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             ]
                         ];
                         return Html::a('<span class="glyphicon glyphicon-trash"></span>', 
-                            ['/teammanage/member/delete', 'team_id' => $model->team_id, 'u_id' => $model->u_id], $options);
+                            ['/teammanage/member/delete', 'id' => $model->id], $options);
                     },       
                 ],
                 'template' => '{update}{delete}',

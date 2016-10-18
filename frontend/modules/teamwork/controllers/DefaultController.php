@@ -60,7 +60,11 @@ class DefaultController extends Controller
         $completedDoor = CourseManage::find()->where(['status' => CourseManage::STATUS_CARRY_OUT])->count();
         $undoneDoor = CourseManage::find()->where(['status' => CourseManage::STATUS_NORMAL])->count();
         $scienceFactory = Team::findOne(['type' => 2]);
-        $teamMember = Team::find()->where(['type' => 1])->with('courseManages')->all();
+        $teamMember = Team::find()
+                      ->where(['type' => 1])
+                      ->andWhere(['!=', 'is_delete', Team::SURE_DELETE])
+                      ->with('courseManages')
+                      ->all();
          
         return $this->render('index',[
             'twTool' => $twTool,
@@ -82,6 +86,7 @@ class DefaultController extends Controller
         $team = Team::findOne(['id' => $team_id]);
         $teamMember = TeamMember::find()
                 ->where(['team_id' => $team_id])
+                ->andWhere(['!=', 'is_delete', TeamMember::SURE_DELETE])
                 ->with('team')
                 ->orderBy('index asc')
                 ->all();

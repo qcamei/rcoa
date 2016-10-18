@@ -49,7 +49,7 @@ class MemberController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => TeamMember::find(),
+            'query' => TeamMember::find()->where(['!=', 'is_delete', 'Y']),
         ]);
 
         return $this->render('index', [
@@ -95,22 +95,21 @@ class MemberController extends Controller
     /**
      * Updates an existing TeamMember model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $team_id
-     * @param string $u_id
-     * @return mixed
+     * @param type $id
+     * @return type
      */
-    public function actionUpdate($team_id, $u_id)
+    public function actionUpdate($id)
     {
-        $model = $this->findModel($team_id, $u_id);
+        $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['/teammanage/team/view', 'id' => $model->team_id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
-                'team' => ArrayHelper::map(Team::find()->all(), 'id', 'name'),
+                'team' => $this->getTeam(),
                 'member' => $this->getTeamMember(),
-                'isExist' => $this->getIsExistLeader($team_id),
+                'isExist' => $this->getIsExistLeader($model->team_id),
                 'position' => ArrayHelper::map(Position::find()->all(), 'id', 'name')
             ]);
         }
@@ -119,15 +118,18 @@ class MemberController extends Controller
     /**
      * Deletes an existing TeamMember model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $team_id
-     * @param string $u_id
-     * @return mixed
+     * @param type $id
+     * @return type
+     * @throws NotFoundHttpException
      */
-    public function actionDelete($team_id, $u_id)
+    public function actionDelete($id)
     {
-        $this->findModel($team_id, $u_id)->delete();
-
-        return $this->redirect(['team/view','id' => $team_id]);
+        $model = $this->findModel($id);
+        $model->is_delete = TeamMember::SURE_DELETE;
+        if($model->update() != false)
+            return $this->redirect(['team/view','id' => $model->team_id]);
+        else
+            throw new NotFoundHttpException('删除失败！');
     }
 
     /**
@@ -138,15 +140,27 @@ class MemberController extends Controller
      * @return TeamMember the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($team_id, $u_id)
+    protected function findModel($id)
     {
-        if (($model = TeamMember::findOne(['team_id' => $team_id, 'u_id' => $u_id])) !== null) {
+        if (($model = TeamMember::findOne($id)) !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            throw new NotFoundHttpException(\Yii::t('rcoa', 'The requested page does not exist'));
         }
     }
     
+    /**
+     * 获取团队
+     * @return type
+     */
+    public function getTeam()
+    {
+        $team = Team::find()
+                ->where(['!=', 'is_delete', 'Y'])
+                ->all();
+        return ArrayHelper::map($team, 'id', 'name');
+    }
+
     /**
      * 获取团队成员
      * @return type

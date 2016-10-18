@@ -66,4 +66,7 @@ return[
     'Statistics-Year' => '年份',
     'Statistics-Month' => '月份',
     'Statistics-Submit' => '统计',
+    
+    //消息提示
+    'The same team refers to send people can not repeat' => '同一团队下指派人不可以重复！',
 ];

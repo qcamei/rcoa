@@ -2,6 +2,7 @@
 
 use common\models\multimedia\MultimediaTask;
 use frontend\modules\multimedia\MultimediaAsset;
+use frontend\modules\multimedia\utils\MultimediaTool;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\ArrayHelper;
@@ -44,7 +45,17 @@ $this->params['breadcrumbs'][] = $this->title;
     <div id="multimedia-task-list">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'summary' => false,
+        'layout' => "{items}\n{summary}\n{pager}",
+        'summaryOptions' => [
+            'class' => 'summary',
+            'style' => 'float: left'
+        ],
+        'pager' => [
+            'options' => [
+                'class' => 'pagination',
+                'style' => 'float: right; margin: 0px;'
+            ]
+        ],
         'tableOptions' => ['class' => 'table table-striped table-list'],
         'columns' => [
             [
@@ -289,13 +300,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'header' => Yii::t('rcoa', 'Operating'),
                 'buttons' => [
                     'view' => function ($url, $model) {
+                        $multimedia = MultimediaTool::getInstance();
                         /* @var $model MultimediaTask */
-                        $actionId = Yii::$app->controller->action->id;      //当前行为方法
                         $options = [
-                            'class' => $actionId == 'team' ? 'btn btn-default btn-sm' : 
-                                    ($model->getIsStatusAssign() ? 'btn btn-primary btn-sm' : ($model->getIsStatusWaitCheck() ? 'btn btn-info btn-sm'
-                                    : ($model->getIsStatusTostart() ? 'btn btn-success btn-sm'  
-                                    : ($model->getIsStatusCompleted() ? 'btn btn-danger btn-sm' : 'btn btn-default btn-sm')))),
+                            'class' => $model->getIsStatusCancel() ? 
+                                    'btn btn-danger btn-sm' : ($model->getIsStatusCompleted()? 
+                                    'btn btn-success btn-sm' : ($multimedia->getIsBelongToOwnOperate($model->id, Yii::$app->user->id, $model->status) ? 
+                                    'btn btn-primary btn-sm' : 'btn btn-default btn-sm')),
                             'style' => 'width: 55px;'
                         ];
                         return Html::a($model->getStatusName(), [
