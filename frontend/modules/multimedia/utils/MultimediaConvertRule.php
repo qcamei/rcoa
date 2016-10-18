@@ -82,7 +82,7 @@ class MultimediaConvertRule {
             {
                 if($target_month >= $proportion['target_month'])
                 {
-                    return $proportion['proportion'];
+                    return (float)$proportion['proportion'];
                 }
             }
         }

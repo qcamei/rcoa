@@ -57,8 +57,7 @@ class HomeController extends Controller
         foreach ($results as $index => $result){            
             //标准工作时间
             $type = $rule[$result['content_type']];
-            $value = $result['production_video_length'] * MultimediaConvertRule::getInstance()->getRuleProportion($result['content_type']);
-
+            $value = (int)($result['production_video_length']/60) * MultimediaConvertRule::getInstance()->getRuleProportion($result['content_type']);
             //添加到创建者（编导）数组
             $this->addData($datas_create_by, $result['create_by'], $type, $value);
             //添加到制作者（制作人）数组
@@ -114,7 +113,7 @@ class HomeController extends Controller
         $query = (new Query())
                 ->select([
                     'Task.id',
-                    'FORMAT(Task.production_video_length/60,1) AS production_video_length',
+                    'Task.production_video_length',
                     'Task.content_type',
                     'CreateUser.nickname AS create_by',
                     'ProducerUser.nickname AS producer'])
