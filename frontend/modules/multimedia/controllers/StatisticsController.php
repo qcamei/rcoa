@@ -47,7 +47,7 @@ class StatisticsController extends Controller
         foreach ($results as $index => $result){            
             //标准工作时间
             $type = $rule[$result['content_type']];
-            $value = $result['production_video_length'] * MultimediaConvertRule::getInstance()->getRuleProportion($result['content_type']);
+            $value = (int)$result['production_video_length']/60 * MultimediaConvertRule::getInstance()->getRuleProportion($result['content_type']);
             $allWorkload += $value;
             //添加到创建者（编导）数组
             $this->addData($datas_create_by, $result['create_by'], $type, $value);
@@ -152,7 +152,7 @@ class StatisticsController extends Controller
                 ->select([
                     'Task.id',
                     'Task.brace_mark',
-                    'FORMAT(Task.production_video_length/60,1) AS production_video_length',
+                    'Task.production_video_length',
                     'Task.content_type',
                     'Task.real_carry_out',
                     'CreateTeam.name AS create_team',
@@ -177,7 +177,7 @@ class StatisticsController extends Controller
        $query = (new Query())
                ->select([
                    'Task.id',
-                   'FORMAT(Task.production_video_length/60,1) AS production_video_length',
+                   'Task.production_video_length',
                    'Task.content_type',
                    'Task.real_carry_out',
                    'CreateTeam.name AS create_team'])
