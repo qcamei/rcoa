@@ -69,9 +69,9 @@ use yii\web\View;
         <div id="datas_team" class="chart"></div>
         <div class="chart-title">支撑</div>
         <div id="datas_team_own_aid" class="chart"></div>
-        <div class="chart-title">编导</div>
-        <div id="producer_canvas" class="chart"></div>
         <div class="chart-title">制作人</div>
+        <div id="producer_canvas" class="chart"></div>
+        <div class="chart-title">编导</div>
         <div id="create_by_canvas" class="chart"></div>
     </div>
 </div>
