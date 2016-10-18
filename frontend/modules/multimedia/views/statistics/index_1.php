@@ -13,6 +13,7 @@ use yii\web\View;
         <?php echo Html::a('标准工作量', Url::to('/multimedia/statistics?type=0'), ['class'=>'btn btn-default']); ?>
         <?php echo Html::a('成品时长', Url::to('/multimedia/statistics?type=1'), ['class'=>'btn btn-default active']); ?>
     </div>
+    <hr/> 
     <form class="form-horizontal">
         <input type="hidden" name="type" value="1"/>
         <div class="form-group">
