@@ -154,32 +154,9 @@ use yii\widgets\ActiveForm;
         echo Html::endTag('div');
     ?>
     
-    <?php
-        echo Html::beginTag('div', ['class' => 'form-group field-coursemanage-weekly_editors_people required has-success']);
-             echo Html::beginTag('label', [
-                 'class' => 'col-lg-1 col-md-1 control-label',
-                 'style' => 'color: #999999; font-weight: normal;padding-right:0;padding-left:10px;',
-                 'for' => 'weekly_editors_people'
-                ]).Yii::t('rcoa/teamwork', 'Weekly Editors People').Html::endTag('label');
-             echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']);
-                echo Select2::widget([
-                    'id' => 'coursemanage-weekly_editors_people',
-                    'name' => 'CourseManage[weekly_editors_people]',
-                    'value' => $model->isNewRecord ? '' : $model->weekly_editors_people,
-                    'data' => is_array($team) ? [] : $weeklyEditors,
-                    'options' => [
-                        'placeholder' => '请选择...',
-                    ],
-                    'pluginOptions' => [
-                        'allowClear' => true
-                    ],
-                ]);
-                
-             echo Html::endTag('div');           
-             echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']).Html::beginTag('div', ['class' => 'help-block']).
-                    Html::endTag('div').Html::endTag('div');
-        echo Html::endTag('div');
-    ?>
+    <?= $form->field($model, 'weekly_editors_people')->widget(Select2::classname(), [
+        'data' => is_array($team) ? [] : $weeklyEditors, 'options' => ['placeholder' => '请选择...']
+    ]) ?> 
     
     <?= $form->field($model, 'course_ops')->widget(Select2::classname(), [
         'data' => $producerList, 'options' => ['placeholder' => '请选择...']
