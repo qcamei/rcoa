@@ -4,6 +4,7 @@ namespace backend\modules\team\controllers;
 
 use common\models\team\searchs\TeamSearch;
 use common\models\team\Team;
+use common\models\team\TeamMember;
 use common\models\team\TeamType;
 use Yii;
 use yii\filters\AccessControl;
@@ -116,8 +117,12 @@ class TeamController extends Controller
     {
         $model = $this->findModel($id);
         $model->is_delete = Team::SURE_DELETE;
-        if($model->update() != false)
+        if($model->update() != false){
+            Yii::$app->db->createCommand()
+                ->update(TeamMember::tableName(), ['is_delete'=> TeamMember::SURE_DELETE], [
+                    'team_id' => $model->id])->execute();
             return $this->redirect(['index']);
+        }
         else
             throw new NotFoundHttpException('删除失败！');
     }

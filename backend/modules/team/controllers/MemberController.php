@@ -77,10 +77,18 @@ class MemberController extends Controller
      */
     public function actionCreate($team_id)
     {
-        $model = new TeamMember();
-        $model->loadDefaultValues();
+        $post = Yii::$app->request->post();
+        $id = ArrayHelper::getValue($post, 'id');
+        $u_id = ArrayHelper::getValue($post, 'TeamMember.u_id');
+        if(isset($id))
+            $model = TeamMember::findOne(['team_id' => $team_id, 'u_id' => $u_id]);
+        if(!isset($model)){
+            $model = new TeamMember();
+            $model->loadDefaultValues();
+        }
         $model->team_id = $team_id;
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $model->is_delete = TeamMember::CANCEL_DELETE;
+        if ($model->load($post) && $model->save()) {
             return $this->redirect(['/teammanage/team/view', 'id' => $model->team_id]);
         } else {
             return $this->render('create', [
@@ -135,8 +143,7 @@ class MemberController extends Controller
     /**
      * Finds the TeamMember model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $team_id
-     * @param string $u_id
+     * @param integer $id
      * @return TeamMember the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */

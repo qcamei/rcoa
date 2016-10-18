@@ -41,6 +41,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'is_leader')->radioList(TeamMember::$is_leaders)->label('') ?>
     
+    <?= Html::hiddenInput('id', $model->id) ?>
+    
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
