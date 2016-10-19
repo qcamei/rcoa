@@ -69,12 +69,14 @@ foreach (MultimediaTask::$statusNmae as $key => $value) {
             ],
             [
                 'attribute' => 'production_video_length',
-                'value' => DateUtil::intToTime($model->production_video_length),
+                'value' => !empty($model->production_video_length) ? 
+                            DateUtil::intToTime($model->production_video_length) : '空',
             ],
             [
                 'label' => Yii::t('rcoa/multimedia', 'Workload'),
                 'format' => 'raw',
-                'value' => DateUtil::intToTime($workload[0]).'<span class="proportion">(1:'.$workload[1].')</span>',
+                'value' =>  !empty($model->production_video_length) ? 
+                            $workload[0].'<span class="proportion">(1分钟成品 = '.$workload[1].'个标准工作量)</span>' : '空',
             ],
             [
                 'attribute' => 'content_type',

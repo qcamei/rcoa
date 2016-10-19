@@ -464,7 +464,7 @@ class DefaultController extends Controller
         $proportion = MultimediaConvertRule::getInstance()
                       ->getRuleProportion($model->content_type, date('Y-m', $model->created_at));
         $video_length = empty($model->production_video_length) ? 
-                        $model->material_video_length : $model->production_video_length;
+                        null : $model->production_video_length;
         $workload = $video_length * $proportion;
         
         return [$workload, $proportion];
