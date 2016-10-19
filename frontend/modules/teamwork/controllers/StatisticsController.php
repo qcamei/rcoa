@@ -218,7 +218,8 @@ class StatisticsController extends Controller
                 ->leftJoin(['Course'=>CourseManage::tableName()],'Course.team_id = Team.id')
                 ->leftJoin(['Item'=>ItemManage::tableName()], 'Course.project_id = Item.id')
                 ->leftJoin(['FItem'=>ItemManage::tableName()], 'Course.course_id = FItem.id')
-                ->groupBy('Team.id');
+                ->groupBy('Team.id')
+                ->orderBy('Team.index DESC');
         return $teamQuery->all(Yii::$app->db);
     }
 }

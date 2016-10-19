@@ -68,32 +68,31 @@ use yii\web\View;
 <?php 
     /**
      * 
-     * @param type $arr [typeA:xxx,typeB:xxx]
+     * @param Array $arr    [typeA:xxx,typeB:xxx]
+     * @param Array $rules  规则 [0:typeA,1:typeB]
      * @return array [name:xx,value:xxx]
      */
-    function convertFun($arr){
+    function convertFun($arr,$rules){
         $newArr = [];
-        foreach($arr AS $name=>$value){
-            $newArr [] = ['name'=>$name,'value'=>$value];
+        foreach($rules AS $name){
+            $newArr [] = ['name'=>$name,'value'=>  isset($arr[$name]) ? $arr[$name] : 0];
         }
         return $newArr;
     }
-    
-    $datas_all_type = json_encode(convertFun($datas_all_type['data']));
+    $rules = array_values($rules);//取值保顺序
+    $datas_all_type = json_encode(convertFun($datas_all_type['data'],$rules));
     foreach($datas_team_type AS $team_name => $team_type_result)
-        $datas_team_type[$team_name] =  convertFun($team_type_result);
-    
-    ksort($datas_team_type);
+        $datas_team_type[$team_name] =  convertFun($team_type_result,$rules);
     $datas_team_type = json_encode($datas_team_type);
-    
+    //转js格式
+    $rules = json_encode($rules);
     $js = <<<JS
-        new multimedia.PicChart('',document.getElementById('datas_all_type'),$datas_all_type);
+        console.log($datas_team_type);
+        new multimedia.PicChart('',document.getElementById('datas_all_type'),$datas_all_type,$rules);
         var datas_team_type = $datas_team_type;
         for(var i in datas_team_type){
-            new multimedia.PicChart(i,$('<div class="team-chart col-md-6"></div>').appendTo($('.team-chart-container'))[0],datas_team_type[i]);
+            new multimedia.PicChart(i,$('<div class="team-chart col-md-6"></div>').appendTo($('.team-chart-container'))[0],datas_team_type[i],$rules);
         }
-        
-            
 JS;
     $this->registerJs($js);
     StatisticsAsset::register($this);

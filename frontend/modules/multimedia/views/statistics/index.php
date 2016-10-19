@@ -84,7 +84,7 @@ use yii\web\View;
     $datas_producer = json_encode($datas_producer);
     $datas_create_by = json_encode($datas_create_by);
    
-    $rules = json_encode($rules);
+    $rules = json_encode(array_values($rules));//取值保顺序
     $own_aid_rules = json_encode([0=>'部内',1=>'支撑']);
     $js = <<<JS
         var datas_team = new multimedia.BarChart(document.getElementById('datas_team'),$datas_team,$rules);

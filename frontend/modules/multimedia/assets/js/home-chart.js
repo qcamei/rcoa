@@ -86,6 +86,7 @@
        //创建类型初始数据
         var _legend = [];
         var series = [];
+        
         for(var id in legend)
         {
             _legend.push(legend[id]);
@@ -180,9 +181,9 @@
      * @param {Array} datas
      * @returns
      */
-    var PicChart = function(title,dom,datas){
+    var PicChart = function(title,dom,datas,legend){
         this.init(dom);
-        this.reflashChart(title,datas);
+        this.reflashChart(title,datas,legend);
         var _this = this;
         $(win).resize(function(){
             _this.chart.resize();
@@ -211,9 +212,8 @@
                 position: ($(dom).width() >= 720 ? null : ['0%', '15%'])
             },
             legend: {
-                orient: 'vertical',
-                left: 'left',
-                data: []
+                data: [],
+                show: false
             },
             series : [
                 {
@@ -254,10 +254,12 @@
      * 刷新图标
      * @param {String} title 标题
      * @param {Array} data 出错步骤数据
+     * @param {Array} legend 类型
      * @returns 
      */
-    p.reflashChart = function(title,data){
+    p.reflashChart = function(title,data,legend){
         this.chartOptions.title.text = title;
+        this.chartOptions.legend.data = legend;
         this.chartOptions.series[0].data = data;
         this.chart.setOption(this.chartOptions);
     }

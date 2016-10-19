@@ -45,7 +45,8 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php 
     $datas_producer = json_encode($datas_producer);
     $datas_create_by = json_encode($datas_create_by);
-    $rules = json_encode($rules);
+    $rules = json_encode(array_values($rules));//取值保顺序
+    
     $js = <<<JS
         var producer_chart = new multimedia.BarChart(document.getElementById('producer_canvas'),$datas_producer,$rules);
         var create_by_chart = new multimedia.BarChart(document.getElementById('create_by_canvas'),$datas_create_by,$rules);

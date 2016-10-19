@@ -61,7 +61,6 @@ class StatisticsController extends Controller
                     $result['brace_mark'] ? "支撑" : "部内", 
                     $value);
         }
-        ArrayHelper::multisort($rule, function($item){return $item == '板书' ? -1 : 1; });
         return $this->render('index',[
             'multimedia'=>  MultimediaTool::getInstance(),
             'date' => $date,
@@ -100,7 +99,7 @@ class StatisticsController extends Controller
             //添加到部门数组
             $this->addData($datas_team_type, $result['create_team'], $type, $value);
         }
-        ArrayHelper::multisort($rule, function($item){return $item == '板书' ? -1 : 1; });
+        
         return $this->render('index_1',[
             'multimedia'=>  MultimediaTool::getInstance(),
             'dateRange' => $dateRange,
@@ -139,7 +138,8 @@ class StatisticsController extends Controller
         /** 通过分组拿到最合适的比例数据 */
         $query = (new Query())
                 ->select(['Type.id','Type.`name`'])
-                ->from(['Type'=>  MultimediaContentType::tableName()]);
+                ->from(['Type'=>  MultimediaContentType::tableName()])
+                ->orderBy('Type.index');
         
         return $query->all(Yii::$app->db);
     }
@@ -167,7 +167,8 @@ class StatisticsController extends Controller
                 ->leftJoin(['ProducerUser'=>  User::tableName()], 'ProducerUser.id = TeamMember.u_id')//制作成员-基本用户
                 ->leftJoin(['CreateUser'=> User::tableName()], 'CreateUser.id = Task.create_by')
                 ->where(['Task.status' => MultimediaTask::STATUS_COMPLETED])
-                ->andWhere(["DATE_FORMAT(Task.real_carry_out,'%Y-%c')" => $dateRange]);
+                ->andWhere(["DATE_FORMAT(Task.real_carry_out,'%Y-%c')" => $dateRange])
+                ->orderBy('CreateTeam.index');
         return $query->all(Yii::$app->db);
     }
     /**
@@ -180,6 +181,7 @@ class StatisticsController extends Controller
                    'Task.production_video_length',
                    'Task.content_type',
                    'Task.real_carry_out',
+                   'CreateTeam.index AS create_team_index',
                    'CreateTeam.name AS create_team'])
                ->from(['Task'=>  MultimediaTask::tableName()])
                ->leftJoin(['CreateTeam'=> Team::tableName()], 'CreateTeam.id = Task.create_team')//创建团队
@@ -189,6 +191,7 @@ class StatisticsController extends Controller
             $dateRange_Arr = explode(" - ",$dateRange);
             $query ->andWhere(['between','Task.real_carry_out',$dateRange_Arr[0], $dateRange_Arr[1]]);
         }
+        $query->orderBy('CreateTeam.index');
        return $query->all(Yii::$app->db);
    }
 }

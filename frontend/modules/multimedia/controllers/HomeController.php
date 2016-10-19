@@ -52,7 +52,6 @@ class HomeController extends Controller
         $datas_producer = [];
         
         $target;
-        
         /** 换算为标准工作量 */
         foreach ($results as $index => $result){            
             //标准工作时间
@@ -63,7 +62,6 @@ class HomeController extends Controller
             //添加到制作者（制作人）数组
             $this->addData($datas_producer, $result['producer'], $type, $value);
         }
-        ArrayHelper::multisort($rule, function($item){return $item == '板书' ? -1 : 1; });
         /* @var $multimedia MultimediaTool */
         $multimedia = MultimediaTool::getInstance();
         return $this->render('index',[
@@ -101,7 +99,8 @@ class HomeController extends Controller
         /** 通过分组拿到最合适的比例数据 */
         $query = (new Query())
                 ->select(['Type.id','Type.`name`'])
-                ->from(['Type'=>  MultimediaContentType::tableName()]);
+                ->from(['Type'=>  MultimediaContentType::tableName()])
+                ->orderBy('Type.index');
         
         return $query->all(Yii::$app->db);
     }

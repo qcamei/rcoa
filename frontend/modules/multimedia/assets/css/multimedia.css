@@ -1,10 +1,15 @@
 /**
  * 公共样式
  */
+@media (max-width: 480px) {
+    .wrap .multimedia-task{
+        padding-left: 0px;
+        padding-right: 0px;
+
+    }
+}
 .wrap .multimedia-task{
-    padding-left: 0px;
-    padding-right: 0px;
-    
+        
 }
 .multimedia-task .table{
     table-layout: fixed;
