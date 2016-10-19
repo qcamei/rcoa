@@ -17,7 +17,7 @@ use yii\db\ActiveRecord;
  * @property string $modules_link                   模块链接
  * @property string $des                            模块描述
  * @property string $isjump                         是否跳转页面
- * @property integer index                          顺序
+ * @property integer $index                         顺序
  * @property integer parent_id                      上一级ID
  *
  * @property Job[] $jobs                            获取所有任务通知
@@ -40,7 +40,8 @@ class System extends ActiveRecord
         return [
             [['isjump', 'index', 'parent_id'], 'integer'],
             [['name'], 'string', 'max' => 64],
-            [['module_image', 'module_link', 'des', 'aliases'], 'string', 'max' => 255]
+            [['module_image', 'module_link', 'des', 'aliases'], 'string', 'max' => 255],
+            [['aliases'], 'unique'],
         ];
     }
 

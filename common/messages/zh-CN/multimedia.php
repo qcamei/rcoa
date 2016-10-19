@@ -69,4 +69,5 @@ return[
     
     //消息提示
     'The same team refers to send people can not repeat' => '同一团队下指派人不可以重复！',
+    'Do not repeat the creation of the same month in the same month' => '在同一个月份请勿重复创建比例！'
 ];

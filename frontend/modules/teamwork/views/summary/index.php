@@ -37,8 +37,7 @@ use yii\web\View;
                 'course_id' => $result->course_id,
                 'create_time' => $result->create_time,
                 'content' => $result->content,
-                'create_by' => $result->weeklyCreateBy->weeklyEditorsPeople->user->nickname.
-                                '('.$result->weeklyCreateBy->weeklyEditorsPeople->position->name.')',
+                'create_by' => $result->weeklyCreateBy->weeklyEditorsPeople->user->nickname,
                 'created_at' => date('Y-m-d H:i', $result->created_at)
             ];
         }
@@ -57,8 +56,8 @@ use yii\web\View;
 <h4><?= Yii::t('rcoa/teamwork', 'Development Weekly').'：'; ?></h4>
 <span class="team-leader">
     <?php echo Yii::t('rcoa/teamwork', 'This Week Weekly Developer').'：'; 
-        echo empty($model->weekly_editors_people)? '无' : 
-            $model->weeklyEditorsPeople->user->nickname.' ('.$model->weeklyEditorsPeople->position->name.')' 
+        echo empty($model->weekly_editors_people)? '' : 
+            $model->weeklyEditorsPeople->user->nickname; 
     ?>
 </span>
     
@@ -97,7 +96,6 @@ use yii\web\View;
              * 3、(必须是【队长】 and 课程 【创建者】 是自己)
              * or 【周报编辑人】 or 【项目管理员】 or 【课程负责人】
              */
-            
             if($model->getIsNormal() && !empty($weeklyInfoResult)
                 && (($twTool->getIsAuthority('is_leader', 'Y') && $model->create_by == \Yii::$app->user->id) 
                 || $twTool->getIsAuthority('id', $model->weekly_editors_people)
@@ -113,7 +111,6 @@ use yii\web\View;
              * 3、(必须是【队长】 and 课程 【创建者】 是自己)
              * or 【周报编辑人】 or 【项目管理员】 or 【课程负责人】
              */
-           
             if($model->getIsNormal() && empty($weeklyInfoResult)
                 && (($twTool->getIsAuthority('is_leader', 'Y') && $model->create_by == \Yii::$app->user->id) 
                 || $twTool->getIsAuthority('id', $model->weekly_editors_people)

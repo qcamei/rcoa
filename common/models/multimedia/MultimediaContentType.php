@@ -12,6 +12,7 @@ use yii\db\ActiveRecord;
  * @property integer $id                                ID
  * @property string $name                               内容类型名称
  * @property string $des                                描述
+ * @property integer $index                             索引
  *
  * @property MultimediaTask[] $multimediaTasks          获取所有任务
  * @property MultimediaTypeProportion[] $proportions    获取所有类型比例
@@ -33,6 +34,7 @@ class MultimediaContentType extends ActiveRecord
     {
         return [
             [['name', 'des'], 'string', 'max' => 255],
+            [['index'], 'integer'],
         ];
     }
 
@@ -45,6 +47,7 @@ class MultimediaContentType extends ActiveRecord
             'id' => Yii::t('rcoa/multimedia', 'ID'),
             'name' => Yii::t('rcoa/multimedia', 'Name'),
             'des' => Yii::t('rcoa', 'Des'),
+            'index' => Yii::t('rcoa', 'Index'),
         ];
     }
 

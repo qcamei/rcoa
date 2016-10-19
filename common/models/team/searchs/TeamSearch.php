@@ -41,7 +41,7 @@ class TeamSearch extends Team
      */
     public function search($params)
     {
-        $query = Team::find()->where(['!=', 'is_delete', 'Y']);
+        $query = Team::find()->where(['!=', 'is_delete', 'Y'])->orderBy('index asc');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

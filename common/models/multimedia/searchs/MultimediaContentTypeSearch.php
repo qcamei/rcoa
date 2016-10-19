@@ -41,7 +41,7 @@ class MultimediaContentTypeSearch extends MultimediaContentType
      */
     public function search($params)
     {
-        $query = MultimediaContentType::find();
+        $query = MultimediaContentType::find()->orderBy('index asc');
 
         // add conditions that should always apply here
 

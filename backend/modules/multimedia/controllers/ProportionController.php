@@ -77,7 +77,7 @@ class ProportionController extends Controller
     public function actionCreate($content_type)
     {
         if($this->getIsExistenceTargetMonth($content_type))
-            throw new NotFoundHttpException('在同一个月份请勿重复创建比例！');
+            throw new NotFoundHttpException(\Yii::t('rcoa/multimedia', 'Do not repeat the creation of the same month in the same month'));
         
         $model = new MultimediaTypeProportion();
         $model->target_month = date('Y-m', time());

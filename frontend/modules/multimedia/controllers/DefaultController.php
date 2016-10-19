@@ -447,8 +447,7 @@ class DefaultController extends Controller
     public function getContentType()
     {
         $contentType = MultimediaContentType::find()
-                       ->with('multimediaTasks')
-                       ->with('proportions')
+                       ->orderBy('index asc')
                        ->all();
         
         return ArrayHelper::map($contentType, 'id', 'name');
@@ -465,9 +464,9 @@ class DefaultController extends Controller
                       ->getRuleProportion($model->content_type, date('Y-m', $model->created_at));
         $video_length = empty($model->production_video_length) ? 
                         null : $model->production_video_length;
-        $workload = $video_length * $proportion;
+        $workload = $video_length * $proportion / 60;
         
-        return [$workload, $proportion];
+        return [(int)$workload, $proportion];
     }    
     
     /**
@@ -478,6 +477,7 @@ class DefaultController extends Controller
     public function getTeams($teamId = null){
         $team = Team::find()
                 ->andFilterWhere(['not in', 'id', $teamId])
+                ->orderBy('index asc')
                 ->all();
         
         return ArrayHelper::map($team, 'id', 'name');

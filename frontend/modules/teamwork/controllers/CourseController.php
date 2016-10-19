@@ -3,6 +3,7 @@
 namespace frontend\modules\teamwork\controllers;
 
 use common\models\expert\Expert;
+use common\models\Position;
 use common\models\team\Team;
 use common\models\team\TeamMember;
 use common\models\teamwork\CourseAnnex;
@@ -15,6 +16,7 @@ use wskeee\framework\models\ItemType;
 use wskeee\rbac\RbacName;
 use Yii;
 use yii\data\ArrayDataProvider;
+use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -445,8 +447,11 @@ class CourseController extends Controller
     {
         /* @var $teamMember TeamMember */
         $teamMember = TeamMember::find()
-                    ->where(['!=', 'is_delete', TeamMember::SURE_DELETE])
-                    ->orderBy(['index' => 'asc', 'team_id' => 'asc'])
+                    ->from(['Member' => TeamMember::tableName()])
+                    ->leftJoin(['Team' => Team::tableName()], 'Team.id = Member.team_id')
+                    ->leftJoin(['Position' => Position::tableName()], 'Position.id = Member.position_id')
+                    ->where(['!=', 'Member.is_delete', TeamMember::SURE_DELETE])
+                    ->orderBy('Team.index asc, Position.level asc')
                     ->with('user')
                     ->with('team')
                     ->with('position')
@@ -455,7 +460,7 @@ class CourseController extends Controller
         $producers = [];
         foreach ($teamMember as $element) {
             $key = ArrayHelper::getValue($element, 'id');
-            $value = ArrayHelper::getValue($element, 'user.nickname').' ('.ArrayHelper::getValue($element, 'position.name').')';
+            $value = ArrayHelper::getValue($element, 'user.nickname');
             $producers[ArrayHelper::getValue($element, 'team.name')][$key] = $value;
         }
         
@@ -472,17 +477,17 @@ class CourseController extends Controller
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
         $sameTeamMembers = TeamMember::find()
+                        ->leftJoin(['Position' => Position::tableName()], 'Position.id = position_id')
                         ->where(['team_id' => $twTool->getHotelTeam($u_id)])
                         ->andWhere(['!=', 'is_delete', TeamMember::SURE_DELETE])
-                        ->orderBy('index asc')
+                        ->orderBy('Position.level asc')
                         ->with('user')
-                        ->with('team')
                         ->with('position')
                         ->all();
         $sameTeamMember = [];
         foreach ($sameTeamMembers as $element) {
             $key = ArrayHelper::getValue($element, 'id');
-            $value = ArrayHelper::getValue($element, 'user.nickname').' ('.ArrayHelper::getValue($element, 'position.name').')';
+            $value = ArrayHelper::getValue($element, 'user.nickname');
             $sameTeamMember[$key] = $value;
         }
         return $sameTeamMember;
@@ -495,19 +500,17 @@ class CourseController extends Controller
     public function getAssignWeeklyEditors($courseId)
     {
         $assignWeeklyEditors = CourseProducer::find()
-                            ->select(['Weeklyeditors.*','Member.`index`'])
                             ->from(['Weeklyeditors' => CourseProducer::tableName()])
                             ->leftJoin(['Member' => TeamMember::tableName()], 'Member.u_id = Weeklyeditors.producer')
+                            ->leftJoin(['Position' => Position::tableName()], 'Position.id = Member.position_id')
                             ->where(['Weeklyeditors.course_id' => $courseId])
-                            ->orderBy(['Member.`index`' => 'ASC', 'Member.team_id' => 'ASC'])
-                            ->with('producerOne')
-                            ->with('course')
+                            ->orderBy('Position.level asc')
                             ->with('producerOne.user')
                             ->all();
         $weeklyEditors = [];
         foreach ($assignWeeklyEditors as $element) {
             $key = ArrayHelper::getValue($element, 'producer');
-            $value = ArrayHelper::getValue($element, 'producerOne.user.nickname').' ('.ArrayHelper::getValue($element, 'producerOne.position.name').')';
+            $value = ArrayHelper::getValue($element, 'producerOne.user.nickname');
             $weeklyEditors[$key] = $value;
         }
         return $weeklyEditors;
@@ -525,23 +528,19 @@ class CourseController extends Controller
                            ->from(['Producer' => CourseProducer::tableName()])
                            ->leftJoin(['Member' => TeamMember::tableName()], 'Member.id = Producer.producer')
                            ->where(['Producer.course_id' => $courseId])
-                           ->orderBy('Member.`index` asc, Member.team_id asc')
+                           ->orderBy('Member.`index` asc, Member.is_leader desc')
                            ->with('producerOne')
                            ->with('producerOne.user')
-                           ->with('producerOne.position')
-                           ->with('course')
                            ->all();
         $producers = [];
         foreach ($assignProducers as $element) {
             $key = ArrayHelper::getValue($element, 'producer');
-            $value = ArrayHelper::getValue($element, 'producerOne.is_leader') == 'Y' ? 
+            $value = ArrayHelper::getValue($element, 'producerOne.is_leader') == TeamMember::TEAMLEADER ? 
                     '<span class="team-leader developer">'.
                         ArrayHelper::getValue($element, 'producerOne.user.nickname').
-                        '('.ArrayHelper::getValue($element, 'producerOne.position.name').')'.
                      '</span>' : 
                     '<span class="developer">'.
-                        ArrayHelper::getValue($element, 'producerOne.user.nickname').
-                        '('.ArrayHelper::getValue($element, 'producerOne.position.name').')'. 
+                        ArrayHelper::getValue($element, 'producerOne.user.nickname'). 
                    '</span>';
             $producers[$key] = $value;
         }

@@ -75,12 +75,11 @@ use yii\widgets\DetailView;
             [
                 'attribute' => Yii::t('rcoa/teamwork', 'Resource People'),
                 'format' => 'raw',
-                'value' => empty($producer)? '无' :implode('', $producer),
+                'value' => empty($producer)?  null :implode('', $producer),
             ],
             [
                 'attribute' => 'course_ops',
-                'value' => empty($model->course_ops) ? '无'
-                           :$model->courseOps->user->nickname.' ( '.$model->courseOps->position->name.' ) ',
+                'value' => empty($model->course_ops) ? null : $model->courseOps->user->nickname,
             ],
             [
                 'attribute' => 'plan_start_time',

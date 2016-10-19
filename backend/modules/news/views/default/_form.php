@@ -22,8 +22,8 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'index')->widget(TouchSpin::classname(),  [
             'pluginOptions' => [
                 'placeholder' => '顺序 ...',
-                'min' => 1,
-                'max' => 10,
+                'min' => -1,
+                'max' => 999999999,
             ],
     ])?>
 

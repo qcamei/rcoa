@@ -2,10 +2,10 @@
 
 namespace common\models\multimedia\searchs;
 
-use Yii;
+use common\models\multimedia\MultimediaAssignTeam;
+use common\models\team\Team;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\multimedia\MultimediaAssignTeam;
 
 /**
  * MultimediaAssignTeamSearch represents the model behind the search form about `common\models\multimedia\MultimediaAssignTeam`.
@@ -41,7 +41,9 @@ class MultimediaAssignTeamSearch extends MultimediaAssignTeam
      */
     public function search($params)
     {
-        $query = MultimediaAssignTeam::find();
+        $query = MultimediaAssignTeam::find()
+                ->leftJoin(['Team' => Team::tableName()], 'Team.id = team_id')
+                ->orderBy('Team.index asc');
 
         // add conditions that should always apply here
 

@@ -27,13 +27,17 @@ use yii\widgets\ActiveForm;
         'data' => $member, 'hideSearch'=>false, 'options' => ['placeholder' => '请选择...'],
     ]) ?>
     
-    <?= $form->field($model, 'index')->widget(TouchSpin::classname(),  [
-            'pluginOptions' => [
-                'placeholder' => '顺序 ...',
-                'min' => 1,
-                'max' => 10,
-            ],
-    ])?>
+    <?php 
+        if(!$model->isNewRecord){
+            echo $form->field($model, 'index')->widget(TouchSpin::classname(),  [
+                    'pluginOptions' => [
+                        'placeholder' => '顺序 ...',
+                        'min' => -1,
+                        'max' => 999999999,
+                    ],
+                ]);
+        }
+    ?>
 
     <?= $form->field($model, 'position_id')->widget(Select2::classname(), [
         'data' => $position, 'hideSearch'=>false, 'options' => ['placeholder' => '请选择...'],

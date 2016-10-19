@@ -4,6 +4,7 @@ namespace common\models\team;
 
 use common\models\multimedia\MultimediaAssignTeam;
 use common\models\multimedia\MultimediaTask;
+use common\models\Position;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\ItemManage;
 use common\models\User;
@@ -18,6 +19,7 @@ use yii\db\ActiveRecord;
  * @property string $name                              名称
  * @property integer $type                             类型
  * @property string $des                               描述
+ * @property integer $index                            索引
  * @property string $is_delete                         是否删除
  *
  * @property MultimediaAssignTeam[] $assignTeams       获取所有多媒体团队指派人
@@ -50,7 +52,7 @@ class Team extends ActiveRecord
     public function rules()
     {
         return [
-            [['type'], 'integer'],
+            [['type', 'index'], 'integer'],
             [['name', 'des'], 'string', 'max' => 255],
             [['is_delete'], 'string', 'max' => 4],
             [['type'], 'exist', 'skipOnError' => true, 'targetClass' => TeamType::className(), 'targetAttribute' => ['type' => 'id']],
@@ -67,6 +69,7 @@ class Team extends ActiveRecord
             'name' => Yii::t('rcoa', 'Name'),
             'type' => Yii::t('rcoa', 'Type'),
             'des' => Yii::t('rcoa', 'Des'),
+            'index' => Yii::t('rcoa', 'Index'),
             'is_delete' => Yii::t('rcoa/team', 'Is Delete'),
         ];
     }
@@ -118,7 +121,9 @@ class Team extends ActiveRecord
     public function getTeamMembers()
     {
         return $this->hasMany(TeamMember::className(), ['team_id' => 'id'])
-               ->where(['!=', 'is_delete', TeamMember::SURE_DELETE]);
+                ->leftJoin(['Position' => Position::tableName()], 'Position.id = position_id')
+                ->where(['!=', 'is_delete', TeamMember::SURE_DELETE])
+                ->orderBy('Position.level asc');
     }
 
     /**

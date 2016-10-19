@@ -5,18 +5,18 @@
 
 use common\config\AppGlobalVariables;
 use common\models\System;
-use common\models\User;
 use frontend\assets\AppAsset;
 use kartik\dropdown\DropdownX;
 use kartik\widgets\AlertBlock;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
 
 AppAsset::register($this);
 
-$system = System::find()->with('jobs')->all();
+$system = System::find()->orderBy('index asc')->with('jobs')->all();
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -47,37 +47,52 @@ $system = System::find()->with('jobs')->all();
             'url' => ['/site/login'], 
         ];
     } else {
-        $system = System::find()->orderBy('index asc')->all();
-        $user = User::findOne(Yii::$app->user->id);
         foreach ($system as $key => $value) {
             $menuItems[] = [
                 'label' => $value->name, 
                 'url' => 
                     $value->isjump == 0  ? [$value->module_link] : 
-                    $value->module_link.'?userId='.$user->id.'&userName='.$user->username.'&timeStamp='.(time()*1000).'&sign='.strtoupper(md5($user->id.$user->username.(time()*1000).'eeent888888rms999999')),
+                    $value->module_link.'?userId='.Yii::$app->user->id.'&userName='.$user->username.'&timeStamp='.(time()*1000).'&sign='.strtoupper(md5($user->id.$user->username.(time()*1000).'eeent888888rms999999')),
                 'linkOptions' => [
                     'target'=> $value->isjump == 0 ? '': "_black",
                     'title' => $value->module_link != '#' ? $value->name : '即将上线',
                 ]
             ];
         }
-       
-        
     }
     
+    $moduleId = Yii::$app->controller->module->id;   //模块ID
+    if($moduleId == 'app-frontend')
+    {
+        //站点经过首页或登录，直接获取当前路由
+        $route = Yii::$app->controller->getRoute();
+    }else
+    {
+        /* 通过模块名拿到对应模块路由 */
+        $urls = ArrayHelper::getColumn($menuItems, 'url');
+        foreach($urls AS $url){
+            if(stripos($url[0], $moduleId))
+            {
+                $route = substr($url[0], 1);
+                break;
+            }
+        }
+    }
+    //控制器唯一ID
     $bar_route = Yii::$app->controller->getUniqueId();
     echo Nav::widget([
         'options' => Yii::$app->user->isGuest ? ['class' =>'navbar-nav navbar-right'] : ['class' => 'navbar-nav navbar-left'],
         'items' => $menuItems,
-        'route' => $bar_route == 'site' ? Yii::$app->controller->getRoute() : $bar_route,
+        'route' => $route,
     ]);
+    
+    /* 非站点记录系统别名和系统ID */
     if($bar_route != 'site'){
-        AppGlobalVariables::$system_aliases = Yii::$app->controller->module->id;
+        AppGlobalVariables::$system_aliases = $moduleId;
         $system_id = System::find()->where(['aliases'=>AppGlobalVariables::$system_aliases])->one();
-            AppGlobalVariables::$system_id = $system_id->id;
-    }  else {
-        Yii::$app->controller->getRoute();
+        AppGlobalVariables::$system_id = $system_id->id;
     }
+
     
     if(!Yii::$app->user->isGuest){
         echo Html::beginTag('ul', ['class'=>'navbar-nav navbar-right nav']);

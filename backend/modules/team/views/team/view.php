@@ -42,6 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => $model->teamType->name,
             ],
             'des',
+            'index'
         ],
     ]) ?>
     
@@ -75,6 +76,20 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value'=>function($model){
                     /* @var $model TeamMember */
                     return TeamMember::$is_leaders[$model->is_leader];
+                }   
+            ],
+            [
+                'label'=>'职位等级',
+                'value'=>function($model){
+                    /* @var $model TeamMember */
+                    return $model->position->level;
+                }   
+            ],
+            [
+                'label'=>'顺序',
+                'value'=>function($model){
+                    /* @var $model TeamMember */
+                    return $model->index;
                 }   
             ],
             [

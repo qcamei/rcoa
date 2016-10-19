@@ -70,19 +70,19 @@ foreach (MultimediaTask::$statusNmae as $key => $value) {
             [
                 'attribute' => 'production_video_length',
                 'value' => !empty($model->production_video_length) ? 
-                            DateUtil::intToTime($model->production_video_length) : '空',
+                            DateUtil::intToTime($model->production_video_length) : null,
             ],
             [
                 'label' => Yii::t('rcoa/multimedia', 'Workload'),
                 'format' => 'raw',
                 'value' =>  !empty($model->production_video_length) ? 
-                            $workload[0].'<span class="proportion">(1分钟成品 = '.$workload[1].'个标准工作量)</span>' : '空',
+                            $workload[0].'<span class="proportion">(1分钟成品 = '.$workload[1].'个标准工作量)</span>' : null,
             ],
             [
                 'attribute' => 'content_type',
                 'format' => 'raw',
                 'value' => !empty($model->content_type) ? 
-                           '<span class="content-type">'.$model->contentType->name.'</span>' : '空' ,
+                           '<span class="content-type">'.$model->contentType->name.'</span>' : null ,
             ],
             
             ['label' => '<span class="btn-block viewdetail-th-head">开发信息</span>','value' => ''],
@@ -110,7 +110,7 @@ foreach (MultimediaTask::$statusNmae as $key => $value) {
             [
                 'label' => Yii::t('rcoa/multimedia', 'Producer'),
                 'format' => 'raw',
-                'value' =>  !empty($producer) ? implode(',', $producer) : '空',
+                'value' =>  !empty($producer) ? implode(',', $producer) : null,
             ],
             [
                 'label' => Yii::t('rcoa/multimedia', 'Status').'/'.Yii::t('rcoa/multimedia', 'Progress'),
@@ -125,11 +125,11 @@ foreach (MultimediaTask::$statusNmae as $key => $value) {
             ['label' => '<span class="btn-block viewdetail-th-head">其它信息</span>','value' => ''],
             [
                 'attribute' => 'create_team',
-                'value' => !empty($model->create_team) ? $model->createTeam->name : '',
+                'value' => !empty($model->create_team) ? $model->createTeam->name : null,
             ],
             [
                 'attribute' => 'create_by',
-                'value' => !empty($model->create_by) ? $model->createBy->nickname : '',
+                'value' => !empty($model->create_by) ? $model->createBy->nickname : null,
             ],
             [
                 'attribute' => 'created_at',
@@ -141,7 +141,7 @@ foreach (MultimediaTask::$statusNmae as $key => $value) {
             ],
             [
                 'attribute' => 'real_carry_out',
-                'value' => !empty($model->real_carry_out) ? $model->real_carry_out : '空',
+                'value' => !empty($model->real_carry_out) ? $model->real_carry_out : null,
             ],
             [
                 'attribute' => 'des',

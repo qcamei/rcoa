@@ -35,6 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             'des',
+            'index',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

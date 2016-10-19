@@ -33,7 +33,7 @@ use yii\widgets\ActiveForm;
         echo Html::endTag('div');
     ?>
     
-    <?= $form->field($model, 'proportion')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'proportion')->textInput(['maxlength' => true, 'value' => ($model->proportion / 10) * 10]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

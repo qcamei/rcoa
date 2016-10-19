@@ -80,21 +80,26 @@ class MemberController extends Controller
         $post = Yii::$app->request->post();
         $id = ArrayHelper::getValue($post, 'id');
         $u_id = ArrayHelper::getValue($post, 'TeamMember.u_id');
+        $isLeader = ArrayHelper::getValue($post, 'TeamMember.is_leader');
         if(isset($id))
             $model = TeamMember::findOne(['team_id' => $team_id, 'u_id' => $u_id]);
         if(!isset($model)){
             $model = new TeamMember();
             $model->loadDefaultValues();
         }
+        
         $model->team_id = $team_id;
         $model->is_delete = TeamMember::CANCEL_DELETE;
+        if($this->getIsExistLeader($model->team_id, $isLeader))
+            throw new NotFoundHttpException(Yii::t('rcoa/team', 'Already exist team leader'));
+        
         if ($model->load($post) && $model->save()) {
             return $this->redirect(['/teammanage/team/view', 'id' => $model->team_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
                 'member' => $this->getTeamMember(),
-                'isExist' => $this->getIsExistLeader($team_id),
+                'isExist' => $this->getIsExistLeader($model->team_id),
                 'position' => ArrayHelper::map(Position::find()->all(), 'id', 'name')
             ]);
         }
@@ -109,8 +114,13 @@ class MemberController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $post = Yii::$app->request->post();
+        $postTeam = ArrayHelper::getValue($post, 'TeamMember.team_id');
+        $isLeader = ArrayHelper::getValue($post, 'TeamMember.is_leader');
+        
+        if($model->team_id != $postTeam && $this->getIsExistLeader($postTeam, $isLeader))
+                throw new NotFoundHttpException(Yii::t('rcoa/team', 'Change department already exist team leader'));
+        if ($model->load($post) && $model->save()) {
             return $this->redirect(['/teammanage/team/view', 'id' => $model->team_id]);
         } else {
             return $this->render('update', [
@@ -182,18 +192,19 @@ class MemberController extends Controller
 
     /**
      * 获取团队下是否已经存在队长
-     * @param type $teamId  团队ID
-     * @return type
+     * @param type $teamId         团队ID
+     * @param type $isLeader       是否是队长
+     * @return integer             1表示已存在, 0表示不存在
      */
-    public function getIsExistLeader($teamId)
+    public function getIsExistLeader($teamId, $isLeader = TeamMember::TEAMLEADER)
     {
-        $teamMember = TeamMember::findAll(['team_id' => $teamId]);
-        $isExist = [];
+        $teamMember = TeamMember::find()
+                      ->where(['team_id' => $teamId, 'is_leader' => TeamMember::TEAMLEADER])
+                      ->andWhere(['!=', 'is_delete', TeamMember::SURE_DELETE])
+                      ->all();
         if(!empty($teamMember) || isset($teamMember)){
-            foreach ($teamMember as $value){
-                $isExist[] = $value->is_leader;
-            }
-            if(in_array('Y', $isExist))
+            $isExist = ArrayHelper::getColumn($teamMember, 'is_leader');
+            if(in_array($isLeader, $isExist))
                 return 1;
         }
         return 0;

@@ -81,12 +81,12 @@ class SiteController extends Controller
                 ->orderBy('index ASC')
                 ->all();*/
         $system = System::find()->orderBy('index asc')->all();
-        $user = User::findOne(Yii::$app->user->id);
+        //$user = User::findOne(Yii::$app->user->id);
         return $this->render('index',[
             //'banner' => $banner,
             //'video' => $video = ['ogg','mpeg4','mp4','webm'],
             'system' => $system,
-            'user' => $user,
+            //'user' => $user,
         ]);
     }
 
@@ -235,9 +235,9 @@ class SiteController extends Controller
         if (\Yii::$app->user->isGuest) 
             return $this->goHome();
         
-        $model = User::findOne(Yii::$app->user->id);
+        $model = User::findOne(\Yii::$app->user->id);
         $model->scenario = User::SCENARIO_UPDATE;
-        if($model->load(Yii::$app->getRequest()->post()))
+        if($model->load(Yii::$app->request->post()))
         {
             if($model->save())
                 return $this->redirect(['index']);

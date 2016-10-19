@@ -36,6 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'name',
             'des',
+            'index',
         ],
     ]) ?>
 
@@ -63,7 +64,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => Yii::t('rcoa/multimedia', 'Proportion'),
                 'value' => function($model){
                     /* @var $model MultimediaTypeProportion */
-                    return $model->proportion;
+                    return ($model->proportion / 10) * 10;
                 }
             ],
             [

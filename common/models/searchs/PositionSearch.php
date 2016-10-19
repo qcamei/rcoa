@@ -18,7 +18,7 @@ class PositionSearch extends Position
     public function rules()
     {
         return [
-            [['id'], 'integer'],
+            [['id', 'level'], 'integer'],
             [['name', 'des'], 'safe'],
         ];
     }
@@ -41,7 +41,7 @@ class PositionSearch extends Position
      */
     public function search($params)
     {
-        $query = Position::find();
+        $query = Position::find()->orderBy('level asc');
 
         // add conditions that should always apply here
 
@@ -60,6 +60,7 @@ class PositionSearch extends Position
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
+            'index' => $this->level,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])

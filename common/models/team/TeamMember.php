@@ -57,25 +57,6 @@ class TeamMember extends ActiveRecord
     }
     
     /**
-     * 保存前判断团队是否已经存在队长
-     * @param type $insert
-     * @return boolean             
-     * @throws NotFoundHttpException
-     */
-    public function beforeSave($insert) {
-        if(parent::beforeSave($insert)){
-            $teamMember = TeamMember::findAll(['team_id' => $this->team_id, 'is_leader' => 'Y']);
-            if(!empty($teamMember) || isset($teamMember)){
-                $leader = ArrayHelper::getColumn($teamMember, 'is_leader');
-                if(in_array($this->is_leader, $leader))
-                    throw new NotFoundHttpException($this->team->name.Yii::t('rcoa/team', 'Already exist team leader'));
-                else 
-                    return true;
-            }
-        }
-    }
-
-    /**
      * @inheritdoc
      */
     public function rules()
