@@ -140,6 +140,9 @@ body .wrap >.content{
 }
 body .footer {
     height: 50px;
+    position: absolute;
+    left: 0px;
+    right: 0px;
 }
 
 /** 通知 */
