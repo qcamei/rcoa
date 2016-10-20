@@ -153,7 +153,7 @@ class ExportController extends Controller
         $devs = (new Query())
                 ->select([
                     'Producer.course_id AS course_id',
-                    "GROUP_CONCAT(DevUser.nickname,'（',Position.`name`,'）' ORDER BY TeamMember.`index`) AS course_dev",   //合并分组里所有开发人员： 名称（岗位）,,,名称（岗位）
+                    "GROUP_CONCAT(DevUser.nickname ORDER BY Position.`level`) AS course_dev",   //合并分组里所有开发人员： 名称（岗位）,,,名称（岗位）
                     ])
                 ->from(['Producer'=>CourseProducer::tableName()])                                               //课程关联开发员工
                 ->leftJoin(['TeamMember'=> TeamMember::tableName()], 'Producer.producer = TeamMember.id')     //团队成员
