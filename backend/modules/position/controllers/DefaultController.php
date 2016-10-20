@@ -2,12 +2,13 @@
 
 namespace backend\modules\position\controllers;
 
-use Yii;
 use common\models\Position;
 use common\models\searchs\PositionSearch;
+use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * DefaultController implements the CRUD actions for Position model.
