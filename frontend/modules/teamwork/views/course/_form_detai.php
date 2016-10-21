@@ -1,16 +1,27 @@
 <?php
 
-use common\models\team\Team;
+use common\models\team\TeamMember;
 use common\models\teamwork\CourseManage;
-use kartik\widgets\Select2;
-use wskeee\rbac\RbacName;
 use wskeee\utils\DateUtil;
+use yii\helpers\ArrayHelper;
 use yii\web\View;
-use yii\widgets\ActiveForm;
 use yii\widgets\DetailView;
 
 /* @var $this View */
 /* @var $model CourseManage */
+
+$producer = [];
+foreach ($producers as $element) {
+    $key = ArrayHelper::getValue($element, 'producer');
+    $value = ArrayHelper::getValue($element, 'producerOne.is_leader') == TeamMember::TEAMLEADER ? 
+            '<span class="team-leader developer">'.
+                ArrayHelper::getValue($element, 'producerOne.user.nickname').
+             '</span>' : 
+            '<span class="developer">'.
+                ArrayHelper::getValue($element, 'producerOne.user.nickname'). 
+           '</span>';
+    $producer[$key] = $value;
+}
 
 ?>
 <div class="course-manage-view">

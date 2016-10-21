@@ -54,7 +54,7 @@ use yii\db\ActiveRecord;
  * @property CoursePhase[] $coursePhases            获取所有课程阶段
  * @property CourseProducer[] $courseProducers      获取所有制作人
  * @property TeamMember[] $producers                获取所有团队成员
- * @property CourseSummary[] $courseWeekly          获取所有周报开发人
+ * @property CourseSummary[] $courseWeeklys         获取所有周报开发人
  * @property CourseSummary[] $courseSummaries       获取所有课程总结
  */
 class CourseManage extends ActiveRecord
@@ -75,6 +75,8 @@ class CourseManage extends ActiveRecord
     
     /** 进度 */
     public $progress;
+    
+    public $isExistWeekly = false ;
     
     /** 状态名 */
     public static $statusName = [
@@ -344,7 +346,7 @@ class CourseManage extends ActiveRecord
     }
 
     /**
-     * 获取所有课程总结
+     * 获取所有课程周报
      * @return ActiveQuery
      */
     public function getCourseSummaries()
