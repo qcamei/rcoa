@@ -52,12 +52,14 @@ class SummaryController extends Controller
         Yii::$app->getResponse()->format = 'json';
         /* @var $twTool TeamworkTool */
         $twTool = Yii::$app->get('twTool');
+        $course = $this->findCourseModel($course_id);
         $errors = [];
         $weekinfo = [];
         $currentTime = date('Y-m-d',  time());
+        $startTime = date('Y-m-d', strtotime($course->real_start_time));
         try
         {
-            foreach ($twTool->getWeekInfo($date) as $value){
+            foreach ($twTool->getWeekInfo($startTime, $date) as $value){
                 $result = $twTool->getWeeklyInfo($course_id, $value['start'], $value['end']);
                 $weekinfo[] = [
                     'date' => date('m/d', strtotime($value['start'])).'～'.date('m/d', strtotime($value['end'])),
@@ -203,6 +205,23 @@ class SummaryController extends Controller
     protected function findModel($course_id, $create_time)
     {
         $model = CourseSummary::findOne(['course_id' => $course_id, 'create_time' => $create_time]);
+        if ($model !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('所请求的页面不存在.');
+        }
+    }
+    
+    /**
+     * Finds the CourseManage model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return CourseSummary the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findCourseModel($course_id)
+    {
+        $model = CourseManage::findOne(['id' => $course_id]);
         if ($model !== null) {
             return $model;
         } else {

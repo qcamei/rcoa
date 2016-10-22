@@ -76,18 +76,23 @@ class TeamworkTool{
     
     /**
      * 计算一个月有多少周
+     * @param type $date        日期
      * @param type $month       月份
      * @return array
      */
-    public function getWeekInfo($month)
+    public function getWeekInfo($date, $month)
     {
         $weekinfo = [];
+        //实际开始月份如果小于开发周期月份，那么开始时间就为1 否则为实际开始日期
+        $start_date = date('m', strtotime($month)) > date('m', strtotime($date)) ? 1 : date('d', strtotime($date));
         $end_date = date('d',strtotime($month.' +1 month -1 day'));   //计算一个月有多少天 
-        for ($i=1; $i <$end_date ; $i=$i+7) { 
-            $w = date('N',strtotime($month.'-'.$i));        //计算每月1号在一个星期是第几天
+        //计算实际开始时间or每个月1号在一个星期是第几天
+        $w = date('m', strtotime($month)) > date('m', strtotime($date)) ? 
+             date('N',strtotime($month.'-'.$start_date)) : date('N',strtotime($date)); 
+        for ($i = $start_date; $i < $end_date; $i = $i + 7) { 
             $weekinfo[] = [
-                'start' => date('Y-m-d',strtotime($month.'-'.$i.' -'.($w-1).' days')),         //获取星期一是几号
-                'end' => date('Y-m-d',strtotime($month.'-'.$i.' +'.(7-$w).' days'))          //获取星期天是几号
+                'start' => date('Y-m-d',strtotime($month.'-'.$i.' -'.($w - 1).' days')),         //获取星期一是几号
+                'end' => date('Y-m-d',strtotime($month.'-'.$i.' +'.(7 - $w).' days'))          //获取星期天是几号
             ];
         }
         return $weekinfo;

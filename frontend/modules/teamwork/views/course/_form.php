@@ -182,7 +182,7 @@ use yii\widgets\ActiveForm;
             echo Html::beginTag('div', ['class' => 'col-sm-4']);
                 echo DateControl::widget([
                     'name' => 'CourseManage[plan_start_time]',
-                    'value' => $model->isNewRecord ? date('Y-m-d H:i', time()) : $model->plan_start_time, 
+                    'value' => $model->isNewRecord ? date('Y-m-d H:i', strtotime('+1 days')) : $model->plan_start_time, 
                     'type'=> DateControl::FORMAT_DATETIME,
                     'displayFormat' => 'yyyy-MM-dd H:i',
                     'saveFormat' => 'yyyy-MM-dd H:i',
@@ -210,7 +210,7 @@ use yii\widgets\ActiveForm;
             echo Html::beginTag('div', ['class' => 'col-sm-4']);
                 echo DateControl::widget([
                     'name' => 'CourseManage[plan_end_time]',
-                    'value' => $model->isNewRecord ? date('Y-m-d H:i', time()) : $model->plan_end_time, 
+                    'value' => $model->isNewRecord ? date('Y-m-d H:i', strtotime('+3 days')) : $model->plan_end_time, 
                     'type'=> DateControl::FORMAT_DATETIME,
                     'displayFormat' => 'yyyy-MM-dd H:i',
                     'saveFormat' => 'yyyy-MM-dd H:i',
