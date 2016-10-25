@@ -155,7 +155,8 @@ use yii\widgets\ActiveForm;
     ?>
     
     <?= $form->field($model, 'weekly_editors_people')->widget(Select2::classname(), [
-        'data' => is_array($team) ? [] : $weeklyEditors, 'options' => ['placeholder' => '请选择...']
+        'data' => is_array($team) ? [] : $weeklyEditors, 
+        'options' => ['placeholder' => '请选择...']
     ]) ?> 
     
     <?= $form->field($model, 'course_ops')->widget(Select2::classname(), [

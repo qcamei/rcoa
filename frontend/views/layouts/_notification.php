@@ -17,9 +17,7 @@ use yii\web\View;
 $jobManager = Yii::$app->get('jobManager');
 $notification = $jobManager->getUnReadyNotification(Yii::$app->user->id);
 
-$jobId = ArrayHelper::getColumn($notification, 'job_id');
-$systemId = ArrayHelper::getColumn($system, 'id');
-$unReadyNotice = $jobManager->getHaveReadNotice($jobId, ['system_id' => $systemId]);
+$unReadyNotice = $jobManager->getNotificationInfo(ArrayHelper::getColumn($notification, 'job_id'), ArrayHelper::getColumn($system, 'id'));
 $notice = ArrayHelper::getColumn($unReadyNotice, 'system_id');
 ?>
 <span class="badge badge-warning"><?php echo count($notification)?></span>
@@ -27,8 +25,9 @@ $notice = ArrayHelper::getColumn($unReadyNotice, 'system_id');
     <li>
         <p id="text">你总有<?php echo count($notification)?>个通知</p>
     </li>
-    <?php 
-        echo '<div class="job-notice-list">';
+    
+        <div class="job-notice-list">
+        <?php 
             foreach ($system as $value) {
                 if(!in_array($value->id, $notice)) continue;
                 echo '<li>';
@@ -41,11 +40,11 @@ $notice = ArrayHelper::getColumn($unReadyNotice, 'system_id');
                     echo '</li>';
                 }
             }
-        echo '</div>';
-        echo '<li>';
-        echo Html::a('全部清除', '', ['id'=>'allRemove','style'=>'text-align: center']);
-        echo '</li>';
-    ?>
+        ?>
+        </div>
+    <li>
+        <?= Html::a('全部清除', '', ['id'=>'allRemove','style'=>'text-align: center']) ?>
+    </li>
 </ul>
 
 <?php  

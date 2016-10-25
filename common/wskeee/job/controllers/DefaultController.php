@@ -43,7 +43,8 @@ class DefaultController extends Controller
         Yii::$app->getResponse()->format = 'json';
         $user = Yii::$app->user->id;
         $post = Yii::$app->getRequest()->post();
-        $systemId = $post['systemId'];
+        
+        $systemId = ArrayHelper::getValue($post, 'systemId');
         $this->getJobNotificatio($user);
         return[
             'result' => 0,      //是否请求正常 0:为不正常请求

@@ -9,6 +9,7 @@ use wskeee\rbac\RbacName;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
@@ -53,25 +54,36 @@ class SummaryController extends Controller
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
         $course = $this->findCourseModel($course_id);
+        $start = 0;
         $errors = [];
         $weekinfo = [];
         $currentTime = date('Y-m-d',  time());
         $startTime = empty($course->real_start_time) ? $currentTime : date('Y-m-d', strtotime($course->real_start_time));
+        $weeks = $twTool->getWeekInfo($startTime, $date);       //获取1月每周的星期1和星期天日期
+        $weekStart = reset($weeks);
+        $weekEnd = end($weeks);
+        $dateArr = ['start' => $weekStart['start'], 'end' => $weekEnd['end']];
+        $weeklyDate = ArrayHelper::getColumn($twTool->getWeeklyInfo($course->id, $dateArr), 'create_time');
         try
         {
-            foreach ($twTool->getWeekInfo($startTime, $date) as $value){
-                $result = $twTool->getWeeklyInfo($course_id, $value['start'], $value['end']);
+            foreach ($weeks as &$week) {
+                for ($i = $start; $i < count($weeklyDate); $i++) {
+                    if ($week['start'] <= $weeklyDate[$i] && $week['end'] >= $weeklyDate[$i]) {
+                        $week['has'] = true;
+                        //$start = $i + 1;
+                        break;
+                    } else {
+                        $week['has'] = false;
+                    }
+                }
                 $weekinfo[] = [
-                    'date' => date('m/d', strtotime($value['start'])).'～'.date('m/d', strtotime($value['end'])),
-                    'class' => !empty($result) ? 'btn btn-info weekinfo' : ($currentTime > $value['end'] ? 
-                        'btn btn-danger weekinfo disabled' : ($currentTime >= $value['start'] && $currentTime <= $value['end'] ? 
-                        'btn btn-info weekinfo disabled' : 'btn btn-default weekinfo disabled')),
-                    'icon' => $currentTime < $value['start'] ?  'not-to' : 
-                                (empty($result) && $currentTime > $value['end'] ? 'leak-write' : 
-                                    ($currentTime >= $value['start'] && $currentTime <= $value['end'] ? 
-                                         'this-week' : 'already-write')),
-                    'start' => $value['start'],
-                    'end' => $value['end']
+                    'date' => date('m/d', strtotime($week['start'])) . '～' . date('m/d', strtotime($week['end'])),
+                    'class' => $currentTime < $week['start'] ? 'btn btn-default weekinfo disabled' : 
+                       ($week['has'] == false && $currentTime > $week['end'] ? 'btn btn-danger weekinfo disabled' : 
+                       ($currentTime >= $week['start'] && $currentTime <= $week['end'] ? 'btn btn-info weekinfo active' : 'btn btn-info weekinfo')),
+                    'icon' => $currentTime < $week['start'] ? 'not-to' : ($week['has'] == false && $currentTime > $week['end'] ? 'leak-write' :
+                                    ($currentTime >= $week['start'] && $currentTime <= $week['end'] ? 'this-week' : 'already-write')),
+                    'week' => $week
                 ];
             }
         } catch (Exception $ex) {
@@ -89,23 +101,26 @@ class SummaryController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($course_id, $start, $end)
+    public function actionView($course_id, $date)
     {
         Yii::$app->getResponse()->format = 'json';
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
         $get = Yii::$app->request->queryParams;
+        $weeks = explode('/', $date);
+        $week = [
+            'start' => $weeks[0],
+            'end' => $weeks[1]
+        ];
         $errors = [];
         $weeklyInfo = [];
         try
         {
-            $weeklyInfo = $twTool->getWeeklyInfo($course_id, $start, $end);
+            $weeklyInfo = $twTool->getWeeklyInfo($course_id, $week, false);
             $weeklyInfo = [
-                'course_id' => $weeklyInfo->course_id,
                 'create_time' => $weeklyInfo->create_time,
                 'content' => $weeklyInfo->content,
-                'create_by' => $weeklyInfo->weeklyCreateBy->weeklyEditorsPeople->user->nickname.
-                        '('.$weeklyInfo->weeklyCreateBy->weeklyEditorsPeople->position->name.')',
+                'create_by' => $weeklyInfo->weeklyCreateBy->weeklyEditorsPeople->user->nickname,
                 'created_at' => date('Y-m-d H:i', $weeklyInfo->created_at)
             ];
         } catch (Exception $ex) {

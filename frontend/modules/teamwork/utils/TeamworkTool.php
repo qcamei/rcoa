@@ -13,11 +13,13 @@ use common\models\teamwork\CourseSummary;
 use common\models\teamwork\ItemManage;
 use common\models\teamwork\Link;
 use common\models\teamwork\Phase;
+use frontend\modules\multimedia\utils\MultimediaTool;
 use wskeee\framework\models\Item;
 use wskeee\framework\models\ItemType;
 use Yii;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
 
@@ -44,11 +46,11 @@ class TeamworkTool{
         $now_end = date('Y-m-d',strtotime("$now_start +6 days"));  //本周结束日期
         //$last_start=date('Y-m-d',strtotime("$now_start - 7 days"));  //上周开始日期
         //$last_end=date('Y-m-d',strtotime("$now_start - 1 days"));  //上周结束日期
+        
         $week = [
             'start' => $now_start,
-            'end' => $now_end,
+            'end' => $now_end
         ];
-        
         return  $week;
     }
     
@@ -69,9 +71,9 @@ class TeamworkTool{
              date('N',strtotime($month.'-'.$start_date)) : date('N',strtotime($date)); 
         for ($i = $start_date; $i < $end_date; $i = $i + 7) { 
             $weekinfo[] = [
-                'start' => date('Y-m-d',strtotime($month.'-'.$i.' -'.($w - 1).' days')),         //获取星期一是几号
-                'end' => date('Y-m-d',strtotime($month.'-'.$i.' +'.(7 - $w).' days'))          //获取星期天是几号
-            ];
+                        'start' => date('Y-m-d',strtotime($month.'-'.$i.' -'.($w - 1).' days')),    //获取星期一是几号
+                        'end' => date('Y-m-d',strtotime($month.'-'.$i.' +'.(7 - $w).' days'))         //获取星期天是几号
+                    ];    
         }
         return $weekinfo;
     }
@@ -91,29 +93,31 @@ class TeamworkTool{
         
         $lastWeek = [
             'start' => $lastWeekStart,
-            'end' => $lastWeekEnd,
+            'end' =>  $lastWeekEnd
         ];
-        
         return  $lastWeek;
     }
 
     /**
      * 获取周报信息
-     * @param type $course_id   课程ID
-     * @param type $weekStart   一周开始日期
-     * @param type $weekEnd   一周结束日期
+     * @param integer | array $courseId         课程ID
+     * @param array $week                       一周
+     * @param boolean $isAll                    ture为返回全部 
      * @return type
      */
-    public function getWeeklyInfo($course_id, $weekStart, $weekEnd) 
+    public function getWeeklyInfo($courseId, $week, $isAll = true) 
     {
         $result = CourseSummary::find()
-                ->where('create_time >="'. $weekStart.'"')
-                ->andWhere('create_time <="'. $weekEnd.'"')
-                ->andWhere(['course_id' => $course_id])
-                ->one();
-        return $result;
+                  ->where(['course_id' => $courseId])
+                  ->andFilterWhere(['>=', 'create_time', ArrayHelper::getValue($week, 'start')])
+                  ->andFilterWhere(['<=', 'create_time', ArrayHelper::getValue($week, 'end')]);
+        if($isAll)
+            return $result->all();
+        else
+            return $result->one();
+        
     }
-
+    
     /**
      * 获取创建者所在团队
      * @param type $uId         用户ID
@@ -141,13 +145,15 @@ class TeamworkTool{
     public function getIsAuthority($keyName, $value)
     {
         //查出成员表里面所有队长
-        $teamMember = TeamMember::findAll(['u_id' => Yii::$app->user->id]);
+        $teamMember = TeamMember::find()
+                    ->where(['u_id' => Yii::$app->user->id])
+                    //->with('user')
+                    ->all();
         if(!empty($teamMember) || isset($teamMember)){
             $authority = ArrayHelper::getColumn($teamMember, $keyName);
             if(in_array($value, $authority))
                return true;
         }
-        
         return false;
     }
     
@@ -183,7 +189,7 @@ class TeamworkTool{
     }
     
     /**
-     * 获取课程时长总和
+     * 获取课程时长总和 AND 个数
      * @param type $condition
      * @return type
      */
@@ -191,15 +197,9 @@ class TeamworkTool{
     {
         $lessionTimes = CourseManage::find()
                         ->where($condition)
-                        ->with('project')
                         ->all();
-           
-        $lessionTime = [];
-        foreach ($lessionTimes as $value)
-            /* @var $value  CourseManage */
-            $lessionTime[] = $value->lession_time;
+        return ArrayHelper::getColumn($lessionTimes, 'lession_time');
         
-        return array_sum($lessionTime);
     }
     
     /**
@@ -474,11 +474,11 @@ class TeamworkTool{
                 )
                 ->groupBy(['Course.id', 'Fw_item.id'])
                 ->with('course')
-                ->with('courseLinks')
-                ->with('coursePhases')
-                ->with('producers')
-                ->with('speakerTeacher')
-                ->with('project')
+                //->with('courseLinks')
+                //->with('coursePhases')
+                //->with('producers')
+                //->with('speakerTeacher')
+                //->with('project')
                 ->with('project.item')
                 ->with('project.itemChild')
                 ->with('project.itemType')
@@ -524,11 +524,11 @@ class TeamworkTool{
                         ->orFilterWhere(['like', 'Fw_item.name', $keyword])
                         ->groupBy('Item.id')
                         ->with('courseManages')
-                        ->with('createBy')
+                        //->with('createBy')
                         ->with('itemChild')
                         ->with('item')
                         ->with('itemType')
-                        ->with('teamMember')
+                        //->with('teamMember')
                         ->all();
         
         return $itemProgress;

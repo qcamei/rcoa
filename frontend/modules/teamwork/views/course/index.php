@@ -5,14 +5,21 @@ use frontend\modules\teamwork\TwAsset;
 use frontend\modules\teamwork\utils\TeamworkTool;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
 
 /* @var $this View */
+/* @var $twTool TeamworkTool */
 /* @var $dataProvider ActiveDataProvider */
 
 $this->title = Yii::t('rcoa/teamwork', 'Course Manages');
 $this->params['breadcrumbs'][] = $this->title;
+
+$courseIds = ArrayHelper::getColumn($dataProvider->allModels, 'id');
+$weekly = ArrayHelper::map($twTool->getWeeklyInfo($courseIds, $twTool->getWeek(date('Y-m-d', time()))), 'course_id', 'create_time');
+foreach ($dataProvider->allModels as $model)
+    $model->isExistWeekly = isset($weekly[$model->id]);
 ?>
 
 <div class="container course-manage-index item-manage">
@@ -160,14 +167,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 [
                     'label' => Yii::t('rcoa/teamwork', 'Weekly'),
                     'format' => 'raw',
-                    'value' => function($model){
-                       /* @var $model CourseManage */
-                       /* @var $twTool TeamworkTool */
-                       $twTool = TeamworkTool::getInstance();
-                       $week = $twTool->getWeek(date('Y-m-d', time()));
-                       $result = $twTool->getWeeklyInfo($model->id, $week['start'], $week['end']);
-                       return empty($result) ? '' : 
-                              Html::img(['/filedata/teamwork/image/already_write_weekly.png']);
+                    'value' => function ($model){
+                        return $model->isExistWeekly ? Html::img(['/filedata/teamwork/image/already_write_weekly.png']) : '';
                     },
                     'headerOptions'=>[
                         'class'=>[

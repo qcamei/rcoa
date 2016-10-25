@@ -9,6 +9,7 @@ use common\models\team\TeamMember;
 use common\models\teamwork\CourseAnnex;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\CourseProducer;
+use common\models\teamwork\ItemManage;
 use frontend\modules\teamwork\utils\TeamworkTool;
 use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\Item;
@@ -16,7 +17,6 @@ use wskeee\framework\models\ItemType;
 use wskeee\rbac\RbacName;
 use Yii;
 use yii\data\ArrayDataProvider;
-use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -65,18 +65,17 @@ class CourseController extends Controller
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
         $dataProvider = new ArrayDataProvider([
-            'allModels' => $twTool->getCourseProgressAll($project_id, $status, $team_id, $item_type_id, $item_id, $item_child_id, $course_id, $keyword, $time),
+            'allModels' => $twTool->getCourseProgressAll($project_id, $status, $team_id, 
+                            $item_type_id, $item_id, $item_child_id, $course_id, $keyword, $time),
         ]);
-        $courseId = ArrayHelper::getColumn($dataProvider->allModels, 'id');
-        $week = $twTool->getWeek(date('Y-m-d', time()));
         
         return $this->render('index', [
+            'twTool' => $twTool,
             'dataProvider' => $dataProvider,
-            'weeklyInfo' => $twTool->getWeeklyInfo($courseId, $week['start'], $week['end']),
             'itemType' => $this->getItemType(),
             'items' => $this->getCollegesForSelect(),
-            'itemChild' => [],
-            'course' => [],
+            'itemChild' => empty($mark) ? [] : $this->getChildren($item_id),
+            'course' => empty($mark) ? [] : $this->getChildren($item_child_id),
             'team' => $this->getTeam(),
             //搜索默认字段值
             'itemTypeId' => $item_type_id,
@@ -99,16 +98,12 @@ class CourseController extends Controller
     {
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
-        $allModels = $this->findItemModel($project_id);
-        foreach ($allModels as $value)
-            $model = $this->findModel($value->id);
-        
+        $model = $this->findItemModel($project_id);
+       
         return $this->render('list', [
-            'allModels' => $allModels,
+            'model' => $model,
             'twTool' => $twTool,
-            'model' => empty($allModels) ? new CourseManage() : $model,
             'lessionTime' => $twTool->getCourseLessionTimesSum(['project_id' => $project_id]),
-            'project_id' => $project_id,
         ]);
     }
 
@@ -123,16 +118,16 @@ class CourseController extends Controller
         $twTool = TeamworkTool::getInstance();
         /* @var $model CourseManage */
         $model = $twTool->getCourseProgressOne($id);
-        $week = $twTool->getWeek(date('Y-m-d', time()));
+        $weekly = $twTool->getWeeklyInfo($id, $twTool->getWeek(date('Y-m-d', time())));
         
         return $this->render('view', [
             'model' => $model,
             'twTool' => $twTool,
             'team' => $this->getTeam(),
             'coursePrincipal' => $this->getTeamMemberList(),
-            'producer' => $this->getAssignProducers($id),
+            'producers' => $this->getAssignProducers($id),
             'weeklyMonth' => $this->getWeeklyMonth($model), //周报月份列表
-            'weeklyInfoResult' => $twTool->getWeeklyInfo($id, $week['start'], $week['end']),
+            'weeklyInfoResult' => !empty($weekly) ? true : false,
             'annex' => $this->getCourseAnnex($model->id),
         ]);
     }
@@ -208,9 +203,9 @@ class CourseController extends Controller
                 'courses' => ArrayHelper::merge([$model->course_id => $model->course->name], $courses),
                 'teachers' => $this->getExpert(),
                 'team' => $twTool->getHotelTeam(\Yii::$app->user->id),
-                'weeklyEditors' => $this->getAssignWeeklyEditors($model->id),
+                'weeklyEditors' => ArrayHelper::map($this->getAssignProducers($model->id), 'producer', 'producerOne.user.nickname'),
                 'producerList' => $this->getTeamMemberList(),
-                'producer' => $this->getAssignProducers($model->id),
+                'producer' => ArrayHelper::map($this->getAssignProducers($model->id), 'producer', 'producerOne.user.nickname'),
                 'annex' => $this->getCourseAnnex($model->id),
             ]);
         }
@@ -368,7 +363,7 @@ class CourseController extends Controller
      */
     protected function findItemModel($project_id)
     {
-        if (($model = CourseManage::findAll(['project_id' => $project_id])) !== null) {
+        if (($model = ItemManage::findOne(['id' => $project_id])) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
@@ -381,7 +376,7 @@ class CourseController extends Controller
      */
     public function getItemType()
     {
-        $itemType = ItemType::find()->with('itemManages')->all();
+        $itemType = ItemType::find()->all();
         return ArrayHelper::map($itemType, 'id', 'name');
     }
     
@@ -397,18 +392,29 @@ class CourseController extends Controller
     }
     
     /**
-     * 获取课程
+     * 获取专业/工种 or 课程
+     * @param type $itemId
+     * @return type
+     */
+    protected function getChildren($itemId)
+    {
+        /* @var $fwManager FrameworkManager */
+        $fwManager = Yii::$app->get('fwManager');
+        return ArrayHelper::map($fwManager->getChildren($itemId), 'id', 'name');
+    }
+    
+    /**
+     * 获取过滤的课程
      * @param type $model
      * @return type
      */
     public function getCourses($projectId, $itemChildId)
     {
-        $existedCourses = CourseManage::find()->where(['project_id' => $projectId])
-                ->with('project')->with('course')->all();
+        $existedCourses = CourseManage::find()->where(['project_id' => $projectId])->all();
         $courses = Item::find()
                 ->where(['parent_id' => $itemChildId])
                 ->andFilterWhere(['NOT IN', 'id', ArrayHelper::getColumn($existedCourses, 'course_id')])
-                ->with('projects')
+                //->with('projects')
                 ->all();
         return ArrayHelper::map($courses, 'id', 'name');
     }
@@ -425,17 +431,13 @@ class CourseController extends Controller
     
     /**
      * 获取所有团队
-     * @return type
+     * @return Team $team
      */
     public function getTeam()
     {
         /* @var $team Team */
-        $team = Team::find()
-                ->with('teamMembers')
-                ->with('us')
-                ->with('courseManages')
-                ->with('itemManages')
-                ->all();
+        $team = Team::find()->orderBy('index asc')->all();
+        
         return ArrayHelper::map($team, 'id', 'name');
     }
 
@@ -454,17 +456,9 @@ class CourseController extends Controller
                     ->orderBy('Team.index asc, Position.level asc')
                     ->with('user')
                     ->with('team')
-                    ->with('position')
                     ->all();
-       
-        $producers = [];
-        foreach ($teamMember as $element) {
-            $key = ArrayHelper::getValue($element, 'id');
-            $value = ArrayHelper::getValue($element, 'user.nickname');
-            $producers[ArrayHelper::getValue($element, 'team.name')][$key] = $value;
-        }
         
-        return $producers;
+        return ArrayHelper::map($teamMember, 'id', 'user.nickname', 'team.name');
     }
     
     /**
@@ -484,36 +478,8 @@ class CourseController extends Controller
                         ->with('user')
                         ->with('position')
                         ->all();
-        $sameTeamMember = [];
-        foreach ($sameTeamMembers as $element) {
-            $key = ArrayHelper::getValue($element, 'id');
-            $value = ArrayHelper::getValue($element, 'user.nickname');
-            $sameTeamMember[$key] = $value;
-        }
-        return $sameTeamMember;
-    }
-    
-    /**
-     * 获取周报编辑人
-     * @param type $courseId
-     */
-    public function getAssignWeeklyEditors($courseId)
-    {
-        $assignWeeklyEditors = CourseProducer::find()
-                            ->from(['Weeklyeditors' => CourseProducer::tableName()])
-                            ->leftJoin(['Member' => TeamMember::tableName()], 'Member.u_id = Weeklyeditors.producer')
-                            ->leftJoin(['Position' => Position::tableName()], 'Position.id = Member.position_id')
-                            ->where(['Weeklyeditors.course_id' => $courseId])
-                            ->orderBy('Position.level asc')
-                            ->with('producerOne.user')
-                            ->all();
-        $weeklyEditors = [];
-        foreach ($assignWeeklyEditors as $element) {
-            $key = ArrayHelper::getValue($element, 'producer');
-            $value = ArrayHelper::getValue($element, 'producerOne.user.nickname');
-            $weeklyEditors[$key] = $value;
-        }
-        return $weeklyEditors;
+        
+        return ArrayHelper::map($sameTeamMembers, 'id', 'user.nickname');
     }
 
     /**
@@ -532,19 +498,8 @@ class CourseController extends Controller
                            ->with('producerOne')
                            ->with('producerOne.user')
                            ->all();
-        $producers = [];
-        foreach ($assignProducers as $element) {
-            $key = ArrayHelper::getValue($element, 'producer');
-            $value = ArrayHelper::getValue($element, 'producerOne.is_leader') == TeamMember::TEAMLEADER ? 
-                    '<span class="team-leader developer">'.
-                        ArrayHelper::getValue($element, 'producerOne.user.nickname').
-                     '</span>' : 
-                    '<span class="developer">'.
-                        ArrayHelper::getValue($element, 'producerOne.user.nickname'). 
-                   '</span>';
-            $producers[$key] = $value;
-        }
-        return $producers;
+        
+        return $assignProducers;
     }
     
     /**

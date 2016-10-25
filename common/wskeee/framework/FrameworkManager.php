@@ -22,7 +22,7 @@ use yii\helpers\ArrayHelper;
 class FrameworkManager extends Component 
 {
     /*
-     * @var  $time_out 超时时长
+     * 超时时长
      */
     const TIME_OUT = 10*60;
     
@@ -217,18 +217,6 @@ class FrameworkManager extends Component
     }
     
     /**
-     * 获取rms.rms_project_sys_data项目
-     * @return type
-     */
-    private function getRmsDb(){
-        $rmsdb = Item::find()->all();
-        /*$rmsdb = Yii::$app->db
-                ->createCommand('select PROJECT_SYS_DATA_ID as id, DATA_NAME as `name`, PARENT_ID as parent_id, DATA_TYPE as `level`, CREATE_DATE as created_at from rms_project_sys_data')
-               ->queryAll();*/
-        return $rmsdb;
-    }
-   
-    /**
      * 取消缓存
      */
     public function invalidateCache() 
@@ -258,6 +246,7 @@ class FrameworkManager extends Component
             return;
         }
         
+        
         $this->items = [];
         $datas = $this->getRmsDb();
         foreach ($datas as $item)
@@ -271,40 +260,6 @@ class FrameworkManager extends Component
         }
         $this->cache->set($this->cacheKey, [$this->items,$this->childs,  time()]);
         
-        return;
-        
-        /** json 请求时执行 */
-        Yii::trace('【Curl】请求最新项目数据！url='.$this->url, 'framework');
-        $curl = new Curl();
-        $response = $curl->setOption(CURLOPT_RETURNTRANSFER,true)->get($this->url);
-       
-        switch ($curl->responseCode) {
- 
-            case 'timeout':
-                Yii::error("加载 framework 数据失败！【timeout】");
-                break;
- 
-            case 200:
-                $this->items = [];
-                $datas = json_decode($response,true);
-                
-                foreach ($datas["data"] as $item)
-                    $this->items[$item["id"]] = $this->populateItem($item);
-                    
-                $this->childs = [];
-                foreach($this->items as $id => $item)
-                {
-                    if($item->parent_id !== null)
-                        $this->childs[$item->parent_id][] = $item;
-                }
-                $this->cache->set($this->cacheKey, [$this->items,$this->childs,  time()]);
-                break;
- 
-            case 404:
-                Yii::error("加载 framework 数据失败！【404】");
-                throw new UserException("加载 framework 数据失败！【404】");
-                break;
-        }
     }
     
     /**

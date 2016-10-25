@@ -15,10 +15,8 @@ use yii\helpers\Html;
 /* @var $jobManager JobManager */
 $jobManager = Yii::$app->get('jobManager');
 $notification = $jobManager->getNotification(Yii::$app->user->id);
-//$system = System::find()->with('jobs')->all();
-$jobId = ArrayHelper::getColumn($notification, 'job_id');
-$systemId = ArrayHelper::getColumn($system, 'id');
-$haveReadNotice = $jobManager->getHaveReadNotice($jobId, ['system_id' => $systemId]);
+
+$haveReadNotice = $jobManager->getNotificationInfo(ArrayHelper::getColumn($notification, 'job_id'), ArrayHelper::getColumn($system, 'id'));
 $notice = ArrayHelper::getColumn($haveReadNotice, 'system_id');
 ?>
 <span class="badge badge-important"><?php echo count($notification)?></span>
