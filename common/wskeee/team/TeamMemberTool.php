@@ -93,7 +93,7 @@ class TeamMemberTool extends Component {
     
     /**
      * 获取团队数据
-     * @param int $team_id  团队id
+     * @param integer|array $team_id  团队id
      * @return  array   [
      *  int     id,     团队id          <br/>
      *  string  name,   团队名称        <br/>
@@ -104,12 +104,19 @@ class TeamMemberTool extends Component {
      * ]
      */
     public function getTeamById($team_id){
-        return $this->teams[$team_id];
+        if(is_array($team_id))
+        {
+            foreach($team_id as $id){
+                $results [] = $this->teams[$id];
+            }
+            return $results;
+        }else
+            return $this->teams[$team_id];
     }
     
     /**
      * 获取团队成员数据
-     * @param type $teamMemberId        团队成员id
+     * @param integer|array $teamMemberId        团队成员id
      * @return array [
      *  int     id,             团队成员id                  <br/>
      *  int     team_id,        团队id                      <br/>
@@ -122,7 +129,14 @@ class TeamMemberTool extends Component {
      * @see getUserTeamMembers  获取用户所有团队成员
      */
     public function getTeammemberById($teamMemberId){
-        return $this->teamMembers[$teamMemberId];
+        if(is_array($teamMemberId))
+        {
+            foreach($teamMemberId as $id){
+                $results [] = $this->teamMembers[$id];
+            }
+            return $results;
+        }else
+            return $this->teamMembers[$teamMemberId];
     }
     
     /**

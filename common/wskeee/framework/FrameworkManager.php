@@ -1,13 +1,11 @@
 <?php
 namespace wskeee\framework;
 
-use linslin\yii2\curl\Curl;
 use wskeee\framework\models\FWItem;
 use wskeee\framework\models\Item;
 use wskeee\framework\models\ItemType;
 use Yii;
 use yii\base\Component;
-use yii\base\UserException;
 use yii\caching\Cache;
 use yii\di\Instance;
 use yii\helpers\ArrayHelper;
@@ -248,7 +246,7 @@ class FrameworkManager extends Component
         
         
         $this->items = [];
-        $datas = $this->getRmsDb();
+        $datas = Item::find()->all();
         foreach ($datas as $item)
             $this->items[$item["id"]] = $this->populateItem($item);
 
