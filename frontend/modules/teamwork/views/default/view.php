@@ -53,7 +53,7 @@ $this->params['breadcrumbs'] = $this->title;
         'columns' => [
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => Yii::t('rcoa/teamwork', 'Course ID').' ('.count($model->courseManages).')',
+                'label' => Yii::t('rcoa/teamwork', 'Course ID').' ('.count($lessionTime).')',
                 'format' => 'raw',
                 'value'=> function($model){
                     /* @var $model CourseManage */
@@ -89,7 +89,7 @@ $this->params['breadcrumbs'] = $this->title;
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
                 //array_sum()返回数组中所有值的和
-                'label' => Yii::t('rcoa/teamwork', 'Lession Time').'('.$lessionTime.')', 
+                'label' => Yii::t('rcoa/teamwork', 'Lession Time').'('.array_sum($lessionTime).')', 
                 'value'=> function($model){
                     /* @var $model CourseManage */
                     return $model->lession_time;
@@ -131,49 +131,25 @@ $this->params['breadcrumbs'] = $this->title;
         <?= Html::a(Yii::t('rcoa', 'Back'), ['list'], ['class' => 'btn btn-default']) ?>
         <?php
             /**
-             * 编辑 按钮显示必须满足以下条件：
-             * 1、必须是状态为【在建】
-             * 2、必须是【队长】 or 【项目管理员】
+             * 下列按钮显示必须满足以下条件：
+             * 1、必须拥有【队长】权限
              */
-            if(/*$model->getIsNormal() && */($twTool->getIsAuthority('is_leader', 'Y') || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
+            if($twTool->getIsAuthority('is_leader', 'Y') || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)){
+                /**
+                 * 编辑 按钮显示必须满足以下条件：
+                 * 1、必须是【项目管理员】
+                 */
                 echo Html::a('编辑', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']).' ';
+                /**
+                 * 配置 按钮
+                 */
+                echo Html::a('配置', ['/teamwork/course/list', 'project_id' => $model->id], ['class' => 'btn btn-success']).' ';
+            }
+            
             /**
-             * 配置 按钮显示必须满足以下条件：
-             * 1、必须是状态为【在建】
-             * 2、必须是【队长】 or 【项目管理员】
+             * 课程 按钮
              */
-            if(/*$model->getIsNormal() && */($twTool->getIsAuthority('is_leader', 'Y') /*|| Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)*/))    
-                echo Html::a('配置', ['/teamwork/course/list', 'project_id' => $model->id], ['class' => 'btn btn-primary']).' ';
-            /**
-             * 课程 按钮显示必须满足以下条件：
-             * 1、必须是状态为【在建】
-             */
-            /*$if(model->getIsNormal())*/
-                echo Html::a('课程', ['/teamwork/course/index', 'project_id' => $model->id], ['class' => 'btn btn-primary']).' ';
-            /**
-             * 完成 按钮显示必须满足以下条件：
-             * 1、必须是状态为【在建】
-             * 2、必须是【队长】 or 【项目管理员】
-             
-            if($model->getIsNormal() && ($twTool->getIsAuthority('is_leader', 'Y') || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
-                echo Html::a('完成', ['carry-out', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
-            */
-            /**
-             * 暂停 按钮显示必须满足以下条件：
-             * 1、必须是状态为【在建】
-             * 2、必须是【队长】 or 【项目管理员】
-             
-            if($model->getIsNormal() && ($twTool->getIsAuthority('is_leader', 'Y') || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
-                echo Html::a('暂停', ['time-out', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
-             */
-            /**
-             * 恢复 按钮显示必须满足以下条件：
-             * 1、必须是状态为【在建】
-             * 2、必去是【队长】 or 【项目管理员】
-             
-            if($model->getIsTimeOut() && ($twTool->getIsAuthority('is_leader', 'Y') || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
-                echo Html::a('恢复', ['normal', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
-             */
+            echo Html::a('课程', ['/teamwork/course/index', 'project_id' => $model->id], ['class' => 'btn btn-primary']).' ';
         ?>
     </div>
 </div>

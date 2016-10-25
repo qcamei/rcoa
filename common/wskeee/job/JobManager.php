@@ -274,7 +274,6 @@ class JobManager {
     {
         $notification = JobNotification::find()
                         ->where(['u_id'=>$user,'status'=> JobNotification::STATUS_INIT])
-                        ->with('jobs')
                         ->all();
         return $notification;
     }
@@ -287,16 +286,29 @@ class JobManager {
     {
         $notification = JobNotification::find()
                         ->where(['u_id'=>$user,'status'=> JobNotification::STATUS_NORMAL])
-                        ->with('jobs')
                         ->all();
         return $notification;
+    }
+    
+    /**
+     * 获取通知内容信息
+     * @param type $jobId       通知id
+     * @param type $systemId    系统id
+     */
+    public function getNotificationInfo($jobId, $systemId)
+    {
+        $haveReadNotice = Job::find()
+            ->filterWhere(['id' => $jobId])
+            ->andFilterWhere(['system_id' => $systemId])
+            ->all();
+        return $haveReadNotice;
     }
     
     /**
      * 获取未读通知内容
      * @param type $jobId       通知id
      * @param type $systemId    系统id
-     */
+     
     public function getUnReadyNotice($jobId, $systemId)
     {
         $unReadyNotice = Job::find()
@@ -307,20 +319,5 @@ class JobManager {
             ->with('system')
             ->all();
         return $unReadyNotice;
-    }
-
-    /**
-     * 获取已读通知内容
-     * @param type $jobId       通知id
-     * @param type $systemId    系统id
-     */
-    public function getHaveReadNotice($jobId, $systemId)
-    {
-        $haveReadNotice = Job::find()
-            ->where(['id' => $jobId])
-            ->andWhere($systemId)
-            ->with('system')
-            ->all();
-        return $haveReadNotice;
-    }
+    }*/
 }

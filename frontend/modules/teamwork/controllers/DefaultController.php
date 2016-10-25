@@ -55,25 +55,23 @@ class DefaultController extends Controller
     {
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
-        $completedHours = $twTool->getCourseLessionTimesSum(['status' => CourseManage::STATUS_CARRY_OUT]);
-        $undoneHours = $twTool->getCourseLessionTimesSum(['status' => CourseManage::STATUS_NORMAL]);
-        $completedDoor = CourseManage::find()->where(['status' => CourseManage::STATUS_CARRY_OUT])->count();
-        $undoneDoor = CourseManage::find()->where(['status' => CourseManage::STATUS_NORMAL])->count();
-        $scienceFactory = Team::findOne(['type' => 2]);
-        $teamMember = Team::find()
+        $completedHours = array_sum($twTool->getCourseLessionTimesSum(['status' => CourseManage::STATUS_CARRY_OUT]));
+        $undoneHours = array_sum($twTool->getCourseLessionTimesSum(['status' => CourseManage::STATUS_NORMAL]));
+        $completedDoor = count($twTool->getCourseLessionTimesSum(['status' => CourseManage::STATUS_CARRY_OUT]));
+        $undoneDoor = count($twTool->getCourseLessionTimesSum(['status' => CourseManage::STATUS_NORMAL]));
+        $team = Team::find()
                       ->where(['type' => 1])
                       ->andWhere(['!=', 'is_delete', Team::SURE_DELETE])
-                      ->with('courseManages')
+                      ->orderBy('id asc')
                       ->all();
-         
+        
         return $this->render('index',[
             'twTool' => $twTool,
             'completedHours' => $completedHours,
             'undoneHours' => $undoneHours,
             'completedDoor' => $completedDoor,
             'undoneDoor' => $undoneDoor,
-            'scienceFactory' => $scienceFactory,
-            'teamMember' => $teamMember,
+            'team' => $team,
         ]);
     }
     
@@ -83,17 +81,9 @@ class DefaultController extends Controller
      */
     public function actionMember($team_id)
     {
-        $team = Team::findOne(['id' => $team_id]);
-        $teamMember = TeamMember::find()
-                ->where(['team_id' => $team_id])
-                ->andWhere(['!=', 'is_delete', TeamMember::SURE_DELETE])
-                ->with('team')
-                ->orderBy('index asc')
-                ->all();
-       
+       $team = Team::findOne(['id' => $team_id]);
         return $this->render('member', [
             'team' => $team,
-            'teamMember' => $teamMember,
         ]);
     }
     

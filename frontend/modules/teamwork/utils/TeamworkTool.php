@@ -189,7 +189,7 @@ class TeamworkTool{
     }
     
     /**
-     * 获取课程时长总和
+     * 获取课程时长总和 AND 个数
      * @param type $condition
      * @return type
      */
@@ -197,15 +197,9 @@ class TeamworkTool{
     {
         $lessionTimes = CourseManage::find()
                         ->where($condition)
-                        ->with('project')
                         ->all();
-           
-        $lessionTime = [];
-        foreach ($lessionTimes as $value)
-            /* @var $value  CourseManage */
-            $lessionTime[] = $value->lession_time;
+        return ArrayHelper::getColumn($lessionTimes, 'lession_time');
         
-        return array_sum($lessionTime);
     }
     
     /**
@@ -530,11 +524,11 @@ class TeamworkTool{
                         ->orFilterWhere(['like', 'Fw_item.name', $keyword])
                         ->groupBy('Item.id')
                         ->with('courseManages')
-                        ->with('createBy')
+                        //->with('createBy')
                         ->with('itemChild')
                         ->with('item')
                         ->with('itemType')
-                        ->with('teamMember')
+                        //->with('teamMember')
                         ->all();
         
         return $itemProgress;

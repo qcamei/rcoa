@@ -110,7 +110,9 @@ class ItemManage extends ActiveRecord
      */
     public function getCourseManages()
     {
-        return $this->hasMany(CourseManage::className(), ['project_id' => 'id']);
+        return $this->hasMany(CourseManage::className(), ['project_id' => 'id'])
+               ->with('speakerTeacher')
+               ->with('course');
     }
 
     /**

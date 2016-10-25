@@ -9,6 +9,7 @@ use common\models\team\TeamMember;
 use common\models\teamwork\CourseAnnex;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\CourseProducer;
+use common\models\teamwork\ItemManage;
 use frontend\modules\teamwork\utils\TeamworkTool;
 use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\Item;
@@ -16,7 +17,6 @@ use wskeee\framework\models\ItemType;
 use wskeee\rbac\RbacName;
 use Yii;
 use yii\data\ArrayDataProvider;
-use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -98,16 +98,12 @@ class CourseController extends Controller
     {
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
-        $allModels = $this->findItemModel($project_id);
-        foreach ($allModels as $value)
-            $model = $this->findModel($value->id);
-        
+        $model = $this->findItemModel($project_id);
+       
         return $this->render('list', [
-            'allModels' => $allModels,
+            'model' => $model,
             'twTool' => $twTool,
-            'model' => empty($allModels) ? new CourseManage() : $model,
             'lessionTime' => $twTool->getCourseLessionTimesSum(['project_id' => $project_id]),
-            'project_id' => $project_id,
         ]);
     }
 
@@ -367,7 +363,7 @@ class CourseController extends Controller
      */
     protected function findItemModel($project_id)
     {
-        if (($model = CourseManage::findAll(['project_id' => $project_id])) !== null) {
+        if (($model = ItemManage::findOne(['id' => $project_id])) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

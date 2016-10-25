@@ -18,7 +18,6 @@ use yii\widgets\Breadcrumbs;
 $this->title = Yii::t('rcoa/teamwork', 'Item Deploy');
 $this->params['breadcrumbs'][] = $this->title;
 
-!empty($allModels) ? : $model->project_id = $project_id;
 ?>
 
 <div class="title">
@@ -33,11 +32,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'links' => [
                 [
                     'label' => Yii::t('rcoa', 'Detail'),
-                    'url' => ['default/view', 'id' => $model->project_id],
+                    'url' => ['default/view', 'id' => $model->id],
                     'template' => '<li class="course-name">{link}</li>',
                 ],
                 [
-                    'label' => Yii::t('rcoa', 'Deploy').'：'.$model->project->itemChild->name,
+                    'label' => Yii::t('rcoa', 'Deploy').'：'.$model->itemChild->name,
                     'template' => '<li class="course-name active" style="width:50%">{link}</li>',
                 ],
             ]
@@ -48,14 +47,14 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="container item-manage-list has-title item-manage">
     <?= GridView::widget([
         'dataProvider' => new ArrayDataProvider([
-            'allModels' => $allModels,
+            'allModels' => $model->courseManages,
         ]),
         'summary' => false,
         'tableOptions' => ['class' => 'table table-striped table-list'],
         'columns' => [
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => Yii::t('rcoa/teamwork', 'Course ID').' ('.count($model->project->courseManages).')',
+                'label' => Yii::t('rcoa/teamwork', 'Course ID').' ('.count($lessionTime).')',
                 'value'=> function($model){
                     /* @var $model CourseManage */
                     return $model->course->name;
@@ -95,7 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'frontend\modules\teamwork\components\ItemListTd',
-                'label' => Yii::t('rcoa/teamwork', 'Lession Time').'('.$lessionTime.')',
+                'label' => Yii::t('rcoa/teamwork', 'Lession Time').'('.  array_sum($lessionTime).')',
                 'format' => 'raw',
                 'value' => function($model){
                         /* @var $model CourseManage */
@@ -149,14 +148,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="controlbar">
     <div class="container">
-        <?= Html::a(Yii::t('rcoa', 'Back'), ['default/view', 'id' => $model->project_id], ['class' => 'btn btn-default']) ?>
+        <?= Html::a(Yii::t('rcoa', 'Back'), ['default/view', 'id' => $model->id], ['class' => 'btn btn-default']) ?>
         <?php
             /**
              * 添加课程 按钮显示必须满足以下条件：
              * 1、必须是【队长】  or 【项目管理员】
              */
             if($twTool->getIsAuthority('is_leader', 'Y') /*|| Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)*/)
-                echo Html::a(Yii::t('rcoa/teamwork', 'Create Course'), ['create','project_id' => $model->project_id], 
+                echo Html::a(Yii::t('rcoa/teamwork', 'Create Course'), ['create','project_id' => $model->id], 
                 ['class' => 'btn btn-primary']);
         ?>
     </div>

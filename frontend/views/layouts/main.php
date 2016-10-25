@@ -16,7 +16,7 @@ use yii\web\View;
 
 AppAsset::register($this);
 
-$system = System::find()->orderBy('index asc')->with('jobs')->all();
+$system = System::find()->orderBy('index asc')->all();
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -93,7 +93,6 @@ $system = System::find()->orderBy('index asc')->with('jobs')->all();
         AppGlobalVariables::$system_id = $system_id->id;
     }
 
-    
     if(!Yii::$app->user->isGuest){
         echo Html::beginTag('ul', ['class'=>'navbar-nav navbar-right nav']);
         echo '<li class="dropdown">'.Html::a(Html::img('/filedata/image/u23.png',[
