@@ -67,20 +67,24 @@ class SummaryController extends Controller
         try
         {
             foreach ($weeks as &$week) {
-                for ($i = $start; $i < count($weeklyDate); $i++) {
-                    if ($week['start'] <= $weeklyDate[$i] && $week['end'] >= $weeklyDate[$i]) {
-                        $week['has'] = true;
-                        //$start = $i + 1;
-                        break;
-                    } else {
-                        $week['has'] = false;
+                if(!empty($weeklyDate)){
+                    for ($i = $start; $i < count($weeklyDate); $i++) {
+                        if ($week['start'] <= $weeklyDate[$i] && $week['end'] >= $weeklyDate[$i]) {
+                            $week['has'] = true;
+                            //$start = $i + 1;
+                            break;
+                        } else {
+                            $week['has'] = false;
+                        }
                     }
+                }  else {
+                    $week['has'] = false;
                 }
                 $weekinfo[] = [
                     'date' => date('m/d', strtotime($week['start'])) . '～' . date('m/d', strtotime($week['end'])),
                     'class' => $currentTime < $week['start'] ? 'btn btn-default weekinfo disabled' : 
                        ($week['has'] == false && $currentTime > $week['end'] ? 'btn btn-danger weekinfo disabled' : 
-                       ($currentTime >= $week['start'] && $currentTime <= $week['end'] ? 'btn btn-info weekinfo active' : 'btn btn-info weekinfo')),
+                       ($currentTime >= $week['start'] && $currentTime <= $week['end'] ? 'btn btn-info weekinfo' : 'btn btn-info weekinfo')),
                     'icon' => $currentTime < $week['start'] ? 'not-to' : ($week['has'] == false && $currentTime > $week['end'] ? 'leak-write' :
                                     ($currentTime >= $week['start'] && $currentTime <= $week['end'] ? 'this-week' : 'already-write')),
                     'week' => $week
@@ -117,12 +121,21 @@ class SummaryController extends Controller
         try
         {
             $weeklyInfo = $twTool->getWeeklyInfo($course_id, $week, false);
-            $weeklyInfo = [
-                'create_time' => $weeklyInfo->create_time,
-                'content' => $weeklyInfo->content,
-                'create_by' => $weeklyInfo->weeklyCreateBy->weeklyEditorsPeople->user->nickname,
-                'created_at' => date('Y-m-d H:i', $weeklyInfo->created_at)
-            ];
+            if(!empty($weeklyInfo)){
+                $weeklyInfo = [
+                    'create_time' => $weeklyInfo->create_time,
+                    'content' => $weeklyInfo->content,
+                    'create_by' => $weeklyInfo->weeklyCreateBy->weeklyEditorsPeople->user->nickname,
+                    'created_at' => date('Y-m-d H:i', $weeklyInfo->created_at)
+                ];
+            }  else {
+                $weeklyInfo = [
+                    'create_time' => null,
+                    'content' => '无',
+                    'create_by' => '无',
+                    'created_at' => '无'
+                ];
+            }
         } catch (Exception $ex) {
             $errors [] = $ex->getMessage();
         }

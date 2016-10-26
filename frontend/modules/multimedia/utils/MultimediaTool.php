@@ -560,12 +560,10 @@ class MultimediaTool {
         $operate = MultimediaOperation::find()
                    ->where(['task_id' => $taskId])
                    ->orderBy('id desc')
-                   ->with('task')
                    ->one();
         if(!empty($operate) || isset($operate)){
             $isBelong = MultimediaOperationUser::find()
                         ->where(['operation_id' => $operate->id])
-                        ->with('operation')
                         ->all();
             if(!empty($isBelong) || isset($isBelong)){
                 /* @var $value MultimediaOperationUser */

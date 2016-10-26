@@ -29,14 +29,18 @@ $isAuthorization = Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER);    //æ˜
     $weekly = end($weeklys);
     $weeklyDate = ArrayHelper::getColumn($weeklys, 'create_time');
     foreach ($weeks as &$week) {
-        for ($i = $start; $i < count($weeklyDate); $i++) {
-            if ($week['start'] <= $weeklyDate[$i] && $week['end'] >= $weeklyDate[$i]) {
-                $week['has'] = true;
-                //$start = $i + 1;
-                break;
-            }else {
-                $week['has'] = false;
+        if(!empty($weeklyDate)){
+            for ($i = $start; $i < count($weeklyDate); $i++) {
+                if ($week['start'] <= $weeklyDate[$i] && $week['end'] >= $weeklyDate[$i]) {
+                    $week['has'] = true;
+                    //$start = $i + 1;
+                    break;
+                }else {
+                    $week['has'] = false;
+                }
             }
+        }  else {
+            $week['has'] = false;
         }
         $weekinfo[] = [
             'date' => date('m/d', strtotime($week['start'])).'ï½ž'.  date('m/d', strtotime($week['end'])),

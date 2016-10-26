@@ -8,6 +8,7 @@ use yii\base\Component;
 use yii\caching\Cache;
 use yii\db\Query;
 use yii\di\Instance;
+use yii\helpers\ArrayHelper;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -132,7 +133,7 @@ class TeamMemberTool extends Component {
         if(is_array($teamMemberId))
         {
             foreach($teamMemberId as $id){
-                $results [] = $this->teamMembers[$id];
+                $results [] = ArrayHelper::getValue($this->teamMembers, $id);
             }
             return $results;
         }else

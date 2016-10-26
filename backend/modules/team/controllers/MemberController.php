@@ -7,6 +7,7 @@ use common\models\Position;
 use common\models\team\Team;
 use common\models\team\TeamMember;
 use common\models\User;
+use wskeee\team\TeamMemberTool;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
@@ -81,6 +82,8 @@ class MemberController extends Controller
         $id = ArrayHelper::getValue($post, 'id');
         $u_id = ArrayHelper::getValue($post, 'TeamMember.u_id');
         $isLeader = ArrayHelper::getValue($post, 'TeamMember.is_leader');
+        TeamMemberTool::getInstance()->invalidateCache();
+        
         if(isset($id))
             $model = TeamMember::findOne(['team_id' => $team_id, 'u_id' => $u_id]);
         if(!isset($model)){
@@ -117,6 +120,7 @@ class MemberController extends Controller
         $post = Yii::$app->request->post();
         $postTeam = ArrayHelper::getValue($post, 'TeamMember.team_id');
         $isLeader = ArrayHelper::getValue($post, 'TeamMember.is_leader');
+        TeamMemberTool::getInstance()->invalidateCache();
         
         if($model->team_id != $postTeam && $this->getIsExistLeader($postTeam, $isLeader))
                 throw new NotFoundHttpException(Yii::t('rcoa/team', 'Change department already exist team leader'));
@@ -144,6 +148,8 @@ class MemberController extends Controller
     {
         $model = $this->findModel($id);
         $model->is_delete = TeamMember::SURE_DELETE;
+        TeamMemberTool::getInstance()->invalidateCache();
+        
         if($model->update() != false)
             return $this->redirect(['team/view','id' => $model->team_id]);
         else

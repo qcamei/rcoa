@@ -83,6 +83,7 @@ class CoursePhase extends ActiveRecord
     {
         return $this->hasMany(CourseLink::className(), ['course_phase_id' => 'id'])
                 ->where(['is_delete' => 'N']);
+                //->with('coursePhase');
     }
 
     /**

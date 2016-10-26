@@ -76,6 +76,8 @@ class TeamController extends Controller
     public function actionCreate()
     {
         $model = new Team();
+        TeamMemberTool::getInstance()->invalidateCache();
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -95,7 +97,8 @@ class TeamController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        TeamMemberTool::getInstance()->invalidateCache();
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -116,6 +119,8 @@ class TeamController extends Controller
     {
         $model = $this->findModel($id);
         $model->is_delete = Team::SURE_DELETE;
+        TeamMemberTool::getInstance()->invalidateCache();
+        
         if($model->update() != false){
             Yii::$app->db->createCommand()
                 ->update(TeamMember::tableName(), ['is_delete'=> TeamMember::SURE_DELETE], [

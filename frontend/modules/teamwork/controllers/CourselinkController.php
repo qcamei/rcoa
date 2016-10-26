@@ -52,7 +52,11 @@ class CourselinkController extends Controller
     {
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
-        $coursePhase = CoursePhase::findAll(['course_id' => $course_id, 'is_delete' => 'N']);
+        $coursePhase = CoursePhase::find()
+                       ->where(['course_id' => $course_id, 'is_delete' => 'N'])
+                       ->with('course')
+                       ->with('courseLinks')
+                       ->all();
         
         return $this->render('index', [
             'model' => $this->findModel(['course_id' => $course_id]),
@@ -326,7 +330,7 @@ class CourselinkController extends Controller
     {
         $phase = CoursePhase::find()
                 ->where($condition)
-                ->with('course')
+                //->with('course')
                 ->all();
         return ArrayHelper::map($phase, 'id', 'name');
         

@@ -93,7 +93,7 @@ $this->params['breadcrumbs'][] = $this->title;
                  * 5、必须是项目管理员
                  */
                 if(!$model->getIsCarryOut())    
-                    echo Html::a('配置', ['/teamwork/courselink/index', 'course_id' => $model->id], ['class' => 'btn btn-primary']).' ';
+                    echo Html::a('配置', ['/teamwork/courselink/index', 'course_id' => $model->id], ['class' => 'btn btn-success']).' ';
 
                 /**
                  * 完成 按钮显示必须满足以下条件：

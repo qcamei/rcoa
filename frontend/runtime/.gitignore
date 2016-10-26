@@ -1,2 +1,8 @@
 *
 !.gitignore
+!/cache/
+!/debug/
+!/URI/
+!/logs/
+!/HTML/
+!/gii-2.0.9/

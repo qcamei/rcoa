@@ -424,8 +424,9 @@ class CourseController extends Controller
      * @return type
      */
     public function getExpert(){
-        $expert = Expert::find()->with('user')
-                ->all();
+        $expert = Expert::find()
+                  ->with('user')
+                  ->all();
         return ArrayHelper::map($expert, 'u_id','user.nickname');
     }
     
@@ -476,7 +477,7 @@ class CourseController extends Controller
                         ->andWhere(['!=', 'is_delete', TeamMember::SURE_DELETE])
                         ->orderBy('Position.level asc')
                         ->with('user')
-                        ->with('position')
+                        //->with('position')
                         ->all();
         
         return ArrayHelper::map($sameTeamMembers, 'id', 'user.nickname');

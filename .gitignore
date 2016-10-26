@@ -34,3 +34,4 @@ phpunit.phar
 /backend/web/assets/
 /backend/runtime/
 /frontend/runtime/
+/backend/modules/runtime/
