@@ -149,13 +149,13 @@ and open the template in the editor.
     display:inline-table;
     padding: 0px;
 }/* Hides from IE-mac */
-*html .clearfix {
+* html .clearfix {
     height:1%;
 }
 .clearfix {
 	display:block;
 }/* End hide from IE-mac */
-*+html .clearfix {
+* +html .clearfix {
     min-height:1%;
 }
 

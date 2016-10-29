@@ -6,7 +6,6 @@ use kartik\widgets\Select2;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
-
 ?>
 
 <?php $form = ActiveForm::begin([
@@ -212,11 +211,7 @@ use yii\widgets\ActiveForm;
                     'id' => 'select2-status',
                     'value'=> $status,
                     'name' => 'status',
-                    'data' => [
-                        1 => '未完成', 
-                        MultimediaTask::STATUS_COMPLETED => '已完成', 
-                        MultimediaTask::STATUS_CANCEL => '已取消'
-                    ],
+                    'data' => [1 => '未完成', MultimediaTask::STATUS_COMPLETED => '已完成'],
                     'options' => [
                         'placeholder' => '全部',
                         //'multiple' => true

@@ -46,7 +46,6 @@ class TeamworkTool{
         {  
             /* @var $model CourseManage*/
             if($model->save()){
-                CourseProducerTool::getInstance()->invalidateCache();
                 $this->saveCourseProducer($model->id, (!empty($post['producer']) ? $post['producer'] : []));
                 $this->addCoursePhase($model->id, $this->templateType);
                 $this->addCourseLink($model->id, $this->templateType);
@@ -75,7 +74,6 @@ class TeamworkTool{
         {  
             /* @var $model CourseManage */
             if($model->save()){
-                CourseProducerTool::getInstance()->invalidateCache();
                 CourseProducer::deleteAll(['course_id' => $model->id]);
                 CourseAnnex::deleteAll(['course_id' => $model->id]);
                 $this->saveCourseProducer($model->id, (!empty($post['producer']) ? $post['producer'] : []));
@@ -291,7 +289,8 @@ class TeamworkTool{
         //$date = date('Y-m-d');  //当前日期
         $first = 1; //$first =1 表示每周星期一为开始日期 0表示每周日为开始日期
         $w = date('w',strtotime($date));  //获取当前周的第几天 周日是 0 周一到周六是 1 - 6
-        $now_start = date('Y-m-d',strtotime("$date -".($w ? $w - $first : 6).' days')); //获取本周开始日期，如果$w是0，则表示周日，减去 6 天
+        //获取本周开始日期，如果$w是0，则表示周日，减去 6 天
+        $now_start = date('Y-m-d',strtotime("$date -".($w ? $w - $first : 6).' days')); 
         $now_end = date('Y-m-d',strtotime("$now_start +6 days"));  //本周结束日期
         //$last_start=date('Y-m-d',strtotime("$now_start - 7 days"));  //上周开始日期
         //$last_end=date('Y-m-d',strtotime("$now_start - 1 days"));  //上周结束日期
@@ -320,9 +319,9 @@ class TeamworkTool{
              date('N',strtotime($month.'-'.$start_date)) : date('N',strtotime($date)); 
         for ($i = $start_date; $i < $end_date; $i = $i + 7) { 
             $weekinfo[] = [
-                        'start' => date('Y-m-d',strtotime($month.'-'.$i.' -'.($w - 1).' days')),    //获取星期一是几号
-                        'end' => date('Y-m-d',strtotime($month.'-'.$i.' +'.(7 - $w).' days'))         //获取星期天是几号
-                    ];    
+                'start' => date('Y-m-d',strtotime($month.'-'.$i.' -'.($w - 1).' days')),    //获取星期一是几号
+                'end' => date('Y-m-d',strtotime($month.'-'.$i.' +'.(7 - $w).' days'))         //获取星期天是几号
+            ];    
         }
         return $weekinfo;
     }
@@ -337,7 +336,8 @@ class TeamworkTool{
         $end_date = date('d',strtotime($month.' +1 month -1 day'));   //计算一个月有多少天 
         $first = 1;     //周日是 0 周一到周六是 1 - 6
         $w = date('w',strtotime($month.'-'.$end_date));      //获取每月最后一天是星期几
-        $lastWeekStart = date('Y-m-d', strtotime($month.'-'.$end_date.' -'.($w ? $w - $first : 6).' days'));     //计算每月最后一个星期的星期一
+        //计算每月最后一个星期的星期一
+        $lastWeekStart = date('Y-m-d', strtotime($month.'-'.$end_date.' -'.($w ? $w - $first : 6).' days'));
         $lastWeekEnd = date('Y-m-d', strtotime("$lastWeekStart + 6 days"));     //计算每月的最后一个星期的星期天
         
         $lastWeek = [
@@ -562,8 +562,9 @@ class TeamworkTool{
      */
     public function getIsUserBelongProducer($course_id)
     {
-        $producer = CourseProducerTool::getInstance()->getCourseProducer($course_id);
-        $teamMember = TeamMemberTool::getInstance()->getTeammemberById($producer);
+        $producer = CourseProducer::findAll(['course_id' => $course_id]);
+        $producerId = ArrayHelper::getColumn($producer, 'producer');
+        $teamMember = TeamMemberTool::getInstance()->getTeammemberById($producerId);
         $uId = ArrayHelper::getColumn($teamMember, 'u_id');
         if(!empty($currentUser) || isset($currentUser) || !empty($course_id)){
             if(in_array(\Yii::$app->user->id, $uId))

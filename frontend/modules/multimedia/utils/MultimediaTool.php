@@ -31,7 +31,6 @@ class MultimediaTool {
      */
     public function saveAssignTask($model, $post)
     {
-        /* @var $model MultimediaTask */
         /* @var $multimediaNotice MultimediaNoticeTool */
         $multimediaNotice = MultimediaNoticeTool::getInstance();
         /* @var $jobManager JobManager */
@@ -76,7 +75,6 @@ class MultimediaTool {
      */
     public function saveCreateTask($model)
     {
-        /* @var $model MultimediaTask */
         /* @var $multimediaNotice MultimediaNoticeTool */
         $multimediaNotice = MultimediaNoticeTool::getInstance();
         $user = ArrayHelper::getValue($multimediaNotice->getAssignPerson($model->create_team), 'u_id');
@@ -108,7 +106,6 @@ class MultimediaTool {
      */
     public function saveUpdateTask($model)
     {
-        /* @var $model MultimediaTask */
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
         /** 开启事务 */
@@ -136,7 +133,6 @@ class MultimediaTool {
      */
     public function saveSeekBraceTask($model)
     {
-        /* @var $model MultimediaTask */
         /* @var $multimediaNotice MultimediaNoticeTool */
         $multimediaNotice = MultimediaNoticeTool::getInstance();
         /* @var $jobManager JobManager */
@@ -172,7 +168,6 @@ class MultimediaTool {
      */
     public function saveCancelBraceTask($model, $oldMakeTeam)
     {
-        /* @var $model MultimediaTask */
         /* @var $multimediaNotice MultimediaNoticeTool */
         $multimediaNotice = MultimediaNoticeTool::getInstance();
         /* @var $jobManager JobManager */
@@ -208,7 +203,6 @@ class MultimediaTool {
      */
     public function saveStartMakeTask($model)
     {
-        /* @var $model MultimediaTask */
         /* @var $multimediaNotice MultimediaNoticeTool */
         $multimediaNotice = MultimediaNoticeTool::getInstance();
         /* @var $jobManager JobManager */
@@ -238,7 +232,6 @@ class MultimediaTool {
      */
     public function saveSubmitMakeTask($model)
     {
-        /* @var $model MultimediaTask */
         /* @var $multimediaNotice MultimediaNoticeTool */
         $multimediaNotice = MultimediaNoticeTool::getInstance();
         /* @var $jobManager JobManager */
@@ -271,9 +264,6 @@ class MultimediaTool {
      */
     public function saveCompleteTask($model)
     {
-        /* @var $model MultimediaTask */
-        /* @var $multimediaNotice MultimediaNoticeTool */
-        $multimediaNotice = MultimediaNoticeTool::getInstance();
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
         /** 开启事务 */
@@ -291,6 +281,37 @@ class MultimediaTool {
         } catch (Exception $ex) {
             $trans ->rollBack(); //回滚事务
             throw new NotFoundHttpException('保存任务失败！格式不正确，请按 00:00:00 格式录入！');//.$ex->getMessage());
+        }
+    }
+    
+    /**
+     * 多媒体任务恢复制作时
+     * @param MultimediaTask $model
+     * @throws NotFoundHttpException
+     * @throws Exception
+     */
+    public function saveRecoveryTask($model)
+    {
+        /* @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
+        /* @var $multimediaNotice MultimediaNoticeTool */
+        $multimediaNotice = MultimediaNoticeTool::getInstance();
+        $producer = ArrayHelper::getValue($multimediaNotice->getProducer($model->id), 'u_id');
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {
+            if ($model->save(false, ['progress', 'status'])){
+                $jobManager->updateJob(10, $model->id, ['progress'=> $model->progress, 'status'=>$model->getStatusName()]);
+                $jobManager->removeNotification(10, $model->id, $producer);
+                $jobManager->addNotification (10, $model->id, $producer);
+            }else {
+                throw new Exception(json_encode($model->getErrors()));
+            }
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        } catch (Exception $ex) {
+            $trans ->rollBack(); //回滚事务
         }
     }
     
@@ -341,14 +362,20 @@ class MultimediaTool {
         /* @var $model MultimediaCheck */
         /* @var $multimediaNotice MultimediaNoticeTool */
         $multimediaNotice = MultimediaNoticeTool::getInstance();
+        /* @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
         $producer = ArrayHelper::getValue($multimediaNotice->getProducer($model->task_id), 'u_id');
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
         {
-            if($model->save()){
-                $this->saveMultimediaOperation($model->task_id, $model->task->status);
+            $number = Yii::$app->db->createCommand()
+                  ->update(MultimediaTask::tableName(), ['status'=>  MultimediaTask::STATUS_UPDATEING], ['id' => $model->task_id])
+                  ->execute();
+            if($model->save() && $number > 0){
+                $this->saveMultimediaOperation($model->task_id, MultimediaTask::STATUS_UPDATEING);
                 $this->saveOperationUser($model->task_id, $producer);
+                $jobManager->updateJob(10, $model->task_id, ['status'=> MultimediaTask::$statusNmae[MultimediaTask::STATUS_UPDATEING]]);
                 $multimediaNotice->sendProducerNotification ($model, $model->task_id, '审核意见', 'multimedia/CreateCheck-html');
             }else {
                 throw new Exception(json_encode($model->getErrors()));
@@ -372,13 +399,19 @@ class MultimediaTool {
         /* @var $model MultimediaCheck */
         /* @var $multimediaNotice MultimediaNoticeTool */
         $multimediaNotice = MultimediaNoticeTool::getInstance();
+        /* @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
         {
-            if($model->save(false, ['real_carry_out', 'status'])){
-                $this->saveMultimediaOperation($model->task_id, $model->task->status);
+            $number = Yii::$app->db->createCommand()
+                  ->update(MultimediaTask::tableName(), ['status'=>  MultimediaTask::STATUS_CHECKING], ['id' => $model->task_id])
+                  ->execute();
+            if($model->save(false, ['real_carry_out', 'status']) && $number > 0){
+                $this->saveMultimediaOperation($model->task_id, MultimediaTask::STATUS_CHECKING);
                 $this->saveOperationUser($model->task_id, [$model->task->create_by]);
+                $jobManager->updateJob(10, $model->task_id, ['status'=> MultimediaTask::$statusNmae[MultimediaTask::STATUS_CHECKING]]);
                 $multimediaNotice->sendCreateByNotification ($model, '审核提交', 'multimedia/SubmitCheck-html');
             }else {
                 throw new Exception(json_encode($model->getErrors()));
@@ -471,7 +504,6 @@ class MultimediaTool {
                 ->with('makeTeam')
                 ->with('course')
                 ->with('createBy')
-                //->with('multimediaChecks')
                 ->with('producers')
                 ->with('teamMember')
                 ->all();
@@ -549,33 +581,50 @@ class MultimediaTool {
     
     /**
      * 获取是否属于自己操作
-     * @param type $taskId                          任务ID
-     * @param type $user                            用户
-     * @param type $status                          状态
+     * @param array $taskId                          任务ID
+     * @param array $status                          状态
      * @return boolean                              true为是
      */ 
-    public function getIsBelongToOwnOperate($taskId, $user, $status)
+    public function getIsBelongToOwnOperate($taskId, $status)
     {
-        /* @var $operate MultimediaOperation */
-        $operate = MultimediaOperation::find()
+        $operation = [];
+        $isBelong = [];
+        $operates = MultimediaOperation::find()
                    ->where(['task_id' => $taskId])
-                   ->orderBy('id desc')
-                   ->one();
-        if(!empty($operate) || isset($operate)){
-            $isBelong = MultimediaOperationUser::find()
-                        ->where(['operation_id' => $operate->id])
-                        ->all();
-            if(!empty($isBelong) || isset($isBelong)){
+                   ->all();
+        if(!empty($operates)){
+            /* @var $value MultimediaOperation */
+            foreach ($operates as $value) {
+                $operation[$value->task_id] = [
+                    'id' => $value->id,
+                    'status' => $value->task_statu == $status[$value->task_id] ? true : false,
+                ];
+            }
+            $operationUser = MultimediaOperationUser::find()
+                            ->where(['operation_id' => ArrayHelper::getColumn($operation, 'id')])
+                            ->with('operation')
+                            ->asArray()
+                            ->all();
+            $operations = ArrayHelper::map($operation, 'id', 'status');
+            $operationUser = ArrayHelper::index($operationUser, 'operation_id');
+            if(!empty($operationUser)){
                 /* @var $value MultimediaOperationUser */
-                foreach ($isBelong as $value) {
-                    if(($user == $value->u_id || $value->brace_mark == MultimediaTask::SEEK_BRACE_MARK) 
-                        && $status == $value->operation->task_statu)
-                        return true;
+                foreach ($operationUser as $key => $value) {
+                    $value['status'] = $operations[$key];
+                    if((\Yii::$app->user->id == $value['u_id'] || MultimediaTask::SEEK_BRACE_MARK == $value['brace_mark'])
+                       && $value['status'])
+                    {
+                        $isBelong[$value['operation']['task_id']] = true;
+                    }else{
+                        $isBelong[$value['operation']['task_id']] = false;
+                    };
+                    
                 }
             }
         }
-        return false;
+        return $isBelong;
     }
+
 
     /**
      * 保存操作到表里

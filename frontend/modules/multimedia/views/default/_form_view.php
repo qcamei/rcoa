@@ -35,7 +35,7 @@ $page = [
              * 1、状态必须是在【待审核】
              * 2、创建者是自己
              */
-            if($model->getIsStatusWaitCheck() && $model->create_by == Yii::$app->user->id)
+            if(($model->getIsStatusWaitCheck() || $model->getIsStatusChecking()) && $model->create_by == Yii::$app->user->id)
                 echo Html::a('完成', 'javascript:;', ['id' => 'complete', 'class' =>'btn btn-success']).' ';
             /**
              * 取消 按钮显示必须满足以下条件：
@@ -45,20 +45,18 @@ $page = [
              * 4、必须是在取消支撑下
              */
             if(Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CANCEL) 
-               && !($model->getIsStatusWaitCheck() || $model->getIsStatusCompleted() || $model->getIsStatusCancel()) 
-               && $model->create_by == Yii::$app->user->id /*&& $model->brace_mark == MultimediaTask::CANCEL_BRACE_MARK*/)
+               && !$model->getIsStatusStartAfter() && $model->create_by == Yii::$app->user->id)
                 echo Html::a('取消', 'javascript:;', ['id' => 'cancel', 'class' =>'btn btn-danger', 'style' => 'margin-right:15px;']).' ';
             /**
              * 添加审核 按钮显示必须满足以下条件：
              * 1、必须拥有添加审核权限
-             * 2、状态必须是在【待审核】
+             * 2、状态必须是在【待审核】 or 【审核中】
              * 3、创建者是自己
              * 4、审核记录必须为空
              * 5、审核记录状态必须已完成
              */
             if(Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CREATE_CHECK) 
-               && $model->getIsStatusWaitCheck() && $model->create_by == Yii::$app->user->id
-               && (empty($model->multimediaChecks) || !$multimedia->getIsCompleteCheck($model->id)))
+               && ($model->getIsStatusWaitCheck() || $model->getIsStatusChecking()) && $model->create_by == Yii::$app->user->id)
                 echo Html::a('添加审核', ['check/create', 'task_id' => $model->id], ['id' => 'check-create', 'class' =>'btn btn-info']).' ';
             /**
              * 恢复制作 按钮显示必须满足以下条件：
@@ -112,13 +110,12 @@ $page = [
                 echo Html::a('提交', ['submit', 'id' => $model->id], ['class' =>'btn btn-success']).' ';
             /**
              * 提交审核 按钮显示必须满足以下条件：
-             * 1、状态必须是在【待审核】
+             * 1、状态必须是在【修改中】
              * 2、必须是制作人身份
              * 3、审核记录不能为空
              * 4、审核记录状态必须未完成
              */
-            if($model->getIsStatusWaitCheck() && $multimedia->getIsProducer($model->id) 
-               && !empty($model->multimediaChecks) && $multimedia->getIsCompleteCheck($model->id))
+            if($model->getIsStatusUpdateing() && $multimedia->getIsProducer($model->id) )
                 echo Html::a('提交审核', ['check/submit', 'task_id' => $model->id], ['class' =>'btn btn-danger']).' ';
         ?>
         </div>

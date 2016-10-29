@@ -105,11 +105,12 @@ class DefaultController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
         /* @var $multimedia MultimediaTool */
         $multimedia = MultimediaTool::getInstance();
         /* @var $multimediaNotice MultimediaNoticeTool */
         $multimediaNotice = MultimediaNoticeTool::getInstance();
-        $model = $this->findModel($id);
+        
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
         if($model->getIsStatusCompleted() || $model->getIsStatusCancel() ){
@@ -322,7 +323,7 @@ class DefaultController extends Controller
         $jobManager = Yii::$app->get('jobManager');
         if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_COMPLETE) && $model->create_by != \Yii::$app->user->id)
             throw new NotAcceptableHttpException('无权限操作！');
-        if(!$model->getIsStatusWaitCheck())
+        if(!($model->getIsStatusWaitCheck() || $model->getIsStatusChecking()))
             throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
         
         $model->status = MultimediaTask::STATUS_COMPLETED;
@@ -344,13 +345,14 @@ class DefaultController extends Controller
         $model = $this->findModel($id);
         /* @var $multimedia MultimediaTool */
         $multimedia = MultimediaTool::getInstance();
-        if($model->create_by != \Yii::$app->user->id)
+        if(\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CREATE) && $model->create_by != \Yii::$app->user->id)
             throw new NotAcceptableHttpException('无权限操作！');
         if(!$model->getIsStatusCompleted())
             throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
         
-        $model->status = MultimediaTask::STATUS_WAITCHECK;
-        $model->save(false, ['status']);
+        $model->status = MultimediaTask::STATUS_CHECKING;
+        $model->progress = $model->getStatusProgress();
+        $multimedia->saveRecoveryTask($model);
         return $this->redirect(['view', 'id' => $model->id]);
     }
     
@@ -367,7 +369,7 @@ class DefaultController extends Controller
         $multimedia = MultimediaTool::getInstance();
         if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CANCEL) && $model->create_by != \Yii::$app->user->id)
             throw new NotAcceptableHttpException('无权限操作！');
-        if(!($model->getIsStatusAssign() || $model->getIsStatusTostart() || $model->getIsStatusWorking()))
+        if($model->getIsStatusStartAfter())
             throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
         
         $cancel = ArrayHelper::getValue(Yii::$app->request->post(), 'reason');

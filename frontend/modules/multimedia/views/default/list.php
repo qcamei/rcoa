@@ -10,11 +10,15 @@ use yii\helpers\Html;
 use yii\web\View;
 
 /* @var $this View */
+/* @var $model MultimediaTask */
 /* @var $dataProvider ActiveDataProvider */
 
 $this->title = Yii::t('rcoa/multimedia', 'Multimedia Manages');
 $this->params['breadcrumbs'][] = $this->title;
 
+$taskIds = ArrayHelper::getColumn($dataProvider->allModels, 'id');
+$taskStatus = ArrayHelper::map($dataProvider->allModels, 'id', 'status');
+MultimediaTask::$operation = $multimedia->getIsBelongToOwnOperate($taskIds, $taskStatus);
 ?>
 <div class="container multimedia-task-list multimedia-task">
     
@@ -48,12 +52,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'layout' => "{items}\n{summary}\n{pager}",
         'summaryOptions' => [
             'class' => 'summary',
-            'style' => 'float: left'
+            //'style' => 'float: left'
         ],
         'pager' => [
             'options' => [
                 'class' => 'pagination',
-                'style' => 'float: right; margin: 0px;'
+                //'style' => 'float: right; margin: 0px;'
             ]
         ],
         'tableOptions' => ['class' => 'table table-striped table-list'],
@@ -300,13 +304,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'header' => Yii::t('rcoa', 'Operating'),
                 'buttons' => [
                     'view' => function ($url, $model) {
-                        $multimedia = MultimediaTool::getInstance();
                         /* @var $model MultimediaTask */
                         $options = [
-                            'class' => $model->getIsStatusCancel() ? 
-                                    'btn btn-danger btn-sm' : ($model->getIsStatusCompleted()? 
-                                    'btn btn-success btn-sm' : ($multimedia->getIsBelongToOwnOperate($model->id, Yii::$app->user->id, $model->status) ? 
-                                    'btn btn-primary btn-sm' : 'btn btn-default btn-sm')),
+                            'class' => $model->getIsStatusCompleted()? 
+                                    'btn btn-success btn-sm' : (MultimediaTask::$operation[$model->id] ? 
+                                    'btn btn-primary btn-sm' : 'btn btn-default btn-sm'),
                             'style' => 'width: 55px;'
                         ];
                         return Html::a($model->getStatusName(), [

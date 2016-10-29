@@ -3,6 +3,7 @@
 namespace frontend\modules\multimedia\controllers;
 
 use common\models\multimedia\MultimediaCheck;
+use common\models\multimedia\MultimediaTask;
 use common\models\multimedia\searchs\MultimediaCheckSearch;
 use frontend\modules\multimedia\utils\MultimediaTool;
 use wskeee\rbac\RbacName;
@@ -84,7 +85,7 @@ class CheckController extends Controller
             throw new NotAcceptableHttpException('无权限操作！');
         $model->task_id = $task_id;
         $model->create_by = \Yii::$app->user->id;
-        if(!$model->task->getIsStatusWaitCheck())
+        if(!($model->task->getIsStatusWaitCheck() || $model->task->getIsStatusChecking()))
             throw new NotAcceptableHttpException('该任务状态为'.$model->task->getStatusName().'！');
         
         if ($model->load(Yii::$app->request->post())) {
@@ -112,7 +113,7 @@ class CheckController extends Controller
         if((!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_UPDATE_CHECK)
            && $model->create_by != Yii::$app->user->id) || !$multimedia->getIsCompleteCheck($model->task_id))
             throw new NotAcceptableHttpException('无权限操作！');
-        if(!$model->task->getIsStatusWaitCheck())
+        if(!$model->task->getIsStatusUpdateing())
             throw new NotAcceptableHttpException('该任务状态为'.$model->task->getStatusName().'！');
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -138,10 +139,13 @@ class CheckController extends Controller
         if((!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_DELETE_CHECK) 
            && $model->create_by != Yii::$app->user->id) || !$multimedia->getIsCompleteCheck($model->task_id))
             throw new NotAcceptableHttpException('无权限操作！');
-        if(!$model->task->getIsStatusWaitCheck())
+        if(!$model->task->getIsStatusUpdateing())
             throw new NotAcceptableHttpException('该任务状态为'.$model->task->getStatusName().'！');
         
-        $model->delete();
+        if($model->delete() != false)
+            Yii::$app->db->createCommand()
+                  ->update(MultimediaTask::tableName(), ['status'=>  MultimediaTask::STATUS_CHECKING], ['id' => $model->task_id])
+                  ->execute();
         return $this->redirect(['default/view', 'id' => $model->task_id]);
     }
     
@@ -164,7 +168,7 @@ class CheckController extends Controller
                      'status' => MultimediaCheck::STATUS_NOTCOMPLETE
                 ])
                  ->one();
-        if(!$model->task->getIsStatusWaitCheck())
+        if(!$model->task->getIsStatusUpdateing())
             throw new NotAcceptableHttpException('该任务状态为'.$model->task->getStatusName().'！');
         
         $model->real_carry_out = date('Y-m-d H:i', time());

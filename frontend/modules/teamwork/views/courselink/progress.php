@@ -48,10 +48,11 @@ $this->params['breadcrumbs'][] = $this->title;
             
         </thead>
         <tbody>
-        <?php foreach ($coursePhase as $phase) {
+        <?php 
+        $isUserBelongProducer = $twTool->getIsUserBelongProducer($course_id);
+        foreach ($coursePhase as $phase) {
             $className = $phase->course->getIsNormal()
-                    && ($twTool->getIsUserBelongProducer($phase->course_id) 
-                    || $twTool->getIsAuthority('id', $phase->course->course_principal)
+                    && ($isUserBelongProducer || $twTool->getIsAuthority('id', $phase->course->course_principal)
                     || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)) ?
                         'btn btn-primary' : 'btn btn-primary disabled';
             /* @var $phase CoursePhase */

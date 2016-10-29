@@ -71,7 +71,9 @@ and open the template in the editor.
     z-index:1000; 
     overflow :auto;
 }
-//滚动条大小
+/** 
+ * 滚动条大小
+ */
 .cbp-spmenu::-webkit-scrollbar { 
     width:0px;
     height:0px;
@@ -129,7 +131,9 @@ and open the template in the editor.
     padding-left:0px;
     overflow :auto;
 }
-//滚动条大小
+/** 
+ * 滚动条大小
+ */
 .file-manage::-webkit-scrollbar { 
     width:0px;
     height:0px;

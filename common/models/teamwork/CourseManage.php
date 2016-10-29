@@ -73,9 +73,16 @@ class CourseManage extends ActiveRecord
     /** 已完成 */
     const STATUS_CARRY_OUT = 15;
     
-    /** 进度 */
+    /**
+     * 进度
+     * @var integer
+     */
     public $progress;
     
+    /**
+     * 是否存在周报
+     * @var type 
+     */
     public $isExistWeekly = false ;
     
     /** 状态名 */

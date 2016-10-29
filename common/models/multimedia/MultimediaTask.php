@@ -67,15 +67,29 @@ class MultimediaTask extends ActiveRecord
     const STATUS_ASSIGN = 5;
     /** 任务已经分派制作人，等待开始制作，【待开始】 */
     const STATUS_TOSTART = 10;
-    /** 任务已经开始在制作中， 【制作中】*/
-    const STATUS_WORKING = 13;
-    /** 任务已经制作完成，等待审核 【待审核】*/
-    const STATUS_WAITCHECK = 14;
-    /** 任务已通过审核，任务结束， 【已完成】*/
+    /** 任务已经开始在制作中， 【制作中】 */
+    const STATUS_WORKING = 11;
+    /** 任务已经制作完成，等待审核 【待审核】 */
+    const STATUS_WAITCHECK = 12;
+    /**任务已经添加审核，等待修改 【修改中】 */
+    const STATUS_UPDATEING = 13;
+    /** 任务修改完成提交，等待继续审核 【审核中】 */
+    const STATUS_CHECKING = 14;
+    /** 任务已通过审核，任务结束， 【已完成】 */
     const STATUS_COMPLETED = 15;
     /** 因客观原因需要改期或者取消原定任务， 【已取消】 */
     const STATUS_CANCEL = 99;
     
+    /**
+     * 任务id
+     * @var array 
+     */
+    public static $taskIds;
+    /**
+     * 多媒体操作
+     * @var array 
+     */
+    public static $operation = [];
     /**
      * 总的标准工作量
      * @var number 
@@ -103,6 +117,8 @@ class MultimediaTask extends ActiveRecord
         self::STATUS_TOSTART,
         self::STATUS_WORKING,
         self::STATUS_WAITCHECK,
+        self::STATUS_UPDATEING,
+        self::STATUS_CHECKING,
     ];
     /**
      * 状态名称
@@ -113,6 +129,8 @@ class MultimediaTask extends ActiveRecord
         self::STATUS_TOSTART => '待开始',
         self::STATUS_WORKING => '制作中',
         self::STATUS_WAITCHECK => '待审核',
+        self::STATUS_UPDATEING => '修改中',
+        self::STATUS_CHECKING => '审核中',
         self::STATUS_COMPLETED => '已完成',
         self::STATUS_CANCEL => '已取消',
     ];
@@ -125,6 +143,8 @@ class MultimediaTask extends ActiveRecord
         self::STATUS_TOSTART => 5,
         self::STATUS_WORKING => 10,
         self::STATUS_WAITCHECK => 80,
+        self::STATUS_UPDATEING => 80,
+        self::STATUS_CHECKING => 80,
         self::STATUS_COMPLETED => 100,
     ];
 
@@ -388,6 +408,24 @@ class MultimediaTask extends ActiveRecord
     }
     
     /**
+     * 获取是否在【修改中】状态
+     * @return type
+     */
+    public function getIsStatusUpdateing()
+    {
+        return $this->status == self::STATUS_UPDATEING;
+    }
+    
+    /**
+     * 获取是否在【审核中】状态
+     * @return type
+     */
+    public function getIsStatusChecking()
+    {
+        return $this->status == self::STATUS_CHECKING;
+    }
+    
+    /**
      * 获取是否在【已完成】状态
      * @return type
      */
@@ -405,6 +443,15 @@ class MultimediaTask extends ActiveRecord
         return $this->status == self::STATUS_CANCEL;
     }
     
+    /**
+     * 获取是否在【待开始】后状态
+     * @return type
+     */
+    public function getIsStatusStartAfter()
+    {
+        return $this->status > self::STATUS_TOSTART;
+    }
+
     /**
      * 获取状态名称
      * @return type

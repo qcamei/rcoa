@@ -39,12 +39,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'layout' => "{items}\n{summary}\n{pager}",
             'summaryOptions' => [
                 'class' => 'summary',
-                'style' => 'float: left'
+                //'style' => 'float: left'
             ],
             'pager' => [
                 'options' => [
                     'class' => 'pagination',
-                    'style' => 'float: right; margin: 0px;'
+                    //'style' => 'float: right; margin: 0px;'
                 ]
             ],
             'tableOptions' => ['class' => 'table table-striped table-list'],

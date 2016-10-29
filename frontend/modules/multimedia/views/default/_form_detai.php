@@ -14,21 +14,29 @@ use yii\widgets\DetailView;
 $statusProgress = '';
 foreach (MultimediaTask::$statusNmae as $key => $value) {
     $isHidden = $key != $model->status ? ' hidden-xs' : '';
-    $isHiddenCancel = $key == MultimediaTask::STATUS_CANCEL ? ' hidden-lg hidden-md hidden-sm' : '';
+    $isHiddenStatus = $key > MultimediaTask::STATUS_WAITCHECK  ? ' hidden-lg hidden-md hidden-sm' : '';
     $progress = $key != MultimediaTask::STATUS_CANCEL ? MultimediaTask::$statusProgress[$key] : $model->progress;
-    if($model->status == MultimediaTask::STATUS_CANCEL){
+    if($key == MultimediaTask::STATUS_CANCEL && $model->status == MultimediaTask::STATUS_CANCEL){
+        $statusProgress =  '<div class="status-progress-div have-to">'
+                            .'<p class="have-to-status">'.$value.'</p><p class="progress-strip">('
+                            .$progress.'%)</p></div>';
+    }else if($key == MultimediaTask::STATUS_COMPLETED && $model->status == MultimediaTask::STATUS_COMPLETED){
         $statusProgress =  '<div class="status-progress-div have-to">'
                             .'<p class="have-to-status">'.$value.'</p><p class="progress-strip">('
                             .$progress.'%)</p></div>';
     }else if($key <= $model->status) {
-        $statusProgress .=  '<div class="status-progress-div have-to'.$isHidden.$isHiddenCancel.'">'
-                            .'<p class="have-to-status">'.$value.'</p><p class="progress-strip">('
-                            .$progress.'%)</p></div>';
+        $statusProgress .=  '<div class="status-progress-div have-to'.$isHidden.$isHiddenStatus.'">'
+                        .'<p class="have-to-status">'.
+                        ($key == MultimediaTask::STATUS_WAITCHECK && $model->status > MultimediaTask::STATUS_WAITCHECK ?  
+                           MultimediaTask::$statusNmae[$model->status] : $value)
+                        .'</p><p class="progress-strip">('
+                        .$progress.'%)</p></div>';
+        
     }else{
-        $statusProgress .=  '<div class="status-progress-div not-to'.$isHidden.$isHiddenCancel.'">'
+        $statusProgress .=  '<div class="status-progress-div not-to'.$isHidden.$isHiddenStatus.'">'
                             .'<p class="not-to-status">'.$value.'</p></div>';
     }
-    if($key == MultimediaTask::STATUS_COMPLETED || $key == MultimediaTask::STATUS_CANCEL)
+    if($key >= MultimediaTask::STATUS_WAITCHECK)
         $statusProgress .= '';
     else
         $statusProgress .= '<img src="/filedata/multimedia/image/direction-arrow.png" class="direction-arrow hidden-xs" />';
