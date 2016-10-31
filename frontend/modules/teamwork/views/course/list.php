@@ -57,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => Yii::t('rcoa/teamwork', 'Course ID').' ('.count($lessionTime).')',
                 'value'=> function($model){
                     /* @var $model CourseManage */
-                    return $model->course->name;
+                    return !empty($model->course_id) ? $model->course->name : null;
                 },
                 'headerOptions' => [
                     'style' => [
@@ -78,7 +78,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => Yii::t('rcoa/teamwork', 'Teacher'),
                 'value' => function ($model){
                     /* @var $model CourseManage */
-                    return $model->speakerTeacher->nickname;
+                    return !empty($model->teacher) ? $model->speakerTeacher->nickname : null;
                 },
                 'headerOptions' => [
                     'class'=>[

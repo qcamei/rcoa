@@ -81,7 +81,7 @@ foreach ($dataProvider->allModels as $model)
                     'label' => Yii::t('rcoa/teamwork', 'Item Type'),
                     'value'=> function($model){
                         /* @var $model CourseManage */
-                        return !empty($model->project->item_type_id) ? $model->project->itemType->name : 'null';
+                        return !empty($model->project->item_type_id) ? $model->project->itemType->name : null;
                     },
                     'headerOptions' => [
                         'class'=>[
@@ -99,7 +99,7 @@ foreach ($dataProvider->allModels as $model)
                     'label' => Yii::t('rcoa/teamwork', 'Item'),
                     'value'=> function($model){
                         /* @var $model CourseManage */
-                        return !empty($model->project->item_id) ? $model->project->item->name : 'null';
+                        return !empty($model->project->item_id) ? $model->project->item->name : null;
                     },
                     'headerOptions' => [
                         'class'=>[
@@ -117,7 +117,7 @@ foreach ($dataProvider->allModels as $model)
                     'label' => Yii::t('rcoa/teamwork', 'Item Child'),
                     'value'=> function($model){
                         /* @var $model CourseManage */
-                        return !empty($model->project->item_child_id) ? $model->project->itemChild->name : 'null';
+                        return !empty($model->project->item_child_id) ? $model->project->itemChild->name : null;
                     },
                     'headerOptions' => [
                         'class'=>[
@@ -136,7 +136,7 @@ foreach ($dataProvider->allModels as $model)
                     'format' => 'raw',
                     'value'=> function($model){
                         /* @var $model CourseManage */
-                        return '<div class="course-name">'.(!empty($model->course_id) ? $model->course->name : 'null').'</div>'.
+                        return '<div class="course-name">'.(!empty($model->course_id) ? $model->course->name : null).'</div>'.
                                Html::beginTag('div', [
                                         'class' => 'progress table-list-progress',
                                         'style' => 'height:12px;margin:2px 0;border-radius:0px;'

@@ -311,17 +311,16 @@ class TeamworkTool{
     public function getWeekInfo($date, $month)
     {
         $weekinfo = [];
-        //开发周期月份$month如果大于实际开始月份$date，那么开始时间就为1 否则为实际开始日期
-        $start_date = date('m', strtotime($month)) > date('m', strtotime($date)) ?  1 : date('d', strtotime($date));
-        $end_date = date('d',strtotime($month.' +1 month -1 day'));   //计算一个月有多少天 
-        //计算实际开始时间or每个月1号在一个星期是第几天
-        $w = date('m', strtotime($month)) > date('m', strtotime($date)) ? 
-             date('N',strtotime($month.'-'.$start_date)) : date('N',strtotime($date)); 
-        for ($i = $start_date; $i < $end_date; $i = $i + 7) { 
-            $weekinfo[] = [
-                'start' => date('Y-m-d',strtotime($month.'-'.$i.' -'.($w - 1).' days')),    //获取星期一是几号
-                'end' => date('Y-m-d',strtotime($month.'-'.$i.' +'.(7 - $w).' days'))         //获取星期天是几号
-            ];    
+        $fristMonday = strtotime("first monday of $month");
+        $lastMonday = strtotime("last monday of $month");
+        $curent = $fristMonday < strtotime($date) ? strtotime($date) : $fristMonday;
+        
+        while($curent <= $lastMonday){
+             $weekinfo[] = [
+                'start' => date('Y-m-d',$curent),                             //获取星期一是几号
+                'end' => date('Y-m-d',strtotime('+6 day',$curent))           //获取星期天是几号
+            ];   
+            $curent = strtotime('+7 day',$curent);
         }
         return $weekinfo;
     }

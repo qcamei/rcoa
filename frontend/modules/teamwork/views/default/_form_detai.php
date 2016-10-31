@@ -52,12 +52,12 @@ use yii\widgets\DetailView;
             [
                 'attribute' => 'background',
                 'format' => 'raw',
-                'value' => '<div style="height:65px;">'.$model->background.'</div>',
+                'value' => '<div style="height:65px; vertical-align:middle; display:table-cell">'.$model->background.'</div>',
             ],
             [
                 'attribute' => 'use',
                 'format' => 'raw',
-                'value' => '<div style="height:65px;">'.$model->use.'</div>',
+                'value' => '<div style="height:65px; vertical-align:middle; display:table-cell">'.$model->use.'</div>',
             ],
         ],
     ]) ?>

@@ -57,19 +57,17 @@ $this->params['breadcrumbs'] = $this->title;
                 'format' => 'raw',
                 'value'=> function($model){
                     /* @var $model CourseManage */
-                    return $model->course->name;
+                    return !empty($model->course_id) ? $model->course->name : null;
                 },
                 'headerOptions' => [
                     'style' => [
-                        'max-width' => '214px',
-                        'min-width' => '84px',
+                        'min-width' => '175px',
                     ],
                 ],
                 'contentOptions' =>[
                     'class' => 'course-name',
                     'style' => [
-                        'max-width' => '214px', 
-                        'max-width' => '84px', 
+                        'max-width' => '175px', 
                     ],
                 ],
             ],
@@ -78,12 +76,18 @@ $this->params['breadcrumbs'] = $this->title;
                 'label' => Yii::t('rcoa/teamwork', 'Teacher'),
                 'value'=> function($model){
                     /* @var $model CourseManage */
-                    return $model->speakerTeacher->nickname;
+                    return !empty($model->teacher) ? $model->speakerTeacher->nickname : null;
                 },
                 'headerOptions' => [
-                    'style' => [
-                        'max-width' => '115px',
+                    'class'=>[
+                        'th'=>'hidden-xs',
                     ],
+                    'style' => [
+                        'width' => '105px',
+                    ],
+                ],
+                'contentOptions' =>[
+                    'class'=>'hidden-xs',
                 ],
             ],
             [
@@ -96,8 +100,22 @@ $this->params['breadcrumbs'] = $this->title;
                 },
                 'headerOptions' => [
                     'style' => [
-                        //'max-width' => '191px',
-                        'width' => '84px',
+                        'width' => '104px',
+                    ],
+                ],
+            ],
+            [
+                'class' => 'frontend\modules\teamwork\components\ItemListTd',
+                'label' => Yii::t('rcoa', 'Status'),
+                'format' => 'raw',
+                'value'=> function($model){
+                    /* @var $model CourseManage */
+                    return $model->status == CourseManage::STATUS_WAIT_START ? 
+                          '<span style="color: #F00">'.$model->getStatusName().'</span>' : $model->getStatusName();
+                },
+                'headerOptions' => [
+                    'style' => [
+                        'width' => '105px',
                     ],
                 ],
             ],
@@ -113,7 +131,7 @@ $this->params['breadcrumbs'] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'max-width' => '740px',
+                        'width' => '300px',
                     ],
                 ],
                 'contentOptions' =>[

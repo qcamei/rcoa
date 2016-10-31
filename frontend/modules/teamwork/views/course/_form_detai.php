@@ -35,23 +35,23 @@ foreach ($producers as $element) {
             ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">基本信息</span>','value' => ''],
             [
                 'attribute' => 'project.item_type_id',
-                'value' => !empty($model->project->item_type_id) ? $model->project->itemType->name : '空',
+                'value' => !empty($model->project->item_type_id) ? $model->project->itemType->name : null,
             ],
             [
                 'attribute' => 'project.item_id',
-                'value' => !empty($model->project->item_id) ? $model->project->item->name : '空',
+                'value' => !empty($model->project->item_id) ? $model->project->item->name : null,
             ],
             [
                 'attribute' => 'project.item_child_id',
-                'value' => !empty($model->project->item_child_id) ? $model->project->itemChild->name : '空',
+                'value' => !empty($model->project->item_child_id) ? $model->project->itemChild->name : null,
             ],
             [
                 'attribute' => 'course_id',
-                'value' => !empty($model->course_id) ? $model->course->name : '空',
+                'value' => !empty($model->course_id) ? $model->course->name : null,
             ],
             [
                 'attribute' => 'teacher',
-                'value' => $model->speakerTeacher->nickname,
+                'value' => !empty($model->teacher) ? $model->speakerTeacher->nickname : null,
             ],
             [
                 'attribute' => 'credit',
@@ -81,16 +81,16 @@ foreach ($producers as $element) {
             [
                 'attribute' => 'team_id',
                 'format' => 'raw',
-                'value' => !empty($model->team_id) ? $model->team->name : '',
+                'value' => !empty($model->team_id) ? $model->team->name : null,
             ],
             [
                 'attribute' => Yii::t('rcoa/teamwork', 'Resource People'),
                 'format' => 'raw',
-                'value' => empty($producer)?  null :implode('', $producer),
+                'value' => !empty($producer)?  implode('', $producer) : null,
             ],
             [
                 'attribute' => 'course_ops',
-                'value' => empty($model->course_ops) ? null : $model->courseOps->user->nickname,
+                'value' => !empty($model->course_ops) ? $model->courseOps->user->nickname : null,
             ],
             [
                 'attribute' => 'plan_start_time',
@@ -115,22 +115,24 @@ foreach ($producers as $element) {
             [
                 'attribute' => 'status',
                 'format' => 'raw',
-                'value' => CourseManage::$statusName[$model->status],
+                'value' => $model->status == CourseManage::STATUS_WAIT_START ? 
+                        '<span style="color: #F00">'.$model->getStatusName().'</span>' : $model->getStatusName(),
             ],
             [
                 'attribute' => 'path',
                 'format' => 'raw',
-                'value' => empty($model->path) ? '空' : $model->path,
+                'value' => !empty($model->path) ? $model->path : null,
             ],
             ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">其它信息</span>','value' => ''],
             [
                 'attribute' => 'create_by',
-                'value' => !empty($model->create_by) ? $model->createBy->nickname : '',
+                'value' => !empty($model->create_by) ? $model->createBy->nickname : null,
             ],
             [
                 'attribute' => 'course_principal',
                 'format' => 'raw',
-                'value' =>empty($model->course_principal)?  (empty($model->create_by) ? '' : $model->createBy->nickname) : $model->coursePrincipal->user->nickname,
+                'value' => !empty($model->course_principal) ?  $model->coursePrincipal->user->nickname :
+                        (!empty($model->create_by) ? $model->createBy->nickname : null),
             ],
             [
                 'attribute' => 'created_at',
@@ -143,7 +145,7 @@ foreach ($producers as $element) {
             [
                 'attribute' => 'des',
                 'format' => 'raw',
-                'value' => '<div style="height:65px;">'.$model->des.'</div>',
+                'value' => '<div style="height:65px; vertical-align:middle; display:table-cell">'.$model->des.'</div>',
             ],
         ],
     ]) ?>

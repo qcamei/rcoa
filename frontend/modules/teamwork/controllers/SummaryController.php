@@ -67,25 +67,19 @@ class SummaryController extends Controller
         try
         {
             foreach ($weeks as &$week) {
-                if(!empty($weeklyDate)){
-                    for ($i = $start; $i < count($weeklyDate); $i++) {
-                        if ($week['start'] <= $weeklyDate[$i] && $week['end'] >= $weeklyDate[$i]) {
-                            $week['has'] = true;
-                            //$start = $i + 1;
-                            break;
-                        } else {
-                            $week['has'] = false;
-                        }
+                for ($i = $start; $i < count($weeklyDate); $i++) {
+                    if ($week['start'] <= $weeklyDate[$i] && $week['end'] >= $weeklyDate[$i]) {
+                        $week['has'] = true;
+                        //$start = $i + 1;
+                        break;
                     }
-                }  else {
-                    $week['has'] = false;
                 }
                 $weekinfo[] = [
                     'date' => date('m/d', strtotime($week['start'])) . '～' . date('m/d', strtotime($week['end'])),
                     'class' => $currentTime < $week['start'] ? 'btn btn-default weekinfo disabled' : 
-                       ($week['has'] == false && $currentTime > $week['end'] ? 'btn btn-danger weekinfo disabled' : 
+                       (!isset($week['has']) && $currentTime > $week['end'] ? 'btn btn-danger weekinfo disabled' : 
                        ($currentTime >= $week['start'] && $currentTime <= $week['end'] ? 'btn btn-info weekinfo' : 'btn btn-info weekinfo')),
-                    'icon' => $currentTime < $week['start'] ? 'not-to' : ($week['has'] == false && $currentTime > $week['end'] ? 'leak-write' :
+                    'icon' => $currentTime < $week['start'] ? 'not-to' : (!isset($week['has']) && $currentTime > $week['end'] ? 'leak-write' :
                                     ($currentTime >= $week['start'] && $currentTime <= $week['end'] ? 'this-week' : 'already-write')),
                     'week' => $week
                 ];

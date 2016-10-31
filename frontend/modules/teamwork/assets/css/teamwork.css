@@ -399,13 +399,14 @@ and open the template in the editor.
 /**
  * 任务详细页样式 
  */
-.viewdetail-th
+.item-manage .viewdetail-th
 {
     color: #666666;
     width: 20%;
     font-weight: normal;
     text-align: right;
     min-width: 73px;
+    vertical-align: middle;
 }
 .viewdetail-th-head
 {
