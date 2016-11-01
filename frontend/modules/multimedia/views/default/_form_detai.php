@@ -19,8 +19,10 @@ $status = [
     MultimediaTask::STATUS_WORKING,
 ];
 /** 待审核、审核中、修改中 只保留一个 */
-if($model->status == MultimediaTask::STATUS_WAITCHECK || $model->status == MultimediaTask::STATUS_UPDATEING || $model->status == MultimediaTask::STATUS_CHECKING)
+if($model->status == MultimediaTask::STATUS_UPDATEING || $model->status == MultimediaTask::STATUS_CHECKING)
     $status [] = $model->status;
+else
+    $status [] = MultimediaTask::STATUS_WAITCHECK;
 //强制添加 完成状态
 $status [] = MultimediaTask::STATUS_COMPLETED;
 
