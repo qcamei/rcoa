@@ -185,7 +185,10 @@ class SummaryController extends Controller
     {
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
-        $model = $this->findModel($course_id, $create_time);
+        if($create_time == null)
+            $model = $twTool->getWeeklyInfo($course_id, $twTool->getWeek(date('Y-m-d', time())), false);
+        else
+            $model = $this->findModel($course_id, $create_time);
         $model->create_by = $model->weeklyCreateBy->weekly_editors_people;
         $editorsPeople = $model->course->weekly_editors_people;
         
