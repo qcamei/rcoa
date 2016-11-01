@@ -307,7 +307,7 @@ MultimediaTask::$operation = $multimedia->getIsBelongToOwnOperate($taskIds, $tas
                         /* @var $model MultimediaTask */
                         $options = [
                             'class' => $model->getIsStatusCompleted()? 
-                                    'btn btn-success btn-sm' : (MultimediaTask::$operation[$model->id] ? 
+                                    'btn btn-success btn-sm' : (!empty(MultimediaTask::$operation[$model->id]) ? 
                                     'btn btn-primary btn-sm' : 'btn btn-default btn-sm'),
                             'style' => 'width: 55px;'
                         ];
