@@ -35,7 +35,9 @@ if($model->status == MultimediaTask::STATUS_CANCEL || $model->status == Multimed
                         . '</div>';
 }else{
     foreach ($status as $status_value){
+        //小屏时显示一个状态
         $isHidden = $status_value != $model->status ? ' hidden-xs' : '';
+         /** 如果$status_value <= 当前状态输出样式"have-to"和显示进度 否则输出"not-to"和不显示进度 */
         $haDone = $status_value <= $model->status;
         $statusProgress .=  '<div class="status-progress-div '.($haDone ? 'have-to' : 'not-to').$isHidden.'">'
                                 .'<p class="have-to-status">'.MultimediaTask::$statusNmae[$status_value].'</p>'
