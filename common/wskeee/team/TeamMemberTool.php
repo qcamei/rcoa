@@ -107,6 +107,7 @@ class TeamMemberTool extends Component {
     public function getTeamById($team_id){
         if(is_array($team_id))
         {
+            $results = [];
             foreach($team_id as $id){
                 $results [] = $this->teams[$id];
             }
@@ -132,6 +133,7 @@ class TeamMemberTool extends Component {
     public function getTeammemberById($teamMemberId){
         if(is_array($teamMemberId))
         {
+            $results = [];
             foreach($teamMemberId as $id){
                 $results [] = ArrayHelper::getValue($this->teamMembers, $id);
             }
@@ -166,6 +168,7 @@ class TeamMemberTool extends Component {
      * @return array (team,team,...)
      */
     public function getUserTeam($user_id,$include_is_delete=false){
+        $results = [];
         foreach ($this->teamMembers as $teammeber) {
             if($teammeber['u_id'] == $user_id){
                 if($include_is_delete || $teammeber['is_delete'] == 'N')
@@ -182,6 +185,7 @@ class TeamMemberTool extends Component {
      * @return array(teamember,...)
      */
     public function getUserTeamMembers($user_id,$include_is_delete=false){
+        $results = [];
         foreach ($this->teamMembers as $teammeber) {
             if($teammeber['u_id'] == $user_id){
                 if($include_is_delete || $teammeber['is_delete'] == 'N')
