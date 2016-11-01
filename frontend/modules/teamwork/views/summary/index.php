@@ -166,33 +166,69 @@ $js =
     
     /** 下拉框AJAX */
     function select2Log(e){
-        $("#weekinfo").html("");
-        $.post("/teamwork/summary/index?course_id=$model->id&date="+$(e).val(),function(data)
-        {
-            $.each(data['data'], function(){
-                $('<a>').html('<i class="state-icon '+this['icon']+'"></i>'+this['date']).addClass(this['class']).attr(
-                    'date', this.week['start']+'/'+this.week['end']).appendTo($("#weekinfo"));
-            });
-            /** 单击选中 */
-            $('.weekinfo').click(function(){
-                clickSelect($(this));
-            }); 
-	});
+        var lastMonth = $(e).val();
+        $.ajax({
+            url: "/teamwork/summary/index",
+            type: 'get',
+            data: {course_id: $model->id, date: $(e).val()},
+            success: function(data, status){
+                $("#weekinfo").html("");
+                if(lastMonth == data['date']){
+                    $.each(data['data'], function(){
+                        $('<a>').html('<i class="state-icon '+this['icon']+'"></i>'+this['date']).addClass(this['class']).attr(
+                            'date', this.week['start']+'/'+this.week['end']).appendTo($("#weekinfo"));
+                    });
+                }else{
+                    $('<span>').html('加载中...').attr('style', 'display: block;margin: 12px 0 0 5px;').appendTo($("#weekinfo"));
+                    setTimeout(function () {
+                        $("#weekinfo").html("");
+                        $('<span>').html('请求超时！').attr('style', 'display: block;margin: 12px 0 0 5px;').appendTo($("#weekinfo"));
+                    }, 10000);
+                }
+                /** 单击选中 */
+                $('.weekinfo').click(function(){
+                    clickSelect($(this));
+                });
+            },
+            error:function(){
+                $("#weekinfo").html("");
+                $('<span>').html('请求失败！').attr('style', 'display: block;margin: 12px 0 0 5px;').appendTo($("#weekinfo"))
+            }
+        })
     }
     /** 每周列表AJAX */          
     function clickWeekinfo(e){
         var date = $(e).attr('date'),
             isAuthorization = $isAuthorization; 
-        $.post("/teamwork/summary/view?course_id=$model->id&date="+date, function(data)
-        {
-            if(isAuthorization)
-                $('#update').attr('href', '/teamwork/summary/update?course_id=$model->id&create_time='+data['data']['create_time'])
-            
-            /** 周报详情 */
-            $('.summar').html('');
-            $('<p>').html('<span>'+createdAt+'：'+data['data']['created_at']+'</span>&nbsp;&nbsp;<span>'+createdBy+'：'+data['data']['create_by']+'</span>').addClass('time').appendTo(".summar");
-            $('<p>').html(data['data']['content']).addClass('content').insertAfter('.time')
-        });
+        $.ajax({
+            url: "/teamwork/summary/view",
+            type: 'get',
+            data: {course_id: $model->id, date: date},
+            success: function(data, status){
+                if(date == data['date']){
+                    if(isAuthorization)
+                        $('#update').attr('href', '/teamwork/summary/update?course_id=$model->id&create_time='+data['data']['create_time'])
+                    /** 周报详情 */
+                    $('.summar').html('');
+                    $('<p>').html('<span>'+createdAt+'：'+data['data']['created_at']+'</span>&nbsp;&nbsp;<span>'+createdBy+'：'+data['data']['create_by']+'</span>').addClass('time').appendTo(".summar");
+                    $('<p>').html(data['data']['content']).addClass('content').insertAfter('.time')
+                }else{
+                    $('.summar').html('');
+                    $('<p>').html('<span>'+createdAt+'：无'+'</span>&nbsp;&nbsp;<span>'+createdBy+'：无'+'</span>').addClass('time').appendTo(".summar");
+                    $('<p>').html('加载中...').addClass('content').insertAfter('.time')
+                    setTimeout(function () {
+                        $('.summar').html('');
+                        $('<p>').html('<span>'+createdAt+'：无'+'</span>&nbsp;&nbsp;<span>'+createdBy+'：无'+'</span>').addClass('time').appendTo(".summar");
+                        $('<p>').html('请求超时！').addClass('content').insertAfter('.time') 
+                    }, 10000);
+                }
+            },
+            error:function(){
+                $('.summar').html('');
+                $('<p>').html('<span>'+createdAt+'：无'+'</span>&nbsp;&nbsp;<span>'+createdBy+'：无'+'</span>').addClass('time').appendTo(".summar");
+                $('<p>').html('请求失败！').addClass('content').insertAfter('.time') 
+            }
+        })
     }
     /** 按钮选中状态 */
     function clickSelect(e){

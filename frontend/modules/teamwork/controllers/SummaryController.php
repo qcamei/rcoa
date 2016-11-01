@@ -70,7 +70,7 @@ class SummaryController extends Controller
                 for ($i = $start; $i < count($weeklyDate); $i++) {
                     if ($week['start'] <= $weeklyDate[$i] && $week['end'] >= $weeklyDate[$i]) {
                         $week['has'] = true;
-                        //$start = $i + 1;
+                        $start = $i + 1;
                         break;
                     }
                 }
@@ -88,7 +88,8 @@ class SummaryController extends Controller
             $errors [] = $ex->getMessage();
         }
         return [
-            'type'=>'S',
+            'type'=> 1,
+            'date' => $date,
             'data' =>  $weekinfo,
             'error' => $errors
         ];
@@ -134,7 +135,8 @@ class SummaryController extends Controller
             $errors [] = $ex->getMessage();
         }
         return [
-            'type'=>'S',
+            'type'=> 1,
+            'date' => $date,
             'data' => $weeklyInfo,
             'error' => $errors
         ];
