@@ -202,7 +202,9 @@ foreach ($dataProvider->allModels as $model)
     </div>
 </div>
 
-<?= $this->render('/default/_footer') ?>
+<?= $this->render('/default/_footer',[
+    'twTool' => $twTool
+]) ?>
 
 <?php
     TwAsset::register($this);

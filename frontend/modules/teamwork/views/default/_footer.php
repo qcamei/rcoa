@@ -2,6 +2,7 @@
 
 use common\models\teamwork\CourseManage;
 use frontend\modules\teamwork\TwAsset;
+use frontend\modules\teamwork\utils\TeamworkTool;
 use wskeee\rbac\RbacName;
 use yii\helpers\Html;
 
@@ -10,6 +11,7 @@ use yii\helpers\Html;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+$team_id = !is_array($twTool->getHotelTeam(Yii::$app->user->id)) ? $twTool->getHotelTeam(Yii::$app->user->id) : ''
 ?>
 
 <div class="controlbar footer-item-list" style="height: 50px;padding-top:0px; ">
@@ -26,7 +28,9 @@ use yii\helpers\Html;
                     ['class' => $controllerId == 'default' && ($actionId == 'list' || $actionId == 'search') ? 
                         'footer-item-xs footer-item-bg visible-xs-inline-block' : 'footer-item-xs visible-xs-inline-block']);
             
-            echo Html::a(Html::img(['/filedata/teamwork/image/course.png']), ['course/index', 'status' => CourseManage::STATUS_NORMAL], [
+            echo Html::a(Html::img(['/filedata/teamwork/image/course.png']), ['course/index',
+                    'team_id' => $team_id,
+                    'status' => CourseManage::STATUS_NORMAL], [
                     'class' => $controllerId == 'course' && $actionId == 'index' ? 
                         'footer-item-xs footer-item-bg visible-xs-inline-block' : 'footer-item-xs visible-xs-inline-block']);
             
@@ -50,7 +54,9 @@ use yii\helpers\Html;
                     ['class' => $controllerId == 'default' && ($actionId == 'list' || $actionId == 'search') ? 
                         'footer-item footer-item-bg hidden-xs' : 'footer-item hidden-xs']);
             
-            echo Html::a(Html::img(['/filedata/teamwork/image/course.png']).'课程', ['course/index', 'status' => CourseManage::STATUS_NORMAL], [
+            echo Html::a(Html::img(['/filedata/teamwork/image/course.png']).'课程', ['course/index', 
+                    'team_id' => $team_id, 
+                    'status' => CourseManage::STATUS_NORMAL], [
                     'class' =>  $controllerId == 'course' && $actionId == 'index' ? 
                         'footer-item footer-item-bg hidden-xs' : 'footer-item hidden-xs']);
             

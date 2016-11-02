@@ -119,7 +119,9 @@ $this->params['breadcrumbs'][] = $this->title;
         ?>
     </div></center>
 </div>
-<?= $this->render('_footer'); ?>
+<?= $this->render('_footer', [
+    'twTool' => $twTool
+]); ?>
 
 <?php
 $js = 
