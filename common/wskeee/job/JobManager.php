@@ -273,8 +273,10 @@ class JobManager {
     public function getUnReadyNotification($user)
     {
         $notification = JobNotification::find()
+                        ->select(['job_id'])
                         ->where(['u_id'=>$user,'status'=> JobNotification::STATUS_INIT])
                         ->all();
+        
         return $notification;
     }
     
@@ -285,8 +287,10 @@ class JobManager {
     public function getNotification($user)
     {
         $notification = JobNotification::find()
+                        ->select(['job_id'])
                         ->where(['u_id'=>$user,'status'=> JobNotification::STATUS_NORMAL])
                         ->all();
+           
         return $notification;
     }
     
@@ -297,11 +301,12 @@ class JobManager {
      */
     public function getNotificationInfo($jobId, $systemId)
     {
-        $haveReadNotice = Job::find()
-            ->filterWhere(['id' => $jobId])
-            ->andFilterWhere(['system_id' => $systemId])
+        $notificationInfo = Job::find()
+            ->where(['id' => $jobId])
+            ->andWhere(['system_id' => $systemId])
             ->all();
-        return $haveReadNotice;
+        
+        return $notificationInfo;
     }
     
     /**

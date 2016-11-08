@@ -17,8 +17,13 @@ use yii\web\View;
 $jobManager = Yii::$app->get('jobManager');
 $notification = $jobManager->getUnReadyNotification(Yii::$app->user->id);
 
-$unReadyNotice = $jobManager->getNotificationInfo(ArrayHelper::getColumn($notification, 'job_id'), ArrayHelper::getColumn($system, 'id'));
-$notice = ArrayHelper::getColumn($unReadyNotice, 'system_id');
+if(!empty($notification)){
+    $unReadyNotice = $jobManager->getNotificationInfo(ArrayHelper::getColumn($notification, 'job_id'), ArrayHelper::getColumn($system, 'id'));
+    $notice = ArrayHelper::getColumn($unReadyNotice, 'system_id');
+} else {
+    $unReadyNotice = [];
+    $notice = [];
+}
 ?>
 <span class="badge badge-warning"><?php echo count($notification)?></span>
 <ul class="dropdown-menu extended notification">

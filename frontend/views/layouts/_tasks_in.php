@@ -16,8 +16,13 @@ use yii\helpers\Html;
 $jobManager = Yii::$app->get('jobManager');
 $notification = $jobManager->getNotification(Yii::$app->user->id);
 
-$haveReadNotice = $jobManager->getNotificationInfo(ArrayHelper::getColumn($notification, 'job_id'), ArrayHelper::getColumn($system, 'id'));
-$notice = ArrayHelper::getColumn($haveReadNotice, 'system_id');
+if(!empty($notification)){
+    $haveReadNotice = $jobManager->getNotificationInfo(ArrayHelper::getColumn($notification, 'job_id'), ArrayHelper::getColumn($system, 'id'));
+    $notice = ArrayHelper::getColumn($haveReadNotice, 'system_id');
+} else {
+    $haveReadNotice = [];
+    $notice = [];
+}
 ?>
 <span class="badge badge-important"><?php echo count($notification)?></span>
 <ul class="dropdown-menu extended tasks-bar">
