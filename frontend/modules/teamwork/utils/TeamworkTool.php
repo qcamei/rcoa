@@ -12,7 +12,6 @@ use common\models\teamwork\CourseSummary;
 use common\models\teamwork\ItemManage;
 use common\models\teamwork\Link;
 use common\models\teamwork\Phase;
-use frontend\modules\multimedia\utils\MultimediaTool;
 use wskeee\framework\models\Item;
 use wskeee\framework\models\ItemType;
 use wskeee\team\TeamMemberTool;
@@ -587,7 +586,7 @@ class TeamworkTool{
     
     /**
      * 获取单例
-     * @return MultimediaTool
+     * @return TeamworkTool
      */
     public static function getInstance() {
         if (self::$instance == null) {

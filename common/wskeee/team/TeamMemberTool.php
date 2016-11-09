@@ -135,7 +135,7 @@ class TeamMemberTool extends Component {
         {
             $results = [];
             foreach($teamMemberId as $id){
-                $results [] = ArrayHelper::getValue($this->teamMembers, $id);
+                $results [] = $this->teamMembers[$id];
             }
             return $results;
         }else
@@ -227,7 +227,7 @@ class TeamMemberTool extends Component {
         }
         //没有缓存则从数据库获取数据
         $this->teams = $this->getTeamsDatas();
-        $this->teamMembers = $this->getTeammemberDatas();
+        $this->teamMembers = ArrayHelper::index($this->getTeammemberDatas(), 'id');
         
         $this->cache->set($this->cacheKey, [$this->teams,$this->teamMembers,  time()]);
     }
