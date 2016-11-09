@@ -187,7 +187,8 @@ class MultimediaTask extends ActiveRecord
             [['production_video_length'], 'required', 'on' => [self::SCENARIO_COMPLETE]],
             [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'progress', 'content_type', 'level', 'make_team', 'status', 'create_team', 'created_at', 'updated_at', 'brace_mark'], 'integer'],
             [['material_video_length', 'production_video_length'], 'checkVideoLen'],
-            [['name', 'path', 'des'], 'string', 'max' => 255],
+            [['name', 'path'], 'string', 'max' => 255],
+            [['des'], 'string'],
             [['plan_end_time', 'real_carry_out'], 'string', 'max' => 60],
             [['create_by'], 'string', 'max' => 36],
             [['content_type'], 'exist', 'skipOnError' => true, 'targetClass' => MultimediaContentType::className(), 'targetAttribute' => ['content_type' => 'id']],
@@ -270,6 +271,18 @@ class MultimediaTask extends ActiveRecord
         ];
     }
 
+    public function beforeSave($insert) {
+        if(parent::beforeSave($insert))
+        {
+            $this->des = htmlentities($this->des);
+            return true;
+        }
+    }
+    public function afterFind() {
+        
+        $this->des = html_entity_decode($this->des);
+    }
+    
     /**
      * 获取任务类型
      * @return ActiveQuery

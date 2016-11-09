@@ -140,7 +140,8 @@ class CourseManage extends ActiveRecord
             [['team_id', 'course_principal'], 'required', 'on' => [self::SCENARIO_CHANGE]],
             [['plan_start_time', 'plan_end_time', 'real_carry_out'], 'string', 'max' => 60],
             [['real_start_time'], 'string', 'max' => 60, 'on' => [self::SCENARIO_WAITSTART]],
-            [['des','path'], 'string', 'max' => 255],
+            [['path'], 'string', 'max' => 255],
+            [['des'], 'string'],
             [['project_id', 'course_id'], 'unique', 'targetAttribute' => ['project_id', 'course_id'], 'comboNotUnique' => \Yii::t('rcoa/teamwork', 'Do not repeat the same data')],
             [['course_ops'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['course_ops' => 'id']],
             [['weekly_editors_people'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['weekly_editors_people' => 'id']],
@@ -223,6 +224,18 @@ class CourseManage extends ActiveRecord
             'des' => Yii::t('rcoa/teamwork', 'Des'),
             'path' => Yii::t('rcoa/teamwork', 'Path'),
         ];
+    }
+    
+    public function beforeSave($insert) {
+        if(parent::beforeSave($insert))
+        {
+            $this->des = htmlentities($this->des);
+            return true;
+        }
+    }
+    public function afterFind() {
+        
+        $this->des = html_entity_decode($this->des);
     }
     
     /**
