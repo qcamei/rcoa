@@ -73,6 +73,11 @@ class CourseManage extends ActiveRecord
     /** 已完成 */
     const STATUS_CARRY_OUT = 15;
     
+    /** 新建模式 */
+    const MODE_NEWBUILT = 0;
+    /** 改造模式 */
+    const MODE_REFORM = 1;
+
     /**
      * 进度
      * @var integer
@@ -81,7 +86,7 @@ class CourseManage extends ActiveRecord
     
     /**
      * 是否存在周报
-     * @var type 
+     * @var array 
      */
     public $isExistWeekly = false ;
     
@@ -92,6 +97,15 @@ class CourseManage extends ActiveRecord
         self::STATUS_CARRY_OUT => '已完成',
     ];
     
+    /**
+     * 模式名称
+     * @var array 
+     */
+    public static $modeName = [
+        self::MODE_NEWBUILT => '新建',
+        self::MODE_REFORM => '改造'
+    ];
+
     /**
      * @inheritdoc
      */

@@ -425,8 +425,8 @@ class TeamworkTool{
         
     /**
      * 复制Phase表数据到CoursePhase表
-     * @param type $course_id       课程ID
-     * @param type $templateType    模版类别
+     * @param integer $course_id       课程ID
+     * @param integer $templateType    模版类别
      */
     public function addCoursePhase($course_id, $templateType)
     {
@@ -436,10 +436,10 @@ class TeamworkTool{
                 ->with('templateType')
                 ->with('createBy')
                 ->all();
-        $values = [];
+        
         /** 重组提交的数据为$values数组 */
-        foreach($phase as $value)
-        {
+        $values = [];
+        foreach($phase as $value){
             $values[] = [
                 'course_id' => $course_id,
                 'name' => $value->name,
@@ -449,23 +449,20 @@ class TeamworkTool{
         }
         
         /** 添加$values数组到表里 */
-        Yii::$app->db->createCommand()->batchInsert(CoursePhase::tableName(), 
-        [
-            'course_id',
-            'name',
-            'weights',
-            'create_by',
-        ], $values)->execute();
+        Yii::$app->db->createCommand()->batchInsert(CoursePhase::tableName(), [
+            'course_id', 'name', 'weights', 'create_by'], $values)->execute();
     }
     
     /**
      * 复制Link表数据到CourseLink表
-     * @param type $course_id   课程ID
+     * @param integer $course_id            课程ID
+     * @param integer $templateType         模版类别
      */
     public function addCourseLink($course_id, $templateType)
     {
         $link = (new Query())
-                ->select(['Course_phase.id AS course_phase_id', 'Link.*'])
+                ->select(['Course_phase.course_id', 'Course_phase.id AS course_phase_id', 'Link.name', 'Link.type',
+                    'Link.total', 'Link.completed', 'Link.unit'])
                 ->from(['Link' => Link::tableName()])
                 ->leftJoin(['Phase' => Phase::tableName()], 'Phase.id = Link.phase_id')
                 ->leftJoin(['Course_phase' => CoursePhase::tableName()], 'Course_phase.`name` = Phase.`name`')
@@ -473,12 +470,11 @@ class TeamworkTool{
                 ->andFilterWhere(['Link.template_type_id' => $templateType])
                 ->all();
         
-        $values = [];
         /** 重组提交的数据为$values数组 */
-        foreach($link as $value)
-        {
+        $values = [];
+        foreach($link as $value){
             $values[] = [
-                'course_id' => $course_id,
+                'course_id' => $value['course_id'],
                 'course_phase_id' => $value['course_phase_id'],
                 'name' => $value['name'],
                 'type' => $value['type'],
@@ -490,17 +486,9 @@ class TeamworkTool{
         }
         
         /** 添加$values数组到表里 */
-        Yii::$app->db->createCommand()->batchInsert(CourseLink::tableName(), 
-        [
-            'course_id',
-            'course_phase_id',
-            'name',
-            'type',
-            'total',
-            'completed',
-            'unit',
-            'create_by',
-        ], $values)->execute();
+        Yii::$app->db->createCommand()->batchInsert(CourseLink::tableName(), [
+            'course_id', 'course_phase_id', 'name', 'type', 'total', 'completed',
+            'unit', 'create_by'], $values)->execute();
     }
     
     /**
@@ -510,8 +498,8 @@ class TeamworkTool{
      */
     public function saveCourseAnnex($course_id, $post)
     {
-        $values = [];
         /** 重组提交的数据为$values数组 */
+        $values = [];
         if(!empty($post)){
             if(!($this->isSameValue($post['name']) || $this->isSameValue($post['path']))){
                 foreach ($post['name'] as $key => $value) {
@@ -523,12 +511,8 @@ class TeamworkTool{
                 }
 
                 /** 添加$values数组到表里 */
-                Yii::$app->db->createCommand()->batchInsert(CourseAnnex::tableName(), 
-                [
-                    'course_id',
-                    'name',
-                    'path',
-                ], $values)->execute();
+                Yii::$app->db->createCommand()->batchInsert(CourseAnnex::tableName(), [
+                    'course_id', 'name', 'path'], $values)->execute();
             }else{
                 throw new NotAcceptableHttpException('请不要重复上传相同附件！');
             }

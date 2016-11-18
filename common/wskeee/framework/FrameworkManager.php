@@ -9,6 +9,7 @@ use yii\base\Component;
 use yii\caching\Cache;
 use yii\di\Instance;
 use yii\helpers\ArrayHelper;
+use yii\web\NotFoundHttpException;
 
 
 
@@ -65,85 +66,140 @@ class FrameworkManager extends Component
         }
         $this->loadFromCache();
     }
+    
     /**
-     * 添加一个项目基础数据
-     * @param string $name              名称
+     * 创建行业
+     * @param array $names              
+     * @param boolean $clearCashe
+     */
+    public function addItemType($names, $clearCashe = null){
+        $doneItems = ItemType::find()
+                    ->select(['id','name'])
+                    ->where(['name'=>$names])
+                    ->asArray()
+                    ->all();
+        //已经存在的数据
+        $doneNames = ArrayHelper::map($doneItems,'name','id');
+        //需要新建的数据
+        //$newNames = array_diff($doneNames, $names);
+        $rows = [];
+        foreach($names as $index => $name){
+            if(!isset($doneNames[$name]))
+                $rows[] = [
+                    'name' => $name
+                ];
+        }
+        
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {  
+            $number = Yii::$app->db->createCommand()->batchInsert(ItemType::tableName(), ['name'], $rows)->execute();
+            if(count($rows) > 0 && $number > 0) {
+                $trans->commit();  //提交事务
+                Yii::$app->getSession()->setFlash('success','操作成功！');
+            }
+        }catch (Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
+        }
+        
+        return ArrayHelper::getColumn($rows, 'name');
+    }
+    
+    /**
+     * 添加层次/类型
+     * @param array $name               名称
      * @param integer $level            等级 Item::LEVEL_COLLEGE / Item::LEVEL_PROJECT / Item::LEVEL_COURSE
-     * @param integer $parent_id        父级id
-     * @param string $des               描述
      * @param boolean $clearCache       清除缓存    
      * @return integer 新加或更新后id
      */
-    public function addItem($name,$level,$parent_id,$des,$clearCache=1){
-        $item = Item::find(['name'=>$name]);
-        if(!$item)
-            $item = new Item ();
-        $item->name = $name;
-        $item->level = $level;
-        $item->parent_id = $parent_id;
-        $item->des = $des;
-        if($item->validate() && $item->sava()){
-            if($clearCache)
-                $this->invalidateCache ();
-            return $item->id;
+    public function addItem($names, $level, $clearCache = 1){
+        $items = Item::find()
+                ->where(['name'=> $names])
+                ->asArray()
+                ->all();
+        
+        //已经存在的数据
+        $doneNames = ArrayHelper::map($items, 'name', 'id');
+        $rows = [];
+        foreach($names as $index => $name){
+            if(!isset($doneNames[$name])){
+                $rows [] = [
+                    'name' => $name,
+                    'level' => $level,
+                    'created_at' => time(),
+                    'updated_at' => time(),
+                ];
+            }
         }
-        return null;
+        
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {  
+            $number = Yii::$app->db->createCommand()->batchInsert(Item::tableName(), [
+                    'name',  'level', 'created_at', 'updated_at'], $rows)->execute();
+            if(count($rows) > 0 && $number > 0) {
+                $trans->commit();  //提交事务
+                Yii::$app->getSession()->setFlash('success','操作成功！');
+            }
+        }catch (Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
+        }
+        
+        return ArrayHelper::getColumn($rows, 'name');
     }
     
     /**
      * 添加多个项目基础数据
      * @param array $names                          多个名称集
-     * @param array | integer $level                等级 Item::LEVEL_COLLEGE / Item::LEVEL_PROJECT / Item::LEVEL_COURSE
-     * @param array | integer $parent_id            父级id
+     * @param integer $level                        等级 
+     * @param array $parentIds                      父级id
      * @param boolean $clearCache                   清除缓存 
      */
-    public function addItems($names,$level,$parent_id,$clearCache=1){
+    public function addItems($names, $level, $parentIds, $clearCache=1)
+    {
         $doneItems = Item::find()
-                        ->select(['id','name'])
-                        ->asArray()
-                        ->where(['name'=>$names])
-                        ->all();
+                    ->select(['id','name'])
+                    ->where(['name' => $names, 'level' => $level, 'parent_id' => array_values($parentIds)])
+                    ->asArray()
+                    ->all();
+        
         //已经存在的数据
         $doneNames = ArrayHelper::map($doneItems,'name','id');
-        //需要新建的数据
-        //$newNames = array_diff($doneNames, $names);
+        
         $rows = [];
-        foreach($names as $index=>$name){
-            if(!isset($doneNames[$name]))
+        foreach($names as $index => $name){
+            if(!isset($doneNames[$name]) && isset($parentIds[$name]))
                 $rows [] = [
-                    $name,  
-                    is_array ($level) ? $level[$index] : $level,//如果是array，添加对应值
-                    is_array ($parent_id) ? $parent_id[$index] : $parent_id//如果是array，添加对应值
+                    'name' => $name,  
+                    'level' => $level,
+                    'created_at' => time(),
+                    'updated_at' => time(),
+                    'parent_id' => $parentIds[$name]
                 ];
         }
-        if(count($rows)==0)return;
-        Yii::$app->db->createCommand()->batchInsert(Item::tableName(), ['name','level','parent_id'], $rows)->execute();
-    }
-    
-    /**
-     * 创建类型
-     * @param array $names
-     * @param boolean $clearCashe
-     */
-    public function addItemType($names,$clearCashe){
-        $doneItems = ItemType::find()
-                        ->select(['id','name'])
-                        ->asArray()
-                        ->where(['name'=>$names])
-                        ->all();
-        //已经存在的数据
-        $doneNames = ArrayHelper::map($doneItems,'name','id');
-        //需要新建的数据
-        //$newNames = array_diff($doneNames, $names);
-        $rows = [];
-        foreach($names as $index=>$name){
-            if(!isset($doneNames[$name]))
-                $rows [] = [$name];
+        
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {  
+            $number = Yii::$app->db->createCommand()->batchInsert(Item::tableName(), [
+                    'name',  'level', 'created_at', 'updated_at', 'parent_id'], $rows)->execute();
+        
+            if(count($rows) > 0 && $number > 0 && !empty($parentIds)) {
+                $trans->commit();  //提交事务
+                Yii::$app->getSession()->setFlash('success','操作成功！');
+            }
+        }catch (Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
-        if(count($rows)==0)return;
-        Yii::$app->db->createCommand()->batchInsert(ItemType::tableName(), ['name'], $rows)->execute();
+        
+        return ArrayHelper::getColumn($rows, 'name');
     }
-    
     
     /**
      * 获取架构数据

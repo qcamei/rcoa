@@ -7,6 +7,7 @@
  */
 
 return[
+    //公共
     'Item Types' => '行业',
     'Create Item Type' => '创建-行业',
     'Update Item Type' => '更新-行业',
@@ -19,4 +20,7 @@ return[
     'Courses' => '课程',
     'Create Course' => '创建-课程',
     'Update Course' => '更新-课程',
+    
+    //提示
+    'Operation failed!reason:1.existence repetition data;2.data is empty' => '操作失败！原因：1. 存在重复数据；2. 数据是空的'
 ];

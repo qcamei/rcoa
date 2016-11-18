@@ -31,7 +31,8 @@ class ItemType extends ActiveRecord
     public function rules()
     {
         return [
-            [['name'], 'string', 'max' => 255]
+            [['name'], 'string', 'max' => 255],
+            [['name'], 'unique', 'targetAttribute' => ['name']],
         ];
     }
 
