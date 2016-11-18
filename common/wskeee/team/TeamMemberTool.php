@@ -84,10 +84,9 @@ class TeamMemberTool extends Component {
     public function init() 
     {
         parent::init();
-        
         $this->cache = Instance::ensure([
                 'class' => 'yii\caching\FileCache',
-                'cachePath' => Yii::getAlias('frontend').'/runtime/cache'
+                'cachePath' => FRONTEND_DIR.'/runtime/cache'
             ], Cache::className());
         $this->loadFromCache();
     }
