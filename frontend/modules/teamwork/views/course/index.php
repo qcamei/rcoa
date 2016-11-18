@@ -62,6 +62,29 @@ foreach ($dataProvider->allModels as $model)
                     'format' => 'raw',
                     'value'=> function($model){
                         /* @var $model CourseManage */
+                        return $model->mode == CourseManage::MODE_NEWBUILT ?
+                                Html::img(['/filedata/teamwork/image/mode_newbuilt.png']) : 
+                                Html::img(['/filedata/teamwork/image/mode_reform.png']);
+                    },
+                    'headerOptions' => [
+                        'class'=>[
+                            //'th'=>'hidden-xs',
+                        ],
+                        'style' => [
+                            'width' => '16px',
+                            'padding-right' => '4px'
+                        ],
+                    ],
+                    'contentOptions' =>[
+                        //'class'=>'hidden-xs',
+                        'style' => 'white-space: nowrap; padding-right:4px'
+                    ],
+                ],
+                [
+                    'label' => Yii::t('rcoa/teamwork', 'Statistics-Team'),
+                    'format' => 'raw',
+                    'value'=> function($model){
+                        /* @var $model CourseManage */
                         return '<span class="team-span">'.$model->team->name.'</span>';
                     },
                     'headerOptions' => [
@@ -69,12 +92,14 @@ foreach ($dataProvider->allModels as $model)
                             //'th'=>'hidden-xs',
                         ],
                         'style' => [
-                            'width' => '45px' 
+                            'width' => '45px',
+                            'padding-left' => '4px;',
+                            'padding-right' => '4px;',
                         ],
                     ],
                     'contentOptions' =>[
                         //'class'=>'hidden-xs',
-                        'style' => 'white-space: nowrap;'
+                        'style' => 'white-space: nowrap;padding-left:4px;padding-right:4px;'
                     ],
                 ],
                 [

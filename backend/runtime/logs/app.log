@@ -16826,3 +16826,172 @@ $_SERVER = [
     'REQUEST_TIME_FLOAT' => 1479291212.839
     'REQUEST_TIME' => 1479291212
 ]
+2016-11-18 15:39:59 [127.0.0.1][59][s78prr5a98bunqskmtlua3qqe5][error][yii\base\ErrorException:8] exception 'yii\base\ErrorException' with message 'Undefined variable: name' in D:\wamp64\www\rcoa\frontend\modules\teamwork\utils\TeamworkBatchAdd.php:94
+Stack trace:
+#0 D:\wamp64\www\rcoa\common\wskeee\framework\controllers\ImportController.php(102): wskeee\framework\controllers\ImportController->createTwCourse()
+#1 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): wskeee\framework\controllers\ImportController->actionUpload()
+#2 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): ::call_user_func_array:{D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php:55}()
+#3 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(154): yii\base\InlineAction->runWithParams()
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(454): yii\base\Controller->runAction()
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(87): yii\base\Module->runAction()
+#6 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest()
+#7 D:\wamp64\www\rcoa\backend\web\index.php(20): yii\base\Application->run()
+#8 {main}
+2016-11-18 15:39:52 [127.0.0.1][59][s78prr5a98bunqskmtlua3qqe5][info][application] $_POST = [
+    '_csrf' => 'OXVfbnlxTldcEQxeVCkjDwAkbCQpQicgYCUcOT4IJWYLJSk8FSYoMg=='
+]
+
+$_FILES = [
+    'import-file' => [
+        'name' => '课程平台数据导入模版.xlsx'
+        'type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        'tmp_name' => 'D:\\wamp64\\tmp\\php8D55.tmp'
+        'error' => 0
+        'size' => 76576
+    ]
+]
+
+$_COOKIE = [
+    '_csrf' => 'a20462df414f159a5c088a31e3b0c516c88bacbc356fb5a6f66b6032195160ada:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"edS0-XmX9Q3JP3iwYPCWGyk12PvRlWfe\";}'
+    'PHPSESSID' => 's78prr5a98bunqskmtlua3qqe5'
+    '_identity' => '80b8c44957021f8a89ab3e49f1b80d951a4283c74690138977eaafcf72d48c4ea:2:{i:0;s:9:\"_identity\";i:1;s:49:\"[\"59\",\"ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK\",2592000]\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => '/framework/import/upload'
+    '__id' => '59'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoaadmin.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'CONTENT_LENGTH' => '76995'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_ORIGIN' => 'http://tt.ccoaadmin.gzedu.net'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36'
+    'CONTENT_TYPE' => 'multipart/form-data; boundary=----WebKitFormBoundaryQTU03gctajWWnzaS'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoaadmin.gzedu.net/framework/import/upload'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => '_csrf=a20462df414f159a5c088a31e3b0c516c88bacbc356fb5a6f66b6032195160ada%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22edS0-XmX9Q3JP3iwYPCWGyk12PvRlWfe%22%3B%7D; PHPSESSID=s78prr5a98bunqskmtlua3qqe5; _identity=80b8c44957021f8a89ab3e49f1b80d951a4283c74690138977eaafcf72d48c4ea%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A49%3A%22%5B%2259%22%2C%22ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK%22%2C2592000%5D%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoaadmin.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoaadmin.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/backend/web/index.php'
+    'REMOTE_PORT' => '64979'
+    'REDIRECT_URL' => 'http://tt.ccoaadmin.gzedu.net/framework/import/upload'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'POST'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/framework/import/upload'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1479454792.636
+    'REQUEST_TIME' => 1479454792
+]
+2016-11-18 15:48:26 [127.0.0.1][59][s78prr5a98bunqskmtlua3qqe5][error][yii\base\ErrorException:1] exception 'yii\base\ErrorException' with message 'Allowed memory size of 134217728 bytes exhausted (tried to allocate 1294076 bytes)' in D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\Command.php:844
+Stack trace:
+#0 D:\wamp64\www\rcoa\frontend\modules\teamwork\utils\TeamworkBatchAdd.php(233): yii\db\Command->execute()
+#1 D:\wamp64\www\rcoa\common\wskeee\framework\controllers\ImportController.php(295): frontend\modules\teamwork\utils\TeamworkBatchAdd->addCourseLink()
+#2 D:\wamp64\www\rcoa\common\wskeee\framework\controllers\ImportController.php(105): wskeee\framework\controllers\ImportController->createTwCourseLink()
+#3 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): wskeee\framework\controllers\ImportController->actionUpload()
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): ::call_user_func_array:{D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php:55}()
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(154): yii\base\InlineAction->runWithParams()
+#6 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(454): yii\base\Controller->runAction()
+#7 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(87): yii\base\Module->runAction()
+#8 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest()
+#9 D:\wamp64\www\rcoa\backend\web\index.php(20): yii\base\Application->run()
+#10 {main}
+2016-11-18 15:48:01 [127.0.0.1][59][s78prr5a98bunqskmtlua3qqe5][info][application] $_POST = [
+    '_csrf' => 'RUxXSlNRMk4gKAR6fglfFnwdZAADYls5HBwUHRQoWX93HCEYPwZUKw=='
+]
+
+$_FILES = [
+    'import-file' => [
+        'name' => '课程平台数据导入模版.xlsx'
+        'type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        'tmp_name' => 'D:\\wamp64\\tmp\\php315.tmp'
+        'error' => 0
+        'size' => 68721
+    ]
+]
+
+$_COOKIE = [
+    '_csrf' => 'a20462df414f159a5c088a31e3b0c516c88bacbc356fb5a6f66b6032195160ada:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"edS0-XmX9Q3JP3iwYPCWGyk12PvRlWfe\";}'
+    'PHPSESSID' => 's78prr5a98bunqskmtlua3qqe5'
+    '_identity' => '80b8c44957021f8a89ab3e49f1b80d951a4283c74690138977eaafcf72d48c4ea:2:{i:0;s:9:\"_identity\";i:1;s:49:\"[\"59\",\"ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK\",2592000]\";}'
+]
+
+$_SESSION = [
+    '__flash' => [
+        'success' => -1
+    ]
+    '__returnUrl' => '/framework/import/upload'
+    '__id' => '59'
+    'success' => '操作成功！'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoaadmin.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'CONTENT_LENGTH' => '69140'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_ORIGIN' => 'http://tt.ccoaadmin.gzedu.net'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36'
+    'CONTENT_TYPE' => 'multipart/form-data; boundary=----WebKitFormBoundaryOnSeue97X7mwGAfE'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoaadmin.gzedu.net/framework/import/upload'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => '_csrf=a20462df414f159a5c088a31e3b0c516c88bacbc356fb5a6f66b6032195160ada%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22edS0-XmX9Q3JP3iwYPCWGyk12PvRlWfe%22%3B%7D; PHPSESSID=s78prr5a98bunqskmtlua3qqe5; _identity=80b8c44957021f8a89ab3e49f1b80d951a4283c74690138977eaafcf72d48c4ea%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A49%3A%22%5B%2259%22%2C%22ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK%22%2C2592000%5D%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoaadmin.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoaadmin.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/backend/web/index.php'
+    'REMOTE_PORT' => '50208'
+    'REDIRECT_URL' => 'http://tt.ccoaadmin.gzedu.net/framework/import/upload'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'POST'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/framework/import/upload'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1479455281.522
+    'REQUEST_TIME' => 1479455281
+]

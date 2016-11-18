@@ -20,6 +20,7 @@ use yii\db\ActiveRecord;
  * @property integer $project_id                项目Id
  * @property integer $course_id                 课程Id
  * @property string $teacher                    主讲教师
+ * @property string $mode                       建设模式
  * @property integer $weekly_editors_people     周报编辑人
  * @property integer $credit                    学分
  * @property integer $lession_time              学时
@@ -217,6 +218,7 @@ class CourseManage extends ActiveRecord
             'project_id' => Yii::t('rcoa/teamwork', 'Project ID'),
             'course_id' => Yii::t('rcoa/teamwork', 'Course ID'),
             'teacher' => Yii::t('rcoa/teamwork', 'Teacher'),
+            'mode' => Yii::t('rcoa/teamwork', 'Mode'),
             'weekly_editors_people' => Yii::t('rcoa/teamwork', 'Weekly Editors People'),
             'credit' => Yii::t('rcoa/teamwork', 'Credit'),
             'lession_time' => Yii::t('rcoa/teamwork', 'Lession Time'),

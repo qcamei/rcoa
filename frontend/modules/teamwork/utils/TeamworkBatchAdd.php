@@ -100,7 +100,7 @@ class TeamworkBatchAdd {
                         'project_id' => $projectId,
                         'course_id' => (int)$id,
                         'teacher' => $this->getSpeakerTeacher($courseInfoArray[$name][0]),
-                        //'mode' => $mode[$courseInfoArray[$name][1]],
+                        'mode' => $mode[$courseInfoArray[$name][1]],
                         'credit' => is_numeric($courseInfoArray[$name][2]) ? $courseInfoArray[$name][2] : null,
                         'lession_time' => is_numeric($courseInfoArray[$name][3]) ? $courseInfoArray[$name][3] : null,
                         'video_length' => $this->videoLenFormat($courseInfoArray[$name][4]),
@@ -111,6 +111,8 @@ class TeamworkBatchAdd {
                         'course_ops' => $this->getCourseOps($courseInfoArray[$name][9]),
                         'created_at' => time(),
                         'updated_at' => time(),
+                        'status' => CourseManage::STATUS_CARRY_OUT,
+                        'path' => $courseInfoArray[$name][10],
                     ];
                 }
             }
@@ -121,8 +123,8 @@ class TeamworkBatchAdd {
         try
         {  
             $number = Yii::$app->db->createCommand()->batchInsert(CourseManage::tableName(), [
-                'project_id', 'course_id', 'teacher', 'credit', 'lession_time', 'video_length', 'question_mete', 
-                'case_number', 'activity_number', 'team_id', 'course_ops', 'created_at', 'updated_at'], $rows)->execute();
+                'project_id', 'course_id', 'teacher', 'mode', 'credit', 'lession_time', 'video_length', 'question_mete', 
+                'case_number', 'activity_number', 'team_id', 'course_ops', 'created_at', 'updated_at', 'status', 'path'], $rows)->execute();
             if(count($rows) > 0 && $number > 0) {
                 $trans->commit();  //提交事务
                 Yii::$app->getSession()->setFlash('success','操作成功！');
@@ -223,7 +225,7 @@ class TeamworkBatchAdd {
                 'name' => $value['name'],
                 'type' => $value['type'],
                 'total' => $value['total'],
-                'completed' => $value['completed'],
+                'completed' => 1,
                 'unit' => $value['unit'],
             ];
         

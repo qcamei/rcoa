@@ -108,6 +108,17 @@ use yii\widgets\ActiveForm;
     
     <h5><b>开发信息</b></h5>
     
+    <?= $form->field($model, 'mode')->radioList(CourseManage::$modeName, [
+        'itemOptions'=>[
+            'labelOptions'=>[
+                'style'=>[
+                    'margin-right'=>'30px',
+                    'margin-top' => '5px'
+                ]
+            ]
+        ],     
+    ]) ?>
+    
     <?php
         if(is_array($team)){
             echo $form->field($model, 'team_id')->widget(Select2::classname(), [

@@ -64,6 +64,7 @@ return[
     'Course ID' => '课程名称',
     'Course' => '课程',
     'Teacher' => '主讲讲师',
+    'Mode' => '建设模式',
     'Credit' => '学分',
     'Lession Time' => '学时',
     'Video Length' => '视频时长',

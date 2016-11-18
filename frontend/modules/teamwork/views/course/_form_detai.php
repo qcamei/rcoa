@@ -4,6 +4,7 @@ use common\models\team\TeamMember;
 use common\models\teamwork\CourseManage;
 use wskeee\utils\DateUtil;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\DetailView;
 
@@ -79,9 +80,14 @@ foreach ($producers as $element) {
             ],
             ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">开发信息</span>','value' => ''],
             [
+                'attribute' => 'mode',
+                'format' => 'raw',
+                'value' => CourseManage::$modeName[$model->mode],
+            ],
+            [
                 'attribute' => 'team_id',
                 'format' => 'raw',
-                'value' => !empty($model->team_id) ? $model->team->name : null,
+                'value' => !empty($model->team_id) ? '<span class="team-span">'.$model->team->name.'</span>' : null,
             ],
             [
                 'attribute' => Yii::t('rcoa/teamwork', 'Resource People'),

@@ -73,6 +73,7 @@ class ImportController extends Controller
             $teams = [];            //团队
             $producer = [];         //开发人员
             $courseOps  = [];       //运维人
+            $paths  = [];           //路径
             foreach ($columns as $column){
                 $itemTypes = $this->unique($itemTypes, $column['data'][0]);
                 $items = $this->merge($items, $column['data'][1], $column['data'][0]);
@@ -89,11 +90,11 @@ class ImportController extends Controller
                 $teams = $this->merge($teams, $column['data'][12], $column['data'][3]);
                 $producer = $this->merge($producer, $column['data'][13], $column['data'][3]);
                 $courseOps = $this->merge($courseOps, $column['data'][14], $column['data'][3]);
+                $paths = $this->merge($paths, $column['data'][16], $column['data'][3]);
             }
-            
             $courseInfoArray = $this->againPackaging([$teachers, $buildModes, 
                 $learnScores, $learnTimes, $videoTimeLengthes, $questionMete, $caseNumber, 
-                $activityNumber, $teams, $courseOps]);
+                $activityNumber, $teams, $courseOps, $paths]);
             $itemTypeIds = $this->createFmItemType($itemTypes);                                       //插入基础数据 - 行业
             $itemIds = $this->createFmItem(array_unique(array_values($items)), Item::LEVEL_COLLEGE);  //插入基础数据 - 层次/类型
             $itemChildIds = $this->createFmItems($itemChilds, $itemIds, Item::LEVEL_PROJECT);        //插入基础数据 - 专业/工种

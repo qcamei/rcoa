@@ -331,7 +331,7 @@ and open the template in the editor.
     text-decoration: blink;
 }
 
-.course-manage-index .team-span {
+.team-span {
     background-color: #333;
     display: block;
     width: 40px;
