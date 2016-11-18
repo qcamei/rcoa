@@ -135,11 +135,15 @@ class TeamMemberTool extends Component {
         {
             $results = [];
             foreach($teamMemberId as $id){
-                $results [] = $this->teamMembers[$id];
+                if(isset($this->teamMembers[$id]))
+                    $results [] = $this->teamMembers[$id];
             }
             return $results;
-        }else
+        }else if(isset ($this->teamMembers[$teamMemberId]))
             return $this->teamMembers[$teamMemberId];
+        else {
+            return [];
+        }
     }
     
     /**
@@ -151,15 +155,13 @@ class TeamMemberTool extends Component {
     public function getTeamMembersByTeamId($team_id,$include_is_delete=false){
         $results = [];
         foreach($this->teamMembers AS $teamMember){
-            //以team_id为键，teammember 数据组成数据
-            if(!isset($results[$teamMember['team_id']]))
-                $results[$teamMember['team_id']] = [];
-            
-            //加到结果
-            if($include_is_delete || $teammeber['is_delete'] == 'N')
-                $results[$teamMember['team_id']] [] = $teamMember;
+            if($teamMember['team_id'] == $team_id)
+            {
+                if($include_is_delete || $teamMember['is_delete'] == 'N')
+                    $results [] = $teamMember;
+            }
         }
-        return $this->team_member_map[$team_id];
+        return $results;
     }
     /**
      * 获取用户所属团队
