@@ -4,10 +4,12 @@ use common\models\teamwork\CourseManage;
 use frontend\modules\teamwork\TwAsset;
 use frontend\modules\teamwork\utils\TeamworkTool;
 use yii\data\ActiveDataProvider;
+use yii\data\Pagination;
 use yii\grid\GridView;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
+use yii\widgets\LinkPager;
 
 /* @var $this View */
 /* @var $twTool TeamworkTool */
@@ -51,7 +53,7 @@ foreach ($dataProvider->allModels as $model)
             ],
             'pager' => [
                 'options' => [
-                    'class' => 'pagination',
+                    'class' => 'hidden',
                     //'style' => 'float: right; margin: 0px;'
                 ]
             ],
@@ -85,7 +87,7 @@ foreach ($dataProvider->allModels as $model)
                     'format' => 'raw',
                     'value'=> function($model){
                         /* @var $model CourseManage */
-                        return '<span class="team-span">'.$model->team->name.'</span>';
+                        return '<span class="team-span">'.(!empty($model->team_id) ? $model->team->name : null).'</span>';
                     },
                     'headerOptions' => [
                         'class'=>[
@@ -161,8 +163,8 @@ foreach ($dataProvider->allModels as $model)
                     'format' => 'raw',
                     'value'=> function($model){
                         /* @var $model CourseManage */
-                        return '<div class="course-name">'.(!empty($model->course_id) ? $model->course->name : null).'</div>'.
-                               Html::beginTag('div', [
+                        return '<div class="course-name">'.(!empty($model->course_id) ? $model->course->name : null).'</div>';
+                               /*Html::beginTag('div', [
                                         'class' => 'progress table-list-progress',
                                         'style' => 'height:12px;margin:2px 0;border-radius:0px;'
                                     ]).
@@ -172,7 +174,7 @@ foreach ($dataProvider->allModels as $model)
                                     ]).
                                     (int)($model->progress * 100).'%'.
                                     Html::endTag('div').
-                                Html::endTag('div');
+                                Html::endTag('div');*/
                     },
                     'headerOptions' => [
                         'style' => [
@@ -224,6 +226,13 @@ foreach ($dataProvider->allModels as $model)
                 ],
             ],
         ]); ?>
+        
+        <?= LinkPager::widget([  
+            'pagination' => new Pagination([
+                //'pageSize' => 20,
+                'totalCount' => $count,  
+            ]),  
+        ]) ?> 
     </div>
 </div>
 

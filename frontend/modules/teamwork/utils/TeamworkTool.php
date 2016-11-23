@@ -2,7 +2,6 @@
 
 namespace frontend\modules\teamwork\utils;
 
-use common\models\team\Team;
 use common\models\teamwork\CourseAnnex;
 use common\models\teamwork\CourseLink;
 use common\models\teamwork\CourseManage;
@@ -121,58 +120,46 @@ class TeamworkTool{
      * @param type $courseId        课程ID
      * @return type                 返回结果对象
      */
-    public function getCourseProgressAll($projectId = null, $status = null, $teamId = null, 
+    public function getCourseProgress($projectId = null, $status = null, $teamId = null, 
             $itemTypeId = null, $itemId = null, $itemChildId = null, $courseId = null, $keyword = null, $time = null)
     {
-        if($time != null)
-            $time = explode(" - ",$time);
+        /* @var $twQuery TeamworkQuery */
+        $twQuery = TeamworkQuery::getInstance();
+        $results = $twQuery->getCourseManageTable();
+        $results->andfilterWhere(['like', 'Fw_item_type.name', $keyword]);
+        $results->orFilterWhere(['like', 'Fw_item.name', $keyword]);
+        $results->orFilterWhere(['like', 'Fw_item_child.name', $keyword]);
+        $results->orFilterWhere(['like', 'Fw_item_course.name', $keyword]);
+        $results->orFilterWhere(['like', 'Team.name', $keyword]);
+        $results->andFilterWhere([
+            'Item.item_type_id' => $itemTypeId,
+            'Tw_item.item_id' => $itemId,
+            'Tw_item.item_child_id' => $itemChildId,
+            'Tw_course.id' => null,
+            'Tw_course.project_id'=> $projectId,
+            'Tw_course.course_id' => $courseId,
+            'Tw_course.`status`'=> $status,
+            'Tw_course.team_id'=> $teamId,
+        ]);
         
-        $results = CourseManage::find()
-                ->select(['Course.*', 'Item.item_type_id','Item.item_id', 'Item.item_child_id', 
-                    'Team.name AS team_name', 'Fw_item_type.name AS item_type_name',
-                    'Fw_item.name AS item_name',
-                    'SUM(Course_phase_progress.progress * Course_phase_progress.weights) AS progress'])
-                ->from($this->courseProgress)
-                ->leftJoin(['Course'=>CourseManage::tableName()], 'Course.id = Course_phase_progress.course_id')
-                ->leftJoin(['Item' => ItemManage::tableName()], 'Item.id = Course.project_id')
-                ->leftJoin(['Team' => Team::tableName()], 'Team.id = Course.team_id')
-                ->leftJoin(['Fw_item_type' => ItemType::tableName()], 'Fw_item_type.id = Item.item_type_id')
-                ->leftJoin(['Fw_item' => Item::tableName()], 
-                    '(Fw_item.id = Course.course_id OR Fw_item.id = Item.item_child_id OR Fw_item.id = Item.item_id)')
-                ->andfilterWhere(['like', 'Fw_item_type.name', $keyword])
-                ->orFilterWhere(['like', 'Fw_item.name', $keyword])
-                ->orFilterWhere(['like', 'Team.name', $keyword])
-                ->andFilterWhere([
-                    'Item.item_type_id' => $itemTypeId,
-                    'Item.item_id' => $itemId,
-                    'Item.item_child_id' => $itemChildId,
-                    'Course.project_id'=> $projectId,
-                    'Course.course_id' => $courseId,
-                    'Course.`status`'=> $status,
-                    'Course.team_id'=> $teamId,
-                ])
-                ->andFilterWhere(
-                    $time != null ? ($status == CourseManage::STATUS_WAIT_START ? ['<=','Course.created_at', strtotime($time[1]) ]: 
-                        ($status == CourseManage::STATUS_NORMAL ? ['<=','Course.real_start_time',$time[1]] : 
-                            ($status == CourseManage::STATUS_CARRY_OUT ? ['between','Course.real_carry_out',$time[0],$time[1]] : 
-                            ['or', ['and',"Course.status=".CourseManage::STATUS_WAIT_START,  ['<=','Course.created_at', strtotime($time[1])]], 
-                                ['and',"Course.status=".CourseManage::STATUS_NORMAL, ['<=','Course.real_start_time', $time[1]]],
-                                ['and',"Course.status=".CourseManage::STATUS_CARRY_OUT,   ['between','Course.real_carry_out',$time[0],$time[1]]]
-                            ]))) : []
-                )
-                ->groupBy(['Course.id', 'Fw_item.id'])
-                ->with('course')
-                //->with('courseLinks')
-                //->with('coursePhases')
-                //->with('producers')
-                //->with('speakerTeacher')
-                //->with('project')
-                ->with('project.item')
-                ->with('project.itemChild')
-                ->with('project.itemType')
-                ->with('team')
-                ->all();
-               
+        if($time != null){
+            $time = explode(" - ",$time);
+            if($status == CourseManage::STATUS_WAIT_START)
+                $results->andFilterWhere(['<=','Tw_course.created_at', strtotime($time[1])]);
+            else if($status == CourseManage::STATUS_NORMAL)
+                $results->andFilterWhere(['<=','Tw_course.real_start_time',$time[1]]);
+            else if($status == CourseManage::STATUS_CARRY_OUT)
+                $results->andFilterWhere(['between','Tw_course.real_carry_out',$time[0],$time[1]]);
+            else
+                $results->andFilterWhere([
+                    'or', ['and',"Tw_course.status=".CourseManage::STATUS_WAIT_START,  ['<=','Tw_course.created_at', strtotime($time[1])]], 
+                    ['and',"Tw_course.status=".CourseManage::STATUS_NORMAL, ['<=','Tw_course.real_start_time', $time[1]]],
+                    ['and',"Tw_course.status=".CourseManage::STATUS_CARRY_OUT,   ['between','Tw_course.real_carry_out',$time[0],$time[1]]]
+                ]);
+        }
+        
+        //$results->addSelect(['Tw_course.teacher']);
+        
         return $results;
     }
     
@@ -212,11 +199,9 @@ class TeamworkTool{
                         ->orFilterWhere(['like', 'Fw_item.name', $keyword])
                         ->groupBy('Item.id')
                         ->with('courseManages')
-                        //->with('createBy')
                         ->with('itemChild')
                         ->with('item')
                         ->with('itemType')
-                        //->with('teamMember')
                         ->all();
         
         return $itemProgress;
@@ -388,6 +373,7 @@ class TeamworkTool{
     public function getCourseLessionTimesSum($condition)
     {
         $lessionTimes = CourseManage::find()
+                        ->select(['lession_time'])
                         ->where($condition)
                         ->all();
         return ArrayHelper::getColumn($lessionTimes, 'lession_time');

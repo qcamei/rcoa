@@ -64,11 +64,14 @@ class CourseController extends Controller
                        
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
+        $query = $twTool->getCourseProgress($project_id, $status, $team_id, $item_type_id, $item_id, $item_child_id, $course_id, $keyword, $time);
+        $count = count($query->all());
         $dataProvider = new ArrayDataProvider([
-            'allModels' => $twTool->getCourseProgressAll($project_id, $status, $team_id, 
-                            $item_type_id, $item_id, $item_child_id, $course_id, $keyword, $time),
+            'allModels' => $query->limit(20)->all(),
+            'totalCount' => isset($count) ? $count : 0,
+            
         ]);
-        
+       
         return $this->render('index', [
             'twTool' => $twTool,
             'dataProvider' => $dataProvider,
@@ -77,6 +80,7 @@ class CourseController extends Controller
             'itemChild' => empty($mark) ? [] : $this->getChildren($item_id),
             'course' => empty($mark) ? [] : $this->getChildren($item_child_id),
             'team' => $this->getTeam(),
+            'count' => $count,
             //搜索默认字段值
             'itemTypeId' => $item_type_id,
             'itemId' => $item_id,
