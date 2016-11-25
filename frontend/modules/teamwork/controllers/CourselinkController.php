@@ -74,7 +74,7 @@ class CourselinkController extends Controller
     {
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
-        $coursePhase = $twTool->getCoursePhaseProgressAll($course_id);
+        $coursePhase = $twTool->getCoursePhaseProgress($course_id)->all();
         return $this->render('progress', [
             'twTool' => $twTool,
             'course_id' => $course_id,

@@ -81,9 +81,9 @@ class CourseManage extends ActiveRecord
 
     /**
      * 进度
-     * @var integer
+     * @var array
      */
-    public $progress;
+    public static $progress = [];
     
     /**
      * 是否存在周报

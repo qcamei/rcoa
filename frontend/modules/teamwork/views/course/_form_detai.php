@@ -24,6 +24,8 @@ foreach ($producers as $element) {
     $producer[$key] = $value;
 }
 
+CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($model->id)->all(), 'id', 'progress');
+
 ?>
 <div class="course-manage-view">
     
@@ -116,7 +118,19 @@ foreach ($producers as $element) {
             ],
             [
                 'attribute' => Yii::t('rcoa/teamwork', 'Now Progress'),
-                'value' => (int)($model->progress * 100).'%',
+                'format' => 'raw',
+                'value' => Html::beginTag('div', ['class' => 'col-lg-2', 'style' => 'padding:0px;']).
+                            Html::beginTag('div', [
+                                'class' => 'progress table-list-progress',
+                                'style' => 'height:12px;margin:2px 0;border-radius:0px;'
+                            ]).
+                                Html::beginTag('div', [
+                                    'class' => 'progress-bar progress-bar',
+                                    'style' => 'width:'.CourseManage::$progress[$model->id].'%;line-height: 12px;font-size: 10px;',
+                                ]).CourseManage::$progress[$model->id].'%'.
+                                Html::endTag('div').
+                           Html::endTag('div').
+                        Html::endTag('div'),
             ],
             [
                 'attribute' => 'status',

@@ -59,17 +59,23 @@ class CourseController extends Controller
      * @return mixed
      */
     public function actionIndex($project_id = null, $status = null, $team_id = null, $item_type_id = null,
-            $item_id =null, $item_child_id = null, $course_id = null, $keyword = null, $time = null, $mark = null)
+            $item_id =null, $item_child_id = null, $course_id = null, $keyword = null, $time = null, $mark = null, $page = null)
     {
-                       
+        $page = $page == null ? 0 : $page-1;        
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
-        $query = $twTool->getCourseProgress($project_id, $status, $team_id, $item_type_id, $item_id, $item_child_id, $course_id, $keyword, $time);
-        $count = count($query->all());
+        $query = $twTool->getCourseInfo($id = null, $project_id, $status, $team_id, $item_type_id, $item_id, $item_child_id, $course_id, $keyword, $time);
+        $count = $query->count();
+        
         $dataProvider = new ArrayDataProvider([
-            'allModels' => $query->limit(20)->all(),
-            'totalCount' => isset($count) ? $count : 0,
-            
+            'allModels' => $query->addSelect([
+                'Tw_course.project_id', 'Tw_course.course_id', 
+                'Tw_course.status', 'Tw_course.team_id', 'Tw_course.mode',
+                'Tw_item.item_type_id', 'Tw_item.item_id', 'Tw_item.item_child_id',
+                'Team.`name` AS team_name', 'Fw_item_type.`name` AS item_type_name',
+                'Fw_item.`name` AS item_name','Fw_item_child.`name` AS item_child_name',
+                'Fw_item_course.`name` AS item_course_name'
+            ])->limit(20)->offset($page*20)->all(),
         ]);
        
         return $this->render('index', [
@@ -121,7 +127,7 @@ class CourseController extends Controller
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
         /* @var $model CourseManage */
-        $model = $twTool->getCourseProgressOne($id);
+        $model = $twTool->getCourseInfo($id)->addSelect(['Tw_course.*'])->one();
         $weekly = $twTool->getWeeklyInfo($id, $twTool->getWeek(date('Y-m-d', time())));
         
         return $this->render('view', [
@@ -275,7 +281,7 @@ class CourseController extends Controller
         $model = $this->findModel($id);
         if($model != null && !$model->getIsCarryOut())
             throw new NotFoundHttpException('该课程'.$model->getStatusName().'！');
-        $model->real_carry_out = '';
+        $model->real_carry_out = null;
         $model->status = CourseManage::STATUS_NORMAL;
         $model->save();
         $this->redirect(['view', 'id' => $model->id]);
@@ -293,14 +299,15 @@ class CourseController extends Controller
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
         /* @var $model CourseManage */
-        $model = $twTool->getCourseProgressOne($id);
+        $model = $this->findModel($id);
+        CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($model->id)->all(), 'id', 'progress');
         $model->scenario = CourseManage::SCENARIO_CARRYOUT;
         if(!(($twTool->getIsAuthority('is_leader', 'Y') && $model->create_by == \Yii::$app->user->id)
             || $twTool->getIsAuthority('id', $model->course_principal)
             || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
             throw new NotFoundHttpException('无权限操作！');
         
-        if($model != null && $model->progress != 1)
+        if($model != null && CourseManage::$progress[$model->id] != 100)
             throw new NotFoundHttpException('当前进度必须为100%！');
         
         if($model->getIsCarryOut())
