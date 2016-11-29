@@ -4,7 +4,8 @@ return [
     'components' => [
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=172.16.131.180;dbname=ccoa',
+            //'dsn' => 'mysql:host=172.16.131.180;dbname=ccoa',     //公司服务器
+            'dsn' => 'mysql:host=10.80.130.22;dbname=ccoa',         //换阿里云服务器
             'username' => 'ccoa',
             'password' => 'ccoa0405',
             'charset' => 'utf8',
