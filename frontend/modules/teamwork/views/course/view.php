@@ -42,6 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
    <?= $this->render('_form_detai', [
         'model' => $model,
+        'twTool' => $twTool,
         'producers' => $producers,
     ]) ?>
     

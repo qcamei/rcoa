@@ -35,6 +35,12 @@ use yii\db\ActiveRecord;
 class CourseLink extends ActiveRecord
 {
     /**
+     * 课程环节进度
+     * @var integer 
+     
+    public $progress;*/
+
+    /**
      * @inheritdoc
      */
     public static function tableName()

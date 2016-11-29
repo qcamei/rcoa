@@ -41,6 +41,7 @@ $this->params['breadcrumbs'] = $this->title;
     
     <?= $this->render('_form_detai', [
         'model' => $model,
+        'twTool' => $twTool,
     ]) ?>
     
     <h4>课程配置信息</h4>

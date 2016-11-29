@@ -40,8 +40,11 @@ use yii\db\ActiveRecord;
 class ItemManage extends ActiveRecord
 {
     
-    /** 进度 */
-    public $progress;
+    /**
+     * 进度
+     * @var array 
+     */
+    public static $progress = [];
 
     /** 状态名 
     public $statusName = [
@@ -110,9 +113,7 @@ class ItemManage extends ActiveRecord
      */
     public function getCourseManages()
     {
-        return $this->hasMany(CourseManage::className(), ['project_id' => 'id'])
-               ->with('speakerTeacher')
-               ->with('course');
+        return $this->hasMany(CourseManage::className(), ['project_id' => 'id']);
     }
 
     /**

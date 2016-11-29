@@ -15,6 +15,7 @@ use wskeee\framework\models\Item;
 use wskeee\framework\models\ItemType;
 use wskeee\team\TeamMemberTool;
 use Yii;
+use yii\db\ActiveQuery;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\web\NotAcceptableHttpException;
@@ -87,44 +88,47 @@ class TeamworkTool{
 
     /**
      * 获取课程阶段进度
-     * @param type $courseId   课程ID
-     * @return type
+     * @param TeamworkQuery $twQuery    
+     * @param ActiveQuery $results       
+     * @param integer $courseId         课程ID
+     * @return Query                    返回查询结果对象
      */
-    public function getCoursePhaseProgressAll($courseId)
+    public function getCoursePhaseProgress($courseId)
     {
-        $sql = "(SELECT Course_link.course_phase_id, SUM(Course_link.completed) / SUM(Course_link.total) AS progress 
-	FROM ccoa_teamwork_course_link AS Course_link
-	WHERE Course_link.course_id = $courseId AND Course_link.is_delete = 'N'
-	GROUP BY Course_link.id) AS Course_link_progress";
-        $results = CoursePhase::find()
-                ->select(['Course_phase.*',
-                    'SUM(Course_link_progress.progress) / COUNT(Course_link_progress.course_phase_id) AS progress'])
-                ->from($sql)
-                ->leftJoin(['Course_phase'=> CoursePhase::tableName()], 'Course_phase.id = Course_link_progress.course_phase_id')
-                ->groupBy('Course_phase.id')
-                ->with('course')
-                ->with('courseLinks')
-                ->all();
+        /* @var $twQuery TeamworkQuery */
+        $twQuery = TeamworkQuery::getInstance();
+        /* @var $results ActiveQuery */
+        $results = $twQuery->getCoursePhaseTable();
+        $results->addSelect([
+            'Tw_course_phase.`name`',
+            'Tw_course_phase.weights',
+            'SUM(Tw_course_link.completed/Tw_course_link.total)/COUNT(Tw_course_link.course_phase_id) AS progress'
+        ]);
+        $results->andWhere(['Tw_course_link.course_id' => $courseId]);
         
         return $results;
     }
     
     /**
-     * 获取所有课程进度
-     * @param type $projectId       项目管理 ID
-     * @param type $status          状态
-     * @param type $teamId          团队ID
-     * @param type $itemTypeId      行业ID
-     * @param type $itemId          层次/类型ID
-     * @param type $itemChildId     专业/工种ID
-     * @param type $courseId        课程ID
-     * @return type                 返回结果对象
+     * 获取所有课程查询结果
+     * @param TeamworkQuery $twQuery       
+     * @param ActiveQuery $results       
+     * @param integer $id              ID
+     * @param integer $projectId       项目管理 ID
+     * @param integer $status          状态
+     * @param integer $teamId          团队ID
+     * @param integer $itemTypeId      行业ID
+     * @param integer $itemId          层次/类型ID
+     * @param integer $itemChildId     专业/工种ID
+     * @param integer $courseId        课程ID
+     * @return Query                   返回查询结果对象
      */
-    public function getCourseProgress($projectId = null, $status = null, $teamId = null, 
+    public function getCourseInfo($id = null, $projectId = null, $status = null, $teamId = null, 
             $itemTypeId = null, $itemId = null, $itemChildId = null, $courseId = null, $keyword = null, $time = null)
     {
         /* @var $twQuery TeamworkQuery */
         $twQuery = TeamworkQuery::getInstance();
+        /* @var $results ActiveQuery */
         $results = $twQuery->getCourseManageTable();
         $results->andfilterWhere(['like', 'Fw_item_type.name', $keyword]);
         $results->orFilterWhere(['like', 'Fw_item.name', $keyword]);
@@ -135,7 +139,7 @@ class TeamworkTool{
             'Item.item_type_id' => $itemTypeId,
             'Tw_item.item_id' => $itemId,
             'Tw_item.item_child_id' => $itemChildId,
-            'Tw_course.id' => null,
+            'Tw_course.id' => $id,
             'Tw_course.project_id'=> $projectId,
             'Tw_course.course_id' => $courseId,
             'Tw_course.`status`'=> $status,
@@ -158,33 +162,76 @@ class TeamworkTool{
                 ]);
         }
         
-        //$results->addSelect(['Tw_course.teacher']);
-        
         return $results;
     }
     
     /**
-     * 获取单条课程进度
-     * @param type $id
+     * 获取课程进度
+     * @param integer|array $courseId       课程ID
+     * @return Query
      */
-    public function getCourseProgressOne($id)
+    public function getCourseProgress($courseId)
     {
-        $results = CourseManage::find()
-                    ->select(['Course.*', 
-                        'SUM(Course_phase_progress.progress * Course_phase_progress.weights) AS progress'])
-                    ->from($this->courseProgress)
-                    ->leftJoin(['Course'=>CourseManage::tableName()], 'Course.id = Course_phase_progress.course_id')
-                    ->andFilterWhere(['Course.id'=> $id])
-                    ->one();
+        $query = (new Query ())
+                    ->select([
+                        'Tw_course.id','Tw_course.project_id', 'Tw_course.status',
+                        'FLOOR(SUM(Course_phase_progress.progress * Course_phase_progress.weights) * 100) AS progress'
+                    ])
+                    ->from(['Course_phase_progress' => $this->getCoursePhaseProgress($courseId)])
+                    ->leftJoin(['Tw_course' => CourseManage::tableName()], 'Tw_course.id = Course_phase_progress.course_id')
+                    ->groupBy(['Course_phase_progress.course_id']);
+        
+        return $query;
+    }
+
+    /**
+     * 获取所有项目查询结果
+     * @param TeamworkQuery $twQuery    
+     * @param ActiveQuery $results               
+     * @param integer $id               ID
+     * @param string $keyword           搜索关键字
+     * @return Query
+     */
+    public function getItemInfo($id = null, $keyword = null){
+        /* @var $twQuery TeamworkQuery */
+        $twQuery = TeamworkQuery::getInstance();
+        /* @var $results ActiveQuery */
+        $results = $twQuery->getItemManageTable();
+        $results->andFilterWhere(['id' => $id]);
+        $results->orFilterWhere(['like', 'Fw_item_type.`name`', $keyword]);
+        $results->orFilterWhere(['like', 'Fw_item.`name`', $keyword]);
+        $results->orFilterWhere(['like', 'Fw_item_child.`name`', $keyword]);
+        
         return $results;
+    }
+    
+    
+    /**
+     * 获取项目进度
+     * @param integer|array $courseId       课程ID
+     * @return Query
+     */
+    public function getItemProgress($courseId)
+    {
+        $query = (new Query ())
+                    ->select([
+                        'Tw_item.id',
+                        'FLOOR(SUM(Course_progress.progress) / COUNT(Course_progress.project_id)) AS progress'
+                    ])
+                    ->from(['Course_progress' => $this->getCourseProgress($courseId)])
+                    ->rightJoin(['Tw_item' => ItemManage::tableName()], 'Tw_item.id = Course_progress.project_id')
+                    //->andWhere(['Course_progress.status' => CourseManage::STATUS_NORMAL])
+                    ->groupBy(['Tw_item.id']);
+                    
+        return $query;
     }
     
     /**
      * 获取所有项目进度
      * @param type $keyword 搜索关键字
      * @return type
-     */
-    public function getItemProgressAll($keyword = null){
+     
+    public function getItemInfo($id = null, $keyword = null){
         $itemProgress = ItemManage::find()
                         ->select([
                             'Item.*', 
@@ -205,7 +252,7 @@ class TeamworkTool{
                         ->all();
         
         return $itemProgress;
-    }
+    }*/
     
     /**
      * 获取单个项目进度

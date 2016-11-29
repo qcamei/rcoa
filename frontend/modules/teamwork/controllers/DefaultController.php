@@ -91,17 +91,22 @@ class DefaultController extends Controller
      * Lists all ItemManage models.
      * @return mixed
      */
-    public function actionList()
+    public function actionList($page = null)
     {
+        $page = $page == null ? 0 : $page-1;
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
+        $query = $twTool->getItemInfo();
+        $count = $query->count();
         $dataProvider = new ArrayDataProvider([
-            'allModels' => $twTool->getItemProgressAll(), 
+            'allModels' => $query->addSelect(['Tw_item.item_type_id','Tw_item.item_id','Tw_item.item_child_id'])
+                           ->limit(20)->offset($page*20)->all(), 
         ]);
         
         return $this->render('list', [
             'twTool' => $twTool,
             'dataProvider' => $dataProvider,
+            'count' => $count,
         ]);
     }
     
@@ -109,17 +114,26 @@ class DefaultController extends Controller
      * Search all ItemManage models.
      * @return mixed
      */
-    public function actionSearch($keyword)
+    public function actionSearch($keyword, $page = null)
     {
+        $page = $page == null ? 0 : $page-1;
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
+        $query = $twTool->getItemInfo($id = null, $keyword);
+        $count = $query->count();
         $dataProvider = new ArrayDataProvider([
-            'allModels' => $twTool->getItemProgressAll($keyword), 
+            'allModels' => $query->addSelect([
+                    'Tw_item.item_type_id','Tw_item.item_id','Tw_item.item_child_id', 
+                    'Fw_item_type.name AS item_type_name',
+                    'Fw_item.name AS item_name','Fw_item_child.name AS item_child_name'
+                ])->limit(20)->offset($page*20)->all(), 
         ]);
+        
         return $this->render('list', [
             'twTool' => $twTool,
-            'keyword' => $keyword,
             'dataProvider' => $dataProvider,
+            'keyword' => $keyword,
+            'count' => $count,
         ]);
     }
 
@@ -133,9 +147,9 @@ class DefaultController extends Controller
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
         /* @var $model ItemManage */
-        $model = $twTool->getItemProgressOne($id);
+        $model = $twTool->getItemInfo($id);
         return $this->render('view', [
-            'model' => !empty($model->progress) ? $model : $this->findModel($id),
+            'model' => !empty(ItemManage::$progress) ? $model : $this->findModel($id),
             'twTool' => $twTool,
             'lessionTime' => $twTool->getCourseLessionTimesSum(['project_id' => $id])
         ]);

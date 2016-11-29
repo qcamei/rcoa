@@ -517,7 +517,7 @@ class MultimediaTool {
      */
     public function getHotelTeam($uId){
         $teamMember = TeamMember::find()
-                      ->where(['u_id' => $uId])
+                      ->where(['u_id' => $uId, 'is_delete' => 'N'])
                       ->with('team')
                       ->all();
         $team = ArrayHelper::getColumn($teamMember, 'team_id');

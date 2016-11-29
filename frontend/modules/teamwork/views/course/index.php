@@ -5,6 +5,7 @@ use frontend\modules\teamwork\TwAsset;
 use frontend\modules\teamwork\utils\TeamworkTool;
 use yii\data\ActiveDataProvider;
 use yii\data\Pagination;
+use yii\db\Query;
 use yii\grid\GridView;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -22,6 +23,9 @@ $courseIds = ArrayHelper::getColumn($dataProvider->allModels, 'id');
 $weekly = ArrayHelper::map($twTool->getWeeklyInfo($courseIds, $twTool->getWeek(date('Y-m-d', time()))), 'course_id', 'create_time');
 foreach ($dataProvider->allModels as $model)
     $model->isExistWeekly = isset($weekly[$model->id]);
+
+CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($courseIds)->all(), 'id', 'progress');
+
 ?>
 
 <div class="container course-manage-index item-manage">
@@ -48,11 +52,13 @@ foreach ($dataProvider->allModels as $model)
             'dataProvider' => $dataProvider,
             'layout' => "{items}\n{summary}\n{pager}",
             'summaryOptions' => [
-                'class' => 'summary',
+                //'class' => 'summary',
+                'class' => 'hidden',
                 //'style' => 'float: left'
             ],
             'pager' => [
                 'options' => [
+                    //'class' => 'pagination',
                     'class' => 'hidden',
                     //'style' => 'float: right; margin: 0px;'
                 ]
@@ -163,18 +169,18 @@ foreach ($dataProvider->allModels as $model)
                     'format' => 'raw',
                     'value'=> function($model){
                         /* @var $model CourseManage */
-                        return '<div class="course-name">'.(!empty($model->course_id) ? $model->course->name : null).'</div>';
-                               /*Html::beginTag('div', [
+                        return '<div class="course-name">'.(!empty($model->course_id) ? $model->course->name : null).'</div>'.
+                               Html::beginTag('div', [
                                         'class' => 'progress table-list-progress',
                                         'style' => 'height:12px;margin:2px 0;border-radius:0px;'
                                     ]).
                                     Html::beginTag('div', [
                                         'class' => 'progress-bar progress-bar',
-                                        'style' => 'width:'.(int)($model->progress * 100).'%;line-height: 12px;font-size: 10px;',
+                                        'style' => 'width:'.CourseManage::$progress[$model->id].'%;line-height: 12px;font-size: 10px;',
                                     ]).
-                                    (int)($model->progress * 100).'%'.
+                                    CourseManage::$progress[$model->id].'%'.
                                     Html::endTag('div').
-                                Html::endTag('div');*/
+                                Html::endTag('div');
                     },
                     'headerOptions' => [
                         'style' => [
@@ -227,9 +233,10 @@ foreach ($dataProvider->allModels as $model)
             ],
         ]); ?>
         
+        <div class="summary">总共<b><?= $count ?></b>条数据</div>
+        
         <?= LinkPager::widget([  
             'pagination' => new Pagination([
-                //'pageSize' => 20,
                 'totalCount' => $count,  
             ]),  
         ]) ?> 
