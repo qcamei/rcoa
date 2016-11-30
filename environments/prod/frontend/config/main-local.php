@@ -11,6 +11,9 @@ $config = [
         'shoot' => [
             'class' => 'frontend\modules\shoot\Module',
         ],
+        'demand' => [
+            'class' => 'frontend\modules\demand\Module',
+        ],
     ],
 ];
 
