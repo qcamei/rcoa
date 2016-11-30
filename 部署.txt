@@ -1,13 +1,16 @@
 1、php
-	4.5+
+	5.6+，最低要求4.5+
 	开启curl
 2、ngix
 	路径定向http://www.yiibai.com/yii2/installation.html(### 推荐使用的 Nginx 配置)
 3、文件权限
-	runtime
-	assets
-	filedatas
-	
+	backend\runtime  
+	backend\web\assets  
+	  
+	frontend\runtime  
+	frontend\web\assets  
+	frontend\web\filedata
+		
 	
 4、数据库字符集：utf8 -- UTF-8 Unicode
 
