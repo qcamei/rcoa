@@ -356,7 +356,6 @@ class ImportController extends Controller
                 $target[$course] = array_filter(explode(',', $nickname));
             else if (strpos($nickname, '，')) 
                 $target[$course] = array_filter(explode('，', $nickname));
-            
         }
         
         return $target;
