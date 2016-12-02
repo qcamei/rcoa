@@ -22,6 +22,8 @@ return [
                         'rcoa/teamwork' => 'teamwork.php',
                         'rcoa/position' => 'position.php',
                         'rcoa/multimedia' => 'multimedia.php',
+                        'rcoa/demand' => 'demand.php',
+                        'rcoa/basedata' => 'basedata.php',
                     ],
                 ],
                

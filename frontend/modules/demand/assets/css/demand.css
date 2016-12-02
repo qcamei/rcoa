@@ -6,7 +6,10 @@
 /** 
  *  footer 导航样式
  */
-.footer-demand-navbar{}
+.footer-demand-navbar{
+    height: 50px;
+    padding-top:0px !important;
+}
 /** 小屏不显示文字 */
 @media (max-width: 767px) {
     .footer-demand-navbar .footer-demand-menu-item{

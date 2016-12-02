@@ -1,0 +1,19 @@
+/**
+ * 公共样式
+ */
+/** 小屏不显示文字 */
+@media (max-width: 767px) {
+    
+}
+/** 大屏显示文字 */
+@media (min-width: 768px) {
+    
+}
+
+
+/** 
+ *  navbar
+ */
+.basedata-navbar{
+    margin: 10px 0px 10px 0px
+}

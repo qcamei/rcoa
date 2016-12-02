@@ -8,7 +8,7 @@ use yii\helpers\Html;
 /* @var $demand MultimediaTool */
 ?>
 
-<div class="controlbar footer-demand-navbar" style="height: 50px;padding-top:0px; ">
+<div class="controlbar footer-demand-navbar">
     <div class="container">
         <?php
             $controllerId = Yii::$app->controller->id;          //当前控制器
@@ -37,10 +37,10 @@ use yii\helpers\Html;
                     'class'=>'footer-demand-menu-item',                 //样式
                 ],
                 [   
-                    'controllerId'=>'basedata',                         //控制ID
+                    'controllerId'=>['business','college','project','course','expert'],                         //控制ID
                     'name'=>'基础数据',                                 //名称
                     'icon'=>'/filedata/demand/image/data_configuration_64.png',    //图标路径
-                    'options'=>['/demand/basedata'],                   //跳转选项，第一索引为地址，第二起为传参
+                    'options'=>['/demand/business'],                   //跳转选项，第一索引为地址，第二起为传参
                     'class'=>'footer-demand-menu-item',                //样式
                 ],
                 [   //任务页-子按钮-新建
@@ -61,11 +61,12 @@ use yii\helpers\Html;
             foreach ($menu AS $menuItem){
                 //非条件控制显示以及条件控制显示
                 if(!isset($menuItem['condition']) || ($controllerId == $menuItem['controllerId'] && $menuItem['condition'])){
+                    $selected = is_array($menuItem['controllerId']) ? in_array($controllerId,$menuItem['controllerId']) : $controllerId == $menuItem['controllerId'];
                     echo Html::a(
                             Html::img([$menuItem['icon']]).Html::tag('span', $menuItem['name'],['class'=>'menu-name hidden-xs']),     //创建图标与文字
                             $menuItem['options'],                                                                                     //添加跳转条件 
                             [
-                                'class' => $menuItem['class'].(($controllerId == $menuItem['controllerId'] && !isset($menuItem['condition'])) ? $selectClass : ''),
+                                'class' => $menuItem['class'].(($selected && !isset($menuItem['condition'])) ? $selectClass : ''),
                             ]
                         );
                 }

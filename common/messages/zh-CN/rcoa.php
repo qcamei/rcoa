@@ -66,6 +66,7 @@ return [
     'Fw College' => '层次/类型',
     'Fw Project' => '专业/工种',
     'Fw Course' => '课程名称',
+    'Expert' => '专家',
     'Tearcher' => "名称",
     'Contacter' => "接洽人",
     'Booker' => "预约人",

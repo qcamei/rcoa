@@ -7,6 +7,7 @@ namespace frontend\modules\demand;
  */
 class Module extends \yii\base\Module
 {
+    public $layout = 'demand';
     /**
      * @inheritdoc
      */
