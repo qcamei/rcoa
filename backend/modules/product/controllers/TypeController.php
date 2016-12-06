@@ -131,7 +131,7 @@ class TypeController extends Controller
         if (($model = ProductType::findOne($id)) !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            throw new NotFoundHttpException(\Yii::t('rcoa', 'The requested page does not exist.'));
         }
     }
 }
