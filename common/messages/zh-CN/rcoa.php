@@ -31,6 +31,7 @@ return [
     'Link' => '链接',
     'Progress' => '进度',
     'Status' => '状态',
+    'Parent ID' => '上一级',
     'Create By' => '创建者',
     'Created At' => '创建于',
     'Updated At' => '更新于',

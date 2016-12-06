@@ -72,7 +72,7 @@ use yii\widgets\ActiveForm;
 
 <?php
 
- $js =   
+$js =   
 <<<JS
     $('#container').removeClass('form-control');
     var ue = UE.getEditor('container');

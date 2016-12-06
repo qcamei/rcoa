@@ -114,6 +114,13 @@ AppAsset::register($this);
             'label' => '团队管理',
             'url' => '/teammanage/team',
         ];
+        $menuItems[] = [
+            'label' => '产品',
+            'items' => [
+               ['label' => '类别', 'url' => '/product/type'],
+               ['label' => '列表', 'url' => '/product/default'],
+            ],
+        ];
 
 
     /*$menuItems[] = [
