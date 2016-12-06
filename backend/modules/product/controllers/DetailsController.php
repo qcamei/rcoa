@@ -133,7 +133,7 @@ class DetailsController extends Controller
         if (($model = ProductDetails::findOne($id)) !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            throw new NotFoundHttpException(\Yii::t('rcoa', 'The requested page does not exist.'));
         }
     }
 }
