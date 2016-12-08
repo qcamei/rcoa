@@ -47,6 +47,9 @@ $config = [
         'multimedia' => [
             'class' => 'backend\modules\multimedia\Module',
         ],
+        'product' => [
+            'class' => 'backend\modules\product\Module',
+        ],
     ],
 ];
 
