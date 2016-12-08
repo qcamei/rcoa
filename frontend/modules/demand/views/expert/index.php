@@ -11,33 +11,47 @@ use yii\web\View;
 /* @var $searchModel ExpertSearch */
 /* @var $dataProvider ActiveDataProvider */
 
-$this->title = Yii::t('rcoa/demand', 'Experts');
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = Yii::t('rcoa/basedata', 'Expert');
 ?>
 <div class="container expert-index">
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
     <p>
-        <?= Html::a(Yii::t('rcoa/demand', 'Create Expert'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(
+                Yii::t('rcoa/basedata', '{Create} {Expert}',['Create'=>  Yii::t('rcoa/basedata', 'Create'),'Expert'=>  Yii::t('rcoa/basedata', 'Expert')]), 
+                ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'u_id',
-            'type',
-            'birth',
-            'personal_image',
+            [
+                'class' => 'yii\grid\SerialColumn',
+                'options'=>['style'=>'width:50px'],
+            ],
+            [
+                'attribute'=>'personal_image',
+                'format'=>['Image',['style'=>'width:40px;height:40px;']],
+            ],
+            [
+                'attribute'=>'username',
+                'value'=>'user.username',
+                'options'=>['style'=>'width:73px'],
+            ],
+            [
+                'attribute'=>'nickname',
+                'options'=>['style'=>'width:73px'],
+            ],
+            [
+                'attribute'=>'birth',
+                'options'=>['style'=>'width:50px'],
+                'filter'=>false,
+            ],
+            'employer',
             'job_title',
-            // 'job_name',
-            // 'level',
-            // 'employer',
-            // 'attainment:ntext',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'options'=>['style'=>'width:70px']
+            ],
         ],
     ]); ?>
 </div>

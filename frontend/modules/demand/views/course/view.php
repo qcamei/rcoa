@@ -6,20 +6,22 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model wskeee\framework\models\Course */
 
-$this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('demand', 'Courses'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = Yii::t('rcoa/basedata', '{Detail} {Course}',['Detail'=>  Yii::t('rcoa/basedata', 'Detail'),'Course'=>  Yii::t('rcoa/basedata', 'Course')]);
+if($model->parent_id != null)
+{
+    $this->params['breadcrumbs'][] = ['label' => $model->parent->parent->name, 'url' => ['/demand/college/view','id'=>$model->parent->parent_id]];
+    $this->params['breadcrumbs'][] = ['label' => $model->parent->name, 'url' => ['/demand/project/view','id'=>$model->parent_id]];
+}
+$this->params['breadcrumbs'][] = $model->name;
 ?>
-<div class="course-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
+<div class="container course-view">
 
     <p>
-        <?= Html::a(Yii::t('demand', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('demand', 'Delete'), ['delete', 'id' => $model->id], [
+        <?= Html::a(Yii::t('rcoa/basedata', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(Yii::t('rcoa/basedata', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => Yii::t('demand', 'Are you sure you want to delete this item?'),
+                'confirm' => Yii::t('rcoa/basedata', 'Are you sure you want to delete this item?'),
                 'method' => 'post',
             ],
         ]) ?>
@@ -31,11 +33,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'name',
             'des',
-            'level',
-            'created_at',
-            'updated_at',
-            'parent_id',
+            'created_at:datetime',
+            'updated_at:datetime',
         ],
     ]) ?>
-
 </div>

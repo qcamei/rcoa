@@ -2,20 +2,18 @@
 
 namespace frontend\modules\demand\controllers;
 
-use Yii;
 use common\models\expert\Expert;
-use common\models\expert\searchs\ExpertSearch;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
+use common\models\expert\searchs\BasedataExperSearch;
+use frontend\modules\demand\models\BasedataExpert;
+use Yii;
 use yii\filters\VerbFilter;
+use yii\web\NotFoundHttpException;
 
 /**
  * ExpertController implements the CRUD actions for Expert model.
  */
-class ExpertController extends Controller
+class ExpertController extends BasedataController
 {
-    /* 重构 layout */
-    public $layout = 'basedata';
     /**
      * @inheritdoc
      */
@@ -37,7 +35,7 @@ class ExpertController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new ExpertSearch();
+        $searchModel = new BasedataExperSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -54,7 +52,7 @@ class ExpertController extends Controller
     public function actionView($id)
     {
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => BasedataExpert::find($id),
         ]);
     }
 
@@ -65,7 +63,7 @@ class ExpertController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Expert();
+        $model = new BasedataExpert();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->u_id]);
@@ -84,7 +82,7 @@ class ExpertController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $model = BasedataExpert::find($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->u_id]);

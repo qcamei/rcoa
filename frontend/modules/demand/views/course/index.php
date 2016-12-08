@@ -11,31 +11,44 @@ use yii\web\View;
 /* @var $searchModel ItemSearch */
 /* @var $dataProvider ActiveDataProvider */
 
-$this->title = Yii::t('demand', 'Courses');
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = Yii::t('rcoa/basedata', 'Course');
 ?>
 <div class="container course-index">
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
     <p>
-        <?= Html::a(Yii::t('demand', 'Create Course'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(
+                Yii::t('rcoa/basedata', '{Create} {Course}',['Create'=>  Yii::t('rcoa/basedata', 'Create'),'Course'=>  Yii::t('rcoa/basedata', 'Course')]), 
+                ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'name',
-            'des',
-            'level',
-            'created_at',
-            // 'updated_at',
-            // 'parent_id',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\SerialColumn',
+                'options'=>['style'=>'width:50px'],
+            ],
+           [
+                'class' => 'frontend\modules\demand\components\GridViewLinkCell',
+                'attribute'=>'college',
+                'url'=>'/demand/college/view',
+                'key'=>'college_id',
+            ],
+            [
+                'class' => 'frontend\modules\demand\components\GridViewLinkCell',
+                'attribute'=>'project',
+                'url'=>'/demand/project/view',
+                'key'=>'project_id',
+            ],
+            [
+                'class' => 'frontend\modules\demand\components\GridViewLinkCell',
+                'attribute'=>'name',
+                'url'=>'/demand/course/view'
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'options'=>['style'=>'width:70px']
+            ],
         ],
     ]); ?>
 </div>

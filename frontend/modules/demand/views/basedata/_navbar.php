@@ -3,47 +3,47 @@
 use frontend\modules\demand\assets\BasedataAssets;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\web\View;
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-$type = Yii::$app->getRequest()->getQueryParam('navtype');
+/* @var $this View */
+
 $menus = [
    [
        'name'=>  Yii::t('rcoa', 'Business'),
-       'url'=>['/demand/business','navtype'=>0],
+       'url'=>['/demand/business'],
        'class'=>'btn btn-default',
    ],
    [
        'name'=>  Yii::t('rcoa', 'Fw College'),
-       'url'=>['/demand/college','navtype'=>1],
+       'url'=>['/demand/college'],
        'class'=>'btn btn-default',
    ],
    [
        'name'=>  Yii::t('rcoa', 'Fw Project'),
-       'url'=>['/demand/project','navtype'=>2],
+       'url'=>['/demand/project'],
        'class'=>'btn btn-default',
    ],
    [
        'name'=>  Yii::t('rcoa', 'Fw Course'),
-       'url'=>['/demand/course','navtype'=>3],
+       'url'=>['/demand/course'],
        'class'=>'btn btn-default',
    ],
    [
        'name'=>  Yii::t('rcoa', 'Expert'),
-       'url'=>['/demand/expert','navtype'=>4],
+       'url'=>['/demand/expert'],
        'class'=>'btn btn-default',
    ],
 ];
+$controllerId = $controllerId = Yii::$app->controller->id;          //当前控制器);
+
 BasedataAssets::register($this);
 ?>
-<div class="container basedata-navbar">
+<div class="basedata-navbar">
     <div class="btn-group">
         <?php
         foreach ($menus AS $index => $menuItem) {
-            echo Html::a($menuItem['name'], Url::to($menuItem['url']), ['class' => $menuItem['class'] . ($type == $index ? ' active' : '')]);
+            $active = strpos($menuItem['url'][0], $controllerId)>0 ? ' active' : '';
+            echo Html::a($menuItem['name'], Url::to($menuItem['url']), ['class' => $menuItem['class'].$active ]);
         }
         ?>
     </div>

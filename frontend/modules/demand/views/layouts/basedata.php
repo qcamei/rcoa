@@ -2,6 +2,7 @@
 
 use frontend\modules\demand\assets\BasedataAssets;
 use yii\web\View;
+use yii\widgets\Breadcrumbs;
 /**
  * 基础数据布局文件，主要在 demand 布局文件上添加了 navbar 头部导航
  */
@@ -9,7 +10,15 @@ use yii\web\View;
 /* @var $this View */
 
 /* 添加基础数据头部导航 */
-$content = $this->render('../basedata/_navbar').$content;
+$breadcrumbs = Breadcrumbs::widget([
+            'homeLink'=>false,
+            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+    ]);
+$head = '<div class="container">'
+            .$this->render('../basedata/_navbar')
+            .$breadcrumbs
+        .'</div>';
+$content = $head.$content;
 
 echo $this->render('demand',['content'=>$content]);
 

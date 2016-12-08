@@ -12,27 +12,30 @@ use yii\web\View;
 /* @var $dataProvider ActiveDataProvider */
 
 $this->title = Yii::t('rcoa/basedata', 'Item Types');
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container item-type-index">
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
     <p>
-        <?= Html::a(Yii::t('rcoa/basedata', "Create Item Type"), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(
+                Yii::t('rcoa/basedata', '{Create} {Item Type}',['Create'=>  Yii::t('rcoa/basedata', 'Create'),'Item Type'=>Yii::t('rcoa/basedata', 'Item Type')]), 
+                ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             [
-                'attribute'=>'id',
-                'options'=>['style'=>'width:100px']
+                'class' => 'yii\grid\SerialColumn',
+                'options'=>['style'=>'width:50px'],
             ],
-            'name',
+            [
+                'class' => 'frontend\modules\demand\components\GridViewLinkCell',
+                'attribute'=>'name',
+                'url'=>'/demand/business/view'
+            ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'options'=>['style'=>'width:100px']
+                'options'=>['style'=>'width:70px']
             ],
         ],
     ]); ?>

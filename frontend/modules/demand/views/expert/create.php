@@ -1,18 +1,16 @@
 <?php
 
-use yii\helpers\Html;
+use frontend\modules\demand\models\BasedataExpert;
+use yii\web\View;
 
 
-/* @var $this yii\web\View */
-/* @var $model common\models\expert\Expert */
+/* @var $this View */
+/* @var $model BasedataExpert */
 
-$this->title = Yii::t('rcoa/demand', 'Create Expert');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/demand', 'Experts'), 'url' => ['index']];
+$this->title = Yii::t('rcoa/basedata', '{Create} {Expert}',['Create'=>  Yii::t('rcoa/basedata', 'Create'),'Expert'=>  Yii::t('rcoa/basedata', 'Expert')]);
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="expert-create">
-
-    <h1><?= Html::encode($this->title) ?></h1>
+<div class="container expert-create">
 
     <?= $this->render('_form', [
         'model' => $model,

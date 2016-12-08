@@ -81,7 +81,7 @@ class CollegeController extends Controller
         $model = new College();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-             /* @var $fwManager FrameworkManager */
+            /* @var $fwManager FrameworkManager */
             $fwManager = \Yii::$app->fwManager;
             $fwManager->invalidateCache();
             return $this->redirect(['view', 'id' => $model->id]);

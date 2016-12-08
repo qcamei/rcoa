@@ -2,20 +2,21 @@
 
 namespace frontend\modules\demand\controllers;
 
-use Yii;
+use wskeee\framework\FrameworkManager;
+use wskeee\framework\models\Item;
 use wskeee\framework\models\Project;
 use wskeee\framework\models\searchs\ItemSearch;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
+use wskeee\framework\models\searchs\ProjectSearch;
+use Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
+use yii\web\NotFoundHttpException;
 
 /**
  * ProjectController implements the CRUD actions for Project model.
  */
-class ProjectController extends Controller
+class ProjectController extends BasedataController
 {
-    /* 重构 layout */
-    public $layout = 'basedata';
     /**
      * @inheritdoc
      */
@@ -37,9 +38,9 @@ class ProjectController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new ItemSearch();
+        $searchModel = new ProjectSearch(['level'=>  Item::LEVEL_PROJECT]);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -53,9 +54,13 @@ class ProjectController extends Controller
      */
     public function actionView($id)
     {
+        $searchModel = new ItemSearch(['level'=>  Item::LEVEL_COURSE,'parent_id' => $id]);
+        $childs = $searchModel->search([]);
+        
         return $this->render('view', [
             'model' => $this->findModel($id),
-        ]);
+            'dataProvider' => $childs
+        ]); 
     }
 
     /**
@@ -68,10 +73,16 @@ class ProjectController extends Controller
         $model = new Project();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            /* @var $fwManager FrameworkManager */
+            $fwManager = \Yii::$app->fwManager;
+            $fwManager->invalidateCache();
+            
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
+            $model->parent_id = Yii::$app->getRequest()->getQueryParam('parent_id');
             return $this->render('create', [
                 'model' => $model,
+                'colleges' => $this->getParents(),
             ]);
         }
     }
@@ -87,10 +98,15 @@ class ProjectController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            /* @var $fwManager FrameworkManager */
+            $fwManager = \Yii::$app->fwManager;
+            $fwManager->invalidateCache();
+            
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'colleges' => $this->getParents(),
             ]);
         }
     }
@@ -101,11 +117,15 @@ class ProjectController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
+    public function actionDelete($id,$callback=null)
     {
         $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        
+        /* @var $fwManager FrameworkManager */
+        $fwManager = \Yii::$app->fwManager;
+        $fwManager->invalidateCache();
+        
+        return $this->redirect([$callback ? $callback : 'index']);
     }
 
     /**
@@ -122,5 +142,16 @@ class ProjectController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    
+    /**
+     * 获取所有学院数据
+     */
+    protected function getParents()
+    {
+        $searchModel = new ItemSearch(['level' => Item::LEVEL_COLLEGE]);
+        $results = $searchModel->search([])->query->all();
+        $parents = ArrayHelper::map($results, 'id', 'name');
+        return $parents;
     }
 }

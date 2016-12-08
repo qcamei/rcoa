@@ -2,24 +2,27 @@
 
 namespace wskeee\framework\models\searchs;
 
+use wskeee\framework\models\Project;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use wskeee\framework\models\Project;
+use yii\db\Query;
 
 /**
  * ProjectSearch represents the model behind the search form about `wskeee\framework\models\Project`.
  */
 class ProjectSearch extends Project
 {
+    public $college = '';
+    public $college_id = "";
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'level', 'create_at', 'update_at', 'parent_id'], 'integer'],
-            [['name', 'des'], 'safe'],
+            [['id', 'level', 'created_at', 'updated_at', 'parent_id'], 'integer'],
+            [['college_id','college','name', 'des'], 'safe'],
         ];
     }
 
@@ -31,6 +34,16 @@ class ProjectSearch extends Project
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
+    
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return array_merge([
+            'college'=>  Yii::t('rcoa/basedata', 'College')
+        ],parent::attributeLabels());
+    }
 
     /**
      * Creates data provider instance with search query applied
@@ -41,10 +54,28 @@ class ProjectSearch extends Project
      */
     public function search($params)
     {
-        $query = Project::find();
+        /* @var $query Query */
+        $query = ProjectSearch::find();
+        $query->select(['Item.id','Item.name','College.name AS college','College.id AS college_id']);
+        $query->from(['Item'=>  self::tableName()]);
+        $query->leftJoin(['College'=>  self::tableName()], 'Item.parent_id = College.id');
+        $query->orderBy('Item.parent_id');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+        ]);
+        
+        $dataProvider->setSort([
+            'attributes' => [
+                /* 指定其它字段 */
+                /* 加入 */
+                /* ============= */
+                'college' => [
+                    'asc' => ['Item.parent_id' => SORT_ASC], //table.字段，若行记录字段名唯一，可略table
+                    'desc' => ['Item.parent_id' => SORT_DESC],
+                ],
+                /* ============= */
+            ]
         ]);
 
         $this->load($params);
@@ -52,20 +83,16 @@ class ProjectSearch extends Project
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
-            return $dataProvider;
+            return $dataProvider; 
         }
 
         $query->andFilterWhere([
-            'id' => $this->id,
-            'level' => $this->level,
-            'create_at' => $this->create_at,
-            'update_at' => $this->update_at,
-            'parent_id' => $this->parent_id,
+            'Item.level' => $this->level,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'des', $this->des]);
-
+        $query->andFilterWhere(['like', 'Item.name', $this->name])
+            ->andFilterWhere(['like', 'College.name', $this->college]);
+    
         return $dataProvider;
     }
 }

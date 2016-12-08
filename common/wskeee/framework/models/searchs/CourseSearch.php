@@ -12,14 +12,18 @@ use wskeee\framework\models\Course;
  */
 class CourseSearch extends Course
 {
+    public $college;
+    public $college_id = "";
+    public $project;
+    public $project_id = "";
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'level', 'create_at', 'update_at', 'parent_id'], 'integer'],
-            [['name', 'des'], 'safe'],
+            [['id', 'level', 'created_at', 'updated_at', 'parent_id'], 'integer'],
+            [['name', 'des','college','project'], 'safe'],
         ];
     }
 
@@ -31,6 +35,17 @@ class CourseSearch extends Course
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
+    
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return array_merge([
+            'college'=>  Yii::t('rcoa/basedata', 'College'),
+            'project'=>  Yii::t('rcoa/basedata', 'Project'),
+        ],parent::attributeLabels());
+    }
 
     /**
      * Creates data provider instance with search query applied
@@ -41,10 +56,28 @@ class CourseSearch extends Course
      */
     public function search($params)
     {
-        $query = Course::find();
+        $query = CourseSearch::find();
+        $query->select(['Item.id','Item.name','College.name AS college','Project.name AS project','College.id AS college_id','Project.id AS project_id']);
+        $query->from(['Item'=>  self::tableName()]);
+        $query->leftJoin(['Project'=>  self::tableName()], 'Item.parent_id = Project.id');
+        $query->leftJoin(['College'=>  self::tableName()], 'Project.parent_id = College.id');
+        $query->orderBy('Item.parent_id');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+        ]);
+        
+        $dataProvider->setSort([
+            'attributes' => [
+                /* 指定其它字段 */
+                /* 加入 */
+                /* ============= */
+                'project' => [
+                    'asc' => ['Item.parent_id' => SORT_ASC], //table.字段，若行记录字段名唯一，可略table
+                    'desc' => ['Item.parent_id' => SORT_DESC],
+                ],
+            /* ============= */
+            ]
         ]);
 
         $this->load($params);
@@ -52,19 +85,16 @@ class CourseSearch extends Course
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
-            return $dataProvider;
+            return $dataProvider; 
         }
 
         $query->andFilterWhere([
-            'id' => $this->id,
-            'level' => $this->level,
-            'create_at' => $this->create_at,
-            'update_at' => $this->update_at,
-            'parent_id' => $this->parent_id,
+            'Item.level' => $this->level,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'des', $this->des]);
+        $query->andFilterWhere(['like', 'Item.name', $this->name])
+            ->andFilterWhere(['like', 'Project.name', $this->project])
+            ->andFilterWhere(['like', 'College.name', $this->college]);
 
         return $dataProvider;
     }

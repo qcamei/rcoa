@@ -1,22 +1,21 @@
 <?php
 
+use frontend\modules\demand\models\BasedataExpert;
 use yii\helpers\Html;
+use yii\web\View;
 use yii\widgets\DetailView;
 
-/* @var $this yii\web\View */
-/* @var $model common\models\expert\Expert */
+/* @var $this View */
+/* @var $model BasedataExpert */
 
-$this->title = $model->u_id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/demand', 'Experts'), 'url' => ['index']];
+$this->title = Yii::t('rcoa/basedata', 'Details').'：'.$model->nickname;
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="expert-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
+<div class="container expert-view">
 
     <p>
-        <?= Html::a(Yii::t('rcoa/demand', 'Update'), ['update', 'id' => $model->u_id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('rcoa/demand', 'Delete'), ['delete', 'id' => $model->u_id], [
+        <?= Html::a(Yii::t('rcoa/basedata', 'Update'), ['update', 'id' => $model->u_id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(Yii::t('rcoa/basedata', 'Delete'), ['delete', 'id' => $model->u_id], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => Yii::t('rcoa/demand', 'Are you sure you want to delete this item?'),
@@ -27,16 +26,32 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= DetailView::widget([
         'model' => $model,
+        'template' => '<tr><th class="viewdetail-th">{label}</th><td class="viewdetail-td">{value}</td></tr>',
         'attributes' => [
+            ['label' => '<span class="btn-block viewdetail-th-head">基本信息</span>','value'=>''],
+            [
+                'attribute'=>'personal_image',
+                'format'=>'raw',
+                'value'=> Html::a(Html::img($model->personal_image,['width'=>'128px']), $model->personal_image),
+            ],
             'u_id',
-            'type',
+            'username',
+            'nickname',
+            [
+                'attribute'=>'sex',
+                'value'=>BasedataExpert::$sexToValue[$model->sex],
+            ],
             'birth',
-            'personal_image',
+            ['label' => '<span class="btn-block viewdetail-th-head">工作信息</span>','value'=>''],        
+            'phone',
+            'email',
             'job_title',
             'job_name',
-            'level',
             'employer',
             'attainment:ntext',
+            ['label' => '<span class="btn-block viewdetail-th-head">其它信息</span>','value'=>''], 
+            'created_at:datetime',
+            'updated_at:datetime',
         ],
     ]) ?>
 

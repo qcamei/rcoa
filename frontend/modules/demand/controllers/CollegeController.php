@@ -2,20 +2,19 @@
 
 namespace frontend\modules\demand\controllers;
 
-use Yii;
+use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\College;
+use wskeee\framework\models\Item;
 use wskeee\framework\models\searchs\ItemSearch;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
+use Yii;
 use yii\filters\VerbFilter;
+use yii\web\NotFoundHttpException;
 
 /**
  * CollegeController implements the CRUD actions for College model.
  */
-class CollegeController extends Controller
+class CollegeController extends BasedataController
 {
-    /* 重构 layout */
-    public $layout = 'basedata';
     /**
      * @inheritdoc
      */
@@ -37,7 +36,7 @@ class CollegeController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new ItemSearch();
+        $searchModel = new ItemSearch(['level'=>  Item::LEVEL_COLLEGE]);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -53,8 +52,12 @@ class CollegeController extends Controller
      */
     public function actionView($id)
     {
+        $searchModel = new ItemSearch(['level'=>  Item::LEVEL_PROJECT,'parent_id'=>$id]);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'dataProvider'=>$dataProvider,
         ]);
     }
 
@@ -68,6 +71,9 @@ class CollegeController extends Controller
         $model = new College();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            /* @var $fwManager FrameworkManager */
+            $fwManager = \Yii::$app->fwManager;
+            $fwManager->invalidateCache();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -87,6 +93,9 @@ class CollegeController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            /* @var $fwManager FrameworkManager */
+            $fwManager = \Yii::$app->fwManager;
+            $fwManager->invalidateCache();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -104,6 +113,10 @@ class CollegeController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
+        
+        /* @var $fwManager FrameworkManager */
+        $fwManager = \Yii::$app->fwManager;
+        $fwManager->invalidateCache();
 
         return $this->redirect(['index']);
     }

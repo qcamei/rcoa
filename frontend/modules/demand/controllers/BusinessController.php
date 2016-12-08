@@ -12,11 +12,8 @@ use yii\web\NotFoundHttpException;
 /**
  * BusinessController implements the CRUD actions for ItemType model.
  */
-class BusinessController extends Controller
+class BusinessController extends BasedataController
 {
-    /* 重构 layout */
-    public $layout = 'basedata';
-    
     /**
      * @inheritdoc
      */

@@ -12,30 +12,37 @@ use yii\web\View;
 /* @var $dataProvider ActiveDataProvider */
 
 $this->title = Yii::t('demand', 'Projects');
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container project-index">
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
     <p>
-        <?= Html::a(Yii::t('demand', 'Create Project'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(
+                Yii::t('rcoa/basedata', '{Create} {Project}',['Create'=>  Yii::t('rcoa/basedata', 'Create'),'Project'=>  Yii::t('rcoa/basedata', 'Project')]), 
+                ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'name',
-            'des',
-            'level',
-            'created_at',
-            // 'updated_at',
-            // 'parent_id',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\SerialColumn',
+                'options'=>['style'=>'width:50px'],
+            ],
+            [
+                'class' => 'frontend\modules\demand\components\GridViewLinkCell',
+                'attribute'=>'college',
+                'url'=>'/demand/college/view',
+                'key'=>'college_id',
+            ],
+            [
+                'class' => 'frontend\modules\demand\components\GridViewLinkCell',
+                'attribute'=>'name',
+                'url'=>'/demand/project/view'
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'options'=>['style'=>'width:70px']
+            ],
         ],
     ]); ?>
 </div>

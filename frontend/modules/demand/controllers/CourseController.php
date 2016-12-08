@@ -2,20 +2,21 @@
 
 namespace frontend\modules\demand\controllers;
 
-use Yii;
+use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\Course;
+use wskeee\framework\models\Item;
+use wskeee\framework\models\searchs\CourseSearch;
 use wskeee\framework\models\searchs\ItemSearch;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
+use Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
+use yii\web\NotFoundHttpException;
 
 /**
  * CourseController implements the CRUD actions for Course model.
  */
-class CourseController extends Controller
+class CourseController extends BasedataController
 {
-    /* 重构 layout */
-    public $layout = 'basedata';
     /**
      * @inheritdoc
      */
@@ -37,7 +38,7 @@ class CourseController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new ItemSearch();
+        $searchModel = new CourseSearch(['level' => Item::LEVEL_COURSE]);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -68,10 +69,18 @@ class CourseController extends Controller
         $model = new Course();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            /* @var $fwManager FrameworkManager */
+            $fwManager = \Yii::$app->fwManager;
+            $fwManager->invalidateCache();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
+            $model->parent_id = Yii::$app->getRequest()->getQueryParam('parent_id');
+            $colleges = $this->getParents(Item::LEVEL_COLLEGE);
+            $projects = $model->parent_id ? $this->getParents(Item::LEVEL_PROJECT,$model->parent->parent_id) : [];
             return $this->render('create', [
                 'model' => $model,
+                'colleges' => $colleges,
+                'projects' => $projects,
             ]);
         }
     }
@@ -87,10 +96,17 @@ class CourseController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            /* @var $fwManager FrameworkManager */
+            $fwManager = \Yii::$app->fwManager;
+            $fwManager->invalidateCache();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
+            $colleges = $this->getParents(Item::LEVEL_COLLEGE);
+            $projects = $model->parent_id ? $this->getParents(Item::LEVEL_PROJECT,$model->parent->parent_id) : [];
             return $this->render('update', [
                 'model' => $model,
+                'colleges' => $colleges,
+                'projects' => $projects,
             ]);
         }
     }
@@ -101,11 +117,37 @@ class CourseController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
+    public function actionDelete($id,$callback=null)
     {
         $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        /* @var $fwManager FrameworkManager */
+        $fwManager = \Yii::$app->fwManager;
+        $fwManager->invalidateCache();
+        return $this->redirect([$callback ? $callback : 'index']);
+    }
+    
+    /**
+     * 获取基础数据
+     * @param int $level        基础数据类型
+     * @param int $parent_id    父级id
+     * @return array
+     */
+    public function actionSearch($level=null,$parent_id=null)
+    {
+        \Yii::$app->getResponse()->format = 'json';
+        $code = 0;
+        $msg = '';
+        $data = [];
+        if(!$level && !$parent_id){
+            $code = 1;
+            $msg = '缺少参数，level和parent_id必须指定一个！';
+        }else
+            $data = $this->getParents($level, $parent_id);
+        return [
+            'code'=>$code,
+            'data'=>$data,
+            'msg'=>$msg,
+        ];
     }
 
     /**
@@ -122,5 +164,16 @@ class CourseController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    
+     /**
+     * 获取所有子项目数据
+     */
+    protected function getParents($level=Item::LEVEL_PROJECT,$parent_id=null)
+    {
+        $searchModel = new ItemSearch(['level' => $level,'parent_id'=>$parent_id]);
+        $results = $searchModel->search([])->query->all();
+        $parents = ArrayHelper::map($results, 'id', 'name');
+        return $parents;
     }
 }
