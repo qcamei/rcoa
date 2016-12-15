@@ -535,7 +535,7 @@ class MultimediaTool {
     public function getIsAssignPerson($teamId)
     {
         $assign = MultimediaAssignTeam::findOne(['team_id' => $teamId]);
-        if(!empty($assign) && isset($assign)){
+        if(!empty($assign)){
             if(Yii::$app->user->id == $assign->u_id)
                 return true;
         }
@@ -553,7 +553,7 @@ class MultimediaTool {
                     ->where(['task_id' => $taskId])
                     ->with('multimediaProducer')
                     ->all();
-        if(!empty($producers) && isset($producers)){
+        if(!empty($producers)){
             $isProducer = ArrayHelper::getColumn($producers, 'multimediaProducer.u_id');
             if(in_array(\Yii::$app->user->id, $isProducer))
                 return true;
@@ -571,7 +571,7 @@ class MultimediaTool {
         $check = MultimediaCheck::find()
                   ->where(['task_id' => $taskId])
                   ->all();
-        if(!empty($check) || isset($check)){
+        if(!empty($check)){
             $isComplete = ArrayHelper::getColumn($check, 'status');
             if(in_array(MultimediaCheck::STATUS_NOTCOMPLETE, $isComplete))
                 return true;  
@@ -583,7 +583,7 @@ class MultimediaTool {
      * 获取是否属于自己操作
      * @param array $taskId                          任务ID
      * @param array $status                          状态
-     * @return boolean                              true为是
+     * @return boolean                               true为是
      */ 
     public function getIsBelongToOwnOperate($taskId, $status)
     {

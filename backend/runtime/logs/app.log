@@ -25826,3 +25826,1244 @@ $_SERVER = [
     'REQUEST_TIME_FLOAT' => 1481011256.452
     'REQUEST_TIME' => 1481011256
 ]
+2016-12-08 10:23:18 [127.0.0.1][59][9qlvmeok62a899k63ebgsj76k4][error][yii\base\InvalidConfigException] exception 'yii\base\InvalidConfigException' with message 'The 'label' option is required.' in D:\wamp64\www\rcoa\vendor\yiisoft\yii2-bootstrap\Dropdown.php:112
+Stack trace:
+#0 D:\wamp64\www\rcoa\vendor\yiisoft\yii2-bootstrap\Dropdown.php(90): yii\bootstrap\Dropdown->renderItems(Array, Array)
+#1 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Widget.php(102): yii\bootstrap\Dropdown->run()
+#2 D:\wamp64\www\rcoa\vendor\yiisoft\yii2-bootstrap\Nav.php(220): yii\base\Widget::widget(Array)
+#3 D:\wamp64\www\rcoa\vendor\yiisoft\yii2-bootstrap\Nav.php(193): yii\bootstrap\Nav->renderDropdown(Array, Array)
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2-bootstrap\Nav.php(147): yii\bootstrap\Nav->renderItem(Array)
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2-bootstrap\Nav.php(134): yii\bootstrap\Nav->renderItems()
+#6 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Widget.php(102): yii\bootstrap\Nav->run()
+#7 D:\wamp64\www\rcoa\backend\views\layouts\main.php(141): yii\base\Widget::widget(Array)
+#8 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(326): require('D:\\wamp64\\www\\r...')
+#9 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(248): yii\base\View->renderPhpFile('D:\\wamp64\\www\\r...', Array)
+#10 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(393): yii\base\View->renderFile('D:\\wamp64\\www\\r...', Array, Object(backend\modules\team\controllers\TeamController))
+#11 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(379): yii\base\Controller->renderContent('<div class="tea...')
+#12 D:\wamp64\www\rcoa\backend\modules\team\controllers\TeamController.php(56): yii\base\Controller->render('index', Array)
+#13 [internal function]: backend\modules\team\controllers\TeamController->actionIndex()
+#14 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): call_user_func_array(Array, Array)
+#15 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(154): yii\base\InlineAction->runWithParams(Array)
+#16 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(454): yii\base\Controller->runAction('', Array)
+#17 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(100): yii\base\Module->runAction('teammanage/team', Array)
+#18 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#19 D:\wamp64\www\rcoa\backend\web\index.php(20): yii\base\Application->run()
+#20 {main}
+2016-12-08 10:23:18 [127.0.0.1][59][9qlvmeok62a899k63ebgsj76k4][info][application] $_COOKIE = [
+    'PHPSESSID' => '9qlvmeok62a899k63ebgsj76k4'
+    '_identity' => '3a9206c8cc741fa2f77f000d16b69aca211c06852d5f76641b613b9664be55fca:2:{i:0;s:9:\"_identity\";i:1;s:49:\"[\"59\",\"ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK\",2592000]\";}'
+    '_csrf' => 'c091814ea77cf2ee0daf8052bf4a8a1f08e016b8bc2bce1594864ed7a7c8132aa:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"iGGj3xrk6bO4AXoFz98ZzwpVLWG97ME0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => '/'
+    '__id' => '59'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoaadmin.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoaadmin.gzedu.net/rbac/role/view?id=r_demand_auditor'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => 'PHPSESSID=9qlvmeok62a899k63ebgsj76k4; _identity=3a9206c8cc741fa2f77f000d16b69aca211c06852d5f76641b613b9664be55fca%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A49%3A%22%5B%2259%22%2C%22ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK%22%2C2592000%5D%22%3B%7D; _csrf=c091814ea77cf2ee0daf8052bf4a8a1f08e016b8bc2bce1594864ed7a7c8132aa%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22iGGj3xrk6bO4AXoFz98ZzwpVLWG97ME0%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoaadmin.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoaadmin.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/backend/web/index.php'
+    'REMOTE_PORT' => '50658'
+    'REDIRECT_URL' => 'http://tt.ccoaadmin.gzedu.net/teammanage/team'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/teammanage/team'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1481163798.418
+    'REQUEST_TIME' => 1481163798
+]
+2016-12-08 10:24:29 [127.0.0.1][59][9qlvmeok62a899k63ebgsj76k4][error][yii\base\InvalidConfigException] exception 'yii\base\InvalidConfigException' with message 'The 'label' option is required.' in D:\wamp64\www\rcoa\vendor\yiisoft\yii2-bootstrap\Dropdown.php:112
+Stack trace:
+#0 D:\wamp64\www\rcoa\vendor\yiisoft\yii2-bootstrap\Dropdown.php(90): yii\bootstrap\Dropdown->renderItems(Array, Array)
+#1 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Widget.php(102): yii\bootstrap\Dropdown->run()
+#2 D:\wamp64\www\rcoa\vendor\yiisoft\yii2-bootstrap\Nav.php(220): yii\base\Widget::widget(Array)
+#3 D:\wamp64\www\rcoa\vendor\yiisoft\yii2-bootstrap\Nav.php(193): yii\bootstrap\Nav->renderDropdown(Array, Array)
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2-bootstrap\Nav.php(147): yii\bootstrap\Nav->renderItem(Array)
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2-bootstrap\Nav.php(134): yii\bootstrap\Nav->renderItems()
+#6 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Widget.php(102): yii\bootstrap\Nav->run()
+#7 D:\wamp64\www\rcoa\backend\views\layouts\main.php(148): yii\base\Widget::widget(Array)
+#8 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(326): require('D:\\wamp64\\www\\r...')
+#9 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(248): yii\base\View->renderPhpFile('D:\\wamp64\\www\\r...', Array)
+#10 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(393): yii\base\View->renderFile('D:\\wamp64\\www\\r...', Array, Object(backend\modules\product\controllers\TypeController))
+#11 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(379): yii\base\Controller->renderContent('<div class="pro...')
+#12 D:\wamp64\www\rcoa\backend\modules\product\controllers\TypeController.php(55): yii\base\Controller->render('index', Array)
+#13 [internal function]: backend\modules\product\controllers\TypeController->actionIndex()
+#14 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): call_user_func_array(Array, Array)
+#15 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(154): yii\base\InlineAction->runWithParams(Array)
+#16 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(454): yii\base\Controller->runAction('', Array)
+#17 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(100): yii\base\Module->runAction('product/type', Array)
+#18 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#19 D:\wamp64\www\rcoa\backend\web\index.php(20): yii\base\Application->run()
+#20 {main}
+2016-12-08 10:24:28 [127.0.0.1][59][9qlvmeok62a899k63ebgsj76k4][info][application] $_COOKIE = [
+    'PHPSESSID' => '9qlvmeok62a899k63ebgsj76k4'
+    '_identity' => '3a9206c8cc741fa2f77f000d16b69aca211c06852d5f76641b613b9664be55fca:2:{i:0;s:9:\"_identity\";i:1;s:49:\"[\"59\",\"ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK\",2592000]\";}'
+    '_csrf' => 'c091814ea77cf2ee0daf8052bf4a8a1f08e016b8bc2bce1594864ed7a7c8132aa:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"iGGj3xrk6bO4AXoFz98ZzwpVLWG97ME0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => '/'
+    '__id' => '59'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoaadmin.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoaadmin.gzedu.net/teammanage/team'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => 'PHPSESSID=9qlvmeok62a899k63ebgsj76k4; _identity=3a9206c8cc741fa2f77f000d16b69aca211c06852d5f76641b613b9664be55fca%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A49%3A%22%5B%2259%22%2C%22ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK%22%2C2592000%5D%22%3B%7D; _csrf=c091814ea77cf2ee0daf8052bf4a8a1f08e016b8bc2bce1594864ed7a7c8132aa%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22iGGj3xrk6bO4AXoFz98ZzwpVLWG97ME0%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoaadmin.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoaadmin.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/backend/web/index.php'
+    'REMOTE_PORT' => '50833'
+    'REDIRECT_URL' => 'http://tt.ccoaadmin.gzedu.net/product/type'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/product/type'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1481163868.698
+    'REQUEST_TIME' => 1481163868
+]
+2016-12-08 10:37:24 [127.0.0.1][-][-][error][yii\base\ErrorException:1] exception 'yii\base\ErrorException' with message 'Class 'Select2' not found' in D:\wamp64\www\rcoa\backend\modules\demand\views\default\_form.php:15
+Stack trace:
+#0 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(248): yii\base\View->renderPhpFile()
+#1 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(150): yii\base\View->renderFile()
+#2 D:\wamp64\www\rcoa\backend\modules\demand\views\default\create.php(19): yii\base\View->render()
+#3 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(326): ::unknown()
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(248): yii\base\View->renderPhpFile()
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(150): yii\base\View->renderFile()
+#6 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(378): yii\base\View->render()
+#7 D:\wamp64\www\rcoa\backend\modules\demand\controllers\DefaultController.php(74): yii\base\Controller->render()
+#8 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): backend\modules\demand\controllers\DefaultController->actionCreate()
+#9 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): ::call_user_func_array:{D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php:55}()
+#10 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(154): yii\base\InlineAction->runWithParams()
+#11 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(454): yii\base\Controller->runAction()
+#12 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(100): yii\base\Module->runAction()
+#13 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest()
+#14 D:\wamp64\www\rcoa\backend\web\index.php(20): yii\base\Application->run()
+#15 {main}
+2016-12-08 10:37:24 [127.0.0.1][-][-][info][application] $_COOKIE = [
+    'PHPSESSID' => '9qlvmeok62a899k63ebgsj76k4'
+    '_identity' => '3a9206c8cc741fa2f77f000d16b69aca211c06852d5f76641b613b9664be55fca:2:{i:0;s:9:\"_identity\";i:1;s:49:\"[\"59\",\"ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK\",2592000]\";}'
+    '_csrf' => 'c091814ea77cf2ee0daf8052bf4a8a1f08e016b8bc2bce1594864ed7a7c8132aa:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"iGGj3xrk6bO4AXoFz98ZzwpVLWG97ME0\";}'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoaadmin.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoaadmin.gzedu.net/demand/default'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => 'PHPSESSID=9qlvmeok62a899k63ebgsj76k4; _identity=3a9206c8cc741fa2f77f000d16b69aca211c06852d5f76641b613b9664be55fca%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A49%3A%22%5B%2259%22%2C%22ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK%22%2C2592000%5D%22%3B%7D; _csrf=c091814ea77cf2ee0daf8052bf4a8a1f08e016b8bc2bce1594864ed7a7c8132aa%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22iGGj3xrk6bO4AXoFz98ZzwpVLWG97ME0%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoaadmin.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoaadmin.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/backend/web/index.php'
+    'REMOTE_PORT' => '52702'
+    'REDIRECT_URL' => 'http://tt.ccoaadmin.gzedu.net/demand/default/create'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/demand/default/create'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1481164644.725
+    'REQUEST_TIME' => 1481164644
+]
+2016-12-08 10:37:35 [127.0.0.1][-][-][error][yii\base\ErrorException:8] exception 'yii\base\ErrorException' with message 'Use of undefined constant teams - assumed 'teams'' in D:\wamp64\www\rcoa\backend\modules\demand\views\default\_form.php:19
+Stack trace:
+#0 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(248): yii\base\View->renderPhpFile()
+#1 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(150): yii\base\View->renderFile()
+#2 D:\wamp64\www\rcoa\backend\modules\demand\views\default\create.php(19): yii\base\View->render()
+#3 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(326): ::unknown()
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(248): yii\base\View->renderPhpFile()
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(150): yii\base\View->renderFile()
+#6 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(378): yii\base\View->render()
+#7 D:\wamp64\www\rcoa\backend\modules\demand\controllers\DefaultController.php(74): yii\base\Controller->render()
+#8 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): backend\modules\demand\controllers\DefaultController->actionCreate()
+#9 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): ::call_user_func_array:{D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php:55}()
+#10 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(154): yii\base\InlineAction->runWithParams()
+#11 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(454): yii\base\Controller->runAction()
+#12 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(100): yii\base\Module->runAction()
+#13 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest()
+#14 D:\wamp64\www\rcoa\backend\web\index.php(20): yii\base\Application->run()
+#15 {main}
+2016-12-08 10:37:35 [127.0.0.1][-][-][info][application] $_COOKIE = [
+    'PHPSESSID' => '9qlvmeok62a899k63ebgsj76k4'
+    '_identity' => '3a9206c8cc741fa2f77f000d16b69aca211c06852d5f76641b613b9664be55fca:2:{i:0;s:9:\"_identity\";i:1;s:49:\"[\"59\",\"ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK\",2592000]\";}'
+    '_csrf' => 'c091814ea77cf2ee0daf8052bf4a8a1f08e016b8bc2bce1594864ed7a7c8132aa:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"iGGj3xrk6bO4AXoFz98ZzwpVLWG97ME0\";}'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoaadmin.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoaadmin.gzedu.net/demand/default'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => 'PHPSESSID=9qlvmeok62a899k63ebgsj76k4; _identity=3a9206c8cc741fa2f77f000d16b69aca211c06852d5f76641b613b9664be55fca%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A49%3A%22%5B%2259%22%2C%22ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK%22%2C2592000%5D%22%3B%7D; _csrf=c091814ea77cf2ee0daf8052bf4a8a1f08e016b8bc2bce1594864ed7a7c8132aa%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22iGGj3xrk6bO4AXoFz98ZzwpVLWG97ME0%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoaadmin.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoaadmin.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/backend/web/index.php'
+    'REMOTE_PORT' => '52726'
+    'REDIRECT_URL' => 'http://tt.ccoaadmin.gzedu.net/demand/default/create'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/demand/default/create'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1481164655.538
+    'REQUEST_TIME' => 1481164655
+]
+2016-12-08 10:49:54 [127.0.0.1][-][-][error][yii\base\ErrorException:2] exception 'yii\base\ErrorException' with message 'Missing argument 1 for yii\db\BaseActiveRecord::findAll(), called in D:\wamp64\www\rcoa\backend\modules\demand\controllers\DefaultController.php on line 138 and defined' in D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\BaseActiveRecord.php:114
+Stack trace:
+#0 D:\wamp64\www\rcoa\backend\modules\demand\controllers\DefaultController.php(76): backend\modules\demand\controllers\DefaultController->getTeam()
+#1 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): backend\modules\demand\controllers\DefaultController->actionCreate()
+#2 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): ::call_user_func_array:{D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php:55}()
+#3 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(154): yii\base\InlineAction->runWithParams()
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(454): yii\base\Controller->runAction()
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(100): yii\base\Module->runAction()
+#6 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest()
+#7 D:\wamp64\www\rcoa\backend\web\index.php(20): yii\base\Application->run()
+#8 {main}
+2016-12-08 10:49:54 [127.0.0.1][-][-][info][application] $_COOKIE = [
+    'PHPSESSID' => '9qlvmeok62a899k63ebgsj76k4'
+    '_identity' => '3a9206c8cc741fa2f77f000d16b69aca211c06852d5f76641b613b9664be55fca:2:{i:0;s:9:\"_identity\";i:1;s:49:\"[\"59\",\"ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK\",2592000]\";}'
+    '_csrf' => 'c091814ea77cf2ee0daf8052bf4a8a1f08e016b8bc2bce1594864ed7a7c8132aa:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"iGGj3xrk6bO4AXoFz98ZzwpVLWG97ME0\";}'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoaadmin.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoaadmin.gzedu.net/demand/default'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => 'PHPSESSID=9qlvmeok62a899k63ebgsj76k4; _identity=3a9206c8cc741fa2f77f000d16b69aca211c06852d5f76641b613b9664be55fca%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A49%3A%22%5B%2259%22%2C%22ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK%22%2C2592000%5D%22%3B%7D; _csrf=c091814ea77cf2ee0daf8052bf4a8a1f08e016b8bc2bce1594864ed7a7c8132aa%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22iGGj3xrk6bO4AXoFz98ZzwpVLWG97ME0%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoaadmin.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoaadmin.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/backend/web/index.php'
+    'REMOTE_PORT' => '54812'
+    'REDIRECT_URL' => 'http://tt.ccoaadmin.gzedu.net/demand/default/create'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/demand/default/create'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1481165394.763
+    'REQUEST_TIME' => 1481165394
+]
+2016-12-08 10:50:24 [127.0.0.1][-][-][error][yii\base\ErrorException:2] exception 'yii\base\ErrorException' with message 'Missing argument 1 for yii\db\BaseActiveRecord::findAll(), called in D:\wamp64\www\rcoa\backend\modules\demand\controllers\DefaultController.php on line 138 and defined' in D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\BaseActiveRecord.php:114
+Stack trace:
+#0 D:\wamp64\www\rcoa\backend\modules\demand\controllers\DefaultController.php(76): backend\modules\demand\controllers\DefaultController->getTeam()
+#1 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): backend\modules\demand\controllers\DefaultController->actionCreate()
+#2 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): ::call_user_func_array:{D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php:55}()
+#3 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(154): yii\base\InlineAction->runWithParams()
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(454): yii\base\Controller->runAction()
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(100): yii\base\Module->runAction()
+#6 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest()
+#7 D:\wamp64\www\rcoa\backend\web\index.php(20): yii\base\Application->run()
+#8 {main}
+2016-12-08 10:50:24 [127.0.0.1][-][-][info][application] $_COOKIE = [
+    'PHPSESSID' => '9qlvmeok62a899k63ebgsj76k4'
+    '_identity' => '3a9206c8cc741fa2f77f000d16b69aca211c06852d5f76641b613b9664be55fca:2:{i:0;s:9:\"_identity\";i:1;s:49:\"[\"59\",\"ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK\",2592000]\";}'
+    '_csrf' => 'c091814ea77cf2ee0daf8052bf4a8a1f08e016b8bc2bce1594864ed7a7c8132aa:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"iGGj3xrk6bO4AXoFz98ZzwpVLWG97ME0\";}'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoaadmin.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoaadmin.gzedu.net/demand/default'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => 'PHPSESSID=9qlvmeok62a899k63ebgsj76k4; _identity=3a9206c8cc741fa2f77f000d16b69aca211c06852d5f76641b613b9664be55fca%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A49%3A%22%5B%2259%22%2C%22ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK%22%2C2592000%5D%22%3B%7D; _csrf=c091814ea77cf2ee0daf8052bf4a8a1f08e016b8bc2bce1594864ed7a7c8132aa%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22iGGj3xrk6bO4AXoFz98ZzwpVLWG97ME0%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoaadmin.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoaadmin.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/backend/web/index.php'
+    'REMOTE_PORT' => '54902'
+    'REDIRECT_URL' => 'http://tt.ccoaadmin.gzedu.net/demand/default/create'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/demand/default/create'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1481165424.646
+    'REQUEST_TIME' => 1481165424
+]
+2016-12-08 10:55:12 [127.0.0.1][-][-][error][yii\base\ErrorException:1] exception 'yii\base\ErrorException' with message 'Class 'backend\modules\demand\controllers\Expert' not found' in D:\wamp64\www\rcoa\backend\modules\demand\controllers\DefaultController.php:150
+Stack trace:
+#0 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): backend\modules\demand\controllers\DefaultController->actionCreate()
+#1 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): ::call_user_func_array:{D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php:55}()
+#2 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(154): yii\base\InlineAction->runWithParams()
+#3 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(454): yii\base\Controller->runAction()
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(100): yii\base\Module->runAction()
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest()
+#6 D:\wamp64\www\rcoa\backend\web\index.php(20): yii\base\Application->run()
+#7 {main}
+2016-12-08 10:55:12 [127.0.0.1][-][-][info][application] $_COOKIE = [
+    'PHPSESSID' => '9qlvmeok62a899k63ebgsj76k4'
+    '_identity' => '3a9206c8cc741fa2f77f000d16b69aca211c06852d5f76641b613b9664be55fca:2:{i:0;s:9:\"_identity\";i:1;s:49:\"[\"59\",\"ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK\",2592000]\";}'
+    '_csrf' => 'c091814ea77cf2ee0daf8052bf4a8a1f08e016b8bc2bce1594864ed7a7c8132aa:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"iGGj3xrk6bO4AXoFz98ZzwpVLWG97ME0\";}'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoaadmin.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoaadmin.gzedu.net/demand/default'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => 'PHPSESSID=9qlvmeok62a899k63ebgsj76k4; _identity=3a9206c8cc741fa2f77f000d16b69aca211c06852d5f76641b613b9664be55fca%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A49%3A%22%5B%2259%22%2C%22ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK%22%2C2592000%5D%22%3B%7D; _csrf=c091814ea77cf2ee0daf8052bf4a8a1f08e016b8bc2bce1594864ed7a7c8132aa%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22iGGj3xrk6bO4AXoFz98ZzwpVLWG97ME0%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoaadmin.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoaadmin.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/backend/web/index.php'
+    'REMOTE_PORT' => '55613'
+    'REDIRECT_URL' => 'http://tt.ccoaadmin.gzedu.net/demand/default/create'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/demand/default/create'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1481165712.453
+    'REQUEST_TIME' => 1481165712
+]
+2016-12-14 16:34:39 [127.0.0.1][59][pomc9q0l3iu8nvpm4r5frnusk5][error][yii\base\ErrorException:2] exception 'yii\base\ErrorException' with message 'strtoupper() expects parameter 1 to be string, array given' in D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php:1008
+Stack trace:
+#0 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(1067): yii\db\QueryBuilder->buildCondition()
+#1 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(1015): yii\db\QueryBuilder->buildAndCondition()
+#2 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(819): yii\db\QueryBuilder->buildCondition()
+#3 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(98): yii\db\QueryBuilder->buildWhere()
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\ActiveQuery.php(319): yii\db\QueryBuilder->build()
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\Query.php(210): yii\db\ActiveQuery->createCommand()
+#6 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\ActiveQuery.php(133): yii\db\Query->all()
+#7 D:\wamp64\www\rcoa\backend\modules\team\controllers\MemberController.php(212): yii\db\ActiveQuery->all()
+#8 D:\wamp64\www\rcoa\backend\modules\team\controllers\MemberController.php(96): backend\modules\team\controllers\MemberController->getIsExistLeader()
+#9 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): backend\modules\team\controllers\MemberController->actionCreate()
+#10 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): ::call_user_func_array:{D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php:55}()
+#11 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(154): yii\base\InlineAction->runWithParams()
+#12 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(454): yii\base\Controller->runAction()
+#13 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(100): yii\base\Module->runAction()
+#14 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest()
+#15 D:\wamp64\www\rcoa\backend\web\index.php(20): yii\base\Application->run()
+#16 {main}
+2016-12-14 16:34:39 [127.0.0.1][59][pomc9q0l3iu8nvpm4r5frnusk5][info][application] $_GET = [
+    'team_id' => '5'
+]
+
+$_COOKIE = [
+    'PHPSESSID' => 'pomc9q0l3iu8nvpm4r5frnusk5'
+    '_csrf' => '99b47a15c50fbd9309a70e4bfef09df5c159494d21bfe74901c19ee30e9a8e61a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"qrKPH7OksHGH0H3iC3yWCpkk15nXEOqT\";}'
+    '_identity' => '7ef891aa41dd563b8a29a06009d06a8f9055221b11a82f8366688c406ed3fb83a:2:{i:0;s:9:\"_identity\";i:1;s:49:\"[\"59\",\"ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK\",2592000]\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => '59'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoaadmin.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoaadmin.gzedu.net/teammanage/team/view?id=5'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => 'PHPSESSID=pomc9q0l3iu8nvpm4r5frnusk5; _csrf=99b47a15c50fbd9309a70e4bfef09df5c159494d21bfe74901c19ee30e9a8e61a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22qrKPH7OksHGH0H3iC3yWCpkk15nXEOqT%22%3B%7D; _identity=7ef891aa41dd563b8a29a06009d06a8f9055221b11a82f8366688c406ed3fb83a%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A49%3A%22%5B%2259%22%2C%22ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK%22%2C2592000%5D%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoaadmin.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoaadmin.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/backend/web/index.php'
+    'REMOTE_PORT' => '53132'
+    'REDIRECT_QUERY_STRING' => 'team_id=5'
+    'REDIRECT_URL' => 'http://tt.ccoaadmin.gzedu.net/teammanage/member/create?team_id=5'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => 'team_id=5'
+    'REQUEST_URI' => '/teammanage/member/create?team_id=5'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1481704479.683
+    'REQUEST_TIME' => 1481704479
+]
+2016-12-14 16:47:30 [127.0.0.1][59][pomc9q0l3iu8nvpm4r5frnusk5][error][yii\base\ErrorException:2] exception 'yii\base\ErrorException' with message 'strtoupper() expects parameter 1 to be string, array given' in D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php:1008
+Stack trace:
+#0 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(1067): yii\db\QueryBuilder->buildCondition()
+#1 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(1015): yii\db\QueryBuilder->buildAndCondition()
+#2 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(819): yii\db\QueryBuilder->buildCondition()
+#3 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(98): yii\db\QueryBuilder->buildWhere()
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\ActiveQuery.php(319): yii\db\QueryBuilder->build()
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\Query.php(210): yii\db\ActiveQuery->createCommand()
+#6 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\ActiveQuery.php(133): yii\db\Query->all()
+#7 D:\wamp64\www\rcoa\backend\modules\team\controllers\MemberController.php(214): yii\db\ActiveQuery->all()
+#8 D:\wamp64\www\rcoa\backend\modules\team\controllers\MemberController.php(95): backend\modules\team\controllers\MemberController->getIsExistLeader()
+#9 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): backend\modules\team\controllers\MemberController->actionCreate()
+#10 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): ::call_user_func_array:{D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php:55}()
+#11 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(154): yii\base\InlineAction->runWithParams()
+#12 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(454): yii\base\Controller->runAction()
+#13 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(100): yii\base\Module->runAction()
+#14 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest()
+#15 D:\wamp64\www\rcoa\backend\web\index.php(20): yii\base\Application->run()
+#16 {main}
+2016-12-14 16:47:30 [127.0.0.1][59][pomc9q0l3iu8nvpm4r5frnusk5][info][application] $_GET = [
+    'team_id' => '5'
+]
+
+$_COOKIE = [
+    'PHPSESSID' => 'pomc9q0l3iu8nvpm4r5frnusk5'
+    '_csrf' => '99b47a15c50fbd9309a70e4bfef09df5c159494d21bfe74901c19ee30e9a8e61a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"qrKPH7OksHGH0H3iC3yWCpkk15nXEOqT\";}'
+    '_identity' => '7ef891aa41dd563b8a29a06009d06a8f9055221b11a82f8366688c406ed3fb83a:2:{i:0;s:9:\"_identity\";i:1;s:49:\"[\"59\",\"ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK\",2592000]\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => '59'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoaadmin.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoaadmin.gzedu.net/teammanage/team/view?id=5'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => 'PHPSESSID=pomc9q0l3iu8nvpm4r5frnusk5; _csrf=99b47a15c50fbd9309a70e4bfef09df5c159494d21bfe74901c19ee30e9a8e61a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22qrKPH7OksHGH0H3iC3yWCpkk15nXEOqT%22%3B%7D; _identity=7ef891aa41dd563b8a29a06009d06a8f9055221b11a82f8366688c406ed3fb83a%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A49%3A%22%5B%2259%22%2C%22ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK%22%2C2592000%5D%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoaadmin.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoaadmin.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/backend/web/index.php'
+    'REMOTE_PORT' => '55050'
+    'REDIRECT_QUERY_STRING' => 'team_id=5'
+    'REDIRECT_URL' => 'http://tt.ccoaadmin.gzedu.net/teammanage/member/create?team_id=5'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => 'team_id=5'
+    'REQUEST_URI' => '/teammanage/member/create?team_id=5'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1481705250.336
+    'REQUEST_TIME' => 1481705250
+]
+2016-12-14 16:47:32 [127.0.0.1][59][pomc9q0l3iu8nvpm4r5frnusk5][error][yii\base\ErrorException:2] exception 'yii\base\ErrorException' with message 'strtoupper() expects parameter 1 to be string, array given' in D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php:1008
+Stack trace:
+#0 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(1067): yii\db\QueryBuilder->buildCondition()
+#1 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(1015): yii\db\QueryBuilder->buildAndCondition()
+#2 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(819): yii\db\QueryBuilder->buildCondition()
+#3 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(98): yii\db\QueryBuilder->buildWhere()
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\ActiveQuery.php(319): yii\db\QueryBuilder->build()
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\Query.php(210): yii\db\ActiveQuery->createCommand()
+#6 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\ActiveQuery.php(133): yii\db\Query->all()
+#7 D:\wamp64\www\rcoa\backend\modules\team\controllers\MemberController.php(214): yii\db\ActiveQuery->all()
+#8 D:\wamp64\www\rcoa\backend\modules\team\controllers\MemberController.php(95): backend\modules\team\controllers\MemberController->getIsExistLeader()
+#9 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): backend\modules\team\controllers\MemberController->actionCreate()
+#10 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): ::call_user_func_array:{D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php:55}()
+#11 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(154): yii\base\InlineAction->runWithParams()
+#12 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(454): yii\base\Controller->runAction()
+#13 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(100): yii\base\Module->runAction()
+#14 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest()
+#15 D:\wamp64\www\rcoa\backend\web\index.php(20): yii\base\Application->run()
+#16 {main}
+2016-12-14 16:47:31 [127.0.0.1][59][pomc9q0l3iu8nvpm4r5frnusk5][info][application] $_GET = [
+    'team_id' => '5'
+]
+
+$_COOKIE = [
+    'PHPSESSID' => 'pomc9q0l3iu8nvpm4r5frnusk5'
+    '_csrf' => '99b47a15c50fbd9309a70e4bfef09df5c159494d21bfe74901c19ee30e9a8e61a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"qrKPH7OksHGH0H3iC3yWCpkk15nXEOqT\";}'
+    '_identity' => '7ef891aa41dd563b8a29a06009d06a8f9055221b11a82f8366688c406ed3fb83a:2:{i:0;s:9:\"_identity\";i:1;s:49:\"[\"59\",\"ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK\",2592000]\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => '59'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoaadmin.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoaadmin.gzedu.net/teammanage/team/view?id=5'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => 'PHPSESSID=pomc9q0l3iu8nvpm4r5frnusk5; _csrf=99b47a15c50fbd9309a70e4bfef09df5c159494d21bfe74901c19ee30e9a8e61a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22qrKPH7OksHGH0H3iC3yWCpkk15nXEOqT%22%3B%7D; _identity=7ef891aa41dd563b8a29a06009d06a8f9055221b11a82f8366688c406ed3fb83a%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A49%3A%22%5B%2259%22%2C%22ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK%22%2C2592000%5D%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoaadmin.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoaadmin.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/backend/web/index.php'
+    'REMOTE_PORT' => '55051'
+    'REDIRECT_QUERY_STRING' => 'team_id=5'
+    'REDIRECT_URL' => 'http://tt.ccoaadmin.gzedu.net/teammanage/member/create?team_id=5'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => 'team_id=5'
+    'REQUEST_URI' => '/teammanage/member/create?team_id=5'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1481705251.885
+    'REQUEST_TIME' => 1481705251
+]
+2016-12-14 16:47:45 [127.0.0.1][59][pomc9q0l3iu8nvpm4r5frnusk5][error][yii\base\ErrorException:2] exception 'yii\base\ErrorException' with message 'strtoupper() expects parameter 1 to be string, array given' in D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php:1008
+Stack trace:
+#0 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(1067): yii\db\QueryBuilder->buildCondition()
+#1 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(1015): yii\db\QueryBuilder->buildAndCondition()
+#2 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(819): yii\db\QueryBuilder->buildCondition()
+#3 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(98): yii\db\QueryBuilder->buildWhere()
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\ActiveQuery.php(319): yii\db\QueryBuilder->build()
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\Query.php(210): yii\db\ActiveQuery->createCommand()
+#6 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\ActiveQuery.php(133): yii\db\Query->all()
+#7 D:\wamp64\www\rcoa\backend\modules\team\controllers\MemberController.php(214): yii\db\ActiveQuery->all()
+#8 D:\wamp64\www\rcoa\backend\modules\team\controllers\MemberController.php(95): backend\modules\team\controllers\MemberController->getIsExistLeader()
+#9 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): backend\modules\team\controllers\MemberController->actionCreate()
+#10 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): ::call_user_func_array:{D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php:55}()
+#11 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(154): yii\base\InlineAction->runWithParams()
+#12 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(454): yii\base\Controller->runAction()
+#13 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(100): yii\base\Module->runAction()
+#14 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest()
+#15 D:\wamp64\www\rcoa\backend\web\index.php(20): yii\base\Application->run()
+#16 {main}
+2016-12-14 16:47:45 [127.0.0.1][59][pomc9q0l3iu8nvpm4r5frnusk5][info][application] $_GET = [
+    'team_id' => '5'
+]
+
+$_COOKIE = [
+    'PHPSESSID' => 'pomc9q0l3iu8nvpm4r5frnusk5'
+    '_csrf' => '99b47a15c50fbd9309a70e4bfef09df5c159494d21bfe74901c19ee30e9a8e61a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"qrKPH7OksHGH0H3iC3yWCpkk15nXEOqT\";}'
+    '_identity' => '7ef891aa41dd563b8a29a06009d06a8f9055221b11a82f8366688c406ed3fb83a:2:{i:0;s:9:\"_identity\";i:1;s:49:\"[\"59\",\"ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK\",2592000]\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => '59'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoaadmin.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoaadmin.gzedu.net/teammanage/team/view?id=5'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => 'PHPSESSID=pomc9q0l3iu8nvpm4r5frnusk5; _csrf=99b47a15c50fbd9309a70e4bfef09df5c159494d21bfe74901c19ee30e9a8e61a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22qrKPH7OksHGH0H3iC3yWCpkk15nXEOqT%22%3B%7D; _identity=7ef891aa41dd563b8a29a06009d06a8f9055221b11a82f8366688c406ed3fb83a%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A49%3A%22%5B%2259%22%2C%22ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK%22%2C2592000%5D%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoaadmin.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoaadmin.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/backend/web/index.php'
+    'REMOTE_PORT' => '55093'
+    'REDIRECT_QUERY_STRING' => 'team_id=5'
+    'REDIRECT_URL' => 'http://tt.ccoaadmin.gzedu.net/teammanage/member/create?team_id=5'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => 'team_id=5'
+    'REQUEST_URI' => '/teammanage/member/create?team_id=5'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1481705265.648
+    'REQUEST_TIME' => 1481705265
+]
+2016-12-14 16:49:49 [127.0.0.1][59][pomc9q0l3iu8nvpm4r5frnusk5][error][yii\base\ErrorException:2] exception 'yii\base\ErrorException' with message 'strtoupper() expects parameter 1 to be string, array given' in D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php:1008
+Stack trace:
+#0 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(1067): yii\db\QueryBuilder->buildCondition()
+#1 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(1015): yii\db\QueryBuilder->buildAndCondition()
+#2 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(819): yii\db\QueryBuilder->buildCondition()
+#3 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(98): yii\db\QueryBuilder->buildWhere()
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\ActiveQuery.php(319): yii\db\QueryBuilder->build()
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\Query.php(210): yii\db\ActiveQuery->createCommand()
+#6 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\ActiveQuery.php(133): yii\db\Query->all()
+#7 D:\wamp64\www\rcoa\backend\modules\team\controllers\MemberController.php(214): yii\db\ActiveQuery->all()
+#8 D:\wamp64\www\rcoa\backend\modules\team\controllers\MemberController.php(95): backend\modules\team\controllers\MemberController->getIsExistLeader()
+#9 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): backend\modules\team\controllers\MemberController->actionCreate()
+#10 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): ::call_user_func_array:{D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php:55}()
+#11 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(154): yii\base\InlineAction->runWithParams()
+#12 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(454): yii\base\Controller->runAction()
+#13 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(100): yii\base\Module->runAction()
+#14 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest()
+#15 D:\wamp64\www\rcoa\backend\web\index.php(20): yii\base\Application->run()
+#16 {main}
+2016-12-14 16:49:48 [127.0.0.1][59][pomc9q0l3iu8nvpm4r5frnusk5][info][application] $_GET = [
+    'team_id' => '5'
+]
+
+$_COOKIE = [
+    'PHPSESSID' => 'pomc9q0l3iu8nvpm4r5frnusk5'
+    '_csrf' => '99b47a15c50fbd9309a70e4bfef09df5c159494d21bfe74901c19ee30e9a8e61a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"qrKPH7OksHGH0H3iC3yWCpkk15nXEOqT\";}'
+    '_identity' => '7ef891aa41dd563b8a29a06009d06a8f9055221b11a82f8366688c406ed3fb83a:2:{i:0;s:9:\"_identity\";i:1;s:49:\"[\"59\",\"ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK\",2592000]\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => '59'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoaadmin.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoaadmin.gzedu.net/teammanage/team/view?id=5'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => 'PHPSESSID=pomc9q0l3iu8nvpm4r5frnusk5; _csrf=99b47a15c50fbd9309a70e4bfef09df5c159494d21bfe74901c19ee30e9a8e61a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22qrKPH7OksHGH0H3iC3yWCpkk15nXEOqT%22%3B%7D; _identity=7ef891aa41dd563b8a29a06009d06a8f9055221b11a82f8366688c406ed3fb83a%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A49%3A%22%5B%2259%22%2C%22ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK%22%2C2592000%5D%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoaadmin.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoaadmin.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/backend/web/index.php'
+    'REMOTE_PORT' => '55396'
+    'REDIRECT_QUERY_STRING' => 'team_id=5'
+    'REDIRECT_URL' => 'http://tt.ccoaadmin.gzedu.net/teammanage/member/create?team_id=5'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => 'team_id=5'
+    'REQUEST_URI' => '/teammanage/member/create?team_id=5'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1481705388.939
+    'REQUEST_TIME' => 1481705388
+]
+2016-12-14 16:51:16 [127.0.0.1][59][pomc9q0l3iu8nvpm4r5frnusk5][error][yii\base\ErrorException:2] exception 'yii\base\ErrorException' with message 'strtoupper() expects parameter 1 to be string, array given' in D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php:1008
+Stack trace:
+#0 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(1067): yii\db\QueryBuilder->buildCondition()
+#1 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(1015): yii\db\QueryBuilder->buildAndCondition()
+#2 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(819): yii\db\QueryBuilder->buildCondition()
+#3 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(98): yii\db\QueryBuilder->buildWhere()
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\ActiveQuery.php(319): yii\db\QueryBuilder->build()
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\Query.php(210): yii\db\ActiveQuery->createCommand()
+#6 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\ActiveQuery.php(133): yii\db\Query->all()
+#7 D:\wamp64\www\rcoa\backend\modules\team\controllers\MemberController.php(214): yii\db\ActiveQuery->all()
+#8 D:\wamp64\www\rcoa\backend\modules\team\controllers\MemberController.php(95): backend\modules\team\controllers\MemberController->getIsExistLeader()
+#9 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): backend\modules\team\controllers\MemberController->actionCreate()
+#10 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): ::call_user_func_array:{D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php:55}()
+#11 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(154): yii\base\InlineAction->runWithParams()
+#12 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(454): yii\base\Controller->runAction()
+#13 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(100): yii\base\Module->runAction()
+#14 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest()
+#15 D:\wamp64\www\rcoa\backend\web\index.php(20): yii\base\Application->run()
+#16 {main}
+2016-12-14 16:51:16 [127.0.0.1][59][pomc9q0l3iu8nvpm4r5frnusk5][info][application] $_GET = [
+    'team_id' => '5'
+]
+
+$_COOKIE = [
+    'PHPSESSID' => 'pomc9q0l3iu8nvpm4r5frnusk5'
+    '_csrf' => '99b47a15c50fbd9309a70e4bfef09df5c159494d21bfe74901c19ee30e9a8e61a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"qrKPH7OksHGH0H3iC3yWCpkk15nXEOqT\";}'
+    '_identity' => '7ef891aa41dd563b8a29a06009d06a8f9055221b11a82f8366688c406ed3fb83a:2:{i:0;s:9:\"_identity\";i:1;s:49:\"[\"59\",\"ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK\",2592000]\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => '59'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoaadmin.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoaadmin.gzedu.net/teammanage/team/view?id=5'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => 'PHPSESSID=pomc9q0l3iu8nvpm4r5frnusk5; _csrf=99b47a15c50fbd9309a70e4bfef09df5c159494d21bfe74901c19ee30e9a8e61a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22qrKPH7OksHGH0H3iC3yWCpkk15nXEOqT%22%3B%7D; _identity=7ef891aa41dd563b8a29a06009d06a8f9055221b11a82f8366688c406ed3fb83a%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A49%3A%22%5B%2259%22%2C%22ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK%22%2C2592000%5D%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoaadmin.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoaadmin.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/backend/web/index.php'
+    'REMOTE_PORT' => '55614'
+    'REDIRECT_QUERY_STRING' => 'team_id=5'
+    'REDIRECT_URL' => 'http://tt.ccoaadmin.gzedu.net/teammanage/member/create?team_id=5'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => 'team_id=5'
+    'REQUEST_URI' => '/teammanage/member/create?team_id=5'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1481705476.749
+    'REQUEST_TIME' => 1481705476
+]
+2016-12-14 16:52:34 [127.0.0.1][59][pomc9q0l3iu8nvpm4r5frnusk5][error][yii\base\ErrorException:2] exception 'yii\base\ErrorException' with message 'strtoupper() expects parameter 1 to be string, array given' in D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php:1008
+Stack trace:
+#0 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(1067): yii\db\QueryBuilder->buildCondition()
+#1 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(1015): yii\db\QueryBuilder->buildAndCondition()
+#2 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(819): yii\db\QueryBuilder->buildCondition()
+#3 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\QueryBuilder.php(98): yii\db\QueryBuilder->buildWhere()
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\ActiveQuery.php(319): yii\db\QueryBuilder->build()
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\Query.php(210): yii\db\ActiveQuery->createCommand()
+#6 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\db\ActiveQuery.php(133): yii\db\Query->all()
+#7 D:\wamp64\www\rcoa\backend\modules\team\controllers\MemberController.php(214): yii\db\ActiveQuery->all()
+#8 D:\wamp64\www\rcoa\backend\modules\team\controllers\MemberController.php(95): backend\modules\team\controllers\MemberController->getIsExistLeader()
+#9 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): backend\modules\team\controllers\MemberController->actionCreate()
+#10 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): ::call_user_func_array:{D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php:55}()
+#11 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(154): yii\base\InlineAction->runWithParams()
+#12 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(454): yii\base\Controller->runAction()
+#13 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(100): yii\base\Module->runAction()
+#14 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest()
+#15 D:\wamp64\www\rcoa\backend\web\index.php(20): yii\base\Application->run()
+#16 {main}
+2016-12-14 16:52:34 [127.0.0.1][59][pomc9q0l3iu8nvpm4r5frnusk5][info][application] $_GET = [
+    'team_id' => '5'
+]
+
+$_COOKIE = [
+    'PHPSESSID' => 'pomc9q0l3iu8nvpm4r5frnusk5'
+    '_csrf' => '99b47a15c50fbd9309a70e4bfef09df5c159494d21bfe74901c19ee30e9a8e61a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"qrKPH7OksHGH0H3iC3yWCpkk15nXEOqT\";}'
+    '_identity' => '7ef891aa41dd563b8a29a06009d06a8f9055221b11a82f8366688c406ed3fb83a:2:{i:0;s:9:\"_identity\";i:1;s:49:\"[\"59\",\"ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK\",2592000]\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => '59'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoaadmin.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoaadmin.gzedu.net/teammanage/team/view?id=5'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => 'PHPSESSID=pomc9q0l3iu8nvpm4r5frnusk5; _csrf=99b47a15c50fbd9309a70e4bfef09df5c159494d21bfe74901c19ee30e9a8e61a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22qrKPH7OksHGH0H3iC3yWCpkk15nXEOqT%22%3B%7D; _identity=7ef891aa41dd563b8a29a06009d06a8f9055221b11a82f8366688c406ed3fb83a%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A49%3A%22%5B%2259%22%2C%22ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK%22%2C2592000%5D%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoaadmin.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoaadmin.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/backend/web/index.php'
+    'REMOTE_PORT' => '55827'
+    'REDIRECT_QUERY_STRING' => 'team_id=5'
+    'REDIRECT_URL' => 'http://tt.ccoaadmin.gzedu.net/teammanage/member/create?team_id=5'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => 'team_id=5'
+    'REQUEST_URI' => '/teammanage/member/create?team_id=5'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1481705554.039
+    'REQUEST_TIME' => 1481705554
+]
+2016-12-14 16:53:38 [127.0.0.1][59][pomc9q0l3iu8nvpm4r5frnusk5][error][yii\web\HttpException:404] exception 'yii\web\NotFoundHttpException' with message '所选成员已是其他团队的队长。' in D:\wamp64\www\rcoa\backend\modules\team\controllers\MemberController.php:98
+Stack trace:
+#0 [internal function]: backend\modules\team\controllers\MemberController->actionCreate('5')
+#1 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): call_user_func_array(Array, Array)
+#2 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(154): yii\base\InlineAction->runWithParams(Array)
+#3 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(454): yii\base\Controller->runAction('create', Array)
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(100): yii\base\Module->runAction('teammanage/memb...', Array)
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#6 D:\wamp64\www\rcoa\backend\web\index.php(20): yii\base\Application->run()
+#7 {main}
+2016-12-14 16:53:37 [127.0.0.1][59][pomc9q0l3iu8nvpm4r5frnusk5][info][application] $_GET = [
+    'team_id' => '5'
+]
+
+$_POST = [
+    '_csrf' => 'X3ZDMzFYRHIuBAhjeW8LGSw.BHsBEHcbHEU6ZHIoLxluQy1rdBc1Jg=='
+    'TeamMember' => [
+        'u_id' => '12'
+        'position_id' => '1'
+        'is_leader' => 'Y'
+    ]
+    'id' => ''
+]
+
+$_COOKIE = [
+    'PHPSESSID' => 'pomc9q0l3iu8nvpm4r5frnusk5'
+    '_csrf' => '99b47a15c50fbd9309a70e4bfef09df5c159494d21bfe74901c19ee30e9a8e61a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"qrKPH7OksHGH0H3iC3yWCpkk15nXEOqT\";}'
+    '_identity' => '7ef891aa41dd563b8a29a06009d06a8f9055221b11a82f8366688c406ed3fb83a:2:{i:0;s:9:\"_identity\";i:1;s:49:\"[\"59\",\"ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK\",2592000]\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => '59'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoaadmin.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'CONTENT_LENGTH' => '179'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_ORIGIN' => 'http://tt.ccoaadmin.gzedu.net'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36'
+    'CONTENT_TYPE' => 'application/x-www-form-urlencoded'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoaadmin.gzedu.net/teammanage/member/create?team_id=5'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => 'PHPSESSID=pomc9q0l3iu8nvpm4r5frnusk5; _csrf=99b47a15c50fbd9309a70e4bfef09df5c159494d21bfe74901c19ee30e9a8e61a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22qrKPH7OksHGH0H3iC3yWCpkk15nXEOqT%22%3B%7D; _identity=7ef891aa41dd563b8a29a06009d06a8f9055221b11a82f8366688c406ed3fb83a%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A49%3A%22%5B%2259%22%2C%22ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK%22%2C2592000%5D%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoaadmin.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoaadmin.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/backend/web/index.php'
+    'REMOTE_PORT' => '56002'
+    'REDIRECT_QUERY_STRING' => 'team_id=5'
+    'REDIRECT_URL' => 'http://tt.ccoaadmin.gzedu.net/teammanage/member/create?team_id=5'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'POST'
+    'QUERY_STRING' => 'team_id=5'
+    'REQUEST_URI' => '/teammanage/member/create?team_id=5'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1481705617.951
+    'REQUEST_TIME' => 1481705617
+]
+2016-12-14 16:53:54 [127.0.0.1][59][pomc9q0l3iu8nvpm4r5frnusk5][error][yii\web\HttpException:404] exception 'yii\web\NotFoundHttpException' with message '已存在队长！' in D:\wamp64\www\rcoa\backend\modules\team\controllers\MemberController.php:96
+Stack trace:
+#0 [internal function]: backend\modules\team\controllers\MemberController->actionCreate('5')
+#1 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): call_user_func_array(Array, Array)
+#2 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(154): yii\base\InlineAction->runWithParams(Array)
+#3 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(454): yii\base\Controller->runAction('create', Array)
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(100): yii\base\Module->runAction('teammanage/memb...', Array)
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#6 D:\wamp64\www\rcoa\backend\web\index.php(20): yii\base\Application->run()
+#7 {main}
+2016-12-14 16:53:54 [127.0.0.1][59][pomc9q0l3iu8nvpm4r5frnusk5][info][application] $_GET = [
+    'team_id' => '5'
+]
+
+$_POST = [
+    '_csrf' => 'MnJLUkFXbXRDAAACCWAiH0E6DBpxH14dcUEyBQInBh8DRyUKBBgcIA=='
+    'TeamMember' => [
+        'u_id' => '12'
+        'position_id' => '1'
+        'is_leader' => 'N'
+    ]
+    'id' => ''
+]
+
+$_COOKIE = [
+    'PHPSESSID' => 'pomc9q0l3iu8nvpm4r5frnusk5'
+    '_csrf' => '99b47a15c50fbd9309a70e4bfef09df5c159494d21bfe74901c19ee30e9a8e61a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"qrKPH7OksHGH0H3iC3yWCpkk15nXEOqT\";}'
+    '_identity' => '7ef891aa41dd563b8a29a06009d06a8f9055221b11a82f8366688c406ed3fb83a:2:{i:0;s:9:\"_identity\";i:1;s:49:\"[\"59\",\"ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK\",2592000]\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => '59'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoaadmin.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'CONTENT_LENGTH' => '179'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_ORIGIN' => 'http://tt.ccoaadmin.gzedu.net'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36'
+    'CONTENT_TYPE' => 'application/x-www-form-urlencoded'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoaadmin.gzedu.net/teammanage/member/create?team_id=5'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => 'PHPSESSID=pomc9q0l3iu8nvpm4r5frnusk5; _csrf=99b47a15c50fbd9309a70e4bfef09df5c159494d21bfe74901c19ee30e9a8e61a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22qrKPH7OksHGH0H3iC3yWCpkk15nXEOqT%22%3B%7D; _identity=7ef891aa41dd563b8a29a06009d06a8f9055221b11a82f8366688c406ed3fb83a%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A49%3A%22%5B%2259%22%2C%22ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK%22%2C2592000%5D%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoaadmin.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoaadmin.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/backend/web/index.php'
+    'REMOTE_PORT' => '56031'
+    'REDIRECT_QUERY_STRING' => 'team_id=5'
+    'REDIRECT_URL' => 'http://tt.ccoaadmin.gzedu.net/teammanage/member/create?team_id=5'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'POST'
+    'QUERY_STRING' => 'team_id=5'
+    'REQUEST_URI' => '/teammanage/member/create?team_id=5'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1481705634.392
+    'REQUEST_TIME' => 1481705634
+]
+2016-12-14 16:59:43 [127.0.0.1][59][pomc9q0l3iu8nvpm4r5frnusk5][error][yii\web\HttpException:404] exception 'yii\web\NotFoundHttpException' with message '所选成员已是其他团队的队长。' in D:\wamp64\www\rcoa\backend\modules\team\controllers\MemberController.php:97
+Stack trace:
+#0 [internal function]: backend\modules\team\controllers\MemberController->actionCreate('5')
+#1 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(55): call_user_func_array(Array, Array)
+#2 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(154): yii\base\InlineAction->runWithParams(Array)
+#3 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(454): yii\base\Controller->runAction('create', Array)
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(100): yii\base\Module->runAction('teammanage/memb...', Array)
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(375): yii\web\Application->handleRequest(Object(yii\web\Request))
+#6 D:\wamp64\www\rcoa\backend\web\index.php(20): yii\base\Application->run()
+#7 {main}
+2016-12-14 16:59:43 [127.0.0.1][59][pomc9q0l3iu8nvpm4r5frnusk5][info][application] $_GET = [
+    'team_id' => '5'
+]
+
+$_POST = [
+    '_csrf' => 'OUUtYjJndUJIN2YyelA6KUoNaioCL0YrenZUNXEXHikIcEM6dygEFg=='
+    'TeamMember' => [
+        'u_id' => '12'
+        'position_id' => '1'
+        'is_leader' => 'N'
+    ]
+    'id' => ''
+]
+
+$_COOKIE = [
+    'PHPSESSID' => 'pomc9q0l3iu8nvpm4r5frnusk5'
+    '_csrf' => '99b47a15c50fbd9309a70e4bfef09df5c159494d21bfe74901c19ee30e9a8e61a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"qrKPH7OksHGH0H3iC3yWCpkk15nXEOqT\";}'
+    '_identity' => '7ef891aa41dd563b8a29a06009d06a8f9055221b11a82f8366688c406ed3fb83a:2:{i:0;s:9:\"_identity\";i:1;s:49:\"[\"59\",\"ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK\",2592000]\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => '59'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoaadmin.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'CONTENT_LENGTH' => '179'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_ORIGIN' => 'http://tt.ccoaadmin.gzedu.net'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36'
+    'CONTENT_TYPE' => 'application/x-www-form-urlencoded'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoaadmin.gzedu.net/teammanage/member/create?team_id=5'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.8'
+    'HTTP_COOKIE' => 'PHPSESSID=pomc9q0l3iu8nvpm4r5frnusk5; _csrf=99b47a15c50fbd9309a70e4bfef09df5c159494d21bfe74901c19ee30e9a8e61a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22qrKPH7OksHGH0H3iC3yWCpkk15nXEOqT%22%3B%7D; _identity=7ef891aa41dd563b8a29a06009d06a8f9055221b11a82f8366688c406ed3fb83a%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A49%3A%22%5B%2259%22%2C%22ehuQ2CT9OicALj0CNsBExnQ6MrHlZSLK%22%2C2592000%5D%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoaadmin.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoaadmin.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/backend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/backend/web/index.php'
+    'REMOTE_PORT' => '56864'
+    'REDIRECT_QUERY_STRING' => 'team_id=5'
+    'REDIRECT_URL' => 'http://tt.ccoaadmin.gzedu.net/teammanage/member/create?team_id=5'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'POST'
+    'QUERY_STRING' => 'team_id=5'
+    'REQUEST_URI' => '/teammanage/member/create?team_id=5'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1481705983.654
+    'REQUEST_TIME' => 1481705983
+]

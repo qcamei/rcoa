@@ -117,7 +117,7 @@ MultimediaTask::$operation = $multimedia->getIsBelongToOwnOperate($taskIds, $tas
                 'format' => 'raw',
                 'value'=> function($model){
                     /* @var $model MultimediaTask */
-                    return !empty($model->content_type) ? '<span class="content-type">'.$model->contentType->name.'</span>' : '';
+                    return !empty($model->content_type) ? '<span class="content-type">'.$model->contentType->name.'</span>' : null;
                 },
                 'headerOptions' => [
                     'style' => [
@@ -135,7 +135,7 @@ MultimediaTask::$operation = $multimedia->getIsBelongToOwnOperate($taskIds, $tas
                 'label' => Yii::t('rcoa/multimedia', 'Item Type'),
                 'value'=> function($model){
                     /* @var $model MultimediaTask */
-                    return !empty($model->item_type_id) ? $model->itemType->name : '';
+                    return !empty($model->item_type_id) ? $model->itemType->name : null;
                 },
                 'headerOptions' => [
                     'class'=>[
@@ -154,7 +154,7 @@ MultimediaTask::$operation = $multimedia->getIsBelongToOwnOperate($taskIds, $tas
                 'label' => Yii::t('rcoa/multimedia', 'Item'),
                 'value'=> function($model){
                     /* @var $model MultimediaTask */
-                    return !empty($model->item_id) ? $model->item->name : '';
+                    return !empty($model->item_id) ? $model->item->name : null;
                 },
                 'headerOptions' => [
                     'class'=>[
@@ -173,7 +173,7 @@ MultimediaTask::$operation = $multimedia->getIsBelongToOwnOperate($taskIds, $tas
                 'label' => Yii::t('rcoa/multimedia', 'Item Child'),
                 'value'=> function($model){
                     /* @var $model MultimediaTask */
-                    return !empty($model->item_child_id) ? $model->itemChild->name : '';
+                    return !empty($model->item_child_id) ? $model->itemChild->name : null;
                 },
                 'headerOptions' => [
                     'class'=>[
@@ -192,7 +192,7 @@ MultimediaTask::$operation = $multimedia->getIsBelongToOwnOperate($taskIds, $tas
                 'label' => Yii::t('rcoa/multimedia', 'Course'),
                 'value'=> function($model){
                     /* @var $model MultimediaTask */
-                    return !empty($model->course_id) ? $model->course->name : '';
+                    return !empty($model->course_id) ? $model->course->name : null;
                 },
                 'headerOptions' => [
                     'class'=>[
@@ -265,7 +265,7 @@ MultimediaTask::$operation = $multimedia->getIsBelongToOwnOperate($taskIds, $tas
                 'label' => Yii::t('rcoa', 'Create By'),
                 'value'=> function($model){
                     /* @var $model MultimediaTask */
-                    return !empty($model->create_by) ? $model->createBy->nickname : '';
+                    return !empty($model->create_by) ? $model->createBy->nickname : null;
                 },
                 'headerOptions' => [
                     'class'=>[

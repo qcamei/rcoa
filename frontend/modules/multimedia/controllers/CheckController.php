@@ -124,6 +124,28 @@ class CheckController extends Controller
             ]);
         }
     }
+    
+    /**
+     * 提交审核记录
+     * @param type $task_id     任务ID
+     * @throws NotAcceptableHttpException
+     */
+    public function actionSubmit($task_id)
+    {
+        /* @var $model MultimediaCheck */
+        $model = MultimediaCheck::findOne(['task_id' => $task_id, 'status' => MultimediaCheck::STATUS_NOTCOMPLETE]);
+        /* @var $multimedia MultimediaTool */
+        $multimedia = MultimediaTool::getInstance();
+        if(!$multimedia->getIsProducer($task_id) || !$multimedia->getIsCompleteCheck($task_id))
+            throw new NotAcceptableHttpException('无权限操作！');
+        if(!$model->task->getIsStatusUpdateing())
+            throw new NotAcceptableHttpException('该任务状态为'.$model->task->getStatusName().'！');
+        
+        $model->real_carry_out = date('Y-m-d H:i', time());
+        $model->status = MultimediaCheck::STATUS_COMPLETE;
+        $multimedia->saveSubmitCheckTask($model);
+        $this->redirect(['default/list', 'producer' => Yii::$app->user->id]);
+    }
 
     /**
      * Deletes an existing MultimediaCheck model.
@@ -149,34 +171,6 @@ class CheckController extends Controller
         return $this->redirect(['default/view', 'id' => $model->task_id]);
     }
     
-    /**
-     * 提交审核记录
-     * @param type $task_id     任务ID
-     * @throws NotAcceptableHttpException
-     */
-    public function actionSubmit($task_id)
-    {
-        /* @var $multimedia MultimediaTool */
-        $multimedia = MultimediaTool::getInstance();
-        if(!$multimedia->getIsProducer($task_id) || !$multimedia->getIsCompleteCheck($task_id))
-            throw new NotAcceptableHttpException('无权限操作！');
-        
-        /* @var $model MultimediaCheck */
-        $model = MultimediaCheck::find()
-                 ->where([
-                     'task_id' => $task_id,
-                     'status' => MultimediaCheck::STATUS_NOTCOMPLETE
-                ])
-                 ->one();
-        if(!$model->task->getIsStatusUpdateing())
-            throw new NotAcceptableHttpException('该任务状态为'.$model->task->getStatusName().'！');
-        
-        $model->real_carry_out = date('Y-m-d H:i', time());
-        $model->status = MultimediaCheck::STATUS_COMPLETE;
-        $multimedia->saveSubmitCheckTask($model);
-        $this->redirect(['default/list', 'producer' => Yii::$app->user->id]);
-    }
-
     /**
      * Finds the MultimediaCheck model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

@@ -50,6 +50,9 @@ $config = [
         'product' => [
             'class' => 'backend\modules\product\Module',
         ],
+        'demand' => [
+            'class' => 'backend\modules\demand\Module',
+        ],
     ],
 ];
 

@@ -1,5 +1,6 @@
 <?php
 
+use common\models\demand\DemandTask;
 use frontend\modules\demand\assets\DemandAssets;
 use frontend\modules\multimedia\utils\MultimediaTool;
 use wskeee\rbac\RbacName;
@@ -26,7 +27,7 @@ use yii\helpers\Html;
                     'controllerId'=>'task',                             //控制ID
                     'name'=>'任务',                                     //名称
                     'icon'=>'/filedata/demand/image/list-check.png',    //图标路径
-                    'options'=>['/demand/task'],                        //跳转选项，第一索引为地址，第二起为传参
+                    'options'=>['/demand/task', 'status' => DemandTask::STATUS_DEFAULT],                        //跳转选项，第一索引为地址，第二起为传参
                     'class'=>'footer-demand-menu-item',                 //样式
                 ],
                 [   
@@ -54,7 +55,7 @@ use yii\helpers\Html;
                     * 1、操作方法必须是 【task】
                     * 2、必须拥有创建权限
                     */
-                    'condition'=> true//Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CREATE)  //权限条件
+                    'condition'=> Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE)  //权限条件
                 ],
             ];
             

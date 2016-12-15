@@ -197,6 +197,23 @@ class TeamMemberTool extends Component {
     }
     
     /**
+     * 获取用户所有队长成员
+     * @param string $user_id           用户id
+     * @param boolean $include_is_delete 是否包括已删除成员，默认不包括
+     * @return array(teamember,...)
+     */
+    public function getUserLeaderTeamMembers($user_id,$include_is_delete=false){
+        $results = [];
+        foreach ($this->teamMembers as $teammeber) {
+            if($teammeber['u_id'] == $user_id){
+                if($include_is_delete || ($teammeber['is_delete'] == 'N' && $teammeber['is_leader'] == 'Y'))
+                    $results [] = $teammeber;
+            }
+        }
+        return $results;
+    }
+    
+    /**
      * 取消缓存
      */
     public function invalidateCache() 
@@ -248,9 +265,10 @@ class TeamMemberTool extends Component {
      * @return arrya (id,team_id,u_id,is_leader,index,position_id,is_delete)
      */
     private function getTeammemberDatas(){
-        $query = (new Query())
+        $query = TeamMember::find()
                 ->select(['id','team_id','u_id','is_leader','index','position_id','is_delete'])
-                ->from(TeamMember::tableName());
+                ->from(TeamMember::tableName())
+                ->with('position', 'team', 'user');
         return $query->all(Yii::$app->db);
     }
     

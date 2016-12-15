@@ -23,5 +23,6 @@ return[
     
     'Under the same team please do not repeat to add the same members' => '在同一个团队请不要重复添加相同的成员。',
     'Already exist team leader' => '已存在队长！',
+    "The selected members are the other team's captain" => '所选成员已是其他团队的队长。',
     'Change department already exist team leader' => '变更的部门已存在队长！'
 ];

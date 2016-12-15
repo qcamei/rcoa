@@ -2,6 +2,7 @@
 
 namespace common\models\teamwork;
 
+use common\models\demand\DemandTask;
 use common\models\team\Team;
 use common\models\team\TeamMember;
 use common\models\teamwork\CourseAnnex;
@@ -17,6 +18,7 @@ use yii\db\ActiveRecord;
  * This is the model class for table "{{%teamwork_course}}".
  *
  * @property integer $id                        ID
+ * @property integer $demand_task_id            课程需求ID
  * @property integer $project_id                项目Id
  * @property integer $course_id                 课程Id
  * @property string $teacher                    主讲教师
@@ -57,6 +59,7 @@ use yii\db\ActiveRecord;
  * @property TeamMember[] $producers                获取所有团队成员
  * @property CourseSummary[] $courseWeeklys         获取所有周报开发人
  * @property CourseSummary[] $courseSummaries       获取所有课程总结
+ * @property DemandTask $demandTask                 获取课程需求任务
  */
 class CourseManage extends ActiveRecord
 {
@@ -128,7 +131,7 @@ class CourseManage extends ActiveRecord
                'team_id', 'course_principal'
             ],
             self::SCENARIO_DEFAULT => [
-                'id', 'project_id', 'course_id', 'teacher', 'weekly_editors_people', 'credit', 'lession_time', 
+                'id', 'demand_task_id', 'project_id', 'course_id', 'teacher', 'weekly_editors_people', 'credit', 'lession_time', 
                 'video_length','question_mete', 'case_number', 'activity_number', 'team_id', 'course_ops', 'create_by', 
                 'plan_start_time', 'plan_end_time', 'real_start_time', 'real_carry_out', 'status','des', 'path'
             ],
@@ -147,8 +150,8 @@ class CourseManage extends ActiveRecord
     public function rules()
     {
         return [
-            [['project_id', 'course_id', 'credit', 'lession_time',  'question_mete', 'case_number', 'activity_number', 'team_id', 'created_at', 'updated_at', 'status', 'weekly_editors_people', 'course_ops'], 'integer'],
-            [['project_id', 'course_id', 'credit', 'lession_time', 'teacher',  'weekly_editors_people'], 'required'],
+            [['demand_task_id', 'project_id', 'course_id', 'credit', 'lession_time',  'question_mete', 'case_number', 'activity_number', 'team_id', 'created_at', 'updated_at', 'status', 'weekly_editors_people', 'course_ops'], 'integer'],
+            [['demand_task_id', 'credit', 'lession_time',  'weekly_editors_people'], 'required'],
             [['video_length', 'question_mete', 'case_number', 'activity_number', 'real_carry_out', 'path'], 'required', 'on' => [self::SCENARIO_CARRYOUT]],
             [['teacher', 'create_by'], 'string', 'max' => 36],
             [['course_principal'], 'integer','on' => [self::SCENARIO_CHANGE]],
@@ -281,7 +284,6 @@ class CourseManage extends ActiveRecord
         return $this->hasOne(TeamMember::className(), ['id' => 'course_ops']);
     }
 
-    
     /**
      * 获取周报编辑人
      * @return ActiveQuery
@@ -321,29 +323,38 @@ class CourseManage extends ActiveRecord
     /**
      * 获取课程
      * @return ActiveQuery
-     */
+     
     public function getCourse()
     {
         return $this->hasOne(Item::className(), ['id' => 'course_id']);
-    }
+    }*/
     
     /**
      * 获取主讲讲师
      * @return ActiveQuery
-     */
+     
     public function getSpeakerTeacher()
     {
         return $this->hasOne(User::className(), ['id' => 'teacher']);
-    }
+    }*/
     
+    /**
+     * 获取课程需求任务
+     * @return ActiveQuery
+     */
+    public function getDemandTask()
+    {
+        return $this->hasOne(DemandTask::className(), ['id' => 'demand_task_id']);
+    }
+
     /**
      * 获取项目管理
      * @return ActiveQuery
-     */
+    
     public function getProject()
     {
         return $this->hasOne(ItemManage::className(), ['id' => 'project_id']);
-    }
+    } */
 
     /**
      * 获取所有阶段

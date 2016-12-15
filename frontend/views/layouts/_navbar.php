@@ -15,10 +15,12 @@ use yii\helpers\Html;
  * and open the template in the editor.
  */
 AppAsset::register($this);
+$moduleId = Yii::$app->controller->module->id;   //模块ID
+$system = AppGlobalVariables::getSystems();
 
-$system = System::find()->orderBy('index asc')->all();
 NavBar::begin([
-        'brandLabel' => '课程中心工作平台',
+        //'brandLabel' => '课程中心工作平台',
+        'brandLabel' => '',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -45,7 +47,6 @@ NavBar::begin([
         }
     }
     
-    $moduleId = Yii::$app->controller->module->id;   //模块ID
     if($moduleId == 'app-frontend')
     {
         //站点经过首页或登录，直接获取当前路由
@@ -62,21 +63,12 @@ NavBar::begin([
             }
         }
     }
-    //控制器唯一ID
-    $bar_route = Yii::$app->controller->getUniqueId();
     echo Nav::widget([
         'options' => Yii::$app->user->isGuest ? ['class' =>'navbar-nav navbar-right'] : ['class' => 'navbar-nav navbar-left'],
         'items' => $menuItems,
         'route' => $route,
     ]);
     
-    /* 非站点记录系统别名和系统ID */
-    if($bar_route != 'site'){
-        AppGlobalVariables::$system_aliases = $moduleId;
-        $system_id = System::find()->where(['aliases'=>AppGlobalVariables::$system_aliases])->one();
-        AppGlobalVariables::$system_id = $system_id->id;
-    }
-
     if(!Yii::$app->user->isGuest){
         echo Html::beginTag('ul', ['class'=>'navbar-nav navbar-right nav']);
         echo '<li class="dropdown">'.Html::a(Html::img('/filedata/image/u23.png',[

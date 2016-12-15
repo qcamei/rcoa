@@ -18,16 +18,16 @@ use yii\web\AssetBundle;
 class DemandAssets extends AssetBundle{
     //put your code here
     public $sourcePath = '@frontend/modules/demand/assets';
+    public $depends = [
+        'yii\web\YiiAsset'
+    ];
     public $publishOptions = [
-        'forceCopy'=>YII_DEBUG
-    ];  
+        'forceCopy' => YII_DEBUG,
+    ];
     public $css = [
        'css/demand.css'
     ];
     public $js = [
-        
-    ];
-    public $depends = [
-        'yii\web\YiiAsset'
+       'js/search-select.js'
     ];
 }

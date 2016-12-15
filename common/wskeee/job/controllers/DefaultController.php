@@ -41,14 +41,10 @@ class DefaultController extends Controller
      */
     public function actionHasReady(){
         Yii::$app->getResponse()->format = 'json';
-        $user = Yii::$app->user->id;
-        $post = Yii::$app->getRequest()->post();
+        $result = $this->getJobNotificatio(\Yii::$app->user->id);
         
-        $systemId = ArrayHelper::getValue($post, 'systemId');
-        $this->getJobNotificatio($user);
         return[
-            'result' => 0,      //是否请求正常 0:为不正常请求
-            'data' => [$systemId,$user],
+            'result' => $result,      //是否请求正常 0:为不正常请求,1:为正常请求
         ];
     }
     
@@ -57,6 +53,7 @@ class DefaultController extends Controller
      * 只有状态为【未读】的时候才执行设置为【已读】
      * @param type $system_id   系统ID
      * @param type $user        当前用户
+     * @return boolean 
      */
     public function getJobNotificatio($user) 
     {
@@ -64,9 +61,14 @@ class DefaultController extends Controller
                 ->from(JobNotification::tableName())
                 ->where(['u_id' => $user, 'status' => JobNotification::STATUS_INIT])
                 ->column(Yii::$app->db);
-        Yii::$app->db->createCommand()
-                ->update(JobNotification::tableName(), ['status'=>  JobNotification::STATUS_NORMAL], [
-                    'job_id' => $jobNotice])
-                ->execute();
+        if(!empty($jobNotice))
+            $number = Yii::$app->db->createCommand()
+                    ->update(JobNotification::tableName(), ['status'=>  JobNotification::STATUS_NORMAL], [
+                        'job_id' => $jobNotice])
+                    ->execute();
+        if($number > 0)
+            return 1;
+        else 
+            return 0;
     }
 }

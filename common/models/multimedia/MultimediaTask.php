@@ -63,7 +63,7 @@ class MultimediaTask extends ActiveRecord
     const  CANCEL_BRACE_MARK = 0;
     /** 寻求支撑 */
     const  SEEK_BRACE_MARK = 1;
-    /** 任务刚发出， 【待指派】 */
+    /** 任务刚发出，等待指派 【待指派】 */
     const STATUS_ASSIGN = 5;
     /** 任务已经分派制作人，等待开始制作，【待开始】 */
     const STATUS_TOSTART = 10;
@@ -77,7 +77,7 @@ class MultimediaTask extends ActiveRecord
     const STATUS_CHECKING = 14;
     /** 任务已通过审核，任务结束， 【已完成】 */
     const STATUS_COMPLETED = 15;
-    /** 因客观原因需要改期或者取消原定任务， 【已取消】 */
+    /** 因客观原因需要改期或者取消原定任务 【已取消】 */
     const STATUS_CANCEL = 99;
     
     /**

@@ -48,6 +48,12 @@ class RbacName {
     const ROLE_MULTIMEDIA_PROMULGATOR = 'r_multimedia_promulgator';
     /** 多媒体任务指派人 */
     const ROLE_MULTIMEDIA_ASSIGNPERSON = 'r_multimedia_assignperson';
+    /** 课程需求审核人 */
+    const ROLE_DEMAND_AUDITOR = 'r_demand_auditor';
+    /** 课程需求发布者 */
+    const ROLE_DEMAND_PROMULGATOR = 'r_demand_promulgator';
+    /** 课程需求承接人 */
+    const ROLE_DEMAND_UNDERTAKE_PERSON = 'r_demand_undertake_person';
 
 
 
@@ -98,5 +104,36 @@ class RbacName {
     const PERMSSION_MULTIMEDIA_TASK_DELETE_CHECK = 'p_multimedia_task_delete_check';
     /** 多媒体-任务指派 */
     const PERMSSION_MULTIMEDIA_TASK_ASSIGN = 'p_multimedia_task_assign';
+    /** 课程需求-任务创建 */
+    const PERMSSION_DEMAND_TASK_CREATE = 'p_demand_task_create';
+    /** 课程需求-任务更新 */
+    const PERMSSION_DEMAND_TASK_UPDATE = 'p_demand_task_update';
+    /** 课程需求-取消任务 */
+    const PERMSSION_DEMAND_TASK_CANCEL = 'p_demand_task_cancel';
+    /** 课程需求-完成任务 */
+    const PERMSSION_DEMAND_TASK_COMPLETE = 'p_demand_task_complete';
+    /** 课程需求-任务添加审核 */
+    const PERMSSION_DEMAND_TASK_CREATE_CHECK = 'p_demand_task_create_check';
+    /** 课程需求-任务更新审核 */
+    const PERMSSION_DEMAND_TASK_UPDATE_CHECK = 'p_demand_task_update_check';
+    /** 课程需求-任务删除审核 */
+    const PERMSSION_DEMAND_TASK_DELETE_CHECK = 'p_demand_task_delete_check';
+    /** 课程需求-任务提交审核 */
+    const PERMSSION_DEMAND_TASK_SUBMIT_CHECK = 'p_demand_task_submit_check';
+    /** 课程需求-任务添加验收 */
+    const PERMSSION_DEMAND_TASK_CREATE_ACCEPTANCE = 'p_demand_task_create_acceptance';
+    /** 课程需求-任务更新验收 */
+    const PERMSSION_DEMAND_TASK_UPDATE_ACCEPTANCE = 'p_demand_task_update_acceptance';
+    /** 课程需求-任务删除验收 */
+    const PERMSSION_DEMAND_TASK_DELETE_ACCEPTANCE = 'p_demand_task_delete_acceptance';
+    /** 课程需求-任务提交验收 */
+    const PERMSSION_DEMAND_TASK_SUBMIT_ACCEPTANCE = 'p_demand_task_submit_acceptance';
+    /** 课程需求-任务承接 */
+    const PERMSSION_DEMAND_TASK_UNDERTAKE = 'p_demand_task_undertake';
+    /** 课程需求-添加课程开发任务 */
+    const PERMSSION_DEMAND_TASK_DEVELOP = 'p_demand_task_develop';
+    /** 课程需求-任务恢复 */
+    const PERMSSION_DEMAND_TASK_RESTORE = 'p_demand_task_restore';
+    
     
 }

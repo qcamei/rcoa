@@ -64,19 +64,14 @@ JS;
 
 <script type="text/javascript">
 function hasReday(){
-     $.ajax({
-        url:'/job/default/has-ready',
-        data:{systemId:"<?= AppGlobalVariables::$system_id ?>"},
-        type:"post",
-        dataType:"json",
-        async:false,
-        success:function(data){
-            /** 是否正常请求 */
-            if(data["result"] != 0)
-            {
-                console.warn("请求失败...！");
-                return;
-            }
+    
+    $.post("/job/default/has-ready",function(data)
+    {
+        /** 是否正常请求 */
+        if(data["result"] == 0)
+        {
+            console.warn("请求失败...！");
+            return;
         }
     });
 }

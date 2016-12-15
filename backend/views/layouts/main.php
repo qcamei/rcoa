@@ -75,7 +75,7 @@ AppAsset::register($this);
             ]
         ];
         $menuItems[] = [
-            'label' => '项目管理',
+            'label' => '项目',
             'items' => [
                 ['label' => Yii::t('rcoa/framework', 'Item Types'), 'url' => '/framework/type'],
                 ['label' => Yii::t('rcoa/framework', 'Items'), 'url' => '/framework/college'],
@@ -98,20 +98,20 @@ AppAsset::register($this);
             ]
         ];
         $menuItems[] = [
-            'label' => '资源展示',
+            'label' => '资源',
             'items' => [
                 ['label' => '资源管理', 'url' => '/resource/default'],
             ],
         ];
         $menuItems[] = [
-            'label' => '文档管理',
+            'label' => '文档',
             'items' => [
                 ['label' => '文档目录', 'url' => '/filemanage/default'],
                 ['label' => '文档详情', 'url' => '/filemanage/detail'],
             ],
         ];
         $menuItems[] = [
-            'label' => '团队管理',
+            'label' => '团队',
             'url' => '/teammanage/team',
         ];
         $menuItems[] = [
@@ -119,6 +119,12 @@ AppAsset::register($this);
             'items' => [
                ['label' => '类别', 'url' => '/product/type'],
                ['label' => '列表', 'url' => '/product/default'],
+            ],
+        ];
+        $menuItems[] = [
+            'label' => '需求',
+            'items' => [
+               ['label' => '审核人指派', 'url' => '/demand/default'],
             ],
         ];
 

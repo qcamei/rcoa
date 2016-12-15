@@ -147,7 +147,7 @@ class AssignteamController extends Controller
     
     /**
      * 获取团队
-     * @return type
+     * @return array
      */
     public function getAssignTeam()
     {
@@ -156,13 +156,15 @@ class AssignteamController extends Controller
     
     /**
      * 获取指派人
-     * @return type
+     * @return array
      */
     public function getAssignUser()
     {
         $expert = Expert::find()->all();
-        $uId = ArrayHelper::getColumn($expert, 'u_id');
-        $user = User::find()->where(['not in', 'id', $uId])->all();
+        $user = User::find()
+                ->where(['not in', 'id', ArrayHelper::getColumn($expert, 'u_id')])
+                ->all();
+        
         return ArrayHelper::map($user, 'id', 'nickname');
     }
 }

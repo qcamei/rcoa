@@ -2,6 +2,38 @@
  * 公共样式
  */
 
+@media (max-width: 480px) {
+    .wrap .demand-task{
+        padding-left: 0px;
+        padding-right: 0px;
+
+    }
+}
+.demand-task .table{
+    table-layout: fixed;
+}
+.demand-task .table .list-td{
+    color: #666;
+    font-size: 13px;
+}
+.course-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.team-span {
+    background-color: #333;
+    display: block;
+    width: 40px;
+    padding: 2px;
+    font-size: 12px;
+    text-align: center;
+    color: #fff;
+    border-radius: 5px;
+}
+.myModal {
+    padding: 0px !important;
+}
 
 /** 
  *  footer 导航样式
@@ -55,4 +87,114 @@
 .footer-demand-navbar a:hover, a:focus {
     background-color: rgba(255, 255, 255, 0.46);;
     text-decoration: blink;
+}
+
+/**
+ * 面包屑样式
+ */
+.container .breadcrumb {
+    padding: 0px;
+    margin-bottom: 20px;
+    margin-top: 0px;
+    list-style: none;
+    background-color: #2e6da4;
+    border-radius: 4px;
+}
+.breadcrumb a {
+    color: #fff;
+}
+.breadcrumb a:hover {
+    color: #fff;
+    text-decoration:none;
+}
+.breadcrumb .active {
+    color: #ccc !important;
+}
+/**
+ * 课程表单页样式
+ */
+.form-img {
+    margin: 10px 0px;
+    float: left;
+}
+@media (min-width: 320px){
+    #demandtaskannex .col-xs-9 {
+        width: 94%;
+        float: left;
+    }
+}
+@media (min-width: 768px){
+    #demandtaskannex .col-sm-10 {
+        width: 96.33333333%;
+        float: left;
+    }
+}
+@media (min-width: 992px){
+    #demandtaskannex .col-md-11 {
+        width: 97.66666667%;
+        float: left;
+    }
+}
+@media (min-width: 1200px){
+    #demandtaskannex .col-lg-12 {
+        width: 98%;
+        float: left;
+    }
+}
+
+/**
+ * 任务详细页样式 
+ */
+.demand-task .viewdetail-th
+{
+    color: #666666;
+    width: 20%;
+    font-weight: normal;
+    text-align: right;
+    min-width: 73px;
+    vertical-align: middle;
+}
+.viewdetail-th-head
+{
+    color: #000000;
+    width: 20%;
+    text-align: left;
+    font-weight: bold;
+}
+.viewdetail td
+{
+    width: 80%;
+    min-width: 100px;
+}
+.team-leader {
+    color: blue;
+}
+.developer {
+  margin: 5px 10px 5px 0;
+  display: inline-block;
+}
+
+/**
+ *  审核和验收样式
+ */
+.icon {
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+    display: inline-block;
+    line-height: 1;
+    font-style: normal;
+    font-weight: normal;
+    color: #ccc;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-size: 15px 15px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.task-complete {
+    background-image: url('/filedata/multimedia/image/task-complete.png');
+}
+.working {
+    background-image: url('/filedata/multimedia/image/working.png');
 }

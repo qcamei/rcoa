@@ -110,15 +110,14 @@ class DefaultController extends Controller
         $multimedia = MultimediaTool::getInstance();
         /* @var $multimediaNotice MultimediaNoticeTool */
         $multimediaNotice = MultimediaNoticeTool::getInstance();
-        
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
         if($model->getIsStatusCompleted() || $model->getIsStatusCancel() ){
             //取消用户与任务通知的关联
-            $jobManager->cancelNotification(10, $model->id, Yii::$app->user->id); 
+            $jobManager->cancelNotification(10, $model->id, \Yii::$app->user->id); 
         }else {
             //设置用户对通知已读
-            $jobManager->setNotificationHasReady(10, Yii::$app->user->id, $model->id);  
+            $jobManager->setNotificationHasReady(10, \Yii::$app->user->id, $model->id);  
         }
         
         return $this->render('view', [

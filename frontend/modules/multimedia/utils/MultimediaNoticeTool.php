@@ -141,7 +141,7 @@ class MultimediaNoticeTool {
             'cancel' => $cancel,
         ];
         //主题 
-        $subject = "拍摄-".$mode;
+        $subject = "多媒体-".$mode;
         //查找接洽人ee和mail 
         $producer_ee = array_filter(ArrayHelper::getValue($producers, 'ee'));
         $producer_mail = array_filter(ArrayHelper::getValue($producers, 'email'));
@@ -183,7 +183,7 @@ class MultimediaNoticeTool {
         $jobManager = Yii::$app->get('jobManager');
         /* @var $model MultimediaTask */
         $producer = $this->getProducer($model->id);
-        $producerId = array_filter(ArrayHelper::getColumn($producer, 'id'));
+        $producerId = array_filter(ArrayHelper::getColumn($producer, 'u_id'));
        
         //更新任务通知表
         $jobManager->updateJob(10, $model->id, ['progress'=> $model->progress, 'status' => $model->getStatusName()]); 
