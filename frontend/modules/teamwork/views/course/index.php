@@ -1,11 +1,11 @@
 <?php
 
+use common\models\demand\DemandTask;
 use common\models\teamwork\CourseManage;
 use frontend\modules\teamwork\TwAsset;
 use frontend\modules\teamwork\utils\TeamworkTool;
 use yii\data\ActiveDataProvider;
 use yii\data\Pagination;
-use yii\db\Query;
 use yii\grid\GridView;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -46,7 +46,7 @@ CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($courseIds
         'team_id' => $team_id,
         'mark' => $mark,
     ]); ?>
-    
+        
     <div id="course-manage-index">
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
@@ -70,9 +70,9 @@ CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($courseIds
                     'format' => 'raw',
                     'value'=> function($model){
                         /* @var $model CourseManage */
-                        return $model->mode == CourseManage::MODE_NEWBUILT ?
-                                Html::img(['/filedata/teamwork/image/mode_newbuilt.png']) : 
-                                Html::img(['/filedata/teamwork/image/mode_reform.png']);
+                        return $model->demandTask->mode == DemandTask::MODE_NEWBUILT ?
+                                Html::img(['/filedata/demand/image/mode_newbuilt.png']) : 
+                                Html::img(['/filedata/demand/image/mode_reform.png']);
                     },
                     'headerOptions' => [
                         'class'=>[
@@ -93,7 +93,7 @@ CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($courseIds
                     'format' => 'raw',
                     'value'=> function($model){
                         /* @var $model CourseManage */
-                        return '<span class="team-span">'.(!empty($model->team_id) ? $model->team->name : null).'</span>';
+                        return !empty($model->team_id) ? '<span class="team-span">'.$model->team->name.'</span>' : null;;
                     },
                     'headerOptions' => [
                         'class'=>[
@@ -114,7 +114,7 @@ CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($courseIds
                     'label' => Yii::t('rcoa/teamwork', 'Item Type'),
                     'value'=> function($model){
                         /* @var $model CourseManage */
-                        return !empty($model->project->item_type_id) ? $model->project->itemType->name : null;
+                        return !empty($model->demandTask->item_type_id) ? $model->demandTask->itemType->name : null;
                     },
                     'headerOptions' => [
                         'class'=>[
@@ -132,7 +132,7 @@ CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($courseIds
                     'label' => Yii::t('rcoa/teamwork', 'Item'),
                     'value'=> function($model){
                         /* @var $model CourseManage */
-                        return !empty($model->project->item_id) ? $model->project->item->name : null;
+                        return !empty($model->demandTask->item_id) ? $model->demandTask->item->name : null;
                     },
                     'headerOptions' => [
                         'class'=>[
@@ -150,7 +150,7 @@ CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($courseIds
                     'label' => Yii::t('rcoa/teamwork', 'Item Child'),
                     'value'=> function($model){
                         /* @var $model CourseManage */
-                        return !empty($model->project->item_child_id) ? $model->project->itemChild->name : null;
+                        return !empty($model->demandTask->item_child_id) ? $model->demandTask->itemChild->name : null;
                     },
                     'headerOptions' => [
                         'class'=>[
@@ -169,7 +169,7 @@ CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($courseIds
                     'format' => 'raw',
                     'value'=> function($model){
                         /* @var $model CourseManage */
-                        return '<div class="course-name">'.(!empty($model->course_id) ? $model->course->name : null).'</div>'.
+                        return !empty($model->demandTask->course_id) ? '<div class="course-name">'.($model->demandTask->course->name).'</div>'.
                                Html::beginTag('div', [
                                         'class' => 'progress table-list-progress',
                                         'style' => 'height:12px;margin:2px 0;border-radius:0px;'
@@ -177,10 +177,9 @@ CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($courseIds
                                     Html::beginTag('div', [
                                         'class' => 'progress-bar progress-bar',
                                         'style' => 'width:'.CourseManage::$progress[$model->id].'%;line-height: 12px;font-size: 10px;',
-                                    ]).
-                                    CourseManage::$progress[$model->id].'%'.
+                                    ]).(!empty(CourseManage::$progress[$model->id]) ? CourseManage::$progress[$model->id] : 0).'%'.
                                     Html::endTag('div').
-                                Html::endTag('div');
+                                Html::endTag('div') : null;
                     },
                     'headerOptions' => [
                         'style' => [
@@ -192,7 +191,7 @@ CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($courseIds
                         'style' => [
                             'max-width' => '300px', 
                             'max-width' => '70px',
-                            'padding' => '2px 4px'
+                            'padding' => '2px 8px'
                         ],
                     ],
 

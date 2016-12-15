@@ -1,5 +1,6 @@
 <?php
 
+use common\models\demand\DemandTask;
 use common\models\teamwork\CourseManage;
 use common\widgets\uploadFile\UploadFileAsset;
 use kartik\datecontrol\DateControl;
@@ -41,46 +42,47 @@ use yii\widgets\ActiveForm;
 
     <h5><b>基础信息</b></h5>
     
-    <?= $form->field($model, 'project.item_type_id')->textInput([
-        'value' => !empty($model->project->item_type_id) ? $model->project->itemType->name : '', 'disabled' => 'disabled'
+    <?= $form->field($model, 'demandTask.item_type_id')->textInput([
+        'value' => !empty($model->demandTask->item_type_id) ? $model->demandTask->itemType->name : '', 'disabled' => 'disabled'
     ]) ?>
     
-    <?= $form->field($model, 'project.item_id')->textInput([
-        'value' => !empty($model->project->item_id) ? $model->project->item->name : '', 'disabled' => 'disabled'
+    <?= $form->field($model, 'demandTask.item_id')->textInput([
+        'value' => !empty($model->demandTask->item_id) ? $model->demandTask->item->name : '', 'disabled' => 'disabled'
     ]) ?>
     
-    <?= $form->field($model, 'project.item_child_id')->textInput([
-        'value' => !empty($model->project->item_child_id) ? $model->project->itemChild->name : '', 'disabled' => 'disabled'
+    <?= $form->field($model, 'demandTask.item_child_id')->textInput([
+        'value' => !empty($model->demandTask->item_child_id) ? $model->demandTask->itemChild->name : '', 'disabled' => 'disabled'
     ]) ?>
     
-    <?= $form->field($model, 'course_id')->widget(Select2::classname(), [
-        'data' => $courses, 'options' => ['placeholder' => '请选择...']
+    <?= $form->field($model, 'demandTask.course_id')->textInput([
+        'value' => !empty($model->demandTask->course_id) ? $model->demandTask->course->name : '', 'disabled' => 'disabled'
     ]) ?>
     
-    <?= $form->field($model, 'teacher')->widget(Select2::classname(), [
-        'data' => $teachers, 'options' => ['placeholder' => '请选择...']
+    <?= $form->field($model, 'demandTask.teacher')->textInput([
+        'value' => !empty($model->demandTask->teacher) ? $model->demandTask->speakerTeacher->nickname : '', 'disabled' => 'disabled'
     ]) ?>
     
-    <?= $form->field($model, 'credit')->widget(TouchSpin::classname(),  [
-        'pluginOptions' => [
-            'placeholder' => '学分 ...',
-            'min' => 0,
-            'max' => 1000000000000000,
+    <?= $form->field($model, 'demandTask.lesson_time')->textInput([
+        'value' => $model->demandTask->lesson_time, 'disabled' => 'disabled'
+    ]) ?>
+    
+    <?= $form->field($model, 'demandTask.credit')->textInput([
+        'value' => $model->demandTask->credit, 'disabled' => 'disabled'
+    ]) ?>
+    
+    <?= $form->field($model->demandTask, 'mode')->radioList(DemandTask::$modeName, [
+        'itemOptions'=>[
+            'labelOptions'=>[
+                'style'=>[
+                    'margin-right'=>'30px',
+                    'margin-top' => '5px'
+                ],
+            ],
+            'disabled' => 'disabled'
         ],
     ]) ?>
-    
-    <?= $form->field($model, 'lession_time')->widget(TouchSpin::classname(),  [
-        'pluginOptions' => [
-            'placeholder' => '学时 ...',
-            'min' => 0,
-            'max' => 1000000000000000,
-            
-        ],
-    ]) ?>
-    
     
     <?= $form->field($model, 'video_length')->textInput(['value'=>  DateUtil::intToTime($model->video_length)])->hint('aaaa')?>
-    
     
     <?= $form->field($model, 'question_mete')->widget(TouchSpin::classname(),  [
         'pluginOptions' => [
@@ -107,17 +109,6 @@ use yii\widgets\ActiveForm;
     ]) ?>
     
     <h5><b>开发信息</b></h5>
-    
-    <?= $form->field($model, 'mode')->radioList(CourseManage::$modeName, [
-        'itemOptions'=>[
-            'labelOptions'=>[
-                'style'=>[
-                    'margin-right'=>'30px',
-                    'margin-top' => '5px'
-                ]
-            ]
-        ],     
-    ]) ?>
     
     <?php
         if(is_array($team)){
@@ -392,6 +383,7 @@ function uploadFile(){
         }]
     });
 }
+/* 移除附件 */
 function deleteAnnex(object){
     $(object).prev().remove();
     $(object).next().remove();

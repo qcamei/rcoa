@@ -44,11 +44,11 @@ ItemManage::$progress = ArrayHelper::map($itemProgress, 'id', 'progress');
                 'value' => Html::beginTag('div', ['class' => 'col-lg-2', 'style' => 'padding:0px;']). 
                             Html::beginTag('div', [
                                 'class' => 'progress table-list-progress',
-                                'style' => 'height:12px;margin:2px 0;border-radius:0px;'
+                                'style' => 'height:12px;margin:4px 0;border-radius:0px;'
                             ]).Html::beginTag('div', [
                                     'class' => 'progress-bar', 
                                     'style' => 'width:'.ItemManage::$progress[$model->id].'%;line-height: 12px;font-size: 10px;',
-                                ]).ItemManage::$progress[$model->id].'%'.
+                                ]).(!empty(ItemManage::$progress[$model->id]) ? ItemManage::$progress[$model->id] : 0).'%'.
                                 Html::endTag('div').
                             Html::endTag('div').
                         Html::endTag('div'),

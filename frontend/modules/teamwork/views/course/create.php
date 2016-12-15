@@ -36,8 +36,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
-        'courses' => $courses,
-        'teachers' => $teachers,
         'team' => $team,
         'producerList' => $producerList,
         'weeklyEditors' => $weeklyEditors,
@@ -48,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="controlbar">
     <div class="container">
-        <?= Html::a(Yii::t('rcoa', 'Back'), ['list','project_id' => $model->project_id], ['class' => 'btn btn-default']) ?>
+        <?= Html::a(Yii::t('rcoa', 'Back'), ['/demand/task/view','id' => $model->demand_task_id], ['class' => 'btn btn-default']) ?>
         <?= Html::a(
                 $model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'),
                 'javascript:;', 

@@ -1,5 +1,6 @@
 <?php
 
+use common\models\demand\DemandTask;
 use common\models\team\TeamMember;
 use common\models\teamwork\CourseManage;
 use wskeee\utils\DateUtil;
@@ -37,32 +38,32 @@ CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($model->id
         'attributes' => [
             ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">基本信息</span>','value' => ''],
             [
-                'attribute' => 'project.item_type_id',
-                'value' => !empty($model->project->item_type_id) ? $model->project->itemType->name : null,
+                'attribute' => 'demandTask.item_type_id',
+                'value' => !empty($model->demandTask->item_type_id) ? $model->demandTask->itemType->name : null,
             ],
             [
-                'attribute' => 'project.item_id',
-                'value' => !empty($model->project->item_id) ? $model->project->item->name : null,
+                'attribute' => 'demandTask.item_id',
+                'value' => !empty($model->demandTask->item_id) ? $model->demandTask->item->name : null,
             ],
             [
-                'attribute' => 'project.item_child_id',
-                'value' => !empty($model->project->item_child_id) ? $model->project->itemChild->name : null,
+                'attribute' => 'demandTask.item_child_id',
+                'value' => !empty($model->demandTask->item_child_id) ? $model->demandTask->itemChild->name : null,
             ],
             [
-                'attribute' => 'course_id',
-                'value' => !empty($model->course_id) ? $model->course->name : null,
+                'attribute' => 'demandTask.course_id',
+                'value' => !empty($model->demandTask->course_id) ? $model->demandTask->course->name : null,
             ],
             [
-                'attribute' => 'teacher',
-                'value' => !empty($model->teacher) ? $model->speakerTeacher->nickname : null,
+                'attribute' => 'demandTask.teacher',
+                'value' => !empty($model->demandTask->teacher) ? $model->demandTask->speakerTeacher->nickname : null,
             ],
             [
-                'attribute' => 'credit',
-                'value' => $model->credit,
+                'attribute' => 'demandTask.lesson_time',
+                'value' => $model->demandTask->lesson_time,
             ],
             [
-                'attribute' => 'lession_time',
-                'value' => $model->lession_time,
+                'attribute' => 'demandTask.credit',
+                'value' => $model->demandTask->credit,
             ],
             [
                 'attribute' => 'video_length',
@@ -82,9 +83,11 @@ CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($model->id
             ],
             ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">开发信息</span>','value' => ''],
             [
-                'attribute' => 'mode',
+                'attribute' => 'demandTask.mode',
                 'format' => 'raw',
-                'value' => CourseManage::$modeName[$model->mode],
+                'value' => $model->demandTask->mode == DemandTask::MODE_NEWBUILT ?
+                    Html::img(['/filedata/demand/image/mode_newbuilt.png'], ['style' => 'margin-right: 10px;']).DemandTask::$modeName[$model->demandTask->mode] : 
+                    Html::img(['/filedata/demand/image/mode_reform.png'], ['style' => 'margin-right: 10px;']).DemandTask::$modeName[$model->demandTask->mode],
             ],
             [
                 'attribute' => 'team_id',
@@ -122,12 +125,12 @@ CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($model->id
                 'value' => Html::beginTag('div', ['class' => 'col-lg-2', 'style' => 'padding:0px;']).
                             Html::beginTag('div', [
                                 'class' => 'progress table-list-progress',
-                                'style' => 'height:12px;margin:2px 0;border-radius:0px;'
+                                'style' => 'height:12px;margin:4px 0;border-radius:0px;'
                             ]).
                                 Html::beginTag('div', [
                                     'class' => 'progress-bar progress-bar',
                                     'style' => 'width:'.CourseManage::$progress[$model->id].'%;line-height: 12px;font-size: 10px;',
-                                ]).CourseManage::$progress[$model->id].'%'.
+                                ]).(!empty(CourseManage::$progress[$model->id] ? CourseManage::$progress[$model->id] : 0)).'%'.
                                 Html::endTag('div').
                            Html::endTag('div').
                         Html::endTag('div'),

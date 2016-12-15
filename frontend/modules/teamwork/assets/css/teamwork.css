@@ -41,6 +41,16 @@ and open the template in the editor.
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+.team-span {
+    background-color: #333;
+    display: block;
+    width: 40px;
+    padding: 2px;
+    font-size: 12px;
+    text-align: center;
+    color: #fff;
+    border-radius: 5px;
+}
 
 /**
  *  主页样式
@@ -329,17 +339,6 @@ and open the template in the editor.
 .footer-item-list a:hover, a:focus {
     background-color: rgba(255, 255, 255, 0.46);;
     text-decoration: blink;
-}
-
-.team-span {
-    background-color: #333;
-    display: block;
-    width: 40px;
-    padding: 2px;
-    font-size: 12px;
-    text-align: center;
-    color: #fff;
-    border-radius: 5px;
 }
 
 /**

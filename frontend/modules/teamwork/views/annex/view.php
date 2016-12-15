@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <div class="container course-annex-view has-title item-manage">
-    <iframe class="col-lg-12 col-md-12 col-sm-12 col-xs-12" src="http://officeweb365.com/o/?i=6824&furl=http://eefile.gzedu.com<?= $model->path?>" style="height: 550px;padding: 0px;">
+    <iframe class="col-lg-12 col-md-12 col-sm-12 col-xs-12" src="http://eezxyl.gzedu.com/o/?i=6824&furl=http://eefile.gzedu.com<?= $model->path?>" style="height: 550px;padding: 0px;">
     </iframe>
 </div>
 

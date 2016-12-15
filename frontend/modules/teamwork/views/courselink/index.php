@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'template' => '<li class="course-name">{link}</li>',
                 ],
                 [
-                    'label' => Yii::t('rcoa', 'Deploy').'：'.$model->course->course->name,
+                    'label' => Yii::t('rcoa', 'Deploy').'：'.$model->course->demandTask->course->name,
                     'template' => '<li class="course-name active" style="width:50%">{link}</li>',
                 ],
             ]

@@ -36,8 +36,6 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa/teamwork', 'Update');
 
     <?= $this->render('_form', [
         'model' => $model,
-        'courses' => $courses,
-        'teachers' => $teachers,
         'team' => $team,
         'weeklyEditors' => $weeklyEditors,
         'producerList' => $producerList,

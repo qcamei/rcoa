@@ -117,7 +117,7 @@ ItemManage::$progress = ArrayHelper::map($twTool->getItemProgress($courseIds)->a
                                 ]).Html::beginTag('div', [
                                         'class' => 'progress-bar', 
                                         'style' => 'width:'.ItemManage::$progress[$model->id].'%;line-height: 12px;font-size: 10px;',
-                                    ]).ItemManage::$progress[$model->id].'%'.
+                                    ]).(!empty(ItemManage::$progress[$model->id]) ? ItemManage::$progress[$model->id] : 0).'%'.
                                     Html::endTag('div').
                                 Html::endTag('div');
                         },
