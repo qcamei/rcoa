@@ -130,7 +130,7 @@ CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($model->id
                                 Html::beginTag('div', [
                                     'class' => 'progress-bar progress-bar',
                                     'style' => 'width:'.CourseManage::$progress[$model->id].'%;line-height: 12px;font-size: 10px;',
-                                ]).(!empty(CourseManage::$progress[$model->id] ? CourseManage::$progress[$model->id] : 0)).'%'.
+                                ]).(!empty(CourseManage::$progress[$model->id])? CourseManage::$progress[$model->id] : 0).'%'.
                                 Html::endTag('div').
                            Html::endTag('div').
                         Html::endTag('div'),

@@ -213,7 +213,7 @@ class TaskController extends Controller
     }
     
     /**
-     * 通过审核操作
+     * 承接任务操作
      * @param integer $id
      * @return type
      * @throws NotAcceptableHttpException
@@ -234,7 +234,7 @@ class TaskController extends Controller
             $dtTool->UndertakeTask($model);
             return $this->redirect(['index']);
         } else {
-            return $this->renderPartial('undertake', [
+            return $this->renderAjax('undertake', [
                 'model' => $model,
                 'team' => $twTool->getHotelTeam(),
                 'undertake' => $dtTool->getHotelTeamMemberId(),

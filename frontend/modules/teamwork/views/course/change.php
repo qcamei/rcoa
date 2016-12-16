@@ -20,7 +20,6 @@ use yii\widgets\ActiveForm;
             'id' => 'form-change', 
             'class'=>'form-horizontal',
         ],
-        'action'=>'change?id='.$model->id,
         'fieldConfig' => [  
             'template' => "{label}\n<div class=\"col-lg-10 col-md-10\">{input}</div>\n<div class=\"col-lg-10 col-md-10\">{error}</div>",  
             'labelOptions' => [

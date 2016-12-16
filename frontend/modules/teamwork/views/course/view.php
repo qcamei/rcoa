@@ -2,11 +2,8 @@
 
 use common\models\teamwork\CourseManage;
 use frontend\modules\teamwork\TwAsset;
-use kartik\widgets\Select2;
-use wskeee\rbac\RbacName;
 use yii\helpers\Html;
 use yii\web\View;
-use yii\widgets\ActiveForm;
 use yii\widgets\Breadcrumbs;
 
 
@@ -80,6 +77,15 @@ $js =
     $('.myModal').on('hidden.bs.modal', function(){
         window.location.reload();
     }); 
+        
+    /** 完成操作 弹出模态框 */
+    $('#carry-out').click(function()
+    {
+        var urlf = $(this).attr("href");
+        $('.myModal').modal({remote:urlf});
+        return false;
+    });  
+        
     /** 移交操作 弹出模态框 */
     $('#change').click(function()
     {
