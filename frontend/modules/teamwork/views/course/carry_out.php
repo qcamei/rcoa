@@ -88,13 +88,13 @@ use yii\widgets\ActiveForm;
     <?php ActiveForm::end(); ?>
 
 </div>
+
 <?php
     echo Html::beginTag('div', ['class' => 'modal-footer']);
     if(!$isComplete)
         echo Html::button('确认', ['id' => 'carry_out-save', 'class' => 'btn btn-primary']);
     echo Html::endTag('div');
 ?>
-
 
 <script type="text/javascript">
     /** 移交操作 提交表单 */

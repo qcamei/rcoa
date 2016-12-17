@@ -37,7 +37,6 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <?= $this->render('_form_detai', [
         'model' => $model,
-        'progress' => $progress,
     ]) ?>
         
     <span><?= Yii::t('rcoa/demand', 'Demand Task Annexes').'：'; ?></span>
@@ -51,6 +50,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model->demandChecks,
     ]) ?>
     
+    <?= $this->render('/acceptance/index',[
+        'model' => $model->demandAcceptances,
+    ]) ?>
+
 </div>
 
 <?= $this->render('_form_view',[
@@ -110,6 +113,29 @@ $js =
         $('.myModal').modal({remote:urlf});
         return false;
     });
+        
+    /** 提交任务操作 弹出模态框 */
+    $('#submit-task').click(function()
+    {
+        var urlf = $(this).attr("href");
+        $('.myModal').modal({remote:urlf});
+        return false;
+    });
+        
+    /** 验收不通过操作 弹出模态框 */
+    $('#acceptance-create').click(function()
+    {
+        var urlf = $(this).attr("href");
+        $('.myModal').modal({remote:urlf});
+        return false;
+    });    
+        
+    /** 查看验收记录 */   
+    $('.view-acceptance').click(function(){
+        var urlf = $(this).attr("href");
+        $(".myModal").modal({remote:urlf});
+        return false;
+    });    
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>

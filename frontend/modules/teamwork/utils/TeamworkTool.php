@@ -47,13 +47,14 @@ class TeamworkTool{
                 $this->addCoursePhase($model->id, $this->templateType);
                 $this->addCourseLink($model->id, $this->templateType);
                 $this->saveCourseAnnex($model->id, (!empty($post['CourseAnnex']) ? $post['CourseAnnex'] : []));
-            }
+            }else
+                throw new \Exception($model->getErrors());
+            
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
-        }catch (Exception $ex) {
+        }catch (\Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            $model->getErrors();
-            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
+            throw new NotFoundHttpException("操作失败！".$ex->getMessage());
         }
     }
     
@@ -75,12 +76,14 @@ class TeamworkTool{
                 CourseAnnex::deleteAll(['course_id' => $model->id]);
                 $this->saveCourseProducer($model->id, (!empty($post['producer']) ? $post['producer'] : []));
                 $this->saveCourseAnnex($model->id, (!empty($post['CourseAnnex']) ? $post['CourseAnnex'] : []));
-            }
+            }else
+                throw new \Exception($model->getErrors());
+            
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
-        }catch (Exception $ex) {
+        }catch (\Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
+            throw new NotFoundHttpException("操作失败！".$ex->getMessage());
         }
     }
 
@@ -97,12 +100,14 @@ class TeamworkTool{
         {  
             /* @var $model CourseManage*/
             if($model->save(false, ['team_id', 'course_principal'])){
-               $trans->commit();  //提交事务
-               Yii::$app->getSession()->setFlash('success','操作成功！');
-            }
-        }catch (Exception $ex) {
+               
+            }else
+                throw new \Exception($model->getErrors());
+            
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        }catch (\Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            $model->getErrors();
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
     }
@@ -133,13 +138,12 @@ class TeamworkTool{
                         $errors[] = $value;
                 }
                 throw new \Exception(implode(',', $errors));
-                
             }
+            
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
         }catch (\Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            $model->getErrors();
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
     }
@@ -168,7 +172,7 @@ class TeamworkTool{
     }
     
     /**
-     * 获取所有课程查询结果
+     * 获取课程查询结果
      * @param TeamworkQuery $twQuery       
      * @param ActiveQuery $results       
      * @param integer $id              ID

@@ -65,6 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <div class="modal-footer">
+    
     <?php
         /**
          * 编辑 按钮显示必须满足以下条件：
@@ -75,16 +76,8 @@ $this->params['breadcrumbs'][] = $this->title;
         if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UPDATE_CHECK) 
           && $model->create_by == Yii::$app->user->id && $model->status == DemandCheck::STATUS_NOTCOMPLETE)
             echo Html::a('编辑', ['update', 'id' => $model->id], ['id' => 'check-update', 'class' => 'btn btn-primary']).' ';
-        /**
-         * 编辑 按钮显示必须满足以下条件：
-         * 1、拥有删除的权限
-         * 2、创建者是自己
-         * 3、审核状态必须是【未完成】
-         
-        if(Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_DELETE_CHECK) 
-           && $model->create_by == Yii::$app->user->id && $model->status == MultimediaCheck::STATUS_NOTCOMPLETE)
-            echo Html::a('删除', ['delete', 'id' => $model->id], ['data' => ['method' => 'post'], 'class' => 'btn btn-danger']);*/
     ?>
+    
 </div>
 
 <script type="text/javascript">

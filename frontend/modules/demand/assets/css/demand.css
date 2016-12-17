@@ -173,6 +173,41 @@
   margin: 5px 10px 5px 0;
   display: inline-block;
 }
+.status-progress-div {
+    width: 60px;
+    height: 60px;
+    float: left;
+    padding-top: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+.have-to {
+    background-color: #f37b53;
+    line-height: 20px;
+}
+.not-to {
+    background-color: #dddddd;
+    line-height: 35px;
+}
+.have-to-status {
+    margin-bottom: 0px; 
+    color: #fff;
+}
+.not-to-status {
+    margin-bottom: 0px; 
+    color: #999999;
+}
+.progress-strip {
+    margin-bottom: 0px; 
+    color: #ccc;
+}
+.direction-arrow {
+    width: 32px;
+    height: 16px;
+    float: left;
+    margin: 20px 0px;
+    margin-right: 5px;
+}
 
 /**
  *  审核和验收样式

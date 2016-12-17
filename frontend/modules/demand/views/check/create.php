@@ -39,17 +39,5 @@ $this->params['breadcrumbs'][] = $this->title;
 </script>
 
 <?php
-$js = 
-<<<JS
-    $('#create-check-save').click(function()
-    {
-        $('#demand-check-form').submit();
-    });
-    
-JS;
-    //$this->registerJs($js,  View::POS_READY);
-?>
-
-<?php
     DemandAssets::register($this);
 ?>

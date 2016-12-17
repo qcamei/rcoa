@@ -136,7 +136,6 @@ use yii\web\View;
                     'view' => function ($url, $model) {
                         /* @var $model DemandCheck */
                         $options = [
-                            'id' => 'view-check-'.$model->id,
                             'class' => 'btn btn-default view-check',
                         ];
                         $icon = $model->status == DemandCheck::STATUS_COMPLETE ? 'icon task-complete' : 'icon working';

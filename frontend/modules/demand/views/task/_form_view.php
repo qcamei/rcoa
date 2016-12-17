@@ -68,8 +68,8 @@ $page = [
              * 3、创建者是自己
              */
             if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE_ACCEPTANCE) 
-               && $model->getIsStatusAcceptance() && $model->create_by == Yii::$app->user->id)
-                echo Html::a('验收不通过', 'javascript:;', ['id' => 'acceptance-create', 'class' =>'btn btn-danger']).' ';
+               && ($model->getIsStatusAcceptance() || $model->getIsStatusAcceptanceing()) && $model->create_by == Yii::$app->user->id)
+                echo Html::a('验收不通过', ['acceptance/create', 'task_id' => $model->id], ['id' => 'acceptance-create', 'class' =>'btn btn-danger']).' ';
             /**
              * 恢复 按钮显示必须满足以下条件：
              * 1、拥有恢复权限
@@ -116,7 +116,7 @@ $page = [
              * 1、必须拥有课程开发权限
              * 2、状态必须是在【开发中】
              * 3、必须是该需求任务的承接人
-             * 4、团队工作课程数据必须为空
+             * 4、课程开发数据必须为空
              */
             if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_DEVELOP) && $model->getIsStatusDeveloping()
                && $model->undertakePerson->u_id == Yii::$app->user->id && empty($model->teamworkCourse))
@@ -125,10 +125,10 @@ $page = [
              * 验收 按钮显示必须满足以下条件：
              * 1、状态必须是在【开发中】
              * 2、必须是该任务的承接人
-             * 3、团队工作课程数据必须非空
+             * 3、课程开发数据必须非空
              */
             if($model->getIsStatusDeveloping() && $model->undertakePerson->u_id == Yii::$app->user->id && !empty($model->teamworkCourse))
-                echo Html::a('提交任务', ['acceptance', 'id' => $model->id], ['class' =>'btn btn-success']).' ';
+                echo Html::a('提交任务', ['submit-task', 'id' => $model->id], ['id' => 'submit-task', 'class' =>'btn btn-success']).' ';
             /**
              * 提交验收 按钮显示必须满足以下条件：
              * 1、必须拥有提交验收权限

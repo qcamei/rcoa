@@ -4,7 +4,7 @@ use common\models\demand\DemandTask;
 use yii\helpers\Html;
 
 /**
- *  您好！任务已承接！  
+ *  您好！任务已提交，请及时查看、验收！ 
     课程名 ：{课程名称}
     承接人 ：{承接人}
     计划验收时间 ：{计划验收时间}
@@ -18,7 +18,7 @@ use yii\helpers\Html;
 
 <div class="mail-new-demand-task">
     
-    <p>您好！任务已承接！ </p>
+    <p>您好！任务已提交，请及时查看、验收！</p>
     
     <p><b>课程名</b>：<?= Html::encode($model->course->name) ?></p>
     

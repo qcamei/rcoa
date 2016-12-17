@@ -21,7 +21,7 @@ use yii\db\ActiveRecord;
  * @property integer $item_child_id                     专业/工种ID
  * @property integer $course_id                         课程ID
  * @property string $name                               任务名称
- * @property integer $format_video_length             素材视频时长
+ * @property integer $format_video_length               素材视频时长
  * @property integer $production_video_length           成品视频时长
  * @property integer $progress                          进度
  * @property integer $content_type                      任务类型
@@ -63,6 +63,8 @@ class MultimediaTask extends ActiveRecord
     const  CANCEL_BRACE_MARK = 0;
     /** 寻求支撑 */
     const  SEEK_BRACE_MARK = 1;
+    /** 默认状态 */
+    const STATUS_DEFAULT = 1;
     /** 任务刚发出，等待指派 【待指派】 */
     const STATUS_ASSIGN = 5;
     /** 任务已经分派制作人，等待开始制作，【待开始】 */
