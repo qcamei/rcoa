@@ -1,23 +1,23 @@
 <?php
 namespace wskeee\team;
 
+use common\models\Position;
 use common\models\team\Team;
+use common\models\team\TeamCategory;
+use common\models\team\TeamCategoryMap;
 use common\models\team\TeamMember;
+use common\models\User;
 use Yii;
 use yii\base\Component;
 use yii\caching\Cache;
 use yii\db\Query;
 use yii\di\Instance;
 use yii\helpers\ArrayHelper;
+use const FRONTEND_DIR;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
- * Description of TeamMemberTool
+ * 团队管理
  *
  * @author Administrator
  */
@@ -27,7 +27,7 @@ class TeamMemberTool extends Component {
     /**
      * @var 超时时长
      */
-    const TIME_OUT = 10*60;
+    const TIME_OUT = 24*60*60;
     
     public $url = '';
     /**
@@ -48,6 +48,27 @@ class TeamMemberTool extends Component {
     public $cacheKey = 'wskeee_teamember';
     
     /**
+     * 团队分类
+     * @var array [category_id=>[
+     *  string id 分类id 如 product_center
+     *  string name 分类名称
+     *  string des  分类描述
+     *  string is_delete 是否已删除:Y是，N否
+     * ]]
+     */
+    private $categorys;
+    
+    /**
+     * 分类与团队的关系
+     * @var array [[
+     *  string category_id  分类id
+     *  string team_id      团队id
+     *  string is_delete    是否删除：Y是，N否
+     * ]]
+     */
+    private $teamCategoryMaps;
+    
+    /**
      *  团队数据
      * @var array   [
      *  int     id,     团队id
@@ -63,7 +84,7 @@ class TeamMemberTool extends Component {
     
     /**
      * 团队成员数据
-     * @var arrya   [teamMember_id => [
+     * @var array   [teamMember_id => [
      *  int     id,             团队成员id
      *  int     team_id,        团队id
      *  string  u_id,           用户id
@@ -75,12 +96,6 @@ class TeamMemberTool extends Component {
      */
     private $teamMembers;
     
-    /**
-     * 团队id => 团队成员
-     * @var array (team_id => teamMember)
-     */
-    private $team_member_map;
-    
     public function init() 
     {
         parent::init();
@@ -89,6 +104,57 @@ class TeamMemberTool extends Component {
                 'cachePath' => FRONTEND_DIR.'/runtime/cache'
             ], Cache::className());
         $this->loadFromCache();
+    }
+    
+    /**
+     * 获取所有分类
+     * @param boolean $include_is_delete    返回数据中是否包括已删除数据         
+     * @return array [[id,name,des,is_delete]]  
+     */
+    public function getCategorys($include_is_delete=false){
+        $results = [];
+        foreach($this->categorys AS $category){
+            if($include_is_delete || $category['is_delete'] == 'N')
+                $results [] = $category;
+        }
+        return $results;
+    }
+    
+    /**
+     * 获取分类详细
+     * @param string $id 分类id
+     * @return array [
+     *  id,name,des,is_delete
+     * ]
+     */
+    public function getCategoryById($id){
+        if(isset($this->categorys[$id]))
+            return $this->categorys[$id];
+        return null;
+    }
+    
+    /**
+     * 获取分类下的所有团队
+     * @param string $categoryId 分类id
+     * @param boolean $include_is_delete    返回数据中是否包括已删除数据
+     * @return array [[ <br/>
+     *  int     <b>id</b>,     团队id          <br/>
+     *  string  <b>name</b>,   团队名称        <br/>
+     *  int     <b>type</b>,   团队类别        <br/>
+     *  string  <b>image</b>,  团队背景图      <br/>
+     *  int     <b>index</b>,  索引            <br/>
+     *  string  <b>is_delete</b>               <br/>
+     * ]]
+     */
+    public function getTeamsByCategoryId($categoryId,$include_is_delete=false){
+        $results = [];
+        foreach($this->teamCategoryMaps AS $map){
+            if($map['category_id'] == $categoryId){
+                if($include_is_delete || $map['is_delete'] == 'N')
+                    $results [] = $this->teams[$map['team_id']];
+            }
+        }
+        return $results;
     }
     
     /**
@@ -206,7 +272,7 @@ class TeamMemberTool extends Component {
         $results = [];
         foreach ($this->teamMembers as $teammeber) {
             if($teammeber['u_id'] == $user_id){
-                if($include_is_delete || ($teammeber['is_delete'] == 'N' && $teammeber['is_leader'] == 'Y'))
+                if(($include_is_delete || $teammeber['is_delete'] == 'N') && $teammeber['is_leader'] == 'Y')
                     $results [] = $teammeber;
             }
         }
@@ -221,9 +287,10 @@ class TeamMemberTool extends Component {
         if(!$this->cache !== null)
         {
             $this->cache->delete($this->cacheKey);
-            $this->teams = [];
+            $this->teams = null;
             $this->teamMembers = [];
-            $this->team_member_map = [];
+            $this->categorys = [];
+            $this->teamCategoryMaps = [];
         }
     }
     
@@ -237,17 +304,18 @@ class TeamMemberTool extends Component {
         }
         $data = $this->cache->get($this->cacheKey);
         
-        if(is_array($data) && (isset($data[2]) && (time() - $data[2]<self::TIME_OUT)) && isset($data[0],$data[1],$data[2]))
-        {
+        if (is_array($data) && (isset($data[4]) && (time() - $data[4] < self::TIME_OUT)) && isset($data[0], $data[1], $data[2], $data[3])) {
             //从缓存取出团队与团队成员数据
-            list($this->teams,$this->teamMembers) = $data;
+            list($this->teams,$this->teamMembers,$this->categorys,$this->teamCategoryMaps) = $data;
             return;
         }
         //没有缓存则从数据库获取数据
-        $this->teams = $this->getTeamsDatas();
+        $this->teams = ArrayHelper::index($this->getTeamsDatas(),'id');
         $this->teamMembers = ArrayHelper::index($this->getTeammemberDatas(), 'id');
+        $this->categorys = ArrayHelper::index($this->getCategoryDatas(),'id');
+        $this->teamCategoryMaps = $this->getTeamCategoryMapDatas();
         
-        $this->cache->set($this->cacheKey, [$this->teams,$this->teamMembers,  time()]);
+        $this->cache->set($this->cacheKey, [$this->teams, $this->teamMembers, $this->categorys, $this->teamCategoryMaps, time()]);
     }
     /**
      * 获取团队数据
@@ -265,11 +333,43 @@ class TeamMemberTool extends Component {
      * @return arrya (id,team_id,u_id,is_leader,index,position_id,is_delete)
      */
     private function getTeammemberDatas(){
-        $query = TeamMember::find()
-                ->select(['id','team_id','u_id','is_leader','index','position_id','is_delete'])
-                ->from(TeamMember::tableName())
-                ->with('position', 'team', 'user');
+        $query = (new Query())
+                ->select([
+                    'TeamMember.id','TeamMember.team_id','TeamMember.u_id','TeamMember.is_leader','TeamMember.index','TeamMember.position_id','TeamMember.is_delete',
+                    'Position.name AS position_name','Position.level AS position_level',
+                    'User.nickname','User.avatar',
+                    'Team.name AS team_name'
+                    ])
+                ->from(['TeamMember'=>TeamMember::tableName()])
+                ->leftJoin(['Position'=>  Position::tableName()], 'TeamMember.position_id=Position.id')
+                ->leftJoin(['User'=>  User::tableName()], 'TeamMember.u_id=User.id')
+                ->leftJoin(['Team'=>  Team::tableName()], 'TeamMember.team_id=Team.id');
         return $query->all(Yii::$app->db);
+    }
+    
+    /**
+     * 获取团队分类
+     * @return array [id=>name]
+     */
+    private function getCategoryDatas(){
+        //获取所有分类
+        $categorys = (new Query())
+                ->select(['id','name','des','is_delete'])
+                ->from(TeamCategory::tableName())
+                ->all();
+        return $categorys;
+    }
+    
+    /**
+     * 获取分类与团队关系数据
+     * @return array [[category_id,team_id,is_delete]]
+     */
+    private function getTeamCategoryMapDatas(){
+        $map = (new Query())
+                ->select(['category_id','team_id','is_delete'])
+                ->from(TeamCategoryMap::tableName())
+                ->all();
+        return $map;
     }
     
     /**

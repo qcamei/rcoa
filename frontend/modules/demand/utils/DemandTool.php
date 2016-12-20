@@ -404,7 +404,7 @@ class DemandTool {
         if(!empty($teamMemberId) && count($teamMemberId) == 1)
             return $teamMemberId[0];
         else
-            return ArrayHelper::map($teamMember, 'id', 'user.nickname');
+            return ArrayHelper::map($teamMember, 'id', 'nickname');
     }
     
     /**

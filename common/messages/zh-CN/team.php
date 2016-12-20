@@ -7,6 +7,15 @@
  */
 
 return[
+    'Is Delete'=>'已删除',
+    'Category ID'=>'分类id',
+    'Team ID'=>'分类id',
+    'Index'=>'分类id',
+    'Category'=>'类别',
+    'Categories'=>'类别',
+    'Map'=>'关联',
+    
+    'Team' => '团队',
     'Teams' => '团队管理',
     'Create Team' => '创建-团队',
     'Update Team' => '更新-团队',
