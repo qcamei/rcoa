@@ -17,32 +17,27 @@ use yii\db\ActiveRecord;
 /**
  * This is the model class for table "{{%teamwork_course}}".
  *
- * @property integer $id                        ID
- * @property integer $demand_task_id            课程需求ID
- * @property integer $project_id                项目Id
- * @property integer $course_id                 课程Id
- * @property string $teacher                    主讲教师
- * @property string $mode                       建设模式
- * @property integer $weekly_editors_people     周报编辑人
- * @property integer $credit                    学分
- * @property integer $lession_time              学时
- * @property double $video_length               视频时长
- * @property integer $question_mete             题量
- * @property integer $case_number               案例数
- * @property integer $activity_number           活动数
- * @property integer $team_id                   创建者所在团队
- * @property integer $course_ops                课程运维负责人
- * @property string $create_by                  创建者
- * @property integer $course_principal          课程负责人
- * @property integer $created_at                创建于
- * @property string $plan_start_time            计划开始时间
- * @property string $plan_end_time              计划完成时间
- * @property string $real_start_time            实际开始时间
- * @property string $real_carry_out             实际完成时间
- * @property integer $status                    状态
- * @property string $des                        描述
- * @property string $path                       存储服务器路径
- * @property integer $progress                  进度
+ * @property integer $id                            ID
+ * @property integer $demand_task_id                课程需求ID
+ * @property integer $weekly_editors_people         周报编辑人
+ * @property double $video_length                   视频时长
+ * @property integer $question_mete                 题量
+ * @property integer $case_number                   案例数
+ * @property integer $activity_number               活动数
+ * @property integer $team_id                       创建者所在团队
+ * @property integer $course_ops                    课程运维负责人
+ * @property string $create_by                      创建者
+ * @property integer $course_principal              课程负责人
+ * @property integer $created_at                    创建于
+ * @property integer $update_at                     更新于
+ * @property string $plan_start_time                计划开始时间
+ * @property string $plan_end_time                  计划完成时间
+ * @property string $real_start_time                实际开始时间
+ * @property string $real_carry_out                 实际完成时间
+ * @property integer $status                        状态
+ * @property string $des                            描述
+ * @property string $path                           存储服务器路径
+ * @property integer $progress                      进度
  *
  * @property CourseAnnex $courseAnnex               获取附件
  * @property CourseLink[] $courseLinks              获取所有课程环节
@@ -125,13 +120,13 @@ class CourseManage extends ActiveRecord
                 'real_start_time',
             ],
             self::SCENARIO_CARRYOUT => [
-                'video_length', 'question_mete', 'case_number', 'activity_number', 'real_carry_out', 'path'
+                'course_ops', 'status','video_length', 'question_mete', 'case_number', 'activity_number', 'real_carry_out', 'path'
             ],
             self::SCENARIO_CHANGE => [
                'team_id', 'course_principal'
             ],
             self::SCENARIO_DEFAULT => [
-                'id', 'demand_task_id', 'project_id', 'course_id', 'teacher', 'weekly_editors_people', 'credit', 'lession_time', 
+                'id', 'demand_task_id', 'weekly_editors_people', 
                 'video_length','question_mete', 'case_number', 'activity_number', 'team_id', 'course_ops', 'create_by', 
                 'plan_start_time', 'plan_end_time', 'real_start_time', 'real_carry_out', 'status','des', 'path'
             ],
@@ -150,17 +145,17 @@ class CourseManage extends ActiveRecord
     public function rules()
     {
         return [
-            [['demand_task_id', 'project_id', 'course_id', 'credit', 'lession_time',  'question_mete', 'case_number', 'activity_number', 'team_id', 'created_at', 'updated_at', 'status', 'weekly_editors_people', 'course_ops'], 'integer'],
-            [['demand_task_id', 'credit', 'lession_time',  'weekly_editors_people'], 'required'],
-            [['video_length', 'question_mete', 'case_number', 'activity_number', 'real_carry_out', 'path'], 'required', 'on' => [self::SCENARIO_CARRYOUT]],
-            [['teacher', 'create_by'], 'string', 'max' => 36],
+            [['demand_task_id',  'question_mete', 'case_number', 'activity_number', 'team_id', 'created_at', 'updated_at', 'status', 'weekly_editors_people', 'course_ops'], 'integer'],
+            [['demand_task_id',  'weekly_editors_people'], 'required'],
+            [['video_length', 'course_ops', 'question_mete', 'case_number', 'activity_number', 'path'], 'required', 'on' => [self::SCENARIO_CARRYOUT]],
+            [['create_by'], 'string', 'max' => 36],
             [['course_principal'], 'integer','on' => [self::SCENARIO_CHANGE]],
             [['team_id', 'course_principal'], 'required', 'on' => [self::SCENARIO_CHANGE]],
             [['plan_start_time', 'plan_end_time', 'real_carry_out'], 'string', 'max' => 60],
             [['real_start_time'], 'string', 'max' => 60, 'on' => [self::SCENARIO_WAITSTART]],
             [['path'], 'string', 'max' => 255],
             [['des'], 'string'],
-            [['project_id', 'course_id'], 'unique', 'targetAttribute' => ['project_id', 'course_id'], 'comboNotUnique' => \Yii::t('rcoa/teamwork', 'Do not repeat the same data')],
+            //[['project_id', 'course_id'], 'unique', 'targetAttribute' => ['project_id', 'course_id'], 'comboNotUnique' => \Yii::t('rcoa/teamwork', 'Do not repeat the same data')],
             [['course_ops'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['course_ops' => 'id']],
             [['weekly_editors_people'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['weekly_editors_people' => 'id']],
             [['course_principal'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['course_principal' => 'id']],
@@ -198,11 +193,11 @@ class CourseManage extends ActiveRecord
             $s = count($times) == 3 ? (int)$times[2] : 0;  
             $videolength = $h*3600+$m*60+$s;  
    
-            if($videolength > 0){  
+            if($this->scenario == self::SCENARIO_DEFAULT && $videolength == 0){
+                $this->setAttribute($attribute, null);
+            }else if($this->scenario == self::SCENARIO_CARRYOUT && $videolength > 0){  
                 $this->setAttribute($attribute, $videolength);  
-            }  
-            else  
-            {  
+            }else{  
                 $this->addError($attribute, Yii::t('rcoa/teamwork', 'Video Length')."不可以小于0。");  
                 return false;  
             }  

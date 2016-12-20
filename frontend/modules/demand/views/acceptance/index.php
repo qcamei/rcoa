@@ -1,7 +1,7 @@
 <?php
 
-use common\models\demand\DemandCheck;
-use common\models\demand\searchs\DemandCheckSearch;
+use common\models\demand\DemandAcceptance;
+use common\models\demand\searchs\DemandAcceptanceSearch;
 use frontend\modules\demand\assets\DemandAssets;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
@@ -10,12 +10,12 @@ use yii\helpers\Html;
 use yii\web\View;
 
 /* @var $this View */
-/* @var $searchModel DemandCheckSearch */
+/* @var $searchModel DemandAcceptanceSearch */
 /* @var $dataProvider ActiveDataProvider */
 
 ?>
-<div class="demand-check-index">
-    <h4>审核记录</h4>
+<div class="demand-acceptance-index">
+    <h4>验收记录</h4>
     <?= GridView::widget([
         'dataProvider' => new ArrayDataProvider([
             'allModels' => $model,
@@ -27,7 +27,7 @@ use yii\web\View;
                 'label' => Yii::t('rcoa/multimedia', 'Title'),
                 'format' => 'raw',
                 'value'=> function($model){
-                    /* @var $model DemandCheck */
+                    /* @var $model DemandAcceptance */
                     return $model->title;
                 },
                 'headerOptions' => [
@@ -44,7 +44,7 @@ use yii\web\View;
                 'label' => Yii::t('rcoa', 'Remark'),
                 'format' => 'raw',
                 'value'=> function($model){
-                    /* @var $model DemandCheck */
+                    /* @var $model DemandAcceptance */
                     return $model->remark;
                 },
                 'headerOptions' => [
@@ -60,7 +60,7 @@ use yii\web\View;
             [
                 'label' => Yii::t('rcoa/multimedia', 'Created At'), 
                 'value'=> function($model){
-                    /* @var $model DemandCheck */
+                    /* @var $model DemandAcceptance */
                     return date('Y-m-d H:i', $model->created_at);
                 },
                 'headerOptions' => [
@@ -84,7 +84,7 @@ use yii\web\View;
             [
                 'label' => Yii::t('rcoa/multimedia', 'Updated At'),
                 'value'=> function($model){
-                    /* @var $model DemandCheck */
+                    /* @var $model DemandAcceptance */
                     return date('Y-m-d H:i', $model->updated_at);
                 },
                 'headerOptions' => [
@@ -108,7 +108,7 @@ use yii\web\View;
             [
                 'label' => Yii::t('rcoa/multimedia', 'Complete Time'),
                 'value'=> function($model){
-                    /* @var $model DemandCheck */
+                    /* @var $model DemandAcceptance */
                     return empty($model->complete_time) ? '' : $model->complete_time;
                 },
                 'headerOptions' => [
@@ -134,13 +134,13 @@ use yii\web\View;
                 'header' => Yii::t('rcoa', 'Operating'),
                 'buttons' => [
                     'view' => function ($url, $model) {
-                        /* @var $model DemandCheck */
+                        /* @var $model DemandAcceptance */
                         $options = [
-                            'class' => 'btn btn-default view-check',
+                            'class' => 'btn btn-default view-acceptance',
                         ];
-                        $icon = $model->status == DemandCheck::STATUS_COMPLETE ? 'icon task-complete' : 'icon working';
+                        $icon = $model->status == DemandAcceptance::STATUS_COMPLETE ? 'icon task-complete' : 'icon working';
                         return Html::a('<i class="'.$icon.'"></i>'.Yii::t('rcoa', 'View'), 
-                            ['check/view', 'id' => $model->id], $options);
+                            ['acceptance/view', 'id' => $model->id], $options);
                     },
                 ],
                 'headerOptions' => [

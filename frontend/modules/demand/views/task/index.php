@@ -20,7 +20,6 @@ use yii\widgets\LinkPager;
 $this->title = Yii::t('rcoa/demand', 'Demand Tasks');
 $this->params['breadcrumbs'][] = $this->title;
 
-CourseManage::$progress = $progress;
 DemandTask::$operation = $operation;
 ?>
 
@@ -136,8 +135,8 @@ DemandTask::$operation = $operation;
                                     'style' => 'height:12px;margin:2px 0;border-radius:0px;'
                                 ]).Html::beginTag('div', [
                                         'class' => 'progress-bar', 
-                                        'style' => 'width:'.(CourseManage::$progress[$model->id]).'%;line-height: 12px;font-size: 10px;',
-                                    ]).(!empty(CourseManage::$progress[$model->id]) ? CourseManage::$progress[$model->id] : 0).'%'.
+                                        'style' => 'width:'.$model->progress.'%;line-height: 12px;font-size: 10px;',
+                                    ]).$model->progress.'%'.
                                     Html::endTag('div').
                                 Html::endTag('div') : null;
                     },

@@ -133,15 +133,15 @@ class DemandTask extends ActiveRecord
      * @var array 
      */
     public static $statusProgress = [
-        self::STATUS_CHECK => 0,
-        self::STATUS_ADJUSTMENTING => 0,
-        self::STATUS_CHECKING => 0,
-        self::STATUS_UNDERTAKE => 0,
-        self::STATUS_DEVELOPING => 0,
-        self::STATUS_ACCEPTANCE => 0,
-        self::STATUS_UPDATEING => 0,
-        self::STATUS_ACCEPTANCEING => 0,
-        self::STATUS_COMPLETED => 0,
+        self::STATUS_CHECK => 5,
+        self::STATUS_ADJUSTMENTING => 5,
+        self::STATUS_CHECKING => 5,
+        self::STATUS_UNDERTAKE => 20,
+        self::STATUS_DEVELOPING => 50,
+        self::STATUS_ACCEPTANCE => 80,
+        self::STATUS_UPDATEING => 80,
+        self::STATUS_ACCEPTANCEING => 80,
+        self::STATUS_COMPLETED => 100,
     ];
 
     /**

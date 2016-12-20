@@ -2,6 +2,7 @@
 namespace frontend\modules\demand\utils;
 
 use common\config\AppGlobalVariables;
+use common\models\demand\DemandAcceptance;
 use common\models\demand\DemandCheck;
 use common\models\demand\DemandOperation;
 use common\models\demand\DemandOperationUser;
@@ -13,10 +14,10 @@ use frontend\modules\teamwork\utils\TeamworkTool;
 use wskeee\team\TeamMemberTool;
 use Yii;
 use yii\db\ActiveQuery;
-use yii\db\Exception;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\web\NotAcceptableHttpException;
+use yii\web\NotFoundHttpException;
 
 
 class DemandTool {
@@ -51,13 +52,14 @@ class DemandTool {
                 $this->saveDemandTaskAnnex($model->id, (!empty($post['DemandTaskAnnex']) ? $post['DemandTaskAnnex'] : []));
                 $demandNotice->saveJobManager($model);
                 $demandNotice->sendAuditorNotification($model, $model->create_team, '任务待审核', 'demand/Create-html');
-            }
+            }else
+                throw new \Exception($model->getErrors());
+            
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
-        }catch (Exception $ex) {
+        }catch (\Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            $model->getErrors();
-            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
+            throw new NotFoundHttpException("操作失败！".$ex->getMessage()); 
         }
     }
     
@@ -70,6 +72,7 @@ class DemandTool {
     {
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
+        
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
@@ -78,14 +81,14 @@ class DemandTool {
                 DemandTaskAnnex::deleteAll(['task_id' => $model->id]);
                 $this->saveDemandTaskAnnex($model->id, (!empty($post['DemandTaskAnnex']) ? $post['DemandTaskAnnex'] : []));
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['subject' => $model->course->name]);
-            }
+            }else
+                throw new \Exception($model->getErrors());
             
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            $model->getErrors();
-            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
+            throw new NotFoundHttpException("操作失败！".$ex->getMessage());
         }
     }
     
@@ -111,12 +114,13 @@ class DemandTool {
                 $demandNotice->setUndertakeNotification($model);
                 $demandNotice->sendCreateByNotification($model, '审核已通过', 'demand/PassCheck-html', $model->createBy->ee);
                 $demandNotice->sendUndertakePersonNotification($model, '新任务发布', 'demand/Undertake-html');
-            }
+            }else
+                throw new \Exception($model->getErrors());
+            
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            $model->getErrors();
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
     }
@@ -140,14 +144,15 @@ class DemandTool {
             if($model->save() && $number > 0){
                 $this->saveDemandOperation($model->task_id, DemandTask::STATUS_ADJUSTMENTING);
                 $this->saveOperationUser($model->task_id, [$model->task->create_by]);
-                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->task_id, ['status'=> $model->task->getStatusName()]);
+                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->task_id, ['status'=> DemandTask::$statusNmae[DemandTask::STATUS_ADJUSTMENTING]]);
                 $demandNotice->sendCreateByNotification ($model, '审核不通过', 'demand/CreateCheck-html', $model->task->createBy->ee);
-            }
+            }else
+                throw new \Exception($model->getErrors());
+            
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            $model->getErrors();
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
     }
@@ -172,14 +177,15 @@ class DemandTool {
             if($model->save(false, ['complete_time', 'status']) && $number > 0){
                 $this->saveDemandOperation($model->task_id, DemandTask::STATUS_CHECKING);
                 $this->saveOperationUser($model->task_id, $user);
-                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->task_id, ['status'=> $model->task->getStatusName()]);
+                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->task_id, ['status'=> DemandTask::$statusNmae[DemandTask::STATUS_CHECKING]]);
                 $demandNotice->sendAuditorNotification($model, $model->task->create_team, '任务待审核', 'demand/SubmitCheck-html');
-            }
+            }else
+                throw new \Exception($model->getErrors());
+            
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            $model->getErrors();
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
     }
@@ -204,12 +210,108 @@ class DemandTool {
                 $this->saveOperationUser($model->id, [$model->undertakePerson->u_id]);
                 $demandNotice->setUndertakeNotification($model);
                 $demandNotice->sendCreateByNotification($model, '任务已承接 ', 'demand/AlreadyUndertake-html', $model->createBy->ee);
-            }
+            }else
+                throw new \Exception($model->getErrors());
+            
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            $model->getErrors();
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
+        }
+    }
+    
+    /**
+     * 提交任务操作
+     * @param DemandTask $model
+     */
+    public function SubmitTask($model)
+    {
+        /* @var $demandNotice DemandNoticeTool */
+        $demandNotice = DemandNoticeTool::getInstance();
+        /* @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
+        
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {
+            if ($model->save(false, ['status', 'progress'])){
+                $this->saveDemandOperation($model->id, $model->status);
+                $this->saveOperationUser($model->id, [$model->create_by]);
+                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->getStatusProgress(), 'status'=> $model->getStatusName()]);
+                $demandNotice->sendCreateByNotification($model, '任务待验收', 'demand/SubmitTask-html', $model->createBy->ee);
+            }else
+                throw new \Exception($model->getErrors());
+            
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        } catch (\Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
+        }
+    }
+    
+    /**
+     * 创建验收记录操作
+     * @param DemandAcceptance $model
+     */
+    public function CreateAcceptanceTask($model)
+    {
+        /* @var $demandNotice DemandNoticeTool */
+        $demandNotice = DemandNoticeTool::getInstance();
+        /* @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
+        
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {
+            $number = DemandTask::updateAll(['status' => DemandTask::STATUS_UPDATEING], ['id' => $model->task_id]);
+            if($model->save() && $number > 0){
+                $this->saveDemandOperation($model->task_id, DemandTask::STATUS_UPDATEING);
+                $this->saveOperationUser($model->task_id, [$model->task->undertakePerson->u_id]);
+                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->task_id, ['status'=> DemandTask::$statusNmae[DemandTask::STATUS_UPDATEING]]);
+                $demandNotice->sendUndertakePersonNotification ($model, '验收不通过', 'demand/CreateAcceptance-html', $model->task->undertakePerson->u_id);
+            }else
+                throw new \Exception($model->getErrors());
+            
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        } catch (\Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
+        }
+    }
+    
+    /**
+     * 提交验收操作
+     * @param DemandAcceptance $model
+     */
+    public function SubmitAcceptanceTask($model)
+    {
+        /* @var $demandNotice DemandNoticeTool */
+        $demandNotice = DemandNoticeTool::getInstance();
+        /* @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
+        
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {
+            $number = DemandTask::updateAll(['status'=> DemandTask::STATUS_ACCEPTANCEING], ['id' => $model->task_id]);
+            if($model->save(false, ['complete_time', 'status']) && $number > 0){
+                $this->saveDemandOperation($model->task_id, DemandTask::STATUS_ACCEPTANCEING);
+                $this->saveOperationUser($model->task_id, [$model->task->create_by]);
+                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->task_id, ['status'=> DemandTask::$statusNmae[DemandTask::STATUS_ACCEPTANCEING]]);
+                $demandNotice->sendCreateByNotification($model, '任务待验收', 'demand/SubmitAcceptance-html', $model->task->createBy->ee);
+            }else
+                throw new \Exception($model->getErrors());
+            
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        } catch (\Exception $ex) {
+            $trans ->rollBack(); //回滚事务
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
     }
@@ -230,12 +332,13 @@ class DemandTool {
             if ($model->save(false, ['status', 'progress', 'reality_check_harvest_time'])){
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status'=>$model->getStatusName()]);
                 $jobManager->cancelNotification(AppGlobalVariables::getSystemId(), $model->id, [$model->create_by, $model->undertakePerson->u_id]);
-            }
+            }else
+                throw new \Exception($model->getErrors());
+            
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            $model->getErrors();
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
     }
@@ -257,12 +360,13 @@ class DemandTool {
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status'=>$model->getStatusName()]);
                 $jobManager->removeNotification(AppGlobalVariables::getSystemId(), $model->id, $model->undertakePerson->u_id);
                 $jobManager->addNotification (AppGlobalVariables::getSystemId(), $model->id, $model->undertakePerson->u_id);
-            }
+            }else
+                throw new \Exception($model->getErrors());
+            
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            $model->getErrors();
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
     }
@@ -283,16 +387,17 @@ class DemandTool {
         {
             if($model->save(false, ['status'])){
                 $demandNotice->cancelJobManager($model, $model->create_team);
-                if(!$model->getIsStatusAcceptance())
+                if($model->getIsStatusCheck())
                     $demandNotice->sendAuditorNotification($model, $model->create_team,'任务取消', 'demand/Cancel-html', $cancel);
                 else
                     $demandNotice->sendUndertakePersonNotification($model, '任务取消', 'demand/Cancel-html', $cancel);
-            }
+            }else
+                throw new \Exception($model->getErrors());
+            
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            $model->getErrors();
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
     }

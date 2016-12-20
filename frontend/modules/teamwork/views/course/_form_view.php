@@ -52,7 +52,7 @@ $page = [
                  * 5、必须是项目管理员
                  */
                 if($model->getIsNormal())
-                    echo Html::a('完成', ['carry-out', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
+                    echo Html::a('完成', ['carry-out', 'id' => $model->id], ['id' => 'carry-out', 'class' => 'btn btn-danger']).' ';
 
                 /**
                  * 开始 按钮显示必须满足以下条件：

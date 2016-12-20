@@ -186,7 +186,7 @@ class DemandNoticeTool {
         $undertakeId = array_filter(ArrayHelper::getValue($undertake, 'u_id'));
        
         //更新任务通知表
-        $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status' => $model->getStatusName()]); 
+        $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->getStatusProgress(), 'status' => $model->getStatusName()]); 
         //清空用户任务通知关联
         $jobManager->removeNotification(AppGlobalVariables::getSystemId(), $model->id, $undertakeId);
         //添加用户任务通知关联
@@ -203,16 +203,18 @@ class DemandNoticeTool {
      * @param integer|array $teamId     团队ID
      */
     public  function cancelJobManager($model, $teamId){
+        $team = [];
+        $undertakeId = [];
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
-        /* @var $model DemandTask */
-        $team = array_filter(ArrayHelper::getValue($this->getAuditor($teamId), 'u_id'));
-        $undertake = $this->getUndertakePerson();
-        $undertakeId = array_filter(ArrayHelper::getValue($undertake, 'u_id'));
+        if(!$model->getIsStatusUndertake())
+            $team = array_filter(ArrayHelper::getValue($this->getAuditor($teamId), 'u_id'));
+        else
+            $undertakeId = array_filter(ArrayHelper::getValue($this->getUndertakePerson(), 'u_id'));
         //全并两个数组的值
         $jobUserAll = ArrayHelper::merge(ArrayHelper::merge([$model->create_by], $team), $undertakeId);
         //修改job表任务
-        $jobManager->updateJob(AppGlobalVariables::getSystemId(),$model->id,['progress'=> $model->progress, 'status'=>$model->getStatusName()]); 
+        $jobManager->updateJob(AppGlobalVariables::getSystemId(),$model->id,['progress'=> $model->progress, 'status'=> $model->getStatusName()]); 
         //修改通知
         $jobManager->cancelNotification(AppGlobalVariables::getSystemId(), $model->id, $jobUserAll);
     }

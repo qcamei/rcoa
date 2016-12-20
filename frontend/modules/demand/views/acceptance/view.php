@@ -1,5 +1,6 @@
 <?php
 
+use common\models\demand\DemandAcceptance;
 use common\models\demand\DemandCheck;
 use frontend\modules\demand\assets\DemandAssets;
 use wskeee\rbac\RbacName;
@@ -7,15 +8,13 @@ use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\DetailView;
 
-
 /* @var $this View */
-/* @var $model DemandCheck */
+/* @var $model DemandAcceptance */
 
-$this->title = Yii::t('rcoa/demand', 'Demand Check View').':'.$model->title;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/demand', 'Demand Checks'), 'url' => ['index']];
+$this->title = Yii::t('rcoa/demand', 'Demand Acceptance View').':'.$model->title;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/demand', 'Demand Acceptances'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     <h4 class="modal-title" id="myModalLabel"><?= $this->title ?></h4>
@@ -71,18 +70,18 @@ $this->params['breadcrumbs'][] = $this->title;
          * 编辑 按钮显示必须满足以下条件：
          * 1、拥有编辑的权限
          * 2、创建者是自己
-         * 3、审核状态必须是【未完成】
+         * 3、验收状态必须是【未完成】
          */
-        if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UPDATE_CHECK) 
-          && $model->create_by == Yii::$app->user->id && $model->status == DemandCheck::STATUS_NOTCOMPLETE)
-            echo Html::a('编辑', ['update', 'id' => $model->id], ['id' => 'check-update', 'class' => 'btn btn-primary']).' ';
+        if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UPDATE_ACCEPTANCE) 
+          && $model->create_by == Yii::$app->user->id && $model->status == DemandAcceptance::STATUS_NOTCOMPLETE)
+            echo Html::a('编辑', ['update', 'id' => $model->id], ['id' => 'acceptance-update', 'class' => 'btn btn-primary']).' ';
     ?>
     
 </div>
 
 <script type="text/javascript">
-    /** 编辑审核操作 */
-    $('#check-update').click(function()
+    /** 编辑验收操作 */
+    $('#acceptance-update').click(function()
     {
         var urlf = $(this).attr("href");
         var a = $('.myModal').modal({remote:urlf});

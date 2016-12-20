@@ -74,59 +74,62 @@ $isAuthorization = Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER);    //�
     
     <div class="row">
     <?php
-        /** 下拉月份选择 */
-        echo Html::beginTag('div', ['class' => 'col-lg-2 col-md-2 col-sm-12 col-xs-12', 
-            'style' => 'padding:0px;margin: 5px 5px 5px 0px;']);
-            echo  Select2::widget([
-                'name' => 'create_time',
-                'value' => end($weeklyMonth),
-                'data' => $weeklyMonth,
-                'hideSearch' => true,
-                'options' => [
-                    'id' => 'weekly-month',
-                    'placeholder' => '请选择月份...',
-                ],
-                'pluginEvents' => [
-                    'change' => 'function(){ select2Log($(this));}'
-                ]
-             ]);
-        echo Html::endTag('div');
-        /** 每月周数列表信息 */
-        echo Html::beginTag('div', [
-            'id' => 'weekinfo',
-            'class' => 'col-lg-8 col-md-10 col-sm-12 col-xs-12', 
-            'style' => 'padding:0px;',
-        ]);
-        echo Html::endTag('div');
-        /** 编辑、新增按钮 */
-        echo Html::beginTag('div', ['class' => 'col-lg-2 col-md-2 col-sm-2 col-xs-5', 'style' => 'padding:0px;']);
-            if(($twTool->getIsAuthority('is_leader', 'Y') && $model->create_by == Yii::$app->user->id) 
-                || $twTool->getIsAuthority('id', $model->weekly_editors_people)
-                || $twTool->getIsAuthority('id', $model->course_principal)
-                || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))
-            {
-                /**
-                 * 编辑 按钮显示必须满足以下条件：
-                 * 1、状态非为【已完成】
-                 * 2、周报必须不能为空
-                 * 3、(必须是【队长】 and 课程 【创建者】 是自己)
-                 * or 【周报编辑人】 or 【项目管理员】 or 【课程负责人】
-                 */
-                if($model->getIsNormal() && $weeklyInfoResult)
-                    echo Html::a(Yii::t('rcoa/teamwork', 'Updated Weekly'), [
-                        'summary/update', 'course_id' => $model->id, 'create_time' => $results['create_time']], 
-                        ['id' => 'update', 'class' => 'btn btn-primary weekinfo']);
-                /**
-                 * 新增 按钮显示必须满足以下条件：
-                 * 1、状态非为【已完成】
-                 * 2、周报必须为空
-                 * 3、(必须是【队长】 and 课程 【创建者】 是自己)
-                 * or 【周报编辑人】 or 【项目管理员】 or 【课程负责人】
-                 */
-                if($model->getIsNormal() && !$weeklyInfoResult)
-                    echo Html::a(Yii::t('rcoa/teamwork', 'Create Weekly'), ['summary/create', 'course_id' => $model->id], [
-                     'class' => 'btn btn-primary weekinfo']);
-            }
+        echo Html::beginTag('div', ['class' => 'col-lg-12 col-md-12 col-sm-12 col-xs-12',
+            'style' => 'padding:0px;']);
+            /** 下拉月份选择 */
+            echo Html::beginTag('div', ['class' => 'col-lg-2 col-md-2 col-sm-12 col-xs-12', 
+                'style' => 'padding:0px;margin: 5px 5px 5px 0px;']);
+                echo  Select2::widget([
+                    'name' => 'create_time',
+                    'value' => end($weeklyMonth),
+                    'data' => $weeklyMonth,
+                    'hideSearch' => true,
+                    'options' => [
+                        'id' => 'weekly-month',
+                        'placeholder' => '请选择月份...',
+                    ],
+                    'pluginEvents' => [
+                        'change' => 'function(){ select2Log($(this));}'
+                    ]
+                 ]);
+            echo Html::endTag('div');
+            /** 每月周数列表信息 */
+            echo Html::beginTag('div', [
+                'id' => 'weekinfo',
+                'class' => 'col-lg-8 col-md-10 col-sm-12 col-xs-12', 
+                'style' => 'padding:0px;',
+            ]);
+            echo Html::endTag('div');
+            /** 编辑、新增按钮 */
+            echo Html::beginTag('div', ['class' => 'col-lg-2 col-md-2 col-sm-2 col-xs-5', 'style' => 'padding:0px;']);
+                if(($twTool->getIsAuthority('is_leader', 'Y') && $model->create_by == Yii::$app->user->id) 
+                    || $twTool->getIsAuthority('id', $model->weekly_editors_people)
+                    || $twTool->getIsAuthority('id', $model->course_principal)
+                    || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))
+                {
+                    /**
+                     * 编辑 按钮显示必须满足以下条件：
+                     * 1、状态非为【已完成】
+                     * 2、周报必须不能为空
+                     * 3、(必须是【队长】 and 课程 【创建者】 是自己)
+                     * or 【周报编辑人】 or 【项目管理员】 or 【课程负责人】
+                     */
+                    if($model->getIsNormal() && $weeklyInfoResult)
+                        echo Html::a(Yii::t('rcoa/teamwork', 'Updated Weekly'), [
+                            'summary/update', 'course_id' => $model->id, 'create_time' => $results['create_time']], 
+                            ['id' => 'update', 'class' => 'btn btn-primary weekinfo']);
+                    /**
+                     * 新增 按钮显示必须满足以下条件：
+                     * 1、状态非为【已完成】
+                     * 2、周报必须为空
+                     * 3、(必须是【队长】 and 课程 【创建者】 是自己)
+                     * or 【周报编辑人】 or 【项目管理员】 or 【课程负责人】
+                     */
+                    if($model->getIsNormal() && !$weeklyInfoResult)
+                        echo Html::a(Yii::t('rcoa/teamwork', 'Create Weekly'), ['summary/create', 'course_id' => $model->id], [
+                         'class' => 'btn btn-primary weekinfo']);
+                }
+            echo Html::endTag('div');
         echo Html::endTag('div');
         /** 内容信息 */
         /* @var $model CourseManage */

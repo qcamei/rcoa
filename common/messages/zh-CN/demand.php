@@ -18,6 +18,9 @@ return[
     'Demand Checks' => '审核记录',
     'Demand Check View' => '审核详情',
     'Update Demand Check' => '更新审核',
+    'Demand Acceptances' => '验收记录',
+    'Update Demand Acceptance' => '更新验收',
+    'Demand Acceptance View' => '验收详情',
     
     //需求任务-字段
     'Item Type' => '行业',

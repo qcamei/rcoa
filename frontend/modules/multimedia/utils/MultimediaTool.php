@@ -2,6 +2,7 @@
 
 namespace frontend\modules\multimedia\utils;
 
+use common\config\AppGlobalVariables;
 use common\models\multimedia\MultimediaAssignTeam;
 use common\models\multimedia\MultimediaCheck;
 use common\models\multimedia\MultimediaOperation;
@@ -11,10 +12,10 @@ use common\models\multimedia\MultimediaTask;
 use common\models\team\TeamMember;
 use common\wskeee\job\JobManager;
 use frontend\modules\multimedia\utils\MultimediaNoticeTool;
-use wskeee\framework\models\Item;
-use wskeee\framework\models\ItemType;
 use Yii;
+use yii\db\ActiveQuery;
 use yii\db\Exception;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 
@@ -26,8 +27,6 @@ class MultimediaTool {
      * 多媒体任务指派时
      * @param MultimediaTask $model
      * @param type $post
-     * @throws NotFoundHttpException
-     * @throws Exception
      */
     public function saveAssignTask($model, $post)
     {
@@ -45,10 +44,10 @@ class MultimediaTool {
             if($model->save(true, ['status', 'progress'])){
                 $this->emptyMultimediaProducer($model->id);
                 $this->saveMultimediaProducer($model->id, $postProducer);
-                $jobManager->removeNotification(10, $model->id, $teamUid);
+                $jobManager->removeNotification(AppGlobalVariables::getSystemId(), $model->id, $teamUid);
                 if(in_array($model->create_by, $teamUid)){
-                    $jobManager->addNotification (10, $model->id, $model->create_by);
-                    $jobManager->setNotificationHasReady(10, $model->create_by, $model->id);
+                    $jobManager->addNotification (AppGlobalVariables::getSystemId(), $model->id, $model->create_by);
+                    $jobManager->setNotificationHasReady(AppGlobalVariables::getSystemId(), $model->create_by, $model->id);
                 }
                 $producer = ArrayHelper::getValue($multimediaNotice->getProducer($model->id), 'u_id');
                 $this->saveMultimediaOperation($model->id, $model->status);
@@ -56,28 +55,27 @@ class MultimediaTool {
                 $multimediaNotice->setAssignNotification($model, $producer);
                 $multimediaNotice->sendProducerNotification($model, $model->id, '新任务', 'multimedia/AssignProducer-htm');
                 $multimediaNotice->sendCreateByNotification($model, '任务已指派', 'multimedia/AssignCreateBy-html');
-            }else {
-                throw new Exception(json_encode($model->getErrors()));
-            }
+            }else 
+                throw new \Exception($model->getErrors());
+            
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            throw new NotFoundHttpException('保存任务失败！');//.$ex->getMessage());
+            throw new NotFoundHttpException("操作失败！".$ex->getMessage());
         }
     }
     
     /**
      * 多媒体任务创建时
      * @param MultimediaTask $model
-     * @throws NotFoundHttpException
-     * @throws Exception
      */
     public function saveCreateTask($model)
     {
         /* @var $multimediaNotice MultimediaNoticeTool */
         $multimediaNotice = MultimediaNoticeTool::getInstance();
         $user = ArrayHelper::getValue($multimediaNotice->getAssignPerson($model->create_team), 'u_id');
+        
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
@@ -87,49 +85,46 @@ class MultimediaTool {
                 $this->saveOperationUser($model->id, $user);
                 $multimediaNotice->saveJobManager($model);
                 $multimediaNotice->sendAssignPersonNotification($model, $model->create_team, '新任务', 'multimedia/Create-html');
-            }else {
-                throw new Exception(json_encode($model->getErrors()));
-            }
+            }else 
+                throw new \Exception($model->getErrors());
+            
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
         } catch (Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            throw new NotFoundHttpException('保存任务失败！');//.$ex->getMessage());
+            throw new NotFoundHttpException("操作失败！".$ex->getMessage());
         }
     }
     
     /**
      * 多媒体任务更新时
      * @param MultimediaTask $model
-     * @throws NotFoundHttpException
-     * @throws Exception
      */
     public function saveUpdateTask($model)
     {
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
+        
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
         {
             if($model->save()){
-                $jobManager->updateJob(10, $model->id, ['subject' => $model->name]);
-            }else {
-                throw new Exception(json_encode($model->getErrors()));
-            }
+                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['subject' => $model->name]);
+            }else 
+                throw new \Exception($model->getErrors());
+            
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            throw new NotFoundHttpException('保存任务失败！');//.$ex->getMessage());
+            throw new NotFoundHttpException("操作失败！".$ex->getMessage());
         }
     }
     
     /**
      * 多媒体任务寻求支撑时
      * @param MultimediaTask $model
-     * @throws NotFoundHttpException
-     * @throws Exception
      */
     public function saveSeekBraceTask($model)
     {
@@ -139,6 +134,7 @@ class MultimediaTool {
         $jobManager = Yii::$app->get('jobManager');
         $assignPerson = $multimediaNotice->getAssignPerson($model->make_team);
         $assignPersonId = ArrayHelper::getValue($assignPerson, 'u_id');
+        
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
@@ -146,16 +142,16 @@ class MultimediaTool {
             if($model->save(false, ['make_team', 'brace_mark'])){
                 $this->saveMultimediaOperation($model->id, $model->status);
                 $this->saveOperationUser($model->id, $assignPersonId, MultimediaTask::SEEK_BRACE_MARK);
-                $jobManager->addNotification(10, $model->id, $assignPersonId);      //添加通知
+                $jobManager->addNotification(AppGlobalVariables::getSystemId(), $model->id, $assignPersonId);      //添加通知
                 $multimediaNotice->sendAssignPersonNotification($model, $model->make_team, '支撑请求', 'multimedia/SeekBrace-html');
-            }else {
-                throw new Exception(json_encode($model->getErrors()));
-            }
+            }else 
+                throw new Exception($model->getErrors());
+            
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
         } catch (Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            throw new NotFoundHttpException('保存任务失败！');//.$ex->getMessage());
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
     }
     
@@ -163,8 +159,6 @@ class MultimediaTool {
      * 多媒体任务取消支撑时
      * @param MultimediaTask $model
      * @param type $oldMakeTeam             旧的制作团队
-     * @throws NotFoundHttpException
-     * @throws Exception
      */
     public function saveCancelBraceTask($model, $oldMakeTeam)
     {
@@ -175,6 +169,7 @@ class MultimediaTool {
         $assignPerson = $multimediaNotice->getAssignPerson($oldMakeTeam);
         $assignPersonId = ArrayHelper::getValue($assignPerson, 'u_id');
         $user = ArrayHelper::getValue($multimediaNotice->getAssignPerson($model->create_team), 'u_id');
+        
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
@@ -182,24 +177,22 @@ class MultimediaTool {
             if($model->save(false, ['brace_mark', 'make_team'])){
                 $this->saveMultimediaOperation($model->id, $model->status);
                 $this->saveOperationUser($model->id, $user);
-                $jobManager->removeNotification(10, $model->id, $assignPersonId);
+                $jobManager->removeNotification(AppGlobalVariables::getSystemId(), $model->id, $assignPersonId);
                 $multimediaNotice->sendAssignPersonNotification ($model, $oldMakeTeam, '取消支撑', 'multimedia/CancelBrace-html');
-            }else {
-                throw new Exception(json_encode($model->getErrors()));
-            }
+            }else
+                throw new \Exception($model->getErrors());
+            
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
         } catch (Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            throw new NotFoundHttpException('保存任务失败！');//.$ex->getMessage());
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
     }
     
     /**
      * 多媒体任务开始制作时
      * @param MultimediaTask $model
-     * @throws NotFoundHttpException
-     * @throws Exception
      */
     public function saveStartMakeTask($model)
     {
@@ -207,28 +200,27 @@ class MultimediaTool {
         $multimediaNotice = MultimediaNoticeTool::getInstance();
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
+        
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
         {
             if($model->save(false, ['status', 'progress'])){
-                $jobManager->updateJob(10, $model->id, ['progress'=> $model->progress, 'status'=>$model->getStatusName()]);
-            }else {
-                throw new Exception(json_encode($model->getErrors()));
-            }
+                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status'=>$model->getStatusName()]);
+            }else
+                throw new \Exception($model->getErrors());
+            
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            throw new NotFoundHttpException('保存任务失败！');//.$ex->getMessage());
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
     }
     
     /**
      * 多媒体任务提交制作时
      * @param MultimediaTask $model
-     * @throws NotFoundHttpException
-     * @throws Exception
      */
     public function saveSubmitMakeTask($model)
     {
@@ -236,6 +228,7 @@ class MultimediaTool {
         $multimediaNotice = MultimediaNoticeTool::getInstance();
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
+        
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
@@ -243,52 +236,54 @@ class MultimediaTool {
             if($model->save(false, ['status', 'progress'])){
                 $this->saveMultimediaOperation($model->id, $model->status);
                 $this->saveOperationUser($model->id, [$model->create_by]);
-                $jobManager->updateJob(10, $model->id, ['progress'=> $model->progress, 'status'=>$model->getStatusName()]);
+                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status'=>$model->getStatusName()]);
                 $multimediaNotice->sendCreateByNotification ($model, '任务提交', 'multimedia/SubmitMake-html');
-            }else {
-                throw new Exception(json_encode($model->getErrors()));
-            }
+            }else
+                throw new \Exception($model->getErrors());
+            
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            throw new NotFoundHttpException('保存任务失败！');//.$ex->getMessage());
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
     }
     
     /**
      * 多媒体任务完成制作时
      * @param MultimediaTask $model
-     * @throws NotFoundHttpException
-     * @throws Exception
      */
     public function saveCompleteTask($model)
     {
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
+        
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
         {
             if ($model->save() && $model->validate()){
-                $jobManager->updateJob(10, $model->id, ['progress'=> $model->progress, 'status'=>$model->getStatusName()]);
-                $jobManager->cancelNotification(10, $model->id, $model->create_by);
-            }else {
-                throw new Exception(json_encode($model->getErrors()));
+                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->getStatusProgress(), 'status'=>$model->getStatusName()]);
+                $jobManager->cancelNotification(AppGlobalVariables::getSystemId(), $model->id, $model->create_by);
+            }else{
+                foreach($model->getErrors() as $error){
+                    foreach($error as $name=>$value)
+                        $errors[] = $value;
+                }
+                throw new \Exception(implode(',', $errors));
             }
+            
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            throw new NotFoundHttpException('保存任务失败！格式不正确，请按 00:00:00 格式录入！');//.$ex->getMessage());
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
     }
     
     /**
      * 多媒体任务恢复制作时
      * @param MultimediaTask $model
-     * @throws NotFoundHttpException
-     * @throws Exception
      */
     public function saveRecoveryTask($model)
     {
@@ -297,21 +292,23 @@ class MultimediaTool {
         /* @var $multimediaNotice MultimediaNoticeTool */
         $multimediaNotice = MultimediaNoticeTool::getInstance();
         $producer = ArrayHelper::getValue($multimediaNotice->getProducer($model->id), 'u_id');
+        
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
         {
             if ($model->save(false, ['progress', 'status'])){
-                $jobManager->updateJob(10, $model->id, ['progress'=> $model->progress, 'status'=>$model->getStatusName()]);
-                $jobManager->removeNotification(10, $model->id, $producer);
-                $jobManager->addNotification (10, $model->id, $producer);
-            }else {
-                throw new Exception(json_encode($model->getErrors()));
-            }
+                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->getStatusProgress(), 'status'=> $model->getStatusName()]);
+                $jobManager->removeNotification(AppGlobalVariables::getSystemId(), $model->id, $producer);
+                $jobManager->addNotification (AppGlobalVariables::getSystemId(), $model->id, $producer);
+            }else
+                throw new \Exception($model->getErrors());
+            
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $trans ->rollBack(); //回滚事务
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
     }
     
@@ -340,67 +337,61 @@ class MultimediaTool {
                     $multimediaNotice->sendAssignPersonNotification ($model, $team,'任务取消', 'multimedia/Cancel-html', $cancel);
                 else
                     $multimediaNotice->sendProducerNotification ($model, $model->id, '任务取消', 'multimedia/Cancel-html', $cancel);
-            }else {
-                throw new Exception(json_encode($model->getErrors()));
-            }
+            }else
+                throw new \Exception($model->getErrors());
+            
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            throw new NotFoundHttpException('保存任务失败！');//.$ex->getMessage());
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
     }
 
     /**
      * 多媒体任务创建审核时
      * @param MultimediaCheck $model
-     * @throws NotFoundHttpException
-     * @throws Exception
      */
     public function saveCreateCheckTask($model)
     {
-        /* @var $model MultimediaCheck */
         /* @var $multimediaNotice MultimediaNoticeTool */
         $multimediaNotice = MultimediaNoticeTool::getInstance();
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
         $producer = ArrayHelper::getValue($multimediaNotice->getProducer($model->task_id), 'u_id');
+        
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
         {
-            $number = Yii::$app->db->createCommand()
-                  ->update(MultimediaTask::tableName(), ['status'=>  MultimediaTask::STATUS_UPDATEING], ['id' => $model->task_id])
-                  ->execute();
+            $number = MultimediaTask::updateAll(['status'=>  MultimediaTask::STATUS_UPDATEING], ['id' => $model->task_id]);
             if($model->save() && $number > 0){
                 $this->saveMultimediaOperation($model->task_id, MultimediaTask::STATUS_UPDATEING);
                 $this->saveOperationUser($model->task_id, $producer);
-                $jobManager->updateJob(10, $model->task_id, ['status'=> MultimediaTask::$statusNmae[MultimediaTask::STATUS_UPDATEING]]);
+                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->task_id, ['status'=> MultimediaTask::$statusNmae[MultimediaTask::STATUS_UPDATEING]]);
                 $multimediaNotice->sendProducerNotification ($model, $model->task_id, '审核意见', 'multimedia/CreateCheck-html');
-            }else {
-                throw new Exception(json_encode($model->getErrors()));
-            }
+            }else
+                throw new \Exception($model->getErrors());
+            
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            throw new NotFoundHttpException('保存任务失败！');//.$ex->getMessage());
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
     }
     
     /**
      * 多媒体任务提交审核时
      * @param MultimediaCheck $model
-     * @throws NotFoundHttpException
-     * @throws Exception
      */
     public function saveSubmitCheckTask($model)
     {
-        /* @var $model MultimediaCheck */
         /* @var $multimediaNotice MultimediaNoticeTool */
         $multimediaNotice = MultimediaNoticeTool::getInstance();
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
+        
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
@@ -411,103 +402,89 @@ class MultimediaTool {
             if($model->save(false, ['real_carry_out', 'status']) && $number > 0){
                 $this->saveMultimediaOperation($model->task_id, MultimediaTask::STATUS_CHECKING);
                 $this->saveOperationUser($model->task_id, [$model->task->create_by]);
-                $jobManager->updateJob(10, $model->task_id, ['status'=> MultimediaTask::$statusNmae[MultimediaTask::STATUS_CHECKING]]);
+                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->task_id, ['status'=> MultimediaTask::$statusNmae[MultimediaTask::STATUS_CHECKING]]);
                 $multimediaNotice->sendCreateByNotification ($model, '审核提交', 'multimedia/SubmitCheck-html');
-            }else {
-                throw new Exception(json_encode($model->getErrors()));
-            }
+            }else
+                throw new \Exception($model->getErrors());
+            
             $trans->commit();  //提交事务
             Yii::$app->getSession()->setFlash('success','操作成功！');
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            throw new NotFoundHttpException('保存任务失败！');//.$ex->getMessage());
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
     }
     
     /**
-     * 查询所有任务
-     * @param type $createBy        创建者
-     * @param type $producer        制作人
-     * @param type $assignPerson    指派人
-     * @param type $createTeam      创建团队
-     * @param type $makeTeam        制作团队
-     * @param type $contentType     类型
-     * @param type $itemTypeId      行业
-     * @param type $itemId          层次/类型
-     * @param type $itemChildId     专业/工种
-     * @param type $courseId        课程
-     * @param type $status          状态
-     * @param type $time            时间段
-     * @param type $keyword         关键字
-     * @param type $mark            标识
-     * @return type                 
+     * 获取多媒体任务结果
+     * @param MultimediaQuery $multimediaQuery                  
+     * @param ActiveQuery $results                  
+     * @param string $createBy                      创建者
+     * @param string $producer                      制作人
+     * @param string $assignPerson                  指派人
+     * @param integer $createTeam                   创建团队
+     * @param integer $makeTeam                     制作团队
+     * @param integer $contentType                  类型
+     * @param integer $itemTypeId                   行业
+     * @param integer $itemId                       层次/类型
+     * @param integer $itemChildId                  专业/工种
+     * @param integer $courseId                     课程
+     * @param integer $status                       状态
+     * @param string $time                          时间段
+     * @param string $keyword                       关键字
+     * @param integer $mark                         标识
+     * @return Query                                返回查询结果对象
      */
     public function getMultimediaTask($createBy = null, $producer = null, $assignPerson = null, $createTeam = null, 
         $makeTeam = null, $contentType = null, $itemTypeId = null, $itemId = null, $itemChildId = null, $courseId = null,
-        $status = 1, $time = null, $keyword = null, $mark = null)
+        $status = null, $time = null, $keyword = null, $mark = null)
     {
-        if($time != null)
-            $time = explode(" - ",$time);
+        /* @var $multimediaQuery MultimediaQuery */
+        $multimediaQuery = MultimediaQuery::getInstance();
+        /* @var $results ActiveQuery */
+        $results = $multimediaQuery->getMultimediaTaskTable();
         
-        $result = MultimediaTask::find()
-                ->select(['Task.id', 'Task.item_type_id', 'Task.item_id', 'Task.item_child_id', 'Task.course_id',
-                    'Task.name', 'Task.progress', 'Task.content_type', 'Task.plan_end_time', 'Task.level',
-                    'Task.make_team', 'Task.status', 'Task.create_team', 'Task.create_by', 'AssignTeam.u_id',
-                    'ItemType.name AS ItemTypeName','Item.name AS ItemName'
-                ])
-                ->from(['Task' => MultimediaTask::tableName()])
-                ->leftJoin(['AssignTeam' => MultimediaAssignTeam::tableName()], 
-                    '(Task.make_team = AssignTeam.team_id OR Task.create_team = AssignTeam.team_id)'
-                )
-                ->leftJoin(['Producer' => MultimediaProducer::tableName()], 'Task.id = Producer.task_id')
-                ->leftJoin(['TeamMember' => TeamMember::tableName()], 'Producer.producer = TeamMember.id')
-                ->leftJoin(['ItemType' => ItemType::tableName()], 'ItemType.id = Task.item_type_id')
-                ->leftJoin(['Item' => Item::tableName()],
-                  '(Item.id = Task.item_id OR Item.id = Task.item_child_id OR Item.id = Task.course_id)')
-                ->andFilterWhere(['or',
-                    [$mark == null ? 'or' : 'and', ['Task.create_by' => $createBy], ['TeamMember.u_id' => $producer]],
-                    ['AssignTeam.u_id' => $assignPerson],
-                ])
-                ->andFilterWhere([
-                    'Task.create_team' => $createTeam,
-                    'Task.make_team' => $makeTeam,
-                    'Task.content_type' => $contentType,
-                    'Task.item_type_id' => $itemTypeId,
-                    'Task.item_id' => $itemId,
-                    'Task.item_child_id' => $itemChildId,
-                    'Task.course_id' => $courseId,
-                ])
-                ->andFilterWhere(['IN', 'Task.status', 
-                    ($status == 1 ? MultimediaTask::$defaultStatus : $status)
-                ])
-                ->andFilterWhere(
-                    $time != null ? ($status == 1 ? ['<=', 'Task.created_at', strtotime($time[1])] : 
-                        ($status == MultimediaTask::STATUS_COMPLETED ? ['between', 'Task.real_carry_out', $time[0],$time[1]] : 
-                            ($status == MultimediaTask::STATUS_CANCEL ? ['between', 'Task.created_at', strtotime($time[0]),strtotime($time[1])] : 
-                                ['or', ['between', 'Task.created_at', strtotime($time[0]),strtotime($time[1])], 
-                                ['between', 'Task.real_carry_out', $time[0],$time[1]]]
-                            )
-                        )
-                    ) : []
-                )
-                ->andFilterWhere(['or',
-                    ['like', 'Task.name', $keyword],
-                    ['like', 'ItemType.name', $keyword],
-                    ['like', 'Item.name', $keyword]
-                ])
-                ->orderBy('Task.level desc, Task.id asc')
-                ->with('contentType')
-                ->with('createTeam')
-                ->with('itemChild')
-                ->with('item')
-                ->with('itemType')
-                ->with('makeTeam')
-                ->with('course')
-                ->with('createBy')
-                ->with('producers')
-                ->with('teamMember')
-                ->all();
-        return $result;
+        $results->andFilterWhere(['or',[$mark == null ? 'or' : 'and', 
+            ['Multimedia_task.create_by' => $createBy], ['TeamMember.u_id' => $producer]], 
+            ['or', ['Assign_make_team.u_id' => $assignPerson], ['Assign_create_team.u_id' => $assignPerson]]
+        ]);
+        $results->andFilterWhere([
+            'Multimedia_task.id' => null,
+            'Multimedia_task.create_team' => $createTeam,
+            'Multimedia_task.make_team' => $makeTeam,
+            'Multimedia_task.content_type' => $contentType,
+            'Multimedia_task.item_type_id' => $itemTypeId,
+            'Multimedia_task.item_id' => $itemId,
+            'Multimedia_task.item_child_id' => $itemChildId,
+            'Multimedia_task.course_id' => $courseId,
+        ]);
+        $results->andFilterWhere(['IN', 'Multimedia_task.status', 
+            ($status == MultimediaTask::STATUS_DEFAULT ? MultimediaTask::$defaultStatus : $status)
+        ]);
+        
+        if($time != null){
+            $time = explode(" - ",$time);
+            if($status == MultimediaTask::STATUS_DEFAULT)
+                $results->andFilterWhere(['<=', 'Multimedia_task.created_at', strtotime($time[1])]);
+            else if($status == MultimediaTask::STATUS_COMPLETED)
+                $results->andFilterWhere(['between', 'Multimedia_task.real_carry_out', $time[0],$time[1]]);
+            else if($status == MultimediaTask::STATUS_CANCEL)
+                $results->andFilterWhere(['between', 'Multimedia_task.created_at', strtotime($time[0]),strtotime($time[1])]);
+            else
+                $results->andFilterWhere(['or', 
+                    ['between', 'Multimedia_task.created_at', strtotime($time[0]),strtotime($time[1])], 
+                    ['between', 'Multimedia_task.real_carry_out', $time[0],$time[1]]
+                ]);
+        }
+        $results->andFilterWhere(['or',
+            ['like', 'Multimedia_task.name', $keyword],
+            ['like', 'Fm_item_type.name', $keyword],
+            ['like', 'Fm_item.name', $keyword],
+            ['like', 'Fm_item_child.name', $keyword],
+            ['like', 'Fm_course.name', $keyword]
+        ]);
+        
+        return $results;
     }
 
     /**

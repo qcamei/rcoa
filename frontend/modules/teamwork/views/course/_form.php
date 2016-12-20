@@ -62,14 +62,30 @@ use yii\widgets\ActiveForm;
         'value' => !empty($model->demandTask->teacher) ? $model->demandTask->speakerTeacher->nickname : '', 'disabled' => 'disabled'
     ]) ?>
     
-    <?= $form->field($model, 'demandTask.lesson_time')->textInput([
-        'value' => $model->demandTask->lesson_time, 'disabled' => 'disabled'
+    <?= $form->field($model->demandTask, 'lesson_time', [
+        'template' => "{label}\n<div class=\"col-sm-4\">{input}</div>\n<div class=\"col-sm-4\">{error}</div>"
+    ])->widget(TouchSpin::classname(),  [
+        'options'=>['disabled' => 'disabled'],
+        'pluginOptions' => [
+            'placeholder' => '学时 ...',
+            'min' => 0,
+            'max' => 999999,
+            'initval' => $model->demandTask->lesson_time,
+        ],
     ]) ?>
     
-    <?= $form->field($model, 'demandTask.credit')->textInput([
-        'value' => $model->demandTask->credit, 'disabled' => 'disabled'
+    <?= $form->field($model->demandTask, 'credit', [
+        'template' => "{label}\n<div class=\"col-sm-4\">{input}</div>\n<div class=\"col-sm-4\">{error}</div>"
+    ])->widget(TouchSpin::classname(),  [
+        'options'=>['disabled' => 'disabled'],
+        'pluginOptions' => [
+            'placeholder' => '学分 ...',
+            'min' => 0,
+            'max' => 999999,
+            'initval' => $model->demandTask->credit,
+        ],
     ]) ?>
-    
+        
     <?= $form->field($model->demandTask, 'mode')->radioList(DemandTask::$modeName, [
         'itemOptions'=>[
             'labelOptions'=>[
@@ -82,43 +98,49 @@ use yii\widgets\ActiveForm;
         ],
     ]) ?>
     
-    <?= $form->field($model, 'video_length')->textInput(['value'=>  DateUtil::intToTime($model->video_length)])->hint('aaaa')?>
-    
-    <?= $form->field($model, 'question_mete')->widget(TouchSpin::classname(),  [
+    <?= $form->field($model, 'video_length', [
+        'template' => "{label}\n<div class=\"col-sm-4\">{input}</div>\n<div class=\"col-sm-4\">{error}</div>"
+    ])->textInput(['value'=>  DateUtil::intToTime($model->video_length)])->hint('aaaa')?>
+        
+    <?= $form->field($model, 'question_mete', [
+        'template' => "{label}\n<div class=\"col-sm-4\">{input}</div>\n<div class=\"col-sm-4\">{error}</div>"
+    ])->widget(TouchSpin::classname(),  [
         'pluginOptions' => [
             'placeholder' => '题量 ...',
             'min' => 0,
-            'max' => 1000000000000000,
+            'max' => 999999,
         ],
     ]) ?>
     
-    <?= $form->field($model, 'case_number')->widget(TouchSpin::classname(),  [
+    <?= $form->field($model, 'case_number', [
+        'template' => "{label}\n<div class=\"col-sm-4\">{input}</div>\n<div class=\"col-sm-4\">{error}</div>"
+    ])->widget(TouchSpin::classname(),  [
         'pluginOptions' => [
             'placeholder' => '案例数...',
             'min' => 0,
-            'max' => 1000000000000000,
+            'max' => 999999,
         ],
     ]) ?>
     
-    <?= $form->field($model, 'activity_number')->widget(TouchSpin::classname(),  [
+    <?= $form->field($model, 'activity_number', [
+        'template' => "{label}\n<div class=\"col-sm-4\">{input}</div>\n<div class=\"col-sm-4\">{error}</div>"
+    ])->widget(TouchSpin::classname(),  [
         'pluginOptions' => [
             'placeholder' => '活动数 ...',
             'min' => 0,
-            'max' => 1000000000000000,
+            'max' => 999999,
         ],
     ]) ?>
     
     <h5><b>开发信息</b></h5>
     
     <?php
-        if(is_array($team)){
+        if(is_array($team))
             echo $form->field($model, 'team_id')->widget(Select2::classname(), [
                 'id' => 'coursemanage-team_id', 'data' => $team, 'options' => ['placeholder' => '请选择...']
             ]);
-        }
-        else{
-            echo Html::hiddenInput('CourseManage[team_id]', $team);
-        }
+        else
+            echo Html::activeHiddenInput($model, 'team_id', ['value' => $team]);
     ?>  
     
     <?php

@@ -79,7 +79,6 @@ class TaskController extends Controller
         return $this->render('index', [
             'twTool' => $twTool,
             'dataProvider' => $dataProvider,
-            'progress' => $this->getTwCourseProgress($taskIds),
             'operation' => $dtTool->getIsBelongToOwnOperate($taskIds, $taskStatus),
             'count' => $count,
         ]);
@@ -112,7 +111,6 @@ class TaskController extends Controller
             'model' => $model,
             'dtTool' => $dtTool,
             'twTool' => $twTool,
-            'progress' => $this->getTwCourseProgress($model->id),
             'annex' => $this->getAnnex($id),
         ]);
     }
@@ -213,7 +211,7 @@ class TaskController extends Controller
     }
     
     /**
-     * 通过审核操作
+     * 承接任务操作
      * @param integer $id
      * @return type
      * @throws NotAcceptableHttpException
@@ -234,10 +232,37 @@ class TaskController extends Controller
             $dtTool->UndertakeTask($model);
             return $this->redirect(['index']);
         } else {
-            return $this->renderPartial('undertake', [
+            return $this->renderAjax('undertake', [
                 'model' => $model,
                 'team' => $twTool->getHotelTeam(),
                 'undertake' => $dtTool->getHotelTeamMemberId(),
+            ]);
+        }
+    }
+    
+    /**
+     * 提交任务操作
+     * @param integer $id
+     * @return type
+     * @throws NotAcceptableHttpException
+     */
+    public function actionSubmitTask($id)
+    {
+        $model = $this->findModel($id);
+        /* @var $dtTool DemandTool */
+        $dtTool = DemandTool::getInstance();
+        if($model->undertakePerson->u_id != Yii::$app->user->id)
+            throw new NotAcceptableHttpException('无权限操作！');
+        if(!$model->getIsStatusDeveloping())
+            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
+        
+        if ($model->load(Yii::$app->request->post())) {
+            $dtTool->SubmitTask($model);
+            return $this->redirect(['index']);
+        } else {
+            return $this->renderPartial('submit_task', [
+                'model' => $model,
+                'isEmpty' => !empty($model->teamworkCourse) ? true : false,
             ]);
         }
     }
@@ -284,7 +309,7 @@ class TaskController extends Controller
         
         /* @var $dtTool DemandTool */
         $dtTool = DemandTool::getInstance();
-        $model->status = DemandTask::STATUS_ACCEPTANCE;
+        $model->status = DemandTask::STATUS_ACCEPTANCEING;
         $model->progress = $model->getStatusProgress();
         $model->reality_check_harvest_time = null;
         $dtTool->RecoveryTask($model);
@@ -293,7 +318,7 @@ class TaskController extends Controller
     
     /**
      * 取消任务
-     * @param type $id
+     * @param integer $id
      * @return type
      * @throws NotAcceptableHttpException
      */
@@ -302,14 +327,13 @@ class TaskController extends Controller
         $model = $this->findModel($id);
         if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CANCEL) && $model->create_by != \Yii::$app->user->id)
             throw new NotAcceptableHttpException('无权限操作！');
-        if(!($model->getIsStatusCheck() || $model->getIsStatusAcceptance()))
+        if(!($model->getIsStatusCheck() || $model->getIsStatusUndertake()))
             throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
         
         /* @var $dtTool DemandTool */
         $dtTool = DemandTool::getInstance();
         $post = Yii::$app->request->post();
         $cancel = ArrayHelper::getValue($post, 'reason');
-        $model->status = DemandTask::STATUS_CANCEL;
         
         if ($model->load($post)){
             $dtTool->CancelTask($model, $cancel);
@@ -322,9 +346,6 @@ class TaskController extends Controller
         
         
     }
-    
-    
-    
     
     /**
      * Deletes an existing DemandTask model.
@@ -350,7 +371,7 @@ class TaskController extends Controller
         Yii::$app->getResponse()->format = 'json';
         $courseId = $mark == null ? DemandTask::find()  
                         ->select('course_id')  
-                        ->where(['item_child_id'=> $id]) : null;         
+                        ->where(['and', ['item_child_id'=> $id], ['!=', 'status', DemandTask::STATUS_CANCEL]]) : null;         
         $errors = [];
         $items = [];
         try
@@ -425,7 +446,8 @@ class TaskController extends Controller
      */
     public function getCourses($itemChildId)
     {
-        $existedCourses = DemandTask::find()->where(['item_child_id' => $itemChildId])->all();
+        $existedCourses = DemandTask::find()
+                ->where(['and', ['item_child_id' => $itemChildId], ['!=', 'status', DemandTask::STATUS_CANCEL]])->all();
         $courses = Item::find()
                 ->where(['parent_id' => $itemChildId])
                 ->andFilterWhere(['NOT IN', 'id', ArrayHelper::getColumn($existedCourses, 'course_id')])
@@ -441,30 +463,6 @@ class TaskController extends Controller
     public function getExpert(){
         $expert = Expert::find()->with('user')->all();
         return ArrayHelper::map($expert, 'u_id','user.nickname');
-    }
-    
-    /**
-     * 获取团队工作课程任务进度
-     * @param integer|array $taskId             任务ID
-     * @return  array
-     */
-    public function getTwCourseProgress($taskId)
-    {
-        /* @var $dtTool TeamworkTool */
-        $twTool = TeamworkTool::getInstance();
-        $course = (new Query())
-                ->select(['id'])
-                ->from(CourseManage::tableName())
-                ->where(['demand_task_id' => $taskId])
-                ->all();
-        
-        $progress = (new Query())
-               ->select(['Demand_task.id', 'Tw_course_progress.progress'])
-               ->from(['Tw_course_progress' => $twTool->getCourseProgress(ArrayHelper::getColumn($course, 'id'))])
-               ->rightJoin(['Demand_task' => DemandTask::tableName()], 'Demand_task.id = Tw_course_progress.demand_task_id')
-               ->all();
-       
-        return ArrayHelper::map($progress, 'id', 'progress');
     }
     
     /**

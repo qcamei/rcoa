@@ -1,15 +1,15 @@
 <?php
 
-use common\models\demand\DemandCheck;
+use common\models\demand\DemandAcceptance;
 use frontend\modules\demand\assets\DemandAssets;
 use yii\web\View;
 
 
 /* @var $this View */
-/* @var $model DemandCheck */
+/* @var $model DemandAcceptance */
 
-$this->title = Yii::t('rcoa/demand', 'Demand Checks').':'.$model->task->course->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/demand', 'Demand Checks'), 'url' => ['index']];
+$this->title = Yii::t('rcoa/demand', 'Demand Acceptances').':'.$model->task->course->name;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/demand', 'Demand Acceptances'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -26,14 +26,14 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <div class="modal-footer">
-    <button type="button" class="btn btn-primary" id="create-check-save">确认</button>
+    <button type="button" class="btn btn-primary" id="create-acceptance-save">确认</button>
 </div>
 
 <script type="text/javascript">
     
-    $('#create-check-save').click(function()
+    $('#create-acceptance-save').click(function()
     {
-        $('#demand-check-form').submit();
+        $('#demand-acceptance-form').submit();
     });
 
 </script>

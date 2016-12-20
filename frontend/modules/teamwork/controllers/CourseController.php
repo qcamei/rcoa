@@ -2,7 +2,6 @@
 
 namespace frontend\modules\teamwork\controllers;
 
-use common\models\expert\Expert;
 use common\models\Position;
 use common\models\team\Team;
 use common\models\team\TeamMember;
@@ -12,7 +11,6 @@ use common\models\teamwork\CourseProducer;
 use common\models\teamwork\ItemManage;
 use frontend\modules\teamwork\utils\TeamworkTool;
 use wskeee\framework\FrameworkManager;
-use wskeee\framework\models\Item;
 use wskeee\framework\models\ItemType;
 use wskeee\rbac\RbacName;
 use Yii;
@@ -227,9 +225,9 @@ class CourseController extends Controller
             $twTool->ChangeTask($model);
             return $this->redirect(['view', 'id' => $model->id]);
         }else{
-            return $this->renderPartial('change', [
+            return $this->renderAjax('change', [
                 'model' => $model,
-                'team' => $this->getTeam(),
+                'team' => $this->getTeam($model->team_id),
                 'coursePrincipal' => $this->getTeamMemberList(),
             ]);
         }
@@ -292,35 +290,28 @@ class CourseController extends Controller
      */
     public function actionCarryOut($id)
     {
-        /* @var $twTool TeamworkTool */
-        $twTool = TeamworkTool::getInstance();
         /* @var $model CourseManage */
         $model = $this->findModel($id);
+        /* @var $twTool TeamworkTool */
+        $twTool = TeamworkTool::getInstance();
         CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($model->id)->all(), 'id', 'progress');
         $model->scenario = CourseManage::SCENARIO_CARRYOUT;
         if(!(($twTool->getIsAuthority('is_leader', 'Y') && $model->create_by == \Yii::$app->user->id)
             || $twTool->getIsAuthority('id', $model->course_principal)
             || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
-            throw new NotFoundHttpException('无权限操作！');
-        
-        if($model != null && CourseManage::$progress[$model->id] != 100)
-            throw new NotFoundHttpException('当前进度必须为100%！');
-        
+            throw new NotFoundHttpException('无权限操作！');        
         if($model->getIsCarryOut())
             throw new NotFoundHttpException('该课程'.$model->getStatusName().'！');
         
-        $model->real_carry_out = date('Y-m-d H:i', time());
-        $model->status = CourseManage::STATUS_CARRY_OUT;
-        if ($model->validate() && $model->save()){
-            $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            $errors = [];
-            foreach($model->getErrors() as $error){
-                foreach($error as $name=>$value){
-                    $errors[] = $value;
-                }
-            }
-            throw new NotFoundHttpException (implode($errors));
+        if($model->load(Yii::$app->request->post())){
+            $twTool->CarryOutTask($model);
+            return $this->redirect(['view', 'id' => $model->id]);
+        }else{
+            return $this->renderAjax('carry_out', [
+                'model' => $model,
+                'producerList' => $this->getTeamMemberList(),
+                'isComplete' => CourseManage::$progress[$model->id] != 100 ? true : false,
+            ]);
         }
     }
     
@@ -379,7 +370,7 @@ class CourseController extends Controller
     
     /**
      * 获取行业
-     * @return type
+     * @return array
      */
     public function getItemType()
     {
@@ -389,42 +380,44 @@ class CourseController extends Controller
     
     /**
      * 获取层次/类型
-     * @return type
+     * @return array
      */
     public function getCollegesForSelect()
     {
         /* @var $fwManager FrameworkManager */
         $fwManager = Yii::$app->get('fwManager');
+        
         return ArrayHelper::map($fwManager->getColleges(), 'id', 'name');
     }
     
     /**
      * 获取专业/工种 or 课程
-     * @param type $itemId
-     * @return type
+     * @param integer $parentId           父级ID
+     * @return array
      */
-    protected function getChildren($itemId)
+    protected function getChildren($parentId)
     {
         /* @var $fwManager FrameworkManager */
         $fwManager = Yii::$app->get('fwManager');
-        return ArrayHelper::map($fwManager->getChildren($itemId), 'id', 'name');
+        
+        return ArrayHelper::map($fwManager->getChildren($parentId), 'id', 'name');
     }
     
     /**
      * 获取所有团队
-     * @return Team $team
+     * @param integer $teamId      团队ID
+     * @return array
      */
-    public function getTeam()
+    public function getTeam($teamId = null)
     {
-        /* @var $team Team */
-        $team = Team::find()->orderBy('index asc')->all();
+        $team = Team::find()->andFilterWhere(['not in', 'id', $teamId])->orderBy('index asc')->all();
         
         return ArrayHelper::map($team, 'id', 'name');
     }
 
     /**
      * 获取团队成员
-     * @return type
+     * @return array
      */
     public function getTeamMemberList()
     {
@@ -435,8 +428,7 @@ class CourseController extends Controller
                     ->leftJoin(['Position' => Position::tableName()], 'Position.id = Member.position_id')
                     ->where(['!=', 'Member.is_delete', TeamMember::SURE_DELETE])
                     ->orderBy('Team.index asc, Position.level asc')
-                    ->with('user')
-                    ->with('team')
+                    ->with('user', 'team')
                     ->all();
         
         return ArrayHelper::map($teamMember, 'id', 'user.nickname', 'team.name');
@@ -444,8 +436,7 @@ class CourseController extends Controller
     
     /**
      * 获取当前用户下的所有团队成员
-     * @param type $u_id    用户ID
-     * @return type
+     * @return array
      */
     public function getSameTeamMember()
     {
@@ -457,7 +448,6 @@ class CourseController extends Controller
                         ->andWhere(['!=', 'is_delete', TeamMember::SURE_DELETE])
                         ->orderBy('Position.level asc')
                         ->with('user')
-                        //->with('position')
                         ->all();
         
         return ArrayHelper::map($sameTeamMembers, 'id', 'user.nickname');
@@ -465,8 +455,8 @@ class CourseController extends Controller
 
     /**
      * 获取已分配的制作人
-     * @param type $courseId   课程ID
-     * @return type
+     * @param integer $courseId         课程ID
+     * @return object
      */
     public function getAssignProducers($courseId){
         
@@ -476,8 +466,7 @@ class CourseController extends Controller
                            ->leftJoin(['Member' => TeamMember::tableName()], 'Member.id = Producer.producer')
                            ->where(['Producer.course_id' => $courseId])
                            ->orderBy('Member.`index` asc, Member.is_leader desc')
-                           ->with('producerOne')
-                           ->with('producerOne.user')
+                           ->with('producerOne', 'producerOne.user')
                            ->all();
         
         return $assignProducers;
@@ -485,8 +474,8 @@ class CourseController extends Controller
     
     /**
      * 获取课程附件
-     * @param type $course_id
-     * @return type
+     * @param integer $course_id        课程ID
+     * @return object
      */
     public function getCourseAnnex($course_id)
     {
@@ -499,7 +488,7 @@ class CourseController extends Controller
     
     /**
      * 计算课程开发周报月份
-     * @param type $model
+     * @param CourseManage $model
      * @return array
      */
     public function getWeeklyMonth($model)

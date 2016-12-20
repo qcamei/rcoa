@@ -56,23 +56,26 @@ use yii\widgets\ActiveForm;
         'data' => $teachers, 'options' => ['placeholder' => '请选择...']
     ]) ?>
 
-    <?= $form->field($model, 'lesson_time')->widget(TouchSpin::classname(),  [
+    <?= $form->field($model, 'lesson_time', [
+        'template' => "{label}\n<div class=\"col-sm-4\">{input}</div>\n<div class=\"col-sm-4\">{error}</div>"
+    ])->widget(TouchSpin::classname(),  [
         'pluginOptions' => [
             'placeholder' => '学时 ...',
             'min' => 0,
-            'max' => 1000000000000000,
-            
+            'max' => 999999,
         ],
     ]) ?>
     
-    <?= $form->field($model, 'credit')->widget(TouchSpin::classname(),  [
+    <?= $form->field($model, 'credit', [
+        'template' => "{label}\n<div class=\"col-sm-4\">{input}</div>\n<div class=\"col-sm-4\">{error}</div>"
+    ])->widget(TouchSpin::classname(),  [
         'pluginOptions' => [
             'placeholder' => '学分 ...',
             'min' => 0,
-            'max' => 1000000000000000,
+            'max' => 999999,
         ],
     ]) ?>
-
+  
     <?= $form->field($model, 'course_description')->textarea(['value' => '无', 'rows' => 3]) ?>
 
     <h5><b>开发信息</b></h5>

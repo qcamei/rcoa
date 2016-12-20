@@ -2,6 +2,7 @@
 
 namespace common\models\demand;
 
+use common\models\User;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
@@ -21,9 +22,15 @@ use yii\db\ActiveRecord;
  * @property integer $status                    状态
  *
  * @property DemandTask $task                   获取需求任务
+ * @property User $createBy                     获取获取创建者
  */
 class DemandAcceptance extends ActiveRecord
 {
+    /** 未完成 */
+    const STATUS_NOTCOMPLETE = 0;
+    /** 已完成 */
+    const STATUS_COMPLETE = 1;
+    
     /**
      * @inheritdoc
      */
@@ -62,8 +69,8 @@ class DemandAcceptance extends ActiveRecord
         return [
             'id' => Yii::t('rcoa/demand', 'ID'),
             'task_id' => Yii::t('rcoa/demand', 'Task ID'),
-            'title' => Yii::t('rcoa/demand', 'Title'),
-            'remark' => Yii::t('rcoa/demand', 'Remark'),
+            'title' => Yii::t('rcoa', 'Title'),
+            'remark' => Yii::t('rcoa', 'Remark'),
             'create_by' => Yii::t('rcoa/demand', 'Create By'),
             'created_at' => Yii::t('rcoa/demand', 'Created At'),
             'updated_at' => Yii::t('rcoa/demand', 'Updated At'),
@@ -79,5 +86,14 @@ class DemandAcceptance extends ActiveRecord
     public function getTask()
     {
         return $this->hasOne(DemandTask::className(), ['id' => 'task_id']);
+    }
+    
+    /**
+     * 获取创建者
+     * @return ActiveQuery
+     */
+    public function getCreateBy()
+    {
+        return $this->hasOne(User::className(), ['id' => 'create_by']);
     }
 }

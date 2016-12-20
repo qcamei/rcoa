@@ -1,6 +1,7 @@
 <?php
 namespace frontend\modules\multimedia\utils;
 
+use common\config\AppGlobalVariables;
 use common\models\multimedia\MultimediaAssignTeam;
 use common\models\multimedia\MultimediaProducer;
 use common\models\multimedia\MultimediaTask;
@@ -167,10 +168,10 @@ class MultimediaNoticeTool {
         $assignPersonId = ArrayHelper::getValue($assignPerson, 'u_id');
         
         //创建job表任务
-        $jobManager->createJob(10, $model->id, $model->name, 
+        $jobManager->createJob(AppGlobalVariables::getSystemId(), $model->id, $model->name, 
                 '/multimedia/default/view?id='.$model->id, $model->getStatusName(), $model->progress);
         //添加通知
-        $jobManager->addNotification(10, $model->id, ArrayHelper::merge([$model->create_by], $assignPersonId));
+        $jobManager->addNotification(AppGlobalVariables::getSystemId(), $model->id, ArrayHelper::merge([$model->create_by], $assignPersonId));
     }
     
     /**
@@ -186,11 +187,11 @@ class MultimediaNoticeTool {
         $producerId = array_filter(ArrayHelper::getColumn($producer, 'u_id'));
        
         //更新任务通知表
-        $jobManager->updateJob(10, $model->id, ['progress'=> $model->progress, 'status' => $model->getStatusName()]); 
+        $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status' => $model->getStatusName()]); 
         //清空用户任务通知关联
-        $jobManager->removeNotification(10, $model->id, $producerId);
+        $jobManager->removeNotification(AppGlobalVariables::getSystemId(), $model->id, $producerId);
         //添加用户任务通知关联
-        $jobManager->addNotification(10, $model->id, $post);
+        $jobManager->addNotification(AppGlobalVariables::getSystemId(), $model->id, $post);
     }
     
     /**
@@ -208,9 +209,9 @@ class MultimediaNoticeTool {
         //全并两个数组的值
         $jobUserAll = ArrayHelper::merge(ArrayHelper::merge([$model->create_by], $team), $producerId);
         //修改job表任务
-        $jobManager->updateJob(10,$model->id,['progress'=> $model->progress, 'status'=>$model->getStatusName()]); 
+        $jobManager->updateJob(AppGlobalVariables::getSystemId(),$model->id,['progress'=> $model->progress, 'status'=>$model->getStatusName()]); 
         //修改通知
-        $jobManager->cancelNotification(10, $model->id, $jobUserAll);
+        $jobManager->cancelNotification(AppGlobalVariables::getSystemId(), $model->id, $jobUserAll);
     }
     
     /**
