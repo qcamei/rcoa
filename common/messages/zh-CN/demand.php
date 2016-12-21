@@ -21,6 +21,7 @@ return[
     'Demand Acceptances' => '验收记录',
     'Update Demand Acceptance' => '更新验收',
     'Demand Acceptance View' => '验收详情',
+    'Demand Task Products' => '课程产品',
     
     //需求任务-字段
     'Item Type' => '行业',

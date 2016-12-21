@@ -31,9 +31,9 @@ use yii\db\ActiveRecord;
  */
 class Product extends ActiveRecord
 {
-    //分类
+    /** 分类 */
     const CLASSIFICATION = 1;
-    //产品
+    /** 产品 */
     const GOODS = 2;
 
     /**

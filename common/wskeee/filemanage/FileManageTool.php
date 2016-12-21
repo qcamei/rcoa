@@ -43,9 +43,9 @@ class FileManageTool{
         $pid = $bread['id'];
         $breadArray = [];
         while($pid > 0){
-                $breadOne = FileManage::find()->where(['id' => $pid])->one();
-                $pid = $breadOne['pid'];
-                $breadArray[] = $breadOne;
+            $breadOne = FileManage::find()->where(['id' => $pid])->one();
+            $pid = $breadOne['pid'];
+            $breadArray[] = $breadOne;
         }
         $breadArray = array_reverse($breadArray);	//array_reverse返回一个单元顺序相反的数组
         return $breadArray;
@@ -56,7 +56,7 @@ class FileManageTool{
      * @param type $id
      * @return type
      */
-   public function getFileManageLeftList($id = null)
+    public function getFileManageLeftList($id = null)
     {
         //读取下一级
         $leftListArray = FileManage::find()->where(['pid' => $id])->orderBy('type ASC')->all();

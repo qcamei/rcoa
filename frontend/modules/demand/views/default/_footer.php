@@ -46,7 +46,7 @@ use yii\helpers\Html;
                 ],
                 [   //任务页-子按钮-新建
                     'controllerId'=>'task',                             //控制ID
-                    'name'=>'新建',                                     //名称
+                    'name'=>'创建任务',                                     //名称
                     'icon'=>'/filedata/demand/image/create.png',        //图标路径
                     'options'=>['/demand/task/create'],                 //跳转选项，第一索引为地址，第二起为传参
                     'class'=>'footer-demand-menu-item submenu-right',   //样式
@@ -77,5 +77,5 @@ use yii\helpers\Html;
 </div>
 
 <?php
-        DemandAssets::register($this);
+    DemandAssets::register($this);
 ?>
