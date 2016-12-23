@@ -20,6 +20,9 @@ class UeditorAsset extends AssetBundle
     //public $basePath = '@webroot/assets';
     //public $baseUrl = '@web/assets';
     public $sourcePath = '@common/widgets/ueditor';
+    public $publishOptions = [
+        'forceCopy'=>YII_DEBUG
+    ];
     public $css = [
     ];
     public $js = [
