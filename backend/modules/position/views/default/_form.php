@@ -18,16 +18,14 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
     
     <?php 
-        if(!$model->isNewRecord){
-            echo $form->field($model, 'level')->widget(TouchSpin::classname(),  [
-                    'pluginOptions' => [
-                        'placeholder' => '顺序 ...',
-                        'min' => -1,
-                        'max' => 999999999,
-                    ],
-                ]);
-        }
-    ?>
+        echo $form->field($model, 'level')->widget(TouchSpin::classname(), [
+            'pluginOptions' => [
+                'placeholder' => '顺序 ...',
+                'min' => -1,
+                'max' => 999999999,
+            ],
+        ]);
+?>
 
     <?= $form->field($model, 'des')->textInput(['maxlength' => true]) ?>
     
