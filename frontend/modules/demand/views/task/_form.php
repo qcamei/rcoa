@@ -12,6 +12,7 @@ use yii\widgets\ActiveForm;
 /* @var $this View */
 /* @var $model DemandTask */
 /* @var $form ActiveForm */
+
 ?>
 
 <div class="demand-task-form">
@@ -179,6 +180,15 @@ use yii\widgets\ActiveForm;
     ?>
     
     <?php ActiveForm::end(); ?>
+    
+    <?php
+        if($mark == true)
+            echo $this->render('/product/index', [
+                //'model' => $model->demandTaskProducts,
+                'task_id' => $model->id,
+                'mark' => $mark,
+            ]);
+    ?>
 
 </div>
 
@@ -203,7 +213,7 @@ $js =
         $('#select2-demandtask-course_id-container').html('<span class="select2-selection__placeholder">请选择...</span>');
         wx(url, element, '请选择...');
     });
-   
+       
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>

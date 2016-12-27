@@ -45,6 +45,7 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa/demand', 'Update');
         'teachers' => $teachers,
         'team' => $team,
         'annex' => $annex,
+        'mark' => $mark,
     ]) ?>
 
 </div>
@@ -52,10 +53,13 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa/demand', 'Update');
 <div class="controlbar">
     <div class="container">
         <?= Html::a(Yii::t('rcoa', 'Back'), ['view', 'id' => $model->id], ['class' => 'btn btn-default']) ?>
-        <?= Html::a(
-                $model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'),
-                'javascript:;', 
-                ['id'=>'submit', 'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?php
+            if($mark == null)
+                echo Html::a(
+                    $model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'),
+                    'javascript:;', 
+                    ['id'=>'submit', 'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) 
+        ?>
     </div>
 </div>
 

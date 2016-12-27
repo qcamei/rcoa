@@ -46,6 +46,8 @@ $this->params['breadcrumbs'][] = $this->title;
         }
     ?>
     
+    <?= $this->render('/product/index'); ?>
+    
     <?= $this->render('/check/index',[
         'model' => $model->demandChecks,
     ]) ?>

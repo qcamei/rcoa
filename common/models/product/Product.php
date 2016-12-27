@@ -65,6 +65,7 @@ class Product extends ActiveRecord
     public function rules()
     {
         return [
+            [['type', 'level', 'created_at', 'updated_at', 'parent_id'], 'required'],
             [['type', 'level', 'created_at', 'updated_at', 'parent_id'], 'integer'],
             [['unit_price'], 'number'],
             [['des'], 'string'],

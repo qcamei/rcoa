@@ -1,44 +1,79 @@
 <?php
 
 use common\models\demand\DemandTaskProduct;
-use frontend\modules\demand\assets\PageListAssets;
+use common\models\product\Product;
+use kartik\widgets\TouchSpin;
+use yii\helpers\Html;
 use yii\web\View;
+use yii\widgets\ActiveForm;
 
 /* @var $this View */
 /* @var $model DemandTaskProduct */
+/* @var $product Product */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/demand', 'Demand Task Products'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="details-backdrop"></div>
-<div class="details-dialog">
-    <div class="details-content">
-        <div class="details-header">
-            <button id="close" type="button" class="close" ><span>&times;</span></button>
-        </div>
 
-        <div class="details-body">
-            <?= $model->id?>
-        </div>
+    <div class="details-dialog">
+        <div class="details-content">
+            <div class="details-header">
+                <button id="close" type="button" class="close" ><span>&times;</span></button>
+            </div>
 
-        <div class="details-footer">
-            <div class="footer-content">
-                <div class="content-left">
-                    <span><b>合计：￥500000</b><span><br/>
+            <div class="details-body">
+                <div class="body-header">
+                    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-5 edge">
+                        <?= Html::img([$product->image]) ?>
+                    </div>
+                    <div class="col-lg-9 col-md-8 col-sm-8 col-xs-7 edge">
+                        <p>【<?= $product->name?>】</p>
+                        <p style="color: #ccc;"><?= $product->des ?></p>
+                        <p style="color: #f00;"><?= $product->currency.$product->unit_price ?></p>
+                    </div>
                 </div>
-                <div class="content-right">
-                    <button type="button" class="btn btn-default btn-sm" id="product-list">已选列表</button>
-                    <button type="button" class="btn btn-primary btn-sm" id="product-save">确认</button>
+                <div class="body-footer">
+                    <ul class="nav nav-tabs" role="tablist" id="myTab">
+                        <li role="presentation" class="active"><a href="#home" role="tab" data-toggle="tab">详情</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="home">
+                            <p><?= $product->productDetail->details ?></p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div> 
-</div>
+
+            <div class="details-footer">
+
+                <div class="footer-left">
+                    <p><b>合计：￥500000</b></p>
+                </div>
+
+                <div class="footer-right">
+
+                    <?= Html::a('确认', 'javascript:;', ['id' => 'product-save', 'class' => 'btn btn-primary btn-sm', 'style' => 'float: right; margin-left:5px;'])?>
+
+                    <?= $this->render('_form', [
+                        'model' => $model,
+                    ]) ?>
+                </div>
+
+            </div>
+        </div> 
+    </div>
 <?php
 $js = <<<JS
     $("#close").click(function(){
-        $(".details-modal").removeClass('details-modal-show').attr('style','display: none;');
+        $('#details').animate({top:'1000px'},'fast','swing');
+    });
+    $("#product-save").click(function(){
+        $.post("/demand/product/save?task_id=$task_id&product_id=$product_id", $('#demand-task--product-form').serialize(), function(data){
+            if(data['type'] == 1){
+                alert(data['error']);
+                $('#details').animate({top:'1000px'},'fast','swing');
+            }else{
+                alert(data['error']);
+            }
+        });
     });
 JS;
     $this->registerJs($js, View::POS_END);
