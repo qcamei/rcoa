@@ -15,40 +15,43 @@ $this->title = Yii::t('rcoa/demand', 'Demand Task Products');
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
-<div class="modal-header">
-    <div class="col-xs-1 modal-operation">
-        <button type="button" id="pl-comeback" class="return">
-            <span aria-hidden="true">&cularr;</span>
-        </button>
-    </div>
-    <div class="col-xs-9 modal-title"><span><?= $this->title ?></span></div>
-    <div class="col-xs-1 modal-operation" style="float: right;">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeMyModal();">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-</div>
-
-<div class="modal-body">
-    <div id="e-pl" class="e-pl"></div>
-    <div id="details" class="details-modal">
-        <div class="product-backdrop"></div>
-    </div>
-</div>
-
-<div class="modal-footer" style="padding:5px; text-align: inherit;">
-    <div class="modal-footer-content">
-        <div class="content-left">
-            <span><b>合计:<span class="totals">￥<?= number_format($totals, 2); ?></span></b><span><br/>
-            <span class="lesson">总学时:<?= $lessons; ?>&nbsp;学时</span>
+ <div class="modal-dialog list-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header list-header">
+            <div class="col-xs-1 list-operation">
+                <button type="button" id="pl-comeback" class="return">
+                    <span aria-hidden="true">&cularr;</span>
+                </button>
+            </div>
+            <div class="col-xs-9 modal-title list-title"><span><?= $this->title ?></span></div>
+            <div class="col-xs-1 list-operation" style="float: right;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeMyModal();">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
         </div>
-        <div class="content-right">
-            <a class="btn btn-default btn-sm disabled" id="product-list">已选列表</a>
-            <a class="btn btn-primary btn-sm" id="product-close" onclick="closeMyModal();">确认</a>
+
+        <div class="modal-body list-body">
+            <div id="e-pl" class="e-pl"></div>
+            <div id="details" class="details-modal">
+                <div class="product-backdrop"></div>
+            </div>
+        </div>
+
+        <div class="modal-footer list-footer" style="padding:5px; text-align: inherit;">
+            <div class="list-footer-content">
+                <div class="content-left">
+                    <span><b>合计:<span class="totals">￥<?= number_format($totals, 2); ?></span></b><span><br/>
+                    <span class="lesson">总学时:<?= $lessons; ?>&nbsp;学时</span>
+                </div>
+                <div class="content-right">
+                    <a class="btn btn-default btn-sm disabled" id="product-list">已选列表</a>
+                    <a class="btn btn-primary btn-sm" id="product-close" onclick="closeMyModal();">确认</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
 
 
 <?php
@@ -58,7 +61,7 @@ $js = <<<JS
     function closeMyModal(){
         $('.myModal').modal('hide'); 
         $('.myModal').on('hidden.bs.modal', function(){
-            $("#demand-task-product-list").load("/demand/product/index?task_id=$task_id&mark=$mark");
+            $("#demand-task-product-list").load("/demand/product/index?task_id=$task_id&mark=1");
         });
     }
     

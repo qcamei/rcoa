@@ -344,6 +344,15 @@ class DemandTask extends ActiveRecord
     }
     
     /**
+     * 获取是否在【默认】状态
+     * @return type
+     */
+    public function getIsStatusDefault()
+    {
+        return $this->status == self::STATUS_DEFAULT;
+    }
+    
+    /**
      * 获取是否在【待审核】状态
      * @return type
      */

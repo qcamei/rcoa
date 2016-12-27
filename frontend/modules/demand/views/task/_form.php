@@ -218,12 +218,12 @@ $js =
     });
     
     //加载已选课程产品列表
-    $("#demand-task-product-list").load("/demand/product/index?task_id=$model->id&mark=$mark", null, function(){
+    $("#demand-task-product-list").load("/demand/product/index?task_id=$model->id&mark=1", null, function(){
         /** 判断是否为刚开始创建课程产品 */
         if($mark == 1){
            var urlf = $("#add").attr("href");
            $(".myModal").modal('show');
-           $(".myModal .modal-dialog .modal-content").load(urlf);
+           $(".myModal").load(urlf);
         }
     });
       

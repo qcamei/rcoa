@@ -36,7 +36,7 @@ use yii\widgets\ActiveForm;
 
 <script type="text/javascript">
     /** 承接操作 提交表单 */
-    $(" #submit-task-save").click(function()
+    $("#submit-task-save").click(function()
     {
         $('#form-submit-task').submit();
     });

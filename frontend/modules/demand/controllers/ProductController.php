@@ -47,10 +47,9 @@ class ProductController extends Controller
     /**
      * Lists all DemandTaskProduct models.
      * @param integer $task_id
-     * @param integer $mark               标识：1执行; 0不执行(默认为0)
      * @return mixed
      */
-    public function actionList($task_id, $mark = 0)
+    public function actionList($task_id)
     {
         $productTotal = $this->getProductTotal($task_id);
         
@@ -59,7 +58,6 @@ class ProductController extends Controller
             'totals' => !empty(ArrayHelper::getValue($productTotal, 'totals')) ? ArrayHelper::getValue($productTotal, 'totals') : 0,
             'lessons' => !empty(ArrayHelper::getValue($productTotal, 'lessons')) ? ArrayHelper::getValue($productTotal, 'lessons') : 0,
             'task_id' => $task_id,
-            'mark' => $mark,
         ]);
     }
     

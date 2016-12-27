@@ -149,6 +149,29 @@ class TaskController extends Controller
             ]);
         }
     }
+    
+    /**
+     * 任务提交审核操作
+     * @param integer $id
+     * @return type
+     * @throws NotAcceptableHttpException
+     */
+    public function actionSubmitCheck($id)
+    {
+        $this->layout = '@app/views/layouts/main';
+        if(!\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE))
+            throw new NotAcceptableHttpException('无权限操作！');
+        $model = $this->findModel($id);
+        $model->status = DemandTask::STATUS_CHECK;
+        $model->progress = $model->getStatusProgress();
+        /* @var $dtTool DemandTool */
+        $dtTool = DemandTool::getInstance();
+        if(!$model->getIsStatusDefault())
+            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        
+        $dtTool->TaskSubmitCheck($model);
+        return $this->redirect(['index']);
+    }
 
     /**
      * Updates an existing DemandTask model.

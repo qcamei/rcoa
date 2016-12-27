@@ -65,9 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ]) ?>
 
 <div class="demand-task">
-    
-    <?= $this->render('_form_model')?>
-    
+    <?= $this->render('_form_model')?>    
 </div>
 
 <?php

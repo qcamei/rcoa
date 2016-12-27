@@ -61,7 +61,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <p><span class="lesson">总学时：<?= $lessons ?>&nbsp;学时</span></p>
 </div>
 <div class="demand-task">
-    <?= $this->render('/task/_form_model')?>
+    <?= isset($mark) && $mark == true ? $this->render('/task/_form_model') : '' ; ?>
 </div>
 
 <?php
@@ -81,7 +81,7 @@ JS;
     {
         var urlf = $(this).attr("href");
         $(".myModal").modal('show');
-        $(".myModal .modal-dialog .modal-content").load(urlf);
+        $(".myModal").load(urlf);
         return false;
     }); 
     /** 单击产品列表显示产品详情  */
@@ -106,7 +106,8 @@ JS;
         $.post("/demand/product/deletes?task_id="+data_t+"&product_id="+data_p,function(data){
             if(data['type'] == 1){
                 alert(data['error']);
-                $(obj).parent().parent().remove();
+                //$(obj).parent().parent().remove();
+                $("#demand-task-product-list").load("/demand/product/index?task_id="+data_t+"&mark=1");
             }else{
                 alert(data['error']);
             }

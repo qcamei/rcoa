@@ -89,22 +89,22 @@
 /**
  * 模态框样式
  */
-.demand-task .modal-header{
+.list-header{
     padding: 25px 15px;
 }
-.modal-title{
+.list-title{
     padding: 0px;
     top: -10px;
     text-align: center;
 }
-.modal-title span{
+.list-title span{
     font-size: 20px;
 }
-.modal-operation{
+.list-operation{
     padding: 0px;
     top: -5px;
 }
-.demand-task .close{
+.list-operation .close{
     margin-right: -10px;
 }
 .return {
@@ -135,16 +135,16 @@ button.return {
     filter: alpha(opacity=20);
     opacity: .2;
 }
-.modal-body{
+.list-body{
     width: 100%;
     height: 445px;
 }
-.demand-task .modal-body{
+.list-body{
     padding: 0px 5px;
     overflow-x: hidden; 
     overflow-y: hidden; 
 }
-.modal-footer-content{
+.list-footer-content{
     height: 40px;
 }
 .content-left{
@@ -290,10 +290,10 @@ button.return {
   
 }
 @media (min-width: 768px){
-    .demand-task .modal-dialog {
+    .list-dialog{
         width: 700px;
     }
-    .modal-body{
+    .list-body{
         height: 600px;
     }
     .details-dialog {
@@ -304,10 +304,10 @@ button.return {
     }
 }
 @media (min-width: 992px){
-    .demand-task .modal-dialog {
+    .list-dialog{
         width: 950px;
     }
-    .modal-body{
+    .list-body{
         height: 490px;
     }
     .details-dialog {
@@ -318,10 +318,10 @@ button.return {
     }
 }
 @media (min-width: 1200px){
-    .demand-task .modal-dialog {
+    .list-dialog{
         width: 1150px;
     }
-    .modal-body{
+    .list-body{
         height: 700px;
     }
     .details-dialog {

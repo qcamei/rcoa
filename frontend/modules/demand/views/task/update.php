@@ -52,7 +52,9 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa/demand', 'Update');
     <div class="container">
         <?= Html::a(Yii::t('rcoa', 'Back'), ['view', 'id' => $model->id], ['class' => 'btn btn-default']) ?>
         <?php
-            if($mark == null)
+            if($mark == true)
+                echo Html::a('提交审核', ['submit-check', 'id' => $model->id], ['class' => 'btn btn-primary']);
+            else    
                 echo Html::a(
                     $model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'),
                     'javascript:;', 
@@ -64,6 +66,8 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa/demand', 'Update');
 <?php
 $js = 
 <<<JS
+   
+    /** 任务更新操作 提交表单 */
     $('#submit').click(function()
     {
         $('#demand-task-form').submit();

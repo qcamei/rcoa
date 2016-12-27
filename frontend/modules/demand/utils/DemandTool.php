@@ -50,8 +50,6 @@ class DemandTool {
                 $this->saveDemandOperation($model->id, $model->status);
                 $this->saveOperationUser($model->id, $user);
                 $this->saveDemandTaskAnnex($model->id, (!empty($post['DemandTaskAnnex']) ? $post['DemandTaskAnnex'] : []));
-                $demandNotice->saveJobManager($model);
-                $demandNotice->sendAuditorNotification($model, $model->create_team, '任务待审核', 'demand/Create-html');
             }else
                 throw new \Exception($model->getErrors());
             
@@ -60,6 +58,33 @@ class DemandTool {
         }catch (\Exception $ex) {
             $trans ->rollBack(); //回滚事务
             throw new NotFoundHttpException("操作失败！".$ex->getMessage()); 
+        }
+    }
+    
+    /**
+     * 任务提交审核操作
+     * @param DemandTask $model
+     */
+    public function TaskSubmitCheck($model)
+    {
+        /* @var $demandNotice DemandNoticeTool */
+        $demandNotice = DemandNoticeTool::getInstance();
+        
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {
+            if ($model->save(false, ['status', 'progress'])){
+                $demandNotice->saveJobManager($model);
+                $demandNotice->sendAuditorNotification($model, $model->create_team, '任务待审核', 'demand/Create-html');
+            }else
+                throw new \Exception($model->getErrors());
+            
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        } catch (\Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
     }
     
