@@ -2,10 +2,9 @@
 
 use common\models\demand\DemandTaskProduct;
 use common\models\product\Product;
-use kartik\widgets\TouchSpin;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
-use yii\widgets\ActiveForm;
 
 /* @var $this View */
 /* @var $model DemandTaskProduct */
@@ -45,7 +44,7 @@ use yii\widgets\ActiveForm;
             <div class="details-footer">
 
                 <div class="footer-left">
-                    <p><b>合计：￥500000</b></p>
+                    <p><b>合计:<span class="totals">￥<?= number_format($totals, 2); ?></span></b></p>
                 </div>
 
                 <div class="footer-right">
@@ -62,19 +61,26 @@ use yii\widgets\ActiveForm;
     </div>
 <?php
 $js = <<<JS
+    /** 隐藏产品详情 */    
     $("#close").click(function(){
         $('#details').animate({top:'1000px'},'fast','swing');
     });
+    
+    /** 提交表单操作 */
     $("#product-save").click(function(){
         $.post("/demand/product/save?task_id=$task_id&product_id=$product_id", $('#demand-task--product-form').serialize(), function(data){
             if(data['type'] == 1){
                 alert(data['error']);
                 $('#details').animate({top:'1000px'},'fast','swing');
+                $(".myModal .modal-dialog .modal-content").load("/demand/product/list?task_id=$task_id");
             }else{
                 alert(data['error']);
             }
         });
     });
+        
+    /** 格式化所有价钱 */
+    format(".totals");
 JS;
     $this->registerJs($js, View::POS_END);
 ?>

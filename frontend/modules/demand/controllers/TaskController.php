@@ -185,7 +185,7 @@ class TaskController extends Controller
                 'teachers' => $this->getExpert(),
                 'team' => $twTool->getHotelTeam(),
                 'annex' => $this->getAnnex($model->id),
-                'mark' => $mark,
+                'mark' => $mark != null ? 1 : 0,
             ]);
         }
     }

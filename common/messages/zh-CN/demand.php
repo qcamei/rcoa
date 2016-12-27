@@ -10,7 +10,8 @@ return[
     //需求任务-公共
     'Demand Tasks' => '需求任务',
     'Demand View' => '任务详情',
-    'Create Demand Task' => '创建需求任务',
+    'Create Demand Task' => '创建-需求任务',
+    'Update Demand Task' => '更新-需求任务',
     'Demand Task Auditors' => '审核人指派',
     'Create Demand Task Auditor' => '创建-审核人指派',
     'Update Demand Task Auditor' => '更新-审核人指派',

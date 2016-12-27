@@ -4,6 +4,7 @@ use common\models\demand\searchs\DemandTaskProductSearch;
 use frontend\modules\demand\assets\DemandAssets;
 use frontend\modules\demand\assets\PageListAssets;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 use yii\web\View;
 
 /* @var $this View */
@@ -16,11 +17,15 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="modal-header">
     <div class="col-xs-1 modal-operation">
-        <button type="button" id="pl-comeback" class="return"><span aria-hidden="true">&cularr;</span></button>
+        <button type="button" id="pl-comeback" class="return">
+            <span aria-hidden="true">&cularr;</span>
+        </button>
     </div>
     <div class="col-xs-9 modal-title"><span><?= $this->title ?></span></div>
     <div class="col-xs-1 modal-operation" style="float: right;">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeMyModal();">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
 </div>
 
@@ -34,12 +39,12 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="modal-footer" style="padding:5px; text-align: inherit;">
     <div class="modal-footer-content">
         <div class="content-left">
-            <span><b>合计：￥500000</b><span><br/>
-            <span class="lesson">合计学时：243学时</span>
+            <span><b>合计:<span class="totals">￥<?= number_format($totals, 2); ?></span></b><span><br/>
+            <span class="lesson">总学时:<?= $lessons; ?>&nbsp;学时</span>
         </div>
         <div class="content-right">
             <a class="btn btn-default btn-sm disabled" id="product-list">已选列表</a>
-            <a class="btn btn-primary btn-sm" id="product-close">确认</a>
+            <a class="btn btn-primary btn-sm" id="product-close" onclick="closeMyModal();">确认</a>
         </div>
     </div>
 </div>
@@ -49,14 +54,14 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 $data = json_encode($data);
 $js = <<<JS
-    /** 此事件在模态框被隐藏（并且同时在 CSS 过渡效果完成）之后被触发。 */    
-    $("#product-close").click(function(){
+    /** 此事件在模态框被隐藏（并且同时在 CSS 过渡效果完成）之后被触发。 */ 
+    function closeMyModal(){
         $('.myModal').modal('hide'); 
         $('.myModal').on('hidden.bs.modal', function(){
-            window.location.reload();
+            $("#demand-task-product-list").load("/demand/product/index?task_id=$task_id&mark=$mark");
         });
-    });     
-        
+    }
+    
     var pageList = new Wskeee.demand.PageList({onItemSelected:onItemSelected});
     pageList.init($data);
       
@@ -70,7 +75,8 @@ $js = <<<JS
             )
         }
     }
-    
+    /** 格式化所有价钱 */
+    format(".totals");
 JS;
 $this->registerJs($js, View::POS_END);
 ?>

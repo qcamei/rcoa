@@ -9,9 +9,7 @@ use yii\widgets\Breadcrumbs;
 /* @var $this View */
 /* @var $model DemandTask */
 
-$this->title = Yii::t('rcoa/demand', 'Update {modelClass}: ', [
-    'modelClass' => 'Demand Task',
-]) . $model->id;
+$this->title = Yii::t('rcoa/demand', 'Update Demand Task');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/demand', 'Demand Tasks'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('rcoa/demand', 'Update');

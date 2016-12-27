@@ -1,9 +1,30 @@
 /**
  * 主页样式
  */
-#add{
-    float: right;
-    margin-bottom: 5px;
+
+.add{
+    width: 100%;
+    text-align: right;
+    padding-bottom: 5px;
+    margin-bottom: -1px;
+    border-bottom: 1px solid #ccc;
+}
+.total{
+    width: 100%;
+    float: left;
+    text-align: right;
+    padding-top: 10px;
+    border-top: 1px solid #ccc; 
+}
+.lesson{
+    font-size: 13px;
+    color: #999;
+}
+#demand-task-product-list .big{
+    font-size: 16px;
+}
+#demand-task-product-list .small{
+    font-size: 10px;
 }
 .product-list{
     position: relative;
@@ -47,10 +68,15 @@
 .product-list .product-list-body .price{
     color: #f00;
 }
-.product-list .product-list-body .price .number{
+.product-list .product-list-body .number{
     color: #000;
     font-size: 15px;
     margin-left: 20px;
+}
+.product-list .product-list-body .total-price{
+    color: #000;
+    font-weight: 400;
+    margin-left: 30px;
 }
 .product-list .product-list-footer{
     position: absolute;
@@ -124,10 +150,6 @@ button.return {
 .content-left{
     float: left;
 }
-.lesson{
-    font-size: 13px;
-    color: #999;
-}
 .content-right{
     float: right;
     padding: 5px 0px;
@@ -198,7 +220,7 @@ button.return {
     float: left;
 }
 .details-footer{
-    height: 51px;
+    height: 54px;
     text-align: inherit;
     border-top: 1px solid #e5e5e5;
 }
@@ -206,7 +228,7 @@ button.return {
     position: absolute;
     left: 0px;
     padding: 15px 5px;
-    width: 120px;
+    width: 200px;
 }
 .details-footer .footer-right{
     position: absolute;

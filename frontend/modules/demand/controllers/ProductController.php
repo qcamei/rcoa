@@ -3,12 +3,14 @@
 namespace frontend\modules\demand\controllers;
 
 use common\models\demand\DemandTaskProduct;
-use common\models\demand\searchs\DemandTaskProductSearch;
 use common\models\product\Product;
+use frontend\modules\demand\utils\DemandQuery;
 use Yii;
+use yii\db\ActiveQuery;
 use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -44,40 +46,39 @@ class ProductController extends Controller
 
     /**
      * Lists all DemandTaskProduct models.
+     * @param integer $task_id
+     * @param integer $mark               标识：1执行; 0不执行(默认为0)
      * @return mixed
      */
-    public function actionIndex($task_id)
+    public function actionList($task_id, $mark = 0)
     {
-        Yii::$app->getResponse()->format = 'json';
-        $dataProducts = $this->getDataProducts($task_id);
-        $items = [];
-        $errors = [];
-        $type = '';
-        try
-        {
-            if(!empty($dataProducts)){
-                $items = $dataProducts;
-                $type = 1;
-            }
-        } catch (Exception $ex) {
-            $errors [] = $ex->getMessage();
-        }
-        return [
-            'type' => $type,
-            'data' => $items,
-            'error' => $errors
-        ];
+        $productTotal = $this->getProductTotal($task_id);
+        
+        return $this->renderAjax('list', [
+            'data' => $this->getProducts(),
+            'totals' => !empty(ArrayHelper::getValue($productTotal, 'totals')) ? ArrayHelper::getValue($productTotal, 'totals') : 0,
+            'lessons' => !empty(ArrayHelper::getValue($productTotal, 'lessons')) ? ArrayHelper::getValue($productTotal, 'lessons') : 0,
+            'task_id' => $task_id,
+            'mark' => $mark,
+        ]);
     }
     
     /**
-     * Lists all DemandTaskProduct models.
+     * Index all DemandTaskProduct models.
+     * @param integer $task_id
+     * @param integer $mark               标识：1执行; 0不执行(默认为0)
      * @return mixed
      */
-    public function actionList($task_id)
+    public function actionIndex($task_id, $mark = 0)
     {
-        return $this->renderAjax('list', [
-            'data' => $this->getProducts(),
-            'task_id' => $task_id,
+        $productTotal = $this->getProductTotal($task_id);
+        
+        return $this->renderPartial('index', [
+            'data' => $this->getDataProducts($task_id),
+            'totals' => !empty(ArrayHelper::getValue($productTotal, 'totals')) ? ArrayHelper::getValue($productTotal, 'totals') : 0,
+            'lessons' => !empty(ArrayHelper::getValue($productTotal, 'lessons')) ? ArrayHelper::getValue($productTotal, 'lessons') : 0,
+            'totalPrice' => $this->getProductTotalPrice($task_id),
+            'mark' => $mark,
         ]);
     }
     
@@ -91,10 +92,12 @@ class ProductController extends Controller
     {
         $product = Product::findOne(['id' => $product_id]);
         $model = $this->findModel($task_id, $product_id);
-
+        $productTotal = $this->getProductTotal($task_id);
+        
         return $this->renderAjax('view', [
             'product' => $product,
             'model' => $model,
+            'totals' => !empty(ArrayHelper::getValue($productTotal, 'totals')) ? ArrayHelper::getValue($productTotal, 'totals') : 0,
             'task_id' => $task_id,
             'product_id' => $product_id,
         ]);
@@ -104,7 +107,7 @@ class ProductController extends Controller
      * Creates a new DemandTaskProduct model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
-     */
+     
     public function actionCreate()
     {
         $model = new DemandTaskProduct();
@@ -116,14 +119,14 @@ class ProductController extends Controller
                 'model' => $model,
             ]);
         }
-    }
+    }*/
 
     /**
      * Updates an existing DemandTaskProduct model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
-     */
+     
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
@@ -135,7 +138,7 @@ class ProductController extends Controller
                 'model' => $model,
             ]);
         }
-    }
+    }*/
 
     /**
      * Deletes an existing DemandTaskProduct model.
@@ -240,22 +243,6 @@ class ProductController extends Controller
     }
     
     /**
-     * Finds the DemandTaskProduct model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return DemandTaskProduct the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     
-    protected function findModel($id)
-    {
-        if (($model = DemandTaskProduct::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException(Yii::t('rcoa', 'The requested page does not exist.'));
-        }
-    }*/
-    
-    /**
      * 获取已创建的课程产品
      * @param integer $taskId              任务ID
      * @return array
@@ -274,6 +261,38 @@ class ProductController extends Controller
                 ->all();
         
         return $dataProduct;
+    }
+
+    /**
+     * 获取课程产品总额和总学时
+     * @param integer $taskId              任务ID
+     * @return  array
+     */
+    public function getProductTotal($taskId)
+    {
+        /* @var $dtQuery DemandQuery */
+        $dtQuery = DemandQuery::getInstance();
+        /* @var $results ActiveQuery */
+        $results = $dtQuery->getProductTotal();
+        $results->where(['Task_product.task_id' => $taskId]);
+        return $results->one();
+    }
+    
+    /**
+     * 获取每个课程产品总额
+     * @param integer $taskId               任务ID
+     * @return  array
+     */
+    public function getProductTotalPrice($taskId)
+    {
+        /* @var $dtQuery DemandQuery */
+        $dtQuery = DemandQuery::getInstance();
+        /* @var $results ActiveQuery */
+        $results = $dtQuery->getProductTotal();
+        $results->select(['(Product.unit_price * Task_product.number) AS goods_total', 'Task_product.product_id']);
+        $results->where(['Task_product.task_id' => $taskId]);
+        $results->groupBy('Task_product.product_id');
+        return ArrayHelper::map($results->all(), 'product_id', 'goods_total');
     }
 
     /**
