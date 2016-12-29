@@ -99,11 +99,11 @@ class CourseManage extends ActiveRecord
     /**
      * 模式名称
      * @var array 
-     */
+     
     public static $modeName = [
         self::MODE_NEWBUILT => '新建',
         self::MODE_REFORM => '改造'
-    ];
+    ];*/
 
     /**
      * @inheritdoc

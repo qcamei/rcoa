@@ -1,5 +1,6 @@
 <?php
 
+use common\models\teamwork\CourseManage;
 use common\models\teamwork\CourseSummary;
 use frontend\modules\teamwork\TwAsset;
 use yii\helpers\Html;
@@ -21,12 +22,12 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa/teamwork', 'Update');
             'options' => ['class' => 'breadcrumb','style'=> 'width:300px;'],
             'homeLink' => [
                 'label' => Yii::t('rcoa/teamwork', 'Courses'),
-                'url' => ['course/index'],
+                'url' => ['course/index', 'status' => CourseManage::STATUS_NORMAL],
                 'template' => '<li class="course-name" style="width:30px;">{link}</li>',
             ],
             'links' => [
                 [
-                    'label' => Yii::t('rcoa/teamwork', 'Course View').'：'.$model->course->course->name,
+                    'label' => Yii::t('rcoa/teamwork', 'Course View').'：'.$model->course->demandTask->course->name,
                     'url' => ['course/view', 'id' => $model->course_id],
                     'template' => '<li class="course-name" style="max-width:158px;min-width:58px">{link}</li>',
                 ],

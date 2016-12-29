@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= Html::a('<div class="col-xs-12 course-door"><span class="visible-xs-inline-block">'.
                                 Html::img(['/filedata/teamwork/image/undone.png'], ['class' => 'total-icon']).
                                 Html::img(['/filedata/teamwork/image/view_undone.png ']).'</span>'.
-                                '<span class="undone total-xs">'.number_format($undoneHours).'</span>'.
+                                '<span class="undone total-xs">'.number_format($unfinishedHours).'</span>'.
                                 '<span>学时</span><p class="hidden-xs">'.
                                 Html::img(['/filedata/teamwork/image/view_undone.png ']).'</p></div>', [
                                     'course/index', 'status' => CourseManage::STATUS_NORMAL
@@ -55,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= Html::a('<div class="col-xs-12 course-door" style="border-right: none"><span class="visible-xs-inline-block">'.
                                 Html::img(['/filedata/teamwork/image/undone.png'], ['class' => 'total-icon']).
                                 Html::img(['/filedata/teamwork/image/view_undone.png ']).'</span>'.
-                                '<span class="undone total-xs">'.number_format($undoneDoor).'</span>'.
+                                '<span class="undone total-xs">'.number_format($unfinishedDoor).'</span>'.
                                 '<span>门</span><p class="hidden-xs">'.
                                 Html::img(['/filedata/teamwork/image/view_undone.png ']).'</p></div>', [
                                     'course/index', 'status' => CourseManage::STATUS_NORMAL
@@ -70,28 +70,24 @@ $this->params['breadcrumbs'][] = $this->title;
     <center><div class="row">
         <?php
             foreach ($team as $value) {
-            $teamCompletedHours = $twTool->getCourseLessionTimesSum([
-                    'team_id' => $value->id, 'status' => CourseManage::STATUS_CARRY_OUT]);
-            $teamUndoneHours = $twTool->getCourseLessionTimesSum([
-            'team_id' => $value->id, 'status' => CourseManage::STATUS_NORMAL]);
                 echo '<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="padding:0px;">';
                      echo '<div class="team">';
-                          echo '<div class="team-top" style="background:url('.$value->image.') no-repeat">';
+                          echo '<div class="team-top" style="background:url('.$value['image'].') no-repeat">';
                                echo '<div>'.Html::a(Html::img(['/filedata/teamwork/image/view_team_member.png']), [
-                                   'member', 'team_id' => $value->id
+                                   'member', 'team_id' => $value['id']
                                ]).'</div>';
-                               echo '<div class="team-name">'.$value->name.'</div>';
+                               echo '<div class="team-name">'.$value['name'].'</div>';
                           echo '</div>';
                           echo '<div class="team-bottom">';
                                 echo Html::a('<div class="team-bottom-left"><p><span class="completed" style="margin-right:5px;">'.
-                                            number_format(array_sum($teamCompletedHours)).'</span><span>学时</span></p><p>'.
+                                            number_format(!empty($teamCompleted[$value['id']]) ? $teamCompleted[$value['id']] : 0).'</span><span>学时</span></p><p>'.
                                             Html::img(['/filedata/teamwork/image/view_completed.png']).'</p></div>', [
-                                                'course/index', 'team_id' => $value->id, 'status' => CourseManage::STATUS_CARRY_OUT
+                                                'course/index', 'team_id' => $value['id'], 'status' => CourseManage::STATUS_CARRY_OUT
                                             ]);
                                 echo Html::a('<div class="team-bottom-right"><p><span class="undone" style="margin-right:5px;">'.
-                                            number_format(array_sum($teamUndoneHours)).'</span><span>学时</span></p><p>'.
+                                            number_format(!empty($teamUnfinished[$value['id']]) ? $teamUnfinished[$value['id']] : 0).'</span><span>学时</span></p><p>'.
                                             Html::img(['/filedata/teamwork/image/view_undone.png']).'</p></div>', [
-                                                'course/index', 'team_id' => $value->id, 'status' => CourseManage::STATUS_NORMAL
+                                                'course/index', 'team_id' => $value['id'], 'status' => CourseManage::STATUS_NORMAL
                                             ]);        
                           echo '</div>';
                      echo '</div>';

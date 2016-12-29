@@ -10,7 +10,7 @@ use yii\helpers\Html;
 
 $page = [
     'index', 
-    'create_by' => Yii::$app->user->id,
+    'team_id' => $model->team_id,
     'status' => CourseManage::STATUS_NORMAL
 ];
 ?>

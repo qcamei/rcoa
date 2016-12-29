@@ -51,7 +51,7 @@ $isAuthorization = Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER);    //æ˜
         $results = [
             'create_time' => $weekly->create_time,
             'content' => $weekly->content,
-            'create_by' => $model->weeklyEditorsPeople->user->nickname,
+            'create_by' => $weekly->weeklyCreateBy->weeklyEditorsPeople->user->nickname,
             'created_at' => date('Y-m-d H:i', $weekly->created_at)
         ];
     }else{

@@ -4,15 +4,16 @@ namespace frontend\modules\teamwork\controllers;
 
 use common\models\Position;
 use common\models\team\Team;
+use common\models\team\TeamCategory;
 use common\models\team\TeamMember;
 use common\models\teamwork\CourseAnnex;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\CourseProducer;
-use common\models\teamwork\ItemManage;
 use frontend\modules\teamwork\utils\TeamworkTool;
 use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\ItemType;
 use wskeee\rbac\RbacName;
+use wskeee\team\TeamMemberTool;
 use Yii;
 use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
@@ -62,7 +63,7 @@ class CourseController extends Controller
         $page = $page == null ? 0 : $page-1;        
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
-        $query = $twTool->getCourseInfo($id = null, $status, $team_id, $item_type_id, $item_id, $item_child_id, $course_id, $keyword, $time);
+        $query = $twTool->getCourseInfo($id = null, $demand_task_id = null, $status, $team_id, $item_type_id, $item_id, $item_child_id, $course_id, $keyword, $time);
         $count = $query->count();
         
         $dataProvider = new ArrayDataProvider([
@@ -101,10 +102,10 @@ class CourseController extends Controller
     /**
      * Lists all CourseManage models.
      * @return mixed
-     */
+
     public function actionList($project_id)
     {
-        /* @var $twTool TeamworkTool */
+        /* @var $twTool TeamworkTool 
         $twTool = TeamworkTool::getInstance();
         $model = $this->findItemModel($project_id);
        
@@ -113,19 +114,19 @@ class CourseController extends Controller
             'twTool' => $twTool,
             'lessionTime' => $twTool->getCourseLessionTimesSum(['project_id' => $project_id]),
         ]);
-    }
+    }*/
 
     /**
      * Displays a single CourseManage model.
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
+    public function actionView($id = null, $demand_task_id = null)
     {
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
         /* @var $model CourseManage */
-        $model = $twTool->getCourseInfo($id)->addSelect(['Tw_course.*'])->one();
+        $model = $twTool->getCourseInfo($id, $demand_task_id)->addSelect(['Tw_course.*'])->one();
         $weekly = $twTool->getWeeklyInfo($id, $twTool->getWeek(date('Y-m-d', time())));
         
         return $this->render('view', [
@@ -181,6 +182,7 @@ class CourseController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->scenario = CourseManage::SCENARIO_CARRYOUT;
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
         $post = Yii::$app->request->post();
@@ -320,11 +322,11 @@ class CourseController extends Controller
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
-     */
+     
     public function actionDelete($id, $project_id)
     {
         $model = $this->findModel(['id' => $id, 'project_id' => $project_id]);
-        /* @var $twTool TeamworkTool */
+        /* @var $twTool TeamworkTool 
         $twTool = TeamworkTool::getInstance();
         
         if(!$model->getIsCarryOut() && (($twTool->getIsAuthority('is_leader', 'Y') && $model->create_by == \Yii::$app->user->id)
@@ -334,7 +336,7 @@ class CourseController extends Controller
             throw new NotFoundHttpException('无权限操作！');
         
         $this->redirect(['list','project_id' => $project_id]);
-    }
+    }*/
 
     /**
      * Finds the CourseManage model based on its primary key value.
@@ -358,7 +360,7 @@ class CourseController extends Controller
      * @param integer $project_id
      * @return CourseManage the loaded model
      * @throws NotFoundHttpException if the model cannot be found
-     */
+    
     protected function findItemModel($project_id)
     {
         if (($model = ItemManage::findOne(['id' => $project_id])) !== null) {
@@ -366,7 +368,7 @@ class CourseController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
-    }
+    } */
     
     /**
      * 获取行业
@@ -404,15 +406,26 @@ class CourseController extends Controller
     }
     
     /**
-     * 获取所有团队
+     * 获取所有课程开发团队
      * @param integer $teamId      团队ID
      * @return array
      */
     public function getTeam($teamId = null)
     {
-        $team = Team::find()->andFilterWhere(['not in', 'id', $teamId])->orderBy('index asc')->all();
-        
-        return ArrayHelper::map($team, 'id', 'name');
+        /* @var $tmTool TeamMemberTool */
+        $tmTool = TeamMemberTool::getInstance();
+        $results = $tmTool->getTeamsByCategoryId(TeamCategory::TYPE_CCOA_DEV_TEAM);
+        $teams = [];
+        foreach ($results as $team) {
+            if($teamId != null){
+                if($team['id'] != $teamId)
+                    $teams[] = $team;
+            }else{
+                $teams[] = $team;
+            }
+        }
+        ArrayHelper::multisort($teams, 'index', SORT_ASC);    
+        return ArrayHelper::map($teams, 'id', 'name');
     }
 
     /**
@@ -421,17 +434,13 @@ class CourseController extends Controller
      */
     public function getTeamMemberList()
     {
-        /* @var $teamMember TeamMember */
-        $teamMember = TeamMember::find()
-                    ->from(['Member' => TeamMember::tableName()])
-                    ->leftJoin(['Team' => Team::tableName()], 'Team.id = Member.team_id')
-                    ->leftJoin(['Position' => Position::tableName()], 'Position.id = Member.position_id')
-                    ->where(['!=', 'Member.is_delete', TeamMember::SURE_DELETE])
-                    ->orderBy('Team.index asc, Position.level asc')
-                    ->with('user', 'team')
-                    ->all();
+        /* @var $tmTool TeamMemberTool */
+        $tmTool = TeamMemberTool::getInstance();
+        $teamIds = ArrayHelper::getColumn($tmTool->getTeamsByCategoryId(TeamCategory::TYPE_CCOA_DEV_TEAM), 'id');
+        $teamMember = $tmTool->getTeamMembersByTeamId($teamIds);
+        ArrayHelper::multisort($teamMember, ['team_id', 'position_level'], SORT_ASC);
         
-        return ArrayHelper::map($teamMember, 'id', 'user.nickname', 'team.name');
+        return ArrayHelper::map($teamMember, 'id', 'nickname', 'team_name');
     }
     
     /**
@@ -442,15 +451,12 @@ class CourseController extends Controller
     {
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
-        $sameTeamMembers = TeamMember::find()
-                        ->leftJoin(['Position' => Position::tableName()], 'Position.id = position_id')
-                        ->where(['team_id' => $twTool->getHotelTeam()])
-                        ->andWhere(['!=', 'is_delete', TeamMember::SURE_DELETE])
-                        ->orderBy('Position.level asc')
-                        ->with('user')
-                        ->all();
-        
-        return ArrayHelper::map($sameTeamMembers, 'id', 'user.nickname');
+        /* @var $tmTool TeamMemberTool */
+        $tmTool = TeamMemberTool::getInstance();
+        $sameTeamMembers = $tmTool->getTeamMembersByTeamId($twTool->getHotelTeam());
+        ArrayHelper::multisort($sameTeamMembers, 'position_level', SORT_ASC);
+
+        return ArrayHelper::map($sameTeamMembers, 'id', 'nickname');
     }
 
     /**

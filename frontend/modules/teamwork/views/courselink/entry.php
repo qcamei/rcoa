@@ -20,7 +20,7 @@ use yii\widgets\ActiveForm;
     <h3 style="margin:0; padding:0"><?= $model->name?></h3>
 </div>
 
-<div class="entry-link-form">
+<div class="modal-body entry-link-form">
 
     <?php $form = ActiveForm::begin([
         'options'=>[
@@ -101,7 +101,22 @@ $js =
             oldValue = maxValue;    
         $("#courselink-completed").trigger("touchspin.updatesettings", {max: maxValue});  
         $('#courselink-completed').val(oldValue);  
-    });  
+    });
+    
+    /** 保存录入数据操作  提交表单 */
+    $('#submit').click(function()
+    {
+        $.post("/teamwork/courselink/entry?id=$model->id", $("#entry-manage-form").serialize(), function(data){
+            if(data['types'] == 1){
+                $(".myModal").modal('hide');
+                $(".modal-open").load("/teamwork/courselink/progress?course_id=$model->course_id");
+            }else{
+                alert("保存失败");
+            }
+        });
+    });
+    
+    
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>

@@ -233,3 +233,10 @@
 .working {
     background-image: url('/filedata/multimedia/image/working.png');
 }
+
+/**
+ * 需求任务附件详情页样式
+ */
+.demand-task-annex-view iframe {
+    border: none;
+}

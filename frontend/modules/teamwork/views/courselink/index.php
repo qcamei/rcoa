@@ -1,6 +1,7 @@
 <?php
 
 use common\models\teamwork\CourseLink;
+use common\models\teamwork\CourseManage;
 use common\models\teamwork\CoursePhase;
 use common\models\teamwork\Link;
 use frontend\modules\teamwork\TeamworkTool;
@@ -27,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'options' => ['class' => 'breadcrumb'],
             'homeLink' => [
                 'label' => Yii::t('rcoa/teamwork', 'Courses'),
-                'url' => ['course/index'],
+                'url' => ['course/index', 'status' => CourseManage::STATUS_NORMAL],
                 'template' => '<li class="course-name">{link}</li>',
             ],
             'links' => [
@@ -117,17 +118,11 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php
-$weights = [];
-foreach ($coursePhase as $value)
-    $weights[] = $value->weights;
-$weightsSum = array_sum($weights);
 $js = 
 <<<JS
-    var weightsSum = $weightsSum;
-    if(weightsSum < 1 || weightsSum > 1)
-        alert("权重总和不能小于或大于 1");
+
 JS;
-    $this->registerJs($js,  View::POS_READY);
+    //$this->registerJs($js,  View::POS_READY);
 ?>
 
 <?php

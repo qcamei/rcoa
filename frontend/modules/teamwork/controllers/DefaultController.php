@@ -3,7 +3,7 @@
 namespace frontend\modules\teamwork\controllers;
 
 use common\models\team\Team;
-use common\models\team\TeamMember;
+use common\models\team\TeamCategory;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\ItemManage;
 use frontend\modules\teamwork\utils\TeamworkTool;
@@ -11,6 +11,7 @@ use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\Item;
 use wskeee\framework\models\ItemType;
 use wskeee\rbac\RbacName;
+use wskeee\team\TeamMemberTool;
 use Yii;
 use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
@@ -55,23 +56,18 @@ class DefaultController extends Controller
     {
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
-        $completedHours = array_sum($twTool->getCourseLessionTimesSum(['status' => CourseManage::STATUS_CARRY_OUT]));
-        $undoneHours = array_sum($twTool->getCourseLessionTimesSum(['status' => CourseManage::STATUS_NORMAL]));
-        $completedDoor = count($twTool->getCourseLessionTimesSum(['status' => CourseManage::STATUS_CARRY_OUT]));
-        $undoneDoor = count($twTool->getCourseLessionTimesSum(['status' => CourseManage::STATUS_NORMAL]));
-        $team = Team::find()
-                      ->where(['type' => 1])
-                      ->andWhere(['!=', 'is_delete', Team::SURE_DELETE])
-                      ->orderBy('id asc')
-                      ->all();
-        
+        $completed=  $twTool->getCourseLessionTimesSum(CourseManage::STATUS_CARRY_OUT);
+        $unfinished = $twTool->getCourseLessionTimesSum(CourseManage::STATUS_NORMAL);
+      
         return $this->render('index',[
             'twTool' => $twTool,
-            'completedHours' => $completedHours,
-            'undoneHours' => $undoneHours,
-            'completedDoor' => $completedDoor,
-            'undoneDoor' => $undoneDoor,
-            'team' => $team,
+            'completedHours' => ArrayHelper::getValue($completed, 'total_lesson_time'),
+            'unfinishedHours' => ArrayHelper::getValue($unfinished, 'total_lesson_time'),
+            'completedDoor' => ArrayHelper::getValue($completed, 'total'),
+            'unfinishedDoor' => ArrayHelper::getValue($unfinished, 'total'),
+            'team' => $this->getCourseDevelopTeam(),
+            'teamCompleted' => $twTool->getTeamCourseLessionTimesSum(CourseManage::STATUS_CARRY_OUT),
+            'teamUnfinished' => $twTool->getTeamCourseLessionTimesSum(CourseManage::STATUS_NORMAL),
         ]);
     }
     
@@ -269,6 +265,21 @@ class DefaultController extends Controller
         }
     }
     
+    /**
+     * 获取所有课程开发团队
+     * @return array
+     */
+    public function getCourseDevelopTeam()
+    {
+        $tmTool = TeamMemberTool::getInstance();
+        $teams = $tmTool->getTeamsByCategoryId(TeamCategory::TYPE_CCOA_DEV_TEAM);
+        ArrayHelper::multisort($teams, 'index', SORT_ASC);
+        
+        return $teams;
+    }
+
+    
+
     /**
      * 获取行业
      * @return type

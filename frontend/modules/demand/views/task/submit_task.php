@@ -18,7 +18,7 @@ use yii\widgets\ActiveForm;
             if($isEmpty){
                 echo Html::encode('是否确定要提交该任务？');
                 echo Html::activeHiddenInput($model, 'status', ['value' => DemandTask::STATUS_ACCEPTANCE]);
-                echo Html::activeHiddenInput($model, 'progress', ['value' => $model->getStatusProgress()]);
+                echo Html::activeHiddenInput($model, 'progress', ['value' => DemandTask::$statusProgress[DemandTask::STATUS_ACCEPTANCE]]);
             }else
                 echo Html::encode('课程开发数据不能为空！');
                

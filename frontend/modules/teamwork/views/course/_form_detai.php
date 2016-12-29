@@ -26,8 +26,8 @@ foreach ($producers as $element) {
 }
 
 CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($model->id)->all(), 'id', 'progress');
-
 ?>
+
 <div class="course-manage-view">
     
     <?php
@@ -120,26 +120,12 @@ CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($model->id
                 'value' => $model->real_carry_out,
             ],
             [
-                'attribute' => Yii::t('rcoa/teamwork', 'Now Progress'),
+                'attribute' => Yii::t('rcoa/multimedia', 'Status').'/'.Yii::t('rcoa/multimedia', 'Progress'),
                 'format' => 'raw',
-                'value' => Html::beginTag('div', ['class' => 'col-lg-2', 'style' => 'padding:0px;']).
-                            Html::beginTag('div', [
-                                'class' => 'progress table-list-progress',
-                                'style' => 'height:12px;margin:4px 0;border-radius:0px;'
-                            ]).
-                                Html::beginTag('div', [
-                                    'class' => 'progress-bar progress-bar',
-                                    'style' => 'width:'.CourseManage::$progress[$model->id].'%;line-height: 12px;font-size: 10px;',
-                                ]).(!empty(CourseManage::$progress[$model->id])? CourseManage::$progress[$model->id] : 0).'%'.
-                                Html::endTag('div').
-                           Html::endTag('div').
-                        Html::endTag('div'),
-            ],
-            [
-                'attribute' => 'status',
-                'format' => 'raw',
-                'value' => $model->status == CourseManage::STATUS_WAIT_START ? 
-                        '<span style="color: #F00">'.$model->getStatusName().'</span>' : $model->getStatusName(),
+                'value' => '<div class="status-progress-div '.($model->status != CourseManage::STATUS_WAIT_START ? 'status-have-to' : 'status-not-to').'">'.
+                                '<p class="have-to-status">'. CourseManage::$statusName[$model->status].'</p>'.
+                                ($model->status != CourseManage::STATUS_WAIT_START ? '<p class="progress-strip">('.CourseManage::$progress[$model->id].'%)</p>' : '').
+                           '</div>',
             ],
             [
                 'attribute' => 'path',

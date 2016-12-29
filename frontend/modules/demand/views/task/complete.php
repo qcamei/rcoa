@@ -15,7 +15,7 @@ use yii\widgets\ActiveForm;
 
         <?= Html::encode('是否确定完成该任务？') ?>
         <?= Html::activeHiddenInput($model, 'status', ['value' => DemandTask::STATUS_COMPLETED])?>
-        <?= Html::activeHiddenInput($model, 'progress', ['value' => $model->getStatusProgress()])?>
+        <?= Html::activeHiddenInput($model, 'progress', ['value' => DemandTask::$statusProgress[DemandTask::STATUS_COMPLETED]])?>
         <?= Html::activeHiddenInput($model, 'reality_check_harvest_time', ['value' => date('Y-m-d H:i', time())])?>
 
     <?php ActiveForm::end(); ?>

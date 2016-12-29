@@ -64,12 +64,20 @@ $page = [
             /**
              * 验收不通过 按钮显示必须满足以下条件：
              * 1、拥有完成的权限
-             * 2、状态必须是在【待验收】
+             * 2、状态必须是在【待验收】 or 【验收中】
              * 3、创建者是自己
              */
             if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE_ACCEPTANCE) 
                && ($model->getIsStatusAcceptance() || $model->getIsStatusAcceptanceing()) && $model->create_by == Yii::$app->user->id)
                 echo Html::a('验收不通过', ['acceptance/create', 'task_id' => $model->id], ['id' => 'acceptance-create', 'class' =>'btn btn-danger']).' ';
+            /**
+             * 验收不通过 按钮显示必须满足以下条件：
+             * 1、拥有完成的权限
+             * 2、状态必须是在【待验收】 or 【验收中】
+             * 3、创建者是自己
+             */
+            if(($model->getIsStatusAcceptance() || $model->getIsStatusAcceptanceing()) && $model->create_by == Yii::$app->user->id )
+                echo Html::a('课程开发', ['/teamwork/course/view', 'demand_task_id' => $model->id], ['class' =>'btn btn-primary', 'target' => '_blank']).' ';
             /**
              * 恢复 按钮显示必须满足以下条件：
              * 1、拥有恢复权限

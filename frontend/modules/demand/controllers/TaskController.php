@@ -162,12 +162,12 @@ class TaskController extends Controller
         if(!\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE))
             throw new NotAcceptableHttpException('无权限操作！');
         $model = $this->findModel($id);
-        $model->status = DemandTask::STATUS_CHECK;
-        $model->progress = $model->getStatusProgress();
-        /* @var $dtTool DemandTool */
-        $dtTool = DemandTool::getInstance();
         if(!$model->getIsStatusDefault())
             throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        /* @var $dtTool DemandTool */
+        $dtTool = DemandTool::getInstance();
+        $model->status = DemandTask::STATUS_CHECK;
+        $model->progress = $model->getStatusProgress();
         
         $dtTool->TaskSubmitCheck($model);
         return $this->redirect(['index']);
@@ -335,7 +335,7 @@ class TaskController extends Controller
         /* @var $dtTool DemandTool */
         $dtTool = DemandTool::getInstance();
         $model->status = DemandTask::STATUS_ACCEPTANCEING;
-        $model->progress = $model->getStatusProgress();
+        $model->progress = DemandTask::$statusProgress[DemandTask::STATUS_ACCEPTANCEING];
         $model->reality_check_harvest_time = null;
         $dtTool->RecoveryTask($model);
         return $this->redirect(['view', 'id' => $model->id]);
@@ -354,14 +354,14 @@ class TaskController extends Controller
             throw new NotAcceptableHttpException('无权限操作！');
         if(!($model->getIsStatusCheck() || $model->getIsStatusUndertake()))
             throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
-        
+        $oldStatus = $model->status;
         /* @var $dtTool DemandTool */
         $dtTool = DemandTool::getInstance();
         $post = Yii::$app->request->post();
         $cancel = ArrayHelper::getValue($post, 'reason');
-        
+
         if ($model->load($post)){
-            $dtTool->CancelTask($model, $cancel);
+            $dtTool->CancelTask($model, $oldStatus, $cancel);
             return $this->redirect(['index']);
         } else {
             return $this->renderPartial('cancel', [
@@ -377,13 +377,13 @@ class TaskController extends Controller
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
-     */
+     
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
-    }
+    }*/
     
     /**
      * 获取课程

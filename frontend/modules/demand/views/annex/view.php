@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'links' => [
                 [
                     'label' => Yii::t('rcoa/demand', 'Demand View'),
-                    'url' => ['course/view', 'id' => $model->course_id],
+                    'url' => ['task/view', 'id' => $model->task_id],
                     'template' => '<li class="course-name">{link}</li>',
                 ],
                 [
@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <div class="container demand-task-annex-view has-title">
-    <iframe class="col-lg-12 col-md-12 col-sm-12 col-xs-12" src="http://eezxyl.gzedu.com/o/?i=6824&furl=http://eefile.gzedu.com<?= $model->path?>" style="height: 550px;padding: 0px;">
+    <iframe class="col-lg-12 col-md-12 col-sm-12 col-xs-12" src="http://eezxyl.gzedu.com?furl=http://eefile.gzedu.com<?= $model->path?>" style="height: 550px;padding: 0px;">
     </iframe>
 </div>
 

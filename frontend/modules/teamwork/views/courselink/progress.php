@@ -1,9 +1,9 @@
 <?php
 
 use common\models\teamwork\CourseLink;
+use common\models\teamwork\CourseManage;
 use common\models\teamwork\CoursePhase;
 use frontend\modules\teamwork\TwAsset;
-use kartik\widgets\SwitchInput;
 use wskeee\rbac\RbacName;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'options' => ['class' => 'breadcrumb'],
             'homeLink' => [
                 'label' => Yii::t('rcoa/teamwork', 'Courses'),
-                'url' => ['course/index'],
+                'url' => ['course/index', 'status' => CourseManage::STATUS_NORMAL],
             ],
             'links' => [
                 [
@@ -88,7 +88,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ($link->total == 0 ? 0 :(int)(($link->completed / $link->total) * 100)).'%'.
                                 Html::endTag('div').
                             Html::endTag('div').'</td>
-                    <td>'.Html::a('录入', ['entry', 'id' => $link->id], ['class' => $className]).'</td>
+                    <td>'.Html::a('录入', 'javascript:;', 
+                            ['class' => $className, 'data_id' =>$link->id, 'onclick' => 'entry($(this));']).'</td>
                 </tr>';
             }
         }
@@ -96,11 +97,7 @@ $this->params['breadcrumbs'][] = $this->title;
         
         </tbody>
     </table>
-    <?php 
-        SwitchInput::widget([
-            'name' => 'nouse'
-        ]); 
-        ?>
+    
 </div>
 
 <div class="controlbar">
@@ -109,38 +106,30 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 
-<div id="myModal" class="fade modal" role="dialog" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content has-title">
-            
-        </div>
-    </div>
+<div class="item-manage">
+    <?= $this->render('/course/_form_model')?>    
 </div>
+
+<script type="text/javascript">
+    function entry(obj){
+        var data_id = $(obj).attr("data_id");
+        $(".myModal").modal('show');
+        $(".myModal .modal-dialog .modal-content").load("/teamwork/courselink/entry?id="+data_id);
+        return false;
+    }
+</script>
+
 <?php
 $js = 
 <<<JS
-    $('.btn-primary').click(function(){
-        var urlf = $(this).attr("href");
-        $("#myModal").modal({remote:urlf});
-        return false;
-    });
-    $('#myModal').on('loaded.bs.modal', function () {
-        $('.carousel').carousel('pause');
-        $('#myModal #submit').click(function()
-        {
-            $('#entry-manage-form').submit();
-        });
-        $("#myModal .modal-header .close").click(function(){
-            window.location.reload();
-        });
-    });
-    /** 隐藏之后触发该事件*/
-    $('#myModal').on('hidden.bs.modal', function () {
+    /** 此事件在模态框被隐藏（并且同时在 CSS 过渡效果完成）之后被触发。
+    $('.myModal').on('hidden.bs.modal', function () {
         window.location.reload();
-    });
+    });*/    
         
-    
-    
+    $(".myModal .modal-dialog").addClass("modal-md");
+    $(".myModal .modal-dialog .modal-content").addClass("has-title");    
+   
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>

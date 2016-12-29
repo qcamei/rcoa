@@ -9,6 +9,7 @@ use common\models\demand\DemandOperationUser;
 use common\models\demand\DemandTask;
 use common\models\demand\DemandTaskAnnex;
 use common\models\demand\DemandTaskAuditor;
+use common\models\team\TeamCategory;
 use common\wskeee\job\JobManager;
 use frontend\modules\teamwork\utils\TeamworkTool;
 use wskeee\team\TeamMemberTool;
@@ -399,9 +400,10 @@ class DemandTool {
     /**
      * 取消任务操作
      * @param DemandTask $model
-     * @param type $cancel              临时变量
+     * @param integer $oldStatus                上一个状态
+     * @param type $cancel                      临时变量
      */
-    public function CancelTask($model, $cancel)
+    public function CancelTask($model, $oldStatus, $cancel)
     {
         /* @var $demandNotice DemandNoticeTool */
         $demandNotice = DemandNoticeTool::getInstance();
@@ -412,9 +414,9 @@ class DemandTool {
         {
             if($model->save(false, ['status'])){
                 $demandNotice->cancelJobManager($model, $model->create_team);
-                if($model->getIsStatusCheck())
+                if($oldStatus == DemandTask::STATUS_CHECK){
                     $demandNotice->sendAuditorNotification($model, $model->create_team,'任务取消', 'demand/Cancel-html', $cancel);
-                else
+                }else
                     $demandNotice->sendUndertakePersonNotification($model, '任务取消', 'demand/Cancel-html', $cancel);
             }else
                 throw new \Exception($model->getErrors());
@@ -524,12 +526,12 @@ class DemandTool {
     }
     
     /**
-     * 获取承接人所在团队成员ID
+     * 获取承接人所在团队成员表里的ID
      * @return integer|array    
      */
     public function getHotelTeamMemberId()
     {
-        $teamMember = TeamMemberTool::getInstance()->getUserLeaderTeamMembers(Yii::$app->user->id);
+        $teamMember = TeamMemberTool::getInstance()->getUserLeaderTeamMembers(Yii::$app->user->id, TeamCategory::TYPE_CCOA_DEV_TEAM);
         $teamMemberId = ArrayHelper::getColumn($teamMember, 'id');
         if(!empty($teamMemberId) && count($teamMemberId) == 1)
             return $teamMemberId[0];

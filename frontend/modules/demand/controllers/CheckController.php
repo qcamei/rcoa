@@ -140,7 +140,8 @@ class CheckController extends Controller
         /* @var $dtTool DemandTool */
         $dtTool = DemandTool::getInstance();
         $dtTool::$table = DemandCheck::tableName();
-        if(!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_SUBMIT_CHECK) && $dtTool->getIsCompleteCheck($task_id)))
+        if(!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_SUBMIT_CHECK) && $model->task->create_by == Yii::$app->user->id
+            && $dtTool->getIsCompleteCheck($task_id)))
             throw new NotAcceptableHttpException('无权限操作！');
         if(!$model->task->getIsStatusAdjusimenting())
             throw new NotAcceptableHttpException('该任务状态为'.$model->task->getStatusName().'！');

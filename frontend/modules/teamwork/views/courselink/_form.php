@@ -53,7 +53,7 @@ use yii\widgets\ActiveForm;
                 ]).'环节名称'.Html::endTag('label');
             echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']).
                     Select2::widget([
-                        'name' => 'id',
+                        'name' => 'CourseLink[id]',
                         'id' => 'courselink-link_id',
                         'data' => $link, 
                         'hideSearch' => true,
@@ -74,8 +74,6 @@ use yii\widgets\ActiveForm;
            
         echo Html::endTag('div');
     ?>
-    
-    
     
     <?= $form->field($phaseModel, 'weights')->textInput( ) ?>
 

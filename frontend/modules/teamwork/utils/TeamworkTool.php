@@ -2,6 +2,8 @@
 
 namespace frontend\modules\teamwork\utils;
 
+use common\models\demand\DemandTask;
+use common\models\team\TeamCategory;
 use common\models\teamwork\CourseAnnex;
 use common\models\teamwork\CourseLink;
 use common\models\teamwork\CourseManage;
@@ -175,17 +177,18 @@ class TeamworkTool{
      * 获取课程查询结果
      * @param TeamworkQuery $twQuery       
      * @param ActiveQuery $results       
-     * @param integer $id              ID
-     * @param integer $projectId       项目管理 ID
-     * @param integer $status          状态
-     * @param integer $teamId          团队ID
-     * @param integer $itemTypeId      行业ID
-     * @param integer $itemId          层次/类型ID
-     * @param integer $itemChildId     专业/工种ID
-     * @param integer $courseId        课程ID
-     * @return Query                   返回查询结果对象
+     * @param integer $id                           ID
+     * @param integer $demand_task_id               课程需求任务ID
+     * @param integer $projectId                    项目管理 ID
+     * @param integer $status                       状态
+     * @param integer $teamId                       团队ID
+     * @param integer $itemTypeId                   行业ID
+     * @param integer $itemId                       层次/类型ID
+     * @param integer $itemChildId                  专业/工种ID
+     * @param integer $courseId                     课程ID
+     * @return Query                                返回查询结果对象
      */
-    public function getCourseInfo($id = null, $status = null, $teamId = null, 
+    public function getCourseInfo($id = null, $demand_task_id = null, $status = null, $teamId = null, 
             $itemTypeId = null, $itemId = null, $itemChildId = null, $courseId = null, $keyword = null, $time = null)
     {
         /* @var $twQuery TeamworkQuery */
@@ -198,6 +201,7 @@ class TeamworkTool{
             'Demand_task.item_child_id' => $itemChildId,
             'Demand_task.course_id' => $courseId,
             'Tw_course.id' => $id,
+            'Tw_course.demand_task_id' => $demand_task_id,
             'Tw_course.`status`'=> $status,
             'Tw_course.team_id'=> $teamId,
         ]);
@@ -237,7 +241,7 @@ class TeamworkTool{
     {
         $query = (new Query ())
                 ->select([
-                    'Tw_course.id', 'Tw_course.project_id', 'Tw_course.status','Tw_course.demand_task_id',
+                    'Tw_course.id', 'Tw_course.status','Tw_course.demand_task_id',
                     'FLOOR(SUM(Course_phase_progress.progress * Course_phase_progress.weights) * 100) AS progress'
                 ])
                 ->from(['Course_phase_progress' => $this->getCoursePhaseProgress($courseId)])
@@ -254,11 +258,11 @@ class TeamworkTool{
      * @param integer $id               ID
      * @param string $keyword           搜索关键字
      * @return Query
-     */
+     
     public function getItemInfo($id = null, $keyword = null){
-        /* @var $twQuery TeamworkQuery */
+        /* @var $twQuery TeamworkQuery 
         $twQuery = TeamworkQuery::getInstance();
-        /* @var $results ActiveQuery */
+        /* @var $results ActiveQuery 
         $results = $twQuery->getItemManageTable();
         $results->andFilterWhere(['id' => $id]);
         $results->orFilterWhere(['like', 'Fw_item_type.`name`', $keyword]);
@@ -266,14 +270,14 @@ class TeamworkTool{
         $results->orFilterWhere(['like', 'Fw_item_child.`name`', $keyword]);
         
         return $results;
-    }
+    }*/
     
     
     /**
      * 获取项目进度
      * @param integer|array $courseId       课程ID
      * @return Query
-     */
+     
     public function getItemProgress($courseId)
     {
         $query = (new Query ())
@@ -286,7 +290,7 @@ class TeamworkTool{
                 ->groupBy(['Tw_item.id']);
                     
         return $query;
-    }
+    }*/
     
     /**
      * 获取一周时间
@@ -382,32 +386,50 @@ class TeamworkTool{
      */
     public function getHotelTeam()
     {
-        $teamMember = TeamMemberTool::getInstance()->getUserTeamMembers(Yii::$app->user->id);
-        $team = ArrayHelper::getColumn($teamMember, 'team_id');
-        if(!empty($team) && count($team) == 1)
-            return $team[0];
+        $teamMember = TeamMemberTool::getInstance()->getUserTeam(Yii::$app->user->id, TeamCategory::TYPE_CCOA_DEV_TEAM);
+        $teamIds = ArrayHelper::getColumn($teamMember, 'id');
+        if(!empty($teamIds) && count($teamIds) == 1)
+            return $teamIds[0];
         else
-            return ArrayHelper::map($teamMember, 'team.id', 'team.name');
+            return ArrayHelper::map($teamMember, 'id', 'name');
     } 
 
     /**
-     * 获取课程时长总和 AND 个数
-     * @param type $condition
-     * @return type
+     * 获取课程时长总和 and 总数
+     * @param integer $status               状态
+     * @return array
      */
-    public function getCourseLessionTimesSum($condition)
+    public function getCourseLessionTimesSum($status)
     {
-        $lessionTimes = CourseManage::find()
-                        ->select(['lession_time'])
-                        ->where($condition)
-                        ->all();
-        return ArrayHelper::getColumn($lessionTimes, 'lession_time');
-        
+        return (new Query())
+                ->select(['COUNT(Tw_course.id) AS total','SUM(Demand_task.lesson_time) AS total_lesson_time'])
+                ->from(['Tw_course' => CourseManage::tableName()])
+                ->leftJoin(['Demand_task' => DemandTask::tableName()], 'Demand_task.id = Tw_course.demand_task_id')
+                ->where(['Tw_course.`status`' => $status])
+                ->one();              
+    }
+    
+    /**
+     * 获取每个团队的课程时长总数量
+     * @param integer $status               状态
+     * @return array
+     */
+    public function getTeamCourseLessionTimesSum($status)
+    {
+        $results = (new Query())
+              ->select(['Tw_course.team_id', 'SUM(Demand_task.lesson_time) AS total_lesson_time'])
+              ->from(['Tw_course' => CourseManage::tableName()])
+              ->leftJoin(['Demand_task' => DemandTask::tableName()], 'Demand_task.id = Tw_course.demand_task_id')
+              ->where(['Tw_course.`status`' => $status])
+              ->groupBy('Tw_course.team_id')
+              ->all();
+                 
+        return ArrayHelper::map($results, 'team_id', 'total_lesson_time');
     }
     
     /**
      * 保存制作人到表里面
-     * @param type $course_id  任务id
+     * @param integer $course_id                任务id
      * @param type $post 
      */
     public function saveCourseProducer($course_id, $post)

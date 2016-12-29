@@ -426,6 +426,34 @@ and open the template in the editor.
   margin: 5px 10px 5px 0;
   display: inline-block;
 }
+/**
+ * 当前状态进度样式
+ */
+.status-progress-div {
+    width: 60px;
+    height: 60px;
+    float: left;
+    padding-top: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+.status-have-to {
+    background-color: #f37b53;
+    line-height: 20px;
+}
+.status-not-to {
+    background-color: #dddddd;
+    line-height: 35px;
+}
+.have-to-status {
+    margin-bottom: 0px; 
+    color: #fff;
+}
+.progress-strip {
+    margin-bottom: 0px; 
+    color: #ccc;
+}
+
 
 /**
  *  周报页面样式
@@ -501,15 +529,16 @@ and open the template in the editor.
 /**
  * 课程进度录入页面样式
  */
-#myModal {
+.myModal {
     padding-right: 0px !important;
 }
-#myModal .modal-md {
+.myModal .modal-md {
     margin-top: 150px;
 }
 
-#myModal .entry-link-form {
+.entry-link-form {
     margin: 20px;
+    padding: 0px;
 }
 #ex1Slider .slider-selection {
     background: #BABABA;
@@ -520,4 +549,11 @@ and open the template in the editor.
  */
 .course-annex-view iframe {
     border: none;
+    height: 550px;
+    padding: 0px;
+   
+}
+.course-annex-view iframe::-webkit-scrollbar { 
+    width:0px;
+    height:0px;
 }

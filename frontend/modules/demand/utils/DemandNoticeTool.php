@@ -4,9 +4,11 @@ namespace frontend\modules\demand\utils;
 use common\config\AppGlobalVariables;
 use common\models\demand\DemandTask;
 use common\models\demand\DemandTaskAuditor;
+use common\models\team\TeamCategory;
 use common\models\team\TeamMember;
 use common\wskeee\job\JobManager;
 use wskeee\ee\EeManager;
+use wskeee\team\TeamMemberTool;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -48,9 +50,12 @@ class DemandNoticeTool {
      */
     public function getUndertakePerson($uId = null)
     {
+        /* @var $tmTool TeamMemberTool */
+        $tmTool = TeamMemberTool::getInstance();
+        $teams = $tmTool->getTeamsByCategoryId(TeamCategory::TYPE_CCOA_DEV_TEAM);
         $undertakes = TeamMember::find()
                     ->where([
-                        'position_id' => 1, 
+                        'team_id' => ArrayHelper::getColumn($teams, 'id'),
                         'is_delete' => TeamMember::CANCEL_DELETE, 
                         'is_leader' => TeamMember::TEAMLEADER
                     ])

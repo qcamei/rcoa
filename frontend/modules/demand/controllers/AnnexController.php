@@ -43,7 +43,7 @@ class AnnexController extends Controller
     /**
      * Lists all DemandTaskAnnex models.
      * @return mixed
-     */
+     
     public function actionIndex()
     {
         $searchModel = new DemandTaskAnnexSearch();
@@ -53,7 +53,7 @@ class AnnexController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
-    }
+    }*/
 
     /**
      * Displays a single DemandTaskAnnex model.
@@ -62,6 +62,7 @@ class AnnexController extends Controller
      */
     public function actionView($id)
     {
+        $this->layout = '@app/views/layouts/main';
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -71,7 +72,7 @@ class AnnexController extends Controller
      * Creates a new DemandTaskAnnex model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
-     */
+     
     public function actionCreate()
     {
         $model = new DemandTaskAnnex();
@@ -83,14 +84,14 @@ class AnnexController extends Controller
                 'model' => $model,
             ]);
         }
-    }
+    }*/
 
     /**
      * Updates an existing DemandTaskAnnex model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
-     */
+     
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
@@ -102,20 +103,20 @@ class AnnexController extends Controller
                 'model' => $model,
             ]);
         }
-    }
+    }*/
 
     /**
      * Deletes an existing DemandTaskAnnex model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
-     */
+     
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
-    }
+    }*/
 
     /**
      * Finds the DemandTaskAnnex model based on its primary key value.
