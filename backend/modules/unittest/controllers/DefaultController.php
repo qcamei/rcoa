@@ -100,8 +100,11 @@ class DefaultController extends Controller {
         $someTeammembers = TeamMemberTool::getInstance()->getTeammemberById([1,2]);
         var_dump($someTeammembers);
         
-        echo '<h2>获取用户所在团队 getUserTeam(\'36aa1fcd1f89849aede1e63aec86a7b8\')</h2>';
-        var_dump(TeamMemberTool::getInstance()->getUserTeam('36aa1fcd1f89849aede1e63aec86a7b8'));
+        echo '<h2>获取用户所在团队 getUserTeam(\'d9d4f1ffd12afbe22e80fe1d6020c7c9\')</h2>';
+        var_dump(TeamMemberTool::getInstance()->getUserTeam('d9d4f1ffd12afbe22e80fe1d6020c7c9'));
+        
+        echo '<h2>获取指定分类下用户所在团队 getUserTeam(\'d9d4f1ffd12afbe22e80fe1d6020c7c9\',TeamCategory::TYPE_CCOA_DEV_TEAM)</h2>';
+        var_dump(TeamMemberTool::getInstance()->getUserTeam('d9d4f1ffd12afbe22e80fe1d6020c7c9',TeamCategory::TYPE_CCOA_DEV_TEAM));
         
         echo '<h2>获取用户所有团成员 getUserTeamMembers(\'36aa1fcd1f89849aede1e63aec86a7b8\')</h2>';
         var_dump(TeamMemberTool::getInstance()->getUserTeamMembers('36aa1fcd1f89849aede1e63aec86a7b8'));

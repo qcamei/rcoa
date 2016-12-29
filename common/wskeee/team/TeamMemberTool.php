@@ -231,13 +231,19 @@ class TeamMemberTool extends Component {
     /**
      * 获取用户所属团队
      * @param string $user_id       用户id
+     * @param string $category      团队类别
      * @param boolean $include_is_delete 是否包括已删除成员，默认不包括
      * @return array (team,team,...)
      */
-    public function getUserTeam($user_id,$include_is_delete=false){
+    public function getUserTeam($user_id,$category=null,$include_is_delete=false){
         $results = [];
+        $categoryTeamMap = null;
+        if($category != null){
+            $categoryTeamMap = ArrayHelper::map($this->getTeamsByCategoryId($category), 'id', 'name');
+        }
+        
         foreach ($this->teamMembers as $teammeber) {
-            if($teammeber['u_id'] == $user_id){
+            if($teammeber['u_id'] == $user_id && ($categoryTeamMap == null || isset($categoryTeamMap[$teammeber['team_id']]))){
                 if($include_is_delete || $teammeber['is_delete'] == 'N')
                     $results [] = $this->teams[$teammeber['team_id']];
             }

@@ -20,6 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'teams'=> $teams,
         'teamCategorys'=> $teamCategorys,
+        'isUpdate'=>true,
     ]) ?>
 
 </div>

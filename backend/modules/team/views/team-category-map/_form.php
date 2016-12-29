@@ -13,14 +13,19 @@ use yii\widgets\ActiveForm;
 
 <div class="team-category-map-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php 
+        $form = ActiveForm::begin(); 
+        $isUpdate = isset($isUpdate);
+    ?>
 
     <?= $form->field($model, 'category_id')->widget(Select2::classname(), [
+        'disabled'=>$isUpdate,
         'data' => $teamCategorys, 
         'options' => ['placeholder' => Yii::t('rcoa', 'Select Placeholder')]
     ])->label(Yii::t('rcoa/team', 'Category'))?>
 
     <?= $form->field($model, 'team_id')->widget(Select2::classname(), [
+        'disabled'=>$isUpdate,
         'data' => $teams, 
         'options' => ['placeholder' => Yii::t('rcoa', 'Select Placeholder')]
     ])->label(Yii::t('rcoa/team', 'Team'))?>

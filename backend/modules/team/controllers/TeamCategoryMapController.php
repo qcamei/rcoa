@@ -112,14 +112,14 @@ class TeamCategoryMapController extends Controller
             //清缓存
             TeamMemberTool::getInstance()->invalidateCache();
             //指定跳转
-            if(isset($callback))
-                $this->redirect([$callback]);
+            if($callback != null)
+                return $this->redirect([$callback]);
             return $this->redirect(['view', 'category_id' => $model->category_id, 'team_id' => $model->team_id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
-                'teams'=> $this->getTeams($category_id),
-                'teamCategorys'=> $this->getCategorys(),
+                'teams'=> [$team_id => $model->team->name],
+                'teamCategorys'=> [$category_id => $model->teamCategory->name],
             ]);
         }
     }
