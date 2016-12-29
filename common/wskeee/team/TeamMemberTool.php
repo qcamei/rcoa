@@ -200,8 +200,9 @@ class TeamMemberTool extends Component {
         {
             $results = [];
             foreach($teamMemberId as $id){
-                if(isset($this->teamMembers[$id]))
+                if(isset($this->teamMembers[$id])){
                     $results [] = $this->teamMembers[$id];
+                }
             }
             return $results;
         }else if(isset ($this->teamMembers[$teamMemberId]))
@@ -269,16 +270,22 @@ class TeamMemberTool extends Component {
     }
     
     /**
-     * 获取用户所有队长成员
+     * 获取所有队长成员用户
      * @param string $user_id           用户id
+     * @param string $category          团队类别
      * @param boolean $include_is_delete 是否包括已删除成员，默认不包括
      * @return array(teamember,...)
      */
-    public function getUserLeaderTeamMembers($user_id,$include_is_delete=false){
+    public function getUserLeaderTeamMembers($user_id,$category=null,$include_is_delete=false){
+        $categoryTeamMap = null;
+        if($category != null){
+            $categoryTeamMap = ArrayHelper::map($this->getTeamsByCategoryId($category), 'id', 'name');
+        }
+        
         $results = [];
         foreach ($this->teamMembers as $teammeber) {
             if($teammeber['u_id'] == $user_id){
-                if(($include_is_delete || $teammeber['is_delete'] == 'N') && $teammeber['is_leader'] == 'Y')
+                if(($include_is_delete || $teammeber['is_delete'] == 'N') && $teammeber['is_leader'] == 'Y' && ($categoryTeamMap == null || isset($categoryTeamMap[$teammeber['team_id']])))
                     $results [] = $teammeber;
             }
         }
@@ -343,7 +350,7 @@ class TeamMemberTool extends Component {
                 ->select([
                     'TeamMember.id','TeamMember.team_id','TeamMember.u_id','TeamMember.is_leader','TeamMember.index','TeamMember.position_id','TeamMember.is_delete',
                     'Position.name AS position_name','Position.level AS position_level',
-                    'User.nickname','User.avatar',
+                    'User.nickname','User.avatar', 'User.ee', 'User.email',
                     'Team.name AS team_name'
                     ])
                 ->from(['TeamMember'=>TeamMember::tableName()])
