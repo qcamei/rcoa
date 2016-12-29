@@ -214,17 +214,23 @@ class TeamMemberTool extends Component {
     
     /**
      * 获取团队下所有成员
-     * @param int $team_id  团队id
+     * @param int|array $team_id  团队id
      * @param boolean $include_is_delete 是否包括已删除成员，默认不包括
      * @return array (team_id = > [teammember,teammember])
      */
     public function getTeamMembersByTeamId($team_id,$include_is_delete=false){
         $results = [];
         foreach($this->teamMembers AS $teamMember){
-            if($teamMember['team_id'] == $team_id)
-            {
+            if(is_array($team_id)){
+                if(in_array($teamMember['team_id'], $team_id)){
+                    if($include_is_delete || $teamMember['is_delete'] == 'N')
+                        $results [] = $teamMember;
+                }
+            }else if($teamMember['team_id'] == $team_id){
                 if($include_is_delete || $teamMember['is_delete'] == 'N')
                     $results [] = $teamMember;
+            }else {
+                $results;
             }
         }
         return $results;
