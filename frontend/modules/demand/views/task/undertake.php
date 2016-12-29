@@ -41,7 +41,7 @@ use yii\widgets\ActiveForm;
 
 <script type="text/javascript">
     /** 承接操作 提交表单 */
-    $(" #undertake-save").click(function()
+    $("#undertake-save").click(function()
     {
         $('#form-undertake').submit();
     });

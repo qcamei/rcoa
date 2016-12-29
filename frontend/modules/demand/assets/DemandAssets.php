@@ -25,9 +25,11 @@ class DemandAssets extends AssetBundle{
         'forceCopy' => YII_DEBUG,
     ];
     public $css = [
-       'css/demand.css'
+       'css/demand.css',
+       'css/product.css'
     ];
     public $js = [
+       'js/productlist.js',
        'js/search-select.js'
     ];
 }

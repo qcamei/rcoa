@@ -46,6 +46,9 @@ $this->params['breadcrumbs'][] = $this->title;
         }
     ?>
     
+    <h4><?= Yii::t('rcoa/demand', 'Demand Task Products'); ?></h4>
+    <div id="demand-task-product-list"></div>
+    
     <?= $this->render('/check/index',[
         'model' => $model->demandChecks,
     ]) ?>
@@ -62,9 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ]) ?>
 
 <div class="demand-task">
-    
-    <?= $this->render('_form_model')?>
-    
+    <?= $this->render('_form_model')?>    
 </div>
 
 <?php
@@ -135,7 +136,10 @@ $js =
         var urlf = $(this).attr("href");
         $(".myModal").modal({remote:urlf});
         return false;
-    });    
+    });
+    
+    //加载已选课程产品列表
+    $("#demand-task-product-list").load("/demand/product/index?task_id=$model->id");
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>

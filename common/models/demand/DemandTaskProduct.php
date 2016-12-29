@@ -34,6 +34,7 @@ class DemandTaskProduct extends ActiveRecord
     public function rules()
     {
         return [
+            [['task_id', 'product_id', 'number'], 'required'],
             [['task_id', 'product_id', 'number'], 'integer'],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['product_id' => 'id']],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => DemandTask::className(), 'targetAttribute' => ['task_id' => 'id']],

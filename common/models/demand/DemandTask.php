@@ -2,6 +2,7 @@
 
 namespace common\models\demand;
 
+use common\models\product\Product;
 use common\models\team\Team;
 use common\models\team\TeamMember;
 use common\models\teamwork\CourseManage;
@@ -330,7 +331,8 @@ class DemandTask extends ActiveRecord
      */
     public function getDemandTaskProducts()
     {
-        return $this->hasMany(DemandTaskProduct::className(), ['task_id' => 'id']);
+        return $this->hasMany(DemandTaskProduct::className(), ['task_id' => 'id'])
+               ->leftJoin(['Product' => Product::tableName()], ['product_id' => 'Product.id']);
     }
 
     /**
@@ -339,6 +341,15 @@ class DemandTask extends ActiveRecord
     public function getDemandToTeamworks()
     {
         return $this->hasMany(DemandToTeamwork::className(), ['task_id' => 'id']);
+    }
+    
+    /**
+     * 获取是否在【默认】状态
+     * @return type
+     */
+    public function getIsStatusDefault()
+    {
+        return $this->status == self::STATUS_DEFAULT;
     }
     
     /**

@@ -33,6 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
     
     $('#create-check-save').click(function()
     {
+        
         $('#demand-check-form').submit();
     });
 

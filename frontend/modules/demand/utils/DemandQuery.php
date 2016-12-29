@@ -2,9 +2,12 @@
 namespace frontend\modules\demand\utils;
 
 use common\models\demand\DemandTask;
+use common\models\demand\DemandTaskProduct;
+use common\models\product\Product;
 use common\models\team\Team;
 use wskeee\framework\models\Item;
 use wskeee\framework\models\ItemType;
+use yii\db\Query;
 
 class DemandQuery {
    private static $instance = null;
@@ -29,7 +32,21 @@ class DemandQuery {
         return $query;
     }
    
-   /**
+    /**
+     * 查询课程产品额和总学时
+     * @return $query
+     */
+    public function getProductTotal()
+    {
+        $query = (new Query())
+                ->select(['SUM(Product.unit_price * Task_product.number) AS totals', 'SUM(Task_product.number) AS lessons'])
+                ->from(['Task_product' => DemandTaskProduct::tableName()])
+                ->leftJoin(['Product' => Product::tableName()], 'Product.id = Task_product.product_id');
+        
+        return $query;
+    }
+    
+    /**
      * 获取单例
      * @return DemandQuery
      */

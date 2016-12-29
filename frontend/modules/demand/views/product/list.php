@@ -1,8 +1,10 @@
 <?php
 
 use common\models\demand\searchs\DemandTaskProductSearch;
+use frontend\modules\demand\assets\DemandAssets;
 use frontend\modules\demand\assets\PageListAssets;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 use yii\web\View;
 
 /* @var $this View */
@@ -11,55 +13,79 @@ use yii\web\View;
 
 $this->title = Yii::t('rcoa/demand', 'Demand Task Products');
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
-<div class="modal-header">
-    <div class="col-xs-4 modal-operation">
-        <button type="button" id="pl-comeback" class="return"><span aria-hidden="true">&cularr;</span></button>
-    </div>
-    <div class="col-xs-4 modal-title"><span><?= $this->title ?></span></div>
-    <div class="col-xs-4 modal-operation">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    </div>
-</div>
-
-<div class="modal-body">
-    <div id="e-pl" class="e-pl"></div>
-    <div class="details-modal"></div>
-</div>
-
-<div class="modal-footer" style="padding:5px; text-align: inherit;">
-    <div class="modal-footer-content">
-        <div class="content-left">
-            <span><b>合计：￥500000</b><span><br/>
-            <span class="lesson">合计学时：243学时</span>
+ <div class="modal-dialog list-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header list-header">
+            <div class="col-xs-1 list-operation">
+                <button type="button" id="pl-comeback" class="return">
+                    <span aria-hidden="true">&cularr;</span>
+                </button>
+            </div>
+            <div class="col-xs-9 modal-title list-title"><span><?= $this->title ?></span></div>
+            <div class="col-xs-1 list-operation" style="float: right;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeMyModal();">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
         </div>
-        <div class="content-right">
-            <button type="button" class="btn btn-default btn-sm" id="product-list">已选列表</button>
-            <button type="button" class="btn btn-primary btn-sm" id="product-save">确认</button>
+
+        <div class="modal-body list-body">
+            <div id="e-pl" class="e-pl"></div>
+            <div id="details" class="details-modal">
+                <div class="product-backdrop"></div>
+            </div>
+        </div>
+
+        <div class="modal-footer list-footer" style="padding:5px; text-align: inherit;">
+            <div class="list-footer-content">
+                <div class="content-left">
+                    <span><b>合计:<span class="totals">￥<?= number_format($totals, 2); ?></span></b><span><br/>
+                    <span class="lesson">总学时:<?= $lessons; ?>&nbsp;学时</span>
+                </div>
+                <div class="content-right">
+                    <a class="btn btn-default btn-sm disabled" id="product-list">已选列表</a>
+                    <a class="btn btn-primary btn-sm" id="product-close" onclick="closeMyModal();">确认</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
 
 
 <?php
 $data = json_encode($data);
 $js = <<<JS
-   
+    /** 此事件在模态框被隐藏（并且同时在 CSS 过渡效果完成）之后被触发。 */ 
+    function closeMyModal(){
+        $('.myModal').modal('hide'); 
+        $('.myModal').on('hidden.bs.modal', function(){
+            $("#demand-task-product-list").load("/demand/product/index?task_id=$task_id&mark=1");
+        });
+    }
+    
     var pageList = new Wskeee.demand.PageList({onItemSelected:onItemSelected});
     pageList.init($data);
-
+      
+    /** 单击选择添加产品数量 */
     function onItemSelected(itemdata){
         if(itemdata.type == "content"){
-            $('.details-modal').load("/demand/product/view?id="+itemdata.id).addClass('details-modal-show').attr('style', 'display: block;');
+            $('#details .product-backdrop').load("/demand/product/view?task_id=$task_id&product_id="+itemdata.id,null,
+                function(){
+                    $('#details').animate({top:'0px'},'fast','swing');
+                }
+            )
         }
     }
-
+    /** 格式化所有价钱 */
+    format(".totals");
 JS;
 $this->registerJs($js, View::POS_END);
 ?>
 
 <?php
     PageListAssets::register($this);
+    DemandAssets::register($this);
 ?>
 

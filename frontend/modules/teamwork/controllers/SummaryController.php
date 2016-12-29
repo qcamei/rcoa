@@ -191,7 +191,7 @@ class SummaryController extends Controller
             $model = $twTool->getWeeklyInfo($course_id, $twTool->getWeek(date('Y-m-d', time())), false);
         else
             $model = $this->findModel($course_id, $create_time);
-        $model->create_by = $model->weeklyCreateBy->weekly_editors_people;
+        
         $editorsPeople = $model->course->weekly_editors_people;
         
         if(!$model->course->getIsNormal())

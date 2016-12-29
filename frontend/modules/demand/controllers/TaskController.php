@@ -136,7 +136,7 @@ class TaskController extends Controller
 
         if ($model->load($post)) {
             $dtTool->CreateTask($model, $post);
-            return $this->redirect(['index']);
+            return $this->redirect(['update', 'id' => $model->id, 'mark' => 1 ]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -149,6 +149,29 @@ class TaskController extends Controller
             ]);
         }
     }
+    
+    /**
+     * 任务提交审核操作
+     * @param integer $id
+     * @return type
+     * @throws NotAcceptableHttpException
+     */
+    public function actionSubmitCheck($id)
+    {
+        $this->layout = '@app/views/layouts/main';
+        if(!\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE))
+            throw new NotAcceptableHttpException('无权限操作！');
+        $model = $this->findModel($id);
+        $model->status = DemandTask::STATUS_CHECK;
+        $model->progress = $model->getStatusProgress();
+        /* @var $dtTool DemandTool */
+        $dtTool = DemandTool::getInstance();
+        if(!$model->getIsStatusDefault())
+            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        
+        $dtTool->TaskSubmitCheck($model);
+        return $this->redirect(['index']);
+    }
 
     /**
      * Updates an existing DemandTask model.
@@ -156,14 +179,15 @@ class TaskController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
+    public function actionUpdate($id, $mark = null)
     {
         $this->layout = '@app/views/layouts/main';
         if(!\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UPDATE))
             throw new NotAcceptableHttpException('无权限操作！');
         $model = $this->findModel($id);
         $post = Yii::$app->request->post();
-        if(!$model->getIsStatusAdjusimenting())
+        
+        if($mark == null && !$model->getIsStatusAdjusimenting())
             throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
         /* @var $dtTool DemandTool */
         $dtTool = DemandTool::getInstance();
@@ -184,6 +208,7 @@ class TaskController extends Controller
                 'teachers' => $this->getExpert(),
                 'team' => $twTool->getHotelTeam(),
                 'annex' => $this->getAnnex($model->id),
+                'mark' => $mark != null ? 1 : 0,
             ]);
         }
     }
