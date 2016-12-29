@@ -35,3 +35,4 @@ phpunit.phar
 /backend/runtime/
 /frontend/runtime/
 /backend/modules/runtime/
+/frontend/web/frontend/
