@@ -12,6 +12,8 @@ use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
+
+
 /**
  * DefaultController implements the CRUD actions for Product model.
  */
@@ -83,7 +85,7 @@ class DefaultController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            return $this->render('create', [
+;            return $this->render('create', [
                 'model' => $model,
                 'productType' => $this->getProductType(),
             ]);
@@ -136,7 +138,7 @@ class DefaultController extends Controller
         if (($model = Product::findOne($id)) !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException(\Yii::t('rcoa', 'The requested page does not exist.'));
+            throw new NotFoundHttpException(Yii::t('rcoa', 'The requested page does not exist.'));
         }
     }
     
@@ -161,5 +163,5 @@ class DefaultController extends Controller
                         ->andWhere(['not in', 'id', $id])
                         ->all();
         return ArrayHelper::map($classification, 'id', 'name');
-    }
+    }   
 }

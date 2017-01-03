@@ -2,10 +2,12 @@
 
 namespace common\models\product;
 
+use common\models\demand\DemandTaskProduct;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "{{%product}}".
@@ -53,6 +55,33 @@ class Product extends ActiveRecord
         return '{{%product}}';
     }
     
+    /**
+     * 
+     * @param type $insert 
+     */
+    public function beforeSave($insert) 
+    {
+        if(parent::beforeSave($insert))
+        {
+            $upload = UploadedFile::getInstance($this, 'image');
+            if($upload != null)
+            {
+                $string = $upload->name;
+                $array = explode('.',$string);
+                //获取后缀名，默认为 jpg 
+                $ext = count($array) == 0 ? 'jpg' : $array[count($array)-1];
+                $uploadpath = $this->fileExists(Yii::getAlias('@filedata').'/product/'.date('Y-m-d', time()).'/');
+                $upload->saveAs($uploadpath.time().rand(1, 6).'.'.$ext);
+                $this->image = '/filedata/product/'.date('Y-m-d', time()).'/'.time().rand(1, 6).'.'.$ext;
+                
+                if(trim($this->image) == '')
+                    $this->image = $this->getOldAttribute ('image');
+            }
+            return true;
+        }else
+            return false;
+    }
+    
     public function behaviors() {
         return [
             TimestampBehavior::className()
@@ -65,13 +94,13 @@ class Product extends ActiveRecord
     public function rules()
     {
         return [
-            [['type', 'level', 'created_at', 'updated_at', 'parent_id'], 'required'],
-            [['type', 'level', 'created_at', 'updated_at', 'parent_id'], 'integer'],
+            [['type', 'level', 'name'], 'required'],
+            [['type', 'level', 'created_at', 'updated_at'], 'integer'],
             [['unit_price'], 'number'],
             [['des'], 'string'],
             [['currency'], 'string', 'max' => 4],
             [['name', 'image'], 'string', 'max' => 255],
-            [['parent_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['parent_id' => 'id']],
+            //[['parent_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['parent_id' => 'id']],
         ];
     }
 
@@ -94,7 +123,7 @@ class Product extends ActiveRecord
             'parent_id' => Yii::t('rcoa', 'Parent ID'),
         ];
     }
-
+    
     /**
      * 获取所有需求任务产品
      * @return ActiveQuery
@@ -149,4 +178,16 @@ class Product extends ActiveRecord
         return $this->hasMany(ProductDetails::className(), ['product_id' => 'id']);
     }
     
+    /**
+     * 检查目标路径是否存在，不存即创建目标
+     * @param string $uploadpath    目录路径
+     * @return string
+     */
+    private function fileExists($uploadpath) {
+
+        if (!file_exists($uploadpath)) {
+            mkdir($uploadpath);
+        }
+        return $uploadpath;
+    }
 }

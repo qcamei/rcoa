@@ -1,6 +1,7 @@
 <?php
 
 use common\models\product\Product;
+use kartik\widgets\FileInput;
 use kartik\widgets\Select2;
 use yii\helpers\Html;
 use yii\web\View;
@@ -13,7 +14,11 @@ use yii\widgets\ActiveForm;
 
 <div class="product-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+        'options' => [
+            'enctype' => 'multipart/form-data',
+        ],
+    ]); ?>
 
     <?= $form->field($model, 'type')->widget(Select2::classname(), [
         'data' => $productType, 'hideSearch'=>false, 'options' => ['placeholder' => '请选择...'],
@@ -40,7 +45,7 @@ use yii\widgets\ActiveForm;
        'style' => $model->level != Product::GOODS ? 'display: none;' : 'display: block'
     ]])->textInput() ?>
 
-    <?= $form->field($model, 'image')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'image')->fileInput() ?>
 
     <?= $form->field($model, 'des')->textarea(['rows' => 6]) ?>
 
