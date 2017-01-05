@@ -53,6 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $this->render('/summary/index', [
         'model' => $model,
         'twTool' => $twTool,
+        'rbacManager' => $rbacManager,
         'weeklyMonth' => $weeklyMonth,
         'weeklyInfoResult' => $weeklyInfoResult
     ]); ?>
@@ -62,6 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?= $this->render('_form_view',[
     'model' => $model,
     'twTool' => $twTool,
+    'rbacManager' => $rbacManager,
 ]) ?>
 
 <div class="item-manage">

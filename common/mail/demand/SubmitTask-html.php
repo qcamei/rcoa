@@ -22,7 +22,7 @@ use yii\helpers\Html;
     
     <p><b>课程名</b>：<?= Html::encode($model->course->name) ?></p>
     
-    <p><b>承接人</b>：<?= Html::encode($model->undertakePerson->user->nickname) ?></p>
+    <p><b>承接人</b>：<?= Html::encode($model->undertakePerson->nickname) ?></p>
     
     <p><b>计划验收时间</b>：<span style="color:red"><?= Html::encode($model->plan_check_harvest_time) ?></span></p>
     

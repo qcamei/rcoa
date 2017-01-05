@@ -55,33 +55,6 @@ class Product extends ActiveRecord
         return '{{%product}}';
     }
     
-    /**
-     * 
-     * @param type $insert 
-     */
-    public function beforeSave($insert) 
-    {
-        if(parent::beforeSave($insert))
-        {
-            $upload = UploadedFile::getInstance($this, 'image');
-            if($upload != null)
-            {
-                $string = $upload->name;
-                $array = explode('.',$string);
-                //获取后缀名，默认为 jpg 
-                $ext = count($array) == 0 ? 'jpg' : $array[count($array)-1];
-                $uploadpath = $this->fileExists(Yii::getAlias('@filedata').'/product/'.date('Y-m-d', time()).'/');
-                $upload->saveAs($uploadpath.time().rand(1, 6).'.'.$ext);
-                $this->image = '/filedata/product/'.date('Y-m-d', time()).'/'.time().rand(1, 6).'.'.$ext;
-                
-                if(trim($this->image) == '')
-                    $this->image = $this->getOldAttribute ('image');
-            }
-            return true;
-        }else
-            return false;
-    }
-    
     public function behaviors() {
         return [
             TimestampBehavior::className()
@@ -122,6 +95,33 @@ class Product extends ActiveRecord
             'updated_at' => Yii::t('rcoa', 'Updated At'),
             'parent_id' => Yii::t('rcoa', 'Parent ID'),
         ];
+    }
+    
+    /**
+     * 
+     * @param type $insert 
+     */
+    public function beforeSave($insert) 
+    {
+        if(parent::beforeSave($insert))
+        {
+            $upload = UploadedFile::getInstance($this, 'image');
+            if($upload != null)
+            {
+                $string = $upload->name;
+                $array = explode('.',$string);
+                //获取后缀名，默认为 jpg 
+                $ext = count($array) == 0 ? 'jpg' : $array[count($array)-1];
+                $uploadpath = $this->fileExists(Yii::getAlias('@filedata').'/product/'.date('Y-m-d', time()).'/');
+                $upload->saveAs($uploadpath.time().rand(1, 6).'.'.$ext);
+                $this->image = '/filedata/product/'.date('Y-m-d', time()).'/'.time().rand(1, 6).'.'.$ext;
+                
+                if(trim($this->image) == '')
+                    $this->image = $this->getOldAttribute ('image');
+            }
+            return true;
+        }else
+            return false;
     }
     
     /**

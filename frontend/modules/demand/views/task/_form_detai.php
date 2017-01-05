@@ -112,7 +112,7 @@ if($model->status == DemandTask::STATUS_CANCEL || $model->status == DemandTask::
                 [
                     'attribute' => 'undertake_person',
                     'format' => 'raw',
-                    'value' => !empty($model->undertake_person) ? $model->undertakePerson->user->nickname : null,
+                    'value' => !empty($model->undertake_person) ? $model->undertakePerson->nickname : null,
                 ],
                 [
                     'attribute' => 'plan_check_harvest_time',

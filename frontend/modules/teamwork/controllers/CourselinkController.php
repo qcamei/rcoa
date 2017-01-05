@@ -5,8 +5,10 @@ namespace frontend\modules\teamwork\controllers;
 use common\models\teamwork\CourseLink;
 use common\models\teamwork\CoursePhase;
 use frontend\modules\teamwork\utils\TeamworkTool;
+use wskeee\rbac\RbacManager;
 use wskeee\rbac\RbacName;
 use Yii;
+use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -52,6 +54,8 @@ class CourselinkController extends Controller
     {
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
+        /* @var $rbacManager RbacManager */  
+        $rbacManager = \Yii::$app->authManager;
         $coursePhase = CoursePhase::find()
                        ->where(['course_id' => $course_id, 'is_delete' => 'N'])
                        ->with('course', 'courseLinks')->all();
@@ -61,6 +65,7 @@ class CourselinkController extends Controller
         return $this->render('index', [
             'model' => $this->findModel(['course_id' => $course_id]),
             'twTool' => $twTool,
+            'rbacManager' => $rbacManager,
             'coursePhase' => $coursePhase,
             'course_id' => $course_id
         ]);
@@ -74,9 +79,12 @@ class CourselinkController extends Controller
     {
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
+        /* @var $rbacManager RbacManager */  
+        $rbacManager = \Yii::$app->authManager;
         $coursePhase = $twTool->getCoursePhaseProgress($course_id)->all();
         return $this->render('progress', [
             'twTool' => $twTool,
+            'rbacManager' => $rbacManager,
             'course_id' => $course_id,
             'coursePhase' => $coursePhase,
         ]);
@@ -86,13 +94,13 @@ class CourselinkController extends Controller
      * Displays a single CourseLink model.
      * @param integer $id
      * @return mixed
-     */
+     
     public function actionView($id)
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
-    }
+    }*/
 
     /**
      * 新增阶段和环节
@@ -105,14 +113,15 @@ class CourselinkController extends Controller
         $phaseModel = new CoursePhase();
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
+        /* @var $rbacManager RbacManager */  
+        $rbacManager = \Yii::$app->authManager;
         $phaseModel->loadDefaultValues();
         $post = Yii::$app->request->post();
         $phaseModel->course_id = $course_id;
         
-        if(!(($twTool->getIsAuthority('is_leader', 'Y') && $phaseModel->course->create_by == Yii::$app->user->id) 
-            || $twTool->getIsAuthority('id', $phaseModel->course->course_principal)
-            || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
-            throw new NotAcceptableHttpException('无权限操作');
+        if(!((Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_TASK_COLLOCATION) && $phaseModel->course->create_by == \Yii::$app->user->id) 
+           || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id) || $twTool->getIsAuthority('id', $phaseModel->course->course_principal)))
+            throw new NotAcceptableHttpException('无权限操作！');
         if(!$phaseModel->course->getIsNormal())
             throw new NotAcceptableHttpException('该课程'.$phaseModel->course->getStatusName().'！');
         
@@ -143,13 +152,13 @@ class CourselinkController extends Controller
         $phaseModel = CoursePhase::findOne($id);
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
+        /* @var $rbacManager RbacManager */  
+        $rbacManager = \Yii::$app->authManager;
         $post = Yii::$app->request->post();
         
-        if(!(($twTool->getIsAuthority('is_leader', 'Y') && $phaseModel->course->create_by == Yii::$app->user->id) 
-            || $twTool->getIsAuthority('id', $phaseModel->course->course_principal)
-            || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
-            throw new NotAcceptableHttpException('无权限操作');
-      
+       if(!((Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_TASK_COLLOCATION) && $phaseModel->course->create_by == \Yii::$app->user->id) 
+           || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id) || $twTool->getIsAuthority('id', $phaseModel->course->course_principal)))
+            throw new NotAcceptableHttpException('无权限操作！');
         if(!$phaseModel->course->getIsNormal())
             throw new NotAcceptableHttpException('该课程'.$phaseModel->course->getStatusName().'！');
         
@@ -177,11 +186,11 @@ class CourselinkController extends Controller
         $model = CoursePhase::findOne($id);
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
-        if(!(($twTool->getIsAuthority('is_leader', 'Y') && $model->course->create_by == Yii::$app->user->id) 
-            || $twTool->getIsAuthority('id', $model->course->course_principal) 
-            || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
-            throw new NotAcceptableHttpException('无权限操作');
-        
+        /* @var $rbacManager RbacManager */  
+        $rbacManager = \Yii::$app->authManager;
+        if(!((Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_TASK_COLLOCATION) && $model->course->create_by == \Yii::$app->user->id) 
+           || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id) || $twTool->getIsAuthority('id', $model->course->course_principal)))
+            throw new NotAcceptableHttpException('无权限操作！');
         if(!$model->course->getIsNormal() )
             throw new NotAcceptableHttpException('该课程'.$model->course->getStatusName().'！');
         
@@ -203,10 +212,11 @@ class CourselinkController extends Controller
         $model = $this->findModel($id);
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
-        if(!(($twTool->getIsAuthority('is_leader', 'Y') && $model->course->create_by == Yii::$app->user->id) 
-            || $twTool->getIsAuthority('id', $model->course->course_principal)
-            || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
-            throw new NotAcceptableHttpException('无权限操作');
+        /* @var $rbacManager RbacManager */  
+        $rbacManager = \Yii::$app->authManager;
+        if(!((Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_TASK_COLLOCATION) && $model->course->create_by == \Yii::$app->user->id) 
+           || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id) || $twTool->getIsAuthority('id', $model->course->course_principal)))
+            throw new NotAcceptableHttpException('无权限操作！');
         
         $model = $this->findModel($id);
         if(!$model->course->getIsNormal() )
@@ -228,10 +238,11 @@ class CourselinkController extends Controller
         $model = $this->findModel($id);
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
-        if(!($twTool->getIsUserBelongProducer($model->course_id) 
-            || $twTool->getIsAuthority('id', $model->course->course_principal) 
-            || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
-            throw new NotAcceptableHttpException('无权限操作');
+        /* @var $rbacManager RbacManager */  
+        $rbacManager = \Yii::$app->authManager;
+        if(!((Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_COURSE_INPUT) && $model->course->create_by == \Yii::$app->user->id) 
+           || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id) || $twTool->getIsAuthority('id', $model->course->course_principal)))
+            throw new NotAcceptableHttpException('无权限操作！');
         if(!$model->course->getIsNormal() )
             throw new NotAcceptableHttpException('该课程'.$phaseModel->course->getStatusName().'！');
 
@@ -367,7 +378,7 @@ class CourselinkController extends Controller
      */
     public function getWeightTotalIsSmallOrBig($courseId)
     {
-        $results = (new \yii\db\Query())
+        $results = (new Query())
                     ->select(['SUM(Tw_course_phase.weights) AS weight_total'])
                     ->from(['Tw_course_phase' => CoursePhase::tableName()])
                     ->where(['course_id' => $courseId, 'is_delete' => 'N'])

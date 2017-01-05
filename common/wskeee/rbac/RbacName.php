@@ -44,15 +44,23 @@ class RbacName {
     const ROLE_TEACHERS = 'r_teachers';
     /** 项目系统管理员 */
     const ROLE_PROJECT_MANAGER = 'r_project_manager';
-    /** 多媒体任务发布者 */
+    /** 课程开发-开发管理员 */
+    const ROLE_TEAMWORK_DEVELOP_MANAGER = 'r_teamwork_develop_manager';
+    /** 课程开发-课程开发经理 */
+    const ROLE_TEAMWORK_DEVELOP_LEADER = 'r_teamwork_develop_leader';
+    /** 课程开发-周报开发者 */
+    const ROLE_TEAMWORK_WEEKLY_DEVELOPER = 'r_teamwork_weekly_developer';
+    /** 课程开发-课程录入人 */
+    const ROLE_TEAMWORK_COURSE_INPUTPERSON   = 'r_teamwork_course_inputperson';
+    /** 多媒体-任务发布者 */
     const ROLE_MULTIMEDIA_PROMULGATOR = 'r_multimedia_promulgator';
-    /** 多媒体任务指派人 */
+    /** 多媒体-任务指派人 */
     const ROLE_MULTIMEDIA_ASSIGNPERSON = 'r_multimedia_assignperson';
-    /** 课程需求审核人 */
+    /** 课程需求-审核人 */
     const ROLE_DEMAND_AUDITOR = 'r_demand_auditor';
-    /** 课程需求发布者 */
+    /** 课程需求-发布者 */
     const ROLE_DEMAND_PROMULGATOR = 'r_demand_promulgator';
-    /** 课程需求承接人 */
+    /** 课程需求-承接人 */
     const ROLE_DEMAND_UNDERTAKE_PERSON = 'r_demand_undertake_person';
 
 
@@ -82,11 +90,25 @@ class RbacName {
     const PERMSSIONT_SHOOT_OWN_UPDATE = 'p_shoot_own_update';
     /** 拍摄-更新预约 */
     const PERMSSIONT_SHOOT_UPDATE = 'p_shoot_update';
-    /** 团队-项目管理创建 */
-    const PERMSSION_TEAMWORK_CREATE = 'p_teamwork_create';
-    /** 团队-项目管理更新 */
-    const PERMSSION_TEAMWORK_UPDATE = 'p_teamwork_update';
-    /** 团队-课程复原 */
+    /** 课程开发-任务创建 */
+    const PERMSSION_TEAMWORK_TASK_CREATE = 'p_teamwork_task_create';
+    /** 课程开发-任务更新 */
+    const PERMSSION_TEAMWORK_TASK_UPDATE = 'p_teamwork_taks_update';
+    /** 课程开发-任务配置 */
+    const PERMSSION_TEAMWORK_TASK_COLLOCATION = 'p_teamwork_taks_collocation';
+    /** 课程开发-任务开始 */
+    const PERMSSION_TEAMWORK_TASK_START = 'p_teamwork_taks_start';
+    /** 课程开发-周报创建 */
+    const PERMSSION_TEAMWORK_WEEKLY_CREATE = 'p_teamwork_weekly_create';
+    /** 课程开发-周报编辑 */
+    const PERMSSION_TEAMWORK_WEEKLY_UPDATE = 'p_teamwork_weekly_update';
+    /** 课程开发-课程录入 */
+    const PERMSSION_TEAMWORK_COURSE_INPUT = 'p_teamwork_course_input';
+    /** 课程开发-任务完成 */
+    const PERMSSION_TEAMWORK_TASK_COMPLETE = 'p_teamwork_taks_complete';
+    /** 课程开发-课程移交 */
+    const PERMSSION_TEAMWORK_COURSE_TRANSFER = 'p_teamwork_course_transfer';
+    /** 课程开发-课程恢复 */
     const PERMSSION_TEAMWORK_COURSE_RESTORE = 'p_teamwork_course_restore';
     /** 多媒体-任务创建 */
     const PERMSSION_MULTIMEDIA_TASK_CREATE = 'p_multimedia_task_create';

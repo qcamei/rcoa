@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
 <div class="demand-task-auditor-form">
 
     <?php $form = ActiveForm::begin(); ?>
-    
+
     <?= $form->field($model, 'team_id')->widget(Select2::classname(), [
         'data' => $teams, 'hideSearch'=>false, 'options' => ['placeholder' => '请选择...'],
     ]) ?>

@@ -2,11 +2,13 @@
 
 use common\models\demand\DemandTask;
 use frontend\modules\demand\utils\DemandTool;
+use wskeee\rbac\RbacManager;
 use wskeee\rbac\RbacName;
 use yii\helpers\Html;
 
 /* @var $model DemandTask */
 /* @var $dtTool DemandTool */ 
+/* @var $rbacManager RbacManager */  
 
 $page = [
     'index', 
@@ -114,10 +116,10 @@ $page = [
              * 承接 按钮显示必须满足以下条件：
              * 1、必须拥有承接权限
              * 2、状态必须是在【待承接】
-             * 3、必须是所有团队的【开发经理】
+             * 3、必须是【承接人】
              */
-            if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UNDERTAKE) && $model->getIsStatusUndertake() 
-              && $dtTool->getIsUndertakePerson())
+            if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UNDERTAKE) 
+              && $rbacManager->isRole(RbacName::ROLE_DEMAND_UNDERTAKE_PERSON, Yii::$app->user->id) && $model->getIsStatusUndertake())
                 echo Html::a('承接', ['undertake', 'id' => $model->id],  ['id' => 'undertake', 'class' =>'btn btn-primary']).' ';
             /**
              * 创建开发 按钮显示必须满足以下条件：
@@ -127,24 +129,25 @@ $page = [
              * 4、课程开发数据必须为空
              */
             if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_DEVELOP) && $model->getIsStatusDeveloping()
-               && $model->undertakePerson->u_id == Yii::$app->user->id && empty($model->teamworkCourse))
+               && $model->undertake_person == Yii::$app->user->id && empty($model->teamworkCourse))
                 echo Html::a('创建开发', ['/teamwork/course/create', 'demand_task_id' => $model->id], ['class' =>'btn btn-primary']).' ';
             /**
              * 验收 按钮显示必须满足以下条件：
              * 1、状态必须是在【开发中】
-             * 2、必须是该任务的承接人
+             * 2、必须是该任务的开发负责人
              * 3、课程开发数据必须非空
              */
-            if($model->getIsStatusDeveloping() && $model->undertakePerson->u_id == Yii::$app->user->id && !empty($model->teamworkCourse))
+            if($model->getIsStatusDeveloping() 
+               && $model->developPrincipals->u_id == Yii::$app->user->id && !empty($model->teamworkCourse))
                 echo Html::a('提交任务', ['submit-task', 'id' => $model->id], ['id' => 'submit-task', 'class' =>'btn btn-success']).' ';
             /**
              * 提交验收 按钮显示必须满足以下条件：
              * 1、必须拥有提交验收权限
              * 2、状态必须是在【修改中】
-             * 3、必须是该任务的承接人
+             * 3、必须是该任务的开发负责人
              */
-            if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_SUBMIT_ACCEPTANCE) 
-               && $model->getIsStatusUpdateing() && $model->undertakePerson->u_id == Yii::$app->user->id)
+            if($model->getIsStatusUpdateing() && (Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_SUBMIT_ACCEPTANCE)
+                && $model->developPrincipals->u_id == Yii::$app->user->id))
                 echo Html::a('提交验收', ['acceptance/submit', 'task_id' => $model->id], ['class' =>'btn btn-info']).' ';
         ?>
         </div>

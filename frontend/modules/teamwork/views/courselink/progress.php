@@ -50,11 +50,11 @@ $this->params['breadcrumbs'][] = $this->title;
         <tbody>
         <?php 
         $isUserBelongProducer = $twTool->getIsUserBelongProducer($course_id);
+        
         foreach ($coursePhase as $phase) {
-            $className = $phase->course->getIsNormal()
-                    && ($isUserBelongProducer || $twTool->getIsAuthority('id', $phase->course->course_principal)
-                    || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)) ?
-                        'btn btn-primary' : 'btn btn-primary disabled';
+            $className = $phase->course->getIsNormal() && ((Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_COURSE_INPUT) && $isUserBelongProducer) 
+                || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id) || $twTool->getIsAuthority('id', $phase->course->course_principal)) ?
+                    'btn btn-primary' : 'btn btn-primary disabled';
             /* @var $phase CoursePhase */
             echo '<tr style="background-color:#eee">
                 <td>'.$phase->name.'</td>

@@ -6,17 +6,16 @@ use common\config\AppGlobalVariables;
 use common\models\demand\DemandTask;
 use common\models\demand\DemandTaskAnnex;
 use common\models\expert\Expert;
-use common\models\teamwork\CourseManage;
 use common\wskeee\job\JobManager;
 use frontend\modules\demand\utils\DemandTool;
 use frontend\modules\teamwork\utils\TeamworkTool;
 use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\Item;
 use wskeee\framework\models\ItemType;
+use wskeee\rbac\RbacManager;
 use wskeee\rbac\RbacName;
 use Yii;
 use yii\data\ArrayDataProvider;
-use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -99,6 +98,8 @@ class TaskController extends Controller
         $twTool = TeamworkTool::getInstance();
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
+        /* @var $rbacManager RbacManager */  
+        $rbacManager = \Yii::$app->authManager;
         if($model->getIsStatusCompleted() || $model->getIsStatusCancel() ){
             //取消用户与任务通知的关联
             $jobManager->cancelNotification(AppGlobalVariables::getSystemId(), $model->id, \Yii::$app->user->id); 
@@ -111,6 +112,7 @@ class TaskController extends Controller
             'model' => $model,
             'dtTool' => $dtTool,
             'twTool' => $twTool,
+            'rbacManager' => $rbacManager,
             'annex' => $this->getAnnex($id),
         ]);
     }
@@ -244,11 +246,14 @@ class TaskController extends Controller
     public function actionUndertake($id)
     {
         $model = $this->findModel($id);
+        /* @var $rbacManager RbacManager */  
+        $rbacManager = \Yii::$app->authManager;
         /* @var $dtTool DemandTool */
         $dtTool = DemandTool::getInstance();
         /* @var $dtTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
-        if(!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UNDERTAKE) && $dtTool->getIsUndertakePerson()))
+        if(!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UNDERTAKE) 
+           && $rbacManager->isRole(RbacName::ROLE_DEMAND_UNDERTAKE_PERSON, \Yii::$app->user->id)))
             throw new NotAcceptableHttpException('无权限操作！');
         if(!$model->getIsStatusUndertake())
             throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
@@ -260,7 +265,7 @@ class TaskController extends Controller
             return $this->renderAjax('undertake', [
                 'model' => $model,
                 'team' => $twTool->getHotelTeam(),
-                'undertake' => $dtTool->getHotelTeamMemberId(),
+                'developPrincipals' => $dtTool->getHotelTeamMemberId(),
             ]);
         }
     }
@@ -276,7 +281,7 @@ class TaskController extends Controller
         $model = $this->findModel($id);
         /* @var $dtTool DemandTool */
         $dtTool = DemandTool::getInstance();
-        if($model->undertakePerson->u_id != Yii::$app->user->id)
+        if($model->developPrincipals->u_id != Yii::$app->user->id)
             throw new NotAcceptableHttpException('无权限操作！');
         if(!$model->getIsStatusDeveloping())
             throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');

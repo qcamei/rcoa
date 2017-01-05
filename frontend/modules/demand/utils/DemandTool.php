@@ -12,6 +12,8 @@ use common\models\demand\DemandTaskAuditor;
 use common\models\team\TeamCategory;
 use common\wskeee\job\JobManager;
 use frontend\modules\teamwork\utils\TeamworkTool;
+use wskeee\rbac\RbacManager;
+use wskeee\rbac\RbacName;
 use wskeee\team\TeamMemberTool;
 use Yii;
 use yii\db\ActiveQuery;
@@ -128,7 +130,13 @@ class DemandTool {
         $demandNotice = DemandNoticeTool::getInstance();
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
-        $undertakeId = ArrayHelper::getValue($demandNotice->getUndertakePerson(), 'u_id');
+        /* @var $authManager RbacManager */
+        $authManager = Yii::$app->authManager;
+        $auditor = $demandNotice->getAuditor($model->create_team);
+        $auditorId = implode(',', array_filter(ArrayHelper::getValue($auditor, 'u_id')));
+        //查找所有承接人
+        $undertakePerson = $authManager->getItemUsers(RbacName::ROLE_DEMAND_UNDERTAKE_PERSON);
+        $undertakeId = array_filter(ArrayHelper::getColumn($undertakePerson, 'id'));
         
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
@@ -138,6 +146,7 @@ class DemandTool {
                 $this->saveDemandOperation($model->id, $model->status);
                 $this->saveOperationUser($model->id, $undertakeId);
                 $demandNotice->setUndertakeNotification($model);
+                $jobManager->cancelNotification(AppGlobalVariables::getSystemId(), $model->id, $auditorId);
                 $demandNotice->sendCreateByNotification($model, '审核已通过', 'demand/PassCheck-html', $model->createBy->ee);
                 $demandNotice->sendUndertakePersonNotification($model, '新任务发布', 'demand/Undertake-html');
             }else
@@ -231,9 +240,9 @@ class DemandTool {
         $trans = Yii::$app->db->beginTransaction();
         try
         {
-            if ($model->save(false, ['team_id', 'undertake_person', 'status', 'progress'])){
+            if ($model->save(false, ['team_id', 'undertake_person',  'develop_principals', 'status', 'progress'])){
                 $this->saveDemandOperation($model->id, $model->status);
-                $this->saveOperationUser($model->id, [$model->undertakePerson->u_id]);
+                $this->saveOperationUser($model->id, [$model->undertake_person]);
                 $demandNotice->setUndertakeNotification($model);
                 $demandNotice->sendCreateByNotification($model, '任务已承接 ', 'demand/AlreadyUndertake-html', $model->createBy->ee);
             }else
@@ -296,9 +305,9 @@ class DemandTool {
             $number = DemandTask::updateAll(['status' => DemandTask::STATUS_UPDATEING], ['id' => $model->task_id]);
             if($model->save() && $number > 0){
                 $this->saveDemandOperation($model->task_id, DemandTask::STATUS_UPDATEING);
-                $this->saveOperationUser($model->task_id, [$model->task->undertakePerson->u_id]);
+                $this->saveOperationUser($model->task_id, [$model->task->developPrincipals->u_id]);
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->task_id, ['status'=> DemandTask::$statusNmae[DemandTask::STATUS_UPDATEING]]);
-                $demandNotice->sendUndertakePersonNotification ($model, '验收不通过', 'demand/CreateAcceptance-html', $model->task->undertakePerson->u_id);
+                $demandNotice->sendDevelopPrincipalsNotification ($model, '验收不通过', 'demand/CreateAcceptance-html', $model->task->developPrincipals->user->ee);
             }else
                 throw new \Exception($model->getErrors());
             
@@ -526,7 +535,7 @@ class DemandTool {
     }
     
     /**
-     * 获取承接人所在团队成员表里的ID
+     * 获取开发负责人所在团队成员表里的ID
      * @return integer|array    
      */
     public function getHotelTeamMemberId()
@@ -600,17 +609,17 @@ class DemandTool {
     /**
      * 获取是否为承接人
      * @return boolean                 true为是
-     */
+     
     public function getIsUndertakePerson()
     {
-        /* @var $demandNotice DemandNoticeTool */
+        /* @var $demandNotice DemandNoticeTool 
         $demandNotice = DemandNoticeTool::getInstance();
         $undertake = ArrayHelper::getValue($demandNotice->getUndertakePerson(), 'u_id');
         if(!empty($undertake) && in_array(Yii::$app->user->id, $undertake))
             return true;
         
         return false;
-    }
+    }*/
     
     /**
      * 获取已存在的记录是否有未完成

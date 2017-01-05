@@ -5,6 +5,7 @@ namespace frontend\modules\teamwork\controllers;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\CourseSummary;
 use frontend\modules\teamwork\utils\TeamworkTool;
+use wskeee\rbac\RbacManager;
 use wskeee\rbac\RbacName;
 use Yii;
 use yii\filters\AccessControl;
@@ -154,18 +155,17 @@ class SummaryController extends Controller
         $twTool = TeamworkTool::getInstance();
         /* @var $course CourseManage */
         $course = CourseManage::findOne(['id' => $course_id]);
+        /* @var $rbacManager RbacManager */  
+        $rbacManager = \Yii::$app->authManager;
         $model->course_id = $course_id;
         $model->create_by = $course->weekly_editors_people;
         $model->create_time = date('Y-m-d', time());
-        $editorsPeople = $model->course->weekly_editors_people;
         
+        if(!((Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_WEEKLY_CREATE) && ($course->create_by == \Yii::$app->user->id || $twTool->getIsAuthority('id', $course->weekly_editors_people))) 
+          || $twTool->getIsAuthority('id', $course->course_principal) || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)))
+            throw new NotAcceptableHttpException('无权限操作！');
         if($model != null && !$model->course->getIsNormal())
             throw new NotAcceptableHttpException('该课程'.$model->course->getStatusName().'！');
-        
-        if(!(($twTool->getIsAuthority('is_leader', 'Y') && $course->create_by == \Yii::$app->user->id) 
-            || $twTool->getIsAuthority('id', $editorsPeople) || $twTool->getIsAuthority('id', $course->course_principal)
-            || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
-            throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['course/view', 'id' => $model->course_id]);
@@ -187,20 +187,19 @@ class SummaryController extends Controller
     {
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
+        /* @var $rbacManager RbacManager */  
+        $rbacManager = \Yii::$app->authManager;
         if($create_time == null)
             $model = $twTool->getWeeklyInfo($course_id, $twTool->getWeek(date('Y-m-d', time())), false);
         else
             $model = $this->findModel($course_id, $create_time);
-        
         $editorsPeople = $model->course->weekly_editors_people;
         
+        if(!((Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_WEEKLY_UPDATE) && ($model->course->create_by == \Yii::$app->user->id || $model->create_by == $editorsPeople)) 
+          || $twTool->getIsAuthority('id', $model->course->course_principal) || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)))
+            throw new NotAcceptableHttpException('无权限操作！');
         if(!$model->course->getIsNormal())
             throw new NotAcceptableHttpException('该课程'.$model->course->getStatusName().'！');
-        
-        if( !(($twTool->getIsAuthority('is_leader', 'Y') && $model->course->create_by == \Yii::$app->user->id) 
-            || $model->create_by == $editorsPeople || $twTool->getIsAuthority('id', $model->course->course_principal)
-            || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
-            throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['course/view', 'id' => $model->course_id]);

@@ -31,6 +31,7 @@ use yii\db\ActiveRecord;
  * @property integer $mode                              模式
  * @property integer $team_id                           开发团队ID
  * @property string $undertake_person                   承接人
+ * @property integer $develop_principals                开发负责人
  * @property string $plan_check_harvest_time            计划验收时间
  * @property string $reality_check_harvest_time         实际验收时间
  * @property integer $status                            状态
@@ -53,7 +54,8 @@ use yii\db\ActiveRecord;
  * @property Team $team                                 获取开发团队
  * @property Team $createTeam                           获取创建团队
  * @property User $createBy                             获取创建者
- * @property TeamMember $undertakePerson                获取承接人
+ * @property User $undertakePerson                      获取承接人
+ * @property TeamMember $developPrincipals              获取开发负责人
  * @property User $speakerTeacher                       获取教师
  * @property CourseManage $teamworkCourse               获取团队工作课程开发数据
  */
@@ -167,7 +169,7 @@ class DemandTask extends ActiveRecord
     {
         return [
             [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'teacher', 'course_description', 'lesson_time', 'credit'],'required'],
-            [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'lesson_time', 'credit', 'mode', 'team_id', 'create_team', 'status', 'progress', 'created_at', 'updated_at'], 'integer'],
+            [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'lesson_time', 'credit', 'mode', 'team_id', 'create_team', 'develop_principals', 'status', 'progress', 'created_at', 'updated_at'], 'integer'],
             [['course_description', 'des'], 'string'],
             [['teacher', 'undertake_person', 'create_by'], 'string', 'max' => 36],
             [['plan_check_harvest_time', 'reality_check_harvest_time'], 'string', 'max' => 60],
@@ -196,6 +198,7 @@ class DemandTask extends ActiveRecord
             'mode' => Yii::t('rcoa/demand', 'Mode'),
             'team_id' => Yii::t('rcoa/demand', 'Team'),
             'undertake_person' => Yii::t('rcoa/demand', 'Undertake Person'),
+            'develop_principals' => Yii::t('rcoa/demand', 'Develop Principals'),
             'plan_check_harvest_time' => Yii::t('rcoa/demand', 'Plan Check Harvest Time'),
             'reality_check_harvest_time' => Yii::t('rcoa/demand', 'Reality Check Harvest Time'),
             'status' => Yii::t('rcoa', 'Status'),
@@ -268,7 +271,16 @@ class DemandTask extends ActiveRecord
      */
     public function getUndertakePerson()
     {
-        return $this->hasOne(TeamMember::className(), ['id' => 'undertake_person']);
+        return $this->hasOne(User::className(), ['id' => 'undertake_person']);
+    }
+    
+    /**
+     * 获取开发负责人
+     * @return ActiveQuery
+     */
+    public function getDevelopPrincipals()
+    {
+        return $this->hasOne(TeamMember::className(), ['id' => 'develop_principals']);
     }
 
     /**

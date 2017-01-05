@@ -102,11 +102,8 @@ $isAuthorization = Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER);    //�
             echo Html::endTag('div');
             /** 编辑、新增按钮 */
             echo Html::beginTag('div', ['class' => 'col-lg-2 col-md-2 col-sm-2 col-xs-5', 'style' => 'padding:0px;']);
-                if(($twTool->getIsAuthority('is_leader', 'Y') && $model->create_by == Yii::$app->user->id) 
-                    || $twTool->getIsAuthority('id', $model->weekly_editors_people)
-                    || $twTool->getIsAuthority('id', $model->course_principal)
-                    || Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER))
-                {
+            if($model->getIsNormal())
+            {
                     /**
                      * 编辑 按钮显示必须满足以下条件：
                      * 1、状态非为【已完成】
@@ -114,7 +111,9 @@ $isAuthorization = Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER);    //�
                      * 3、(必须是【队长】 and 课程 【创建者】 是自己)
                      * or 【周报编辑人】 or 【项目管理员】 or 【课程负责人】
                      */
-                    if($model->getIsNormal() && $weeklyInfoResult)
+                    if($weeklyInfoResult 
+                      && ((Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_WEEKLY_UPDATE) && ($model->create_by == Yii::$app->user->id || $twTool->getIsAuthority('id', $model->weekly_editors_people)))
+                      || $twTool->getIsAuthority('id', $model->course_principal) || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)))
                         echo Html::a(Yii::t('rcoa/teamwork', 'Updated Weekly'), [
                             'summary/update', 'course_id' => $model->id, 'create_time' => $results['create_time']], 
                             ['id' => 'update', 'class' => 'btn btn-primary weekinfo']);
@@ -125,7 +124,9 @@ $isAuthorization = Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER);    //�
                      * 3、(必须是【队长】 and 课程 【创建者】 是自己)
                      * or 【周报编辑人】 or 【项目管理员】 or 【课程负责人】
                      */
-                    if($model->getIsNormal() && !$weeklyInfoResult)
+                    if(!$weeklyInfoResult
+                      && ((Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_WEEKLY_UPDATE) && ($model->create_by == Yii::$app->user->id || $twTool->getIsAuthority('id', $model->weekly_editors_people)))
+                      || $twTool->getIsAuthority('id', $model->course_principal) || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)))
                         echo Html::a(Yii::t('rcoa/teamwork', 'Create Weekly'), ['summary/create', 'course_id' => $model->id], [
                          'class' => 'btn btn-primary weekinfo']);
                 }

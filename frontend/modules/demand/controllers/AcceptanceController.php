@@ -138,7 +138,8 @@ class AcceptanceController extends Controller
         /* @var $dtTool DemandTool */
         $dtTool = DemandTool::getInstance();
         $dtTool::$table = DemandAcceptance::tableName();
-        if(!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_SUBMIT_ACCEPTANCE) && $dtTool->getIsCompleteCheck($task_id)))
+        if((!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_SUBMIT_ACCEPTANCE) && $model->task->developPrincipals->u_id == \Yii::$app->user->id)
+           && $dtTool->getIsCompleteCheck($task_id)))
             throw new NotAcceptableHttpException('无权限操作！');
         if(!$model->task->getIsStatusUpdateing())
             throw new NotAcceptableHttpException('该任务状态为'.$model->task->getStatusName().'！');

@@ -49,6 +49,14 @@ use yii\widgets\ActiveForm;
 </div>
 
 <script type="text/javascript">
+    /** 下拉选择【课程负责人】 */
+    $('#coursemanage-team_id').change(function(){
+        var url = "/teamwork/course/search-select?team_id="+$(this).val(),
+            element = $('#coursemanage-course_principal');
+        $("#coursemanage-course_principal").html("");
+        $('#select2-coursemanage-course_principal-container').html('<span class="select2-selection__placeholder">请选择...</span>');
+        wx(url, element, '请选择...');
+    });
     /** 移交操作 提交表单 */
     $("#change-save").click(function()
     {

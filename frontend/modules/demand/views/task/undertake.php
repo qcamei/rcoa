@@ -19,16 +19,17 @@ use yii\widgets\ActiveForm;
                 echo $form->field($model, 'team_id')->widget(Select2::classname(), [
                     'id' => 'demandtask-team_id', 'data' => $team, 'options' => ['placeholder' => '请选择...']
                 ]);
-                echo $form->field($model, 'undertake_person')->widget(Select2::classname(), [
-                    'id' => 'demandtask-undertake_person', 'data' => $undertake, 'options' => ['placeholder' => '请选择...']
+                echo $form->field($model, 'develop_principals')->widget(Select2::classname(), [
+                    'id' => 'demandtask-develop_principals', 'data' => $developPrincipals, 'options' => ['placeholder' => '请选择...']
                 ]);
             }
             else{
                 echo Html::encode('是否确定要承接该任务？');
                 echo Html::activeHiddenInput($model, 'team_id', ['value' => $team]);
-                echo Html::activeHiddenInput($model, 'undertake_person', ['value' => $undertake]);
+                echo Html::activeHiddenInput($model, 'develop_principals', ['value' => $developPrincipals]);
             }
-        ?> 
+        ?>
+        <?= Html::activeHiddenInput($model, 'undertake_person', ['value' => Yii::$app->user->id]); ?>
         <?= Html::activeHiddenInput($model, 'status', ['value' => DemandTask::STATUS_DEVELOPING])?>
         <?= Html::activeHiddenInput($model, 'progress', ['value' => $model->getStatusProgress()])?>
 

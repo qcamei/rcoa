@@ -41,6 +41,7 @@ return[
     'Reality Check Harvest Time' => '实际验收时间',
     'Check Harvest Time' => '验收时间',
     'Create By' => '发布者',
+    'Create Team' => '创建团队',
     'Created At' => '发布时间',
     'Updated At' => '编辑时间',
     'Des' => '备注',

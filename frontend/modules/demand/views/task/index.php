@@ -200,7 +200,7 @@ DemandTask::$operation = $operation;
                     'label' => Yii::t('rcoa/demand', 'Undertake Person'),
                     'value'=> function($model){
                         /* @var $model DemandTask */
-                        return !empty($model->undertake_person) ? $model->undertakePerson->user->nickname : null;
+                        return !empty($model->undertake_person) ? $model->undertakePerson->nickname : null;
                     },
                     'headerOptions' => [
                         'class'=>[

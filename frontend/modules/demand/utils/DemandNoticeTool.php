@@ -8,6 +8,8 @@ use common\models\team\TeamCategory;
 use common\models\team\TeamMember;
 use common\wskeee\job\JobManager;
 use wskeee\ee\EeManager;
+use wskeee\rbac\RbacManager;
+use wskeee\rbac\RbacName;
 use wskeee\team\TeamMemberTool;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -47,10 +49,10 @@ class DemandNoticeTool {
      * 获取所有承接人
      * @param string $uId           用户ID
      * @return array             
-     */
+     
     public function getUndertakePerson($uId = null)
     {
-        /* @var $tmTool TeamMemberTool */
+        /* @var $tmTool TeamMemberTool 
         $tmTool = TeamMemberTool::getInstance();
         $teams = $tmTool->getTeamsByCategoryId(TeamCategory::TYPE_CCOA_DEV_TEAM);
         $undertakes = TeamMember::find()
@@ -71,7 +73,7 @@ class DemandNoticeTool {
         ];
         
         return $undertake;
-    }
+    }*/
     
     /**
      * 给所在团队审核人 发送 ee通知 email
@@ -136,12 +138,11 @@ class DemandNoticeTool {
      * @param DemandTask $model
      * @param string $mode            标题模式
      * @param string $views           视图
-     * @param string $uid             承接人
      * @param string $cancel          临时变量
      */
-    public  function sendUndertakePersonNotification($model, $mode, $views, $uid = null, $cancel = null){
-        /* @var $model DemandTask */
-        $undertake = $this->getUndertakePerson($uid);
+    public  function sendUndertakePersonNotification($model, $mode, $views, $cancel = null){    
+        /* @var $authManager RbacManager */
+        $authManager = Yii::$app->authManager;
         //传进view 模板参数 
         $params = [
             'model' => $model,
@@ -149,14 +150,44 @@ class DemandNoticeTool {
         ];
         //主题 
         $subject = "课程需求-".$mode;
+        //查找所有承接人
+        $undertakePerson = $authManager->getItemUsers(RbacName::ROLE_DEMAND_UNDERTAKE_PERSON);
         //查找承接人ee和mail 
-        $undertakePerson_ee = implode(',', array_filter(ArrayHelper::getValue($undertake, 'ee')));
-        $undertakePerson_mail = array_filter(ArrayHelper::getValue($undertake, 'email'));
+        $undertakePerson_ee = array_filter(ArrayHelper::getColumn($undertakePerson, 'ee'));
+        $undertakePerson_mail = array_filter(ArrayHelper::getColumn($undertakePerson, 'email'));
         //发送ee消息
         EeManager::sendEeByView($views, $params,$undertakePerson_ee, $subject);
         //发送邮件消息 
         /*Yii::$app->mailer->compose($views, $params)
             ->setTo($undertakePerson_mail)
+            ->setSubject($subject)
+            ->send();*/
+    }
+    
+    /**
+     * 给开发负责人 发送 ee通知 email
+     * @param DemandTask $model
+     * @param string $mode                      标题模式
+     * @param string $views                     视图
+     * @param integer $developPrincipals_ee     开发负责人ee
+     * @param string $developPrincipals_mail    开发负责人email
+     * @param string $cancel                    临时变量
+     */
+    public  function sendDevelopPrincipalsNotification($model, $mode, $views, $developPrincipals_ee = null,  $developPrincipals_mail = null, $cancel = null){    
+        /* @var $authManager RbacManager */
+        $authManager = Yii::$app->authManager;
+        //传进view 模板参数 
+        $params = [
+            'model' => $model,
+            'cancel' => $cancel,
+        ];
+        //主题 
+        $subject = "课程需求-".$mode;
+        //发送ee消息
+        EeManager::sendEeByView($views, $params,$developPrincipals_ee, $subject);
+        //发送邮件消息 
+        /*Yii::$app->mailer->compose($views, $params)
+            ->setTo($developPrincipals_mail)
             ->setSubject($subject)
             ->send();*/
     }
@@ -184,11 +215,13 @@ class DemandNoticeTool {
      * @param DemandTask $model
      */
     public  function setUndertakeNotification($model){
+        /* @var $authManager RbacManager */
+        $authManager = Yii::$app->authManager;
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
-        /* @var $model DemandTask */
-        $undertake = $this->getUndertakePerson();
-        $undertakeId = array_filter(ArrayHelper::getValue($undertake, 'u_id'));
+        //查找所有承接人
+        $undertakePerson = $authManager->getItemUsers(RbacName::ROLE_DEMAND_UNDERTAKE_PERSON);
+        $undertakeId = array_filter(ArrayHelper::getColumn($undertakePerson, 'id'));
        
         //更新任务通知表
         $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->getStatusProgress(), 'status' => $model->getStatusName()]); 
@@ -198,7 +231,7 @@ class DemandNoticeTool {
         if(empty($model->undertake_person))
             $jobManager->addNotification(AppGlobalVariables::getSystemId(), $model->id, $undertakeId);
         else
-            $jobManager->addNotification(AppGlobalVariables::getSystemId(), $model->id, $model->undertakePerson->u_id);
+            $jobManager->addNotification(AppGlobalVariables::getSystemId(), $model->id, $model->undertake_person);
         
     }
     
@@ -210,12 +243,16 @@ class DemandNoticeTool {
     public  function cancelJobManager($model, $teamId){
         $team = [];
         $undertakeId = [];
+        /* @var $authManager RbacManager */
+        $authManager = Yii::$app->authManager;
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
+        //查找所有承接人
+        $undertakePerson = $authManager->getItemUsers(RbacName::ROLE_DEMAND_UNDERTAKE_PERSON);
         if(!$model->getIsStatusUndertake())
             $team = array_filter(ArrayHelper::getValue($this->getAuditor($teamId), 'u_id'));
         else
-            $undertakeId = array_filter(ArrayHelper::getValue($this->getUndertakePerson(), 'u_id'));
+            $undertakeId = array_filter(ArrayHelper::getValue($undertakePerson, 'id'));
         //全并两个数组的值
         $jobUserAll = ArrayHelper::merge(ArrayHelper::merge([$model->create_by], $team), $undertakeId);
         //修改job表任务

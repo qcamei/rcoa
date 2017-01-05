@@ -102,7 +102,7 @@ class TeamworkTool{
         {  
             /* @var $model CourseManage*/
             if($model->save(false, ['team_id', 'course_principal'])){
-               
+                DemandTask::updateAll(['team_id' => $model->team_id, 'develop_principals' => $model->course_principal], ['id' => $model->demand_task_id]);
             }else
                 throw new \Exception($model->getErrors());
             
@@ -386,7 +386,7 @@ class TeamworkTool{
      */
     public function getHotelTeam()
     {
-        $teamMember = TeamMemberTool::getInstance()->getUserTeam(Yii::$app->user->id, TeamCategory::TYPE_CCOA_DEV_TEAM);
+        $teamMember = TeamMemberTool::getInstance()->getUserTeam(Yii::$app->user->id);
         $teamIds = ArrayHelper::getColumn($teamMember, 'id');
         if(!empty($teamIds) && count($teamIds) == 1)
             return $teamIds[0];
@@ -581,7 +581,7 @@ class TeamworkTool{
         $producerId = ArrayHelper::getColumn($producer, 'producer');
         $teamMember = TeamMemberTool::getInstance()->getTeammemberById($producerId);
         $uId = ArrayHelper::getColumn($teamMember, 'u_id');
-        if(!empty($currentUser) || isset($currentUser) || !empty($course_id)){
+        if(!empty($currentUser) || !empty($course_id)){
             if(in_array(\Yii::$app->user->id, $uId))
                 return true;
         }

@@ -62,6 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?= $this->render('_form_view',[
     'model' => $model,
     'dtTool' => $dtTool,
+    'rbacManager' => $rbacManager,
 ]) ?>
 
 <div class="demand-task">
