@@ -64,7 +64,6 @@ $js = <<<JS
     $("#close").click(function(){
         $('#details').animate({top:'1000px'},'fast','swing');
     });
-    
     /** 提交表单操作 */
     $("#product-save").click(function(){
         $.post("/demand/product/save?task_id=$task_id&product_id=$product_id", $('#demand-task--product-form').serialize(), function(data){
@@ -77,11 +76,10 @@ $js = <<<JS
             }
         });
     });
-        
     /** 格式化所有价钱 */
     format(".totals");
 JS;
-    $this->registerJs($js, View::POS_END);
+    $this->registerJs($js, View::POS_READY);
 ?>
 
 <?php

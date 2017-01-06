@@ -106,6 +106,7 @@ class DemandTask extends ActiveRecord
      * @var array 
      */
     public static $defaultStatus = [
+        self::STATUS_DEFAULT,
         self::STATUS_CHECK,
         self::STATUS_ADJUSTMENTING,
         self::STATUS_CHECKING,
@@ -120,6 +121,7 @@ class DemandTask extends ActiveRecord
      * @var array 
      */
     public static $statusNmae = [
+        self::STATUS_DEFAULT => '创建中',
         self::STATUS_CHECK => '待审核',
         self::STATUS_ADJUSTMENTING => '调整中',
         self::STATUS_CHECKING => '审核中',

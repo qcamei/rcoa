@@ -189,7 +189,7 @@ class TaskController extends Controller
         $model = $this->findModel($id);
         $post = Yii::$app->request->post();
         
-        if($mark == null && !$model->getIsStatusAdjusimenting())
+        if($mark == null && !($model->getIsStatusDefault() || $model->getIsStatusAdjusimenting()))
             throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
         /* @var $dtTool DemandTool */
         $dtTool = DemandTool::getInstance();

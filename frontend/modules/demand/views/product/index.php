@@ -60,36 +60,23 @@ $this->params['breadcrumbs'][] = $this->title;
     <p><b>合计总额：<span class="totals">￥<?= number_format($totals, 2); ?></span></b></p>
     <p><span class="lesson">总学时：<?= $lessons ?>&nbsp;学时</span></p>
 </div>
-<div class="demand-task">
-    <?= isset($mark) && $mark == true ? $this->render('/task/_form_model') : '' ; ?>
-</div>
+
 
 <?php
 $js = 
 <<<JS
-   /** 此事件在模态框被隐藏（并且同时在 CSS 过渡效果完成）之后被触发。 
-    $('.myModal').on('hidden.bs.modal', function(){
-        window.location.reload();
-    });*/       
+    
 JS;
-    //$this->registerJs($js,  View::POS_END);
+    //$this->registerJs($js,  View::POS_READY);
 ?>
 
 <script type="text/javascript">
-    /** 单击添加按钮显示产品列表 模态框 */ 
-    $('#add').click(function()
-    {
-        var urlf = $(this).attr("href");
-        $(".myModal").modal('show');
-        $(".myModal").load(urlf);
-        return false;
-    }); 
     /** 单击产品列表显示产品详情  */
     function viewproduct(obj){
         var data_t = $(obj).attr("data_t");
         var data_p = $(obj).attr("data_p");
         $(".myModal").modal('show');
-        $(".myModal .modal-dialog .modal-content").load("/demand/product/list?task_id="+data_t,null,function(){
+        $(".myModal").load("/demand/product/list?task_id="+data_t,null,function(){
             $("#details .product-backdrop").load("/demand/product/view?task_id="+data_t+"&product_id="+data_p,null,
                 function(){
                     $('#details').animate({top:'0px'},'fast','swing');
@@ -98,7 +85,6 @@ JS;
         });
         return false;
     }
-    
     /** 单击删除产品 */
     function deleteproduct(obj){
         var data_t = $(obj).attr("data_t");
@@ -113,12 +99,10 @@ JS;
             }
         });
     }
-   
     /** 格式化所有价钱 */
     format(".price");
     format(".total-price");
     format(".totals");
-    
     /** 价格格式化 */
     function format(obj){
         $(obj).each(function(){
@@ -131,6 +115,7 @@ JS;
 　　     return str.replace(/(^\s*)|(\s*$)/g, "");
 　　}
 </script>
+
 <?php
     DemandAssets::register($this);
 ?>

@@ -47,9 +47,10 @@ class ProductController extends Controller
     /**
      * Lists all DemandTaskProduct models.
      * @param integer $task_id
+     * @param integer $mark               标识：1执行; 0不执行(默认为0)
      * @return mixed
      */
-    public function actionList($task_id)
+    public function actionList($task_id, $mark = 0)
     {
         $productTotal = $this->getProductTotal($task_id);
         

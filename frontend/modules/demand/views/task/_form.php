@@ -192,6 +192,11 @@ use yii\widgets\ActiveForm;
             <div id="demand-task-product-list"></div>
         </div>
     </div>
+    
+    <div class="demand-task">
+        <?= $this->render('_form_model') ?>
+    </div>
+    
     <?php endif; ?>
 </div>
 
@@ -216,17 +221,15 @@ $js =
         $('#select2-demandtask-course_id-container').html('<span class="select2-selection__placeholder">请选择...</span>');
         wx(url, element, '请选择...');
     });
-    
-    //加载已选课程产品列表
-    $("#demand-task-product-list").load("/demand/product/index?task_id=$model->id&mark=1", null, function(){
-        /** 判断是否为刚开始创建课程产品 */
-        if($mark == 1){
-           var urlf = $("#add").attr("href");
-           $(".myModal").modal('show');
-           $(".myModal").load(urlf);
-        }
-    });
-      
+    /** 加载已选课程产品列表 */
+    $("#demand-task-product-list").load("/demand/product/index?task_id=$model->id&mark=1"); 
+    /** 单击添加按钮显示产品列表 模态框 */    
+    $('#add').click(function(){
+        var urlf = $(this).attr("href");
+        $(".myModal").modal('show').load(urlf);
+        return false;
+    }); 
+   
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>

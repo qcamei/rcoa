@@ -57,31 +57,27 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 $data = json_encode($data);
 $js = <<<JS
-    /** 此事件在模态框被隐藏（并且同时在 CSS 过渡效果完成）之后被触发。 */ 
-    function closeMyModal(){
-        $('.myModal').modal('hide'); 
-        $('.myModal').on('hidden.bs.modal', function(){
-            $("#demand-task-product-list").load("/demand/product/index?task_id=$task_id&mark=1");
-        });
-    }
-    
     var pageList = new Wskeee.demand.PageList({onItemSelected:onItemSelected});
     pageList.init($data);
-      
     /** 单击选择添加产品数量 */
     function onItemSelected(itemdata){
         if(itemdata.type == "content"){
-            $('#details .product-backdrop').load("/demand/product/view?task_id=$task_id&product_id="+itemdata.id,null,
+            $('#details .product-backdrop').load("/demand/product/view?task_id=$task_id&product_id="+itemdata.id, null,
                 function(){
                     $('#details').animate({top:'0px'},'fast','swing');
                 }
             )
         }
     }
+    /** 此事件在模态框被隐藏（并且同时在 CSS 过渡效果完成）之后被触发。  */    
+    function closeMyModal(){
+        $('.myModal').modal('hide'); 
+        $("#demand-task-product-list").load("/demand/product/index?task_id=$task_id&mark=1");
+    }
     /** 格式化所有价钱 */
     format(".totals");
 JS;
-$this->registerJs($js, View::POS_END);
+   $this->registerJs($js, View::POS_READY);
 ?>
 
 <?php

@@ -29,9 +29,9 @@ $page = [
              * 2、状态必须是在【调整中】
              * 3、创建者是自己
              */
-            if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UPDATE) && $model->getIsStatusAdjusimenting() 
+            if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UPDATE) && ($model->getIsStatusDefault() || $model->getIsStatusAdjusimenting())
                && $model->create_by == Yii::$app->user->id)
-                echo Html::a('编辑', ['update', 'id' => $model->id], ['class' =>'btn btn-primary']).' ';
+                echo Html::a('编辑', ['update', 'id' => $model->id, 'mark' => $model->getIsStatusDefault() ? 1 : ''], ['class' =>'btn btn-primary']).' ';
             /**
              * 取消 按钮显示必须满足以下条件：
              * 1、拥有取消的权限
