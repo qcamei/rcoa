@@ -70,7 +70,14 @@ $js =
     /** 任务更新操作 提交表单 */
     $('#submit').click(function()
     {
-        $('#demand-task-form').submit();
+        $.post("/demand/task/check-unique", $('#demand-task-form').serialize(), function(data){
+            if(data['types'] == 1){
+                $(".field-demandtask-course_id").addClass("has-error").removeClass("has-success");
+                $(".field-demandtask-course_id .help-block").text(data['message']);
+            }else{
+               $('#demand-task-form').submit();
+            }
+        })
     });
     
 JS;

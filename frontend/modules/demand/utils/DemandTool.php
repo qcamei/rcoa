@@ -365,7 +365,7 @@ class DemandTool {
         {
             if ($model->save(false, ['status', 'progress', 'reality_check_harvest_time'])){
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status'=>$model->getStatusName()]);
-                $jobManager->cancelNotification(AppGlobalVariables::getSystemId(), $model->id, [$model->create_by, $model->undertakePerson->u_id]);
+                $jobManager->cancelNotification(AppGlobalVariables::getSystemId(), $model->id, [$model->create_by, $model->undertake_person]);
             }else
                 throw new \Exception($model->getErrors());
             

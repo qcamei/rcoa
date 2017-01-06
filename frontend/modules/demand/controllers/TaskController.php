@@ -421,6 +421,37 @@ class TaskController extends Controller
     }
     
     /**
+     * 检测课程是否唯一
+     * @return type JSON
+     */
+    public function actionCheckUnique()
+    {
+        Yii::$app->getResponse()->format = 'json';
+        $courseId = ArrayHelper::getValue(Yii::$app->request->post(), 'DemandTask.course_id');
+        $result = DemandTask::find()->select('course_id')  
+                  ->where(['and', ['course_id'=> $courseId], ['!=', 'status', DemandTask::STATUS_CANCEL]])->all();         
+        $errors = [];
+        $message = '';
+        $type = '';
+        try
+        {
+            if(!empty($result)){
+                $type = 1;
+                $message = '所选的课程已经被选择了！';
+            }else{
+                $type = 0;
+            }
+        } catch (Exception $ex) {
+            $errors [] = $ex->getMessage();
+        }
+        return [
+            'types'=> $type,
+            'message' => $message,
+            'error' => $errors
+        ];
+    }
+    
+    /**
      * Finds the DemandTask model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
