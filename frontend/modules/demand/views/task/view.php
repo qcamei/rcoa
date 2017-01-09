@@ -14,11 +14,12 @@ $this->title = Yii::t('rcoa/demand', 'Demand View').'：'.$model->course->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/demand', 'Demand Tasks'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
+/** 判断添加课程产品【标识】 */
 if($model->getIsStatusDefault() || $model->getIsStatusAdjusimenting())
     $mark = 1;
 else 
     $mark = 0;
-
+/** 判断是否提示创建课程开发数据 */
 if($model->getIsStatusDeveloping() && $model->undertake_person == Yii::$app->user->id)
    $isCreateDevelop = 1;
 else
