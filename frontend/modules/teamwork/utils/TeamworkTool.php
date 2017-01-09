@@ -3,16 +3,15 @@
 namespace frontend\modules\teamwork\utils;
 
 use common\models\demand\DemandTask;
-use common\models\team\TeamCategory;
 use common\models\teamwork\CourseAnnex;
 use common\models\teamwork\CourseLink;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\CoursePhase;
 use common\models\teamwork\CourseProducer;
 use common\models\teamwork\CourseSummary;
-use common\models\teamwork\ItemManage;
 use common\models\teamwork\Link;
 use common\models\teamwork\Phase;
+use common\wskeee\job\JobManager;
 use wskeee\team\TeamMemberTool;
 use Yii;
 use yii\db\ActiveQuery;
@@ -92,17 +91,26 @@ class TeamworkTool{
     /**
      * 更改团队/课程负责人操作
      * @param CourseManage $model
+     * @param string $oldCoursePrincipal              旧的课程负责人
+     * @param string $newCoursePrincipal              新的课程负责人
      * @return type
      */
-    public function ChangeTask($model)
+    public function ChangeTask($model, $oldCoursePrincipal, $newCoursePrincipal)
     {
+        /* @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
+        
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
         {  
             /* @var $model CourseManage*/
             if($model->save(false, ['team_id', 'course_principal'])){
-                DemandTask::updateAll(['team_id' => $model->team_id, 'develop_principals' => $model->course_principal], ['id' => $model->demand_task_id]);
+                $number = DemandTask::updateAll(['team_id' => $model->team_id, 'develop_principals' => $model->course_principal], ['id' => $model->demand_task_id]);
+                if($number > 0){
+                    $jobManager->removeNotification(11, $model->demand_task_id, $oldCoursePrincipal);
+                    $jobManager->addNotification(11, $model->demand_task_id, $newCoursePrincipal);
+                }
             }else
                 throw new \Exception($model->getErrors());
             

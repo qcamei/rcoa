@@ -7,6 +7,7 @@ use common\models\team\TeamMember;
 use common\models\teamwork\CourseAnnex;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\CourseProducer;
+use common\wskeee\job\JobManager;
 use frontend\modules\demand\utils\DemandTool;
 use frontend\modules\teamwork\utils\TeamworkTool;
 use wskeee\framework\FrameworkManager;
@@ -223,15 +224,25 @@ class CourseController extends Controller
      */
     public function actionChange($id) 
     {
+        
         $model = $this->findModel($id);
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
+        /* @var $tmTool TeamMemberTool */
+        $tmTool = TeamMemberTool::getInstance();
+        
         $model->scenario = CourseManage::SCENARIO_CHANGE;
+        $post = Yii::$app->request->post();
         if ($model->getIsCarryOut() && !Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_COURSE_TRANSFER)) 
             throw new NotFoundHttpException('无权限操作！');
         
-        if($model->load(Yii::$app->request->post())){
-            $twTool->ChangeTask($model);
+        $oldCoursePrincipal = $model->coursePrincipal->u_id;
+        $teamMemberId = ArrayHelper::getValue($post, 'CourseManage.course_principal');
+        $teamMember = $tmTool->getTeammemberById($teamMemberId);
+        $newCoursePrincipal = ArrayHelper::getValue($teamMember, 'u_id');
+        
+        if($model->load($post)){
+            $twTool->ChangeTask($model, $oldCoursePrincipal, $newCoursePrincipal);
             return $this->redirect(['view', 'id' => $model->id]);
         }else{
             return $this->renderAjax('change', [

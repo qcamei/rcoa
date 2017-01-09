@@ -179,10 +179,13 @@ class JobManager {
                     throw new Exception ("用户不能为空：systme_id:$systemId,relate_id:$relateId");
                 else
                 {
-                    foreach($users as $user)
-                       JobNotification::deleteAll(['and','job_id='.$job->id,'u_id="'.$user.'"']);
+                    foreach($users as $user){
+                        Yii::$app->db->createCommand()
+                            ->delete(JobNotification::tableName(), ['job_id' =>$job->id, 'u_id' => $user])
+                            ->execute();
+                    }
+                }   
                     //echo json_encode($rows);
-                }
             }else
                 throw new Exception ("找不到对应通知：systme_id:$systemId,relate_id:$relateId");
             return true;

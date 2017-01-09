@@ -160,7 +160,7 @@ $js =
     });
     
    /** 创建开发操作 弹出模态框 */
-    if($isCreateDevelop){
+    if($isCreateDevelop && $develop){
         $('.myModal').modal("show");
         $('#myModalBody').text("是否现在就开始创建开发课程数据？");
         $("#button").click(function(){
