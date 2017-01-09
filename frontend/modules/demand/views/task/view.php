@@ -64,7 +64,7 @@ else
         <div class="col-lg-12 col-md-12" style="padding:0px;">
             <?php if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE_PRODUCT) && $mark && $model->create_by == Yii::$app->user->id):?>
             <div class="add">
-                <?= Html::a('添加', ['product/list', 'task_id' => $model->id, 'mark' => $mark], 
+                <?= Html::a('添加', ['product/list', 'task_id' => $model->id], 
                                     ['id' => 'add' ,'class' => 'btn btn-success btn-sm',
                                       'data-toggle' => 'tooltip', 'data-placement'=> 'top', 'title' => '点击这里添加课程产品！'
                                     ]); ?>
@@ -108,7 +108,7 @@ $js =
     }); 
     
     //加载已选课程产品列表
-    $("#demand-task-product-index").load("/demand/product/index?task_id=$model->id&mark=$mark");
+    $("#demand-task-product-index").load("/demand/product/index?task_id=$model->id");
     /** 单击添加按钮显示产品列表 模态框 */    
     $('#add').click(function(){
         $(".myModal").html("");
