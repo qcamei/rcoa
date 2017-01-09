@@ -70,7 +70,7 @@ JS;
         var data_p = $(obj).attr("data_p");
         $(".myModal").modal('show');
         $(".myModal").load("/demand/product/list?task_id="+data_t,null,function(){
-            $("#details .product-backdrop").load("/demand/product/view?task_id="+data_t+"&product_id="+data_p+"&mark=<?= $mark?>",null,
+            $("#details .product-backdrop").load("/demand/product/view?task_id="+data_t+"&product_id="+data_p,null,
                 function(){
                     $('#details').animate({top:'0px'},'fast','swing');
                 }
@@ -86,7 +86,7 @@ JS;
             if(data['type'] == 1){
                 alert(data['error']);
                 //$(obj).parent().parent().remove();
-                $("#demand-task-product-index").load("/demand/product/index?task_id="+data_t+"&mark=<?= $mark?>");
+                $("#demand-task-product-index").load("/demand/product/index?task_id="+data_t);
             }else{
                 alert(data['error']);
             }

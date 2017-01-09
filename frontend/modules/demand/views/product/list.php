@@ -62,7 +62,7 @@ $js = <<<JS
     /** 单击选择添加产品数量 */
     function onItemSelected(itemdata){
         if(itemdata.type == "content"){
-            $('#details .product-backdrop').load("/demand/product/view?task_id=$task_id&product_id="+itemdata.id+"&mark=$mark", null,
+            $('#details .product-backdrop').load("/demand/product/view?task_id=$task_id&product_id="+itemdata.id, null,
                 function(){
                     $('#details').animate({top:'0px'},'fast','swing');
                 }
@@ -72,7 +72,7 @@ $js = <<<JS
     /** 此事件在模态框被隐藏（并且同时在 CSS 过渡效果完成）之后被触发。  */    
     function closeMyModal(){
         $('.myModal').modal('hide'); 
-        $("#demand-task-product-index").load("/demand/product/index?task_id=$task_id&mark=$mark");
+        $("#demand-task-product-index").load("/demand/product/index?task_id=$task_id");
     }
     /** 格式化所有价钱 */
     format(".totals");

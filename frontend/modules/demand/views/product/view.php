@@ -72,7 +72,7 @@ $js = <<<JS
             if(data['type'] == 1){
                 alert(data['error']);
                 $('#details').animate({top:'1000px'},'fast','swing');
-                $(".myModal").load("/demand/product/list?task_id=$task_id&mark=$mark");
+                $(".myModal").load("/demand/product/list?task_id=$task_id");
             }else{
                 alert(data['error']);
             }

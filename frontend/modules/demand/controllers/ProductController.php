@@ -48,10 +48,9 @@ class ProductController extends Controller
     /**
      * Lists all DemandTaskProduct models.
      * @param integer $task_id
-     * @param integer $mark               标识：1表示指定状态; 0表示不是指定状态(默认为0)
      * @return mixed
      */
-    public function actionList($task_id, $mark = 0)
+    public function actionList($task_id)
     {
         $productTotal = $this->getProductTotal($task_id);
         
@@ -60,17 +59,15 @@ class ProductController extends Controller
             'totals' => !empty(ArrayHelper::getValue($productTotal, 'totals')) ? ArrayHelper::getValue($productTotal, 'totals') : 0,
             'lessons' => !empty(ArrayHelper::getValue($productTotal, 'lessons')) ? ArrayHelper::getValue($productTotal, 'lessons') : 0,
             'task_id' => $task_id,
-            'mark' => $mark,
         ]);
     }
     
     /**
      * Index all DemandTaskProduct models.
      * @param integer $task_id
-     * @param integer $mark               标识：1表示指定状态; 0表示不是指定状态(默认为0)
      * @return mixed
      */
-    public function actionIndex($task_id, $mark = 0)
+    public function actionIndex($task_id)
     {
         $model = new DemandTaskProduct();
         $productTotal = $this->getProductTotal($task_id);
@@ -82,7 +79,7 @@ class ProductController extends Controller
             'totals' => !empty(ArrayHelper::getValue($productTotal, 'totals')) ? ArrayHelper::getValue($productTotal, 'totals') : 0,
             'lessons' => !empty(ArrayHelper::getValue($productTotal, 'lessons')) ? ArrayHelper::getValue($productTotal, 'lessons') : 0,
             'totalPrice' => $this->getProductTotalPrice($task_id),
-            'mark' => $mark,
+            'mark' => $model->task->getIsStatusDefault() || $model->task->getIsStatusAdjusimenting() ? true : false,
         ]);
     }
     
@@ -90,10 +87,9 @@ class ProductController extends Controller
      * Displays a single DemandTaskProduct model.
      * @param integer $task_id
      * @param integer $product_id
-     * @param integer $mark               标识：1表示指定状态; 0表示不是指定状态(默认为0)
      * @return mixed
      */
-    public function actionView($task_id, $product_id, $mark = 0)
+    public function actionView($task_id, $product_id)
     {
         $product = Product::findOne(['id' => $product_id]);
         $model = $this->findModel($task_id, $product_id);
@@ -106,7 +102,7 @@ class ProductController extends Controller
             'totals' => !empty(ArrayHelper::getValue($productTotal, 'totals')) ? ArrayHelper::getValue($productTotal, 'totals') : 0,
             'task_id' => $task_id,
             'product_id' => $product_id,
-            'mark' => $mark,
+            'mark' => $model->task->getIsStatusDefault() || $model->task->getIsStatusAdjusimenting() ? true : false,
         ]);
     }
 
