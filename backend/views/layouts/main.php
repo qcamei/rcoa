@@ -112,7 +112,10 @@ AppAsset::register($this);
         ];
         $menuItems[] = [
             'label' => '团队',
-            'url' => '/teammanage/team',
+            'items' => [
+               ['label' => '团队管理', 'url' => '/teammanage/team'],
+               ['label' => '团队分类', 'url' => '/teammanage/team-category'],
+            ],
         ];
         $menuItems[] = [
             'label' => '产品',
