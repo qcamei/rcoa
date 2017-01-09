@@ -45,8 +45,8 @@
      */
     p.initChild = function(){
         this.container = $(this.config['container']);
-        this.pageA = $('<div class="pl-page"></div>').appendTo(this.container);
         this.pageB = $('<div class="pl-page"></div>').appendTo(this.container);
+        this.pageA = $('<div class="pl-page"></div>').appendTo(this.container);
         
         this.comeback = $(this.config.comeback);
         this.comeback.click(this,function(e){
@@ -187,11 +187,13 @@
      * 切换动画
      */
     p.animation = function(goIn){
-        if(this.currentPage)
+        console.log('animation',this.currentPage,goIn);
+        if(this.currentPage){
             this.currentPage.animate({left:((this.currentPage.width() + 20)*(goIn ? -1 : 1))+"px",zIndex:1},'fast','swing');
-        var nextPage = this.__getNextPage();
-        nextPage.css({left:((nextPage.width() + 20)*(goIn ? 1 : -1))+"px",zIndex:2});
-        nextPage.animate({left:"0px"},'fast','swing');
+            var nextPage = this.__getNextPage();
+            nextPage.css({left:((nextPage.width() + 20)*(goIn ? 1 : -1))+"px",zIndex:2});
+            nextPage.animate({left:"0px"},'fast','swing');
+        }
     };
     /**
      * 获取下一页
