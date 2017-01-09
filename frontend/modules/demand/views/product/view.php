@@ -2,7 +2,7 @@
 
 use common\models\demand\DemandTaskProduct;
 use common\models\product\Product;
-use yii\helpers\ArrayHelper;
+use wskeee\rbac\RbacName;
 use yii\helpers\Html;
 use yii\web\View;
 
@@ -48,11 +48,13 @@ use yii\web\View;
 
             <div class="footer-right">
 
-                <?= Html::a('确认', 'javascript:;', ['id' => 'product-save', 'class' => 'btn btn-primary btn-sm', 'style' => 'float: right; margin-left:5px;'])?>
+                <?php
+                    if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE_PRODUCT) && $mark && $model->task->create_by == Yii::$app->user->id){
+                        echo Html::a('确认', 'javascript:;', ['id' => 'product-save', 'class' => 'btn btn-primary btn-sm', 'style' => 'float: right; margin-left:5px;']); 
+                        echo $this->render('_form', ['model' => $model,]);
+                    }
+              ?>
 
-                <?= $this->render('_form', [
-                    'model' => $model,
-                ]) ?>
             </div>
 
         </div>
@@ -70,7 +72,7 @@ $js = <<<JS
             if(data['type'] == 1){
                 alert(data['error']);
                 $('#details').animate({top:'1000px'},'fast','swing');
-                $(".myModal").load("/demand/product/list?task_id=$task_id");
+                $(".myModal").load("/demand/product/list?task_id=$task_id&mark=$mark");
             }else{
                 alert(data['error']);
             }

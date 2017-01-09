@@ -20,13 +20,13 @@
     font-size: 13px;
     color: #999;
 }
-#demand-task-product-list .big{
+.big{
     font-size: 16px;
 }
-#demand-task-product-list .small{
+.small{
     font-size: 10px;
 }
-.product-list{
+.product-index{
     position: relative;
     width: 100%;
     border-top: 1px solid #ccc;
@@ -35,61 +35,61 @@
     padding: 10px 5px;
     float: left;
 }
-.product-list a{
+.product-index a{
     color: #000;
 }
-.product-list a:hover{
+.product-index a:hover{
     cursor:pointer;
 }
-.product-list .product-list-header{
+.product-index .product-index-header{
     position: relative;
     left: 0px;
     width: 85px;
     height: 85px;
 }
-.product-list .product-list-header img{
+.product-index-header img{
     width: 85px;
     height: 85px;
 }
-.product-list .product-list-body{
+.product-index .product-index-body{
     position: absolute;
     top: 10px;
     left:95px; 
     right: 55px;
     height: auto;
 }
-.product-list .product-list-body .des{
+.product-index-body .des{
     width: 100%;
     color: #ccc;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.product-list .product-list-body .price{
+.product-index-body .price{
     color: #f00;
 }
-.product-list .product-list-body .number{
+.product-index-body .number{
     color: #000;
     font-size: 15px;
     margin-left: 20px;
 }
-.product-list .product-list-body .total-price{
+.product-index-body .total-price{
     color: #000;
     font-weight: 400;
     margin-left: 30px;
 }
-.product-list .product-list-footer{
+.product-index-footer{
     position: absolute;
     bottom: 10px;
     right: 5px;
 }
-.product-list .product-list-footer .btn-danger {
+.product-index-footer .btn-danger {
     color: #fff;
 }
 /**
  * 模态框样式
  */
-.list-header{
+.product-list .list-header{
     padding: 25px 15px;
 }
 .list-title{
@@ -290,7 +290,7 @@ button.return {
   
 }
 @media (min-width: 768px){
-    .list-dialog{
+    .product-list .list-dialog{
         width: 700px;
     }
     .list-body{
@@ -304,7 +304,7 @@ button.return {
     }
 }
 @media (min-width: 992px){
-    .list-dialog{
+    .product-list .list-dialog{
         width: 950px;
     }
     .list-body{
@@ -318,7 +318,7 @@ button.return {
     }
 }
 @media (min-width: 1200px){
-    .list-dialog{
+    .product-list .list-dialog{
         width: 1150px;
     }
     .list-body{

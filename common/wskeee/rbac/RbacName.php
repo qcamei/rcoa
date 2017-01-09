@@ -130,6 +130,10 @@ class RbacName {
     const PERMSSION_DEMAND_TASK_CREATE = 'p_demand_task_create';
     /** 课程需求-任务更新 */
     const PERMSSION_DEMAND_TASK_UPDATE = 'p_demand_task_update';
+    /** 课程需求-任务创建课程产品 */
+    const PERMSSION_DEMAND_TASK_CREATE_PRODUCT = 'p_demand_task_create_product';
+    /** 课程需求-任务删除课程产品 */
+    const PERMSSION_DEMAND_TASK_DELETE_PRODUCT = 'p_demand_task_delete_product';
     /** 课程需求-取消任务 */
     const PERMSSION_DEMAND_TASK_CANCEL = 'p_demand_task_cancel';
     /** 课程需求-完成任务 */

@@ -13,22 +13,26 @@ $this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'i
 $this->params['breadcrumbs'][] = Yii::t('rcoa/demand', 'Update');
 ?>
 
-<div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <h4 class="modal-title" id="myModalLabel"><?= $this->title ?></h4>
-</div>
-<div class="modal-body">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel"><?= $this->title ?></h4>
+        </div>
+        <div class="modal-body">
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
+            <?= $this->render('_form', [
+                'model' => $model,
+            ]) ?>
 
-</div>
+        </div>
 
-<div class="modal-footer">
-    <button type="button" class="btn btn-primary" id="update-acceptance-save">确认</button>
-</div>
-
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="update-acceptance-save">确认</button>
+        </div>
+   </div>
+</div>  
+        
 <script type="text/javascript">
     /** 编辑审核操作 */
     $('#update-acceptance-save').click(function()

@@ -62,6 +62,7 @@ $js =
 <<<JS
     $('#submit').click(function()
     {
+        
         $.post("/demand/task/check-unique", $('#demand-task-form').serialize(), function(data){
             if(data['types'] == 1){
                 $(".field-demandtask-course_id").addClass("has-error").removeClass("has-success");

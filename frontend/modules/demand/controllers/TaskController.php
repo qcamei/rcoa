@@ -88,7 +88,7 @@ class TaskController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
+    public function actionView($id, $sign = 0)
     {
         $this->layout = '@app/views/layouts/main';
         $model = $this->findModel($id);
@@ -114,6 +114,7 @@ class TaskController extends Controller
             'twTool' => $twTool,
             'rbacManager' => $rbacManager,
             'annex' => $this->getAnnex($id),
+            'sign' => $sign,
         ]);
     }
 
@@ -122,7 +123,7 @@ class TaskController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($id = null)
     {
         $this->layout = '@app/views/layouts/main';
         if(!\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE))
@@ -135,10 +136,10 @@ class TaskController extends Controller
         $twTool = TeamworkTool::getInstance();
         $post = Yii::$app->request->post();
         $model->create_by = \Yii::$app->user->id;
-
+       
         if ($model->load($post)) {
             $dtTool->CreateTask($model, $post);
-            return $this->redirect(['update', 'id' => $model->id, 'mark' => 1 ]);
+            return $this->redirect(['view', 'id' => $model->id, 'sign' => 1]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -160,19 +161,22 @@ class TaskController extends Controller
      */
     public function actionSubmitCheck($id)
     {
-        $this->layout = '@app/views/layouts/main';
-        if(!\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE))
-            throw new NotAcceptableHttpException('无权限操作！');
         $model = $this->findModel($id);
-        if(!$model->getIsStatusDefault())
-            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
         /* @var $dtTool DemandTool */
         $dtTool = DemandTool::getInstance();
-        $model->status = DemandTask::STATUS_CHECK;
-        $model->progress = $model->getStatusProgress();
-        
-        $dtTool->TaskSubmitCheck($model);
-        return $this->redirect(['index']);
+        if(!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE) && $model->create_by == \Yii::$app->user->id))
+            throw new NotAcceptableHttpException('无权限操作！');
+        if(!$model->getIsStatusDefault())
+            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+                
+        if ($model->load(Yii::$app->request->post())) {
+            $dtTool->TaskSubmitCheck($model);
+            return $this->redirect(['index']);
+        } else {
+            return $this->renderPartial('submit_check', [
+                'model' => $model,
+            ]);
+        }
     }
 
     /**
@@ -181,15 +185,14 @@ class TaskController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id, $mark = null)
+    public function actionUpdate($id)
     {
         $this->layout = '@app/views/layouts/main';
-        if(!\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UPDATE))
-            throw new NotAcceptableHttpException('无权限操作！');
         $model = $this->findModel($id);
         $post = Yii::$app->request->post();
-        
-        if($mark == null && !($model->getIsStatusDefault() || $model->getIsStatusAdjusimenting()))
+        if(!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UPDATE) && $model->create_by == \Yii::$app->user->id))
+            throw new NotAcceptableHttpException('无权限操作！');
+        if(!($model->getIsStatusDefault() || $model->getIsStatusAdjusimenting()))
             throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
         /* @var $dtTool DemandTool */
         $dtTool = DemandTool::getInstance();
@@ -199,7 +202,7 @@ class TaskController extends Controller
         
         if ($model->load($post)) {
             $dtTool->UpdateTask($model, $post);
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'id' => $model->id, 'sign' => 1]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -210,7 +213,6 @@ class TaskController extends Controller
                 'teachers' => $this->getExpert(),
                 'team' => $twTool->getHotelTeam(),
                 'annex' => $this->getAnnex($model->id),
-                'mark' => $mark != null ? 1 : 0,
             ]);
         }
     }
@@ -260,7 +262,7 @@ class TaskController extends Controller
         
         if ($model->load(Yii::$app->request->post())) {
             $dtTool->UndertakeTask($model);
-            return $this->redirect(['index']);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->renderAjax('undertake', [
                 'model' => $model,
@@ -422,14 +424,16 @@ class TaskController extends Controller
     
     /**
      * 检测课程是否唯一
+     * @param type $id              任务ID
      * @return type JSON
      */
-    public function actionCheckUnique()
+    public function actionCheckUnique($id = null)
     {
         Yii::$app->getResponse()->format = 'json';
-        $courseId = ArrayHelper::getValue(Yii::$app->request->post(), 'DemandTask.course_id');
-        $result = DemandTask::find()->select('course_id')  
-                  ->where(['and', ['course_id'=> $courseId], ['!=', 'status', DemandTask::STATUS_CANCEL]])->all();         
+        $courseId = ArrayHelper::getValue($post = Yii::$app->request->post(), 'DemandTask.course_id');
+        $result = DemandTask::find()->select(['id', 'course_id'])  
+                  ->where(['and', ['course_id'=> $courseId], ['!=', 'status', DemandTask::STATUS_CANCEL]])
+                  ->andFilterWhere(['!=', 'id', $id])->all();         
         $errors = [];
         $message = '';
         $type = '';

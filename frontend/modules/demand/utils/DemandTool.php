@@ -40,6 +40,9 @@ class DemandTool {
     */
     public function CreateTask($model, $post)
     {
+        /* @var $demandNotice DemandNoticeTool */
+        $demandNotice = DemandNoticeTool::getInstance();
+        
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
@@ -49,6 +52,7 @@ class DemandTool {
                 $this->saveDemandOperation($model->id, $model->status);
                 $this->saveOperationUser($model->id, [$model->create_by]);
                 $this->saveDemandTaskAnnex($model->id, (!empty($post['DemandTaskAnnex']) ? $post['DemandTaskAnnex'] : []));
+                $demandNotice->saveJobManager($model);
             }else
                 throw new \Exception($model->getErrors());
             
@@ -68,6 +72,8 @@ class DemandTool {
     {
         /* @var $demandNotice DemandNoticeTool */
         $demandNotice = DemandNoticeTool::getInstance();
+        /* @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
         $user = ArrayHelper::getValue($demandNotice->getAuditor($model->create_team), 'u_id');
         
         /** 开启事务 */
@@ -77,7 +83,7 @@ class DemandTool {
             if ($model->save(false, ['status', 'progress'])){
                 $this->saveDemandOperation($model->id, $model->status);
                 $this->saveOperationUser($model->id, $user);
-                $demandNotice->saveJobManager($model);
+                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['status'=> DemandTask::$statusNmae[DemandTask::STATUS_CHECK]]);
                 $demandNotice->sendAuditorNotification($model, $model->create_team, '任务待审核', 'demand/Create-html');
             }else
                 throw new \Exception($model->getErrors());

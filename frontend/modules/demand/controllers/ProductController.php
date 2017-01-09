@@ -5,6 +5,7 @@ namespace frontend\modules\demand\controllers;
 use common\models\demand\DemandTaskProduct;
 use common\models\product\Product;
 use frontend\modules\demand\utils\DemandQuery;
+use wskeee\rbac\RbacName;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\Query;
@@ -47,7 +48,7 @@ class ProductController extends Controller
     /**
      * Lists all DemandTaskProduct models.
      * @param integer $task_id
-     * @param integer $mark               标识：1执行; 0不执行(默认为0)
+     * @param integer $mark               标识：1表示指定状态; 0表示不是指定状态(默认为0)
      * @return mixed
      */
     public function actionList($task_id, $mark = 0)
@@ -59,20 +60,24 @@ class ProductController extends Controller
             'totals' => !empty(ArrayHelper::getValue($productTotal, 'totals')) ? ArrayHelper::getValue($productTotal, 'totals') : 0,
             'lessons' => !empty(ArrayHelper::getValue($productTotal, 'lessons')) ? ArrayHelper::getValue($productTotal, 'lessons') : 0,
             'task_id' => $task_id,
+            'mark' => $mark,
         ]);
     }
     
     /**
      * Index all DemandTaskProduct models.
      * @param integer $task_id
-     * @param integer $mark               标识：1执行; 0不执行(默认为0)
+     * @param integer $mark               标识：1表示指定状态; 0表示不是指定状态(默认为0)
      * @return mixed
      */
     public function actionIndex($task_id, $mark = 0)
     {
+        $model = new DemandTaskProduct();
         $productTotal = $this->getProductTotal($task_id);
+        $model->task_id = $task_id;
         
         return $this->renderPartial('index', [
+            'model' => $model,
             'data' => $this->getDataProducts($task_id),
             'totals' => !empty(ArrayHelper::getValue($productTotal, 'totals')) ? ArrayHelper::getValue($productTotal, 'totals') : 0,
             'lessons' => !empty(ArrayHelper::getValue($productTotal, 'lessons')) ? ArrayHelper::getValue($productTotal, 'lessons') : 0,
@@ -85,13 +90,15 @@ class ProductController extends Controller
      * Displays a single DemandTaskProduct model.
      * @param integer $task_id
      * @param integer $product_id
+     * @param integer $mark               标识：1表示指定状态; 0表示不是指定状态(默认为0)
      * @return mixed
      */
-    public function actionView($task_id, $product_id)
+    public function actionView($task_id, $product_id, $mark = 0)
     {
         $product = Product::findOne(['id' => $product_id]);
         $model = $this->findModel($task_id, $product_id);
         $productTotal = $this->getProductTotal($task_id);
+        $model->task_id = $task_id;
         
         return $this->renderAjax('view', [
             'product' => $product,
@@ -99,6 +106,7 @@ class ProductController extends Controller
             'totals' => !empty(ArrayHelper::getValue($productTotal, 'totals')) ? ArrayHelper::getValue($productTotal, 'totals') : 0,
             'task_id' => $task_id,
             'product_id' => $product_id,
+            'mark' => $mark,
         ]);
     }
 
@@ -157,7 +165,9 @@ class ProductController extends Controller
         $trans = Yii::$app->db->beginTransaction();
         try
         {  
-            if ($model->delete() > 0){
+            if ($model->delete() > 0 && \Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_DELETE_PRODUCT) 
+                && $model->task->create_by == \Yii::$app->user->id)
+            {
                $type = 1;
                $message = '操作成功！';
                $trans->commit();  //提交事务
@@ -200,7 +210,10 @@ class ProductController extends Controller
         $trans = Yii::$app->db->beginTransaction();
         try
         {  
-            if ($model->load(Yii::$app->request->post()) && $model->save()){
+            if ($model->load(Yii::$app->request->post()) && $model->save() 
+                && \Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE_PRODUCT) 
+                && $model->task->create_by == \Yii::$app->user->id)
+            {
                $type = 1;
                $message = '操作成功！';
                $trans->commit();  //提交事务

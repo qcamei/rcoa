@@ -178,26 +178,8 @@ use yii\widgets\ActiveForm;
                 .Html::endTag('div').Html::endTag('div');
         echo Html::endTag('div');
     ?>
-    
+        
     <?php ActiveForm::end(); ?>
-    
-    <?php if($mark == true || !$model->isNewRecord): ?>
-    <h5><b>课程产品</b></h5>
-    <div class="demand-task-product">
-        <div class="col-lg-11 col-md-11" style="padding:0px;">
-            <div class="add">
-                <?= Html::a('添加', ['product/list', 'task_id' => $model->id, 'mark' => $mark], 
-                                    ['id' => 'add' ,'class' => 'btn btn-success btn-sm']); ?>
-            </div>
-            <div id="demand-task-product-list"></div>
-        </div>
-    </div>
-    
-    <div class="demand-task">
-        <?= $this->render('_form_model') ?>
-    </div>
-    
-    <?php endif; ?>
 </div>
 
 <?php
@@ -221,14 +203,7 @@ $js =
         $('#select2-demandtask-course_id-container').html('<span class="select2-selection__placeholder">请选择...</span>');
         wx(url, element, '请选择...');
     });
-    /** 加载已选课程产品列表 */
-    $("#demand-task-product-list").load("/demand/product/index?task_id=$model->id&mark=1"); 
-    /** 单击添加按钮显示产品列表 模态框 */    
-    $('#add').click(function(){
-        var urlf = $(this).attr("href");
-        $(".myModal").modal('show').load(urlf);
-        return false;
-    }); 
+     
    
 JS;
     $this->registerJs($js,  View::POS_READY);
