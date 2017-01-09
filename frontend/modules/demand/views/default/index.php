@@ -1,176 +1,65 @@
 <?php
-    use frontend\modules\demand\assets\PageListAssets;
-    use yii\web\View;
+
+use common\models\teamwork\CourseManage;
+use frontend\modules\demand\assets\DefaultAssets;
+use yii\helpers\Html;
+use yii\web\View;
 
     /* @var $this View */
 ?>
 
-<div class="container demand-default-index">
-    <h1>主页</h1>
-    <div style="height: 30px">
-        <span id="pl-comeback">返回</span>
-    </div>
-    
-    <div style="height: 600px">
-        <div id="e-pl" class="e-pl"></div>
+<div class="demand-default-index">
+    <div class="head">
+        <div class="head-top"></div>
+        <div class="head-bottom">
+            <div class="container">
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 total">
+                    <?= Html::a('<div class="col-xs-12 lession-time"><span class="visible-xs-inline-block">'.
+                                Html::img(['/filedata/teamwork/image/completed.png'], ['class' => 'total-icon']).
+                                '<span class="completed-label">已完成</span>'.'</span>'.
+                                '<span class="completed total-xs">'.number_format(2222).'</span>'.
+                                '<span>学时</span><p class="hidden-xs">'.
+                                '<span class="completed-label">已完成</span></p></div>', [
+                                    'course/index', 'status' => CourseManage::STATUS_CARRY_OUT
+                                ]) ?>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 total">
+                    <?= Html::a('<div class="col-xs-12 lession-time"><span class="visible-xs-inline-block">'.
+                                Html::img(['/filedata/teamwork/image/completed.png'], ['class' => 'total-icon']).
+                                '<span class="completed-label">已完成</span>'.'</span>'.
+                                '<span class="completed total-xs">'.number_format(42424).'</span>'.
+                                '<span>门</span><p class="hidden-xs">'.
+                                '<span class="completed-label">已完成</span></p></div>', [
+                                    'course/index', 'status' => CourseManage::STATUS_CARRY_OUT
+                                ]) ?>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 total">
+                    <?= Html::a('<div class="col-xs-12 course-door"><span class="visible-xs-inline-block">'.
+                                Html::img(['/filedata/teamwork/image/undone.png'], ['class' => 'total-icon']).
+                                '<span class="doing-label">在 建</span>'.'</span>'.
+                                '<span class="undone total-xs">'.number_format(4242).'</span>'.
+                                '<span>学时</span><p class="hidden-xs">'.
+                                '<span class="doing-label">在 建</span></p></div>', [
+                                    'course/index', 'status' => CourseManage::STATUS_NORMAL
+                                ]) ?>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 total">
+                    <?= Html::a('<div class="col-xs-12 course-door" style="border-right: none"><span class="visible-xs-inline-block">'.
+                                Html::img(['/filedata/teamwork/image/undone.png'], ['class' => 'total-icon']).
+                                '<span class="doing-label">在 建</span>'.'</span>'.
+                                '<span class="undone total-xs">'.number_format(42424).'</span>'.
+                                '<span>门</span><p class="hidden-xs">'.
+                                '<span class="doing-label">在 建</span></p></div>', [
+                                    'course/index', 'status' => CourseManage::STATUS_NORMAL
+                                ]) ?>
+                </div>
+                </div>
+        </div>
     </div>
 </div>
 <?php 
-    $data = [
-        [
-            'id'=>'111',
-            'name'=>'蓝箱类',
-            'type'=>'dir',
-            'des'=>'蓝箱类场景',
-            'children'=>[
-                [
-                    'id'=>'111_1',
-                    'name'=>'蓝箱子类',
-                    'type'=>'dir',
-                    'des'=>'蓝箱子类场景',
-                    'children'=>[
-                        [
-                            'id'=>'111_1_1',
-                            'name'=>'蓝箱A',
-                            'type'=>'content',
-                            'des'=>'蓝箱',
-                            'price'=>'￥2,142.00'
-                        ],
-                        [
-                            'id'=>'111_1_2',
-                            'name'=>'蓝箱B',
-                            'type'=>'content',
-                            'des'=>'蓝箱',
-                            'price'=>'￥2,142.00'
-                        ]    
-                    ]
-                ],
-                [
-                    'id'=>'111_2',
-                    'name'=>'蓝箱B',
-                    'type'=>'content',
-                    'des'=>'蓝箱',
-                    'price'=>'￥2,142.00'
-                ]    
-            ]
-        ],
-        [
-            'id'=>'112',
-            'name'=>'动画类',
-            'type'=>'dir',
-            'des'=>'蓝箱类场景',
-            'children'=>[
-                [
-                    'id'=>'112_1',
-                    'name'=>'动画A',
-                    'type'=>'content',
-                    'des'=>'动画',
-                    'price'=>'￥2,142.00'
-                ],
-                [
-                    'id'=>'112_2',
-                    'name'=>'动画B',
-                    'type'=>'content',
-                    'des'=>'动画',
-                    'price'=>'￥2,142.00'
-                ]    
-            ]
-        ],
-        [
-            'id'=>'113',
-            'name'=>'动画C',
-            'type'=>'content',
-            'des'=>'动画',
-            'price'=>'￥2,142.00'
-        ],
-        [
-            'id'=>'114',
-            'name'=>'动画D',
-            'type'=>'content',
-            'des'=>'动画',
-            'price'=>'￥2,142.00'
-        ],
-        [
-            'id'=>'115',
-            'name'=>'动画C',
-            'type'=>'content',
-            'des'=>'动画',
-            'price'=>'￥2,142.00'
-        ],
-        [
-            'id'=>'116',
-            'name'=>'动画D',
-            'type'=>'content',
-            'des'=>'动画',
-            'price'=>'￥2,142.00'
-        ],
-        [
-            'id'=>'117',
-            'name'=>'动画C',
-            'type'=>'content',
-            'des'=>'动画',
-            'price'=>'￥2,142.00'
-        ],
-        [
-            'id'=>'118',
-            'name'=>'动画D',
-            'type'=>'content',
-            'des'=>'动画',
-            'price'=>'￥2,142.00'
-        ],
-        [
-            'id'=>'119',
-            'name'=>'动画C',
-            'type'=>'content',
-            'des'=>'动画',
-            'price'=>'￥2,142.00'
-        ],
-        [
-            'id'=>'120',
-            'name'=>'动画D',
-            'type'=>'content',
-            'des'=>'动画',
-            'price'=>'￥2,142.00'
-        ],
-        [
-            'id'=>'121',
-            'name'=>'动画C',
-            'type'=>'content',
-            'des'=>'动画',
-            'price'=>'￥2,142.00'
-        ],
-        [
-            'id'=>'122',
-            'name'=>'动画D',
-            'type'=>'content',
-            'des'=>'动画',
-            'price'=>'￥2,142.00'
-        ],
-        [
-            'id'=>'123',
-            'name'=>'动画C',
-            'type'=>'content',
-            'des'=>'动画',
-            'price'=>'￥2,142.00'
-        ],
-        [
-            'id'=>'124',
-            'name'=>'动画D',
-            'type'=>'content',
-            'des'=>'动画',
-            'price'=>'￥2,142.00'
-        ] 
-    ];
-    $data = json_encode($data);
     $js = <<<JS
-            var pageList = new Wskeee.demand.PageList({onItemSelected:onItemSelected});
-            pageList.init($data);
-            
-            function onItemSelected(itemdata){
-                console.log(itemdata.id);
-            }
-            
 JS;
     $this->registerJs($js);
-    PageListAssets::register($this);
+    DefaultAssets::register($this);
 ?>

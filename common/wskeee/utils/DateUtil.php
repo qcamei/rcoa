@@ -53,6 +53,31 @@ class DateUtil {
         
         return ($type != 1 ? "" : self::zeor($h).':').self::zeor($m).':'.self::zeor($s);
     }
+    /**
+     * 字符转int
+     * 
+     * @param string $strTime     12:20:21
+     * @return int 长度
+     */
+    public static function timeToInt($strTime){
+        if(!is_numeric($strTime))  
+        {  
+            if(strpos($strTime ,":"))  
+            {  
+                $times =  explode(":", $strTime);  
+            }else if(strpos($strTime ,'：')){  
+                $times =  explode(":", $strTime);  
+            }else  
+            {  
+                return 0;  
+            }  
+            $h = (int)$times[0] ;  
+            $m = (int)$times[1];  
+            $s = count($times) == 3 ? (int)$times[2] : 0;  
+            return $h*3600+$m*60+$s;  
+        }else
+            return 0;
+;    }
     
     /**
      * 小于9自动在数字前添加0
