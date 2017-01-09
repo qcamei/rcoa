@@ -26,12 +26,19 @@ $page = [
             /**
              * 编辑 按钮显示必须满足以下条件：
              * 1、拥有编辑的权限
-             * 2、状态必须是在【调整中】
+             * 2、状态必须是在【默认】 or【调整中】
              * 3、创建者是自己
              */
-            if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UPDATE) && $model->getIsStatusAdjusimenting() 
+            if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UPDATE) && ($model->getIsStatusDefault() || $model->getIsStatusAdjusimenting())
                && $model->create_by == Yii::$app->user->id)
                 echo Html::a('编辑', ['update', 'id' => $model->id], ['class' =>'btn btn-primary']).' ';
+            /**
+             * 提交审核 按钮显示必须满足以下条件：
+             * 1、状态必须是在【默认】
+             * 2、创建者是自己
+             */
+            if($model->getIsStatusDefault() && $model->create_by == Yii::$app->user->id)
+                echo Html::a('提交审核', ['submit-check', 'id' => $model->id], ['id' => 'task-submit-check', 'class' => 'btn btn-info']).' ';
             /**
              * 取消 按钮显示必须满足以下条件：
              * 1、拥有取消的权限
@@ -52,7 +59,7 @@ $page = [
              * 5、审核记录状态必须未完成
              */
             if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_SUBMIT_CHECK) 
-               && $model->getIsStatusAdjusimenting() && $model->create_by = Yii::$app->user->id )
+               && $model->getIsStatusAdjusimenting() && $model->create_by == Yii::$app->user->id )
                 echo Html::a('提交审核', ['check/submit', 'task_id' => $model->id], ['class' =>'btn btn-info']).' ';
             /**
              * 完成 按钮显示必须满足以下条件：
@@ -130,7 +137,7 @@ $page = [
              */
             if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_DEVELOP) && $model->getIsStatusDeveloping()
                && $model->undertake_person == Yii::$app->user->id && empty($model->teamworkCourse))
-                echo Html::a('创建开发', ['/teamwork/course/create', 'demand_task_id' => $model->id], ['class' =>'btn btn-primary']).' ';
+                echo Html::a('创建开发', ['/teamwork/course/create', 'demand_task_id' => $model->id], ['id' => 'create-develop', 'class' =>'btn btn-primary']).' ';
             /**
              * 验收 按钮显示必须满足以下条件：
              * 1、状态必须是在【开发中】

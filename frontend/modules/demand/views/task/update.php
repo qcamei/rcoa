@@ -43,7 +43,6 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa/demand', 'Update');
         'teachers' => $teachers,
         'team' => $team,
         'annex' => $annex,
-        'mark' => $mark,
     ]) ?>
 
 </div>
@@ -52,13 +51,10 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa/demand', 'Update');
     <div class="container">
         <?= Html::a(Yii::t('rcoa', 'Back'), ['view', 'id' => $model->id], ['class' => 'btn btn-default']) ?>
         <?php
-            if($mark == true)
-                echo Html::a('提交审核', ['submit-check', 'id' => $model->id], ['class' => 'btn btn-primary']);
-            else    
-                echo Html::a(
-                    $model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'),
-                    'javascript:;', 
-                    ['id'=>'submit', 'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) 
+            echo Html::a(
+                $model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'),
+                'javascript:;', 
+                ['id'=>'submit', 'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) 
         ?>
     </div>
 </div>
@@ -70,7 +66,15 @@ $js =
     /** 任务更新操作 提交表单 */
     $('#submit').click(function()
     {
-        $('#demand-task-form').submit();
+        
+        $.post("/demand/task/check-unique?id=$model->id", $('#demand-task-form').serialize(), function(data){
+            if(data['types'] == 1){
+                $(".field-demandtask-course_id").addClass("has-error").removeClass("has-success");
+                $(".field-demandtask-course_id .help-block").text(data['message']);
+            }else{
+               $('#demand-task-form').submit();
+            }
+        })
     });
     
 JS;

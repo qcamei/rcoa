@@ -42,7 +42,6 @@ class DemandTool {
     {
         /* @var $demandNotice DemandNoticeTool */
         $demandNotice = DemandNoticeTool::getInstance();
-        $user = ArrayHelper::getValue($demandNotice->getAuditor($model->create_team), 'u_id');
         
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
@@ -51,8 +50,9 @@ class DemandTool {
             /* @var $model DemandTask*/
             if($model->save()){
                 $this->saveDemandOperation($model->id, $model->status);
-                $this->saveOperationUser($model->id, $user);
+                $this->saveOperationUser($model->id, [$model->create_by]);
                 $this->saveDemandTaskAnnex($model->id, (!empty($post['DemandTaskAnnex']) ? $post['DemandTaskAnnex'] : []));
+                $demandNotice->saveJobManager($model);
             }else
                 throw new \Exception($model->getErrors());
             
@@ -72,13 +72,18 @@ class DemandTool {
     {
         /* @var $demandNotice DemandNoticeTool */
         $demandNotice = DemandNoticeTool::getInstance();
+        /* @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
+        $user = ArrayHelper::getValue($demandNotice->getAuditor($model->create_team), 'u_id');
         
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
         {
             if ($model->save(false, ['status', 'progress'])){
-                $demandNotice->saveJobManager($model);
+                $this->saveDemandOperation($model->id, $model->status);
+                $this->saveOperationUser($model->id, $user);
+                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['status'=> DemandTask::$statusNmae[DemandTask::STATUS_CHECK]]);
                 $demandNotice->sendAuditorNotification($model, $model->create_team, '任务待审核', 'demand/Create-html');
             }else
                 throw new \Exception($model->getErrors());
@@ -366,7 +371,7 @@ class DemandTool {
         {
             if ($model->save(false, ['status', 'progress', 'reality_check_harvest_time'])){
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status'=>$model->getStatusName()]);
-                $jobManager->cancelNotification(AppGlobalVariables::getSystemId(), $model->id, [$model->create_by, $model->undertakePerson->u_id]);
+                $jobManager->cancelNotification(AppGlobalVariables::getSystemId(), $model->id, [$model->create_by, $model->undertake_person]);
             }else
                 throw new \Exception($model->getErrors());
             

@@ -2,6 +2,7 @@
 
 use common\models\demand\DemandTask;
 use frontend\modules\demand\assets\DemandAssets;
+use wskeee\rbac\RbacName;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\Breadcrumbs;
@@ -12,6 +13,18 @@ use yii\widgets\Breadcrumbs;
 $this->title = Yii::t('rcoa/demand', 'Demand View').'：'.$model->course->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/demand', 'Demand Tasks'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
+/** 判断添加课程产品【标识】 */
+if($model->getIsStatusDefault() || $model->getIsStatusAdjusimenting())
+    $mark = 1;
+else 
+    $mark = 0;
+/** 判断是否提示创建课程开发数据 */
+if($model->getIsStatusDeveloping() && $model->undertake_person == Yii::$app->user->id)
+   $isCreateDevelop = 1;
+else
+   $isCreateDevelop = 0;
+
 ?>
 
 <div class="title">
@@ -46,8 +59,20 @@ $this->params['breadcrumbs'][] = $this->title;
         }
     ?>
     
-    <h4><?= Yii::t('rcoa/demand', 'Demand Task Products'); ?></h4>
-    <div id="demand-task-product-list"></div>
+    <h4 id="anchor"><?= Yii::t('rcoa/demand', 'Demand Task Products'); ?></h4>
+    <div class="demand-task-product">
+        <div class="col-lg-12 col-md-12" style="padding:0px;">
+            <?php if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE_PRODUCT) && $mark && $model->create_by == Yii::$app->user->id):?>
+            <div class="add">
+                <?= Html::a('添加', ['product/list', 'task_id' => $model->id, 'mark' => $mark], 
+                                    ['id' => 'add' ,'class' => 'btn btn-success btn-sm',
+                                      'data-toggle' => 'tooltip', 'data-placement'=> 'top', 'title' => '点击这里添加课程产品！'
+                                    ]); ?>
+            </div>
+            <?php endif;?>
+            <div id="demand-task-product-index"></div>
+        </div>
+    </div>
     
     <?= $this->render('/check/index',[
         'model' => $model->demandChecks,
@@ -72,75 +97,98 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 $js = 
 <<<JS
+    /** 滚动到添加课程产品处 */
+    if($sign){
+        $('html,body').animate({scrollTop:($('#anchor').offset().top) - 140},1000);
+        $('#add').tooltip('show'); 
+    }   
     /** 此事件在模态框被隐藏（并且同时在 CSS 过渡效果完成）之后被触发。 */
     $('.myModal').on('hidden.bs.modal', function(){
-        window.location.reload();
+        $(".myModal").html("");
     }); 
+    
+    //加载已选课程产品列表
+    $("#demand-task-product-index").load("/demand/product/index?task_id=$model->id&mark=$mark");
+    /** 单击添加按钮显示产品列表 模态框 */    
+    $('#add').click(function(){
+        $(".myModal").html("");
+        $(this).tooltip('hide');  
+        $(".myModal").modal('show').load($(this).attr("href"));
+        return false;
+    });
         
+    /** 提交任务操作 弹出模态框 */
+    $('#task-submit-check').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    });    
+       
     /** 完成操作 弹出模态框 */
-    $('#complete').click(function()
-    {
-        var urlf = $(this).attr("href");
-        $('.myModal').modal({remote:urlf});
+    $('#complete').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
         return false;
     });
     
     /** 取消操作 弹出模态框 */
-    $('#cancel').click(function()
-    {
-        var urlf = $(this).attr("href");
-        $('.myModal').modal({remote:urlf});
+    $('#cancel').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
         return false;
     });
      
     /** 审核不通过操作 弹出模态框 */
-    $('#check-create').click(function()
-    {
-        var urlf = $(this).attr("href");
-        $('.myModal').modal({remote:urlf});
+    $('#check-create').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
         return false;
     });
     
     /** 查看审核记录 */   
     $('.view-check').click(function(){
-        var urlf = $(this).attr("href");
-        $(".myModal").modal({remote:urlf});
+       $(".myModal").html("");
+       $('.myModal').modal("show").load($(this).attr("href"));
         return false;
     });
         
     /** 承接操作 弹出模态框 */
-    $('#undertake').click(function()
-    {
-        var urlf = $(this).attr("href");
-        $('.myModal').modal({remote:urlf});
+    $('#undertake').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
         return false;
     });
-        
+    
+   /** 创建开发操作 弹出模态框 */
+    if($isCreateDevelop){
+        $('.myModal').modal("show");
+        $('#myModalBody').text("是否现在就开始创建开发课程数据？");
+        $("#button").click(function(){
+            location.href = $('#create-develop').attr("href");
+        });
+    }    
+    
     /** 提交任务操作 弹出模态框 */
-    $('#submit-task').click(function()
-    {
-        var urlf = $(this).attr("href");
-        $('.myModal').modal({remote:urlf});
+    $('#submit-task').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
         return false;
     });
         
     /** 验收不通过操作 弹出模态框 */
-    $('#acceptance-create').click(function()
-    {
-        var urlf = $(this).attr("href");
-        $('.myModal').modal({remote:urlf});
+    $('#acceptance-create').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
         return false;
-    });    
+    }); 
         
     /** 查看验收记录 */   
     $('.view-acceptance').click(function(){
-        var urlf = $(this).attr("href");
-        $(".myModal").modal({remote:urlf});
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
         return false;
     });
-    
-    //加载已选课程产品列表
-    $("#demand-task-product-list").load("/demand/product/index?task_id=$model->id");
+   
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>
