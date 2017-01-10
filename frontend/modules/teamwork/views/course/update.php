@@ -41,6 +41,7 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa/teamwork', 'Update');
         'producerList' => $producerList,
         'producer' => $producer,
         'annex' => $annex,
+        'courseOps' => $courseOps,
     ]) ?>
 
 </div>

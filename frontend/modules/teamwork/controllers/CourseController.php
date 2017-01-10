@@ -2,12 +2,13 @@
 
 namespace frontend\modules\teamwork\controllers;
 
+use common\models\expert\Expert;
 use common\models\team\TeamCategory;
 use common\models\team\TeamMember;
 use common\models\teamwork\CourseAnnex;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\CourseProducer;
-use common\wskeee\job\JobManager;
+use common\models\User;
 use frontend\modules\demand\utils\DemandTool;
 use frontend\modules\teamwork\utils\TeamworkTool;
 use wskeee\framework\FrameworkManager;
@@ -174,6 +175,7 @@ class CourseController extends Controller
                 'producerList' => $this->getTeamMemberList(),
                 'weeklyEditors' => $this->getSameTeamMember(),
                 'producer' => $this->getSameTeamMember(),
+                'courseOps' => $this->getCourseOps(),
             ]);
         }
     }
@@ -212,6 +214,7 @@ class CourseController extends Controller
                 'producerList' => $this->getTeamMemberList(),
                 'producer' => ArrayHelper::map($this->getAssignProducers($model->id), 'producer', 'producerOne.user.nickname'),
                 'annex' => $this->getCourseAnnex($model->id),
+                'courseOps' => $this->getCourseOps(),
             ]);
         }
         
@@ -332,7 +335,7 @@ class CourseController extends Controller
         }else{
             return $this->renderAjax('carry_out', [
                 'model' => $model,
-                'producerList' => $this->getTeamMemberList(),
+                'courseOps' => $this->getCourseOps(),
                 'isComplete' => CourseManage::$progress[$model->id] != 100 ? true : false,
             ]);
         }
@@ -531,6 +534,18 @@ class CourseController extends Controller
                            ->all();
         
         return $assignProducers;
+    }
+    
+    /**
+     * 获取运维人
+     * @return array
+     */
+    public function getCourseOps(){
+        $expert = Expert::find()->all();
+        $courseOps = User::find()
+                ->where(['not in', 'id', ArrayHelper::getColumn($expert, 'u_id')])
+                ->all();
+        return ArrayHelper::map($courseOps, 'id', 'nickname');
     }
     
     /**

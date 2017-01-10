@@ -145,18 +145,16 @@ class CourseManage extends ActiveRecord
     public function rules()
     {
         return [
-            [['demand_task_id',  'question_mete', 'case_number', 'activity_number', 'team_id', 'created_at', 'updated_at', 'status', 'weekly_editors_people', 'course_ops'], 'integer'],
+            [['demand_task_id',  'question_mete', 'case_number', 'activity_number', 'team_id', 'created_at', 'updated_at', 'status', 'weekly_editors_people'], 'integer'],
             [['demand_task_id',  'weekly_editors_people'], 'required'],
             [['video_length', 'course_ops', 'question_mete', 'case_number', 'activity_number', 'path'], 'required', 'on' => [self::SCENARIO_CARRYOUT]],
-            [['create_by'], 'string', 'max' => 36],
+            [['course_ops', 'create_by'], 'string', 'max' => 36],
             [['course_principal'], 'integer','on' => [self::SCENARIO_CHANGE]],
             [['team_id', 'course_principal'], 'required', 'on' => [self::SCENARIO_CHANGE]],
             [['plan_start_time', 'plan_end_time', 'real_carry_out'], 'string', 'max' => 60],
             [['real_start_time'], 'string', 'max' => 60, 'on' => [self::SCENARIO_WAITSTART]],
             [['path'], 'string', 'max' => 255],
             [['des'], 'string'],
-            //[['project_id', 'course_id'], 'unique', 'targetAttribute' => ['project_id', 'course_id'], 'comboNotUnique' => \Yii::t('rcoa/teamwork', 'Do not repeat the same data')],
-            [['course_ops'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['course_ops' => 'id']],
             [['weekly_editors_people'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['weekly_editors_people' => 'id']],
             [['course_principal'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['course_principal' => 'id']],
             [['team_id'], 'exist', 'skipOnError' => true, 'targetClass' => Team::className(), 'targetAttribute' => ['team_id' => 'id']],

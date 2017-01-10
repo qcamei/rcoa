@@ -40,6 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'producerList' => $producerList,
         'weeklyEditors' => $weeklyEditors,
         'producer' => $producer,
+        'courseOps' => $courseOps,
     ]) ?>
 
 </div>

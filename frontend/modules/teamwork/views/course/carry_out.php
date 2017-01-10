@@ -41,7 +41,7 @@ use yii\widgets\ActiveForm;
         else{
             if(empty($model->course_ops))
                 echo $form->field($model, 'course_ops')->widget(Select2::classname(), [
-                        'data' => $producerList, 'options' => ['placeholder' => '请选择...']
+                        'data' => $courseOps, 'options' => ['placeholder' => '请选择...']
                     ]);
             
             if(!$model->validate()){

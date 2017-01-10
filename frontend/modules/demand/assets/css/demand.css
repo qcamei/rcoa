@@ -34,6 +34,28 @@
 .myModal {
     padding: 0px !important;
 }
+.myModal .label {
+    display: inline;
+    padding: .2em .6em .3em !important;
+    font-size: 75%;
+    font-weight: bold;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 5.25em !important;
+    margin-right: 5px;
+}
+.state-icon {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    margin: -3px 5px -3px 0;
+}
+.already_write {
+    background: url('/filedata/demand/image/already_write.png') no-repeat;
+}
 
 /** 
  *  footer 导航样式
@@ -208,6 +230,7 @@
     margin: 20px 0px;
     margin-right: 5px;
 }
+
 
 /**
  *  审核和验收样式

@@ -184,7 +184,7 @@ use yii\widgets\ActiveForm;
     ]) ?> 
     
     <?= $form->field($model, 'course_ops')->widget(Select2::classname(), [
-        'data' => $producerList, 'options' => ['placeholder' => '请选择...']
+        'data' => $courseOps, 'options' => ['placeholder' => '请选择...']
     ]) ?>    
    
     <?php

@@ -162,7 +162,7 @@ $js =
    /** 创建开发操作 弹出模态框 */
     if($isCreateDevelop && $develop){
         $('.myModal').modal("show");
-        $('#myModalBody').text("是否现在就开始创建开发课程数据？");
+        $('#myModalBody').html('<i class="state-icon already_write"></i>是否现在就开始创建开发课程数据？');
         $("#button").click(function(){
             location.href = $('#create-develop').attr("href");
         });
