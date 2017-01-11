@@ -21,8 +21,8 @@ use yii\widgets\Breadcrumbs;
 $this->title = Yii::t('rcoa/teamwork', 'Course Links');
 $this->params['breadcrumbs'][] = $this->title;
 
-if($model->course->getIsNormal() && ((Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_TASK_COLLOCATION) && $model->course->create_by == \Yii::$app->user->id) 
-   || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id) || $twTool->getIsAuthority('id', $model->course->course_principal)))
+if($model->course->getIsNormal() && ($model->course->coursePrincipal->u_id == \Yii::$app->user->id 
+   || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id)))
 {
     $classUpdate = 'btn btn-primary';
     $classDeletee = 'btn btn-danger';
@@ -110,8 +110,8 @@ if($model->course->getIsNormal() && ((Yii::$app->user->can(RbacName::PERMSSION_T
              * 1、必须是【队长】
              * 2、创建者是自己
              */
-            if($model->course->getIsNormal() && ((Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_TASK_COLLOCATION) && $model->course->create_by == \Yii::$app->user->id) 
-               || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id) || $twTool->getIsAuthority('id', $model->course->course_principal)))
+            if($model->course->getIsNormal() && (Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_TASK_COLLOCATION) || $model->course->coursePrincipal->u_id == Yii::$app->user->id
+               || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id)))
                echo Html::a('新增', ['create', 'course_id' => $course_id], ['class' => 'btn btn-primary']) 
         ?>
         <?php /* Html::a('进度', ['progress', 'course_id' => $course_id], ['class' => 'btn btn-primary'])*/ ?>

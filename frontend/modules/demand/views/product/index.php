@@ -66,16 +66,18 @@ JS;
     /** 单击产品列表显示产品详情  */
     function viewproduct(obj){
         $(".myModal").html("");
+        $('#add').tooltip('hide');
         var data_t = $(obj).attr("data_t");
         var data_p = $(obj).attr("data_p");
         $(".myModal").modal('show');
-        $(".myModal").load("/demand/product/list?task_id="+data_t,null,function(){
-            $("#details .product-backdrop").load("/demand/product/view?task_id="+data_t+"&product_id="+data_p,null,
-                function(){
-                    $('#details').animate({top:'0px'},'fast','swing');
-                }
-            );
-        });
+        $(".myModal").html('<div id="details" class="details-dialog" style="margin:0 auto; top:-120px;"></div>');
+        $("#details").load("/demand/product/view?task_id="+data_t+"&product_id="+data_p,null,
+            function(){
+                $("#close").click(function(){
+                    $(".myModal").modal('hide');
+                });
+            }
+        );
         return false;
     }
     /** 单击删除产品 */

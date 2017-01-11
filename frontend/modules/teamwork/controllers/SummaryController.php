@@ -158,11 +158,11 @@ class SummaryController extends Controller
         /* @var $rbacManager RbacManager */  
         $rbacManager = \Yii::$app->authManager;
         $model->course_id = $course_id;
-        $model->create_by = $course->weekly_editors_people;
+        $model->create_by = \Yii::$app->user->id;
         $model->create_time = date('Y-m-d', time());
         
-        if(!((Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_WEEKLY_CREATE) && ($course->create_by == \Yii::$app->user->id || $twTool->getIsAuthority('id', $course->weekly_editors_people))) 
-          || $twTool->getIsAuthority('id', $course->course_principal) || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)))
+        if(!($course->weeklyEditorsPeople->u_id == \Yii::$app->user->id
+          || $course->coursePrincipal->u_id == \Yii::$app->user->id || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)))
             throw new NotAcceptableHttpException('无权限操作！');
         if($model != null && !$model->course->getIsNormal())
             throw new NotAcceptableHttpException('该课程'.$model->course->getStatusName().'！');
@@ -193,10 +193,9 @@ class SummaryController extends Controller
             $model = $twTool->getWeeklyInfo($course_id, $twTool->getWeek(date('Y-m-d', time())), false);
         else
             $model = $this->findModel($course_id, $create_time);
-        $editorsPeople = $model->course->weekly_editors_people;
         
-        if(!((Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_WEEKLY_UPDATE) && ($model->course->create_by == \Yii::$app->user->id || $model->create_by == $editorsPeople)) 
-          || $twTool->getIsAuthority('id', $model->course->course_principal) || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)))
+        if(!($model->course->weeklyEditorsPeople->u_id == \Yii::$app->user->id
+          || $model->course->coursePrincipal->u_id == \Yii::$app->user->id || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)))
             throw new NotAcceptableHttpException('无权限操作！');
         if(!$model->course->getIsNormal())
             throw new NotAcceptableHttpException('该课程'.$model->course->getStatusName().'！');
@@ -216,13 +215,13 @@ class SummaryController extends Controller
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
-     */
+     
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
-    }
+    }*/
 
     /**
      * Finds the CourseSummary model based on its primary key value.

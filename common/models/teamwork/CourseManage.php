@@ -25,7 +25,7 @@ use yii\db\ActiveRecord;
  * @property integer $case_number                   案例数
  * @property integer $activity_number               活动数
  * @property integer $team_id                       创建者所在团队
- * @property integer $course_ops                    课程运维负责人
+ * @property string $course_ops                     课程运维负责人
  * @property string $create_by                      创建者
  * @property integer $course_principal              课程负责人
  * @property integer $created_at                    创建于
@@ -42,7 +42,7 @@ use yii\db\ActiveRecord;
  * @property CourseAnnex $courseAnnex               获取附件
  * @property CourseLink[] $courseLinks              获取所有课程环节
  * @property TeamMember $coursePrincipal            获取课程负责人
- * @property TeamMember $courseOps                  获取课程运维负责人
+ * @property User $courseOps                        获取课程运维负责人
  * @property Team $team                             获取团队
  * @property User $createBy                         获取创建者
  * @property Item $course                           获取课程
@@ -155,6 +155,7 @@ class CourseManage extends ActiveRecord
             [['real_start_time'], 'string', 'max' => 60, 'on' => [self::SCENARIO_WAITSTART]],
             [['path'], 'string', 'max' => 255],
             [['des'], 'string'],
+            [['course_ops'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['course_ops' => 'id']],
             [['weekly_editors_people'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['weekly_editors_people' => 'id']],
             [['course_principal'], 'exist', 'skipOnError' => true, 'targetClass' => TeamMember::className(), 'targetAttribute' => ['course_principal' => 'id']],
             [['team_id'], 'exist', 'skipOnError' => true, 'targetClass' => Team::className(), 'targetAttribute' => ['team_id' => 'id']],
@@ -191,9 +192,9 @@ class CourseManage extends ActiveRecord
             $s = count($times) == 3 ? (int)$times[2] : 0;  
             $videolength = $h*3600+$m*60+$s;  
    
-            if($this->scenario == self::SCENARIO_DEFAULT && $videolength == 0){
+            if($videolength == 0){
                 $this->setAttribute($attribute, null);
-            }else if($this->scenario == self::SCENARIO_CARRYOUT && $videolength > 0){  
+            }else if($videolength > 0){  
                 $this->setAttribute($attribute, $videolength);  
             }else{  
                 $this->addError($attribute, Yii::t('rcoa/teamwork', 'Video Length')."不可以小于0。");  
@@ -274,7 +275,7 @@ class CourseManage extends ActiveRecord
      */
     public function getCourseOps()
     {
-        return $this->hasOne(TeamMember::className(), ['id' => 'course_ops']);
+        return $this->hasOne(User::className(), ['id' => 'course_ops']);
     }
 
     /**

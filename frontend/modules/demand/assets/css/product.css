@@ -161,13 +161,13 @@ button.return {
  * 自定义弹框效果样式
  */
 .details-modal{
-    position: fixed;
+    position: absolute;
     top: 1000px;
     right: 0px;
     bottom: 0px;
     left: 0px;
     margin: 0px;
-    z-index: 1050;
+    z-index: 2;
 }
 .product-backdrop{
     position: relative;
@@ -175,7 +175,7 @@ button.return {
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 1040;
+    z-index: 1;
     background-color: rgba(0, 0, 0, .5);
 }
 .details-dialog{
@@ -202,6 +202,13 @@ button.return {
    padding: 0px 15px;
    height: 312px;
    overflow-y: auto;
+   scrollbar-base-color: #fff;
+   scrollbar-3dlight-color: #fff;
+   scrollbar-highlight-color: #fff;
+   scrollbar-track-color: #fff;
+   scrollbar-arrow-color: #fff;
+   scrollbar-shadow-color: #fff;
+
 }
 .body-header{
     width: 100%;

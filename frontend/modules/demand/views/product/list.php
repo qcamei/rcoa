@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="product-list">
     <div class="modal-dialog list-dialog" role="document">
-       <div class="modal-content">
+        <div class="modal-content" style="height: auto; overflow: hidden;">
            <div class="modal-header list-header">
                <div class="col-xs-1 list-operation">
                    <button type="button" id="pl-comeback" class="return">
@@ -32,11 +32,12 @@ $this->params['breadcrumbs'][] = $this->title;
            </div>
 
            <div class="modal-body list-body">
-               <div id="e-pl" class="e-pl"></div>
-               <div id="details" class="details-modal">
-                   <div class="product-backdrop"></div>
-               </div>
+                <div id="e-pl" class="e-pl"></div>
            </div>
+           
+            <div id="details" class="details-modal">
+                <div class="product-backdrop"></div>
+            </div>
 
            <div class="modal-footer list-footer" style="padding:5px; text-align: inherit;">
                <div class="list-footer-content">
@@ -50,6 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
                    </div>
                </div>
            </div>
+           
        </div>
    </div>
 </div>

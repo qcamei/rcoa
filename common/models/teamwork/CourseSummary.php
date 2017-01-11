@@ -3,6 +3,7 @@
 namespace common\models\teamwork;
 
 use common\models\teamwork\CourseManage;
+use common\models\User;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
@@ -18,7 +19,7 @@ use yii\db\ActiveRecord;
  * @property integer $created_at    创建于
  * @property integer $updated_at    更新于
  *
- * @property CourseManage $weeklyCreateBy     获取周报开发人
+ * @property User2 $createBy                   获取周报开发人
  * @property CourseManage $course             获取课程
  */
 class CourseSummary extends ActiveRecord
@@ -48,7 +49,7 @@ class CourseSummary extends ActiveRecord
             [['course_id', 'create_by', 'created_at', 'updated_at'], 'integer'],
             [['create_time'], 'string', 'max' => 60],
             [['content'], 'string'],
-            [['create_by'], 'exist', 'skipOnError' => true, 'targetClass' => CourseManage::className(), 'targetAttribute' => ['create_by' => 'weekly_editors_people']],
+            [['create_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['create_by' => 'id']],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => CourseManage::className(), 'targetAttribute' => ['course_id' => 'id']],
         ];
     }
@@ -83,9 +84,9 @@ class CourseSummary extends ActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getWeeklyCreateBy()
+    public function getCreateBy()
     {
-        return $this->hasOne(CourseManage::className(), ['weekly_editors_people' => 'create_by']);
+        return $this->hasOne(User::className(), ['id' => 'create_by']);
     }
 
     /**
