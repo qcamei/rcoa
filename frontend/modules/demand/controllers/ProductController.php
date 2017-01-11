@@ -87,9 +87,10 @@ class ProductController extends Controller
      * Displays a single DemandTaskProduct model.
      * @param integer $task_id
      * @param integer $product_id
+     * @param integer $sign                     标记操作：0为添加课程产品1为查看课程产品（默认为1）
      * @return mixed
      */
-    public function actionView($task_id, $product_id)
+    public function actionView($task_id, $product_id, $sign = 0)
     {
         $product = Product::findOne(['id' => $product_id]);
         $model = $this->findModel($task_id, $product_id);
@@ -103,6 +104,7 @@ class ProductController extends Controller
             'task_id' => $task_id,
             'product_id' => $product_id,
             'mark' => $model->task->getIsStatusDefault() || $model->task->getIsStatusAdjusimenting() ? true : false,
+            'sign' => $sign,
         ]);
     }
 

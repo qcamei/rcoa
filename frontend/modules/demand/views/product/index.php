@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <p>
                         <span class="price"><?= $value['currency'].number_format($value['unit_price'], 2) ?></span>
                         <span class="number">×<?= $value['number'] ?></span>
-                        <span class="total-price"><?= $value['currency'].number_format($totalPrice[$value['product_id']], 2) ?></p></span>
+                        <span class="total-price hidden-xs"><?= $value['currency'].number_format($totalPrice[$value['product_id']], 2) ?></p></span>
                     </p>
                 </div>
                 <div class="product-index-footer">
@@ -65,17 +65,15 @@ JS;
 <script type="text/javascript">
     /** 单击产品列表显示产品详情  */
     function viewproduct(obj){
-        $(".myModal").html("");
-        $('#add').tooltip('hide');
         var data_t = $(obj).attr("data_t");
         var data_p = $(obj).attr("data_p");
+        $(".myModal").html("");
+        $('#add').tooltip('hide');
         $(".myModal").modal('show');
-        $(".myModal").html('<div id="details" class="details-dialog" style="margin:0 auto; top:-120px;"></div>');
-        $("#details").load("/demand/product/view?task_id="+data_t+"&product_id="+data_p,null,
+        $(".myModal").html('<div id="details" class="details-dialog" style="margin:0 auto;"></div>');
+        $("#details").load("/demand/product/view?task_id="+data_t+"&product_id="+data_p+"&sign=1",null,
             function(){
-                $("#close").click(function(){
-                    $(".myModal").modal('hide');
-                });
+               $('#details').animate({top:'-120px'},'fast','swing');
             }
         );
         return false;

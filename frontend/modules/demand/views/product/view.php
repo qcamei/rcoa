@@ -68,6 +68,8 @@ $js = <<<JS
     /** 隐藏产品详情 */    
     $("#close").click(function(){
         $('#details').animate({top:'1000px'},'fast','swing');
+        if($sign)
+            $(".myModal").modal('hide');
     });
     /** 提交表单操作 */
     $("#product-save").click(function(){
@@ -75,7 +77,12 @@ $js = <<<JS
             if(data['type'] == 1){
                 alert(data['error']);
                 $('#details').animate({top:'1000px'},'fast','swing');
-                $(".myModal").load("/demand/product/list?task_id=$task_id");
+                if($sign){
+                    $(".myModal").modal('hide');
+                    $("#demand-task-product-index").load("/demand/product/index?task_id=$task_id");
+                }else{
+                    $(".myModal").load("/demand/product/list?task_id=$task_id");
+                }
             }else{
                 alert(data['error']);
             }
