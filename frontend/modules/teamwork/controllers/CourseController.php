@@ -151,15 +151,18 @@ class CourseController extends Controller
      */
     public function actionCreate($demand_task_id)
     {
-        /* @var $twTool TeamworkTool */
-        $twTool = TeamworkTool::getInstance();
-        $post = Yii::$app->request->post();
-        if(!Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_TASK_CREATE))
+        /* @var $rbacManager RbacManager */  
+        $rbacManager = \Yii::$app->authManager;
+        if(!$rbacManager->isRole(RbacName::ROLE_DEMAND_UNDERTAKE_PERSON, Yii::$app->user->id))
             throw new NotAcceptableHttpException('无权限操作！');
         
         /* @var $model CourseManage */
         $model = new CourseManage();
+        /* @var $twTool TeamworkTool */
+        $twTool = TeamworkTool::getInstance();
+        $post = Yii::$app->request->post();
         $model->loadDefaultValues();
+        $model->scenario = CourseManage::SCENARIO_DEFAULT;
         $model->demand_task_id = $demand_task_id;
         $model->create_by = \Yii::$app->user->id;
         $model->course_principal = DemandTool::getInstance()->getHotelTeamMemberId();
@@ -189,15 +192,15 @@ class CourseController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $model->scenario = CourseManage::SCENARIO_CARRYOUT;
+        $model->scenario = CourseManage::SCENARIO_DEFAULT;
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
         /* @var $rbacManager RbacManager */  
         $rbacManager = \Yii::$app->authManager;
         $post = Yii::$app->request->post();
        
-        if(!((Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_TASK_UPDATE) && $model->create_by == \Yii::$app->user->id) 
-          || $twTool->getIsAuthority('id', $model->course_principal) || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)))
+        if(!($model->coursePrincipal->u_id == \Yii::$app->user->id
+          || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)))
             throw new NotAcceptableHttpException('无权限操作！');
         if(!$model->getIsNormal())
             throw new NotAcceptableHttpException('该课程'.$model->getStatusName().'！');
@@ -270,8 +273,8 @@ class CourseController extends Controller
         $twTool = TeamworkTool::getInstance();
         /* @var $rbacManager RbacManager */  
         $rbacManager = \Yii::$app->authManager;
-        if(!((Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_TASK_START) && $model->create_by == \Yii::$app->user->id) 
-           || $twTool->getIsAuthority('id', $model->course_principal) || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)))
+        if(!($model->coursePrincipal->u_id == \Yii::$app->user->id
+          || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)))
             throw new NotAcceptableHttpException('无权限操作！');
         if($model != null && !$model->getIsWaitStart())
             throw new NotFoundHttpException('该课程'.$model->getStatusName().'！');
@@ -295,7 +298,9 @@ class CourseController extends Controller
         $model = $this->findModel($id);
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
-        if (!Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_COURSE_RESTORE)) 
+        /* @var $rbacManager RbacManager */  
+        $rbacManager = \Yii::$app->authManager;
+        if (!$rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)) 
             throw new NotFoundHttpException('无权限操作！');
         if($model != null && !$model->getIsCarryOut())
             throw new NotFoundHttpException('该课程'.$model->getStatusName().'！');
@@ -323,8 +328,8 @@ class CourseController extends Controller
         $rbacManager = \Yii::$app->authManager;
         CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($model->id)->all(), 'id', 'progress');
         $model->scenario = CourseManage::SCENARIO_CARRYOUT;
-        if(!((Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_TASK_COMPLETE) && $model->create_by == \Yii::$app->user->id) 
-          || $twTool->getIsAuthority('id', $model->course_principal) || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)))
+        if(!($model->coursePrincipal->u_id == \Yii::$app->user->id 
+          || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)))
             throw new NotAcceptableHttpException('无权限操作！');
         if(!$model->getIsNormal())
             throw new NotFoundHttpException('该课程'.$model->getStatusName().'！');

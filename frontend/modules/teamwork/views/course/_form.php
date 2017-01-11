@@ -100,7 +100,7 @@ use yii\widgets\ActiveForm;
     
     <?= $form->field($model, 'video_length', [
         'template' => "{label}\n<div class=\"col-sm-4\">{input}</div>\n<div class=\"col-sm-4\">{error}</div>"
-    ])->textInput(['value'=>  DateUtil::intToTime($model->video_length)])->hint('aaaa')?>
+    ])->textInput(['value'=>  DateUtil::intToTime($model->video_length)]) ?>
         
     <?= $form->field($model, 'question_mete', [
         'template' => "{label}\n<div class=\"col-sm-4\">{input}</div>\n<div class=\"col-sm-4\">{error}</div>"

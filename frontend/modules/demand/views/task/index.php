@@ -25,6 +25,25 @@ DemandTask::$operation = $operation;
 
 <div class="container demand-task-index demand-task">
    
+    <?php /* $this->render('_search_detai',[
+        'itemType' => $itemType,
+        'items' => $items,
+        'itemChild' => $itemChild,
+        'course' => $course,
+        'team' => $team,
+
+        
+        'item_type_id' => $item_type_id,
+        'item_id' => $item_id,
+        'item_child_id' => $item_child_id,
+        'course_id' => $course_id,
+        'status' => $status,
+        'time' => $time,
+        'keyword' => $keyword,
+        'mark' => $mark,
+    ]);*/?>
+
+    
     <div id="demand-task-index">
         <?= GridView::widget([
             'dataProvider' => $dataProvider,

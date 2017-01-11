@@ -52,8 +52,8 @@ $this->params['breadcrumbs'][] = $this->title;
         $isUserBelongProducer = $twTool->getIsUserBelongProducer($course_id);
         
         foreach ($coursePhase as $phase) {
-            $className = $phase->course->getIsNormal() && ((Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_COURSE_INPUT) && $isUserBelongProducer) 
-                || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id) || $twTool->getIsAuthority('id', $phase->course->course_principal)) ?
+            $className = $phase->course->getIsNormal() && ($isUserBelongProducer 
+                || $phase->course->coursePrincipal->u_id == Yii::$app->user->id || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id)) ?
                     'btn btn-primary' : 'btn btn-primary disabled';
             /* @var $phase CoursePhase */
             echo '<tr style="background-color:#eee">

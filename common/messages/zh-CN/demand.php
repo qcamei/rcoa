@@ -37,6 +37,7 @@ return[
     'Course Description' => '课程简介',
     'Team' => '开发团队',
     'Undertake Person' => '承接人',
+    'Develop Principals' => '开发负责人',
     'Plan Check Harvest Time' => '计划验收时间',
     'Reality Check Harvest Time' => '实际验收时间',
     'Check Harvest Time' => '验收时间',

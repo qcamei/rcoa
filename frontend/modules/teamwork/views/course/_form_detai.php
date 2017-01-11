@@ -101,7 +101,7 @@ CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($model->id
             ],
             [
                 'attribute' => 'course_ops',
-                'value' => !empty($model->course_ops) ? $model->courseOps->user->nickname : null,
+                'value' => !empty($model->course_ops) ? $model->courseOps->nickname : null,
             ],
             [
                 'attribute' => 'plan_start_time',

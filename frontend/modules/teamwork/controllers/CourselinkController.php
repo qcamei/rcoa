@@ -119,8 +119,8 @@ class CourselinkController extends Controller
         $post = Yii::$app->request->post();
         $phaseModel->course_id = $course_id;
         
-        if(!((Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_TASK_COLLOCATION) && $phaseModel->course->create_by == \Yii::$app->user->id) 
-           || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id) || $twTool->getIsAuthority('id', $phaseModel->course->course_principal)))
+        if(!($phaseModel->course->coursePrincipal->u_id == \Yii::$app->user->id
+           || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id)))
             throw new NotAcceptableHttpException('无权限操作！');
         if(!$phaseModel->course->getIsNormal())
             throw new NotAcceptableHttpException('该课程'.$phaseModel->course->getStatusName().'！');
@@ -156,8 +156,8 @@ class CourselinkController extends Controller
         $rbacManager = \Yii::$app->authManager;
         $post = Yii::$app->request->post();
         
-       if(!((Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_TASK_COLLOCATION) && $phaseModel->course->create_by == \Yii::$app->user->id) 
-           || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id) || $twTool->getIsAuthority('id', $phaseModel->course->course_principal)))
+       if(!($phaseModel->course->coursePrincipal->u_id == \Yii::$app->user->id
+           || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id)))
             throw new NotAcceptableHttpException('无权限操作！');
         if(!$phaseModel->course->getIsNormal())
             throw new NotAcceptableHttpException('该课程'.$phaseModel->course->getStatusName().'！');
@@ -188,8 +188,8 @@ class CourselinkController extends Controller
         $twTool = TeamworkTool::getInstance();
         /* @var $rbacManager RbacManager */  
         $rbacManager = \Yii::$app->authManager;
-        if(!((Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_TASK_COLLOCATION) && $model->course->create_by == \Yii::$app->user->id) 
-           || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id) || $twTool->getIsAuthority('id', $model->course->course_principal)))
+        if(!($model->course->coursePrincipal->u_id == \Yii::$app->user->id 
+           || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id)))
             throw new NotAcceptableHttpException('无权限操作！');
         if(!$model->course->getIsNormal() )
             throw new NotAcceptableHttpException('该课程'.$model->course->getStatusName().'！');
@@ -214,8 +214,8 @@ class CourselinkController extends Controller
         $twTool = TeamworkTool::getInstance();
         /* @var $rbacManager RbacManager */  
         $rbacManager = \Yii::$app->authManager;
-        if(!((Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_TASK_COLLOCATION) && $model->course->create_by == \Yii::$app->user->id) 
-           || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id) || $twTool->getIsAuthority('id', $model->course->course_principal)))
+        if(!($model->course->coursePrincipal->u_id == \Yii::$app->user->id 
+           || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id)))
             throw new NotAcceptableHttpException('无权限操作！');
         
         $model = $this->findModel($id);
@@ -239,9 +239,10 @@ class CourselinkController extends Controller
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
         /* @var $rbacManager RbacManager */  
+        $isUserBelongProducer = $twTool->getIsUserBelongProducer($model->course_id);
         $rbacManager = \Yii::$app->authManager;
-        if(!((Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_COURSE_INPUT) && $model->course->create_by == \Yii::$app->user->id) 
-           || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id) || $twTool->getIsAuthority('id', $model->course->course_principal)))
+        if(!($isUserBelongProducer|| $model->course->coursePrincipal->u_id == \Yii::$app->user->id 
+            || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id)))
             throw new NotAcceptableHttpException('无权限操作！');
         if(!$model->course->getIsNormal() )
             throw new NotAcceptableHttpException('该课程'.$phaseModel->course->getStatusName().'！');
