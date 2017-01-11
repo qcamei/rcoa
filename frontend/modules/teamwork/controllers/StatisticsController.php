@@ -2,13 +2,16 @@
 
 namespace frontend\modules\teamwork\controllers;
 
+use common\models\demand\DemandTask;
 use common\models\team\Team;
+use common\models\team\TeamCategory;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\ItemManage;
 use frontend\modules\teamwork\utils\TeamworkTool;
 use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\Item;
 use wskeee\framework\models\ItemType;
+use wskeee\team\TeamMemberTool;
 use Yii;
 use yii\db\Query;
 use yii\filters\AccessControl;
@@ -60,9 +63,9 @@ class StatisticsController extends Controller
         $query = (new Query())
                 ->andFilterWhere(['Course.status'=>$status])
                 ->andFilterWhere(['Course.`team_id`'=>$team])
-                ->andFilterWhere(['Item.`item_type_id`'=>$item_type_id])
-                ->andFilterWhere(['Item.`item_id`'=>$item_id])
-                ->andFilterWhere(['Item.`item_child_id`'=>$item_child_id]);
+                ->andFilterWhere(['DemandTask.`item_type_id`'=>$item_type_id])
+                ->andFilterWhere(['DemandTask.`item_id`'=>$item_id])
+                ->andFilterWhere(['DemandTask.`item_child_id`'=>$item_child_id]);
         /* 当时间段参数不为空时 */
         if($dateRange = $request->getQueryParam('dateRange')){
             $dateRange_Arr = explode(" - ",$dateRange);
@@ -156,10 +159,7 @@ class StatisticsController extends Controller
      * @return Array [id=>name]
      */
     private function getTeamIds(){
-        $teamIds = Team::find()
-                    ->select(['id','name'])
-                    ->asArray()
-                    ->all();
+        $teamIds = TeamMemberTool::getInstance()->getTeamsByCategoryId(TeamCategory::TYPE_CCOA_DEV_TEAM);
         $teamIds = ArrayHelper::map($teamIds, 'id', 'name');
         return $teamIds;
     }
@@ -170,11 +170,11 @@ class StatisticsController extends Controller
      */
     private function getStatisticsByItemType($sourceQuery){
         $itemTypQuery = clone $sourceQuery;
-        $itemTypQuery->select(['ItemType.name','SUM(Course.lession_time) AS value'])
+        $itemTypQuery->select(['ItemType.name','SUM(DemandTask.lesson_time) AS value'])
                     ->from(['Course'=>CourseManage::tableName()])
-                    ->leftJoin(['Item'=>ItemManage::tableName()], 'Course.project_id = Item.id')
-                    ->leftJoin(['ItemType'=>  ItemType::tableName()],'Item.item_type_id = ItemType.id')
-                    ->groupBy('Item.item_type_id');
+                    ->leftJoin(['DemandTask'=>  DemandTask::tableName()], 'Course.demand_task_id = DemandTask.id')
+                    ->leftJoin(['ItemType'=>  ItemType::tableName()],'DemandTask.item_type_id = ItemType.id')
+                    ->groupBy('DemandTask.item_type_id');
         return $itemTypQuery->all(Yii::$app->db);
     }
     /**
@@ -184,11 +184,11 @@ class StatisticsController extends Controller
      */
     private function getStatisticsByItem($sourceQuery){
         $itemQuery = clone $sourceQuery;
-        $itemQuery->select(['FwItem.name','SUM(Course.lession_time) AS value'])
+        $itemQuery->select(['FwItem.name','SUM(DemandTask.lesson_time) AS value'])
                 ->from(['Course'=>CourseManage::tableName()])
-                ->leftJoin(['Item'=>ItemManage::tableName()], 'Course.project_id = Item.id')
-                ->leftJoin(['FwItem'=> Item::tableName()],'Item.item_id = FwItem.id')
-                ->groupBy('Item.item_id');
+                ->leftJoin(['DemandTask'=>  DemandTask::tableName()], 'Course.demand_task_id = DemandTask.id')
+                ->leftJoin(['FwItem'=> Item::tableName()],'DemandTask.item_id = FwItem.id')
+                ->groupBy('DemandTask.item_id');
         return $itemQuery->all(Yii::$app->db);
     }
      /**
@@ -198,11 +198,11 @@ class StatisticsController extends Controller
      */
     private function getStatisticsByItemChild($sourceQuery){
         $itemChildQuery = clone $sourceQuery;
-        $itemChildQuery->select(['FwItem.name','SUM(Course.lession_time) AS value'])
+        $itemChildQuery->select(['FwItem.name','SUM(DemandTask.lesson_time) AS value'])
                     ->from(['Course'=>CourseManage::tableName()])
-                    ->leftJoin(['Item'=>ItemManage::tableName()], 'Course.project_id = Item.id')
-                    ->leftJoin(['FwItem'=> Item::tableName()],'Item.item_child_id = FwItem.id')
-                    ->groupBy('Item.item_child_id');
+                    ->leftJoin(['DemandTask'=>  DemandTask::tableName()], 'Course.demand_task_id = DemandTask.id')
+                    ->leftJoin(['FwItem'=> Item::tableName()],'DemandTask.item_child_id = FwItem.id')
+                    ->groupBy('DemandTask.item_child_id');
         return $itemChildQuery->all(Yii::$app->db);
     }
     
@@ -213,11 +213,11 @@ class StatisticsController extends Controller
      */
     private function getStatisticsByTeam($sourceQuery){
         $teamQuery = clone $sourceQuery;
-        $teamQuery->select(['Team.name','SUM(Course.lession_time) AS value','Count(Course.id) AS total'])
+        $teamQuery->select(['Team.name','SUM(DemandTask.lesson_time) AS value','Count(Course.id) AS total'])
                 ->from(['Team'=> Team::tableName()])
                 ->leftJoin(['Course'=>CourseManage::tableName()],'Course.team_id = Team.id')
-                ->leftJoin(['Item'=>ItemManage::tableName()], 'Course.project_id = Item.id')
-                ->leftJoin(['FItem'=>ItemManage::tableName()], 'Course.course_id = FItem.id')
+                ->leftJoin(['DemandTask'=>  DemandTask::tableName()], 'Course.demand_task_id = DemandTask.id')
+                ->where(['Team.id'=>  ArrayHelper::getColumn(TeamMemberTool::getInstance()->getTeamsByCategoryId(TeamCategory::TYPE_CCOA_DEV_TEAM), 'id')])
                 ->groupBy('Team.id')
                 ->orderBy('Team.index DESC');
         return $teamQuery->all(Yii::$app->db);
