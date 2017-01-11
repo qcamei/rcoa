@@ -16,8 +16,8 @@ use yii\web\View;
         <div class="details-header">
             <button id="close" type="button" class="close" ><span>&times;</span></button>
         </div>
-
         <div class="details-body">
+            <?php if($product != null): ?>
             <div class="body-header">
                 <div class="col-lg-3 col-md-4 col-sm-4 col-xs-5 edge">
                     <?= Html::img([$product->image]) ?>
@@ -34,10 +34,13 @@ use yii\web\View;
                 </ul>
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="home">
-                        <p><?= $product->productDetail->details ?></p>
+                        <p><?= !empty($product->productDetail) ? $product->productDetail->details : '<p>没有找到数据。</p>' ?></p>
                     </div>
                 </div>
             </div>
+            <?php else: ?>
+                没有找到数据。
+            <?php endif;?>
         </div>
 
         <div class="details-footer">

@@ -64,6 +64,7 @@ $js = <<<JS
     /** 单击选择添加产品数量 */
     function onItemSelected(itemdata){
         if(itemdata.type == "content"){
+            $('#details .product-backdrop').html("");
             $('#details .product-backdrop').load("/demand/product/view?task_id=$task_id&product_id="+itemdata.id, null,
                 function(){
                     $('#details').animate({top:'0px'},'fast','swing');
