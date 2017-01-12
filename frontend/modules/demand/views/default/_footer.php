@@ -27,7 +27,12 @@ use yii\helpers\Html;
                     'controllerId'=>'task',                             //控制ID
                     'name'=>'任务',                                     //名称
                     'icon'=>'/filedata/demand/image/list-check.png',    //图标路径
-                    'options'=>['/demand/task', 'status' => DemandTask::STATUS_DEFAULT],                        //跳转选项，第一索引为地址，第二起为传参
+                    'options'=>[
+                        '/demand/task/index', 
+                        'create_by' => Yii::$app->user->id, 
+                        'undertake_person' => Yii::$app->user->id, 
+                        'auditor' => Yii::$app->user->id
+                    ],                                                  //跳转选项，第一索引为地址，第二起为传参
                     'class'=>'footer-demand-menu-item',                 //样式
                 ],
                 [   

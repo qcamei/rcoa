@@ -2,6 +2,7 @@
 namespace frontend\modules\demand\utils;
 
 use common\models\demand\DemandTask;
+use common\models\demand\DemandTaskAuditor;
 use common\models\demand\DemandTaskProduct;
 use common\models\product\Product;
 use common\models\team\Team;
@@ -22,12 +23,13 @@ class DemandQuery {
                 ->select(['Demand_task.id'])
                 ->from(['Demand_task' => DemandTask::tableName()])
                 ->leftJoin(['Team' => Team::tableName()], 'Team.id = Demand_task.team_id')
+                ->leftJoin(['Demand_task_auditor' => DemandTaskAuditor::tableName()], 'Demand_task_auditor.team_id = Demand_task.create_team')
                 ->leftJoin(['Fw_item_type' => ItemType::tableName()], 'Fw_item_type.id = Demand_task.item_type_id')
                 ->leftJoin(['Fw_item' => Item::tableName()], 'Fw_item.id = Demand_task.item_id')
                 ->leftJoin(['Fw_item_child' => Item::tableName()], 'Fw_item_child.id = Demand_task.item_child_id')
                 ->leftJoin(['Fw_item_course' => Item::tableName()], 'Fw_item_course.id = Demand_task.course_id')
                 ->groupBy(['Demand_task.id'])
-                ->with('course', 'item', 'itemChild', 'itemType', 'team');
+                ->with('course', 'item', 'itemChild', 'itemType', 'team', 'createBy');
                  
         return $query;
     }

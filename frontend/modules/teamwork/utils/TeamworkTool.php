@@ -194,6 +194,8 @@ class TeamworkTool{
      * @param integer $itemId                       层次/类型ID
      * @param integer $itemChildId                  专业/工种ID
      * @param integer $courseId                     课程ID
+     * @param string $keyword                       关键字
+     * @param string $time                          时间段
      * @return Query                                返回查询结果对象
      */
     public function getCourseInfo($id = null, $demand_task_id = null, $status = null, $teamId = null, 

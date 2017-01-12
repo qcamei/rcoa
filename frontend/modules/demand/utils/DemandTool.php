@@ -445,21 +445,69 @@ class DemandTool {
    
     /**
      * 查询所有需求任务结果
-     * @param integer $id                      任务ID
-     * @param integer $status                  状态
+     * @param integer $id                           任务ID
+     * @param integer $status                       状态
+     * @param string $createBy                      创建者
+     * @param string $producer                      承接人
+     * @param string $assignPerson                  审核人
+     * @param integer $itemTypeId                   行业ID
+     * @param integer $itemId                       层次/类型ID
+     * @param integer $itemChildId                  专业/工种ID
+     * @param integer $courseId                     课程ID
+     * @param integer $teamId                       团队ID
+     * @param string $keyword                       关键字
+     * @param string $time                          时间段
      * @return Query
      */
-    public function getDemandTaskInfo($id = null, $status = 1)
+    public function getDemandTaskInfo($id = null, $status = 1, $createBy = null, $undertakePerson = null, $auditor = null,
+        $itemTypeId = null, $itemId = null, $itemChildId = null, $courseId = null, $teamId = null, $keyword = null, $time = null, $mark = null)
     {
+        /* @var $rbacManager RbacManager */  
+        $rbacManager = \Yii::$app->authManager;
         /* @var $dtQuery DemandQuery */
         $dtQuery = DemandQuery::getInstance();
         /* @var $results ActiveQuery */
         $results = $dtQuery->getDemandTaskTable();
+        $results->andFilterWhere(['or',[$mark == null ? 'or' : 'and', 
+            ['Demand_task.create_by' => $createBy], ['Demand_task.undertake_person' => $undertakePerson]], 
+            ['Demand_task_auditor.u_id' => $auditor]
+        ]);
+        if($rbacManager->isRole(RbacName::ROLE_DEMAND_UNDERTAKE_PERSON, \Yii::$app->user->id)){
+            $results->orWhere(['is', 'Demand_task.undertake_person', NULL]);
+            $results->orderBy([["FIELD(Demand_task.`status`, 10, 1, 5, 6, 7, 11, 12, 13, 14)"]]);
+        }     
+        
         $results->andFilterWhere([
             'Demand_task.id' => $id,
+            'Demand_task.item_type_id' => $itemTypeId,
+            'Demand_task.item_id' => $itemId,
+            'Demand_task.item_child_id' => $itemChildId,
+            'Demand_task.course_id' => $courseId,
+            'Demand_task.team_id'=> $teamId,
         ]);
         $results->andFilterWhere(['IN', 'Demand_task.status', 
             ($status == DemandTask::STATUS_DEFAULT ? DemandTask::$defaultStatus : $status)
+        ]);
+        
+        if($time != null){
+            $time = explode(" - ",$time);
+            if($status == DemandTask::STATUS_DEFAULT)
+                $results->andFilterWhere(['<=', 'Demand_task.plan_check_harvest_time', strtotime($time[1])]);
+            else if($status == DemandTask::STATUS_COMPLETED)
+                $results->andFilterWhere(['between', 'Multimedia_task.reality_check_harvest_time', $time[0],$time[1]]);
+            else if($status == DemandTask::STATUS_CANCEL)
+                $results->andFilterWhere(['between', 'Multimedia_task.plan_check_harvest_time', strtotime($time[0]),strtotime($time[1])]);
+            else
+                $results->andFilterWhere(['or', 
+                    ['between', 'Multimedia_task.plan_check_harvest_time', strtotime($time[0]),strtotime($time[1])], 
+                    ['between', 'Multimedia_task.reality_check_harvest_time', $time[0],$time[1]]
+                ]);
+        }
+        $results->andFilterWhere(['or',
+            ['like', 'Fw_item_type.name', $keyword],
+            ['like', 'Fw_item.name', $keyword],
+            ['like', 'Fw_item_child.name', $keyword],
+            ['like', 'Fw_item_course.name', $keyword],
         ]);
         
         return $results;

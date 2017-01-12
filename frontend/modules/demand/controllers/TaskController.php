@@ -6,6 +6,7 @@ use common\config\AppGlobalVariables;
 use common\models\demand\DemandTask;
 use common\models\demand\DemandTaskAnnex;
 use common\models\expert\Expert;
+use common\models\team\TeamCategory;
 use common\wskeee\job\JobManager;
 use frontend\modules\demand\utils\DemandTool;
 use frontend\modules\teamwork\utils\TeamworkTool;
@@ -14,6 +15,7 @@ use wskeee\framework\models\Item;
 use wskeee\framework\models\ItemType;
 use wskeee\rbac\RbacManager;
 use wskeee\rbac\RbacName;
+use wskeee\team\TeamMemberTool;
 use Yii;
 use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
@@ -57,19 +59,23 @@ class TaskController extends Controller
      * Lists all DemandTask models.
      * @return mixed
      */
-    public function actionIndex($status = 1, $page = null)
+    public function actionIndex($status = 1, $create_by = null, $undertake_person = null, $auditor = null,
+            $item_type_id = null, $item_id = null, $item_child_id = null, $course_id = null,
+            $team_id = null, $keyword = null, $time = null, $mark = null,$page = null)
     {
         $page = $page == null ? 0 : $page-1; 
         /* @var $dtTool DemandTool */
         $dtTool = DemandTool::getInstance();
         /* @var $dtTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
-        $query = $dtTool->getDemandTaskInfo($id = null, $status);
+        $query = $dtTool->getDemandTaskInfo($id = null, $status, $create_by, $undertake_person, $auditor, $item_type_id, $item_id, $item_child_id, $course_id, $team_id, $keyword, $time, $mark);
         $count = $query->count();
         
         $dataProvider = new ArrayDataProvider([
             'allModels' => $query->addSelect([
-                'Demand_task.*'
+                'Demand_task.item_type_id', 'Demand_task.item_id', 'Demand_task.item_child_id', 'Demand_task.course_id',
+                'Demand_task.team_id', 'Demand_task.undertake_person', 'Demand_task.create_by', 
+                'Demand_task.plan_check_harvest_time', 'Demand_task.status', 'Demand_task.mode'
             ])->limit(20)->offset($page*20)->all(),
         ]);
         $taskIds = ArrayHelper::getColumn($dataProvider->allModels, 'id');
@@ -80,6 +86,25 @@ class TaskController extends Controller
             'dataProvider' => $dataProvider,
             'operation' => $dtTool->getIsBelongToOwnOperate($taskIds, $taskStatus),
             'count' => $count,
+            'itemType' => $this->getItemType(),
+            'items' => $this->getCollegesForSelect(),
+            'itemChild' => empty($mark) ? [] : $this->getChildren($item_id),
+            'course' => empty($mark) ? [] : $this->getChildren($item_child_id),
+            'team' => $this->getTeam(),
+            'createBys' => $this->getCreateBys(),
+            'undertakePersons' => $this->getUndertakePersons(),
+            //搜索默认字段值
+            'itemTypeId' => $item_type_id,
+            'itemId' => $item_id,
+            'itemChildId' => $item_child_id,
+            'courseId' => $course_id,
+            'keyword' => $keyword,
+            'status' => $status,
+            'createBy' => $create_by,
+            'undertakePerson' => $undertake_person,
+            'teamId' => $team_id,
+            'time' => !empty($time) ? $time : null,
+            'mark' => !empty($mark) ? $mark : 0,
         ]);
     }
 
@@ -544,5 +569,49 @@ class TaskController extends Controller
                ->where(['task_id' => $taskId])
                ->with('task')
                ->all();
+    }
+    
+    /**
+     * 获取所有课程开发团队
+     * @param integer $teamId      团队ID
+     * @return array
+     */
+    public function getTeam()
+    {
+        /* @var $tmTool TeamMemberTool */
+        $tmTool = TeamMemberTool::getInstance();
+        $results = $tmTool->getTeamsByCategoryId(TeamCategory::TYPE_CCOA_DEV_TEAM);
+        $teams = [];
+        foreach ($results as $team) {
+            $teams[] = $team;
+        }
+        ArrayHelper::multisort($teams, 'index', SORT_ASC);    
+        return ArrayHelper::map($teams, 'id', 'name');
+    }
+    
+    /**
+     * 获取所有创建者
+     * @return type
+     */
+    public function getCreateBys()
+    {
+        /* @var $rbacManager RbacManager */
+        $rbacManager = Yii::$app->authManager;
+        $createBys = $rbacManager->getItemUsers(RbacName::ROLE_DEMAND_PROMULGATOR);
+        
+        return ArrayHelper::map($createBys, 'id', 'nickname');
+    }
+    
+    /**
+     * 获取所有承接人
+     * @return type
+     */
+    public function getUndertakePersons()
+    {
+        /* @var $rbacManager RbacManager */
+        $rbacManager = Yii::$app->authManager;
+        $undertakePersons = $rbacManager->getItemUsers(RbacName::ROLE_DEMAND_UNDERTAKE_PERSON);
+        
+        return ArrayHelper::map($undertakePersons, 'id', 'nickname');
     }
 }

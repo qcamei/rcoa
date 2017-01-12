@@ -1,6 +1,6 @@
 <?php
 
-use common\models\teamwork\CourseManage;
+use common\models\demand\DemandTask;
 use kartik\daterange\DateRangePicker;
 use kartik\widgets\Select2;
 use yii\helpers\Html;
@@ -10,7 +10,7 @@ use yii\widgets\ActiveForm;
 ?>
 
 <?php $form = ActiveForm::begin([
-    'id' => 'course-manage-search',
+    'id' => 'demand-task-search',
     'action' => ['index'],
     'method' => 'get',
 ]); ?>
@@ -39,7 +39,7 @@ use yii\widgets\ActiveForm;
             <div class="col-lg-9">
                 <?= Select2::widget([
                     'id' => 'select2-item_type_id',
-                    'value'=> $itemTypeId,
+                    'value'=> $item_type_id,
                     'name' => 'item_type_id',
                     'data' => $itemType,
                     'options' => [
@@ -58,7 +58,7 @@ use yii\widgets\ActiveForm;
             <div class="col-lg-9">
                 <?= Select2::widget([
                     'id' => 'select2-item_id',
-                    'value'=> $itemId,
+                    'value'=> $item_id,
                     'name' => 'item_id',
                     'data' => $items,
                     'options' => [
@@ -77,7 +77,7 @@ use yii\widgets\ActiveForm;
             <div class="col-lg-9">
                 <?= Select2::widget([
                     'id' => 'select2-item_child_id',
-                    'value'=> $itemChildId,
+                    'value'=> $item_child_id,
                     'name' => 'item_child_id',
                     'data' => $itemChild,
                     'options' => [
@@ -96,9 +96,47 @@ use yii\widgets\ActiveForm;
             <div class="col-lg-9">
                 <?= Select2::widget([
                     'id' => 'select2-course_id',
-                    'value'=> $courseId,
+                    'value'=> $course_id,
                     'name' => 'course_id',
                     'data' => $course,
+                    'options' => [
+                        'placeholder' => '全部',
+                    ],
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
+                ]); ?>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding: 5px 0px;">
+            <label id="label-status" for="create_by" class="col-lg-3 control-label">
+                <?= Yii::t('rcoa', 'Create By'); ?>
+            </label>
+            <div class="col-lg-9">
+                <?= Select2::widget([
+                    'id' => 'select2-create_by',
+                    'value'=> $create_by,
+                    'name' => 'create_by',
+                    'data' => $createBy,
+                    'options' => [
+                        'placeholder' => '全部',
+                    ],
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
+                ]); ?>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding: 5px 0px;">
+            <label id="label-status" for="producer" class="col-lg-3 control-label">
+                <?= Yii::t('rcoa/demand', 'Undertake Person'); ?>
+            </label>
+            <div class="col-lg-9">
+                <?= Select2::widget([
+                    'id' => 'select2-producer',
+                    'value'=> $undertake_person,
+                    'name' => 'producer',
+                    'data' => $undertakePerson,
                     'options' => [
                         'placeholder' => '全部',
                     ],
@@ -136,7 +174,7 @@ use yii\widgets\ActiveForm;
                     'id' => 'select2-status',
                     'value'=> $status,
                     'name' => 'status',
-                    'data' => CourseManage::$statusName,
+                    'data' => [DemandTask::STATUS_DEFAULT => '未完成', DemandTask::STATUS_COMPLETED => '已完成'],
                     'options' => [
                         'placeholder' => '全部',
                     ],
@@ -176,7 +214,7 @@ use yii\widgets\ActiveForm;
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding: 5px 15px;">
             <label for="time" class="col-lg-3 control-label hidden-lg hidden-xs">&nbsp;</label>
             <div class="col-lg-9">
-                <a id="export" role="button" class="btn btn-primary">导出详细</a>
+                <a id="export" role="button" class="btn btn-primary disabled">导出详细</a>
             </div>
         </div>
     </div>
@@ -203,8 +241,9 @@ $js =
         $('#up').toggleClass('up');
     });
     $('#submit').click(function(){
-        $('#course-manage-search').submit();
+        $('#demand-task-search').submit();
     });
+        
     $('#select2-item_id').change(function(){
         var url = "/framework/api/search?id="+$(this).val(),
             element = $('#select2-item_child_id');
@@ -225,22 +264,6 @@ $js =
     $('#export').click(function(){
         location.href = "/teamwork/export/run?" + $('#course-manage-search').serialize();
     });
-   
-    /*var datas = $('#course-manage-search').serialize();
-    $('#course-manage-search').keydown(function(e){
-        if(e.keyCode==13){
-            submitFeom(datas);
-            return false;
-        }
-    });
-    $('#submit').click(function(){
-        submitFeom(datas);
-    });
-    function submitFeom(datas){
-        $.get('', datas, function(data){
-            $('#course-manage-index').html(data);
-        });
-    }*/
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>

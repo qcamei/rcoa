@@ -25,23 +25,27 @@ DemandTask::$operation = $operation;
 
 <div class="container demand-task-index demand-task">
    
-    <?php /* $this->render('_search_detai',[
+    <?=  $this->render('_search_detai',[
         'itemType' => $itemType,
         'items' => $items,
         'itemChild' => $itemChild,
         'course' => $course,
         'team' => $team,
+        'createBy' => $createBys,
+        'undertakePerson' => $undertakePersons,
 
-        
-        'item_type_id' => $item_type_id,
-        'item_id' => $item_id,
-        'item_child_id' => $item_child_id,
-        'course_id' => $course_id,
+        'item_type_id' => $itemTypeId,
+        'item_id' => $itemId,
+        'item_child_id' => $itemChildId,
+        'course_id' => $courseId,
+        'team_id' => $teamId,
+        'create_by' => $createBy,
+        'undertake_person' => $undertakePerson,
         'status' => $status,
         'time' => $time,
         'keyword' => $keyword,
         'mark' => $mark,
-    ]);*/?>
+    ]); ?>
 
     
     <div id="demand-task-index">
