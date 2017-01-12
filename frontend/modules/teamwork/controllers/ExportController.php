@@ -2,6 +2,7 @@
 
 namespace frontend\modules\teamwork\controllers;
 
+use common\models\demand\DemandTask;
 use common\models\Position;
 use common\models\team\Team;
 use common\models\team\TeamMember;
@@ -9,7 +10,6 @@ use common\models\teamwork\CourseLink;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\CoursePhase;
 use common\models\teamwork\CourseProducer;
-use common\models\teamwork\ItemManage;
 use common\models\User;
 use PHPExcel;
 use PHPExcel_IOFactory;
@@ -63,8 +63,8 @@ class ExportController extends Controller
                     "FwItemB.name AS item_child_id",                    //专业/工种
                     "FwItemC.name AS course_name",                      //课程名
                     'TeacherUser.nickname AS teacher',                  //主讲老师
-                    'Course.credit AS credit',                          //学分
-                    'Course.lession_time AS lession_time',              //学时
+                    'DemandTask.credit AS credit',                      //学分
+                    'DemandTask.lesson_time AS lesson_time',            //学时
                     'Course.video_length AS video_length',              //视频时长(数字，需要用php转换成时间格式)
                     'Course.question_mete AS question_mete',            //题目数
                     'Course.case_number AS case_number',                //案例数
@@ -84,22 +84,21 @@ class ExportController extends Controller
                     ])
                 ->from(['Course'=>CourseManage::tableName()])
                 ->leftJoin(['Team'=>  Team::tableName()],'Course.team_id = Team.id')                    //团队
-                ->leftJoin(['Item'=>ItemManage::tableName()], 'Course.project_id = Item.id')            //课程关联的项目模型
+                ->leftJoin(['DemandTask'=>  DemandTask::tableName()], 'DemandTask.id = Course.demand_task_id')            //课程关联的项目模型
                 
-                ->leftJoin(['ItemType'=>  ItemType::tableName()],'Item.item_type_id = ItemType.id')     //项目行业
-                ->leftJoin(['FwItemA'=> Item::tableName()],'Item.item_id = FwItemA.id')                 //层次/类型
-                ->leftJoin(['FwItemB'=> Item::tableName()],'Item.item_child_id = FwItemB.id')           //专业/工种
-                ->leftJoin(['FwItemC'=> Item::tableName()], 'Course.course_id = FwItemC.id')            //课程名
+                ->leftJoin(['ItemType'=>  ItemType::tableName()],'DemandTask.item_type_id = ItemType.id')     //项目行业
+                ->leftJoin(['FwItemA'=> Item::tableName()],'DemandTask.item_id = FwItemA.id')                 //层次/类型
+                ->leftJoin(['FwItemB'=> Item::tableName()],'DemandTask.item_child_id = FwItemB.id')           //专业/工种
+                ->leftJoin(['FwItemC'=> Item::tableName()], 'DemandTask.course_id = FwItemC.id')            //课程名
                 
-                ->leftJoin(['TeacherUser'=> User::tableName()], 'Course.teacher = TeacherUser.id')      //老师
-                ->leftJoin(['TeamMember'=> TeamMember::tableName()], 'Course.course_ops = TeamMember.id')           //团队成员
-                ->leftJoin(['OpsUser'=> User::tableName()], 'TeamMember.u_id = OpsUser.id')             //运维人
+                ->leftJoin(['TeacherUser'=> User::tableName()], 'DemandTask.teacher = TeacherUser.id')      //老师
+                ->leftJoin(['OpsUser'=> User::tableName()], 'Course.course_ops = OpsUser.id')             //运维人
                 
                 ->andFilterWhere(['Course.status'=>$status])
                 ->andFilterWhere(['Course.`team_id`'=>$team])
-                ->andFilterWhere(['Item.`item_type_id`'=>$item_type_id])                            //行业          条件
-                ->andFilterWhere(['Item.`item_id`'=>$item_id])                                      //层次/类型     条件
-                ->andFilterWhere(['Item.`item_child_id`'=>$item_child_id]);                         //专业/工种     条件
+                ->andFilterWhere(['DemandTask.`item_type_id`'=>$item_type_id])                            //行业          条件
+                ->andFilterWhere(['DemandTask.`item_id`'=>$item_id])                                      //层次/类型     条件
+                ->andFilterWhere(['DemandTask.`item_child_id`'=>$item_child_id]);                         //专业/工种     条件
         /* 当时间段参数不为空时 */
         if($dateRange = $request->getQueryParam('dateRange')){
             $dateRange_Arr = explode(" - ",$dateRange);
@@ -248,7 +247,7 @@ class ExportController extends Controller
                     ->getRowDimension()->setRowHeight(28);
         //添加2级标题
         $objPHPExcel->getActiveSheet()
-                ->setCellValue('A2', '行业') ->setCellValue('B2', '层次/类型') ->setCellValue('C2', '业/工种') ->setCellValue('D2', '课程名称')
+                ->setCellValue('A2', '行业') ->setCellValue('B2', '层次/类型') ->setCellValue('C2', '专业/工种') ->setCellValue('D2', '课程名称')
                 ->setCellValue('E2', '主讲讲师') ->setCellValue('F2', '学分') ->setCellValue('G2', '学时') ->setCellValue('H2', '视频时长')
                 ->setCellValue('I2', '题量') ->setCellValue('J2', '案例数') ->setCellValue('K2', '活动数') ->setCellValue('L2', '开发团队')
                 ->setCellValue('M2', '开发人员') ->setCellValue('N2', '运维人员') ->setCellValue('O2', '计划开始时间') ->setCellValue('P2', '计划结束时间')
@@ -264,7 +263,7 @@ class ExportController extends Controller
                         ->setCellValueByColumnAndRow(++$columnIndex, $index+$startRow, $course['course_name'])              //课程名
                         ->setCellValueByColumnAndRow(++$columnIndex, $index+$startRow, $course['teacher'])                  //主讲老师
                         ->setCellValueByColumnAndRow(++$columnIndex, $index+$startRow, $course['credit'])                   //学分
-                        ->setCellValueByColumnAndRow(++$columnIndex, $index+$startRow, $course['lession_time'])             //学时
+                        ->setCellValueByColumnAndRow(++$columnIndex, $index+$startRow, $course['lesson_time'])             //学时
                         ->setCellValueByColumnAndRow(++$columnIndex, $index+$startRow, DateUtil::intToTime($course['video_length']))             //视频时长
                         ->setCellValueByColumnAndRow(++$columnIndex, $index+$startRow, $course['question_mete'])            //题目数
                         ->setCellValueByColumnAndRow(++$columnIndex, $index+$startRow, $course['case_number'])              //案例数
