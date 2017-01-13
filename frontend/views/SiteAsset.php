@@ -6,14 +6,13 @@ namespace frontend\views;
  * and open the template in the editor.
  */
 
-use yii\web\AssetBundle;
 use const YII_DEBUG;
 /**
  * Description of RbacAsset
  *
  * @author Administrator
  */
-class SiteAsset extends AssetBundle
+class SiteAsset extends \yii\web\AssetBundle
 {
     //public $basePath = '@webroot/assets';
     //public $baseUrl = '@web/assets';

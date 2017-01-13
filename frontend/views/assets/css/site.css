@@ -31,3 +31,13 @@ and open the template in the editor.
     margin: 0 20px;
 }*/
 
+/** 登录页 */
+.site-login{
+    position: relative;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background: url("/filedata/site/image/login_bg1.jpg") no-repeat;
+    background-position:center center;
+}
