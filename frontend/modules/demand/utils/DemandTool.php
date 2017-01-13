@@ -17,6 +17,7 @@ use wskeee\rbac\RbacName;
 use wskeee\team\TeamMemberTool;
 use Yii;
 use yii\db\ActiveQuery;
+use yii\db\Expression;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\web\NotAcceptableHttpException;
@@ -474,7 +475,7 @@ class DemandTool {
         ]);
         if($rbacManager->isRole(RbacName::ROLE_DEMAND_UNDERTAKE_PERSON, \Yii::$app->user->id)){
             $results->orWhere(['is', 'Demand_task.undertake_person', NULL]);
-            $results->orderBy([["FIELD(Demand_task.`status`, 10, 1, 5, 6, 7, 11, 12, 13, 14)"]]);
+            $results->orderBy(new Expression("FIELD(Demand_task.`status`, 10, 1, 5, 6, 7, 11, 12, 13, 14)")); 
         }     
         
         $results->andFilterWhere([
