@@ -3,6 +3,9 @@ namespace common\models;
 
 use Yii;
 use yii\base\Model;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * Login form
@@ -23,11 +26,11 @@ class LoginForm extends Model
     {
         return [
             // username and password are both required
-            [['username', 'password'], 'required'],
+            [['username', 'password'], 'required','message' => '用户名或密码不能为空。'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
-            ['password', 'validatePassword'],
+            ['password', 'verification'],
         ];
     }
 
@@ -38,12 +41,12 @@ class LoginForm extends Model
      * @param string $attribute the attribute currently being validated
      * @param array $params the additional name-value pairs given in the rule
      */
-    public function validatePassword($attribute, $params)
+    public function Verification($attribute, $params)
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
             if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
+                $this->addError($attribute, '不正确的用户名或密码。');
             }
         }
     }
