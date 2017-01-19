@@ -20,31 +20,25 @@ $system = AppGlobalVariables::getSystems();
 
 NavBar::begin([
         //'brandLabel' => '课程中心工作平台',
-        'brandLabel' => '',
+        'brandLabel' => Html::img(['/filedata/site/image/logo.png'], [
+            'style' => 'width: 50px;height: 45px;margin-top: -11px;margin-left: -5px;margin-right: -5px;'
+        ]),
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $menuItems = [['label' => '首页','url' => ['/site/index'],],];
+    $menuItems = [['label' => '首页','url' => ['/site/index']]];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = [
             'label' => '登录', 
             'url' => ['/site/login'], 
         ];
     } else {
-        foreach ($system as $key => $value) {
-            $menuItems[] = [
-                'label' => $value->name, 
-                'url' => 
-                    $value->isjump == 0  ? [$value->module_link] : 
-                    $value->module_link.'?userId='.Yii::$app->user->id.'&userName='.$user->username.'&timeStamp='.(time()*1000).'&sign='.strtoupper(md5($user->id.$user->username.(time()*1000).'eeent888888rms999999')),
-                'linkOptions' => [
-                    'target'=> $value->isjump == 0 ? '': "_black",
-                    'title' => $value->module_link != '#' ? $value->name : '即将上线',
-                ]
-            ];
-        }
+        $systems = AppGlobalVariables::__getSystems();
+        foreach ($systems as $_system)
+            $menuItems[] = $_system;
+        
     }
     
     if($moduleId == 'app-frontend')
@@ -55,6 +49,14 @@ NavBar::begin([
     {
         /* 通过模块名拿到对应模块路由 */
         $urls = ArrayHelper::getColumn($menuItems, 'url');
+        $item = [];
+        foreach ($menuItems as $items){
+            if(isset($items['items'])){
+                foreach ($items['items'] as $vals)
+                    $item[] = ArrayHelper::getValue($vals, 'url');
+            } 
+        }
+        $urls = ArrayHelper::merge($urls, $item);        
         foreach($urls AS $url){
             if(stripos($url[0], $moduleId))
             {
@@ -98,5 +100,6 @@ NavBar::begin([
             ]).'</li>'; 
         echo Html::endTag('ul');
     }
+    
     NavBar::end();
 ?>

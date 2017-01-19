@@ -5,7 +5,8 @@ use frontend\modules\demand\assets\DefaultAssets;
 use yii\helpers\Html;
 use yii\web\View;
 
-    /* @var $this View */
+/* @var $this View */
+$this->title = Yii::t('rcoa/demand', 'Demand Tasks');
 ?>
 
 <div class="demand-default-index">

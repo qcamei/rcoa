@@ -140,7 +140,7 @@ body .wrap >.content{
 }
 body .footer {
     height: 50px;
-    position: fixed;
+    position: absolute;
     left: 0px;
     right: 0px;
 }

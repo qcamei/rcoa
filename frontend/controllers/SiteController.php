@@ -76,9 +76,9 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $system = System::find()->orderBy('index asc')->all();
+        //$system = System::find()->where(['is_delete' => 'N'])->orderBy('index asc')->all();
         return $this->render('index',[
-            'system' => $system,
+            //'system' => $system,
         ]);
     }
 

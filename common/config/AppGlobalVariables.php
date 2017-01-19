@@ -40,4 +40,47 @@ class AppGlobalVariables{
         $system = self::getSystem();
         return $system->id;
     }
+    
+    /**
+     * 组装菜单导航
+     */
+    public static function __getSystems(){
+        $system = self::getSystems();
+        $menuItems = [];
+        foreach($system as $_system){
+            if($_system->parent_id == null){
+                $children = self::getNavItemChildren($system, $_system->id);
+                $item = [
+                    'label'=> $_system->name,
+                ];
+                if(count($children)>0)
+                    $item['items'] = $children;
+                else
+                    $item['url'] = [$_system->module_link];
+
+                 $menuItems[] = $item;
+            }
+        }
+        return $menuItems;
+        
+    }
+
+    /**
+     * 获取二级导航
+     * @param array $allSystems           获取所有导航
+     * @param integer $parent_id          父级ID
+     * @return array
+     */
+    private static function getNavItemChildren($allSystems, $parent_id){
+        $items = [];
+        foreach($allSystems as $systme){
+            if($systme->parent_id == $parent_id){
+                $items[]=[
+                    'label'=> $systme->name,
+                    'url'=> [$systme->module_link],
+                ];
+            }
+        }
+        return $items;
+    }
 }

@@ -121,7 +121,7 @@ class SummaryController extends Controller
                 $weeklyInfo = [
                     'create_time' => $weeklyInfo->create_time,
                     'content' => $weeklyInfo->content,
-                    'create_by' => $weeklyInfo->weeklyCreateBy->weeklyEditorsPeople->user->nickname,
+                    'create_by' => $weeklyInfo->createBy->nickname,
                     'created_at' => date('Y-m-d H:i', $weeklyInfo->created_at)
                 ];
             }  else {

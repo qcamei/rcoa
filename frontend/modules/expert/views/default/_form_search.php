@@ -10,7 +10,7 @@ use yii\web\View;
 ?>
 
     <form id="form-assign-key" action="<?= Yii::$app->request->hostInfo?>/expert/default/searchs" method="get">
-        <ul class="dropdown clearfix" style="display:none;">
+        <ul class="dropdowns clearfix" style="display:none;">
             <li><input type="radio" id="all" name="fieldName" value="all" checked/><label for="all"><strong>全部</strong></label></li>
             <li><input type="radio" id="job_title" name="fieldName" value="job_title"/><label for="job_title"><strong>头衔</strong></label></li>
             <li><input type="radio" id="job_name" name="fieldName" value="job_name"/><label for="job_name"><strong>职称</strong></label></li>
@@ -34,7 +34,7 @@ use yii\web\View;
 		
     /** 对焦点上单击“显示”下拉列表中 **/
     ui.find('.searchtext').bind('focus click',function(){
-        ui.find('.arrowDown').addClass('arrowUp').removeClass('arrowDown').andSelf().find('.dropdown').slideDown(50);
+        ui.find('.arrowDown').addClass('arrowUp').removeClass('arrowDown').andSelf().find('.dropdowns').slideDown(50);
     });
    /** 鼠标离开隐藏下拉 **/
     ui.bind('mouseleave',function(){

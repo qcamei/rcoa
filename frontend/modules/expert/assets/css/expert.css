@@ -116,7 +116,7 @@ and open the template in the editor.
 .row .glyphicon {
     top: 0px;
 }
-.dropdown {
+.dropdowns {
     width:100px;
     padding:6px 5px;
     border:solid 1px #ddd;
@@ -125,7 +125,7 @@ and open the template in the editor.
     left:0px;
     top:-225px;
 }
-.dropdown li {
+.dropdowns li {
     float:left;
     width:175px;
     padding:0 0 0 5px;
@@ -134,7 +134,7 @@ and open the template in the editor.
     height:32px;
     list-style: none;
 }
-.dropdown li label {
+.dropdowns li label {
     color: #000;
     cursor:pointer;
 }

@@ -31,6 +31,68 @@ and open the template in the editor.
     margin: 0 20px;
 }*/
 
+/** 首页样式 */
+.homebg{
+    width: 100%;
+    height: auto;
+}
+/*.homebg .banner{
+    width: 100%; 
+    height: auto;
+    position: absolute;
+    top:50px;
+    right: 0;
+    bottom: 10%;
+    left: 0;
+    overflow: hidden;
+}*/
+.homebg .banner img{
+    width: 100%;
+    /*position: absolute;
+    left: 50%;
+    margin-left: -960px;
+    display:block;*/
+}
+.homebg .site-index{
+    width: 100%;
+    position: relative;
+}
+.site-index .jumbotron{
+    position: relative;
+    top: -100px;
+}
+.circle{
+    width: 250px;
+    height: 250px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.circle .img-circle{
+    width: 150px;
+    height: 150px;
+    text-align: center;
+    margin: 30px auto 20px;
+    background-color: #aab5bb;
+    padding: 22px 15px;
+}
+.circle .img-circle:active{
+    background-color: #3f99ce;
+}
+.circle .words{
+    width: 150px;
+    margin: 0px auto;
+    text-align: center;
+}
+.words p span{
+    color: #aab5bb;
+    font-weight: 400;
+}
+@media (max-width: 425px){
+    .site-index{
+        top: 0;
+    }
+}
+
 /** 登录页 */
 .site-login{
     width: 100%;
