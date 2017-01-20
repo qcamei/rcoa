@@ -109,5 +109,6 @@ class DefaultController extends Controller {
         echo '<h2>获取用户所有团成员 getUserTeamMembers(\'36aa1fcd1f89849aede1e63aec86a7b8\')</h2>';
         var_dump(TeamMemberTool::getInstance()->getUserTeamMembers('36aa1fcd1f89849aede1e63aec86a7b8'));
         //var_dump($categorys,$product_center_category,$dev_teams,$team1,$teammanbers,$someTeammembers);
+        //
     }
 }
