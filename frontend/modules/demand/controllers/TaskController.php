@@ -59,7 +59,7 @@ class TaskController extends Controller
      * Lists all DemandTask models.
      * @return mixed
      */
-    public function actionIndex($status = 1, $create_by = null, $undertake_person = null, $auditor = null,
+    public function actionIndex($status = DemandTask::STATUS_DEFAULT, $create_by = null, $undertake_person = null, $auditor = null,
             $item_type_id = null, $item_id = null, $item_child_id = null, $course_id = null,
             $team_id = null, $keyword = null, $time = null, $mark = null,$page = null)
     {
@@ -199,7 +199,10 @@ class TaskController extends Controller
                 
         if ($model->load(Yii::$app->request->post())) {
             $dtTool->TaskSubmitCheck($model);
-            return $this->redirect(['index']);
+            return $this->redirect(['index','create_by' => Yii::$app->user->id, 
+                    'undertake_person' => Yii::$app->user->id, 
+                    'auditor' => Yii::$app->user->id
+                ]);
         } else {
             return $this->renderPartial('submit_check', [
                 'model' => $model,
@@ -264,7 +267,10 @@ class TaskController extends Controller
         $model->status = DemandTask::STATUS_UNDERTAKE;
         $model->progress = $model->getStatusProgress();
         $dtTool->PassCheckTask($model);
-        return $this->redirect(['index']);
+        return $this->redirect(['index','create_by' => Yii::$app->user->id, 
+            'undertake_person' => Yii::$app->user->id, 
+            'auditor' => Yii::$app->user->id
+        ]);
     }
     
     /**
@@ -318,7 +324,10 @@ class TaskController extends Controller
         
         if ($model->load(Yii::$app->request->post())) {
             $dtTool->SubmitTask($model);
-            return $this->redirect(['index']);
+            return $this->redirect(['index','create_by' => Yii::$app->user->id, 
+                'undertake_person' => Yii::$app->user->id, 
+                'auditor' => Yii::$app->user->id
+            ]);
         } else {
             return $this->renderPartial('submit_task', [
                 'model' => $model,
@@ -345,7 +354,10 @@ class TaskController extends Controller
                 
         if ($model->load(Yii::$app->request->post())){
             $dtTool->CompleteTask($model);
-            return $this->redirect(['index']);
+            return $this->redirect(['index','create_by' => Yii::$app->user->id, 
+                'undertake_person' => Yii::$app->user->id, 
+                'auditor' => Yii::$app->user->id
+            ]);
         } else {
             return $this->renderPartial('complete', [
                 'model' => $model,
@@ -397,7 +409,10 @@ class TaskController extends Controller
 
         if ($model->load($post)){
             $dtTool->CancelTask($model, $oldStatus, $cancel);
-            return $this->redirect(['index']);
+            return $this->redirect(['index','create_by' => Yii::$app->user->id, 
+                'undertake_person' => Yii::$app->user->id, 
+                'auditor' => Yii::$app->user->id,
+            ]);
         } else {
             return $this->renderPartial('cancel', [
                 'model' => $model,

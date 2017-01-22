@@ -149,7 +149,10 @@ class CheckController extends Controller
         $model->complete_time = date('Y-m-d H:i', time());
         $model->status = DemandCheck::STATUS_COMPLETE;
         $dtTool->SubmitCheckTask($model);
-        $this->redirect(['task/index']);
+        $this->redirect(['task/index', 'create_by' => Yii::$app->user->id,
+            'undertake_person' => Yii::$app->user->id, 
+            'auditor' => Yii::$app->user->id,
+        ]);
     }
     
     /**
@@ -157,13 +160,13 @@ class CheckController extends Controller
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
-     */
+     
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
-    }
+    }*/
 
     /**
      * Finds the DemandCheck model based on its primary key value.

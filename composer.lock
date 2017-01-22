@@ -345,16 +345,16 @@
         },
         {
             "name": "kartik-v/bootstrap-fileinput",
-            "version": "v4.3.5",
+            "version": "v4.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/bootstrap-fileinput.git",
-                "reference": "6e1a8ca5ca04d4927540ccf18bbfc3253286bd0c"
+                "reference": "ad0ddced480efdd38051d02b1ef28a2749bcc48a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/bootstrap-fileinput/zipball/6e1a8ca5ca04d4927540ccf18bbfc3253286bd0c",
-                "reference": "6e1a8ca5ca04d4927540ccf18bbfc3253286bd0c",
+                "url": "https://api.github.com/repos/kartik-v/bootstrap-fileinput/zipball/ad0ddced480efdd38051d02b1ef28a2749bcc48a",
+                "reference": "ad0ddced480efdd38051d02b1ef28a2749bcc48a",
                 "shasum": ""
             },
             "type": "library",
@@ -394,7 +394,7 @@
                 "progress",
                 "upload"
             ],
-            "time": "2016-09-20 05:47:41"
+            "time": "2016-12-17 16:49:33"
         },
         {
             "name": "kartik-v/bootstrap-star-rating",
@@ -634,12 +634,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-datecontrol.git",
-                "reference": "31f05b03d3e28f45e2b16ffd9e01f7d8e29da5a2"
+                "reference": "497b7bb438864843b450aa9ab1df20bed096b5a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-datecontrol/zipball/31f05b03d3e28f45e2b16ffd9e01f7d8e29da5a2",
-                "reference": "31f05b03d3e28f45e2b16ffd9e01f7d8e29da5a2",
+                "url": "https://api.github.com/repos/kartik-v/yii2-datecontrol/zipball/497b7bb438864843b450aa9ab1df20bed096b5a1",
+                "reference": "497b7bb438864843b450aa9ab1df20bed096b5a1",
                 "shasum": ""
             },
             "require": {
@@ -678,7 +678,7 @@
                 "yii",
                 "yii2"
             ],
-            "time": "2016-11-27 11:20:59"
+            "time": "2016-12-07 19:41:05"
         },
         {
             "name": "kartik-v/yii2-dropdown-x",
@@ -1953,23 +1953,24 @@
         },
         {
             "name": "swiftmailer/swiftmailer",
-            "version": "v5.4.4",
+            "version": "v5.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "545ce9136690cea74f98f86fbb9c92dd9ab1a756"
+                "reference": "cd142238a339459b10da3d8234220963f392540c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/545ce9136690cea74f98f86fbb9c92dd9ab1a756",
-                "reference": "545ce9136690cea74f98f86fbb9c92dd9ab1a756",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/cd142238a339459b10da3d8234220963f392540c",
+                "reference": "cd142238a339459b10da3d8234220963f392540c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
             "require-dev": {
-                "mockery/mockery": "~0.9.1"
+                "mockery/mockery": "~0.9.1",
+                "symfony/phpunit-bridge": "~3.2"
             },
             "type": "library",
             "extra": {
@@ -2002,7 +2003,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2016-11-24 01:01:23"
+            "time": "2016-12-29 10:02:40"
         },
         {
             "name": "yiisoft/yii2",
@@ -2150,20 +2151,23 @@
         },
         {
             "name": "yiisoft/yii2-composer",
-            "version": "2.0.4",
+            "version": "2.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-composer.git",
-                "reference": "7452fd908a5023b8bb5ea1b123a174ca080de464"
+                "reference": "3f4923c2bde6caf3f5b88cc22fdd5770f52f8df2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-composer/zipball/7452fd908a5023b8bb5ea1b123a174ca080de464",
-                "reference": "7452fd908a5023b8bb5ea1b123a174ca080de464",
+                "url": "https://api.github.com/repos/yiisoft/yii2-composer/zipball/3f4923c2bde6caf3f5b88cc22fdd5770f52f8df2",
+                "reference": "3f4923c2bde6caf3f5b88cc22fdd5770f52f8df2",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^1.0"
+            },
+            "require-dev": {
+                "composer/composer": "^1.0"
             },
             "type": "composer-plugin",
             "extra": {
@@ -2193,7 +2197,7 @@
                 "extension installer",
                 "yii2"
             ],
-            "time": "2016-02-06 00:49:24"
+            "time": "2016-12-20 13:26:02"
         },
         {
             "name": "yiisoft/yii2-swiftmailer",

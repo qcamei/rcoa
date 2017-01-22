@@ -13,14 +13,15 @@ use yii\helpers\Html;
 $page = [
     'index', 
     'create_by' => Yii::$app->user->id,
-    'status' => DemandTask::STATUS_DEFAULT
+    'undertake_person' => Yii::$app->user->id, 
+    'auditor' => Yii::$app->user->id,
 ];
 ?>
 
 <div class="controlbar">
     <div class="container">
         <div class="footer-view-btn">
-        <?= Html::a(Yii::t('rcoa', 'Back'), $page, ['class' => 'btn btn-default', /*'onclick'=> 'history.go(-1)'*/]) ?>
+        <?= Html::a(Yii::t('rcoa', 'Back'), '#', ['class' => 'btn btn-default', 'onclick'=> 'history.go(-1)']) ?>
         <?php
             //发布人
             /**
