@@ -48,5 +48,6 @@ return[
     'Des' => '备注',
     'Team ID' => '团队名称',
     'U ID' => '用户名',
-    'Task ID' => '课程名称'
+    'Task ID' => '课程名称',
+    'Product Total' => '产品总额',
 ];

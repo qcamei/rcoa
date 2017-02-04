@@ -28,7 +28,7 @@ NavBar::begin([
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $menuItems = [['label' => '首页','url' => ['/site/index']]];
+    $menuItems = [];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = [
             'label' => '登录', 

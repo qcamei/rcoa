@@ -94,6 +94,11 @@ class DemandTask extends ActiveRecord
      */
     public static $operation = [];
     /**
+     * 课程产品总额
+     * @var array 
+     */
+    public static $productTotal = [];
+    /**
      * 模式名称
      * @var array 
      */

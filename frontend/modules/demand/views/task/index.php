@@ -2,13 +2,10 @@
 
 use common\models\demand\DemandTask;
 use common\models\demand\searchs\DemandTaskSearch;
-use common\models\multimedia\MultimediaTask;
-use common\models\teamwork\CourseManage;
 use frontend\modules\demand\assets\DemandAssets;
 use yii\data\ActiveDataProvider;
 use yii\data\Pagination;
 use yii\grid\GridView;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\LinkPager;
@@ -21,6 +18,7 @@ $this->title = Yii::t('rcoa/demand', 'Demand Tasks');
 $this->params['breadcrumbs'][] = $this->title;
 
 DemandTask::$operation = $operation;
+DemandTask::$productTotal = $productTotal;
 ?>
 
 <div class="container demand-task-index demand-task">
@@ -211,7 +209,7 @@ DemandTask::$operation = $operation;
                             'th'=>'hidden-xs',
                         ],
                         'style' => [
-                            'width' => '68px',
+                            'width' => '65px',
                             'padding' => '8px'
                         ],
                     ],
@@ -230,7 +228,7 @@ DemandTask::$operation = $operation;
                             //'th'=>'hidden-xs',
                         ],
                         'style' => [
-                            'width' => '68px',
+                            'width' => '65px',
                             'padding' => '8px'
                         ],
                     ],
@@ -251,6 +249,30 @@ DemandTask::$operation = $operation;
                         ],
                         'style' => [
                             'width' => '68px',
+                            'padding' => '8px'
+                        ],
+                    ],
+                    'contentOptions' =>[
+                        'class'=>'list-td hidden-xs',
+                    ],
+                ],
+                [
+                    'label' => Yii::t('rcoa/demand', 'Product Total'),
+                    'format' => 'raw',
+                    'value'=> function($model){
+                        /* @var $model DemandTask */
+                        if(isset(DemandTask::$productTotal[$model->id])){
+                            return '<span class="total-price">￥'.DemandTask::$productTotal[$model->id].'</span>';
+                        }else{
+                            return null;
+                        }
+                    },
+                    'headerOptions' => [
+                        'class'=>[
+                            'th'=>'hidden-xs',
+                        ],
+                        'style' => [
+                            'width' => '78px',
                             'padding' => '8px'
                         ],
                     ],
@@ -302,6 +324,26 @@ DemandTask::$operation = $operation;
         
     </div>
 </div>
+
+<?php
+$js = 
+<<<JS
+    /** 格式化所有价钱 */
+    format(".total-price");
+    /** 价格格式化 */
+    function format(obj){
+        $(obj).each(function(){
+            var con = trim($(this).html()).split('￥');
+            $(this).html('<span class="big" style="font-size: 14px;">' + $(this).html().split('.')[0] + '.</span><span class="small">' + $(this).html().split('.')[1] + '</span>');
+        });
+    }
+    /** 正则匹配 */
+    function trim(str){ 
+　　     return str.replace(/(^\s*)|(\s*$)/g, "");
+　　}
+JS;
+    $this->registerJs($js,  View::POS_READY);
+?>
 
 <?php
     DemandAssets::register($this);

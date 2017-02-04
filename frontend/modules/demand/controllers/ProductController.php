@@ -284,6 +284,7 @@ class ProductController extends Controller
         $dtQuery = DemandQuery::getInstance();
         /* @var $results ActiveQuery */
         $results = $dtQuery->getProductTotal();
+        $results->select(['SUM(Product.unit_price * Task_product.number) AS totals', 'SUM(Task_product.number) AS lessons']);
         $results->where(['Task_product.task_id' => $taskId]);
         return $results->one();
     }

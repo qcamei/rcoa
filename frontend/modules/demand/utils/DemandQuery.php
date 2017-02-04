@@ -41,7 +41,7 @@ class DemandQuery {
     public function getProductTotal()
     {
         $query = (new Query())
-                ->select(['SUM(Product.unit_price * Task_product.number) AS totals', 'SUM(Task_product.number) AS lessons'])
+                ->select(['Task_product.id'])
                 ->from(['Task_product' => DemandTaskProduct::tableName()])
                 ->leftJoin(['Product' => Product::tableName()], 'Product.id = Task_product.product_id');
         

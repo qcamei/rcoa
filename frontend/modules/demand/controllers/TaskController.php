@@ -8,6 +8,7 @@ use common\models\demand\DemandTaskAnnex;
 use common\models\expert\Expert;
 use common\models\team\TeamCategory;
 use common\wskeee\job\JobManager;
+use frontend\modules\demand\utils\DemandQuery;
 use frontend\modules\demand\utils\DemandTool;
 use frontend\modules\teamwork\utils\TeamworkTool;
 use wskeee\framework\FrameworkManager;
@@ -18,6 +19,7 @@ use wskeee\rbac\RbacName;
 use wskeee\team\TeamMemberTool;
 use Yii;
 use yii\data\ArrayDataProvider;
+use yii\db\ActiveQuery;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -93,6 +95,7 @@ class TaskController extends Controller
             'team' => $this->getTeam(),
             'createBys' => $this->getCreateBys(),
             'undertakePersons' => $this->getUndertakePersons(),
+            'productTotal' => $this->getProductTotal(),
             //搜索默认字段值
             'itemTypeId' => $item_type_id,
             'itemId' => $item_id,
@@ -628,5 +631,20 @@ class TaskController extends Controller
         $undertakePersons = $rbacManager->getItemUsers(RbacName::ROLE_DEMAND_UNDERTAKE_PERSON);
         
         return ArrayHelper::map($undertakePersons, 'id', 'nickname');
+    }
+    
+    /**
+     * 获取所有课程产品总额
+     * @return  array
+     */
+    public function getProductTotal()
+    {
+        /* @var $dtQuery DemandQuery */
+        $dtQuery = DemandQuery::getInstance();
+        /* @var $results ActiveQuery */
+        $results = $dtQuery->getProductTotal();
+        $results->select(['Task_product.task_id', 'SUM(Product.unit_price * Task_product.number) AS totals']);
+        $results->groupBy('Task_product.task_id');
+        return ArrayHelper::map($results->all(), 'task_id', 'totals');
     }
 }

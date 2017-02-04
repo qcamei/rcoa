@@ -128,14 +128,14 @@ use yii\widgets\ActiveForm;
             </div>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding: 5px 0px;">
-            <label id="label-status" for="producer" class="col-lg-3 control-label">
+            <label id="label-status" for="undertake_person" class="col-lg-3 control-label">
                 <?= Yii::t('rcoa/demand', 'Undertake Person'); ?>
             </label>
             <div class="col-lg-9">
                 <?= Select2::widget([
                     'id' => 'select2-producer',
                     'value'=> $undertake_person,
-                    'name' => 'producer',
+                    'name' => 'undertake_person',
                     'data' => $undertakePerson,
                     'options' => [
                         'placeholder' => '全部',
