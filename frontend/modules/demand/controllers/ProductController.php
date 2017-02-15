@@ -52,9 +52,10 @@ class ProductController extends Controller
      */
     public function actionList($task_id)
     {
+        $this->layout = '@app/views/layouts/main';
         $productTotal = $this->getProductTotal($task_id);
         
-        return $this->renderAjax('list', [
+        return $this->render('list', [
             'data' => $this->getProducts(),
             'totals' => !empty(ArrayHelper::getValue($productTotal, 'totals')) ? ArrayHelper::getValue($productTotal, 'totals') : 0,
             'lessons' => !empty(ArrayHelper::getValue($productTotal, 'lessons')) ? ArrayHelper::getValue($productTotal, 'lessons') : 0,
@@ -92,15 +93,17 @@ class ProductController extends Controller
      */
     public function actionView($task_id, $product_id, $sign = 0)
     {
+        $this->layout = '@app/views/layouts/main';
         $product = Product::findOne(['id' => $product_id]);
         $model = $this->findModel($task_id, $product_id);
         $productTotal = $this->getProductTotal($task_id);
         $model->task_id = $task_id;
         
-        return $this->renderAjax('view', [
+        return $this->render('view', [
             'product' => $product,
             'model' => $model,
             'totals' => !empty(ArrayHelper::getValue($productTotal, 'totals')) ? ArrayHelper::getValue($productTotal, 'totals') : 0,
+            'lessons' => !empty(ArrayHelper::getValue($productTotal, 'lessons')) ? $model->task->lesson_time - ArrayHelper::getValue($productTotal, 'lessons') : 0,
             'task_id' => $task_id,
             'product_id' => $product_id,
             'mark' => $model->task->getIsStatusDefault() || $model->task->getIsStatusAdjusimenting() ? true : false,

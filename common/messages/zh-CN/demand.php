@@ -23,6 +23,8 @@ return[
     'Update Demand Acceptance' => '更新验收',
     'Demand Acceptance View' => '验收详情',
     'Demand Task Products' => '课程产品',
+    'Demand Task Products List' => '课程产品列表',
+    'Demand Task Products Details' => '课程产品详情',
     
     //需求任务-字段
     'Item Type' => '行业',

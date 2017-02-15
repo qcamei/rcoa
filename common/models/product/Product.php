@@ -113,8 +113,9 @@ class Product extends ActiveRecord
                 //获取后缀名，默认为 jpg 
                 $ext = count($array) == 0 ? 'jpg' : $array[count($array)-1];
                 $uploadpath = $this->fileExists(Yii::getAlias('@filedata').'/product/'.date('Y-m-d', time()).'/');
-                $upload->saveAs($uploadpath.time().rand(1, 6).'.'.$ext);
-                $this->image = '/filedata/product/'.date('Y-m-d', time()).'/'.time().rand(1, 6).'.'.$ext;
+                $uploadname = time().rand(1, 4);
+                $upload->saveAs($uploadpath.$uploadname.'.'.$ext);
+                $this->image = '/filedata/product/'.date('Y-m-d', time()).'/'.$uploadname.'.'.$ext;
                 
                 if(trim($this->image) == '')
                     $this->image = $this->getOldAttribute ('image');

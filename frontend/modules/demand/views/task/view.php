@@ -109,13 +109,13 @@ $js =
     
     //加载已选课程产品列表
     $("#demand-task-product-index").load("/demand/product/index?task_id=$model->id");
-    /** 单击添加按钮显示产品列表 模态框 */    
+    /** 单击添加按钮显示产品列表 模态框     
     $('#add').click(function(){
         $(".myModal").html("");
         $(this).tooltip('hide');  
         $(".myModal").modal('show').load($(this).attr("href"));
         return false;
-    });
+    });*/
         
     /** 提交任务操作 弹出模态框 */
     $('#task-submit-check').click(function(){
