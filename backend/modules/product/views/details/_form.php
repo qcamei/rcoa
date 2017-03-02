@@ -1,8 +1,9 @@
 <?php
 
 use common\models\product\ProductDetails;
-use common\widgets\ueditor\UeditorAsset;
+use kartik\widgets\FileInput;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\View;
 use yii\widgets\ActiveForm;
 
@@ -11,35 +12,63 @@ use yii\widgets\ActiveForm;
 /* @var $form ActiveForm */
 ?>
 
+
 <div class="product-details-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+        'options' => [
+            'enctype' => 'multipart/form-data',
+            'id' => 'product-details-form',
+            //'action' => '#',
+        ],
+    ]); ?>
 
-    <?= $form->field($model, 'details')->textarea([
-            'id' => 'container', 
-            'type' => 'text/plain', 
-            'style' => 'width:100%; height:450px;'
+    <?= $form->field($model, 'details[]')->widget(FileInput::className(), [
+        'options'=>[
+            'multiple'=>true,
+            'webkitdirectory' => true,
+        ],
+        
+        'pluginOptions' => [
+            /*'uploadUrl' => Url::to(['file-upload']),
+            'uploadExtraData' => [
+                'name' => 'document.getElementsByClassName("file-preview-frame").setAttribute("title")'
+            ],*/
+            'showUpload' => false,
+            'dropZoneTitle' => '支持多文件同时上传',
+            'maxFileCount' => 99999,
+            'allowedPreviewTypes' => null,
+        ]
     ]) ?>
 
+    
+    <?= Html::activeHiddenInput($model, 'product_id', ['value' => $productId]) ?>
+    
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
-    
-    <?= Html::activeHiddenInput($model, 'product_id', ['value' => $productId]) ?>
 
     <?php ActiveForm::end(); ?>
 
 </div>
 
+
+
+
 <?php
 $js =   
 <<<JS
-    $('#container').removeClass('form-control');
-    var ue = UE.getEditor('container');
+   $('.fileinput-upload-button').attr('type', 'button');
+   $('.fileinput-upload-button').click(function(){
+       $.post('product/details/file-upload', $('#product-details-form').serialize(),function(){
+           
+        });
+   });
+    
 JS;
     $this->registerJs($js,  View::POS_READY); 
 ?> 
 
 <?php
-    UeditorAsset::register($this);
+    //UeditorAsset::register($this);
 ?>

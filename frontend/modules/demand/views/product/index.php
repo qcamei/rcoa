@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php if(!empty($data)): ?>
         <?php foreach ($data as $value): ?>
         <div class="product-index">
-            <a data_t="<?= $value['task_id'] ?>" data_p="<?= $value['product_id'] ?>" onclick="viewproduct($(this));">
+            <a  href="/demand/product/view?task_id=<?= $value['task_id'] ?>&product_id=<?= $value['product_id'] ?>">
                 <div class="product-index-header"><img src="<?= $value['image'] ?>"></div>
                 <div class="product-index-body"
                     <p>【<?= $value['name'] ?>】</p>

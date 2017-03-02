@@ -26,10 +26,10 @@ class DemandAssets extends AssetBundle{
     ];
     public $css = [
        'css/demand.css',
-       'css/product.css'
+       'css/product.css',
     ];
     public $js = [
        'js/productlist.js',
-       'js/search-select.js'
+       'js/search-select.js',
     ];
 }

@@ -9,6 +9,7 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\UploadedFile;
 
 /**
  * DetailsController implements the CRUD actions for ProductDetails model.
@@ -76,9 +77,11 @@ class DetailsController extends Controller
     {
         $model = new ProductDetails();
         $model->loadDefaultValues();
+        $post = Yii::$app->request->post();
         $model->product_id = $product_id;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $this->Upload($model);
             return $this->redirect(['default/view', 'id' => $model->product_id]);
         } else {
             return $this->render('create', [
@@ -136,4 +139,45 @@ class DetailsController extends Controller
             throw new NotFoundHttpException(\Yii::t('rcoa', 'The requested page does not exist.'));
         }
     }
-}
+    
+    /**
+     * 
+     * @param ProductDetails $model
+     */
+    public function Upload($model){
+        $upload = UploadedFile::getInstances($model, 'details');  
+            
+        if($upload != null && $model->validate()){
+            $values = [];
+            $model->uploadpath = $this->fileExists(Yii::getAlias('@filedata').'/product/'.date('Y-m-d', time()).'/');
+            foreach ($upload as $index => $fl){
+                $fl->saveAs($model->uploadpath .$fl->baseName. '.' . $fl->extension);
+                $values[] = [
+                        'product_id' => $model->product_id,
+                        'created_at' => time(),
+                        'updated_at' => time(),
+                        'details' => '/filedata/product/'.date('Y-m-d', time()).'/'.$fl->baseName.'.'.$fl->extension,
+                        'index' => $index,
+                    ];
+
+            }
+            Yii::$app->db->createCommand()->batchInsert(ProductDetails::tableName(), 
+                ['product_id', 'created_at', 'updated_at', 'details', 'index'], $values)->execute();
+        }
+            
+    }
+    
+    /**
+     * 检查目标路径是否存在，不存即创建目标
+     * @param string $uploadpath    目录路径
+     * @return string
+     */
+    private function fileExists($uploadpath) {
+
+        if (!file_exists($uploadpath)) {
+            mkdir($uploadpath);
+        }
+        return $uploadpath;
+    }
+    
+}   

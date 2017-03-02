@@ -6,6 +6,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "{{%product_details}}".
@@ -20,6 +21,13 @@ use yii\db\ActiveRecord;
  */
 class ProductDetails extends ActiveRecord
 {
+    /**
+     * 上传文件路径
+     * @var string 
+     */
+    public $uploadpath = '';
+
+
     /**
      * @inheritdoc
      */
@@ -41,7 +49,7 @@ class ProductDetails extends ActiveRecord
     {
         return [
             [['product_id', 'created_at', 'updated_at'], 'integer'],
-            [['details'], 'string'],
+            [['details'], 'file','maxFiles' => 10,'extensions'=>'jpg,png,gif'],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['product_id' => 'id']],
         ];
     }
@@ -60,7 +68,7 @@ class ProductDetails extends ActiveRecord
         ];
     }
     
-    public function beforeSave($insert) {
+    /*public function beforeSave($insert) {
         if(parent::beforeSave($insert))
         {
             $this->details = htmlentities($this->details);
@@ -69,7 +77,40 @@ class ProductDetails extends ActiveRecord
     }
     public function afterFind() {
         $this->details = html_entity_decode($this->details);
-    }
+    }*/
+    
+    /**
+     * 
+     * @param type $insert 
+    
+    public function beforeSave($insert) 
+    {
+        if(parent::beforeSave($insert))
+        {
+            $upload = UploadedFile::getInstances($this, 'details');  
+            
+            if($upload != null){
+                $values = [];
+                $this->uploadpath = $this->fileExists(Yii::getAlias('@filedata').'/product/'.date('Y-m-d', time()).'/');
+                foreach ($upload as $index => $fl){
+                    $fl->saveAs($this->uploadpath .$fl->baseName. '.' . $fl->extension);
+                    $values[] = [
+                        'product_id' => $this->product_id,
+                        'created_at' => $this->created_at,
+                        'updated_at' => $this->updated_at,
+                        'details' => '/filedata/product/'.date('Y-m-d', time()).'/'.$fl->baseName.'.'.$fl->extension,
+                        'index' => $index,
+                    ];
+                   
+                }
+               Yii::$app->db->createCommand()->batchInsert(self::tableName(), 
+                ['product_id', 'created_at', 'updated_at', 'details', 'index'], $values)->execute();
+               
+            }               
+            return true;
+        }else
+            return false;
+    } */
 
     /**
      * 获取产品
@@ -79,4 +120,17 @@ class ProductDetails extends ActiveRecord
     {
         return $this->hasOne(Product::className(), ['id' => 'product_id']);
     }
+    
+    /**
+     * 检查目标路径是否存在，不存即创建目标
+     * @param string $uploadpath    目录路径
+     * @return string
+     
+    private function fileExists($uploadpath) {
+
+        if (!file_exists($uploadpath)) {
+            mkdir($uploadpath);
+        }
+        return $uploadpath;
+    }*/
 }

@@ -12,6 +12,7 @@ use yii\widgets\Breadcrumbs;
 /* @var $this View */
 /* @var $searchModel DemandTaskProductSearch */
 /* @var $dataProvider ActiveDataProvider */
+/* @var $taskModel DemandTask */
 
 $this->title = Yii::t('rcoa/demand', 'Demand Task Products List');
 $this->params['breadcrumbs'][] = $this->title;
@@ -37,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 
-<div class="container demand-product-list demand-task">
+<div class="container demand-product-list has-title  demand-task">
     <button type="button" id="pl-comeback" class="return">
         <span aria-hidden="true">&cularr;</span>
     </button>
@@ -49,7 +50,16 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="controlbar">
     <div class="container">
         <div class="footer-view-btn">
-        <?= Html::a(Yii::t('rcoa', 'Back'), '#', ['class' => 'btn btn-default', 'onclick'=> 'history.go(-1)']) ?>
+            <div class="footer-view-left">
+                <?= Html::a(Yii::t('rcoa', 'Back'), ['task/view', 'id' => $task_id], ['class' => 'btn btn-default']) ?>
+            </div>
+        
+            <div class="footer-view-right">
+                    <span class="totals">合计：￥<span id="number"><?= number_format($totals, 2); ?></span></span></br>
+                    <span class="lessons">
+                    <?= '学时：<span class="lessons-big"><span class="lessons-small">'.$lessons.'</span>/'.$taskModel->lesson_time.'</span>';?>                    
+                    </span>
+            </div>
         </div>
     </div>
 </div>

@@ -125,31 +125,54 @@ button.return {
     margin: 0px;
     padding: 0px;
 }
-.details-header{
+
+.details{
+    display: none;
     background-color: #eee;
     background-repeat: no-repeat;
     background-size:cover;
     background-position: center 0;
 }
 .details-info{
-    padding-top: 9%;
+    padding-top: 5%;
 }
 .inner{
     padding-left: 30px;
 }
-.tit{
-    line-height: 70px;
-    font-size: 42px;
-    color: #a48559;
+.inner-info{
+    width: 500px;
 }
-.desc{
-    width: 360px;
-    height: 36px;
+.tit{
+    float: left;
+}
+.tit h2{
+    line-height: 70px;
+    font-size: 60px;
+    color: #a48559;
+    font-weight: bold;
+}
+.tag{
+    width: 118px;
+    height: 38px;
+    margin-top: 45px;
+    margin-left: 25px;
+    float: left;
+    text-align: center;
+    background-image: url('/filedata/demand/image/tag.png');
+}
+.tag span{
+    font-size: 25px;
+    color: #fff;
+}
+.inner-desc{
+    width: 383px;
+    height: 51px;
+    float: left;
     padding-left: 40px;
     background-image: url('/filedata/demand/image/desc.png');
 }
-.desc span{
-    font-size: 26px;
+.inner-desc span{
+    font-size: 35px;
     color: #fff;
 }
 .info{
@@ -158,9 +181,10 @@ button.return {
     font-size: 22px;
     color: #666;
 }
-.price{
+.unit-price{
     width: 206px;
     height: 57px;
+    float: left;
     margin-top: 60px;
     background-image: url('/filedata/demand/image/price.png');
 }
@@ -175,7 +199,7 @@ button.return {
     color: #ceb591;
     font-weight: bold;
 }
-.number{
+.unit-price-number{
     width: 120px;
     height: 57px;
     float: left;
@@ -189,23 +213,38 @@ button.return {
     padding-left: 5px;
     padding-right: 5px;
 }
+.footer-view-btn{
+    width: 100%;
+}
 .footer-view-left{
-    width: 140px;
+    width: 115px;
     float: left;
-    margin-top: -2px;
+}
+.demand-task-product-form{
+    position: relative;
+    left: 100px;
+    bottom: 30px;
+}
+.footer-view-left .has-success .form-control {
+    border: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+.footer-view-right{
+    width: 210px;
+    float:right;
 }
 .totals{
     font-weight: bold;
 }
+
 .lessons{
     font-size: 10px;
     color: #999;
 }
-.overtime{
-    font-size: 10px;
-    color: #dd514c;
+.lessons-big{
+    font-size: 14px;
+    color: #999;
+    font-weight: bold;
 }
-.footer-view-right{
-    width: 165px;
-    float:right;
-}
+

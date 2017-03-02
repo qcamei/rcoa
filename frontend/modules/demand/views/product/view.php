@@ -38,19 +38,30 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>-->
 
 <div class="demand-product-view demand-task">
-    <div class="details-header" style="background-image: url('<?= $product->image ?>')">
+    <div class="details" style="background-image: url('<?= $product->image ?>')">
         <div class="container details-info">
             <div class="inner">
-                <h2 class="tit"><?= $product->name ?></h2>
-                <div class="desc"><span>学员随报随学，定期开班</span></div>
-                <div class="info"><?= $product->des ?></div>
-                <div class="price">
-                    <span class="rmb">RMB</span>
-                    <span class="number"><?= $product->unit_price ?> 元</span>
+                <div class="inner-info">
+                    <div class="tit"><h2><?= $product->name ?></h2></div>
+                    <div class="tag"><span>趣味型</span></div>
+                    <div class="inner-desc"><span><?= $product->des ?></span></div>
+                    <!--<div class="info"></div>-->
+                    <div class="unit-price">
+                        <span class="rmb">RMB</span>
+                        <span class="unit-price-number"><?= $product->unit_price ?> 元</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    
+    <?php
+    foreach ($product->productDetails as $detail) {
+        echo '<div class="details" style="background-image: url('.$detail->details.')"></div>';
+    }
+    
+    ?>
+    
 </div>
 
 
@@ -58,26 +69,29 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="container footer-view">
         <div class="footer-view-btn">
             <div class="footer-view-left">
-                <span class="totals">合计：￥<?= number_format($totals, 2); ?></span></br>
-                <?php if($lessons < 0){
-                    echo '<span class="overtime">';
-                    echo '超出：'.abs($lessons).'学时';
-                }
-                else{        
-                    echo '<span class="lessons">';
-                    echo '剩下：'.$lessons.'学时';
-                }
-                ?>                    
-                </span>
+                <?php
+                    echo Html::a(Yii::t('rcoa', 'Back'), ['list', 'task_id' => $model->task_id], ['class' => 'btn btn-default btn-sm back']). ' ';
+                    if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE_PRODUCT) && $mark && $model->task->create_by == Yii::$app->user->id){
+                        echo Html::a('确认', 'javascript:;', ['id' => 'submit', 'class' => 'btn btn-primary btn-sm']); 
+                        echo $this->render('_form', 
+                                [
+                                    'model' => $model, 
+                                    'totals' => $totals,
+                                    'unit_price' => $product->unit_price, 
+                                    'lessons' => $lessons,
+                                    'task_id' => $task_id,
+                                    'product_id' => $product_id,
+                                ]);
+                    }
+                ?>
             </div>
-        </div>
-        <div class="footer-view-right">
-            <?php
-                if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE_PRODUCT) && $mark && $model->task->create_by == Yii::$app->user->id){
-                    echo Html::a('确认', 'javascript:;', ['id' => 'product-save', 'class' => 'btn btn-primary btn-sm', 'style' => 'float: right; margin-left:5px;']); 
-                    echo $this->render('_form', ['model' => $model,]);
-                }
-            ?>
+        
+            <div class="footer-view-right">
+                <span class="totals">合计：￥<span id="number"><?= number_format($totals, 2); ?></span>(￥<span id="unit_price"><?= number_format($product->unit_price * $model->number, 2) ?></span>)</span></br>
+                    <span class="lessons">
+                    <?= '学时：<span class="lessons-big"><span class="lessons-small">'.$lessons.'</span>/'.$model->task->lesson_time.'</span>';?>                    
+                    </span>
+            </div>
         </div>
     </div>
 </div>
@@ -89,11 +103,15 @@ $js = <<<JS
     });
     size();
     function size(){
-        var width = $('.wrap').width(),
-        height = $('.wrap').height();
-        $(".details-header").css({width:width,height:height});
+        var width = $(document.body).width(),
+        height = $(document.body).height();
+        $(".details").css({width:width,height:height, display:"block"});
     }
-    
+    /** 提交表单 */
+    $('#submit').click(function()
+    {
+        $('#demand-task--product-form').submit();
+    });
 JS;
     $this->registerJs($js, View::POS_READY);
 ?>

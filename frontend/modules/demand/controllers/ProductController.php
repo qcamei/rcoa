@@ -2,6 +2,7 @@
 
 namespace frontend\modules\demand\controllers;
 
+use common\models\demand\DemandTask;
 use common\models\demand\DemandTaskProduct;
 use common\models\product\Product;
 use frontend\modules\demand\utils\DemandQuery;
@@ -14,6 +15,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+
 
 /**
  * ProductController implements the CRUD actions for DemandTaskProduct model.
@@ -53,9 +55,11 @@ class ProductController extends Controller
     public function actionList($task_id)
     {
         $this->layout = '@app/views/layouts/main';
+        $taskModel = DemandTask::findOne(['id' => $task_id]);
         $productTotal = $this->getProductTotal($task_id);
         
         return $this->render('list', [
+            'taskModel' => $taskModel,
             'data' => $this->getProducts(),
             'totals' => !empty(ArrayHelper::getValue($productTotal, 'totals')) ? ArrayHelper::getValue($productTotal, 'totals') : 0,
             'lessons' => !empty(ArrayHelper::getValue($productTotal, 'lessons')) ? ArrayHelper::getValue($productTotal, 'lessons') : 0,
@@ -98,12 +102,12 @@ class ProductController extends Controller
         $model = $this->findModel($task_id, $product_id);
         $productTotal = $this->getProductTotal($task_id);
         $model->task_id = $task_id;
-        
+       
         return $this->render('view', [
             'product' => $product,
             'model' => $model,
             'totals' => !empty(ArrayHelper::getValue($productTotal, 'totals')) ? ArrayHelper::getValue($productTotal, 'totals') : 0,
-            'lessons' => !empty(ArrayHelper::getValue($productTotal, 'lessons')) ? $model->task->lesson_time - ArrayHelper::getValue($productTotal, 'lessons') : 0,
+            'lessons' => !empty(ArrayHelper::getValue($productTotal, 'lessons')) ? ArrayHelper::getValue($productTotal, 'lessons') : 0,
             'task_id' => $task_id,
             'product_id' => $product_id,
             'mark' => $model->task->getIsStatusDefault() || $model->task->getIsStatusAdjusimenting() ? true : false,
@@ -180,7 +184,7 @@ class ProductController extends Controller
             }
             
             //Yii::$app->getSession()->setFlash('success','操作成功！');
-        }catch (\Exception $ex) {
+        }catch (Exception $ex) {
             
             //Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
@@ -200,41 +204,34 @@ class ProductController extends Controller
      */
     public function actionSave($task_id, $product_id)
     {
-        Yii::$app->getResponse()->format = 'json';
         $model = $this->findModel($task_id, $product_id);
+        $post = Yii::$app->request->post();
+        $number = ArrayHelper::getValue($post, 'DemandTaskProduct.number');
+        $lessonsTotal = ArrayHelper::getValue($this->getProductTotal($task_id), 'lessons');
         $model->task_id = $task_id;
         $model->product_id = $product_id;
-        $type = '';
-        $message = '';
+        $oldnumber = $model->number;
         
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
         {  
-            if ($model->load(Yii::$app->request->post()) && $model->save() 
-                && \Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE_PRODUCT) 
-                && $model->task->create_by == \Yii::$app->user->id)
+            if ($model->load($post) && $model->save() && $model->task->lesson_time >= $lessonsTotal - $oldnumber + $number
+                && \Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE_PRODUCT) && $model->task->create_by == \Yii::$app->user->id)
             {
-               $type = 1;
-               $message = '操作成功！';
-               $trans->commit();  //提交事务
+                $trans->commit();  //提交事务
+                Yii::$app->getSession()->setFlash('success','操作成功！');
+                return $this->redirect(['list', 'task_id' => $model->task_id]);
             }else{
-                $type = 0;
-                $message = '操作失败！';
-                $trans ->rollBack(); //回滚事务
                 //throw new \Exception($model->getErrors());
+                Yii::$app->getSession()->setFlash('error', '产品总学时不能超过需求任务学时');
+                return $this->redirect(['view', 'task_id' => $task_id, 'product_id' => $product_id]);
             }
             
-            //Yii::$app->getSession()->setFlash('success','操作成功！');
-        }catch (\Exception $ex) {
-            
-            //Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
+        }catch (Exception $ex) {
+            $trans ->rollBack(); //回滚事务
         }
         
-        return [
-            'type' => $type,
-            'error' => $message,
-        ];
     }
 
     /**

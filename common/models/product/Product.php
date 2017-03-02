@@ -176,7 +176,7 @@ class Product extends ActiveRecord
      */
     public function getProductDetails()
     {
-        return $this->hasMany(ProductDetails::className(), ['product_id' => 'id']);
+        return $this->hasMany(ProductDetails::className(), ['product_id' => 'id'])->orderBy('index');
     }
     
     /**
