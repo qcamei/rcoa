@@ -21,7 +21,7 @@ use yii\widgets\ActiveForm;
         ], 
     ]); ?>
     <div class="col-lg-7 col-md-7">
-        <?= $form->field($model, 'username')->textInput(['maxlength' => true,'readonly'=>($model->getIsNewRecord() ? '' : true)]) ?>
+        <?= $form->field($model, 'username')->textInput(['maxlength' => true,'readonly'=>($model->getIsNewRecord() ? false : true)]) ?>
 
         <?= $form->field($model, 'nickname')->textInput() ?>
 
