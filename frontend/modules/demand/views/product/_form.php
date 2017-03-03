@@ -8,6 +8,10 @@ use yii\widgets\ActiveForm;
 /* @var $this View */
 /* @var $model DemandTaskProduct */
 /* @var $form ActiveForm */
+
+$num = !empty($model->number) ? $model->number : 0;
+$target = $model->task->lesson_time;
+$max = $target - ($lessons - $num);
 ?>
 
 <div class="demand-task-product-form">
@@ -24,8 +28,8 @@ use yii\widgets\ActiveForm;
         'options' => ['class' => 'input-sm', 'style' => 'padding:5px;'],
         'pluginOptions' => [
             'placeholder' => '数量 ...',
-            'min' => 1,
-            'max' => 99999,
+            'min' => 0,
+            'max' => $max < 0 ? 0 : $max,
             'buttonup_class' => 'btn btn-default btn-sm', 
             'buttondown_class' => 'btn btn-default btn-sm', 
             'buttonup_txt' => '<i class="glyphicon glyphicon-plus-sign"></i>', 
@@ -38,8 +42,6 @@ use yii\widgets\ActiveForm;
 </div>
 
 <?php
-$num = !empty($model->number) ? $model->number : 0;
-$target = $model->task->lesson_time;
 $js = <<<JS
     $("#demandtaskproduct-number").blur(function(){
         var num = $('#demandtaskproduct-number').val();

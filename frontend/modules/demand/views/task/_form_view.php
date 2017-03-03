@@ -70,7 +70,7 @@ $page = [
              */
             if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_COMPLETE) 
                && ($model->getIsStatusAcceptance() || $model->getIsStatusAcceptanceing()) && $model->create_by == Yii::$app->user->id)
-                echo Html::a('完成', ['complete', 'id' => $model->id], ['id' => 'complete', 'class' =>'btn btn-success']).' ';
+                echo Html::a('验收通过', ['complete', 'id' => $model->id], ['id' => 'complete', 'class' =>'btn btn-success']).' ';
             /**
              * 验收不通过 按钮显示必须满足以下条件：
              * 1、拥有完成的权限

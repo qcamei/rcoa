@@ -4,6 +4,7 @@ use common\models\teamwork\CourseLink;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\CoursePhase;
 use frontend\modules\teamwork\TwAsset;
+use kartik\widgets\SwitchInput;
 use wskeee\rbac\RbacName;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
@@ -53,8 +54,8 @@ $this->params['breadcrumbs'][] = $this->title;
         
         foreach ($coursePhase as $phase) {
             $className = $phase->course->getIsNormal() && ($isUserBelongProducer 
-                || $phase->course->coursePrincipal->u_id == Yii::$app->user->id || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id)) ?
-                    'btn btn-primary' : 'btn btn-primary disabled';
+                || $phase->course->coursePrincipal->u_id == Yii::$app->user->id || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)) ?
+                    'btn btn-primary entry' : 'btn btn-primary disabled';
             /* @var $phase CoursePhase */
             echo '<tr style="background-color:#eee">
                 <td>'.$phase->name.'</td>
@@ -89,7 +90,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 Html::endTag('div').
                             Html::endTag('div').'</td>
                     <td>'.Html::a('录入', 'javascript:;', 
-                            ['class' => $className, 'data_id' =>$link->id, 'onclick' => 'entry($(this));']).'</td>
+                            ['class' => $className, 'data_id' =>$link->id]).'</td>
                 </tr>';
             }
         }
@@ -98,6 +99,16 @@ $this->params['breadcrumbs'][] = $this->title;
         </tbody>
     </table>
     
+</div>
+
+<div style="display: none">
+<?= SwitchInput::widget([
+        'name' => 'activation_status',
+        'pluginOptions' => [
+            'onText' => '完成',
+            'offText' => '未完成',
+        ]
+    ]) ?>
 </div>
 
 <div class="controlbar">
@@ -110,14 +121,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $this->render('/course/_form_model')?>    
 </div>
 
-<script type="text/javascript">
-    function entry(obj){
-        var data_id = $(obj).attr("data_id");
-        $(".myModal").modal('show');
-        $(".myModal .modal-dialog .modal-content").load("/teamwork/courselink/entry?id="+data_id);
-        return false;
-    }
-</script>
 
 <?php
 $js = 
@@ -127,9 +130,17 @@ $js =
         window.location.reload();
     });*/    
         
-    $(".myModal .modal-dialog").addClass("modal-md");
-    $(".myModal .modal-dialog .modal-content").addClass("has-title");    
+    $('.entry').click(function(){
+        var data_id = $(this).attr("data_id");
+        $(".myModal").modal('show');
+        $(".myModal .modal-dialog .modal-content").load("/teamwork/courselink/entry?id="+data_id, null, function(){
+            $(".myModal .modal-dialog").addClass("modal-md");
+            $(".myModal .modal-dialog .modal-content").addClass("has-title");    
+        });
+        return false;
+    });  
    
+        
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>

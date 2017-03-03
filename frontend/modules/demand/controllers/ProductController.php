@@ -219,6 +219,8 @@ class ProductController extends Controller
             if ($model->load($post) && $model->save() && $model->task->lesson_time >= $lessonsTotal - $oldnumber + $number
                 && \Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE_PRODUCT) && $model->task->create_by == \Yii::$app->user->id)
             {
+                if($number == 0)
+                    $model->delete();
                 $trans->commit();  //提交事务
                 Yii::$app->getSession()->setFlash('success','操作成功！');
                 return $this->redirect(['list', 'task_id' => $model->task_id]);
