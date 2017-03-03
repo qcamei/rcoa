@@ -1,10 +1,11 @@
 <?php
 
+use common\models\product\ProductDetails;
 use yii\helpers\Html;
-use yii\widgets\DetailView;
+use yii\web\View;
 
-/* @var $this yii\web\View */
-/* @var $model common\models\product\ProductDetails */
+/* @var $this View */
+/* @var $model ProductDetails */
 
 $this->title = $model->product->name;
 
@@ -16,7 +17,7 @@ $this->title = $model->product->name;
         <span style="color: #ccc">时间：<?= Html::encode(date('Y-m-d H:i', $model->created_at)) ?></span>
     </center>
     <hr>
-    <?= $model->details ?>
+    <?= Html::img(WEB_ROOT.$model->details)?>
     
     <p>
         <?= Html::a(Yii::t('rcoa', 'Update'), ['details/update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>

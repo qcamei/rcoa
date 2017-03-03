@@ -150,14 +150,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ]);
         } else {
-            if(!empty($model->productDetail->product_id))
-                echo $this->render('/details/view', ['model' => $model->productDetail]);
+            echo $this->render('/details/index', ['model' => $model->productDetails, 'product_id' => $model->id]);
+            /*if(!empty($model->productDetail->product_id))
+                    echo $this->render('/details/view', ['model' => $model->productDetail]);
             else{
                 echo '<p>'.Html::a(Yii::t('rcoa/product', 'Create Product Details'), 
                     ['details/create', 'product_id'=>$model->id], 
-                    ['class' => 'btn btn-success'/*, 'data' => ['method' => 'post']*/]).'</p>';
+                    ['class' => 'btn btn-success'/*, 'data' => ['method' => 'post']]).'</p>';
                 echo '没有找到数据。';
-            }
+            }*/
         }
     ?>
 

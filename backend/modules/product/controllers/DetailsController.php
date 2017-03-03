@@ -7,6 +7,7 @@ use common\models\product\searchs\ProductDetailsSearch;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
@@ -79,7 +80,7 @@ class DetailsController extends Controller
         $model->loadDefaultValues();
         $post = Yii::$app->request->post();
         $model->product_id = $product_id;
-
+        
         if ($model->load(Yii::$app->request->post())) {
             $this->Upload($model);
             return $this->redirect(['default/view', 'id' => $model->product_id]);
@@ -100,8 +101,16 @@ class DetailsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $post = Yii::$app->request->post();
+        $upload = UploadedFile::getInstance($model, 'details');  
+        if($upload != null){
+            $model->uploadpath = $this->fileExists(Yii::getAlias('@filedata').'/product/'.date('Y-m-d', time()).'/');
+            $upload->saveAs($model->uploadpath .$upload->name);
+            Yii::$app->db->createCommand()->update(ProductDetails::tableName(), 
+                ['details' =>  '/filedata/product/'.date('Y-m-d', time()).'/'.$upload->name, 'index' => ArrayHelper::getValue($post, 'ProductDetails.index')], ['id' => $id])->execute();
+        }
+        
+        if ($model->load($post)) {
             return $this->redirect(['default/view', 'id' => $model->product_id]);
         } else {
             return $this->render('update', [
