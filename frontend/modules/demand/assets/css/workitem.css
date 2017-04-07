@@ -1,0 +1,57 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2017-4-1, 13:40:27
+    Author     : Kiwi°
+*/
+.demand-workitem-table{
+    width: 100%;
+}
+.table th{
+    width: 200px;
+}
+.table td{
+    min-width: 100px;
+}
+.table .tr{
+    background-color: #eee;
+}
+.text-center{
+    text-align: center;
+}
+.text-right{
+    color: #ccc;
+    font-weight: 100;
+    text-align: right;
+}
+.cost-unit{
+    width: 100%;
+    color: #ccc;
+    text-align: right;
+}
+@media (max-width: 1024px) {
+    .col-sm-6{
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    .col-sm-7{
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+}
+@media (max-width: 480px) {
+    .table th{
+        width: 65px;
+        padding: 4px !important;
+    }
+    .table td{
+        padding: 2px !important;
+    }
+    .cost-unit{
+        display: none;
+    }
+}
+

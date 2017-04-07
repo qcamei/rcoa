@@ -21,13 +21,9 @@ use yii\widgets\ActiveForm;
             <?php $form = ActiveForm::begin(['id' => 'form-submit-check']); ?>
 
                 <?php
-                    if(!empty($model->demandTaskProducts)){
-                        echo Html::encode('是否确定要提交该任务审核？');
-                        echo Html::activeHiddenInput($model, 'status', ['value' => DemandTask::STATUS_CHECK]);
-                        echo Html::activeHiddenInput($model, 'progress', ['value' => DemandTask::$statusProgress[DemandTask::STATUS_CHECK]]);
-                    }else
-                        echo Html::encode('课程产品不能为空！');
-
+                    echo Html::encode('是否确定要提交该任务审核？');
+                    echo Html::activeHiddenInput($model, 'status', ['value' => DemandTask::STATUS_CHECK]);
+                    echo Html::activeHiddenInput($model, 'progress', ['value' => DemandTask::$statusProgress[DemandTask::STATUS_CHECK]]);
                 ?> 
             <?php ActiveForm::end(); ?>
 
@@ -35,10 +31,7 @@ use yii\widgets\ActiveForm;
 
         <?php
             echo Html::beginTag('div', ['class' => 'modal-footer']);
-            if(!empty($model->demandTaskProducts))
                 echo Html::button('确认', ['id' => 'submit-check-save', 'class' => 'btn btn-primary']);
-            else
-                echo Html::button('关闭', ['class' => 'btn btn-primary', 'data-dismiss' => 'modal', 'aria-label' => 'Close']);
             echo Html::endTag('div');
         ?>
    </div>

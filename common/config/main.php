@@ -25,6 +25,7 @@ return [
                         'rcoa/demand' => 'demand.php',
                         'rcoa/basedata' => 'basedata.php',
                         'rcoa/product' => 'product.php',
+                        'rcoa/workitem' => 'workitem.php',
                     ],
                 ],
                

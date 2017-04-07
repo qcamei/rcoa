@@ -4,95 +4,162 @@
 .demand-default-index {
     
 }
-.head {
+.demand-default-head {
     width: 100%;
 }
-.head-top {
+.demand-default-headtop {
     width: 100%;
     height: 166px;
     background: url("/filedata/demand/image/head_image.jpg");
     background-position: center;
     background-repeat: no-repeat;
 }
-.head-bottom {
+.demand-default-headbottom {
     width: 100%;
     background-color: #fff;
 }
-.head-bottom .total {
-    padding: 10px 15px;
-}
-.lession-time {
-    padding: 5px 15px;
+.demand-default-total {
+    margin: 15px 0px;
+    color: #696969;
+    font-size: 12px;
     text-align: center;
-    border-right: 1px #eee solid;
-}
-.course-door {
-    padding: 5px 15px;
-    text-align: center; 
     border-right: 1px #eee solid;
 }
 .total-icon {
     width: 32px;
     height: 32px;
+    margin-top: -15px;
 }
-.completed {
-    font-family: Arial !important;
-    font-size: 28px !important;
-    color: #009944 !important;
-    margin-top: -5px !important;
-    margin-right: 5px;
-    text-align: center;
-}
-.undone {
-    font-family: Arial !important;
-    font-size: 28px !important;
-    color: #666666 !important;
-    margin-top: -5px !important;
-    margin-right: 5px;
-    text-align: center;
-}
-
 .completed-label{
+    position: relative;
+    top: -5px;
+    font-size: 14px;
     color: #009944;
     border: 1px #ccc solid;
     padding: 0px 2px;
 }
-.doing-label{
-    color: #e0a216;
+.completed-num {
+    margin: 0px 15px;
+    font-family: Arial !important;
+    font-size: 28px;
+    color: #009944;
+}
+.undone-label{
+    position: relative;
+    top: -5px;
+    font-size: 14px;
+    color: #666;
     border: 1px #ccc solid;
     padding: 0px 2px;
 }
+.undone-num {
+    margin: 0px 15px;
+    font-family: Arial !important;
+    font-size: 28px;
+    color: #666;
+}
+
+.demand-default-team {
+    width: 304px;
+    height: 220px;
+    margin: 30px 15px;
+    background-color: #fff;
+    border-radius: 5px;
+}
+.team-top {
+    width: 304px;
+    height: 131px;
+    padding: 20px 0px;
+    text-align: center;
+}
+.team-icon {
+    display: inline-block;
+    width: 110px;
+    height: 100px;
+    padding:0px 10px;
+}
+.team-icon:hover, .team-icon:focus{
+    color: #fff;
+    text-decoration: none;
+    background-color: transparent;
+}
+.team-name {
+    position: relative;
+    top: 5px;
+    font-size: 20px;
+    color: #fff;
+}
+.team-bottom {
+    padding: 13px 25px;
+}
+.team-total{
+    padding: 0px !important;
+}
+.team-completed-label{
+    position: relative;
+    top: -5px;
+    font-size: 14px;
+    color: #009944;
+    border: 1px #ccc solid;
+    padding: 0px 2px;
+}
+.team-completed-num {
+    width: 200px;
+    float: right;
+    margin-bottom: 5px;
+    font-size: 10px;
+    color: #009944;
+}
+.timer-completed{
+    width: 155px;
+    margin-right: 10px;
+    float: left;
+    display: block;
+    font-family: Arial !important;
+    font-size: 16px;
+    text-align: right;
+}
+.team-undone-label{
+    position: relative;
+    top: -5px;
+    font-size: 14px;
+    color: #666;
+    border: 1px #ccc solid;
+    padding: 0px 2px;
+}
+.team-undone-num {
+    width: 200px;
+    float: right;
+    margin-bottom: 5px;
+    font-size: 10px;
+    color: #666;
+}
+.timer-undone{
+    width: 155px;
+    margin-right: 10px;
+    float: left;
+    display: block;
+    font-family: Arial !important;
+    font-size: 16px;
+    text-align: right;
+}
 
 @media (max-width: 767px){
-    .head-bottom .container{
-        padding-left: 0px;
-        padding-right: 0px;
+    .col-xs-12{
+        padding: 0px !important;
     }
-    .head-bottom .total {
-        padding: 0;
-    }
-    .lession-time {
-        padding: 10px 0px;
+    .demand-default-total {
+        margin-bottom: -1px;
+        padding: 0px !important;
         text-align: left;
         border-bottom: 1px #eee solid;
         border-right: none;
-        margin-bottom: -1px;
     }
-    .course-door {
-        padding: 10px 0px;
-        text-align: left; 
-        border-top: 1px #eee solid;
-        border-right: none
+    .demand-default-team{
+        margin: 20px 0px;
     }
-    .total-xs {
-        width: 41.66666667%;
+    .demand-default-container{
+        padding: 0px 8px !important;
     }
-    .head-bottom .completed {
-        text-align: right;
-        display: inline-block;
-    }
-    .head-bottom .undone {
-        text-align: right;
-        display: inline-block;
-    }
+   
 }

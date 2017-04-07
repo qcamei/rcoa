@@ -59,28 +59,11 @@ else
         }
     ?>
     
-    <h4 id="anchor"><?= Yii::t('rcoa/demand', 'Demand Task Products'); ?></h4>
-    <div class="demand-task-product">
-        <div class="col-lg-12 col-md-12" style="padding:0px;">
-            <?php if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE_PRODUCT) && $mark && $model->create_by == Yii::$app->user->id):?>
-            <div class="add">
-                <?= Html::a('添加', ['product/list', 'task_id' => $model->id], 
-                                    ['id' => 'add' ,'class' => 'btn btn-success btn-sm',
-                                      'data-toggle' => 'tooltip', 'data-placement'=> 'top', 'title' => '点击这里添加课程产品！'
-                                    ]); ?>
-            </div>
-            <?php endif;?>
-            <div id="demand-task-product-index"></div>
-        </div>
-    </div>
-    
     <?= $this->render('/check/index',[
         'model' => $model->demandChecks,
     ]) ?>
     
-    <?= $this->render('/acceptance/index',[
-        'model' => $model->demandAcceptances,
-    ]) ?>
+    
 
 </div>
 
@@ -97,11 +80,7 @@ else
 <?php
 $js = 
 <<<JS
-    /** 滚动到添加课程产品处 */
-    if($sign){
-        $('html,body').animate({scrollTop:($('#anchor').offset().top) - 140},1000);
-        $('#add').tooltip('show'); 
-    }   
+      
     /** 此事件在模态框被隐藏（并且同时在 CSS 过渡效果完成）之后被触发。 */
     $('.myModal').on('hidden.bs.modal', function(){
         $(".myModal").html("");
@@ -124,12 +103,12 @@ $js =
         return false;
     });    
        
-    /** 完成操作 弹出模态框 */
+    /** 完成操作 弹出模态框 
     $('#complete').click(function(){
         $(".myModal").html("");
         $('.myModal').modal("show").load($(this).attr("href"));
         return false;
-    });
+    });*/
     
     /** 取消操作 弹出模态框 */
     $('#cancel').click(function(){
@@ -168,26 +147,26 @@ $js =
         });
     }    
     
-    /** 提交任务操作 弹出模态框 */
+    /** 提交任务操作 弹出模态框 
     $('#submit-task').click(function(){
         $(".myModal").html("");
         $('.myModal').modal("show").load($(this).attr("href"));
         return false;
-    });
+    });*/
         
-    /** 验收不通过操作 弹出模态框 */
+    /** 验收不通过操作 弹出模态框 
     $('#acceptance-create').click(function(){
         $(".myModal").html("");
         $('.myModal').modal("show").load($(this).attr("href"));
         return false;
-    }); 
+    }); */
         
-    /** 查看验收记录 */   
+    /** 查看验收记录  
     $('.view-acceptance').click(function(){
         $(".myModal").html("");
         $('.myModal').modal("show").load($(this).attr("href"));
         return false;
-    });
+    });*/  
    
 JS;
     $this->registerJs($js,  View::POS_READY);

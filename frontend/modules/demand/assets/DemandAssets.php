@@ -27,6 +27,7 @@ class DemandAssets extends AssetBundle{
     public $css = [
        'css/demand.css',
        'css/product.css',
+       'css/workitem.css',
     ];
     public $js = [
        'js/productlist.js',

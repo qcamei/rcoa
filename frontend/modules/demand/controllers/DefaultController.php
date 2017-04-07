@@ -2,8 +2,13 @@
 
 namespace frontend\modules\demand\controllers;
 
+use common\models\demand\DemandTask;
+use common\models\team\TeamCategory;
+use frontend\modules\demand\utils\DemandTool;
+use wskeee\team\TeamMemberTool;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 
 /**
@@ -42,6 +47,30 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        /* @var $dtTool DemandTool */
+        $dtTool = DemandTool::getInstance();
+        $completed = $dtTool->getDemandCount(DemandTask::STATUS_COMPLETED);
+        $unfinished = $dtTool->getDemandCount(DemandTask::$defaultStatus);
+        
+        return $this->render('index', [
+            'completed' => ArrayHelper::getValue($completed, 'total_lesson_time'),
+            'unfinished' => ArrayHelper::getValue($unfinished, 'total_lesson_time'),
+            'team' => $this->getCourseDevelopTeam(),
+            'teamCompleted' => $dtTool->getTeamDemandCount(DemandTask::STATUS_COMPLETED),
+            'teamUnfinished' => $dtTool->getTeamDemandCount(DemandTask::$defaultStatus),
+        ]);
+    }
+    
+    /**
+     * 获取所有课程开发团队
+     * @return array
+     */
+    public function getCourseDevelopTeam()
+    {
+        $tmTool = TeamMemberTool::getInstance();
+        $teams = $tmTool->getTeamsByCategoryId(TeamCategory::TYPE_PRODUCT_CENTER);
+        ArrayHelper::multisort($teams, 'index', SORT_ASC);
+       
+        return $teams;
     }
 }

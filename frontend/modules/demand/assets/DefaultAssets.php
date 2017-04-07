@@ -26,6 +26,7 @@ class DefaultAssets extends AssetBundle{
        'css/default.css'
     ];
     public $js = [
+        'js/numberturn.js'
         
     ];
     public $depends = [

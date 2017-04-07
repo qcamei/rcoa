@@ -25,6 +25,16 @@ return[
     'Demand Task Products' => '课程产品',
     'Demand Task Products List' => '课程产品列表',
     'Demand Task Products Details' => '课程产品详情',
+    'Demand Workitem Template Types' => '模版类型',
+    'Create Demand Workitem Template Type' => '创建-模版类型',
+    'Update Demand Workitem Template Type' => '更新-模版类型',
+    'Demand Workitem Templates' => '需求工作项模版',
+    'Create Demand Workitem Template' => '创建-需求工作项模版',
+    'Update Demand Workitem Template' => '更新-需求工作项模版',
+    'Demand Deliveries' => '交付任务',
+    'Create Demand Delivery' => '提交-交付任务',
+    'Demand Acceptances' => '验收记录',
+    'Create Demand Acceptance' => '提交-验收记录',
     
     //需求任务-字段
     'Item Type' => '行业',
@@ -52,4 +62,9 @@ return[
     'U ID' => '用户名',
     'Task ID' => '课程名称',
     'Product Total' => '产品总额',
+    'Demand Workitem Template Type ID' => '模版类型',
+    'Workitem Type ID' => '工作项类型',
+    'Workitem ID' => '工作项',
+    'Is New' => '是否是新建',
+    'Value Type' => '数量的类型'
 ];

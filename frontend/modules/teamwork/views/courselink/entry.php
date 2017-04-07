@@ -86,7 +86,11 @@ use yii\widgets\ActiveForm;
 </div>
 
 <div class="modal-footer">
-    <?= Html::submitButton('保存', ['id' => 'submit', 'class' => 'btn btn-primary'])?>
+    <?= Html::submitButton('保存', [
+        'id' => 'submit', 
+        'class' => 'btn btn-primary ', 
+        'data-dismiss' => 'modal', 
+        ])?>
 
 </div>
 
@@ -108,8 +112,8 @@ $js =
     {
         $.post("/teamwork/courselink/entry?id=$model->id", $("#entry-manage-form").serialize(), function(data){
             if(data['types'] == 1){
-                $(".myModal").modal('hide');
-                $(".modal-open").load("/teamwork/courselink/progress?course_id=$model->course_id");
+                //$(".myModal").modal('hide');
+                $("body").load("/teamwork/courselink/progress?course_id=$model->course_id");
             }else{
                 alert("保存失败");
             }

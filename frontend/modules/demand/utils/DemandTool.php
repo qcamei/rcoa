@@ -9,6 +9,7 @@ use common\models\demand\DemandOperationUser;
 use common\models\demand\DemandTask;
 use common\models\demand\DemandTaskAnnex;
 use common\models\demand\DemandTaskAuditor;
+use common\models\demand\DemandWorkitem;
 use common\models\team\TeamCategory;
 use common\wskeee\job\JobManager;
 use frontend\modules\teamwork\utils\TeamworkTool;
@@ -53,6 +54,7 @@ class DemandTool {
                 $this->saveDemandOperation($model->id, $model->status);
                 $this->saveOperationUser($model->id, [$model->create_by]);
                 $this->saveDemandTaskAnnex($model->id, (!empty($post['DemandTaskAnnex']) ? $post['DemandTaskAnnex'] : []));
+                $this->saveDemandWorkitem($model);
                 $demandNotice->saveJobManager($model);
             }else
                 throw new \Exception($model->getErrors());
@@ -115,6 +117,7 @@ class DemandTool {
                 DemandTaskAnnex::deleteAll(['task_id' => $model->id]);
                 $this->saveDemandTaskAnnex($model->id, (!empty($post['DemandTaskAnnex']) ? $post['DemandTaskAnnex'] : []));
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['subject' => $model->course->name]);
+                $this->UpdateDemandWorkitem($post, DemandWorkitem::tableName());
             }else
                 throw new \Exception($model->getErrors());
             
@@ -468,7 +471,7 @@ class DemandTool {
         /* @var $dtQuery DemandQuery */
         $dtQuery = DemandQuery::getInstance();
         /* @var $results ActiveQuery */
-        $results = $dtQuery->getDemandTaskTable();
+        $results = $dtQuery->findDemandTaskTable();
         $results->andFilterWhere(['or',[$mark == null ? 'or' : 'and', 
             ['Demand_task.create_by' => $createBy], ['Demand_task.undertake_person' => $undertakePerson]], 
             ['Demand_task_auditor.u_id' => $auditor]
@@ -512,6 +515,37 @@ class DemandTool {
         ]);
         
         return $results;
+    }
+    
+    /**
+     * 获取需求任务时长总和 和 总花费金额
+     * @param integer $status               状态
+     * @return array
+     */
+    public function getDemandCount($status)
+    {
+        return (new Query())
+                ->select(['SUM(Demand_task.lesson_time) AS total_lesson_time'])
+                ->from(['Demand_task' => DemandTask::tableName()])
+                ->where(['Demand_task.`status`' => $status])
+                ->one();              
+    }
+    
+    /**
+     * 获取每个团队的需求任务时长总和 和 总花费金额
+     * @param integer $status               状态
+     * @return array
+     */
+    public function getTeamDemandCount($status)
+    {
+        $results = (new Query())
+                ->select(['Demand_task.create_team', 'SUM(Demand_task.lesson_time) AS total_lesson_time'])
+                ->from(['Demand_task' => DemandTask::tableName()])
+                ->where(['Demand_task.`status`' => $status])
+                ->groupBy('Demand_task.create_team')
+                ->all();
+            
+        return ArrayHelper::map($results, 'create_team', 'total_lesson_time');
     }
     
     /**
@@ -588,6 +622,65 @@ class DemandTool {
         ['operation_id', 'u_id'], $values)->execute();
     }
     
+    /**
+     * 保存数据到需求工作项表
+     * @param DemandTask $model
+     */
+    public function saveDemandWorkitem($model)
+    {
+        /* @var $dtQuery DemandQuery */
+        $dtQuery = DemandQuery::getInstance();
+        /* @var $results ActiveQuery */
+        $results = $dtQuery->findDemandWorkitemTemplateTotal();
+        $workitems = [];
+        if(!empty($results->all())){
+            foreach ($results->all() as $index => $workitem) {
+                if(date('Y-m', $model->created_at) >= $workitem['target_month']){
+                    unset($workitem['target_month']);
+                    $workitem += [
+                        'demand_task_id' => $model->id, 
+                        'value' => null,
+                        'created_at' => strtotime($model->plan_check_harvest_time),
+                        'updated_at' => $model->updated_at
+                    ];
+                    $workitems[] = $workitem;
+                }
+            }
+        }
+        
+        /** 添加$values数组到表里 */
+        Yii::$app->db->createCommand()->batchInsert(DemandWorkitem::tableName(),[
+            'workitem_type_id', 'workitem_id', 'is_new',  'value_type', 'cost', 'demand_task_id', 'value', 'created_at', 'updated_at'
+        ], $workitems)->execute();
+    }
+    
+    /**
+     * 更新需求工作项
+     * @param array $post   
+     * @param string $table             数据表
+     */
+    public function UpdateDemandWorkitem($post, $table)
+    {
+        $values = ArrayHelper::getValue($post, 'value');
+        
+        foreach ($values as $key => $value) {
+            if(!is_numeric($value)){  
+                if(strpos($value ,":"))  {  
+                    $times =  explode(":", $value);  
+                }else if(strpos($value ,'：')){  
+                    $times =  explode("：", $value);
+                }
+                $h = (int)$times[0] ;  
+                $m = (int)$times[1];  
+                $s = count($times) == 3 ? (int)$times[2] : 0;  
+                $value = $h * 3600 + $m * 60 + $s;  
+            }else{
+                $value = $value;
+            }
+            Yii::$app->db->createCommand()->update($table, ['value' => $value], ['id' => $key])->execute();
+        }  
+    }
+
     /**
      * 获取开发负责人所在团队成员表里的ID
      * @return integer|array    

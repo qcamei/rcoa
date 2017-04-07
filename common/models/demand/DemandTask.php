@@ -51,6 +51,7 @@ use yii\db\ActiveRecord;
  * @property DemandTaskAnnex[] $demandTaskAnnexes       获取所有的附件
  * @property DemandTaskProduct[] $demandTaskProducts    获取所有的课程产品
  * @property DemandToTeamwork[] $demandToTeamworks
+ * @property DemandWorkitem[] $demandWorkitems          获取所有任务相关联的工作项
  * @property Team $team                                 获取开发团队
  * @property Team $createTeam                           获取创建团队
  * @property User $createBy                             获取创建者
@@ -224,7 +225,7 @@ class DemandTask extends ActiveRecord
      */
     public function getDemandAcceptances()
     {
-        return $this->hasMany(DemandAcceptance::className(), ['task_id' => 'id']);
+        return $this->hasMany(DemandAcceptance::className(), ['demand_task_id' => 'id']);
     }
 
     /**
@@ -353,6 +354,18 @@ class DemandTask extends ActiveRecord
         return $this->hasMany(DemandTaskProduct::className(), ['task_id' => 'id'])
                ->leftJoin(['Product' => Product::tableName()], ['product_id' => 'Product.id']);
     }
+    
+    /**
+     * 获取所有任务相关联的工作项
+     * @return ActiveQuery
+     */
+    public function getDemandWorkitems()
+    {
+        return $this->hasMany(DemandWorkitem::className(), ['demand_task_id' => 'id'])
+               ->orderBy(['workitem_type_id' => 'asc', 'workitem_id' => 'asc'])
+               ->with('workitem', 'workitemType', 'demandTask');
+    }
+
 
     /**
      * @return ActiveQuery

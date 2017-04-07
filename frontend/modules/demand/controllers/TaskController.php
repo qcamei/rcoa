@@ -82,7 +82,7 @@ class TaskController extends Controller
         ]);
         $taskIds = ArrayHelper::getColumn($dataProvider->allModels, 'id');
         $taskStatus = ArrayHelper::map($dataProvider->allModels, 'id', 'status');
-        
+       
         return $this->render('index', [
             'twTool' => $twTool,
             'dataProvider' => $dataProvider,
@@ -170,7 +170,7 @@ class TaskController extends Controller
        
         if ($model->load($post)) {
             $dtTool->CreateTask($model, $post);
-            return $this->redirect(['view', 'id' => $model->id, 'sign' => 1]);
+            return $this->redirect(['update', 'id' => $model->id, 'sign' => 1]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -217,13 +217,15 @@ class TaskController extends Controller
      * Updates an existing DemandTask model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
+     * @param boolean $sign             标记：1为添加需求工作项数据，默认为0
      * @return mixed
      */
-    public function actionUpdate($id)
+    public function actionUpdate($id, $sign = 0)
     {
         $this->layout = '@app/views/layouts/main';
         $model = $this->findModel($id);
         $post = Yii::$app->request->post();
+        
         if(!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UPDATE) && $model->create_by == \Yii::$app->user->id))
             throw new NotAcceptableHttpException('无权限操作！');
         if(!($model->getIsStatusDefault() || $model->getIsStatusAdjusimenting()))
@@ -240,6 +242,7 @@ class TaskController extends Controller
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'sign' => $sign,
                 'itemTypes' => $this->getItemType(),
                 'items' => $this->getCollegesForSelect(),
                 'itemChilds' => $this->getChildren($model->item_id),
@@ -314,11 +317,11 @@ class TaskController extends Controller
      * @param integer $id
      * @return type
      * @throws NotAcceptableHttpException
-     */
+     
     public function actionSubmitTask($id)
     {
-        $model = $this->findModel($id);
-        /* @var $dtTool DemandTool */
+        $model = $this->findModel($id);*/
+        /* @var $dtTool DemandTool 
         $dtTool = DemandTool::getInstance();
         if($model->developPrincipals->u_id != Yii::$app->user->id)
             throw new NotAcceptableHttpException('无权限操作！');
@@ -337,18 +340,18 @@ class TaskController extends Controller
                 'isEmpty' => !empty($model->teamworkCourse) ? true : false,
             ]);
         }
-    }
+    }*/
     
     /**
      * 完成任务操作
      * @param integer $id
      * @return type
      * @throws NotAcceptableHttpException
-     */
+     
     public function actionComplete($id)
     {
-        $model = $this->findModel($id);
-        /* @var $dtTool DemandTool */
+        $model = $this->findModel($id);*/
+        /* @var $dtTool DemandTool 
         $dtTool = DemandTool::getInstance();
         if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_COMPLETE) && $model->create_by != \Yii::$app->user->id)
             throw new NotAcceptableHttpException('无权限操作！');
@@ -366,7 +369,7 @@ class TaskController extends Controller
                 'model' => $model,
             ]);
         }
-    }
+    }*/
     
     /**
      * 恢复任务制作操作
@@ -642,7 +645,7 @@ class TaskController extends Controller
         /* @var $dtQuery DemandQuery */
         $dtQuery = DemandQuery::getInstance();
         /* @var $results ActiveQuery */
-        $results = $dtQuery->getProductTotal();
+        $results = $dtQuery->findProductTotal();
         $results->select(['Task_product.task_id', 'SUM(Product.unit_price * Task_product.number) AS totals']);
         $results->groupBy('Task_product.task_id');
         return ArrayHelper::map($results->all(), 'task_id', 'totals');

@@ -98,15 +98,15 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php
 $js = <<<JS
+   size();
    $(window).resize(function(){
         size();
     });
-    size();
     function size(){
-        var width = $(document.body).width(),
-        height = $(document.body).height();
-        $(".details").css({width:width,height:height, display:"block"});
+        var height = $(document.body).height() - 100;
+        $(".site-home").css({width:'100%',height:height, display:"block"});
     }
+    
     /** 提交表单 */
     $('#submit').click(function()
     {

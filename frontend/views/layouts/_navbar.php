@@ -21,7 +21,7 @@ $system = AppGlobalVariables::getSystems();
 NavBar::begin([
         //'brandLabel' => '课程中心工作平台',
         'brandLabel' => Html::img(['/filedata/site/image/logo.png'], [
-            'style' => 'width: 50px;height: 45px;margin-top: -11px;margin-left: -5px;margin-right: -5px;'
+            'class' => 'logo'
         ]),
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [

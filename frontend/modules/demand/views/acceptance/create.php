@@ -2,45 +2,67 @@
 
 use common\models\demand\DemandAcceptance;
 use frontend\modules\demand\assets\DemandAssets;
+use yii\helpers\Html;
 use yii\web\View;
+use yii\widgets\Breadcrumbs;
 
 
 /* @var $this View */
 /* @var $model DemandAcceptance */
 
-$this->title = Yii::t('rcoa/demand', 'Demand Acceptances').':'.$model->task->course->name;
+$this->title = Yii::t('rcoa/demand', 'Create Demand Acceptance');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/demand', 'Demand Acceptances'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="modal-dialog" role="document">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel"><?= $this->title ?></h4>
-        </div>
-        <div class="modal-body">
+<div class="title">
+    <div class="container">
+        <?= Breadcrumbs::widget([
+            'options' => ['class' => 'breadcrumb'],
+            'homeLink' => [
+                'label' => Yii::t('rcoa/demand', 'Demand Tasks'),
+                'url' => ['task/index'],
+            ],
+            'links' => [
+                [
+                    'label' => $model->demandTask->course->name,
+                    'url' => ['task/view', 'id' => $model->demand_task_id]
+                ],
+                [
+                    'label' => Yii::t('rcoa/demand', 'Demand Acceptances'),
+                ],
+            ]
+        ]);?>
+    </div>
+</div>
 
-            <?= $this->render('_form', [
-                'model' => $model,
-            ]) ?>
+<div class="container demand-acceptance-create has-title">
 
-        </div>
+    <?= $this->render('_form', [
+        'model' => $model,
+        'delivery' => $delivery,
+        'wdArrays' => $wdArrays,
+    ]) ?>
 
-        <div class="modal-footer">
-            <button type="button" class="btn btn-primary" id="create-acceptance-save">确认</button>
-        </div>
-   </div>
-</div> 
+</div>
 
-<script type="text/javascript">
-    
-    $('#create-acceptance-save').click(function()
-    {
+<div class="controlbar">
+    <div class="container">
+        <?= Html::a(Yii::t('rcoa', 'Back'), ['task/view', 'id' => $model->demand_task_id], ['class' => 'btn btn-default']) ?>
+        <?= Html::a(Yii::t('rcoa', '提交'), 'javascript:;',  ['id'=>'submit', 'class' => 'btn btn-info']) ?>
+    </div>
+</div>
+
+<?php
+$js = 
+<<<JS
+    $('#submit').click(function(){
         $('#demand-acceptance-form').submit();
     });
-
-</script>
+    
+JS;
+    $this->registerJs($js,  View::POS_READY);
+?>
 
 <?php
     DemandAssets::register($this);

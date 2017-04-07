@@ -174,7 +174,7 @@ class TeamworkTool{
         $results->addSelect([
             'Tw_course_phase.`name`',
             'Tw_course_phase.weights',
-            'SUM(Tw_course_link.completed/Tw_course_link.total)/COUNT(Tw_course_link.course_phase_id) AS progress'
+            'SUM(FLOOR(Tw_course_link.completed/Tw_course_link.total))/COUNT(Tw_course_link.course_phase_id) AS progress'
         ]);
         $results->andFilterWhere(['Tw_course_link.course_id' => $courseId]);
         

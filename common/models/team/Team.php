@@ -7,10 +7,13 @@ use common\models\multimedia\MultimediaTask;
 use common\models\Position;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\ItemManage;
-use common\models\User;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\web\UploadedFile;
+use yii\web\User;
+
+
 
 /**
  * This is the model class for table "{{%team}}".
@@ -18,6 +21,8 @@ use yii\db\ActiveRecord;
  * @property integer $id                               id
  * @property string $name                              名称
  * @property integer $type                             类型
+ * @property string $team_icon                         团队图标
+ * @property string $image                             团队背景图
  * @property string $des                               描述
  * @property integer $index                            索引
  * @property string $is_delete                         是否删除
@@ -53,7 +58,7 @@ class Team extends ActiveRecord
     {
         return [
             [['type', 'index'], 'integer'],
-            [['name', 'des'], 'string', 'max' => 255],
+            [['name', 'team_icon',  'image', 'des'], 'string', 'max' => 255],
             [['is_delete'], 'string', 'max' => 4],
             [['type'], 'exist', 'skipOnError' => true, 'targetClass' => TeamType::className(), 'targetAttribute' => ['type' => 'id']],
         ];
@@ -68,12 +73,42 @@ class Team extends ActiveRecord
             'id' => Yii::t('rcoa/team', 'ID'),
             'name' => Yii::t('rcoa', 'Name'),
             'type' => Yii::t('rcoa', 'Type'),
+            'team_icon' => Yii::t('rcoa/team', 'Team Icon'),
+            'image' => Yii::t('rcoa', 'Image'),
             'des' => Yii::t('rcoa', 'Des'),
             'index' => Yii::t('rcoa', 'Index'),
             'is_delete' => Yii::t('rcoa/team', 'Is Delete'),
         ];
     }
     
+    /**
+     * 
+     * @param type $insert 
+     */
+    public function beforeSave($insert) 
+    {
+        if(parent::beforeSave($insert))
+        {
+            $uploadIcon = UploadedFile::getInstance($this, 'team_icon');
+            $uploadImage = UploadedFile::getInstance($this, 'image');
+            if($uploadIcon != null || $uploadImage != null)
+            {
+                $uploadIconPath = $this->fileExists(Yii::getAlias('@filedata').'/team/icon/');
+                $uploadImagePath = $this->fileExists(Yii::getAlias('@filedata').'/team/image/');
+                $uploadIcon->saveAs($uploadIconPath.$uploadIcon->name.'.'.$uploadIcon->extension);
+                $uploadImage->saveAs($uploadImagePath.$uploadImage->name.'.'.$uploadImage->extension);
+                $this->team_icon = '/filedata/team/icon/'.$uploadIcon->name.'.'.$uploadIcon->extension;
+                $this->image = '/filedata/team/image/'.$uploadImage->name.'.'.$uploadImage->extension;
+                
+                if(trim($this->team_icon) == '' || trim($this->image) == ''){
+                    $this->team_icon = $this->getOldAttribute ('team_icon');
+                    $this->image = $this->getOldAttribute ('image');
+                }
+            }
+            return true;
+        }else
+            return false;
+    }
     
     /**
      * 获取所有多媒体团队指派人
@@ -153,5 +188,18 @@ class Team extends ActiveRecord
     public function getItemManages()
     {
         return $this->hasMany(ItemManage::className(), ['team_id' => 'id']);
+    }
+    
+    /**
+     * 检查目标路径是否存在，不存即创建目标
+     * @param string $uploadpath    目录路径
+     * @return string
+     */
+    private function fileExists($uploadpath) {
+
+        if (!file_exists($uploadpath)) {
+            mkdir($uploadpath);
+        }
+        return $uploadpath;
     }
 }

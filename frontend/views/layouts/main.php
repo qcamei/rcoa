@@ -47,7 +47,7 @@ use yii\web\View;
 
     <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; 广州远程教育中心有限公司 </p>
+        <p class="pull-left">&copy; 国家开放大学在线教育运营服务中心&nbsp;&nbsp;版本号：v1.50 </p>
     </div>
 </footer>
 

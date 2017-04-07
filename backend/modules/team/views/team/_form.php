@@ -9,28 +9,33 @@ use yii\widgets\ActiveForm;
 /* @var $this View */
 /* @var $model Team */
 /* @var $form ActiveForm */
+
 ?>
 
 <div class="team-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+        'options' => [
+            'enctype' => 'multipart/form-data',
+        ],
+    ]); ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'type')->dropDownList($teamType, ['prompt'=>'请选择...']) ?>
     
-    <?php 
-        if(!$model->isNewRecord){
-            echo $form->field($model, 'index')->widget(TouchSpin::classname(),  [
-                    'pluginOptions' => [
-                        'placeholder' => '顺序 ...',
-                        'min' => -1,
-                        'max' => 999999999,
-                    ],
-                ]);
-        }
-    ?>
-
+    <?= $form->field($model, 'team_icon')->fileInput() ?>
+    
+    <?= $form->field($model, 'index')->widget(TouchSpin::classname(),  [
+        'pluginOptions' => [
+            'placeholder' => '顺序 ...',
+            'min' => -1,
+            'max' => 999999999,
+        ],
+    ])?>
+    
+    <?= $form->field($model, 'image')->fileInput() ?>
+    
     <?= $form->field($model, 'des')->textarea() ?>
 
     <div class="form-group">

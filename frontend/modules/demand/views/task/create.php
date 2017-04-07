@@ -36,6 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
+        'sign'  => 0,
         'itemTypes' => $itemTypes,
         'items' => $items,
         'itemChilds' => $itemChilds,

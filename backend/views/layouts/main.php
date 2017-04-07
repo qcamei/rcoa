@@ -118,16 +118,19 @@ AppAsset::register($this);
             ],
         ];
         $menuItems[] = [
-            'label' => '产品',
+            'label' => '工作项',
             'items' => [
-               ['label' => '类别', 'url' => '/product/type'],
-               ['label' => '列表', 'url' => '/product/default'],
+               ['label' => '类别', 'url' => '/workitem/type'],
+               ['label' => '工作项', 'url' => '/workitem/default'],
+               ['label' => '价值', 'url' => '/workitem/cost'],
             ],
         ];
         $menuItems[] = [
             'label' => '需求',
             'items' => [
                ['label' => '审核人指派', 'url' => '/demand/default'],
+               ['label' => '模版类型', 'url' => '/demand/templatetype'],
+               ['label' => '工作项模版', 'url' => '/demand/workitem'],
             ],
         ];
 

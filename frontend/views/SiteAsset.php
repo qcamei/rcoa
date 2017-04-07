@@ -21,7 +21,9 @@ class SiteAsset extends \yii\web\AssetBundle
        'css/site.css',
     ];
     public $js = [
-        
+        'js/shakeobj.js',
+        'js/numberturn.js',
+        'js/jquery.easing.1.3.min.js'
     ];
     public $depends = [
         'yii\web\YiiAsset'

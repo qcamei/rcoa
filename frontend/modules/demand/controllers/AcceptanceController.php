@@ -3,15 +3,15 @@
 namespace frontend\modules\demand\controllers;
 
 use common\models\demand\DemandAcceptance;
-use common\models\demand\DemandCheck;
+use common\models\demand\DemandDelivery;
+use common\models\demand\DemandDeliveryData;
+use common\models\demand\DemandWorkitem;
 use common\models\demand\searchs\DemandAcceptanceSearch;
-use frontend\modules\demand\utils\DemandTool;
-use wskeee\rbac\RbacName;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
-use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -66,7 +66,7 @@ class AcceptanceController extends Controller
      */
     public function actionView($id)
     {
-        return $this->renderPartial('view', [
+        return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
     }
@@ -76,25 +76,24 @@ class AcceptanceController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($task_id)
+    public function actionCreate($demand_task_id)
     {
+        $this->layout = '@app/views/layouts/main';
         $model = new DemandAcceptance();
-        /* @var $dtTool DemandTool */
-        $dtTool = DemandTool::getInstance();
-        $dtTool::$table = DemandAcceptance::tableName();
-        if(!\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE_ACCEPTANCE) || $dtTool->getIsCompleteCheck($task_id))
-            throw new NotAcceptableHttpException('无权限操作！');
-        $model->task_id = $task_id;
+        $delivery = $this->findDeliveryModel($demand_task_id);
+        $model->loadDefaultValues();
+        
+        $model->demand_task_id = $demand_task_id;
         $model->create_by = \Yii::$app->user->id;
-        if(!($model->task->getIsStatusAcceptance() || $model->task->getIsStatusAcceptanceing()))
-            throw new NotAcceptableHttpException('该任务状态为'.$model->task->getStatusName().'！');
-
-        if ($model->load(Yii::$app->request->post())) {
-            $dtTool->CreateAcceptanceTask($model);
-            return $this->redirect(['task/view', 'id' => $model->task_id]);
+        
+        
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['task/view', 'id' => $model->demand_task_id]);
         } else {
-            return $this->renderPartial('create', [
+            return $this->render('create', [
                 'model' => $model,
+                'delivery' => $delivery,
+                'wdArrays' => $this->getWorkitemDeliveryDatas($model),
             ]);
         }
     }
@@ -108,49 +107,14 @@ class AcceptanceController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        /* @var $dtTool DemandTool */
-        $dtTool = DemandTool::getInstance();
-        $dtTool::$table = DemandAcceptance::tableName();
-        if((!\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UPDATE_ACCEPTANCE)
-           && $model->create_by != \Yii::$app->user->id) || !$dtTool->getIsCompleteCheck($model->task_id))
-            throw new NotAcceptableHttpException('无权限操作！');
-        if(!$model->task->getIsStatusUpdateing())
-            throw new NotAcceptableHttpException('该任务状态为'.$model->task->getStatusName().'！');
-        
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['task/view', 'id' => $model->task_id]);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            return $this->renderPartial('update', [
+            return $this->render('update', [
                 'model' => $model,
             ]);
         }
-    }
-    
-    /**
-     * 提交验收记录
-     * @param integer $task_id                      任务ID
-     * @throws NotAcceptableHttpException
-     */
-    public function actionSubmit($task_id)
-    {
-        /* @var $model DemandCheck */
-        $model = DemandAcceptance::findOne(['task_id' => $task_id, 'status' => DemandCheck::STATUS_NOTCOMPLETE]);
-        /* @var $dtTool DemandTool */
-        $dtTool = DemandTool::getInstance();
-        $dtTool::$table = DemandAcceptance::tableName();
-        if((!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_SUBMIT_ACCEPTANCE) && $model->task->developPrincipals->u_id == \Yii::$app->user->id)
-           && $dtTool->getIsCompleteCheck($task_id)))
-            throw new NotAcceptableHttpException('无权限操作！');
-        if(!$model->task->getIsStatusUpdateing())
-            throw new NotAcceptableHttpException('该任务状态为'.$model->task->getStatusName().'！');
-        
-        $model->complete_time = date('Y-m-d H:i', time());
-        $model->status = DemandCheck::STATUS_COMPLETE;
-        $dtTool->SubmitAcceptanceTask($model);
-        $this->redirect(['task/index', 'create_by' => Yii::$app->user->id,
-            'undertake_person' => Yii::$app->user->id, 
-            'auditor' => Yii::$app->user->id,
-        ]);
     }
 
     /**
@@ -158,13 +122,13 @@ class AcceptanceController extends Controller
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
-     
+     */
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
-    }*/
+    }
 
     /**
      * Finds the DemandAcceptance model based on its primary key value.
@@ -180,5 +144,64 @@ class AcceptanceController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    
+    /**
+     * Finds the DemandDelivery model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return DemandDelivery the loaded delivery
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findDeliveryModel($demand_task_id)
+    {
+        $delivery = DemandDelivery::find()
+                    ->where(['demand_task_id' => $demand_task_id])
+                    ->orderBy('demand_task_id DESC')
+                    ->one();
+        if ($delivery !== null) {
+            return $delivery;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+    
+    /**
+     * 获取需求和支付数据
+     * @param DemandAcceptance $model
+     */
+    public function getWorkitemDeliveryDatas($model)
+    {
+        $delivery = $this->findDeliveryModel($model->demand_task_id);
+        $deliveryDatas = DemandDeliveryData::find()
+                         ->where(['demand_delivery_id' => $delivery->id])
+                         ->all();
+        $deliverys = [];
+        foreach ($deliveryDatas as $dModel) {
+            /* @var $dModel DemandDeliveryData */
+            $deliverys [$dModel->demandWorkitem->workitemType->name][$dModel->demandWorkitem->workitem->name][] = [
+                'workitem_type_id' => $dModel->demandWorkitem->workitem_type_id,
+                'is_new' => $dModel->demandWorkitem->is_new,
+                'value_type' => $dModel->demandWorkitem->value_type,
+                'is_workitem' => '0',
+                'value' => $dModel->value,
+                'unit' => $dModel->demandWorkitem->workitem->unit,
+            ];
+        }
+            
+        $workitems = [];
+        foreach ($model->demandTask->demandWorkitems as $wModel) {
+            /* @var $wModel DemandWorkitem */
+            $workitems[$wModel->workitemType->name][$wModel->workitem->name][] = [
+                'workitem_type_id' => $wModel->workitem_type_id,
+                'is_new' => $wModel->is_new,
+                'value_type' => $wModel->value_type,
+                'is_workitem' => '1',
+                'value' => $wModel->value,
+                'unit' => $wModel->workitem->unit,
+            ];
+        }
+        //var_dump( ArrayHelper::merge($workitems, $deliverys));exit;
+        return ArrayHelper::merge($workitems, $deliverys);
     }
 }

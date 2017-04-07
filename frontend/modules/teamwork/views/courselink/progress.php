@@ -4,7 +4,7 @@ use common\models\teamwork\CourseLink;
 use common\models\teamwork\CourseManage;
 use common\models\teamwork\CoursePhase;
 use frontend\modules\teamwork\TwAsset;
-use kartik\widgets\SwitchInput;
+use kartik\switchinput\SwitchInputAsset;
 use wskeee\rbac\RbacName;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
@@ -101,15 +101,7 @@ $this->params['breadcrumbs'][] = $this->title;
     
 </div>
 
-<div style="display: none">
-<?= SwitchInput::widget([
-        'name' => 'activation_status',
-        'pluginOptions' => [
-            'onText' => '完成',
-            'offText' => '未完成',
-        ]
-    ]) ?>
-</div>
+
 
 <div class="controlbar">
     <div class="container">
@@ -147,4 +139,5 @@ JS;
 
 <?php
     TwAsset::register($this);
+    SwitchInputAsset::register($this);
 ?>

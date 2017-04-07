@@ -1,9 +1,9 @@
 <?php
 namespace frontend\controllers;
 
-use common\models\Banner;
+use common\models\demand\DemandTask;
+use common\models\expert\Expert;
 use common\models\LoginForm;
-use common\models\System;
 use common\models\User;
 use frontend\models\ContactForm;
 use frontend\models\PasswordResetRequestForm;
@@ -76,9 +76,11 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        //$system = System::find()->where(['is_delete' => 'N'])->orderBy('index asc')->all();
+        $total = $this->getDemandTaskNewCount();
+        $expert = $this->getExpertPlaceNewCount();
         return $this->render('index',[
-            //'system' => $system,
+            'total' => $total <= 999 ? $total : 999  ,
+            'expert' => $expert <= 999 ? $expert : 999,
         ]);
     }
 
@@ -242,5 +244,28 @@ class SiteController extends Controller
                 'model' => $model,
             ]);
         }
+    }
+    
+    /**
+     * 获取所有新的需求任务总数
+     */
+    public function getDemandTaskNewCount()
+    {
+        return  DemandTask::find()
+                ->select(['Demand_task.id'])
+                ->from(['Demand_task' => DemandTask::tableName()])
+                ->where(['Demand_task.status' => DemandTask::$defaultStatus])
+                ->count();
+    }
+    
+    /**
+     * 获取所有师资总数
+     */
+    public function getExpertPlaceNewCount()
+    {
+        return  Expert::find()
+                ->select(['Expert.u_id'])
+                ->from(['Expert' => Expert::tableName()])
+                ->count();
     }
 }

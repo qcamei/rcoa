@@ -18,8 +18,8 @@ class DemandAcceptanceSearch extends DemandAcceptance
     public function rules()
     {
         return [
-            [['id', 'task_id', 'created_at', 'updated_at', 'status'], 'integer'],
-            [['title', 'remark', 'create_by', 'complete_time'], 'safe'],
+            [['id', 'demand_task_id', 'demand_delivery_id', 'pass', 'create_by', 'created_at', 'updated_at'], 'integer'],
+            [['des'], 'safe'],
         ];
     }
 
@@ -60,16 +60,15 @@ class DemandAcceptanceSearch extends DemandAcceptance
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'task_id' => $this->task_id,
+            'demand_task_id' => $this->demand_task_id,
+            'demand_delivery_id' => $this->demand_delivery_id,
+            'pass' => $this->pass,
+            'create_by' => $this->create_by,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'status' => $this->status,
         ]);
 
-        $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'remark', $this->remark])
-            ->andFilterWhere(['like', 'create_by', $this->create_by])
-            ->andFilterWhere(['like', 'complete_time', $this->complete_time]);
+        $query->andFilterWhere(['like', 'des', $this->des]);
 
         return $dataProvider;
     }

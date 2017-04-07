@@ -53,6 +53,9 @@ $config = [
         'demand' => [
             'class' => 'backend\modules\demand\Module',
         ],
+        'workitem' => [
+            'class' => 'backend\modules\workitem\Module',
+        ],
     ],
 ];
 

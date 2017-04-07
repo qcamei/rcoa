@@ -5,6 +5,7 @@ use common\widgets\uploadFile\UploadFileAsset;
 use kartik\datecontrol\DateControl;
 use kartik\widgets\Select2;
 use kartik\widgets\TouchSpin;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
@@ -131,10 +132,19 @@ use yii\widgets\ActiveForm;
         echo Html::endTag('div');
     ?>
     
+    <?php if(!$model->isNewRecord): ?>
+    <h5><b>具体信息</b></h5>
+    
+    <?= $this->render('/workitem/index', [
+        'allModels' => $model->demandWorkitems
+    ]) ?>
+    
+    <?php endif; ?>
+    
     <h5><b>其他信息</b></h5>
     
     <?= $form->field($model, 'des')->textarea(['value' => '无', 'rows' => 4]) ?>
-
+    
     <?php
         //附件上传按钮
         echo Html::beginTag('div', ['class' => 'form-group field-demandtaskannex-annex', 'style' => 'margin-bottom:5px;']);
@@ -203,8 +213,11 @@ $js =
         $('#select2-demandtask-course_id-container').html('<span class="select2-selection__placeholder">请选择...</span>');
         wx(url, element, '请选择...');
     });
-     
-   
+    
+   /** 滚动到添加课程产品处 */
+    if($sign)
+        $('html,body').animate({scrollTop:($('.demand-workitem-index').offset().top) - 140},1000);
+    
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>

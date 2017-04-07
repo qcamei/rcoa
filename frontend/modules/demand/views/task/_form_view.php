@@ -70,16 +70,16 @@ $page = [
              */
             if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_COMPLETE) 
                && ($model->getIsStatusAcceptance() || $model->getIsStatusAcceptanceing()) && $model->create_by == Yii::$app->user->id)
-                echo Html::a('验收通过', ['complete', 'id' => $model->id], ['id' => 'complete', 'class' =>'btn btn-success']).' ';
+                echo Html::a('验收', ['acceptance/create', 'demand_task_id' => $model->id], ['id' => 'complete', 'class' =>'btn btn-success']).' ';
             /**
              * 验收不通过 按钮显示必须满足以下条件：
              * 1、拥有完成的权限
              * 2、状态必须是在【待验收】 or 【验收中】
              * 3、创建者是自己
-             */
+             
             if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE_ACCEPTANCE) 
                && ($model->getIsStatusAcceptance() || $model->getIsStatusAcceptanceing()) && $model->create_by == Yii::$app->user->id)
-                echo Html::a('验收不通过', ['acceptance/create', 'task_id' => $model->id], ['id' => 'acceptance-create', 'class' =>'btn btn-danger']).' ';
+                echo Html::a('验收不通过', ['acceptance/create', 'task_id' => $model->id], ['id' => 'acceptance-create', 'class' =>'btn btn-danger']).' ';*/
             /**
              * 验收不通过 按钮显示必须满足以下条件：
              * 1、拥有完成的权限
@@ -147,7 +147,7 @@ $page = [
              */
             if($model->getIsStatusDeveloping() 
                && $model->developPrincipals->u_id == Yii::$app->user->id && !empty($model->teamworkCourse))
-                echo Html::a('提交任务', ['submit-task', 'id' => $model->id], ['id' => 'submit-task', 'class' =>'btn btn-success']).' ';
+                echo Html::a('交付', ['delivery/create', 'demand_task_id' => $model->id], ['id' => 'submit-task', 'class' =>'btn btn-success']).' ';
             /**
              * 提交验收 按钮显示必须满足以下条件：
              * 1、必须拥有提交验收权限

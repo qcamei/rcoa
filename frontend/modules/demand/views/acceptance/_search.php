@@ -17,21 +17,19 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'task_id') ?>
+    <?= $form->field($model, 'demand_task_id') ?>
 
-    <?= $form->field($model, 'title') ?>
+    <?= $form->field($model, 'demand_delivery_id') ?>
 
-    <?= $form->field($model, 'remark') ?>
+    <?= $form->field($model, 'pass') ?>
 
-    <?= $form->field($model, 'create_by') ?>
+    <?= $form->field($model, 'des') ?>
+
+    <?php // echo $form->field($model, 'create_by') ?>
 
     <?php // echo $form->field($model, 'created_at') ?>
 
     <?php // echo $form->field($model, 'updated_at') ?>
-
-    <?php // echo $form->field($model, 'complete_time') ?>
-
-    <?php // echo $form->field($model, 'status') ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('rcoa/demand', 'Search'), ['class' => 'btn btn-primary']) ?>

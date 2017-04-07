@@ -73,7 +73,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 echo '<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="padding:0px;">';
                      echo '<div class="team">';
                           echo '<div class="team-top" style="background:url('.$value['image'].') no-repeat">';
-                               echo '<div>'.Html::a(Html::img(['/filedata/teamwork/image/view_team_member.png']), [
+                               echo '<div>'.Html::a(Html::img([$value['team_icon']]), [
                                    'member', 'team_id' => $value['id']
                                ]).'</div>';
                                echo '<div class="team-name">'.$value['name'].'</div>';
