@@ -67,6 +67,23 @@ and open the template in the editor.
     top: 150px;
     opacity: 0;
 }
+.netbutton{
+    text-align: center;
+    height: 200px;
+    position:relative;
+    top: 150px;
+    opacity: 0;
+}
+@media (min-width: 1200px){
+    .netbutton canvas{
+        left: -45px;
+    }
+}
+.netbutton canvas{
+    position: relative;
+    top: -85px;
+}
+
 .site-home-circle{
     width: 127px;
     height: 127px;

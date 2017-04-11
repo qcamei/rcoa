@@ -16,7 +16,7 @@ use const YII_DEBUG;
  *
  * @author Administrator
  */
-class RichbuttonAssets extends AssetBundle{
+class NetbuttonAssets extends AssetBundle{
     //put your code here
     //public $sourcePath = '@frontend/modules/demand/assets';
     public $basePath = '@webroot';
@@ -28,9 +28,9 @@ class RichbuttonAssets extends AssetBundle{
        
     ];
     public $js = [
-        'filedata/site/richbutton/createjs-2015.11.26.min.js',
-        'filedata/site/richbutton/buuton.js',
-        'filedata/site/richbutton/richbutton.js',
+        'filedata/site/netbutton/createjs-2015.11.26.min.js',
+        'filedata/site/netbutton/netbutton.js',
+        'filedata/site/netbutton/netbuttonskin.js',
     ];
     public $depends = [
         'yii\web\YiiAsset'

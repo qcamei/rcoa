@@ -217,7 +217,7 @@ class StatisticsController extends Controller
                 ->from(['Team'=> Team::tableName()])
                 ->leftJoin(['Course'=>CourseManage::tableName()],'Course.team_id = Team.id')
                 ->leftJoin(['DemandTask'=>  DemandTask::tableName()], 'Course.demand_task_id = DemandTask.id')
-                ->where(['Team.id'=>  ArrayHelper::getColumn(TeamMemberTool::getInstance()->getTeamsByCategoryId(TeamCategory::TYPE_CCOA_DEV_TEAM), 'id')])
+                ->andWhere(['Team.id'=>  ArrayHelper::getColumn(TeamMemberTool::getInstance()->getTeamsByCategoryId(TeamCategory::TYPE_CCOA_DEV_TEAM), 'id')])
                 ->groupBy('Team.id')
                 ->orderBy('Team.index DESC');
         return $teamQuery->all(Yii::$app->db);

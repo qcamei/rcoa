@@ -25,8 +25,8 @@ use yii\widgets\ActiveForm;
     <div class = "search-btn-bg">
         <?= Html::a(Yii::t('rcoa', 'Search'), 'javascript:;', ['id' => 'submit', 'class' => 'btn', 'style' => 'float: left;']); ?>
         <div class="search-arrow-box" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-            <span id="down" style="display: block;">▼</span>
-            <span id="up" style="display: none;">▲</span>
+            <span id="down" style="display: block;color: #fff">▼</span>
+            <span id="up" style="display: none;color: #fff">▲</span>
         </div>
     </div>
 </div>

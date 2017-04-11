@@ -1,6 +1,6 @@
 <?php
 
-use frontend\assets\RichbuttonAssets;
+use frontend\assets\NetbuttonAssets;
 use frontend\views\SiteAsset;
 use yii\helpers\Html;
 use yii\web\View;
@@ -38,19 +38,8 @@ $this->title = '课程中心工作平台';
                 </div>
             </div>
 
-            <div class="col-lg-3 site-home-circlebox">
-                <a href="/demand/default">
-                    <div class="site-home-circle img-circle">
-                        <?= Html::img(['/filedata/site/system/development.png']) ?>
-                        <div class="circle-bg img-circle">
-                            <span class="timer ciricle-num" id="count-number" data-to="200" data-speed="550">0</span>
-                            <span class="num-words">条</span>
-                        </div>
-                    </div>
-                </a>
-                <div class="site-home-words">
-                    <span class="site-home-words-ch">开发</span><br/><span class="site-home-words-en">Development</span>
-                </div>
+            <div  class="col-lg-3 netbutton">
+                
             </div>
 
             <div class="col-lg-3 site-home-circlebox">
@@ -96,6 +85,9 @@ $this->title = '课程中心工作平台';
 <?php  
  $js =   
 <<<JS
+    //开发按钮     
+    var netbutton;
+         
    /** 设置.site-home 大小*/
    size();
    $(window).resize(function(){
@@ -114,6 +106,12 @@ $this->title = '课程中心工作平台';
             $(obj).animate({top:'0px', opacity:1}, 500, 'easeOutBack');
         }, 300 + index * 100)
     });
+    $('.netbutton').each(function(index, obj){
+        setTimeout(function(){
+            $(obj).animate({top:'0px', opacity:1}, 500, 'easeOutBack');
+        }, 300 + index * 100)
+    });
+    
          
     /** 鼠标经过跳动 */
     function init(){
@@ -126,9 +124,22 @@ $this->title = '课程中心工作平台';
             $(elem).mouseout(function(){
                 $(elem).children('.site-home-words').removeClass('color-replace');
             });
-        
         });
+        
+        //初始
+        netbutton = new Wskeee.ccoa.NetButton({
+			path:'filedata/site/netbutton/',
+			container:'.netbutton',
+			onSelected:onSelected
+		});
     }
+    /**
+     * 开发子按钮按下回调
+     **/
+    function onSelected(data){
+        console.log(data);
+    }     
+     
     window.onload = init; 
     /** 鼠标经过换图标背景颜色 */      
     $('.site-home-circle').each(function(index, obj){
@@ -156,5 +167,5 @@ JS;
 
 <?php
     SiteAsset::register($this);
-    RichbuttonAssets::register($this);
+    NetbuttonAssets::register($this);
 ?>
