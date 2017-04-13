@@ -27,6 +27,7 @@ $statisticsName = ($type == 0 ? '学时':'元');
     </div>
     <hr/> 
     <form class="form-horizontal">
+        <?php echo Html::hiddenInput('type', $type) ?>
         <div class="form-group">
           <label for="dateRange" class="col-sm-2 control-label"><?php echo Yii::t('rcoa/teamwork', 'Statistics-Time-Rang') ?></label>
           <div class="col-sm-10">
