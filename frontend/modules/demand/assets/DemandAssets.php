@@ -32,5 +32,6 @@ class DemandAssets extends AssetBundle{
     public $js = [
        'js/productlist.js',
        'js/search-select.js',
+       'js/jquery.easypiechart.js'
     ];
 }

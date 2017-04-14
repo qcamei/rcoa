@@ -1,8 +1,9 @@
 <?php
 
 use common\models\demand\DemandTask;
+use frontend\modules\demand\assets\ChartAsset;
 use frontend\modules\demand\assets\DemandAssets;
-use wskeee\rbac\RbacName;
+use kartik\select2\Select2;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\Breadcrumbs;
@@ -33,7 +34,7 @@ else
             'options' => ['class' => 'breadcrumb'],
             'homeLink' => [
                 'label' => Yii::t('rcoa/demand', 'Demand Tasks'),
-                'url' => ['index', 'status' => DemandTask::STATUS_DEFAULT],
+                'url' => ['index'],
                 'template' => '<li class="course-name">{link}</li>',
             ],
             'links' => [
@@ -63,8 +64,19 @@ else
         'model' => $model->demandChecks,
     ]) ?>
     
+    <h4><?= Html::encode(Yii::t('rcoa/demand', 'Demand Acceptances')) ?></h4>
+    <div style="width: 180px; float: right; padding: 0px; margin-bottom: 5px;">
+        <?= Select2::widget([
+            'id' => 'date',
+            'name' => 'created_at',
+            'data' => $dates, 
+            'options' => [
+                'placeholder' => '请选择...',
+            ]
+        ])?>
+    </div>
+    <div id="demand-acceptance-view"></div>    
     
-
 </div>
 
 <?= $this->render('_form_view',[
@@ -80,22 +92,15 @@ else
 <?php
 $js = 
 <<<JS
+        
+    //加载课程验收记录
+    $("#demand-acceptance-view").load("/demand/acceptance/view?demand_task_id=$model->id");    
       
     /** 此事件在模态框被隐藏（并且同时在 CSS 过渡效果完成）之后被触发。 */
     $('.myModal').on('hidden.bs.modal', function(){
         $(".myModal").html("");
     }); 
-    
-    //加载已选课程产品列表
-    $("#demand-task-product-index").load("/demand/product/index?task_id=$model->id");
-    /** 单击添加按钮显示产品列表 模态框     
-    $('#add').click(function(){
-        $(".myModal").html("");
-        $(this).tooltip('hide');  
-        $(".myModal").modal('show').load($(this).attr("href"));
-        return false;
-    });*/
-        
+       
     /** 提交任务操作 弹出模态框 */
     $('#task-submit-check').click(function(){
         $(".myModal").html("");
@@ -103,13 +108,7 @@ $js =
         return false;
     });    
        
-    /** 完成操作 弹出模态框 
-    $('#complete').click(function(){
-        $(".myModal").html("");
-        $('.myModal').modal("show").load($(this).attr("href"));
-        return false;
-    });*/
-    
+ 
     /** 取消操作 弹出模态框 */
     $('#cancel').click(function(){
         $(".myModal").html("");
@@ -145,33 +144,18 @@ $js =
         $("#button").click(function(){
             location.href = $('#create-develop').attr("href");
         });
-    }    
+    }
+        
+    $('#date').change(function(){
+        $("#demand-acceptance-view").load("/demand/acceptance/view?demand_task_id=$model->id&delivery_id="+$(this).val());
+    });    
     
-    /** 提交任务操作 弹出模态框 
-    $('#submit-task').click(function(){
-        $(".myModal").html("");
-        $('.myModal').modal("show").load($(this).attr("href"));
-        return false;
-    });*/
-        
-    /** 验收不通过操作 弹出模态框 
-    $('#acceptance-create').click(function(){
-        $(".myModal").html("");
-        $('.myModal').modal("show").load($(this).attr("href"));
-        return false;
-    }); */
-        
-    /** 查看验收记录  
-    $('.view-acceptance').click(function(){
-        $(".myModal").html("");
-        $('.myModal').modal("show").load($(this).attr("href"));
-        return false;
-    });*/  
-   
+    
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>
 
 <?php
     DemandAssets::register($this);
+    ChartAsset::register($this);
 ?>

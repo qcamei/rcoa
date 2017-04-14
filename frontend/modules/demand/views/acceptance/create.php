@@ -42,6 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'delivery' => $delivery,
         'wdArrays' => $wdArrays,
+        'percentage' => $percentage,
     ]) ?>
 
 </div>
