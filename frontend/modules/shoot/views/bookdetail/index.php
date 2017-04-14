@@ -150,6 +150,34 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail');
             ],
             [
                 'class' => 'frontend\modules\shoot\components\ShootBookdetailListTd',
+                'label' => '【备注】',
+                'headerOptions'=>[
+                    'class'=>[
+                        'th'=>'hidden-xs',
+                    ],
+                    'style'=>[
+                        'max-width' => '350px;',
+                        'min-width' => '100px',
+                        'padding' => '4px',
+                    ],
+                ],
+                'contentOptions' =>[
+                    'class'=>'hidden-xs',
+                    'style'=> [
+                        'vertical-align' => 'middle',
+                        'max-width' => '350x;',
+                        'min-width' => '100px',
+                        'padding' => '4px',
+                    ]
+                ],
+                
+                'content' => function($model,$key,$index,$e)
+                {
+                    return "<p style='text-overflow: ellipsis;white-space: nowrap;overflow: hidden;color:#e74955'>$model->remark</p>";
+                }
+            ],
+            [
+                'class' => 'frontend\modules\shoot\components\ShootBookdetailListTd',
                 'label' => '【老 师 / 接洽人 / 摄影师】',
                 'headerOptions'=>[
                     'class'=>[
