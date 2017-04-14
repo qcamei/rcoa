@@ -204,7 +204,7 @@
         this.nameLabelSelectd.visible = true;
         //标题下移
         createjs.Tween.get(this.nameLabelSelectd,{override:true}).
-            to({y:this.nameLabelUnSelected.y + 100},500,createjs.Ease.circOut);
+            to({y:this.nameLabelUnSelected.y + 70},500,createjs.Ease.circOut);
         //图标隐藏
         createjs.Tween.get(this.icon,{override:true}).
             to({alpha:0},500,createjs.Ease.circOut);
