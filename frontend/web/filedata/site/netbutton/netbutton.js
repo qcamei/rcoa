@@ -65,7 +65,7 @@
         }
         this.container = $(this.config['container']);
         this.container.empty();
-        this.canvas = $('<canvas id="canvas" width="340" height="370"></canvas>').appendTo(this.container)[0];
+        this.canvas = $('<canvas id="canvas" width="340" height="340"></canvas>').appendTo(this.container)[0];
         var _this = this;
 
 
