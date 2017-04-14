@@ -156,7 +156,7 @@ $page = [
              */
             if($model->getIsStatusUpdateing() && (Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_SUBMIT_ACCEPTANCE)
                 && $model->developPrincipals->u_id == Yii::$app->user->id))
-                echo Html::a('提交验收', ['acceptance/submit', 'task_id' => $model->id], ['class' =>'btn btn-info']).' ';
+                echo Html::a('交付', ['delivery/create', 'demand_task_id' => $model->id], ['class' =>'btn btn-info']).' ';
         ?>
         </div>
     </div>

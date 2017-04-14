@@ -12,20 +12,24 @@ and open the template in the editor.
 }
 .table th{
     width: 200px;
+    vertical-align: middle !important;
 }
 .table td{
     min-width: 100px;
+    vertical-align: middle !important;
 }
 .table .tr{
     background-color: #eee;
 }
 .text-center{
     text-align: center;
+    vertical-align: middle !important;
 }
 .text-right{
     color: #ccc;
     font-weight: 100;
     text-align: right;
+    vertical-align: middle !important;
 }
 .cost-unit{
     width: 100%;

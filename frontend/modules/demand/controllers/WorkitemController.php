@@ -2,12 +2,13 @@
 
 namespace frontend\modules\demand\controllers;
 
-use Yii;
 use common\models\demand\DemandWorkitem;
 use common\models\demand\searchs\DemandWorkitemSearch;
+use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * WorkitemController implements the CRUD actions for DemandWorkitem model.
@@ -24,6 +25,16 @@ class WorkitemController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                ],
+            ],
+            //access验证是否有登录
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
                 ],
             ],
         ];
@@ -106,46 +117,6 @@ class WorkitemController extends Controller
         return $this->redirect(['index']);
     }
     
-    /**
-     * Ajax 动态保存数据库操作
-     * @param integer $task_id
-     * @param integer $product_id
-     * @return json      
-     */
-    public function actionSave()
-    {
-        /*$model = $this->findModel($task_id, $product_id);
-        $post = Yii::$app->request->post();
-        $number = ArrayHelper::getValue($post, 'DemandTaskProduct.number');
-        $lessonsTotal = ArrayHelper::getValue($this->getProductTotal($task_id), 'lessons');
-        $model->task_id = $task_id;
-        $model->product_id = $product_id;
-        $oldnumber = $model->number;*/
-        
-        /** 开启事务 
-        $trans = Yii::$app->db->beginTransaction();
-        try
-        {  
-            if ($model->load($post) && $model->save() && $model->task->lesson_time >= $lessonsTotal - $oldnumber + $number
-                && \Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE_PRODUCT) && $model->task->create_by == \Yii::$app->user->id)
-            {
-                if($number == 0)
-                    $model->delete();
-                $trans->commit();  //提交事务
-                Yii::$app->getSession()->setFlash('success','操作成功！');
-                return $this->redirect(['list', 'task_id' => $model->task_id]);
-            }else{
-                //throw new \Exception($model->getErrors());
-                Yii::$app->getSession()->setFlash('error', '产品总学时不能超过需求任务学时');
-                return $this->redirect(['view', 'task_id' => $task_id, 'product_id' => $product_id]);
-            }
-            
-        }catch (Exception $ex) {
-            $trans ->rollBack(); //回滚事务
-        }*/
-        
-    }
-
     /**
      * Finds the DemandWorkitem model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

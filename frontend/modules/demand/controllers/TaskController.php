@@ -3,6 +3,7 @@
 namespace frontend\modules\demand\controllers;
 
 use common\config\AppGlobalVariables;
+use common\models\demand\DemandDelivery;
 use common\models\demand\DemandTask;
 use common\models\demand\DemandTaskAnnex;
 use common\models\expert\Expert;
@@ -20,6 +21,7 @@ use wskeee\team\TeamMemberTool;
 use Yii;
 use yii\data\ArrayDataProvider;
 use yii\db\ActiveQuery;
+use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -77,7 +79,7 @@ class TaskController extends Controller
             'allModels' => $query->addSelect([
                 'Demand_task.item_type_id', 'Demand_task.item_id', 'Demand_task.item_child_id', 'Demand_task.course_id',
                 'Demand_task.team_id', 'Demand_task.undertake_person', 'Demand_task.create_by', 
-                'Demand_task.plan_check_harvest_time', 'Demand_task.status', 'Demand_task.mode'
+                'Demand_task.plan_check_harvest_time', 'Demand_task.status', 'Demand_task.mode', 'Demand_task.progress'
             ])->limit(20)->offset($page*20)->all(),
         ]);
         $taskIds = ArrayHelper::getColumn($dataProvider->allModels, 'id');
@@ -146,6 +148,7 @@ class TaskController extends Controller
             'annex' => $this->getAnnex($id),
             'sign' => $sign,
             'develop' => $develop,
+            'dates' => $this->getDeliveryCreatedAt($id)
         ]);
     }
 
@@ -313,65 +316,6 @@ class TaskController extends Controller
     }
     
     /**
-     * 提交任务操作
-     * @param integer $id
-     * @return type
-     * @throws NotAcceptableHttpException
-     
-    public function actionSubmitTask($id)
-    {
-        $model = $this->findModel($id);*/
-        /* @var $dtTool DemandTool 
-        $dtTool = DemandTool::getInstance();
-        if($model->developPrincipals->u_id != Yii::$app->user->id)
-            throw new NotAcceptableHttpException('无权限操作！');
-        if(!$model->getIsStatusDeveloping())
-            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
-        
-        if ($model->load(Yii::$app->request->post())) {
-            $dtTool->SubmitTask($model);
-            return $this->redirect(['index','create_by' => Yii::$app->user->id, 
-                'undertake_person' => Yii::$app->user->id, 
-                'auditor' => Yii::$app->user->id
-            ]);
-        } else {
-            return $this->renderPartial('submit_task', [
-                'model' => $model,
-                'isEmpty' => !empty($model->teamworkCourse) ? true : false,
-            ]);
-        }
-    }*/
-    
-    /**
-     * 完成任务操作
-     * @param integer $id
-     * @return type
-     * @throws NotAcceptableHttpException
-     
-    public function actionComplete($id)
-    {
-        $model = $this->findModel($id);*/
-        /* @var $dtTool DemandTool 
-        $dtTool = DemandTool::getInstance();
-        if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_COMPLETE) && $model->create_by != \Yii::$app->user->id)
-            throw new NotAcceptableHttpException('无权限操作！');
-        if(!($model->getIsStatusAcceptance() || $model->getIsStatusAcceptanceing()))
-            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
-                
-        if ($model->load(Yii::$app->request->post())){
-            $dtTool->CompleteTask($model);
-            return $this->redirect(['index','create_by' => Yii::$app->user->id, 
-                'undertake_person' => Yii::$app->user->id, 
-                'auditor' => Yii::$app->user->id
-            ]);
-        } else {
-            return $this->renderPartial('complete', [
-                'model' => $model,
-            ]);
-        }
-    }*/
-    
-    /**
      * 恢复任务制作操作
      * @param integer $id
      * @return type
@@ -387,8 +331,8 @@ class TaskController extends Controller
         
         /* @var $dtTool DemandTool */
         $dtTool = DemandTool::getInstance();
-        $model->status = DemandTask::STATUS_ACCEPTANCEING;
-        $model->progress = DemandTask::$statusProgress[DemandTask::STATUS_ACCEPTANCEING];
+        $model->status = DemandTask::STATUS_UPDATEING;
+        $model->progress = DemandTask::$statusProgress[DemandTask::STATUS_UPDATEING];
         $model->reality_check_harvest_time = null;
         $dtTool->RecoveryTask($model);
         return $this->redirect(['view', 'id' => $model->id]);
@@ -649,5 +593,20 @@ class TaskController extends Controller
         $results->select(['Task_product.task_id', 'SUM(Product.unit_price * Task_product.number) AS totals']);
         $results->groupBy('Task_product.task_id');
         return ArrayHelper::map($results->all(), 'task_id', 'totals');
+    }
+    
+    /**
+     * 获取交付创建时间
+     * @param integer $taskId
+     */
+    public function getDeliveryCreatedAt($taskId)
+    {
+        $dates = (new Query())
+                ->select(['id', 'FROM_UNIXTIME(created_at, "%Y-%m-%d %H:%i:%s") AS date'])
+                ->from(DemandDelivery::tableName())
+                ->where(['demand_task_id' => $taskId])
+                ->all();
+        
+        return ArrayHelper::map($dates, 'id', 'date');
     }
 }

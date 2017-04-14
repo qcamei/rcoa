@@ -46,7 +46,7 @@ class DemandAcceptance extends ActiveRecord
     public function rules()
     {
         return [
-            [['demand_task_id', 'demand_delivery_id', 'pass', 'create_by'], 'required'],
+            //[['demand_task_id', 'demand_delivery_id',  'create_by'], 'required'],
             [['demand_task_id', 'demand_delivery_id', 'pass', 'created_at', 'updated_at'], 'integer'],
             [['des', 'create_by'], 'string'],
             [['demand_task_id'], 'exist', 'skipOnError' => true, 'targetClass' => DemandTask::className(), 'targetAttribute' => ['demand_task_id' => 'id']],
