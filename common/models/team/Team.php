@@ -89,21 +89,23 @@ class Team extends ActiveRecord
     {
         if(parent::beforeSave($insert))
         {
-            $uploadIcon = UploadedFile::getInstance($this, 'team_icon');
+            $uploadLogo = UploadedFile::getInstance($this, 'team_icon');
             $uploadImage = UploadedFile::getInstance($this, 'image');
-            if($uploadIcon != null || $uploadImage != null)
-            {
-                $uploadIconPath = $this->fileExists(Yii::getAlias('@filedata').'/team/icon/');
-                $uploadImagePath = $this->fileExists(Yii::getAlias('@filedata').'/team/image/');
-                $uploadIcon->saveAs($uploadIconPath.$uploadIcon->name.'.'.$uploadIcon->extension);
-                $uploadImage->saveAs($uploadImagePath.$uploadImage->name.'.'.$uploadImage->extension);
-                $this->team_icon = '/filedata/team/icon/'.$uploadIcon->name.'.'.$uploadIcon->extension;
-                $this->image = '/filedata/team/image/'.$uploadImage->name.'.'.$uploadImage->extension;
-                
-                if(trim($this->team_icon) == '' || trim($this->image) == ''){
+            if($uploadLogo != null){
+                $uploadLogoPath = $this->fileExists(Yii::getAlias('@filedata').'/team/logo/');
+                $uploadLogo->saveAs($uploadLogoPath.$uploadLogo->name.'.'.$uploadLogo->extension);
+                $this->team_icon = '/filedata/team/logo/'.$uploadLogo->name.'.'.$uploadLogo->extension;
+                if(trim($this->team_icon) == '')
                     $this->team_icon = $this->getOldAttribute ('team_icon');
-                    $this->image = $this->getOldAttribute ('image');
-                }
+                    
+            }
+            
+            if($uploadImage != null){
+                $uploadImagePath = $this->fileExists(Yii::getAlias('@filedata').'/team/image/');
+                $uploadImage->saveAs($uploadImagePath.$uploadImage->name.'.'.$uploadImage->extension);
+                $this->image = '/filedata/team/image/'.$uploadImage->name.'.'.$uploadImage->extension;
+                if(trim($this->image) == '')
+                   $this->image = $this->getOldAttribute ('image');
             }
             return true;
         }else

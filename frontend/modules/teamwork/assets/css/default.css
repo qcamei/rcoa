@@ -13,7 +13,7 @@ and open the template in the editor.
  */
 .wrap{
 }
-.demand-default-index {
+.item-manage-index {
     width: 100%;
     position: relative;
     display: none;
@@ -23,7 +23,7 @@ and open the template in the editor.
     background-size:cover;
     background-position: center 0;
 }
-.demand-default-words{
+.item-manage-words{
     display: table-cell;
     vertical-align: bottom;
     font-family: '方正细倩_GBK';
@@ -36,7 +36,7 @@ and open the template in the editor.
     font-size: 22px;
     color: #666;
 }
-.demand-default-team{
+.item-manage-team{
     width: 100%;
     padding-top: 80px; 
     background-color: #9da2a5;
@@ -113,7 +113,7 @@ and open the template in the editor.
 
 
 @media (min-width: 1280px){
-    .demand-default-index .container {
+    .item-manage-index .container {
         width: 1280px;
     }
     .container .team{
@@ -121,7 +121,7 @@ and open the template in the editor.
     }
 }
 @media (min-width: 1400px){
-    .demand-default-index .container {
+    .item-manage-index .container {
         width: 1400px;
         padding: 0px;
     }
@@ -132,7 +132,7 @@ and open the template in the editor.
     }
 }
 @media (min-width: 1500px){
-    .demand-default-index .container {
+    .item-manage-index .container {
         width: 1500px;
     }
     .container .team{

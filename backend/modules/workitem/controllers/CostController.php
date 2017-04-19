@@ -105,6 +105,7 @@ class CostController extends Controller
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'workitems' => $this->getWorkitems(),
             ]);
         }
     }

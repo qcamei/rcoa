@@ -31,7 +31,7 @@ else
 <div class="title">
     <div class="container">
         <?= Breadcrumbs::widget([
-            'options' => ['class' => 'breadcrumb'],
+            'options' => ['class' => 'breadcrumb breadcrumb-title'],
             'homeLink' => [
                 'label' => Yii::t('rcoa/demand', 'Demand Tasks'),
                 'url' => ['index'],
@@ -51,6 +51,8 @@ else
     
     <?= $this->render('_form_detai', [
         'model' => $model,
+        'works' => $works,
+        'totalPrice' => $totalPrice,
     ]) ?>
         
     <span><?= Yii::t('rcoa/demand', 'Demand Task Annexes').'：'; ?></span>

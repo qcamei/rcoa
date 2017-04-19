@@ -15,6 +15,7 @@ class TwAsset extends AssetBundle
     public $sourcePath = '@frontend/modules/teamwork/assets';
     public $css = [
        'css/teamwork.css',
+       'css/default.css',
     ];
     public $js = [
        'js/search-select.js'

@@ -43,7 +43,8 @@ class WorkitemCost extends ActiveRecord
     {
         return [
             [['workitem_id', 'cost_new', 'cost_remould', 'target_month'], 'required'],
-            [['workitem_id', 'cost_new', 'cost_remould', 'created_at', 'updated_at'], 'integer'],
+            [['workitem_id', 'created_at', 'updated_at'], 'integer'],
+            [['cost_new', 'cost_remould'], 'number'],
             [['target_month'], 'string', 'max' => 10],
             [['workitem_id'], 'exist', 'skipOnError' => true, 'targetClass' => Workitem::className(), 'targetAttribute' => ['workitem_id' => 'id']],
         ];

@@ -56,9 +56,8 @@ and open the template in the editor.
 }
 .site-home-jumbotron{
     width: 100%;
-    height: 200px;
     position: relative;
-    top: 55px;
+    top: 30px;
     z-index: 200;
 }
 .site-home-circlebox{
@@ -175,35 +174,50 @@ and open the template in the editor.
     background-size:cover;
     background-position: center 0;
 }
-.site-login-logo{
-    position: relative;
-    top: 100px;
-    left: -50px;
-    z-index: 100;
-    text-align: center;
-}
-.site-login-introduction{
-    position: relative;
-    top: -30px;
-    z-index: 200;
-    font-family: '方正细倩_GBK';
-    font-size: 30px;
-    color: #565656;
-    text-align: center;
+.site-login-box{
+    width: 422px;
+    height: 450px;
+    margin: 171px auto;
+    padding: 17px;
+    border-radius: 23px;
+    background: url("/filedata/site/image/site_loginboxbg.png");
 }
 .site-login-form{
+    width: 390px;
+    height: 415px;
+    padding: 24px 37px 34px 40px;
+    border-radius: 23px;
+}
+.site-login-logo{
     width: 100%;
-    position: relative;
-    top: 25px;
-    z-index: 200;
+    height: 78px;
+}
+.site-login-logo img{
+    width: 69px;
+    height: 78px;
+}
+.site-login-logo span{
+    font-family: '方正细倩_GBK';
+    font-size: 21px;
+    color: #565656;
+    font-weight: 500;
 }
 .site-login-case{
-    left: 50%;
-    margin-left:-35%;
+    width: 100%;
+}
+.site-login-attribute{
+     margin-top: 21px;
+     padding-left: 10px !important;
+     padding-right: 10px !important;
 }
 .site-login-icon{
     width:40px !important;
     left: 7px;
     padding:0px !important;
     z-index: 100
+}
+.site-login-button{
+    margin-top: 55px;
+    margin-left: 35px;
+    margin-right: 35px;
 }

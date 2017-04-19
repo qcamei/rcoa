@@ -3,9 +3,11 @@
 namespace frontend\modules\demand\controllers;
 
 use common\models\demand\DemandTask;
+use common\models\demand\DemandWorkitem;
 use common\models\team\TeamCategory;
 use frontend\modules\demand\utils\DemandTool;
 use wskeee\team\TeamMemberTool;
+use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -49,15 +51,12 @@ class DefaultController extends Controller
     {
         /* @var $dtTool DemandTool */
         $dtTool = DemandTool::getInstance();
-        $completed = $dtTool->getDemandCount(DemandTask::STATUS_COMPLETED);
-        $unfinished = $dtTool->getDemandCount(DemandTask::$defaultStatus);
         
         return $this->render('index', [
-            'completed' => ArrayHelper::getValue($completed, 'total_lesson_time'),
-            'unfinished' => ArrayHelper::getValue($unfinished, 'total_lesson_time'),
             'team' => $this->getCourseDevelopTeam(),
             'teamCompleted' => $dtTool->getTeamDemandCount(DemandTask::STATUS_COMPLETED),
             'teamUnfinished' => $dtTool->getTeamDemandCount(DemandTask::$defaultStatus),
+            'teamCost' => $this->getTeamDemandWorkitemCost(),
         ]);
     }
     
@@ -72,5 +71,20 @@ class DefaultController extends Controller
         ArrayHelper::multisort($teams, 'index', SORT_ASC);
        
         return $teams;
+    }
+    
+    public function getTeamDemandWorkitemCost()
+    {
+        $teamCost = (new Query())
+                    ->select([
+                        'Demamd_task.create_team',
+                        'FORMAT(SUM(if(Demand_workitem.value_type = TRUE, Demand_workitem.`value` / 60, Demand_workitem.`value`) * Demand_workitem.cost),2) AS cost'
+                    ])
+                    ->from(['Demamd_task' => DemandTask::tableName()])
+                    ->leftJoin(['Demand_workitem' => DemandWorkitem::tableName()], 'Demand_workitem.demand_task_id = Demamd_task.id')
+                    ->groupBy('Demamd_task.create_team')
+                    ->all();
+        
+        return ArrayHelper::map($teamCost, 'create_team', 'cost');
     }
 }

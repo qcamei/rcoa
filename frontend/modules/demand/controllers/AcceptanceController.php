@@ -65,22 +65,28 @@ class AcceptanceController extends Controller {
         ]);
     }
 
+   
+    
     /**
      * Displays a single DemandAcceptance model.
      * @param integer $demand_task_id
+     * @param type $delivery_id
      * @return mixed
      */
     public function actionView($demand_task_id, $delivery_id = null) {
         $delivery = $this->findDeliveryModel($demand_task_id);
         $delivery_id = empty($delivery_id) ? $delivery->id : $delivery_id;
+        
         return $this->renderAjax('view', [
             'demand_task_id' => $demand_task_id,
-            'datas' => $this->getW_D_A_Datas($demand_task_id, $delivery_id),
-        ]);
-        
-        
+            'workitemType' => $this->getDemandWorkitemTypeData($demand_task_id),
+            'workitem' => $this->getDemandWorkitemData($demand_task_id),
+            'delivery' => $this->getDemandDeliveryData($demand_task_id, $delivery_id),
+            'acceptance' => $this->getDemandAcceptanceData($demand_task_id, $delivery_id),
+            'percentage' => $this->getWorkitemTypePercentage($demand_task_id, $delivery->id),
+        ]);        
     }
-
+    
     /**
      * Creates a new DemandAcceptance model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -263,6 +269,146 @@ class AcceptanceController extends Controller {
     }
     
     /**
+     * 获取需求的工作项类型数据
+     * @param integer $demand_task_id           需求任务ID
+     * @return array
+     */
+    public function getDemandWorkitemTypeData($demand_task_id)
+    {
+        $types = (new Query())
+               ->select(['Demand_workitem.workitem_type_id', 'Workitem_type.name', 'Workitem_type.icon'])
+               ->from(['Demand_workitem' => DemandWorkitem::tableName()])
+               ->leftJoin(['Workitem_type' => WorkitemType::tableName()], 'Workitem_type.id = Demand_workitem.workitem_type_id')
+               ->where(['Demand_workitem.demand_task_id' => $demand_task_id])
+               ->all();
+        
+        $workitemType = [];
+        foreach ($types as $data) {
+            $workitemType[$data['workitem_type_id']] = [
+                'id' => $data['workitem_type_id'],
+                'name' => $data['name'],
+                'icon' => $data['icon'],
+            ];
+        }
+        
+        return $workitemType;
+    }
+
+    /**
+     * 获取需求的工作项数据
+     * @param integer $demand_task_id       需求任务ID
+     * @return array
+     */
+    public function getDemandWorkitemData($demand_task_id)
+    {
+        $d_workitems = (new Query())
+                    ->select(['Demand_workitem.workitem_id', 'Demand_workitem.workitem_type_id AS workitem_type', 
+                        'Workitem.name', 'Workitem.unit',
+                        'Demand_workitem.is_new', 'Demand_workitem.value_type', 'Demand_workitem.value',
+                        'Demand_task.plan_check_harvest_time AS demand_time', 'Demand_task.des'
+                    ])
+                    ->from(['Demand_workitem' => DemandWorkitem::tableName()])
+                    ->leftJoin(['Workitem' => Workitem::tableName()], 'Workitem.id = Demand_workitem.workitem_id')
+                    ->leftJoin(['Demand_task' => DemandTask::tableName()], 'Demand_task.id = Demand_workitem.demand_task_id')
+                    ->where(['Demand_workitem.demand_task_id' => $demand_task_id])
+                    ->all();
+        
+        $workitem = [];
+        foreach ($d_workitems as $data) {
+            if(!isset($workitem[$data['workitem_id']])){
+                $workitem[$data['workitem_id']] = [
+                    'id' => $data['workitem_id'],
+                    'workitem_type' => $data['workitem_type'],
+                    'name' => $data['name'],
+                    'demand_time' => $data['demand_time'],
+                    'des' => $data['des'],
+                    'childs' => [],
+                ];
+            }
+            $workitem[$data['workitem_id']]['childs'][] = [
+                'is_new' => $data['is_new'],
+                'value_type' => $data['value_type'],
+                'value' => $data['value'],
+                'unit' => $data['unit']
+            ];
+        }
+        
+        return $workitem;
+    }
+    
+    /**
+     * 获取需求的交付数据
+     * @param integer $demand_task_id           需求任务ID
+     * @param integer $delivery_id              交付ID
+     * @return array
+     */
+    public function getDemandDeliveryData($demand_task_id, $delivery_id)
+    {
+        $deliveryDatas = (new Query())
+                    ->select(['Demand_workitem.workitem_id','Workitem.unit',
+                        'Demand_workitem.is_new', 'Demand_workitem.value_type', 'Delivery_data.value',
+                        'Delivery.created_at AS delivery_time', 'Delivery.des'
+                    ])
+                    ->from(['Delivery_data' => DemandDeliveryData::tableName()])
+                    ->leftJoin(['Delivery' => DemandDelivery::tableName()], 'Delivery.id = Delivery_data.demand_delivery_id')
+                    ->leftJoin(['Demand_workitem' => DemandWorkitem::tableName()], 'Demand_workitem.id = Delivery_data.demand_workitem_id')
+                    ->leftJoin(['Workitem' => Workitem::tableName()], 'Workitem.id = Demand_workitem.workitem_id')
+                    ->where(['Delivery.demand_task_id' => $demand_task_id, 'Delivery.id' => $delivery_id])
+                    ->all();
+        
+        $delivery = [];
+        foreach ($deliveryDatas as $data) {
+            if(!isset($delivery[$data['workitem_id']])){
+                $delivery[$data['workitem_id']] = [
+                    'id' => $data['workitem_id'],
+                    'delivery_time' => date('Y-m-d H:i', $data['delivery_time']),
+                    'des' => $data['des'],
+                    'childs' => [],
+                ];
+            }
+            $delivery[$data['workitem_id']]['childs'][] = [
+                'is_new' => $data['is_new'],
+                'value_type' => $data['value_type'],
+                'value' => $data['value'],
+                'unit' => $data['unit']
+            ];
+        }
+       
+        return $delivery;
+    }
+    
+    /**
+     * 获取需求的验收记录数据
+     * @param integer $demand_task_id              需求任务ID
+     * @param integer $delivery_id                 交付ID
+     * @return array
+     */
+    public function getDemandAcceptanceData($demand_task_id, $delivery_id)
+    {
+        $acceptanceDatas = (new Query())
+                    ->select(['Acceptance_data.workitem_type_id AS workitem_type',
+                        'Acceptance.pass', 'Acceptance_data.value',
+                        'Acceptance.created_at AS acceptance_time', 'Acceptance.des'
+                    ])
+                    ->from(['Acceptance_data' => DemandAcceptanceData::tableName()])
+                    ->leftJoin(['Acceptance' => DemandAcceptance::tableName()], 'Acceptance.id = Acceptance_data.demand_acceptance_id')
+                    ->where(['Acceptance.demand_task_id' => $demand_task_id, 'Acceptance.demand_delivery_id' => 32])
+                    ->all();
+        
+        $acceptance = [];
+        foreach ($acceptanceDatas as $data) {
+            $acceptance[$data['workitem_type']] = [
+                'pass' => $data['pass'],
+                'value' => $data['value'],
+                'acceptance_time' => date('Y-m-d H:i', $data['acceptance_time']),
+                'des' => $data['des']
+            ];
+        }
+        
+        return $acceptance;
+    }
+    
+    /**
      * 获取工作项类型数量的百分比
      * @param integer $taskId                  引用需求任务ID
      * @param integer $deliveryId              引用交付ID
@@ -326,106 +472,5 @@ class AcceptanceController extends Controller {
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage()); 
         }
     }
-    
-    /**
-     * 获取所有需求交付验收数据
-     * @param integer $demand_task_id              引用需求任务ID
-     * @param integer $delivery_id                 引用交付ID
-     * @return array
-     */
-    public function getW_D_A_Datas($demand_task_id, $delivery_id) 
-    {
-        
-        $datas = (new Query())
-            ->select([
-                'Demand_workitem.workitem_type_id',  'Demand_workitem.workitem_id', 'Demand_workitem.created_at AS demand_workitem_time',
-                'Demand_task.id AS demand_task_id', 'Demand_task.des AS demand_workitem_des',
-                'Demand_workitem.is_new', 'Demand_workitem.value_type','Demand_workitem.value AS demand_workitem_value',
-                'Workitem.name AS workitem_name', 'Workitem.unit',
-                'Workitem_type.name AS workitem_type_name', 'Workitem_type.icon',
-                'Delivery.des AS delivery_des','Delivery.created_at AS delivery_time',
-                'Delivery_data.value AS deliver_data_value',
-                'Acceptance.pass', 'Acceptance.des AS acceptance_des', 'Acceptance.created_at AS acceptance_time',
-                'Acceptance_data.workitem_type_id AS ad_workitem_type_id',
-                'Acceptance_data.value AS acceptance_data_value'
-            ])
-            ->from(['Demand_workitem' => DemandWorkitem::tableName()])
-            ->leftJoin(['Demand_task' => DemandTask::tableName()], 'Demand_task.id = Demand_workitem.demand_task_id')
-            ->leftJoin(['Workitem' => Workitem::tableName()], 'Workitem.id = Demand_workitem.workitem_id')
-            ->leftJoin(['Workitem_type' => WorkitemType::tableName()], 'Workitem_type.id = Demand_workitem.workitem_type_id')
-            ->leftJoin(['Delivery' => DemandDelivery::tableName()], 'Delivery.demand_task_id = Demand_workitem.demand_task_id')
-            ->leftJoin(['Delivery_data' => DemandDeliveryData::tableName()], '(Delivery_data.demand_delivery_id = Delivery.id AND Delivery_data.demand_workitem_id = Demand_workitem.id)')
-            ->leftJoin(['Acceptance' => DemandAcceptance::tableName()], '(Acceptance.demand_task_id = Demand_workitem.demand_task_id AND Acceptance.demand_delivery_id = Delivery.id)')
-            ->leftJoin(['Acceptance_data' => DemandAcceptanceData::tableName()], 'Acceptance_data.demand_acceptance_id = Acceptance.id')
-            ->where([
-                'Demand_workitem.demand_task_id' => $demand_task_id,
-                'Delivery.demand_task_id' => $demand_task_id,
-                'Acceptance.demand_task_id' => $demand_task_id,
-                'Delivery.id' => $delivery_id
-            ])->all();        
-
-        $workitemType = [];         //工作项类型数据
-        $demandDelivery = [];       //需求和交付数据
-        $acceptance = [];           //验收数据
-        $workitemValue = [];        //需求数量
-        $deliveryValue = [];        //交付数量
-        $timeDes = [];
-        foreach ($datas as $data) {
-            $workitemType[$data['workitem_type_id']] =[
-                'id' => $data['workitem_type_id'],
-                'name' => $data['workitem_type_name'],
-                'icon' => $data['icon'],
-            ];
-            if(!isset($demandDelivery[$data['workitem_id']])){
-                $demandDelivery[$data['workitem_id']] = [
-                    'id' => $data['workitem_id'],
-                    'workitem_type' => $data['workitem_type_id'],
-                    'name' => $data['workitem_name'],
-                    'childs' => [],
-                ];
-            }
-            $demandDelivery[$data['workitem_id']]['childs'][$data['is_new']] = [
-                'is_new' => $data['is_new'],
-                'value_type' => $data['value_type'],
-                'demand_workitem_value' => $data['demand_workitem_value'],
-                'deliver_data_value' => $data['deliver_data_value'],
-                'unit' => $data['unit'],
-            ];
-            
-            if($data['ad_workitem_type_id'] == $demandDelivery[$data['workitem_id']]['workitem_type']){
-                $workitemValue[$data['ad_workitem_type_id']][] = $data['demand_workitem_value'];
-                $deliveryValue[$data['ad_workitem_type_id']][] = $data['deliver_data_value'];
-            }
-            $acceptance[$data['ad_workitem_type_id']] = [
-                'acceptance_data_value' => $data['acceptance_data_value'],
-                
-            ];
-            $timeDes[$data['demand_task_id']] = [
-                'pass' => $data['pass'],
-                'demand_workitem_des' => $data['demand_workitem_des'],
-                'demand_workitem_time' => date('Y-m-d H:i', $data['demand_workitem_time']),
-                'delivery_des' => $data['delivery_des'],
-                'delivery_time' => date('Y-m-d H:i', $data['delivery_time']),
-                'acceptance_des' => $data['acceptance_des'],
-                'acceptance_time' => date('Y-m-d H:i', $data['acceptance_time']),
-            ];
-        }
-        foreach ($workitemValue as $key => $workitem){
-            $acceptance[$key]['workitem_value'] = array_sum($workitem);
-        }
-        foreach ($deliveryValue as $key => $delivery){
-            $acceptance[$key]['deliver_value'] = array_sum($delivery);
-        }
-        
-        return [
-            'workitemType' => $workitemType,
-            'demandDelivery' => $demandDelivery,
-            'acceptance' => $acceptance,
-            'timeDes' => $timeDes
-        ];
-     
-    }
-    
-    
     
 }

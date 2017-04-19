@@ -1,9 +1,9 @@
 <?php
 
 use common\models\demand\DemandAcceptance;
+use common\widgets\cslider\CSlider;
 use frontend\modules\demand\assets\ChartAsset;
 use frontend\modules\demand\assets\DemandAssets;
-use kartik\slider\Slider;
 use wskeee\utils\DateUtil;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -16,26 +16,27 @@ use yii\web\View;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/demand', 'Demand Acceptances'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-$percent = [];
-foreach ($datas['workitemType'] as  $workitemType){
-    if($datas['acceptance'][$workitemType['id']]['workitem_value'] == 0)
-        $datas['acceptance'][$workitemType['id']]['workitem_value'] = 1;
-    else 
-        $datas['acceptance'][$workitemType['id']]['workitem_value'];
-    $nums = $datas['acceptance'][$workitemType['id']]['deliver_value'] / $datas['acceptance'][$workitemType['id']]['workitem_value'] * 100;
-    $percent[$workitemType['id']] = (int)ceil($nums);
-}
+$is_show = reset($workitemType);   //获取数组的第一个值
+$is_rowspan = [];  //是否合并单元格
+$worktime = ArrayHelper::getColumn($workitem, 'demand_time');
+$workdes = ArrayHelper::getColumn($workitem, 'des');
+$deliverytime = ArrayHelper::getColumn($delivery, 'delivery_time');
+$deliverydes = ArrayHelper::getColumn($delivery, 'des');
+$acceptancetime = ArrayHelper::getColumn($acceptance, 'acceptance_time');
+$acceptancepass = ArrayHelper::getColumn($acceptance, 'pass');
+$acceptancedes = ArrayHelper::getColumn($acceptance, 'des');
 
-$number = []; 
-foreach ($datas['demandDelivery'] as $demandDelivery){
-    if(!isset($number[$demandDelivery['workitem_type']]))
-        $number[$demandDelivery['workitem_type']] = 0;
-    $number[$demandDelivery['workitem_type']] ++;
+
+$number = [];   //合并单元格数
+foreach ($workitem as $work){
+    if(!isset($number[$work['workitem_type']]))
+        $number[$work['workitem_type']] = 0;
+    $number[$work['workitem_type']] ++;
 }
 
 ?>
 <div class="demand-acceptance-view has-title">
-    
+
     <table class="table table-bordered demand-workitem-table">
 
         <thead>
@@ -46,123 +47,118 @@ foreach ($datas['demandDelivery'] as $demandDelivery){
                 <td class="text-center">验收</td>
             </tr>
         </thead>
-
+        
         <tbody>
             <tr>
                 <th class="text-center">时间</th>
-                <td class="text-center"><?= ArrayHelper::getValue($datas['timeDes'][$demand_task_id], 'demand_workitem_time') ?></td>
-                <td class="text-center"><?= ArrayHelper::getValue($datas['timeDes'][$demand_task_id], 'delivery_time') ?></td>
-                <td class="text-center"><?= ArrayHelper::getValue($datas['timeDes'][$demand_task_id], 'acceptance_time') ?></td>
+                <td class="text-center"><?= reset($worktime) ?></td>
+                <td class="text-center"><?= reset($deliverytime) ?></td>
+                <td class="text-center"><?= reset($acceptancetime) ?></td>
             </tr>
-            <?php $array = []; foreach ($datas['workitemType'] as  $workitemType): 
-                if($percent[$workitemType['id']] < 0) $percent[$workitemType['id']] = 1; else  $percent[$workitemType['id']];
-                if($percent[$workitemType['id']] < 70) $color = '#ff0000'; else if($percent[$workitemType['id']] < 100) $color = '#428BCA'; else $color = '#43c584';
+            <?php  foreach ($workitemType as $type): 
+                if($percentage[$type['id']] < 0) $percentage[$type['id']] = 1; else  $percentage[$type['id']];
+                if($percentage[$type['id']] < 70) $color = '#ff0000'; else if($percentage[$type['id']] < 100) $color = '#428BCA'; else $color = '#43c584';
             ?>
             <tr class="tr">
-                <th class="text-center"><?= $workitemType['name'] ?></th>
+                <th class="text-center"><?= $type['name'] ?></th>
                 <td></td>
                 <td></td>
                 <td class="text-center">
-                    <?php if($workitemType['name'] == '授'): ?>
+                    <?php if($is_show['id'] == $type['id'] ): ?>
                     <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">数量</div>
                     <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">质量</div>
                     <?php endif; ?>
                 </td>
             </tr>
-                
-                <?php foreach ($datas['demandDelivery'] as $demandDelivery): ?>
-                    <?php if($demandDelivery['workitem_type'] == $workitemType['id']): ?>
+                <?php foreach ($workitem as $work): ?>
+                    <?php if($work['workitem_type'] == $type['id']): ?>
                     <tr>
-                        <th class="text-right"><?= $demandDelivery['name'] ?></th>
+                        <th class="text-right"><?= $work['name'] ?></th>
                         <td style="width: 300px">
-                        <?php rsort($demandDelivery['childs']); foreach ($demandDelivery['childs'] as $child): ?>                         
-                        <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
-                             <?php if($child['value_type'] == true){
-                                echo $child['is_new'] == true ? 
-                                     Html::img(['/filedata/demand/image/mode_newbuilt.png'], ['style' => 'margin-right: 10px;']).DateUtil::intToTime($child['demand_workitem_value']) :
-                                     Html::img(['/filedata/demand/image/mode_reform.png'], ['style' => 'margin-right: 10px;']).DateUtil::intToTime($child['demand_workitem_value']);
-                            }else{
-                                echo $child['is_new'] == true ? 
-                                    Html::img(['/filedata/demand/image/mode_newbuilt.png'], ['style' => 'margin-right: 10px;']).$child['demand_workitem_value'].$child['unit'] :
-                                    Html::img(['/filedata/demand/image/mode_reform.png'], ['style' => 'margin-right: 10px;']).$child['demand_workitem_value'].$child['unit'];
-                            }?>
-                        </div>
-                        <?php endforeach; ?>
-                        </td>
-                        <td style="width: 300px">
-                        <?php rsort($demandDelivery['childs']); foreach ($demandDelivery['childs'] as $child): ?>                         
-                        <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
-                             <?php if($child['value_type'] == true){
-                                echo $child['is_new'] == true ? 
-                                     Html::img(['/filedata/demand/image/mode_newbuilt.png'], ['style' => 'margin-right: 10px;']).DateUtil::intToTime($child['deliver_data_value']) :
-                                     Html::img(['/filedata/demand/image/mode_reform.png'], ['style' => 'margin-right: 10px;']).DateUtil::intToTime($child['deliver_data_value']);
-                            }else{
-                                echo $child['is_new'] == true ? 
-                                    Html::img(['/filedata/demand/image/mode_newbuilt.png'], ['style' => 'margin-right: 10px;']).$child['deliver_data_value'].$child['unit'] :
-                                    Html::img(['/filedata/demand/image/mode_reform.png'], ['style' => 'margin-right: 10px;']).$child['deliver_data_value'].$child['unit'];
-                            }?>
-                        </div>
-                        <?php endforeach; ?>
-                        </td>
-                        <?php if(!isset($array[$workitemType['id']])): $array[$workitemType['id']] = true;?>
-                        <td class="text-center" rowspan="<?= $number[$workitemType['id']] ?>">
+                        <?php rsort($work['childs']); foreach ($work['childs'] as $child): ?>                         
                             <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
-                                <span class="chart" data-percent="<?= $percent[$workitemType['id']]; ?>" data-bar-color="<?= $color; ?>">
-                                    <span class="percent"></span>
-                                </span>        
+                            <?php if($child['value_type'] == true){
+                               echo $child['is_new'] == true ? 
+                                    Html::img(['/filedata/demand/image/mode_newbuilt.png'], ['style' => 'margin-right: 10px;']).DateUtil::intToTime($child['value']) :
+                                    Html::img(['/filedata/demand/image/mode_reform.png'], ['style' => 'margin-right: 10px;']).DateUtil::intToTime($child['value']);
+                            }else{
+                               echo $child['is_new'] == true ? 
+                                   Html::img(['/filedata/demand/image/mode_newbuilt.png'], ['style' => 'margin-right: 10px;']).$child['value'].$child['unit'] :
+                                   Html::img(['/filedata/demand/image/mode_reform.png'], ['style' => 'margin-right: 10px;']).$child['value'].$child['unit'];
+                            }?>
                             </div>
-                            <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12" style="margin-top: 25px;">
-                            
-                            <?= Slider::widget([
-                                'id' => 'acceptance'.$workitemType['id'],
-                                'name'=> 'value['.$workitemType['id'].']',
-                                'value'=> (int)$datas['acceptance'][$workitemType['id']]['acceptance_data_value'],
-                                'sliderColor'=> ((int)$datas['acceptance'][$workitemType['id']]['acceptance_data_value'] < 7 ? Slider::TYPE_DANGER : 
-                                        ((int)$datas['acceptance'][$workitemType['id']]['acceptance_data_value'] < 10 ? Slider::TYPE_PRIMARY : Slider::TYPE_SUCCESS)),
-                                'handleColor'=> ((int)$datas['acceptance'][$workitemType['id']]['acceptance_data_value'] < 7 ? Slider::TYPE_DANGER : 
-                                        ((int)$datas['acceptance'][$workitemType['id']]['acceptance_data_value'] < 10 ? Slider::TYPE_PRIMARY : Slider::TYPE_SUCCESS)),   
-                                'options' => [
-                                   'style' => [
-                                       'width' => '100%',
-                                       'height' => '20px;'
-                                   ],
-                                ],
-                                'pluginOptions'=>[
-                                    'step' => 1,
-                                    'tooltip'=>'always',
-                                    'enabled' => false,
-                                ],
-
-                            ]); ?>       
-                        </div>
+                        <?php endforeach; ?>    
+                        </td>
+                        <td style="width: 300px">
+                        <?php if(isset($delivery[$work['id']])): ?>
+                        <?php rsort($delivery[$work['id']]['childs']); foreach ($delivery[$work['id']]['childs'] as $child): ?>                         
+                            <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
+                            <?php if($child['value_type'] == true){
+                               echo $child['is_new'] == true ? 
+                                    Html::img(['/filedata/demand/image/mode_newbuilt.png'], ['style' => 'margin-right: 10px;']).DateUtil::intToTime($child['value']) :
+                                    Html::img(['/filedata/demand/image/mode_reform.png'], ['style' => 'margin-right: 10px;']).DateUtil::intToTime($child['value']);
+                            }else{
+                               echo $child['is_new'] == true ? 
+                                   Html::img(['/filedata/demand/image/mode_newbuilt.png'], ['style' => 'margin-right: 10px;']).$child['value'].$child['unit'] :
+                                   Html::img(['/filedata/demand/image/mode_reform.png'], ['style' => 'margin-right: 10px;']).$child['value'].$child['unit'];
+                            }?>
+                            </div>
+                        <?php endforeach; ?>
+                        <?php endif; ?>    
+                        </td>
+                        <?php if(!isset($is_rowspan[$type['id']])): $is_rowspan[$type['id']] = true;?>
+                        <td class="text-center" rowspan="<?= $number[$type['id']] ?>">
+                            <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
+                                <?php  if(isset($percentage[$type['id']])): ?>
+                                <span class="chart" data-percent="<?= $percentage[$type['id']]; ?>" data-bar-color="<?= $color; ?>">
+                                    <span class="percent"></span>
+                                </span>
+                                <?php endif; ?>
+                            </div>
+                            <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
+                                <?php if(isset($acceptance[$type['id']])): ?>
+                                <?= CSlider::widget([
+                                    'plugOptions' => [
+                                        'height' => 6,                  //进度条高度
+                                        'max' => 10,                    //最大值，默认是1
+                                        'value' => (int)$acceptance[$type['id']]['value'],
+                                        'sliderColor' => $acceptance[$type['id']]['value'] < 7 ? '#ef1e25' : 
+                                                ($acceptance[$type['id']]['value'] < 10 ? '#428bca' : '#56cb90'),     //已选择颜色 #ef1e25 红色，#428bca 蓝色，#56cb90 绿色
+                                        'tooltipColor' => $acceptance[$type['id']]['value'] < 7 ? '#ef1e25' : 
+                                                ($acceptance[$type['id']]['value'] < 10 ? '#428bca' : '#56cb90'),    //提示颜色
+                                    ]
+                                ]) ?>
+                                <?php endif; ?>
+                            </div>
                         </td>
                         <?php endif; ?>
                     </tr>
                     <?php endif; ?>
                 <?php endforeach; ?>
             <?php endforeach; ?>
-            
             <tr class="tr">
                 <th class="text-center">备注</th>
-                <td><?= ArrayHelper::getValue($datas['timeDes'][$demand_task_id], 'demand_workitem_des') ?></td>
-                <td><?= ArrayHelper::getValue($datas['timeDes'][$demand_task_id], 'delivery_des') ?></td>
+                <td><?= reset($workdes) ?></td>
+                <td><?= reset($deliverydes) ?></td>
                 <td>
-                    <div class="acceptance-pass">
-                        <?php if(ArrayHelper::getValue($datas['timeDes'][$demand_task_id], 'pass') == 0): ?>
-                        <a class="btn btn-danger">验收不通过</a>
+                    <?php $is_pass = reset($acceptancepass); ?>
+                    <?php if($is_pass !== false): ?>
+                    <div class="acceptance-pass">结果：
+                        <?php if($is_pass == 0): ?>
+                            <span class="btn btn-danger btn-sm">验收不通过</span>
                         <?php else: ?>
-                        <a class="btn btn-success">验收通过</a>
+                        <span class="btn btn-success btn-sm">验收通过</span>
                         <?php endif; ?>
                     </div>
                     <div class="acceptance-des">
-                        <?= ArrayHelper::getValue($datas['timeDes'][$demand_task_id], 'acceptance_des') ?>
+                        原因：<?= reset($acceptancedes) ?>
                     </div>
+                    <?php endif; ?>
                 </td>
             </tr>        
-        </tbody>
+        </tbody>    
 
     </table> 
-    
 
 </div>
 

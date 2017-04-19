@@ -36,6 +36,15 @@ and open the template in the editor.
     color: #ccc;
     text-align: right;
 }
+.workitem-type{
+    margin-top: 15px;
+    margin-bottom: 0px;
+    font-weight: bold;
+}
+.workitem{
+    font-size: 13px;
+    margin: 0px 0px 5px;
+}
 @media (max-width: 1024px) {
     .col-sm-6{
         padding-left: 0px;

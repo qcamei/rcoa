@@ -6,8 +6,11 @@ use common\config\AppGlobalVariables;
 use common\models\demand\DemandDelivery;
 use common\models\demand\DemandTask;
 use common\models\demand\DemandTaskAnnex;
+use common\models\demand\DemandWorkitem;
 use common\models\expert\Expert;
 use common\models\team\TeamCategory;
+use common\models\workitem\Workitem;
+use common\models\workitem\WorkitemType;
 use common\wskeee\job\JobManager;
 use frontend\modules\demand\utils\DemandQuery;
 use frontend\modules\demand\utils\DemandTool;
@@ -148,7 +151,9 @@ class TaskController extends Controller
             'annex' => $this->getAnnex($id),
             'sign' => $sign,
             'develop' => $develop,
-            'dates' => $this->getDeliveryCreatedAt($id)
+            'dates' => $this->getDeliveryCreatedAt($id),
+            'works' => $this->getDemandWorkitem($id),
+            'totalPrice' => $this->getDemandWorkitemTotalPrice($id)
         ]);
     }
 
@@ -608,5 +613,71 @@ class TaskController extends Controller
                 ->all();
         
         return ArrayHelper::map($dates, 'id', 'date');
+    }
+    
+    /**
+     * 获取需求工作项数据
+     * @param type $task_id             需求任务ID
+     * @return array
+     */
+    public function getDemandWorkitem($task_id)
+    {
+        $workitems = (new Query())
+                 ->select(['Demand_workitem.workitem_type_id', 'Workitem_type.name AS workitem_type_name', 'Workitem_type.icon',
+                       'Demand_workitem.workitem_id', 'Workitem.name AS workitem_name',  'Demand_workitem.is_new', 'Demand_workitem.value',
+                       'Demand_workitem.value_type', 'Workitem.unit'
+                     //'ROUND(SUM(if(Demand_workitem.value_type = TRUE, Demand_workitem.`value` / 60, Demand_workitem.`value`) * Demand_workitem.cost)) AS price'
+                 ])
+                 ->from(['Demand_workitem' => DemandWorkitem::tableName()])
+                 ->leftJoin(['Workitem_type' => WorkitemType::tableName()], 'Workitem_type.id = Demand_workitem.workitem_type_id')
+                 ->leftJoin(['Workitem' => Workitem::tableName()], 'Workitem.id = Demand_workitem.workitem_id')
+                 ->where(['Demand_workitem.demand_task_id' => $task_id])
+                 ->all();
+                 
+         $works = [];
+         foreach ($workitems as $items) {
+            if(!isset($works[$items['workitem_type_id']])){
+                $works[$items['workitem_type_id']] = [
+                    'id' => $items['workitem_type_id'],
+                    'name' => $items['workitem_type_name'],
+                    'icon' => $items['icon'],
+                    'childs' => [],
+                ];
+            }
+            if(!isset($works[$items['workitem_type_id']]['childs'][$items['workitem_id']])){
+                $works[$items['workitem_type_id']]['childs'][$items['workitem_id']] = [
+                    'id' => $items['workitem_id'],
+                    'name' => $items['workitem_name'],
+                    'childs' => [],
+                ];
+            }
+            $works[$items['workitem_type_id']]['childs'][$items['workitem_id']]['childs'][] = [
+                'is_new' => $items['is_new'],
+                'value_type' => $items['value_type'],
+                'value' => $items['value'],
+                'unit' => $items['unit']
+            ];
+         }
+        
+        return $works;
+    }
+    
+    /**
+     * 获取需求工作项的总费用
+     * @param type $task_id         需求任务ID
+     * @return array
+     */
+    public function getDemandWorkitemTotalPrice($task_id)
+    {
+        $totalPrice = (new Query())
+                 ->select(['Demand_workitem.demand_task_id',
+                    'FORMAT(SUM(if(Demand_workitem.value_type = TRUE, Demand_workitem.`value` / 60, Demand_workitem.`value`) * Demand_workitem.cost),2) AS price'
+                 ])
+                 ->from(['Demand_workitem' => DemandWorkitem::tableName()])
+                 ->where(['Demand_workitem.demand_task_id' => $task_id])
+                 ->groupBy('Demand_workitem.demand_task_id')
+                 ->all();
+        
+        return ArrayHelper::map($totalPrice, 'demand_task_id', 'price');
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 use common\models\demand\DemandTask;
-use common\models\multimedia\MultimediaTask;
+use wskeee\utils\DateUtil;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\DetailView;
@@ -52,6 +52,30 @@ if($model->status == DemandTask::STATUS_CANCEL || $model->status == DemandTask::
         $statusProgress .= $status_value == DemandTask::STATUS_COMPLETED ? '' : '<img src="/filedata/multimedia/image/direction-arrow.png" class="direction-arrow hidden-xs" />';
     }
 }
+
+$workitem = '';
+foreach ($works as $items) {
+    $workitem .= '<p class="workitem-type">'.$items['name'].'<span class="mode"> ( 新建, 改造 ) </span></p>';
+    foreach ($items['childs'] as $childs) {
+        $workitem .= '<p class="workitem"><span>'.$childs['name'].'</span><span>(';
+        foreach ($childs['childs'] as $child) {
+            if($child['value_type'] == true){
+                if($child['is_new'] == true)
+                    $workitem .= ', '.DateUtil::intToTime($child['value']);
+                else
+                    $workitem .= DateUtil::intToTime($child['value']);
+            }else {
+                if($child['is_new'] == true)
+                    $workitem .= ', '.$child['value'].$child['unit'];
+                else
+                    $workitem .= $child['value'].$child['unit'];
+            }
+            
+        }
+        $workitem .= ')</span></p>';
+    }
+}
+
 ?>
 
 
@@ -130,6 +154,16 @@ if($model->status == DemandTask::STATUS_CANCEL || $model->status == DemandTask::
                 'attribute' => Yii::t('rcoa/multimedia', 'Status').'/'.Yii::t('rcoa/multimedia', 'Progress'),
                 'format' => 'raw',
                 'value' => $statusProgress,
+            ],
+            [
+                'label' => '工作项',
+                'format' => 'raw',
+                'value' => $workitem
+            ],
+            [
+                'label' => '总费用',
+                'format' => 'raw',
+                'value' => '￥'.$totalPrice[$model->id]
             ],
             ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">其它信息</span>','value' => ''],
             [

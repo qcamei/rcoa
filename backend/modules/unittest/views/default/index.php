@@ -47,6 +47,17 @@ use common\widgets\cslider\CSliderAssets;
             'tooltipColor' => '#56cb90',    //提示颜色
         ]
     ]) ?>
+    
+     <?= CSlider::widget([
+            'plugOptions' => [
+                'width' => '200',
+                'max' => 10,
+                'value' => 5,
+                'valueText' => '不达标',
+                'sliderColor' => '#428BCA',     //已选择颜色
+                'tooltipColor' => '#428BCA',    //提示颜色
+            ]
+        ]) ?>
 </div>
 <?php 
     CSliderAssets::register($this);

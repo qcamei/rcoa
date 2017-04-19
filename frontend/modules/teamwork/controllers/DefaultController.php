@@ -56,15 +56,9 @@ class DefaultController extends Controller
     {
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
-        $completed=  $twTool->getCourseLessionTimesSum(CourseManage::STATUS_CARRY_OUT);
-        $unfinished = $twTool->getCourseLessionTimesSum(CourseManage::STATUS_NORMAL);
-      
+       
         return $this->render('index',[
             'twTool' => $twTool,
-            'completedHours' => ArrayHelper::getValue($completed, 'total_lesson_time'),
-            'unfinishedHours' => ArrayHelper::getValue($unfinished, 'total_lesson_time'),
-            'completedDoor' => ArrayHelper::getValue($completed, 'total'),
-            'unfinishedDoor' => ArrayHelper::getValue($unfinished, 'total'),
             'team' => $this->getCourseDevelopTeam(),
             'teamCompleted' => $twTool->getTeamCourseLessionTimesSum(CourseManage::STATUS_CARRY_OUT),
             'teamUnfinished' => $twTool->getTeamCourseLessionTimesSum(CourseManage::STATUS_NORMAL),

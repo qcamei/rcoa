@@ -16,136 +16,71 @@ $this->title = Yii::t('rcoa/teamwork', 'Item Manages');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="row item-manage-row">
-    <div class="head">
-        <div class="head-top"></div>
-        <div class="head-bottom">
-            <div class="container">
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 total">
-                    <?= Html::a('<div class="col-xs-12 lession-time"><span class="visible-xs-inline-block">'.
-                                Html::img(['/filedata/teamwork/image/completed.png'], ['class' => 'total-icon']).
-                                Html::img(['/filedata/teamwork/image/view_completed.png ']).'</span>'.
-                                '<span class="completed total-xs">'.number_format($completedHours).'</span>'.
-                                '<span>学时</span><p class="hidden-xs">'.
-                                Html::img(['/filedata/teamwork/image/view_completed.png ']).'</p></div>', [
-                                    'course/index', 'status' => CourseManage::STATUS_CARRY_OUT
-                                ]) ?>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 total">
-                    <?= Html::a('<div class="col-xs-12 lession-time"><span class="visible-xs-inline-block">'.
-                                Html::img(['/filedata/teamwork/image/completed.png'], ['class' => 'total-icon']).
-                                Html::img(['/filedata/teamwork/image/view_completed.png ']).'</span>'.
-                                '<span class="completed total-xs">'.number_format($completedDoor).'</span>'.
-                                '<span>门</span><p class="hidden-xs">'.
-                                Html::img(['/filedata/teamwork/image/view_completed.png ']).'</p></div>', [
-                                    'course/index', 'status' => CourseManage::STATUS_CARRY_OUT
-                                ]) ?>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 total">
-                    <?= Html::a('<div class="col-xs-12 course-door"><span class="visible-xs-inline-block">'.
-                                Html::img(['/filedata/teamwork/image/undone.png'], ['class' => 'total-icon']).
-                                Html::img(['/filedata/teamwork/image/view_undone.png ']).'</span>'.
-                                '<span class="undone total-xs">'.number_format($unfinishedHours).'</span>'.
-                                '<span>学时</span><p class="hidden-xs">'.
-                                Html::img(['/filedata/teamwork/image/view_undone.png ']).'</p></div>', [
-                                    'course/index', 'status' => CourseManage::STATUS_NORMAL
-                                ]) ?>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 total">
-                    <?= Html::a('<div class="col-xs-12 course-door" style="border-right: none"><span class="visible-xs-inline-block">'.
-                                Html::img(['/filedata/teamwork/image/undone.png'], ['class' => 'total-icon']).
-                                Html::img(['/filedata/teamwork/image/view_undone.png ']).'</span>'.
-                                '<span class="undone total-xs">'.number_format($unfinishedDoor).'</span>'.
-                                '<span>门</span><p class="hidden-xs">'.
-                                Html::img(['/filedata/teamwork/image/view_undone.png ']).'</p></div>', [
-                                    'course/index', 'status' => CourseManage::STATUS_NORMAL
-                                ]) ?>
-                </div>
-                </div>
+<div class="item-manage-index">
+    <div class="container">
+        <div class="item-manage-words">
+            <span class="words-ch">开发</span>
+            <span class="words-en">Development</span>
         </div>
     </div>
-</div>
+    <div class="item-manage-team">
+        <div class="container">
+            <?php foreach($team as $value): ?>
+            <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 team">
+                <div class="team-logo">
+                    <?= Html::img([$value['team_icon']]) ?>
+                </div>
+                <div class="team-content">
+                    <p>
+                        <span class="team-name"><?= $value['name'] ?></span>
+                        <a href="#" class="see"></a>
+                    </p>
+                    <p>
+                        <span class="team-label">已完成</span>
+                        <span class="team-number"><?= isset($teamCompleted[$value['id']]) ? number_format($teamCompleted[$value['id']]) : 0 ?></span>
+                        <span class="team-unit">学时</span>
+                    </p>
+                    <p>
+                        <span class="team-label">在&nbsp;&nbsp;&nbsp;&nbsp;建</span>
+                        <span class="team-number"><?= isset($teamUnfinished[$value['id']]) ? number_format($teamUnfinished[$value['id']]) : 0 ?></span>
+                        <span class="team-unit">学时</span>
+                    </p>
+                    <p>
+                        <span class="team-label">RMB</span>
+                        <span class="team-number"><?= isset($teamCost[$value['id']]) ? $teamCost[$value['id']] : 0 ?></span>
+                        <span class="team-unit">元</span>
+                    </p>
+                </div>
+            </div>
+            <?php endforeach;?>
+        </div>
+    </div>
+</div>    
 
-<div class="container item-manage-index item-manage">
-    <center><div class="row">
-        <?php
-            foreach ($team as $value) {
-                echo '<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="padding:0px;">';
-                     echo '<div class="team">';
-                          echo '<div class="team-top" style="background:url('.$value['image'].') no-repeat">';
-                               echo '<div>'.Html::a(Html::img([$value['team_icon']]), [
-                                   'member', 'team_id' => $value['id']
-                               ]).'</div>';
-                               echo '<div class="team-name">'.$value['name'].'</div>';
-                          echo '</div>';
-                          echo '<div class="team-bottom">';
-                                echo Html::a('<div class="team-bottom-left"><p><span class="completed" style="margin-right:5px;">'.
-                                            number_format(!empty($teamCompleted[$value['id']]) ? $teamCompleted[$value['id']] : 0).'</span><span>学时</span></p><p>'.
-                                            Html::img(['/filedata/teamwork/image/view_completed.png']).'</p></div>', [
-                                                'course/index', 'team_id' => $value['id'], 'status' => CourseManage::STATUS_CARRY_OUT
-                                            ]);
-                                echo Html::a('<div class="team-bottom-right"><p><span class="undone" style="margin-right:5px;">'.
-                                            number_format(!empty($teamUnfinished[$value['id']]) ? $teamUnfinished[$value['id']] : 0).'</span><span>学时</span></p><p>'.
-                                            Html::img(['/filedata/teamwork/image/view_undone.png']).'</p></div>', [
-                                                'course/index', 'team_id' => $value['id'], 'status' => CourseManage::STATUS_NORMAL
-                                            ]);        
-                          echo '</div>';
-                     echo '</div>';
-                echo '</div>';
-            }
-            /** 学工厂 
-            echo '<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="padding:0px;">';
-                echo '<div class="team">';
-                     echo '<div class="team-top" style="background:url('.$scienceFactory->image.') no-repeat">';
-                          echo '<div>'.Html::img(['/filedata/teamwork/image/view_team_member.png']).'</div>';
-                          echo '<div class="team-name">'.$scienceFactory->name.'</div>';
-                     echo '</div>';
-                     echo '<div class="team-bottom">';
-                          echo '<div class="team-bottom-left">'.
-                                  '<p><span class="completed">'.''.'</span><span>学时</span></p>'.
-                                  '<p>'.Html::img(['/filedata/teamwork/image/view_completed.png']).'</p>'.
-                              '</div>';
-                          echo '<div class="team-bottom-right">'.
-                                  '<p><span class="undone">'.''.'</span><span>学时</span></p>'.
-                                  '<p>'.Html::img(['/filedata/teamwork/image/view_undone.png']).'</p>'.
-                               '</div>';
-                     echo '</div>';
-                echo '</div>';
-            echo '</div>';*/
-        ?>
-    </div></center>
-</div>
 <?= $this->render('_footer', [
     'twTool' => $twTool
 ]); ?>
 
-<?php
-$js = 
-<<<JS
-    $('#submit').click(function()
-    {
-        $('#item-manage-form').submit();
+<?php 
+$js = <<<JS
+   /** 设置.item-manage-index 大小*/
+   size();
+   $(window).resize(function(){
+        size();
     });
+    function size(){
+        var height = $(document.body).height() - 100;
+        if(height < 820)
+            height = 820;
+        $(".item-manage-index").css({height:height, display:"block"});
+        var wordsH = height - $(".item-manage-team").outerHeight();
+        $(".item-manage-words").css({height: wordsH});
+    }    
+    //$('.timer').each(count);  // 启动所有定时器
+       
 JS;
-    //$this->registerJs($js,  View::POS_READY);
+    $this->registerJs($js,  View::POS_READY); 
 ?>
-
-<style type="text/css">
-    .content {
-        background-color: #e9e9e9;
-    }
-    .content span {
-        font-size: 14px;
-        color: #696969;
-        display: inline-block;
-        padding: 5px 0px;
-    }
-    @media (max-width: 767px){
-        .head-bottom .container {
-            padding: 0px;
-        }
-    }
-</style>
 
 <?php
     TwAsset::register($this);
