@@ -62,7 +62,7 @@ class RbacName {
     const ROLE_DEMAND_PROMULGATOR = 'r_demand_promulgator';
     /** 课程需求-承接人 */
     const ROLE_DEMAND_UNDERTAKE_PERSON = 'r_demand_undertake_person';
-    /** 需求基础数据管理人 */
+    /** 课程需求-基础数据管理人 */
     const ROLE_DEMAND_BASEDATA_ADMIN = 'r_demand_basedata_admin';
 
 
