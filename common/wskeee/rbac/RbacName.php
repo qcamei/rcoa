@@ -62,6 +62,8 @@ class RbacName {
     const ROLE_DEMAND_PROMULGATOR = 'r_demand_promulgator';
     /** 课程需求-承接人 */
     const ROLE_DEMAND_UNDERTAKE_PERSON = 'r_demand_undertake_person';
+    /** 需求基础数据管理人 */
+    const ROLE_DEMAND_BASEDATA_ADMIN = 'r_demand_basedata_admin';
 
 
 
@@ -160,6 +162,14 @@ class RbacName {
     const PERMSSION_DEMAND_TASK_DEVELOP = 'p_demand_task_develop';
     /** 课程需求-任务恢复 */
     const PERMSSION_DEMAND_TASK_RESTORE = 'p_demand_task_restore';
+    /** 课程需求-基础数据-添操作 */
+    const PERMSSION_DEMAND_BASEDATA_CREATE = 'p_demand_basedata_create';
+    /** 课程需求-基础数据-删操作 */
+    const PERMSSION_DEMAND_BASEDATA_DELETE = 'p_demand_basedata_delete';
+    /** 课程需求-基础数据-改操作 */
+    const PERMSSION_DEMAND_BASEDATA_UPDATE = 'p_demand_basedata_update';
+    /** 课程需求-基础数据-查操作 */
+    const PERMSSION_DEMAND_BASEDATA_READ = 'p_demand_basedata_read';
     
     
 }

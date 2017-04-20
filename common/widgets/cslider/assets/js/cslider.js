@@ -22,7 +22,12 @@
         
         this.__init();
         this.__createChild();
-        this.reflash();
+        //this.reflash();
+        var _this = this;
+        setTimeout(function(){
+            _this.reflash.call(_this);
+        },10);
+        
     };
     
     var p = CSlider.prototype;
