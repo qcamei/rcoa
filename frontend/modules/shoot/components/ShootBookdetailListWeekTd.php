@@ -24,7 +24,7 @@ class ShootBookdetailListWeekTd extends ShootBookdetailListTd{
             if($index%$rowspan == 0)
                 return parent::renderDataCell($model, $key, $index);
             else
-                return $this->grid->emptyCell;
+                return null;
         }else
             return parent::renderDataCell($model, $key, $index);
     }

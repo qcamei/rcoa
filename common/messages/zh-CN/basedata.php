@@ -20,7 +20,7 @@ return[
     'Project'=>'专业/工种',
     'Course'=>'课程',
     
-    'Expert'=>'专家',
+    'Expert'=>'师资',
     'Username'=>'用户名',
     'Nickname'=>'专家名称',
     'Personal Image'=>'个人形象',

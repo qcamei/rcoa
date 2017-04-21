@@ -14,14 +14,20 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="container expert-view">
 
     <p>
-        <?= Html::a(Yii::t('rcoa/basedata', 'Update'), ['update', 'id' => $model->u_id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('rcoa/basedata', 'Delete'), ['delete', 'id' => $model->u_id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => Yii::t('rcoa/demand', 'Are you sure you want to delete this item?'),
-                'method' => 'post',
-            ],
-        ]) ?>
+        <?php
+        if ($rbac['update']) {
+            echo Html::a(Yii::t('rcoa/basedata', 'Update'), ['update', 'id' => $model->u_id], ['class' => 'btn btn-primary']).' ';
+        }
+        if ($rbac['delete']) {
+            echo Html::a(Yii::t('rcoa/basedata', 'Delete'), ['delete', 'id' => $model->u_id], [
+                'class' => 'btn btn-danger',
+                'data' => [
+                    'confirm' => Yii::t('rcoa/demand', 'Are you sure you want to delete this item?'),
+                    'method' => 'post',
+                ],
+            ]);
+        }
+        ?>
     </p>
 
     <?= DetailView::widget([

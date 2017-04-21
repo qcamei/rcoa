@@ -9,27 +9,27 @@ use yii\web\View;
 
 $menus = [
    [
-       'name'=>  Yii::t('rcoa', 'Business'),
+       'name'=>  Yii::t('rcoa/basedata', 'Item Type'),
        'url'=>['/demand/business'],
        'class'=>'btn btn-default',
    ],
    [
-       'name'=>  Yii::t('rcoa', 'Fw College'),
+       'name'=>  Yii::t('rcoa/basedata', 'College'),
        'url'=>['/demand/college'],
        'class'=>'btn btn-default',
    ],
    [
-       'name'=>  Yii::t('rcoa', 'Fw Project'),
+       'name'=>  Yii::t('rcoa/basedata', 'Project'),
        'url'=>['/demand/project'],
        'class'=>'btn btn-default',
    ],
    [
-       'name'=>  Yii::t('rcoa', 'Fw Course'),
+       'name'=>  Yii::t('rcoa/basedata', 'Course'),
        'url'=>['/demand/course'],
        'class'=>'btn btn-default',
    ],
    [
-       'name'=>  Yii::t('rcoa', 'Expert'),
+       'name'=>  Yii::t('rcoa/basedata', 'Expert'),
        'url'=>['/demand/expert'],
        'class'=>'btn btn-default',
    ],

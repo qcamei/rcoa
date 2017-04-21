@@ -16,17 +16,21 @@ $this->title = Yii::t('demand', 'Projects');
 <div class="container project-index">
 
     <p>
-        <?= Html::a(
-                Yii::t('rcoa/basedata', '{Create} {Project}',['Create'=>  Yii::t('rcoa/basedata', 'Create'),'Project'=>  Yii::t('rcoa/basedata', 'Project')]), 
-                ['create'], ['class' => 'btn btn-success']) ?>
+        <?php
+        if ($rbac['create']) {
+            echo Html::a(
+                    Yii::t('rcoa/basedata', '{Create} {Project}', ['Create' => Yii::t('rcoa/basedata', 'Create'), 'Project' => Yii::t('rcoa/basedata', 'Project')]), ['create'], ['class' => 'btn btn-success']);
+        }
+        ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'tableOptions' => ['class' => 'table table-striped table-bordered','style' => ['table-layout' => 'fixed']],
         'columns' => [
             [
                 'class' => 'yii\grid\SerialColumn',
-                'options'=>['style'=>'width:50px'],
+                'options'=>['style'=>'width:20px'],
             ],
             [
                 'class' => 'frontend\modules\demand\components\GridViewLinkCell',
@@ -41,7 +45,12 @@ $this->title = Yii::t('demand', 'Projects');
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'options'=>['style'=>'width:70px']
+                'options'=>['style'=>'width:30px'],
+                'visibleButtons' => [
+                    'create' => $rbac['create'],
+                    'update' => $rbac['update'],
+                    'delete' => $rbac['delete'],
+                ],
             ],
         ],
     ]); ?>

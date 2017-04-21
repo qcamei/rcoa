@@ -18,14 +18,20 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="container project-view">
 
     <p>
-        <?= Html::a(Yii::t('rcoa/basedata', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('rcoa/basedata', 'Delete'), ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => Yii::t('rcoa/basedata', 'Are you sure you want to delete this item?'),
-                'method' => 'post',
-            ],
-        ]) ?>
+        <?php
+        if ($rbac['update']) {
+            echo Html::a(Yii::t('rcoa/basedata', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']).' ';
+        }
+        if ($rbac['delete']) {
+            echo Html::a(Yii::t('rcoa/basedata', 'Delete'), ['delete', 'id' => $model->id], [
+                'class' => 'btn btn-danger',
+                'data' => [
+                    'confirm' => Yii::t('rcoa/basedata', 'Are you sure you want to delete this item?'),
+                    'method' => 'post',
+                ],
+            ]);
+        }
+        ?>
     </p>
 
     <?= DetailView::widget([
@@ -38,19 +44,24 @@ $this->params['breadcrumbs'][] = $this->title;
             'updated_at:datetime',
         ],
     ]) ?>
+    <h4><b><?= Yii::t('rcoa/basedata', 'Course') ?></b></h4>
     <p>
-        <?= Html::a(Yii::t('rcoa/basedata', '{Create} {Course}',['Create'=>  Yii::t('rcoa/basedata', 'Create'),'Course'=>  Yii::t('rcoa/basedata', 'Course')]), 
-                ['course/create','parent_id'=>$model->id], 
-                ['class' => 'btn btn-success'/*, 'data' => ['method' => 'post']*/]) ?>
+        <?php
+        if ($rbac['create']) {
+            echo Html::a(Yii::t('rcoa/basedata', '{Create} {Course}', ['Create' => Yii::t('rcoa/basedata', 'Create'), 'Course' => Yii::t('rcoa/basedata', 'Course')]), 
+                ['course/create', 'parent_id' => $model->id], ['class' => 'btn btn-success'/* , 'data' => ['method' => 'post'] */]);
+        }
+        ?>
     </p>
 
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
+        'tableOptions' => ['class' => 'table table-striped table-bordered','style' => ['table-layout' => 'fixed']],
         'columns' => [
             [
                 'class' => 'yii\grid\SerialColumn',
-                'options'=>['style'=>'width:50px'],
+                'options'=>['style'=>'width:20px'],
             ],
             [
                 'class' => 'frontend\modules\demand\components\GridViewLinkCell',
@@ -60,7 +71,12 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => ActionColumn::className(),
                 'template' => '{view} {update} {delete}',
-                'options'=>['style'=>'width:70px'],
+                'options'=>['style'=>'width:50px'],
+                 'visibleButtons' => [
+                    'create' => $rbac['create'],
+                    'update' => $rbac['update'],
+                    'delete' => $rbac['delete'],
+                ],
                 'buttons' => [
                     'view' => function ($url, $model, $key) {
                         $options = [

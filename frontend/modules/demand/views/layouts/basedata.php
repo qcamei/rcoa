@@ -11,6 +11,7 @@ use yii\widgets\Breadcrumbs;
 
 /* 添加基础数据头部导航 */
 $breadcrumbs = Breadcrumbs::widget([
+            'options' => ['class' => 'breadcrumb basedata-breadcrumbs'],
             'homeLink'=>false,
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
     ]);
