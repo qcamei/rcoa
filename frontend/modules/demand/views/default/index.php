@@ -12,8 +12,10 @@ $this->title = Yii::t('rcoa/demand', 'Demand Tasks');
 <div class="demand-default-index">
     <div class="container">
         <div class="demand-default-words">
-            <span class="words-ch">任务</span>
-            <span class="words-en">Task</span>
+            <span class="words-big">多挣钱的方法只有两个：不是多卖，就是降低管理费。</span><br/>
+            <span class="words-small">——克莱斯勒汽车公司总裁李·艾柯卡</span>
+            <!--<span class="words-ch">任务</span>
+            <span class="words-en">Task</span>-->
         </div>
     </div>
     <div class="demand-default-team">
@@ -26,7 +28,7 @@ $this->title = Yii::t('rcoa/demand', 'Demand Tasks');
                 <div class="team-content">
                     <p>
                         <span class="team-name"><?= $value['name'] ?></span>
-                        <a href="#" class="see"></a>
+                        <?= Html::a('', ['member', 'team_id' => $value['id']], ['class' => 'see']) ?>
                     </p>
                     <p>
                         <span class="team-label">已完成</span>
@@ -40,8 +42,8 @@ $this->title = Yii::t('rcoa/demand', 'Demand Tasks');
                     </p>
                     <p>
                         <span class="team-label">RMB</span>
-                        <span class="team-number"><?= isset($teamCost[$value['id']]) ? $teamCost[$value['id']] : 0 ?></span>
-                        <span class="team-unit">元</span>
+                        <span class="team-number"><?= isset($teamCost[$value['id']]) ? number_format($teamCost[$value['id']]) : 0 ?></span>
+                        <span class="team-unit">万元</span>
                     </p>
                 </div>
             </div>

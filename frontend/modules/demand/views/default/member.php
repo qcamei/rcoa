@@ -1,8 +1,8 @@
 <?php
 
 use common\models\team\Team;
+use frontend\modules\demand\assets\DefaultAssets;
 use frontend\modules\teamwork\TeamworkTool;
-use frontend\modules\teamwork\TwAsset;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\web\View;
@@ -63,5 +63,5 @@ JS;
 ?>
 
 <?php
-    TwAsset::register($this);
+    DefaultAssets::register($this);
 ?>

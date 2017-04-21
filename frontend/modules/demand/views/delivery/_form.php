@@ -101,7 +101,8 @@ foreach ($workitems as $data) {
                                                     'placeholder' => '数量...'
                                                 ],
                                                 'pluginOptions' => [
-                                                    'min' => 1,
+                                                    'initval' => 0,
+                                                    'min' => 0,
                                                     'max' => 99999,
                                                     'buttonup_class' => 'btn btn-default btn-sm', 
                                                     'buttondown_class' => 'btn btn-default btn-sm', 
@@ -117,7 +118,8 @@ foreach ($workitems as $data) {
                                                 'placeholder' => '数量...'
                                             ],
                                             'pluginOptions' => [
-                                                'min' => 1,
+                                                'initval' => 0,
+                                                'min' => 0,
                                                 'max' => 99999,
                                                 'buttonup_class' => 'btn btn-default btn-sm', 
                                                 'buttondown_class' => 'btn btn-default btn-sm', 

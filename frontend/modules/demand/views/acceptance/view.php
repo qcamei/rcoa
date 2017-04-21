@@ -4,6 +4,7 @@ use common\models\demand\DemandAcceptance;
 use common\widgets\cslider\CSlider;
 use frontend\modules\demand\assets\ChartAsset;
 use frontend\modules\demand\assets\DemandAssets;
+use kartik\widgets\Select2;
 use wskeee\utils\DateUtil;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -35,8 +36,24 @@ foreach ($workitem as $work){
 }
 
 ?>
-<div class="demand-acceptance-view has-title">
 
+
+<div class="demand-acceptance-view has-title">
+    <?php if(empty($delivery)): ?>
+    没有找到数据。
+    <?php else: ?>
+    <div class="select-date">
+        <?= Select2::widget([
+            'id' => 'date',
+            'name' => 'created_at',
+            'value' => $delivery_id,
+            'data' => $dates, 
+            'options' => [
+                'placeholder' => '请选择...',
+            ]
+        ])?>
+    </div>
+    
     <table class="table table-bordered demand-workitem-table">
 
         <thead>
@@ -56,7 +73,7 @@ foreach ($workitem as $work){
                 <td class="text-center"><?= reset($acceptancetime) ?></td>
             </tr>
             <?php  foreach ($workitemType as $type): 
-                if($percentage[$type['id']] < 0) $percentage[$type['id']] = 1; else  $percentage[$type['id']];
+                if($percentage[$type['id']] < 0) $percentage[$type['id']] = 1; else if($percentage[$type['id']] == 0) $percentage[$type['id']] = 100; else $percentage[$type['id']];
                 if($percentage[$type['id']] < 70) $color = '#ff0000'; else if($percentage[$type['id']] < 100) $color = '#428BCA'; else $color = '#43c584';
             ?>
             <tr class="tr">
@@ -90,7 +107,6 @@ foreach ($workitem as $work){
                         <?php endforeach; ?>    
                         </td>
                         <td style="width: 300px">
-                        <?php if(isset($delivery[$work['id']])): ?>
                         <?php rsort($delivery[$work['id']]['childs']); foreach ($delivery[$work['id']]['childs'] as $child): ?>                         
                             <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
                             <?php if($child['value_type'] == true){
@@ -104,14 +120,13 @@ foreach ($workitem as $work){
                             }?>
                             </div>
                         <?php endforeach; ?>
-                        <?php endif; ?>    
                         </td>
                         <?php if(!isset($is_rowspan[$type['id']])): $is_rowspan[$type['id']] = true;?>
                         <td class="text-center" rowspan="<?= $number[$type['id']] ?>">
                             <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
                                 <?php  if(isset($percentage[$type['id']])): ?>
                                 <span class="chart" data-percent="<?= $percentage[$type['id']]; ?>" data-bar-color="<?= $color; ?>">
-                                    <span class="percent"></span>
+                                    <span class="percent" style="color: <?= $color; ?>"></span>
                                 </span>
                                 <?php endif; ?>
                             </div>
@@ -159,6 +174,7 @@ foreach ($workitem as $work){
         </tbody>    
 
     </table> 
+    <?php endif; ?>
 
 </div>
 
@@ -175,6 +191,9 @@ $js =
         }); 
     });  
   
+    $('#date').change(function(){
+        $("#demand-acceptance-view").load("/demand/acceptance/view?demand_task_id=$demand_task_id&delivery_id="+$(this).val());
+    });    
     
 JS;
     $this->registerJs($js,  View::POS_READY);

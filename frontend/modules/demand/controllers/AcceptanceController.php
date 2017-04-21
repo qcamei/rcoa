@@ -79,11 +79,13 @@ class AcceptanceController extends Controller {
         
         return $this->renderAjax('view', [
             'demand_task_id' => $demand_task_id,
+            'delivery_id' => $delivery_id,
+            'dates' => $this->getDeliveryCreatedAt($demand_task_id),
             'workitemType' => $this->getDemandWorkitemTypeData($demand_task_id),
             'workitem' => $this->getDemandWorkitemData($demand_task_id),
             'delivery' => $this->getDemandDeliveryData($demand_task_id, $delivery_id),
             'acceptance' => $this->getDemandAcceptanceData($demand_task_id, $delivery_id),
-            'percentage' => $this->getWorkitemTypePercentage($demand_task_id, $delivery->id),
+            'percentage' => $this->getWorkitemTypePercentage($demand_task_id, $delivery_id),
         ]);        
     }
     
@@ -187,7 +189,7 @@ class AcceptanceController extends Controller {
         if ($delivery !== null) {
             return $delivery;
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            return new DemandDelivery();
         }
     }
 
@@ -392,7 +394,7 @@ class AcceptanceController extends Controller {
                     ])
                     ->from(['Acceptance_data' => DemandAcceptanceData::tableName()])
                     ->leftJoin(['Acceptance' => DemandAcceptance::tableName()], 'Acceptance.id = Acceptance_data.demand_acceptance_id')
-                    ->where(['Acceptance.demand_task_id' => $demand_task_id, 'Acceptance.demand_delivery_id' => 32])
+                    ->where(['Acceptance.demand_task_id' => $demand_task_id, 'Acceptance.demand_delivery_id' => $delivery_id])
                     ->all();
         
         $acceptance = [];
@@ -409,23 +411,39 @@ class AcceptanceController extends Controller {
     }
     
     /**
+     * 获取交付创建时间
+     * @param integer $demand_task_id           引用需求任务ID
+     * @return type
+     */
+    public function getDeliveryCreatedAt($demand_task_id)
+    {
+        $dates = (new Query())
+                ->select(['id', 'FROM_UNIXTIME(created_at, "%Y-%m-%d %H:%i:%s") AS date'])
+                ->from(DemandDelivery::tableName())
+                ->where(['demand_task_id' => $demand_task_id])
+                ->orderBy('created_at DESC')
+                ->all();
+        
+        return ArrayHelper::map($dates, 'id', 'date');
+    }
+    
+    /**
      * 获取工作项类型数量的百分比
-     * @param integer $taskId                  引用需求任务ID
-     * @param integer $deliveryId              引用交付ID
+     * @param integer $demand_task_id                  引用需求任务ID
+     * @param integer $delivery_id                      引用交付ID
      * @return array
      */
-    public function getWorkitemTypePercentage($taskId, $deliveryId)
+    public function getWorkitemTypePercentage($demand_task_id, $delivery_id)
     {
         $percentage = (new Query())
-                ->select(['Workitem_type.id', '(SUM(Delivery_data.`value`) / (IF(SUM(Demand_workitem.`value`) = 0, 1, SUM(Demand_workitem.`value`)))) * 100 AS percentage'])
-                ->from(['Workitem_type' => WorkitemType::tableName()])
-                ->leftJoin(['Demand_workitem' => DemandWorkitem::tableName()], 'Demand_workitem.workitem_type_id = Workitem_type.id')
+                ->select(['Demand_workitem.workitem_type_id', '(SUM(Delivery_data.`value`) / (IF(SUM(Demand_workitem.`value`) = 0, 1, SUM(Demand_workitem.`value`)))) * 100 AS percentage'])
+                ->from(['Demand_workitem' => DemandWorkitem::tableName()])
                 ->leftJoin(['Delivery_data' => DemandDeliveryData::tableName()], 'Delivery_data.demand_workitem_id = Demand_workitem.id')
-                ->where(['Demand_workitem.demand_task_id' => $taskId, 'Delivery_data.demand_delivery_id' => $deliveryId])
+                ->where(['Demand_workitem.demand_task_id' => $demand_task_id, 'Delivery_data.demand_delivery_id' => $delivery_id])
                 ->groupBy('Demand_workitem.workitem_type_id')
                 ->all();
-
-        return ArrayHelper::map($percentage, 'id', 'percentage');
+ 
+        return ArrayHelper::map($percentage, 'workitem_type_id', 'percentage');
     }
     
     /**

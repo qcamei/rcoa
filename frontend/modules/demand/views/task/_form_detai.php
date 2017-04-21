@@ -55,27 +55,31 @@ if($model->status == DemandTask::STATUS_CANCEL || $model->status == DemandTask::
 
 $workitem = '';
 foreach ($works as $items) {
-    $workitem .= '<p class="workitem-type">'.$items['name'].'<span class="mode"> ( 新建, 改造 ) </span></p>';
+    $workitem .= '<p class="workitem-type">'.$items['name'].'<span class="mode">（新建, 改造）</span></p>';
+    $array_end = end($items['childs']);
     foreach ($items['childs'] as $childs) {
-        $workitem .= '<p class="workitem"><span>'.$childs['name'].'</span><span>(';
+        if($childs['id'] == $array_end['id'])
+            $workitem .= '<p class="workitem" style="margin-bottom:20px"><span>'.$childs['name'].'</span><span>（';
+        else 
+            $workitem .= '<p class="workitem"><span>'.$childs['name'].'</span><span>（';
+        rsort($childs['childs']);
         foreach ($childs['childs'] as $child) {
             if($child['value_type'] == true){
                 if($child['is_new'] == true)
-                    $workitem .= ', '.DateUtil::intToTime($child['value']);
+                    $workitem .= DateUtil::intToTime($child['value']).', ';
                 else
                     $workitem .= DateUtil::intToTime($child['value']);
             }else {
                 if($child['is_new'] == true)
-                    $workitem .= ', '.$child['value'].$child['unit'];
+                    $workitem .= $child['value'].$child['unit'].', ';
                 else
                     $workitem .= $child['value'].$child['unit'];
             }
             
         }
-        $workitem .= ')</span></p>';
+        $workitem .= '）</span></p>';
     }
 }
-
 ?>
 
 

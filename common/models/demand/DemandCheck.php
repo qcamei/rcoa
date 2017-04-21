@@ -78,6 +78,19 @@ class DemandCheck extends ActiveRecord
             'status' => Yii::t('rcoa/demand', 'Status'),
         ];
     }
+    
+    public function beforeSave($insert) {
+        if(parent::beforeSave($insert))
+        {
+            $this->remark = htmlentities($this->remark);
+            return true;
+        }
+    }
+    public function afterFind() {
+        
+        $this->remark = html_entity_decode($this->remark);
+    }
+    
 
     /**
      * 获取需求任务

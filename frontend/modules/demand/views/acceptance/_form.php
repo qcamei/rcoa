@@ -40,7 +40,7 @@ use yii\widgets\ActiveForm;
                     <td class="text-center"><?= date('Y-m-d H:i', time()) ?></td>
                 </tr>
                 <?php $array = []; foreach ($wdArrays as  $items): 
-                    if($percentage[$items['id']] < 0) $percentage[$items['id']] = 1; else  $percentage[$items['id']];
+                    if($percentage[$items['id']] < 0) $percentage[$items['id']] = 1; else if($percentage[$items['id']] == 0) $percentage[$items['id']] = 100; else $percentage[$items['id']];
                     if($percentage[$items['id']] < 70) $color = '#ff0000'; else if($percentage[$items['id']] < 100) $color = '#428BCA'; else $color = '#43c584';
                 ?>
                 <tr class="tr">
@@ -95,7 +95,7 @@ use yii\widgets\ActiveForm;
                         <td class="text-center" rowspan="<?= $number ?>">
                             <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
                                 <span class="chart" data-percent="<?= $percentage[$items['id']] ?>" data-bar-color="<?= $color; ?>">
-                                    <span class="percent"></span>
+                                    <span class="percent" style="color: <?= $color; ?>"></span>
                                 </span>        
                             </div>
                             <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12" style="margin-top: 25px;">

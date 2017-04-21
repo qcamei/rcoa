@@ -7,6 +7,12 @@ and open the template in the editor.
     Created on : 2017-4-1, 13:40:27
     Author     : Kiwi°
 */
+.select-date{
+    width: 180px; 
+    float: right;
+    padding: 0px; 
+    margin-bottom: 5px;
+}
 .demand-workitem-table{
     width: 100%;
 }
@@ -37,13 +43,10 @@ and open the template in the editor.
     text-align: right;
 }
 .workitem-type{
-    margin-top: 15px;
-    margin-bottom: 0px;
     font-weight: bold;
 }
 .workitem{
     font-size: 13px;
-    margin: 0px 0px 5px;
 }
 @media (max-width: 1024px) {
     .col-sm-6{

@@ -151,7 +151,6 @@ class TaskController extends Controller
             'annex' => $this->getAnnex($id),
             'sign' => $sign,
             'develop' => $develop,
-            'dates' => $this->getDeliveryCreatedAt($id),
             'works' => $this->getDemandWorkitem($id),
             'totalPrice' => $this->getDemandWorkitemTotalPrice($id)
         ]);
@@ -598,21 +597,6 @@ class TaskController extends Controller
         $results->select(['Task_product.task_id', 'SUM(Product.unit_price * Task_product.number) AS totals']);
         $results->groupBy('Task_product.task_id');
         return ArrayHelper::map($results->all(), 'task_id', 'totals');
-    }
-    
-    /**
-     * 获取交付创建时间
-     * @param integer $taskId
-     */
-    public function getDeliveryCreatedAt($taskId)
-    {
-        $dates = (new Query())
-                ->select(['id', 'FROM_UNIXTIME(created_at, "%Y-%m-%d %H:%i:%s") AS date'])
-                ->from(DemandDelivery::tableName())
-                ->where(['demand_task_id' => $taskId])
-                ->all();
-        
-        return ArrayHelper::map($dates, 'id', 'date');
     }
     
     /**

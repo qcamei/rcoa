@@ -68,8 +68,8 @@ foreach ($allModels as $model) {
                                             'placeholder' => '数量...'
                                         ],
                                         'pluginOptions' => [
-                                            'initval' => $value['value'],
-                                            'min' => 1,
+                                            'initval' => !empty($value['value']) ? $value['value'] : 0,
+                                            'min' => 0,
                                             'max' => 99999,
                                             'buttonup_class' => 'btn btn-default btn-sm', 
                                             'buttondown_class' => 'btn btn-default btn-sm', 

@@ -17,7 +17,8 @@ $this->title = '课程中心工作平台';
         </div>
         
         <div class="site-home-introduction">
-            <span>课程建设分散式众包平台</span>
+            <span>课程建设工作平台</span>
+            <!--<span>课程建设分散式众包平台</span>-->
         </div>
         
         <div class="site-home-jumbotron">

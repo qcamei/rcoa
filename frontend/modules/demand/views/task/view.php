@@ -1,9 +1,9 @@
 <?php
 
 use common\models\demand\DemandTask;
+use common\widgets\cslider\CSliderAssets;
 use frontend\modules\demand\assets\ChartAsset;
 use frontend\modules\demand\assets\DemandAssets;
-use kartik\select2\Select2;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\Breadcrumbs;
@@ -67,16 +67,6 @@ else
     ]) ?>
     
     <h4><?= Html::encode(Yii::t('rcoa/demand', 'Demand Acceptances')) ?></h4>
-    <div style="width: 180px; float: right; padding: 0px; margin-bottom: 5px;">
-        <?= Select2::widget([
-            'id' => 'date',
-            'name' => 'created_at',
-            'data' => $dates, 
-            'options' => [
-                'placeholder' => '请选择...',
-            ]
-        ])?>
-    </div>
     <div id="demand-acceptance-view"></div>    
     
 </div>
@@ -148,11 +138,6 @@ $js =
         });
     }
         
-    $('#date').change(function(){
-        $("#demand-acceptance-view").load("/demand/acceptance/view?demand_task_id=$model->id&delivery_id="+$(this).val());
-    });    
-    
-    
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>
@@ -160,4 +145,5 @@ JS;
 <?php
     DemandAssets::register($this);
     ChartAsset::register($this);
+    CSliderAssets::register($this);
 ?>

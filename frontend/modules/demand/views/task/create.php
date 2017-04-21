@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="title">
     <div class="container">
         <?= Breadcrumbs::widget([
-            'options' => ['class' => 'breadcrumb'],
+            'options' => ['class' => 'breadcrumb breadcrumb-title'],
             'homeLink' => [
                 'label' => Yii::t('rcoa/demand', 'Demand Tasks'),
                 'url' => ['index'],

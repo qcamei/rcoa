@@ -19,8 +19,10 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="item-manage-index">
     <div class="container">
         <div class="item-manage-words">
-            <span class="words-ch">开发</span>
-            <span class="words-en">Development</span>
+            <span class="words-big">我们最大的目标是：要为顾客节省每一分钱。</span><br/>
+            <span class="words-small">——沃尔玛创始人萨姆·沃尔顿</span>
+            <!--<span class="words-ch">开发</span>
+            <span class="words-en">Development</span>-->
         </div>
     </div>
     <div class="item-manage-team">
@@ -33,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="team-content">
                     <p>
                         <span class="team-name"><?= $value['name'] ?></span>
-                        <a href="#" class="see"></a>
+                        <?= Html::a('', ['member', 'team_id' => $value['id']], ['class' => 'see']) ?>
                     </p>
                     <p>
                         <span class="team-label">已完成</span>
@@ -48,7 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <p>
                         <span class="team-label">RMB</span>
                         <span class="team-number"><?= isset($teamCost[$value['id']]) ? $teamCost[$value['id']] : 0 ?></span>
-                        <span class="team-unit">元</span>
+                        <span class="team-unit">万元</span>
                     </p>
                 </div>
             </div>

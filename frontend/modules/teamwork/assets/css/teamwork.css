@@ -151,41 +151,6 @@ and open the template in the editor.
     }
 }
 
-/**
- * 团队成员页样式
- */
-.item-manage-member .member-bg {
-    width:100%;
-    height:95px;
-    background-color:rgba(119, 128, 138, 1);
-    margin-bottom: 20px;
-}
-.item-manage-member .left{
-    width:80px;
-    float: left;
-}
-.item-manage-member img {
-    width: 80px;
-    height: 80px;
-    margin-top:7.5px;
-    margin-left:5px;
-}
-.item-manage-member .right{
-    margin-left: 25px;
-    margin-top: 25px;
-    float: left;
-}
-.right .span-name {
-    font-size: 20px;
-    color: #fff;
-}
-.right p {
-    margin-top: -5px;
-}
-.right .span-position {
-    font-size: 14px;
-    color: rgb(204, 204, 204);
-}
 
 /**
  * 搜索框样式

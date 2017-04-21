@@ -4,6 +4,7 @@ namespace frontend\modules\demand\controllers;
 
 use common\models\demand\DemandTask;
 use common\models\demand\DemandWorkitem;
+use common\models\team\Team;
 use common\models\team\TeamCategory;
 use frontend\modules\demand\utils\DemandTool;
 use wskeee\team\TeamMemberTool;
@@ -61,6 +62,18 @@ class DefaultController extends Controller
     }
     
     /**
+     * Member all ItemManage models.
+     * @return mixed
+     */
+    public function actionMember($team_id)
+    {
+       $team = Team::findOne(['id' => $team_id]);
+        return $this->render('member', [
+            'team' => $team,
+        ]);
+    }
+    
+    /**
      * 获取所有课程开发团队
      * @return array
      */
@@ -78,7 +91,7 @@ class DefaultController extends Controller
         $teamCost = (new Query())
                     ->select([
                         'Demamd_task.create_team',
-                        'FORMAT(SUM(if(Demand_workitem.value_type = TRUE, Demand_workitem.`value` / 60, Demand_workitem.`value`) * Demand_workitem.cost),2) AS cost'
+                        'CEIL(SUM(IF(Demand_workitem.value_type = TRUE,Demand_workitem.`value` / 60,Demand_workitem.`value`) * Demand_workitem.cost)) / 10000 AS cost'
                     ])
                     ->from(['Demamd_task' => DemandTask::tableName()])
                     ->leftJoin(['Demand_workitem' => DemandWorkitem::tableName()], 'Demand_workitem.demand_task_id = Demamd_task.id')

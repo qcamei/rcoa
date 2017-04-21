@@ -31,7 +31,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'remark')->textarea(['rows' => 4]) ?>
+    <?= $form->field($model, 'remark')->textarea(['rows' => 4, 'wrap' => 'hard']) ?>
 
     <?php ActiveForm::end(); ?>
 
