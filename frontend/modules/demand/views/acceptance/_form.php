@@ -40,7 +40,7 @@ use yii\widgets\ActiveForm;
                     <td class="text-center"><?= date('Y-m-d H:i', time()) ?></td>
                 </tr>
                 <?php $array = []; foreach ($wdArrays as  $items): 
-                    if($percentage[$items['id']] < 0) $percentage[$items['id']] = 1; else if($percentage[$items['id']] == 0) $percentage[$items['id']] = 100; else $percentage[$items['id']];
+                    if($percentage[$items['id']] == NUll) $percentage[$items['id']] = 100; else $percentage[$items['id']];
                     if($percentage[$items['id']] < 70) $color = '#ff0000'; else if($percentage[$items['id']] < 100) $color = '#428BCA'; else $color = '#43c584';
                 ?>
                 <tr class="tr">
@@ -61,15 +61,10 @@ use yii\widgets\ActiveForm;
                         <?php rsort($childs['childs']); foreach ($childs['childs'] as $child): ?> 
                             <?php if($child['is_workitem'] == true): ?>
                                 <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
-                                    <?php if($child['value_type'] == true){
-                                        echo $child['is_new'] == true ? 
-                                             Html::img(['/filedata/demand/image/mode_newbuilt.png'], ['style' => 'margin-right: 10px;']).DateUtil::intToTime($child['value']) :
-                                             Html::img(['/filedata/demand/image/mode_reform.png'], ['style' => 'margin-right: 10px;']).DateUtil::intToTime($child['value']);
-                                    }else{
-                                        echo $child['is_new'] == true ? 
-                                            Html::img(['/filedata/demand/image/mode_newbuilt.png'], ['style' => 'margin-right: 10px;']).$child['value'].$child['unit'] :
-                                            Html::img(['/filedata/demand/image/mode_reform.png'], ['style' => 'margin-right: 10px;']).$child['value'].$child['unit'];
-                                    }?>
+                                <?= $child['is_new'] == true ? 
+                                        Html::img(['/filedata/demand/image/mode_newbuilt.png'], ['style' => 'margin-right: 10px;']).$child['value'].$child['unit'] :
+                                        Html::img(['/filedata/demand/image/mode_reform.png'], ['style' => 'margin-right: 10px;']).$child['value'].$child['unit'];
+                                ?>
                                 </div>
                             <?php endif; ?>
                         <?php endforeach; ?>    
@@ -78,15 +73,10 @@ use yii\widgets\ActiveForm;
                         <?php rsort($childs['childs']); foreach ($childs['childs'] as $child): ?> 
                             <?php if($child['is_workitem'] == false): ?>
                                 <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
-                                    <?php if($child['value_type'] == true){
-                                        echo $child['is_new'] == true ? 
-                                             Html::img(['/filedata/demand/image/mode_newbuilt.png'], ['style' => 'margin-right: 10px;']).DateUtil::intToTime($child['value']) :
-                                             Html::img(['/filedata/demand/image/mode_reform.png'], ['style' => 'margin-right: 10px;']).DateUtil::intToTime($child['value']);
-                                    }else{
-                                        echo $child['is_new'] == true ? 
-                                            Html::img(['/filedata/demand/image/mode_newbuilt.png'], ['style' => 'margin-right: 10px;']).$child['value'].$child['unit'] :
-                                            Html::img(['/filedata/demand/image/mode_reform.png'], ['style' => 'margin-right: 10px;']).$child['value'].$child['unit'];
-                                    }?>
+                                <?= $child['is_new'] == true ? 
+                                        Html::img(['/filedata/demand/image/mode_newbuilt.png'], ['style' => 'margin-right: 10px;']).$child['value'].$child['unit'] :
+                                        Html::img(['/filedata/demand/image/mode_reform.png'], ['style' => 'margin-right: 10px;']).$child['value'].$child['unit'];
+                                ?>
                                 </div>
                             <?php endif; ?>
                         <?php endforeach; ?>
@@ -102,7 +92,7 @@ use yii\widgets\ActiveForm;
                                 <?= Slider::widget([
                                     'class' => 'acceptance-value',
                                     'name'=> 'value['.$items['id'].']',
-                                    'value'=> $percentage[$items['id']] == 0 || $percentage[$items['id']] >= 100 ?  10 : 0,
+                                    'value'=> $percentage[$items['id']] >= 100 ?  10 : 0,
                                     'sliderColor'=>Slider::TYPE_INFO,
                                     'handleColor'=>Slider::TYPE_INFO,   
                                     'options' => [

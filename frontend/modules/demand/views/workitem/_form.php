@@ -23,9 +23,7 @@ foreach ($allModels as $model) {
     ];
 }
 
-//$allModel = ArrayHelper::index($allModel, null, ['workitemTypeName']);
-//var_dump($allModel);
-//exit;
+
 ?>
 
 <div class="demand-workitem-form">
@@ -52,33 +50,13 @@ foreach ($allModels as $model) {
                             <th class="text-right"><?= $keys ?></th>
                             <?php rsort($elements); foreach ($elements as $value): ?>
                             <td>
-                                <?php if($value['value_type'] == true): ?>
-                                    <div class="col-lg-5 col-md-7 col-sm-7 col-xs-12">
-                                    <?= Html::input('text', 'value['.$value['id'].']', DateUtil::intToTime($value['value']), [
-                                        'class' => 'form-control workitem-input'
+                                <div class="col-lg-4 col-md-7 col-sm-7 col-xs-12">
+                                    <?= Html::input('number', 'value['.$value['id'].']', isset($value['value']) ? $value['value'] : 0, [
+                                        'class' => 'form-control workitem-input', 'min' => 0, 
+                                        'data-cost' => $value['cost'], 'onblur' => 'totalCost()'
                                     ]) ?>
-                                    </div>
-                                <?php else: ?>
-                                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
-                                    <?= TouchSpin::widget([
-                                        'name' => 'value['.$value['id'].']',
-                                        'options' => [
-                                            'class' => 'input-sm workitem-input',
-                                            'style' => 'padding-left: 5px;',
-                                            'placeholder' => '数量...'
-                                        ],
-                                        'pluginOptions' => [
-                                            'initval' => !empty($value['value']) ? $value['value'] : 0,
-                                            'min' => 0,
-                                            'max' => 99999,
-                                            'buttonup_class' => 'btn btn-default btn-sm', 
-                                            'buttondown_class' => 'btn btn-default btn-sm', 
-                                            'buttonup_txt' => '<i class="glyphicon glyphicon-plus-sign"></i>', 
-                                            'buttondown_txt' => '<i class="glyphicon glyphicon-minus-sign"></i>'
-                                        ],
-                                    ]); ?>
-                                    </div>
-                                <?php endif; ?>
+                                </div>
+                                <div class="unit"><?= $value['unit'] ?></div>
                                 <div class="workitem-tooltip" data-toggle="tooltip" data-placement="top" title="￥<?= $value['cost'] ?> / <?= $value['unit'] ?>"></div>
                                 <div class="cost-unit"><span>( ￥<?= $value['cost'] ?> / <?= $value['unit'] ?> )</span></div>
                             </td>
@@ -89,13 +67,34 @@ foreach ($allModels as $model) {
             </tbody>
                         
         </table> 
-
+    
+    <div class="total-cost">
+        <div class="total">
+            总费用：￥<span id="total-cost"><?= !empty($model->demandTask->cost) ? 
+number_format($model->demandTask->cost + $model->demandTask->cost * $model->demandTask->bonus_proportion, 2, '.', ',') : '0' ?></span>
+        <?= Html::hiddenInput('cost', 0.00, ['id' => 'total-cost-input']); ?>
+        </div>
+        <span class="pattern">(总费用 = 总成本 + 总成本 × 奖金比值)</span>
+    </div>
+    
 </div>
 
 
 <?php
 $js =   
 <<<JS
+    /** 计算总成本 */
+    window.totalCost = function(){    
+        var totalCost = 0;
+        var bonusProportion = $('#demandtask-bonus_proportion').val();
+        $('.workitem-input').each(function(){
+            totalCost += $(this).val() * $(this).attr('data-cost');
+        });
+        $('#total-cost').text(number_format(totalCost + totalCost * bonusProportion, 2, '.', ','));
+        $('#total-cost-input').val(totalCost);
+    } 
+    
+    /** 小屏幕显示 */
     var width = $(document).width();
     if(width <= 480){
         $('.col-xs-12').each(function(index, elem){
@@ -113,8 +112,28 @@ $js =
             });
         });    
     }         
-   
-    
+
+    /** 数字格式化 */
+    function number_format(number, decimals, dec_point, thousands_sep) {  
+        var n = !isFinite(+number) ? 0 : +number,  
+            prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),  
+            sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,  
+            dec = (typeof dec_point === 'undefined') ? '.' : dec_point,  
+            s = '',  
+            toFixedFix = function (n, prec) {  
+                var k = Math.pow(10, prec);  
+                return '' + Math.round(n * k) / k;        };  
+        // Fix for IE parseFloat(0.55).toFixed(0) = 0;  
+        s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');  
+        if (s[0].length > 3) {  
+            s[0] = s[0].replace(/(\d)(?=(?:\d{3})+$)/g, '$1'+sep);  
+        }  
+        if ((s[1] || '').length < prec) {  
+            s[1] = s[1] || '';  
+            s[1] += new Array(prec - s[1].length + 1).join('0');  
+        }      
+        return s.join(dec);  
+    } 
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>

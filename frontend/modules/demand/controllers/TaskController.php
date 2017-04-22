@@ -81,6 +81,7 @@ class TaskController extends Controller
         $dataProvider = new ArrayDataProvider([
             'allModels' => $query->addSelect([
                 'Demand_task.item_type_id', 'Demand_task.item_id', 'Demand_task.item_child_id', 'Demand_task.course_id',
+                'Demand_task.cost', 'Demand_task.bonus_proportion',
                 'Demand_task.team_id', 'Demand_task.undertake_person', 'Demand_task.create_by', 
                 'Demand_task.plan_check_harvest_time', 'Demand_task.status', 'Demand_task.mode', 'Demand_task.progress'
             ])->limit(20)->offset($page*20)->all(),
@@ -152,7 +153,6 @@ class TaskController extends Controller
             'sign' => $sign,
             'develop' => $develop,
             'works' => $this->getDemandWorkitem($id),
-            'totalPrice' => $this->getDemandWorkitemTotalPrice($id)
         ]);
     }
 
@@ -232,6 +232,7 @@ class TaskController extends Controller
         $this->layout = '@app/views/layouts/main';
         $model = $this->findModel($id);
         $post = Yii::$app->request->post();
+        $model->cost = ArrayHelper::getValue($post, 'cost');
         
         if(!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UPDATE) && $model->create_by == \Yii::$app->user->id))
             throw new NotAcceptableHttpException('无权限操作！');
@@ -242,6 +243,7 @@ class TaskController extends Controller
         /* @var $dtTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
         $courses = $this->getCourses($model->item_child_id);
+        
         
         if ($model->load($post)) {
             $dtTool->UpdateTask($model, $post);
@@ -646,22 +648,4 @@ class TaskController extends Controller
         return $works;
     }
     
-    /**
-     * 获取需求工作项的总费用
-     * @param type $task_id         需求任务ID
-     * @return array
-     */
-    public function getDemandWorkitemTotalPrice($task_id)
-    {
-        $totalPrice = (new Query())
-                 ->select(['Demand_workitem.demand_task_id',
-                    'FORMAT(SUM(if(Demand_workitem.value_type = TRUE, Demand_workitem.`value` / 60, Demand_workitem.`value`) * Demand_workitem.cost),2) AS price'
-                 ])
-                 ->from(['Demand_workitem' => DemandWorkitem::tableName()])
-                 ->where(['Demand_workitem.demand_task_id' => $task_id])
-                 ->groupBy('Demand_workitem.demand_task_id')
-                 ->all();
-        
-        return ArrayHelper::map($totalPrice, 'demand_task_id', 'price');
-    }
 }

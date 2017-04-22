@@ -131,6 +131,7 @@ AppAsset::register($this);
                ['label' => '审核人指派', 'url' => '/demand/default'],
                ['label' => '模版类型', 'url' => '/demand/templatetype'],
                ['label' => '工作项模版', 'url' => '/demand/workitem'],
+               ['label' => '比重模版', 'url' => '/demand/weight'],
             ],
         ];
 

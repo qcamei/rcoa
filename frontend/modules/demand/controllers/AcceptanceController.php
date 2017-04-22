@@ -7,13 +7,16 @@ use common\models\demand\DemandAcceptanceData;
 use common\models\demand\DemandDelivery;
 use common\models\demand\DemandDeliveryData;
 use common\models\demand\DemandTask;
+use common\models\demand\DemandWeight;
 use common\models\demand\DemandWorkitem;
 use common\models\demand\searchs\DemandAcceptanceSearch;
 use common\models\workitem\Workitem;
 use common\models\workitem\WorkitemType;
+use frontend\modules\demand\utils\DemandQuery;
 use frontend\modules\demand\utils\DemandTool;
 use wskeee\rbac\RbacName;
 use Yii;
+use yii\db\ActiveQuery;
 use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -86,6 +89,7 @@ class AcceptanceController extends Controller {
             'delivery' => $this->getDemandDeliveryData($demand_task_id, $delivery_id),
             'acceptance' => $this->getDemandAcceptanceData($demand_task_id, $delivery_id),
             'percentage' => $this->getWorkitemTypePercentage($demand_task_id, $delivery_id),
+            'bonus' => $this->getDemandTaskBonus($demand_task_id),
         ]);        
     }
     
@@ -436,7 +440,7 @@ class AcceptanceController extends Controller {
     public function getWorkitemTypePercentage($demand_task_id, $delivery_id)
     {
         $percentage = (new Query())
-                ->select(['Demand_workitem.workitem_type_id', '(SUM(Delivery_data.`value`) / (IF(SUM(Demand_workitem.`value`) = 0, 1, SUM(Demand_workitem.`value`)))) * 100 AS percentage'])
+                ->select(['Demand_workitem.workitem_type_id', 'SUM(Delivery_data.`value`) / SUM(Demand_workitem.`value`) * 100 AS percentage'])
                 ->from(['Demand_workitem' => DemandWorkitem::tableName()])
                 ->leftJoin(['Delivery_data' => DemandDeliveryData::tableName()], 'Delivery_data.demand_workitem_id = Demand_workitem.id')
                 ->where(['Demand_workitem.demand_task_id' => $demand_task_id, 'Delivery_data.demand_delivery_id' => $delivery_id])
@@ -446,6 +450,24 @@ class AcceptanceController extends Controller {
         return ArrayHelper::map($percentage, 'workitem_type_id', 'percentage');
     }
     
+    /**
+     * 需求任务的奖金
+     * @param type $demand_task_id      需求任务ID
+     * @return array
+     */
+    public function getDemandTaskBonus($demand_task_id)
+    {
+        /* @var $dtQuery DemandQuery */
+        $dtQuery = DemandQuery::getInstance();
+        
+        $bonus = (new Query())
+                ->select(['Demand_Bonus.id', 'SUM(Demand_Bonus.bonus) AS bonus'])
+                ->from(['Demand_Bonus' => $dtQuery->findDemandWorkitemTypeBonus($demand_task_id)])
+                ->all();
+        
+        return ArrayHelper::map($bonus, 'id', 'bonus');
+    }
+
     /**
      * 保存需求交付数据到表里
      * @param DemandAcceptance $model              

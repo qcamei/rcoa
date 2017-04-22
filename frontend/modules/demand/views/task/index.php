@@ -257,12 +257,12 @@ DemandTask::$productTotal = $productTotal;
                     ],
                 ],
                 [
-                    'label' => Yii::t('rcoa/demand', 'Product Total'),
+                    'label' => Yii::t('rcoa/demand', 'Total Cost'),
                     'format' => 'raw',
                     'value'=> function($model){
                         /* @var $model DemandTask */
-                        if(isset(DemandTask::$productTotal[$model->id])){
-                            return '<span class="total-price">￥'.DemandTask::$productTotal[$model->id].'</span>';
+                        if(!empty($model->cost)){
+                            return '<span class="total-price">￥'.number_format(($model->cost + $model->cost * $model->bonus_proportion) / 10000, 2).'</span>万';
                         }else{
                             return null;
                         }
@@ -342,7 +342,7 @@ $js =
 　　     return str.replace(/(^\s*)|(\s*$)/g, "");
 　　}
 JS;
-    $this->registerJs($js,  View::POS_READY);
+    //$this->registerJs($js,  View::POS_READY);
 ?>
 
 <?php

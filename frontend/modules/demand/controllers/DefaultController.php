@@ -91,10 +91,10 @@ class DefaultController extends Controller
         $teamCost = (new Query())
                     ->select([
                         'Demamd_task.create_team',
-                        'CEIL(SUM(IF(Demand_workitem.value_type = TRUE,Demand_workitem.`value` / 60,Demand_workitem.`value`) * Demand_workitem.cost)) / 10000 AS cost'
+                        'CEIL(SUM(Demamd_task.cost + Demamd_task.cost * Demamd_task.bonus_proportion)) / 10000 AS cost'
                     ])
                     ->from(['Demamd_task' => DemandTask::tableName()])
-                    ->leftJoin(['Demand_workitem' => DemandWorkitem::tableName()], 'Demand_workitem.demand_task_id = Demamd_task.id')
+                    ->where(['!=', 'Demamd_task.status', DemandTask::STATUS_CANCEL])
                     ->groupBy('Demamd_task.create_team')
                     ->all();
         

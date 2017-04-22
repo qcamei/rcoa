@@ -10,6 +10,7 @@ use common\models\demand\DemandOperationUser;
 use common\models\demand\DemandTask;
 use common\models\demand\DemandTaskAnnex;
 use common\models\demand\DemandTaskAuditor;
+use common\models\demand\DemandWeight;
 use common\models\demand\DemandWorkitem;
 use common\models\team\TeamCategory;
 use common\wskeee\job\JobManager;
@@ -56,6 +57,7 @@ class DemandTool {
                 $this->saveOperationUser($model->id, [$model->create_by]);
                 $this->saveDemandTaskAnnex($model->id, (!empty($post['DemandTaskAnnex']) ? $post['DemandTaskAnnex'] : []));
                 $this->saveDemandWorkitem($model);
+                $this->saveDemandWeight($model);
                 $demandNotice->saveJobManager($model);
             }else
                 throw new \Exception($model->getErrors());
@@ -118,7 +120,7 @@ class DemandTool {
                 DemandTaskAnnex::deleteAll(['task_id' => $model->id]);
                 $this->saveDemandTaskAnnex($model->id, (!empty($post['DemandTaskAnnex']) ? $post['DemandTaskAnnex'] : []));
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['subject' => $model->course->name]);
-                $this->UpdateDemandWorkitem($post, DemandWorkitem::tableName());
+                $this->UpdateDemandWorkitem($post);
             }else
                 throw new \Exception($model->getErrors());
             
@@ -486,7 +488,7 @@ class DemandTool {
     }
     
     /**
-     * 获取每个团队的需求任务时长总和 和 总花费金额
+     * 获取每个团队的需求任务时长总和
      * @param integer $status               状态
      * @return array
      */
@@ -607,32 +609,45 @@ class DemandTool {
             'workitem_type_id', 'workitem_id', 'is_new',  'value_type', 'cost', 'demand_task_id', 'value', 'created_at', 'updated_at'
         ], $workitems)->execute();
     }
-    
+        
     /**
      * 更新需求工作项
      * @param array $post   
-     * @param string $table             数据表
      */
-    public function UpdateDemandWorkitem($post, $table)
+    public function UpdateDemandWorkitem($post)
     {
         $values = ArrayHelper::getValue($post, 'value');
-        
         foreach ($values as $key => $value) {
-            if(!is_numeric($value)){  
-                if(strpos($value ,":"))  {  
-                    $times =  explode(":", $value);  
-                }else if(strpos($value ,'：')){  
-                    $times =  explode("：", $value);
-                }
-                $h = (int)$times[0] ;  
-                $m = (int)$times[1];  
-                $s = count($times) == 3 ? (int)$times[2] : 0;  
-                $value = $h * 3600 + $m * 60 + $s;  
-            }else{
-                $value = $value;
+            \Yii::$app->db->createCommand()->update(DemandWorkitem::tableName(), ['value' => $value], ['id' => $key])->execute();
+        }
+    }
+    
+    /**
+     * 保存数据到需求比重表
+     * @param DemandTask $model
+     */
+    public function saveDemandWeight($model)
+    {
+        /* @var $dtQuery DemandQuery */
+        $dtQuery = DemandQuery::getInstance();
+        /* @var $results ActiveQuery */
+        $results = $dtQuery->findDemandWeightTemplateTotal();
+        $weights = [];
+        if(!empty($results->all())){
+            foreach ($results->all() as $index => $weight) {
+                $weight += [
+                    'demand_task_id' => $model->id,
+                    'created_at' => $model->created_at,
+                    'updated_at' => $model->updated_at
+                ];
+                $weights[] = $weight;
             }
-            Yii::$app->db->createCommand()->update($table, ['value' => $value], ['id' => $key])->execute();
-        }  
+        }
+        
+        /** 添加$values数组到表里 */
+        Yii::$app->db->createCommand()->batchInsert(DemandWeight::tableName(),[
+            'workitem_type_id', 'weight', 'sl_weight',  'zl_weight', 'demand_task_id', 'created_at', 'updated_at'
+        ], $weights)->execute();
     }
 
     /**

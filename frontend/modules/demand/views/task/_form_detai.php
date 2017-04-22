@@ -64,17 +64,10 @@ foreach ($works as $items) {
             $workitem .= '<p class="workitem"><span>'.$childs['name'].'</span><span>（';
         rsort($childs['childs']);
         foreach ($childs['childs'] as $child) {
-            if($child['value_type'] == true){
-                if($child['is_new'] == true)
-                    $workitem .= DateUtil::intToTime($child['value']).', ';
-                else
-                    $workitem .= DateUtil::intToTime($child['value']);
-            }else {
-                if($child['is_new'] == true)
-                    $workitem .= $child['value'].$child['unit'].', ';
-                else
-                    $workitem .= $child['value'].$child['unit'];
-            }
+            if($child['is_new'] == true)
+                $workitem .= $child['value'].$child['unit'].', ';
+            else
+                $workitem .= $child['value'].$child['unit'];
             
         }
         $workitem .= '）</span></p>';
@@ -162,12 +155,12 @@ foreach ($works as $items) {
             [
                 'label' => '工作项',
                 'format' => 'raw',
-                'value' => $workitem
+                'value' => !empty($workitem) ? $workitem : null,
             ],
             [
                 'label' => '总费用',
                 'format' => 'raw',
-                'value' => '￥'.$totalPrice[$model->id]
+                'value' => (!empty($model->cost) ? '￥'. number_format($model->cost + $model->cost * $model->bonus_proportion, 2).'<span class="pattern"> (总费用 = 总成本 + 总成本 × 奖金比值)</span>' : null ), 
             ],
             ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">其它信息</span>','value' => ''],
             [

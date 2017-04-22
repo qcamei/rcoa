@@ -37,16 +37,30 @@ and open the template in the editor.
     text-align: right;
     vertical-align: middle !important;
 }
+.unit{
+    float: left;
+    margin-top: 10px;
+}
 .cost-unit{
-    width: 100%;
+    float: right;
+    margin-top: 10px;
     color: #ccc;
-    text-align: right;
 }
 .workitem-type{
     font-weight: bold;
 }
 .workitem{
     font-size: 13px;
+}
+.total-cost{
+    font-size: 16px;
+    font-weight: bold;
+    text-align: right;
+}
+.pattern{
+    font-size: 13px;
+    color: #ccc;
+    font-weight: 500;
 }
 @media (max-width: 1024px) {
     .col-sm-6{

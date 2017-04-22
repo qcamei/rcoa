@@ -132,6 +132,10 @@ use yii\widgets\ActiveForm;
         echo Html::endTag('div');
     ?>
     
+    <?= $form->field($model, 'bonus_proportion', [
+        'template' => "{label}\n<div class=\"col-sm-2\">{input}</div>\n<div class=\"col-sm-2\">{error}</div>"
+    ])->textInput(['value' => $model->bonus_proportion, 'disabled' => 'disabled']); ?>
+    
     <?php if(!$model->isNewRecord): ?>
     <h5><b>具体信息</b></h5>
     

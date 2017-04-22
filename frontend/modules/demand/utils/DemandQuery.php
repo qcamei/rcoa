@@ -1,18 +1,20 @@
 <?php
 namespace frontend\modules\demand\utils;
 
+use common\models\demand\DemandAcceptance;
+use common\models\demand\DemandAcceptanceData;
 use common\models\demand\DemandTask;
 use common\models\demand\DemandTaskAuditor;
 use common\models\demand\DemandTaskProduct;
+use common\models\demand\DemandWeight;
+use common\models\demand\DemandWeightTemplate;
 use common\models\demand\DemandWorkitemTemplate;
 use common\models\product\Product;
 use common\models\team\Team;
 use common\models\workitem\WorkitemCost;
 use wskeee\framework\models\Item;
 use wskeee\framework\models\ItemType;
-use Yii;
 use yii\db\Query;
-use yii\helpers\ArrayHelper;
 
 class DemandQuery {
    private static $instance = null;
@@ -74,6 +76,43 @@ class DemandQuery {
                 ->from(['dw_temp'=> DemandWorkitemTemplate::tableName()])
                 ->leftJoin(['w_cost'=> WorkitemCost::tableName()], 'w_cost.workitem_id=dw_temp.workitem_id')
                 ->orderBy(['w_cost.target_month' => 'DESC', 'dw_temp.workitem_id' => 'DESC',   'dw_temp.is_new'=> 'DESC']);
+        
+        return $query;
+    }
+    
+    /**
+     * 查询需求任务比重数据
+     * @return $query
+     */
+    public function findDemandWeightTemplateTotal()
+    {
+        $query = (new Query())
+                ->select([
+                    'd_Weight_template.workitem_type_id',
+                    'd_Weight_template.weight',
+                    'd_Weight_template.sl_weight',
+                    'd_Weight_template.zl_weight',
+                ])
+                ->from(['d_Weight_template'=> DemandWeightTemplate::tableName()]);
+        
+        return $query;
+    }
+    
+    /**
+     * 查询该需求任务对应的每个工作项类型的奖金
+     * @param type $demand_task_id          需求任务ID
+     * @return $query
+     */
+    public function findDemandWorkitemTypeBonus($demand_task_id)
+    {
+        $query = (new Query())
+                ->select(['Demand_task.id', 'Demand_task.cost *  Demand_task.bonus_proportion * (Acceptance_data.value * Demand_weight.zl_weight) AS bonus'])
+                ->from(['Demand_task' => DemandTask::tableName()])
+                ->leftJoin(['Demand_weight' => DemandWeight::tableName()], 'Demand_weight.demand_task_id = Demand_task.id')
+                ->leftJoin(['Acceptance' => DemandAcceptance::tableName()], 'Acceptance.demand_task_id = Demand_task.id')
+                ->leftJoin(['Acceptance_data' => DemandAcceptanceData::tableName()], 'Acceptance_data.demand_acceptance_id = Acceptance.id')
+                ->where(['Acceptance.demand_task_id' => $demand_task_id, 'Acceptance.pass' => TRUE])
+                ->groupBy('Acceptance_data.workitem_type_id');
         
         return $query;
     }

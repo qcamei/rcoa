@@ -42,7 +42,7 @@ $this->title = Yii::t('rcoa/demand', 'Demand Tasks');
                     </p>
                     <p>
                         <span class="team-label">RMB</span>
-                        <span class="team-number"><?= isset($teamCost[$value['id']]) ? number_format($teamCost[$value['id']]) : 0 ?></span>
+                        <span class="team-number"><?= isset($teamCost[$value['id']]) ? number_format($teamCost[$value['id']], 2, '.', ',') : 0 ?></span>
                         <span class="team-unit">万元</span>
                     </p>
                 </div>

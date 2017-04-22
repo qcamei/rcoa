@@ -73,7 +73,7 @@ foreach ($workitem as $work){
                 <td class="text-center"><?= reset($acceptancetime) ?></td>
             </tr>
             <?php  foreach ($workitemType as $type): 
-                if($percentage[$type['id']] < 0) $percentage[$type['id']] = 1; else if($percentage[$type['id']] == 0) $percentage[$type['id']] = 100; else $percentage[$type['id']];
+                if($percentage[$type['id']] == NUll) $percentage[$type['id']] = 100; else $percentage[$type['id']];
                 if($percentage[$type['id']] < 70) $color = '#ff0000'; else if($percentage[$type['id']] < 100) $color = '#428BCA'; else $color = '#43c584';
             ?>
             <tr class="tr">
@@ -94,30 +94,20 @@ foreach ($workitem as $work){
                         <td style="width: 300px">
                         <?php rsort($work['childs']); foreach ($work['childs'] as $child): ?>                         
                             <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
-                            <?php if($child['value_type'] == true){
-                               echo $child['is_new'] == true ? 
-                                    Html::img(['/filedata/demand/image/mode_newbuilt.png'], ['style' => 'margin-right: 10px;']).DateUtil::intToTime($child['value']) :
-                                    Html::img(['/filedata/demand/image/mode_reform.png'], ['style' => 'margin-right: 10px;']).DateUtil::intToTime($child['value']);
-                            }else{
-                               echo $child['is_new'] == true ? 
+                            <?= $child['is_new'] == true ? 
                                    Html::img(['/filedata/demand/image/mode_newbuilt.png'], ['style' => 'margin-right: 10px;']).$child['value'].$child['unit'] :
                                    Html::img(['/filedata/demand/image/mode_reform.png'], ['style' => 'margin-right: 10px;']).$child['value'].$child['unit'];
-                            }?>
+                            ?>
                             </div>
                         <?php endforeach; ?>    
                         </td>
                         <td style="width: 300px">
                         <?php rsort($delivery[$work['id']]['childs']); foreach ($delivery[$work['id']]['childs'] as $child): ?>                         
                             <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
-                            <?php if($child['value_type'] == true){
-                               echo $child['is_new'] == true ? 
-                                    Html::img(['/filedata/demand/image/mode_newbuilt.png'], ['style' => 'margin-right: 10px;']).DateUtil::intToTime($child['value']) :
-                                    Html::img(['/filedata/demand/image/mode_reform.png'], ['style' => 'margin-right: 10px;']).DateUtil::intToTime($child['value']);
-                            }else{
-                               echo $child['is_new'] == true ? 
+                            <?= $child['is_new'] == true ? 
                                    Html::img(['/filedata/demand/image/mode_newbuilt.png'], ['style' => 'margin-right: 10px;']).$child['value'].$child['unit'] :
                                    Html::img(['/filedata/demand/image/mode_reform.png'], ['style' => 'margin-right: 10px;']).$child['value'].$child['unit'];
-                            }?>
+                            ?>
                             </div>
                         <?php endforeach; ?>
                         </td>
@@ -170,7 +160,12 @@ foreach ($workitem as $work){
                     </div>
                     <?php endif; ?>
                 </td>
-            </tr>        
+            </tr>
+            <tr>
+                <th class="text-center">奖金</th>
+                <td colspan="3"><?= isset($bonus[$demand_task_id]) ? 
+                    '￥'.number_format($bonus[$demand_task_id], 2, '.', ',').'<span class="pattern">（奖金 = 人工成本 × 资金比值 × 验收评分）</span>' : '无' ?></td>
+            </tr>
         </tbody>    
 
     </table> 

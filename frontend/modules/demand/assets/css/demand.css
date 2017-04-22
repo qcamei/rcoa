@@ -225,6 +225,10 @@
     margin: 10px 0px;
     float: left;
 }
+.total-unit{
+    font-size: 13px;
+    color: #eee;
+}
 @media (min-width: 320px){
     #demandtaskannex .col-xs-9 {
         width: 94%;

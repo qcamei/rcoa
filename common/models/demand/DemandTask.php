@@ -28,6 +28,9 @@ use yii\db\ActiveRecord;
  * @property integer $lesson_time                       学时
  * @property integer $credit                            学分
  * @property string $course_description                 课程简介
+ * @property integer $cost                              课程成本
+ * @property integer $bonus_proportion                  资金比值
+ * @property integer $bonus                             奖金
  * @property integer $mode                              模式
  * @property integer $team_id                           开发团队ID
  * @property string $undertake_person                   承接人
@@ -179,6 +182,7 @@ class DemandTask extends ActiveRecord
             [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'teacher', 'course_description', 'lesson_time', 'credit'],'required'],
             [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'lesson_time', 'credit', 'mode', 'team_id', 'create_team', 'develop_principals', 'status', 'progress', 'created_at', 'updated_at'], 'integer'],
             [['course_description', 'des'], 'string'],
+            [['cost', 'bonus_proportion', 'bonus'], 'number'],
             [['teacher', 'undertake_person', 'create_by'], 'string', 'max' => 36],
             [['plan_check_harvest_time', 'reality_check_harvest_time'], 'string', 'max' => 60],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Item::className(), 'targetAttribute' => ['course_id' => 'id']],
@@ -203,6 +207,9 @@ class DemandTask extends ActiveRecord
             'lesson_time' => Yii::t('rcoa/demand', 'Lesson Time'),
             'credit' => Yii::t('rcoa/demand', 'Credit'),
             'course_description' => Yii::t('rcoa/demand', 'Course Description'),
+            'cost' => Yii::t('rcoa/demand', 'Cost'),
+            'bonus_proportion' => Yii::t('rcoa/demand', 'Bonus Proportion'),
+            'bonus' => Yii::t('rcoa/demand', 'Bonus'),
             'mode' => Yii::t('rcoa/demand', 'Mode'),
             'team_id' => Yii::t('rcoa/demand', 'Team'),
             'undertake_person' => Yii::t('rcoa/demand', 'Undertake Person'),

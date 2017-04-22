@@ -52,7 +52,6 @@ else
     <?= $this->render('_form_detai', [
         'model' => $model,
         'works' => $works,
-        'totalPrice' => $totalPrice,
     ]) ?>
         
     <span><?= Yii::t('rcoa/demand', 'Demand Task Annexes').'：'; ?></span>

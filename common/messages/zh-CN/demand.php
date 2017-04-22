@@ -35,6 +35,9 @@ return[
     'Create Demand Delivery' => '提交-交付任务',
     'Demand Acceptances' => '验收记录',
     'Create Demand Acceptance' => '提交-验收记录',
+    'Demand Weight Templates' => '需求比重模版',
+    'Create Demand Weight Template' => '创建-需求比重',
+    'Update Demand Weight Template' => '更新-需求比重',
     
     //需求任务-字段
     'Item Type' => '行业',
@@ -61,10 +64,14 @@ return[
     'Team ID' => '团队名称',
     'U ID' => '用户名',
     'Task ID' => '课程名称',
-    'Product Total' => '产品总额',
+    'Total Cost' => '总费用',
     'Demand Workitem Template Type ID' => '模版类型',
     'Workitem Type ID' => '工作项类型',
     'Workitem ID' => '工作项',
     'Is New' => '是否是新建',
-    'Value Type' => '数量的类型'
+    'Value Type' => '数量的类型',
+    'Bonus Proportion' => '奖金比值',
+    'Weight' => '比重',
+    'Sl Weight' => '数量比重',
+    'Zl Weight' => '质量比重'
 ];

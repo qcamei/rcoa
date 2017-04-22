@@ -9,7 +9,7 @@ use yii\web\View;
 /* @var $searchModel DemandWorkitemSearch */
 /* @var $dataProvider ActiveDataProvider */
 
-$this->title = Yii::t('rcoa/demand', 'Demand Workitems');
+//$this->title = Yii::t('rcoa/demand', 'Demand Workitems');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="demand-workitem-index">
