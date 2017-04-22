@@ -41,6 +41,7 @@ class ExpertController extends BasedataController
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'rbac' => $this->getRbac(),
         ]);
     }
 
@@ -53,6 +54,7 @@ class ExpertController extends BasedataController
     {
         return $this->render('view', [
             'model' => BasedataExpert::find($id),
+            'rbac' => $this->getRbac(),
         ]);
     }
 
@@ -63,6 +65,8 @@ class ExpertController extends BasedataController
      */
     public function actionCreate()
     {
+        parent::actionCreate();
+        
         $model = new BasedataExpert();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -82,6 +86,8 @@ class ExpertController extends BasedataController
      */
     public function actionUpdate($id)
     {
+        parent::actionUpdate($id);
+        
         $model = BasedataExpert::find($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -101,6 +107,8 @@ class ExpertController extends BasedataController
      */
     public function actionDelete($id)
     {
+        parent::actionDelete($id);
+        
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

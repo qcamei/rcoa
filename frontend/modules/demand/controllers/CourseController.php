@@ -44,6 +44,7 @@ class CourseController extends BasedataController
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'rbac' => $this->getRbac(),
         ]);
     }
 
@@ -56,6 +57,7 @@ class CourseController extends BasedataController
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'rbac' => $this->getRbac(),
         ]);
     }
 
@@ -66,6 +68,8 @@ class CourseController extends BasedataController
      */
     public function actionCreate()
     {
+        parent::actionCreate();
+        
         $model = new Course();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -93,6 +97,8 @@ class CourseController extends BasedataController
      */
     public function actionUpdate($id)
     {
+        parent::actionUpdate($id);
+        
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -119,6 +125,8 @@ class CourseController extends BasedataController
      */
     public function actionDelete($id,$callback=null)
     {
+        parent::actionDelete($id);
+        
         $this->findModel($id)->delete();
         /* @var $fwManager FrameworkManager */
         $fwManager = \Yii::$app->fwManager;

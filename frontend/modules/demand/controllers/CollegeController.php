@@ -42,6 +42,7 @@ class CollegeController extends BasedataController
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'rbac' => $this->getRbac(),
         ]);
     }
 
@@ -58,6 +59,7 @@ class CollegeController extends BasedataController
         return $this->render('view', [
             'model' => $this->findModel($id),
             'dataProvider'=>$dataProvider,
+            'rbac' => $this->getRbac(),
         ]);
     }
 
@@ -68,6 +70,8 @@ class CollegeController extends BasedataController
      */
     public function actionCreate()
     {
+        parent::actionCreate();
+        
         $model = new College();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -90,6 +94,8 @@ class CollegeController extends BasedataController
      */
     public function actionUpdate($id)
     {
+        parent::actionUpdate($id);
+        
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -112,6 +118,8 @@ class CollegeController extends BasedataController
      */
     public function actionDelete($id)
     {
+        parent::actionDelete($id);
+        
         $this->findModel($id)->delete();
         
         /* @var $fwManager FrameworkManager */

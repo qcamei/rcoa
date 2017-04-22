@@ -6,7 +6,6 @@ use wskeee\framework\models\ItemType;
 use wskeee\framework\models\searchs\ItemTypeSearch;
 use Yii;
 use yii\filters\VerbFilter;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -41,6 +40,7 @@ class BusinessController extends BasedataController
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'rbac' => $this->getRbac(),
         ]);
     }
 
@@ -53,6 +53,7 @@ class BusinessController extends BasedataController
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'rbac' => $this->getRbac(),
         ]);
     }
 
@@ -63,6 +64,8 @@ class BusinessController extends BasedataController
      */
     public function actionCreate()
     {
+        parent::actionCreate();
+        
         $model = new ItemType();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -82,6 +85,8 @@ class BusinessController extends BasedataController
      */
     public function actionUpdate($id)
     {
+        parent::actionUpdate($id);
+        
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -101,6 +106,8 @@ class BusinessController extends BasedataController
      */
     public function actionDelete($id)
     {
+        parent::actionDelete($id);
+        
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

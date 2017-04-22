@@ -26,6 +26,10 @@
     margin: 10px 0px 10px 0px;
 }
 
+.basedata-breadcrumbs a{
+    color: #337ab7 !important
+}
+
 
 /**
  * 详细页样式 

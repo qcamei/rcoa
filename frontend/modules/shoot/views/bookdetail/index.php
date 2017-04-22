@@ -173,7 +173,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail');
                 
                 'content' => function($model,$key,$index,$e)
                 {
-                    return "<p style='text-overflow: ellipsis;white-space: nowrap;overflow: hidden;color:#e74955'>$model->remark</p>";
+                    return $model->getIsValid() ? "<p style='text-overflow: ellipsis;white-space: nowrap;overflow: hidden;color:#e74955'>$model->remark</p>" : '';
                 }
             ],
             [
