@@ -150,7 +150,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail');
             ],
             [
                 'class' => 'frontend\modules\shoot\components\ShootBookdetailListTd',
-                'label' => '【备注】',
+                'label' => '备注',
                 'headerOptions'=>[
                     'class'=>[
                         'th'=>'hidden-xs',
