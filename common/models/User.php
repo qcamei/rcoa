@@ -307,6 +307,9 @@ class User extends ActiveRecord implements IdentityInterface
             if($this->scenario == self::SCENARIO_CREATE)
             {
                 $this->setPassword($this->password);
+                //设置默认头像
+                if(trim($this->avatar) == '')
+                    $this->avatar = '/filedata/avatars/default/'.($this->sex == 1 ? 'man' : 'women').rand(1, 25).'.jpg';
             }else if($this->scenario ==  self::SCENARIO_UPDATE)
             {
                 if(trim($this->password) == '')

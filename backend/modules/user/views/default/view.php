@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'nickname',
             [
                 'attribute' => 'sex',
-                'value' => $model::SEX_MALE ? '男' : '女',
+                'value' => $model->sex == 1 ? '男' : '女',
             ],
             'email:email',
             'status',
