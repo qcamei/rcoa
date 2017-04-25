@@ -21,7 +21,7 @@ use yii\web\User;
  * @property integer $id                               id
  * @property string $name                              名称
  * @property integer $type                             类型
- * @property string $team_icon                         团队图标
+ * @property string $team_logo                         团队图标
  * @property string $image                             团队背景图
  * @property string $des                               描述
  * @property integer $index                            索引
@@ -58,7 +58,7 @@ class Team extends ActiveRecord
     {
         return [
             [['type', 'index'], 'integer'],
-            [['name', 'team_icon',  'image', 'des'], 'string', 'max' => 255],
+            [['name', 'team_logo',  'image', 'des'], 'string', 'max' => 255],
             [['is_delete'], 'string', 'max' => 4],
             [['type'], 'exist', 'skipOnError' => true, 'targetClass' => TeamType::className(), 'targetAttribute' => ['type' => 'id']],
         ];
@@ -73,7 +73,7 @@ class Team extends ActiveRecord
             'id' => Yii::t('rcoa/team', 'ID'),
             'name' => Yii::t('rcoa', 'Name'),
             'type' => Yii::t('rcoa', 'Type'),
-            'team_icon' => Yii::t('rcoa/team', 'Team Icon'),
+            'team_logo' => Yii::t('rcoa/team', 'Team Logo'),
             'image' => Yii::t('rcoa', 'Image'),
             'des' => Yii::t('rcoa', 'Des'),
             'index' => Yii::t('rcoa', 'Index'),
@@ -89,21 +89,22 @@ class Team extends ActiveRecord
     {
         if(parent::beforeSave($insert))
         {
-            $uploadLogo = UploadedFile::getInstance($this, 'team_icon');
+            $uploadLogo = UploadedFile::getInstance($this, 'team_logo');
+            
             $uploadImage = UploadedFile::getInstance($this, 'image');
             if($uploadLogo != null){
                 $uploadLogoPath = $this->fileExists(Yii::getAlias('@filedata').'/team/logo/');
-                $uploadLogo->saveAs($uploadLogoPath.$uploadLogo->name.'.'.$uploadLogo->extension);
-                $this->team_icon = '/filedata/team/logo/'.$uploadLogo->name.'.'.$uploadLogo->extension;
-                if(trim($this->team_icon) == '')
-                    $this->team_icon = $this->getOldAttribute ('team_icon');
+                $uploadLogo->saveAs($uploadLogoPath.$uploadLogo->name);
+                $this->team_logo = '/filedata/team/logo/'.$uploadLogo->name;
+                if(trim($this->team_logo) == '')
+                    $this->team_logo = $this->getOldAttribute ('team_icon');
                     
             }
             
             if($uploadImage != null){
                 $uploadImagePath = $this->fileExists(Yii::getAlias('@filedata').'/team/image/');
-                $uploadImage->saveAs($uploadImagePath.$uploadImage->name.'.'.$uploadImage->extension);
-                $this->image = '/filedata/team/image/'.$uploadImage->name.'.'.$uploadImage->extension;
+                $uploadImage->saveAs($uploadImagePath.$uploadImage->name);
+                $this->image = '/filedata/team/image/'.$uploadImage->name;
                 if(trim($this->image) == '')
                    $this->image = $this->getOldAttribute ('image');
             }

@@ -24,7 +24,7 @@ use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\UploadedFile;
 
-class Import2Controller extends Controller
+class ImportController extends Controller
 {
     
     //禁用csrf验证

@@ -342,7 +342,7 @@ class TeamMemberTool extends Component {
      */
     private function getTeamsDatas(){
         $query = (new Query())
-                ->select(['id','name','type', 'team_icon', 'image','index'])
+                ->select(['id','name','type', 'team_logo', 'image','index'])
                 ->from(Team::tableName());
         return $query->all(Yii::$app->db);
     }

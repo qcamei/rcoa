@@ -10,7 +10,7 @@ return[
     'Is Delete'=>'已删除',
     'Category ID'=>'分类id',
     'Team ID'=>'分类id',
-    'Team Icon' => '团队队标',
+    'Team Logo' => '团队logo',
     'Index'=>'分类id',
     'Category'=>'类别',
     'Categories'=>'类别',

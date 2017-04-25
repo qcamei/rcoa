@@ -23,7 +23,7 @@ $this->title = Yii::t('rcoa/demand', 'Demand Tasks');
             <?php foreach($team as $value): ?>
             <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 team">
                 <div class="team-logo">
-                    <?= Html::img([$value['team_icon']]) ?>
+                    <?= Html::img([$value['team_logo']]) ?>
                 </div>
                 <div class="team-content">
                     <p>

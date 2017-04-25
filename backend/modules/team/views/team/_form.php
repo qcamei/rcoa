@@ -24,7 +24,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'type')->dropDownList($teamType, ['prompt'=>'请选择...']) ?>
     
-    <?= $form->field($model, 'team_icon')->fileInput() ?>
+    <?= $form->field($model, 'team_logo')->fileInput() ?>
     
     <?= $form->field($model, 'index')->widget(TouchSpin::classname(),  [
         'pluginOptions' => [
