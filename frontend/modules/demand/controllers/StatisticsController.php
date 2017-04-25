@@ -146,15 +146,12 @@ class StatisticsController extends Controller
      * @return Array
      */
     private function getStatisticsByItemType($sourceQuery,$type){
-        $selectName = $type == 1 ? 'DemandWorkitem.value * DemandWorkitem.cost' : 'DemandTask.lesson_time';
+        $selectName = $type == 1 ? 'SUM(COALESCE(DemandTask.cost,0) + COALESCE(DemandTask.cost,0) * DemandTask.bonus_proportion)' : 'SUM(DemandTask.lesson_time)';
         $itemTypQuery = clone $sourceQuery;
-        $itemTypQuery->select(['ItemType.name',"COALESCE(SUM({$selectName}),0) + COALESCE(SUM({$selectName}),0) * DemandTask.bonus_proportion AS value"])
+        $itemTypQuery->select(['ItemType.name',"{$selectName} AS value"])
                     ->from(['DemandTask'=>DemandTask::tableName()])
                     ->leftJoin(['ItemType'=>  ItemType::tableName()],'DemandTask.item_type_id = ItemType.id')
                     ->groupBy('DemandTask.item_type_id');
-        if($type == 1){
-            $itemTypQuery->leftJoin (['DemandWorkitem'=> DemandWorkitem::tableName ()], 'DemandTask.id = DemandWorkitem.demand_task_id');
-        }
         return $itemTypQuery->all(Yii::$app->db);
     }
     /**
@@ -165,15 +162,12 @@ class StatisticsController extends Controller
      * @return Array
      */
     private function getStatisticsByItem($sourceQuery,$type){
-        $selectName = $type == 1 ? 'DemandWorkitem.value * DemandWorkitem.cost' : 'DemandTask.lesson_time';
+        $selectName = $type == 1 ? 'SUM(COALESCE(DemandTask.cost,0) + COALESCE(DemandTask.cost,0) * DemandTask.bonus_proportion)' : 'SUM(DemandTask.lesson_time)';
         $itemQuery = clone $sourceQuery;
-        $itemQuery->select(['FwItem.name',"COALESCE(SUM({$selectName}),0) + COALESCE(SUM({$selectName}),0) * DemandTask.bonus_proportion AS value"])
+        $itemQuery->select(['FwItem.name',"{$selectName} AS value"])
                 ->from(['DemandTask'=>DemandTask::tableName()])
                 ->leftJoin(['FwItem'=> Item::tableName()],'DemandTask.item_id = FwItem.id')
                 ->groupBy('DemandTask.item_id');
-        if($type == 1){
-            $itemQuery->leftJoin (['DemandWorkitem'=> DemandWorkitem::tableName ()], 'DemandTask.id = DemandWorkitem.demand_task_id');
-        }
         return $itemQuery->all(Yii::$app->db);
     }
      /**
@@ -183,15 +177,12 @@ class StatisticsController extends Controller
      * @return Array
      */
     private function getStatisticsByItemChild($sourceQuery,$type){
-        $selectName = $type == 1 ? 'DemandWorkitem.value * DemandWorkitem.cost' : 'DemandTask.lesson_time';
+        $selectName = $type == 1 ? 'SUM(COALESCE(DemandTask.cost,0) + COALESCE(DemandTask.cost,0) * DemandTask.bonus_proportion)' : 'SUM(DemandTask.lesson_time)';
         $itemChildQuery = clone $sourceQuery;
-        $itemChildQuery->select(['FwItem.name',"COALESCE(SUM({$selectName}),0) + COALESCE(SUM({$selectName}),0) * DemandTask.bonus_proportion AS value"])
+        $itemChildQuery->select(['FwItem.name',"{$selectName} AS value"])
                     ->from(['DemandTask'=>DemandTask::tableName()])
                     ->leftJoin(['FwItem'=> Item::tableName()],'DemandTask.item_child_id = FwItem.id')
                     ->groupBy('DemandTask.item_child_id');
-        if($type == 1){
-            $itemChildQuery->leftJoin (['DemandWorkitem'=> DemandWorkitem::tableName ()], 'DemandTask.id = DemandWorkitem.demand_task_id');
-        }
         return $itemChildQuery->all(Yii::$app->db);
     }
     
@@ -202,17 +193,14 @@ class StatisticsController extends Controller
      * @return Array
      */
     private function getStatisticsByTeam($sourceQuery,$type){
-        $selectName = $type == 1 ? 'DemandWorkitem.value * DemandWorkitem.cost' : 'DemandTask.lesson_time';
+        $selectName = $type == 1 ? 'SUM(COALESCE(DemandTask.cost,0) + COALESCE(DemandTask.cost,0) * DemandTask.bonus_proportion)' : 'SUM(DemandTask.lesson_time)';
         $teamQuery = clone $sourceQuery;
-        $teamQuery->select(['Team.name',"COALESCE(SUM({$selectName}),0) + COALESCE(SUM({$selectName}),0) * DemandTask.bonus_proportion AS value",'Count(distinct DemandTask.id) AS total'])
+        $teamQuery->select(['Team.name',"{$selectName} AS value",'Count(distinct DemandTask.id) AS total'])
                 ->from(['Team'=> Team::tableName()])
                 ->leftJoin(['DemandTask'=>DemandTask::tableName()],'DemandTask.create_team = Team.id')
                 ->andWhere(['Team.id'=>  ArrayHelper::getColumn(TeamMemberTool::getInstance()->getTeamsByCategoryId(TeamCategory::TYPE_PRODUCT_CENTER), 'id')])
                 ->groupBy('Team.id')
                 ->orderBy('Team.index DESC');
-        if($type == 1){
-            $teamQuery->leftJoin (['DemandWorkitem'=> DemandWorkitem::tableName ()], 'DemandTask.id = DemandWorkitem.demand_task_id');
-        }
         return $teamQuery->all(Yii::$app->db);
     }
 

@@ -53,12 +53,13 @@ class AppGlobalVariables{
                 $item = [
                     'label'=> $_system->name,
                 ];
-                if(count($children)>0)
+                if(count($children)>0){
                     $item['items'] = $children;
-                else
+                    $item['url'] = ["/{$_system->aliases}"];
+                }else
                     $item['url'] = [$_system->module_link];
-
-                 $menuItems[] = $item;
+                $item['aliases'] = $_system->aliases;    
+                $menuItems[] = $item;
             }
         }
         return $menuItems;
@@ -78,6 +79,7 @@ class AppGlobalVariables{
                 $items[]=[
                     'label'=> $systme->name,
                     'url'=> [$systme->module_link],
+                    'aliases' => $systme->aliases,
                 ];
             }
         }

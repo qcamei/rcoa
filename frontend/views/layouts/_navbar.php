@@ -47,28 +47,23 @@ NavBar::begin([
         $route = Yii::$app->controller->getRoute();
     }else
     {
-        /* 通过模块名拿到对应模块路由 */
-        $urls = ArrayHelper::getColumn($menuItems, 'url');
+        /* 通过模块名拿到对应模块路由 $urls = [aliases => [url],,,] */
+        $urls = ArrayHelper::map($menuItems, 'aliases', 'url');
+       
         $item = [];
         foreach ($menuItems as $items){
             if(isset($items['items'])){
                 foreach ($items['items'] as $vals)
-                    $item[] = ArrayHelper::getValue($vals, 'url');
+                    $urls[$vals['aliases']] = ArrayHelper::getValue($vals, 'url');
             } 
         }
-        $urls = ArrayHelper::merge($urls, $item);        
-        foreach($urls AS $url){
-            if(stripos($url[0], $moduleId))
-            {
-                $route = substr($url[0], 1);
-                break;
-            }
-        }
+        $route = substr($urls[$moduleId][0], 1);
     }
     echo Nav::widget([
         'options' => Yii::$app->user->isGuest ? ['class' =>'navbar-nav navbar-right'] : ['class' => 'navbar-nav navbar-left'],
         'items' => $menuItems,
         'route' => $route,
+        'activateParents' => true,  //启用选择【子级】【父级】显示高亮
     ]);
     
     if(!Yii::$app->user->isGuest){
