@@ -133,7 +133,7 @@ use yii\widgets\ActiveForm;
                         <input type="hidden" name="DemandAcceptance[pass]" value="">
                         <div id="demandacceptance-pass">
                             <label><input type="radio" name="DemandAcceptance[pass]" value="1">&nbsp;<a class="btn btn-success">验收通过</a></label>
-                            <label><input type="radio" name="DemandAcceptance[pass]" value="0">&nbsp;<a class="btn btn-danger">验收不通过</a></label>
+                            <label><input type="radio" name="DemandAcceptance[pass]" value="0"  checked="checked" >&nbsp;<a class="btn btn-danger">验收不通过</a></label>
                         </div>
                         <?=  Html::activeTextarea($model, 'des', ['class' => 'form-control', 'rows' => 4, 'value' => '无']); ?>
                     </td>

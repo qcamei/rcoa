@@ -120,11 +120,10 @@ class TaskController extends Controller
     /**
      * Displays a single DemandTask model.
      * @param integer $id
-     * @param integer $sign                     是否滚动到添加课程产品位置标识  1为是0为否（默认为0）
      * @param integer $develop                  是否现在就开始创建课程开发数据标识  1为是0为否（默认为0）
      * @return mixed
      */
-    public function actionView($id, $sign = 0, $develop = 0)
+    public function actionView($id, $develop = 0)
     {
         $this->layout = '@app/views/layouts/main';
         $model = $this->findModel($id);
@@ -150,7 +149,6 @@ class TaskController extends Controller
             'twTool' => $twTool,
             'rbacManager' => $rbacManager,
             'annex' => $this->getAnnex($id),
-            'sign' => $sign,
             'develop' => $develop,
             'works' => $this->getDemandWorkitem($id),
         ]);

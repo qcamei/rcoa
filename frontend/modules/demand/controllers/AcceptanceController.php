@@ -79,8 +79,9 @@ class AcceptanceController extends Controller {
     public function actionView($demand_task_id, $delivery_id = null) {
         $delivery = $this->findDeliveryModel($demand_task_id);
         $delivery_id = empty($delivery_id) ? $delivery->id : $delivery_id;
-        
+        $model = $this->findModel($demand_task_id, $delivery_id);
         return $this->renderAjax('view', [
+            'model' => $model,
             'demand_task_id' => $demand_task_id,
             'delivery_id' => $delivery_id,
             'dates' => $this->getDeliveryCreatedAt($demand_task_id),
@@ -89,7 +90,6 @@ class AcceptanceController extends Controller {
             'delivery' => $this->getDemandDeliveryData($demand_task_id, $delivery_id),
             'acceptance' => $this->getDemandAcceptanceData($demand_task_id, $delivery_id),
             'percentage' => $this->getWorkitemTypePercentage($demand_task_id, $delivery_id),
-            'bonus' => $this->getDemandTaskBonus($demand_task_id),
         ]);        
     }
     
@@ -118,7 +118,7 @@ class AcceptanceController extends Controller {
         $model->pass = ArrayHelper::getValue($post, 'DemandAcceptance.pass');
         $model->des = ArrayHelper::getValue($post, 'DemandAcceptance.des');
         $model->create_by = \Yii::$app->user->id;
-
+        
         if (\Yii::$app->getRequest()->isPost && $model->save()) {
             $this->saveDemandAcceptanceData($model, $post);
             $dtTool->CreateAcceptanceTask($model);
@@ -170,11 +170,15 @@ class AcceptanceController extends Controller {
      * @return DemandAcceptance the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id) {
-        if (($model = DemandAcceptance::findOne($id)) !== null) {
+    protected function findModel($demand_task_id, $delivery_id) {
+        $model = DemandAcceptance::find()
+                ->filterWhere(['demand_task_id' => $demand_task_id])
+                ->andFilterWhere(['demand_delivery_id' => $delivery_id])
+                ->one();
+        if ($model !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            return new DemandAcceptance();
         }
     }
 
@@ -452,17 +456,19 @@ class AcceptanceController extends Controller {
     
     /**
      * 需求任务的奖金
-     * @param type $demand_task_id      需求任务ID
+     * @param integer $demand_task_id
+     * @param integer $delivery_id
+     * @param integer $acceptance_id
      * @return array
      */
-    public function getDemandTaskBonus($demand_task_id)
+    public function getDemandTaskBonus($demand_task_id, $delivery_id, $acceptance_id)
     {
         /* @var $dtQuery DemandQuery */
         $dtQuery = DemandQuery::getInstance();
         
         $bonus = (new Query())
                 ->select(['Demand_Bonus.id', 'SUM(Demand_Bonus.bonus) AS bonus'])
-                ->from(['Demand_Bonus' => $dtQuery->findDemandWorkitemTypeBonus($demand_task_id)])
+                ->from(['Demand_Bonus' => $dtQuery->findDemandWorkitemTypeBonus($demand_task_id, $delivery_id, $acceptance_id)])
                 ->all();
         
         return ArrayHelper::map($bonus, 'id', 'bonus');
@@ -484,6 +490,7 @@ class AcceptanceController extends Controller {
             ];
         }
         ArrayHelper::multisort($datas, 'workitem_type_id', SORT_ASC);
+        
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
@@ -492,13 +499,16 @@ class AcceptanceController extends Controller {
                 /** 添加$values数组到表里 */
                 Yii::$app->db->createCommand()->batchInsert(DemandAcceptanceData::tableName(), 
                 ['demand_acceptance_id', 'workitem_type_id', 'value'], $datas)->execute();
+                
                 if($model->pass == false){
                     \Yii::$app->db->createCommand()->update(DemandTask::tableName(), [
                         'status' => DemandTask::STATUS_UPDATEING], ['id' => $model->demand_task_id])->execute();
                 }else{
+                    $bonus = $this->getDemandTaskBonus($model->demand_task_id, $model->demand_delivery_id, $model->id);
                     \Yii::$app->db->createCommand()->update(DemandTask::tableName(), [
                         'status' => DemandTask::STATUS_COMPLETED,
                         'progress' => DemandTask::$statusProgress[DemandTask::STATUS_COMPLETED],
+                        'bonus' => $bonus[$model->demand_task_id],
                         'reality_check_harvest_time' => Date('Y-m-d H:i', time()),
                         ], ['id' => $model->demand_task_id])->execute();
                 }

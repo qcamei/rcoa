@@ -21,19 +21,25 @@ use yii\widgets\ActiveForm;
             <?php $form = ActiveForm::begin(['id' => 'form-submit-check']); ?>
 
                 <?php
-                    echo Html::encode('是否确定要提交该任务审核？');
-                    echo Html::activeHiddenInput($model, 'status', ['value' => DemandTask::STATUS_CHECK]);
-                    echo Html::activeHiddenInput($model, 'progress', ['value' => DemandTask::$statusProgress[DemandTask::STATUS_CHECK]]);
+                    if(empty($model->cost))
+                        echo Html::encode('工作项成本不能为空！');
+                    else {
+                        echo Html::encode('是否确定要提交该任务审核？');
+                        echo Html::activeHiddenInput($model, 'status', ['value' => DemandTask::STATUS_CHECK]);
+                        echo Html::activeHiddenInput($model, 'progress', ['value' => DemandTask::$statusProgress[DemandTask::STATUS_CHECK]]);
+                    }    
+                    
                 ?> 
             <?php ActiveForm::end(); ?>
 
         </div>
-
-        <?php
-            echo Html::beginTag('div', ['class' => 'modal-footer']);
-                echo Html::button('确认', ['id' => 'submit-check-save', 'class' => 'btn btn-primary']);
-            echo Html::endTag('div');
-        ?>
+        <div class="modal-footer">
+            <?php if(empty($model->cost)): ?>
+            <button class="btn btn-primary" data-dismiss="modal" aria-label="Close">关闭</button>
+            <?php else:?>
+            <button id="submit-check-save" class="btn btn-primary">确认</button>
+            <?php endif; ?>    
+        </div>
    </div>
 </div> 
 

@@ -3,11 +3,14 @@ namespace frontend\modules\demand\utils;
 
 use common\models\demand\DemandAcceptance;
 use common\models\demand\DemandAcceptanceData;
+use common\models\demand\DemandDelivery;
+use common\models\demand\DemandDeliveryData;
 use common\models\demand\DemandTask;
 use common\models\demand\DemandTaskAuditor;
 use common\models\demand\DemandTaskProduct;
 use common\models\demand\DemandWeight;
 use common\models\demand\DemandWeightTemplate;
+use common\models\demand\DemandWorkitem;
 use common\models\demand\DemandWorkitemTemplate;
 use common\models\product\Product;
 use common\models\team\Team;
@@ -100,18 +103,27 @@ class DemandQuery {
     
     /**
      * 查询该需求任务对应的每个工作项类型的奖金
-     * @param type $demand_task_id          需求任务ID
+     * @param integer $demand_task_id              需求任务id
+     * @param integer $delivery_id                 交付id
+     * @param integer $acceptance_id               验收id
      * @return $query
      */
-    public function findDemandWorkitemTypeBonus($demand_task_id)
+    public function findDemandWorkitemTypeBonus($demand_task_id, $delivery_id, $acceptance_id)
     {
         $query = (new Query())
-                ->select(['Demand_task.id', 'Demand_task.cost *  Demand_task.bonus_proportion * (Acceptance_data.value * Demand_weight.zl_weight) AS bonus'])
+                ->select([
+                    'Demand_task.id', 
+                    'SUM(Demand_workitem.cost) * Demand_task.bonus_proportion * 
+                        (if(SUM(Delivery_data.`value`) / SUM(Demand_workitem.`value`) > 1, 1, SUM(Delivery_data.`value`) / SUM(Demand_workitem.`value`)) * Demand_weight.sl_weight + 
+                         Acceptance_data.`value` / 10 * Demand_weight.zl_weight) AS bonus'
+                ])
                 ->from(['Demand_task' => DemandTask::tableName()])
-                ->leftJoin(['Demand_weight' => DemandWeight::tableName()], 'Demand_weight.demand_task_id = Demand_task.id')
-                ->leftJoin(['Acceptance' => DemandAcceptance::tableName()], 'Acceptance.demand_task_id = Demand_task.id')
-                ->leftJoin(['Acceptance_data' => DemandAcceptanceData::tableName()], 'Acceptance_data.demand_acceptance_id = Acceptance.id')
-                ->where(['Acceptance.demand_task_id' => $demand_task_id, 'Acceptance.pass' => TRUE])
+                ->leftJoin(['Demand_workitem' => DemandWorkitem::tableName()], 'Demand_workitem.demand_task_id = Demand_task.id')
+                ->leftJoin(['Delivery_data' => DemandDeliveryData::tableName()], '(Delivery_data.demand_delivery_id = :delivery_id AND Delivery_data.demand_workitem_id = Demand_workitem.id)', ['delivery_id' => $delivery_id])
+                ->leftJoin(['Acceptance' => DemandAcceptance::tableName()], '(Acceptance.demand_task_id = Demand_task.id AND Acceptance.demand_delivery_id = :delivery_id)', ['delivery_id' => $delivery_id])
+                ->leftJoin(['Acceptance_data' => DemandAcceptanceData::tableName()], '(Acceptance_data.demand_acceptance_id = :acceptance_id AND Acceptance_data.workitem_type_id = Demand_workitem.workitem_type_id)', ['acceptance_id' => $acceptance_id])
+                ->leftJoin(['Demand_weight' => DemandWeight::tableName()], '(Demand_weight.demand_task_id = Demand_task.id AND Demand_weight.workitem_type_id = Acceptance_data.workitem_type_id)')
+                ->filterWhere(['Demand_task.id' => $demand_task_id])
                 ->groupBy('Acceptance_data.workitem_type_id');
         
         return $query;

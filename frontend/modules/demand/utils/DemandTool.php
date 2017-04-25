@@ -430,12 +430,13 @@ class DemandTool {
         $results = $dtQuery->findDemandTaskTable();
         $results->andFilterWhere(['or',[$mark == null ? 'or' : 'and', 
             ['Demand_task.create_by' => $createBy], ['Demand_task.undertake_person' => $undertakePerson]],
-            isset($auditor) ? new Expression("IF(Demand_task.`status` < 10, Demand_task_auditor.u_id = '$auditor', '')") : NUll
+            isset($auditor) ? new Expression("IF(Demand_task.`status` < 10 && Demand_task.`status` != 1, Demand_task_auditor.u_id = '$auditor', '')") : NUll
         ]);
-        if($rbacManager->isRole(RbacName::ROLE_DEMAND_UNDERTAKE_PERSON, \Yii::$app->user->id)){
+        
+        if($rbacManager->isRole(RbacName::ROLE_DEMAND_UNDERTAKE_PERSON, \Yii::$app->user->id) && $undertakePerson != null){
             $results->orWhere(new Expression("IF(Demand_task.`status` = 10, Demand_task.undertake_person IS NULL, '')"));
             $results->orderBy(new Expression("FIELD(Demand_task.`status`, 10, 1, 5, 6, 7, 11, 12, 13, 14)")); 
-        }     
+        }  
         
         $results->andFilterWhere([
             'Demand_task.id' => $id,

@@ -177,19 +177,6 @@ class DeliveryController extends Controller {
         $values = ArrayHelper::getValue($post, 'value');
         $datas = [];
         foreach ($values as $key => $value) {
-            if (!is_numeric($value)) {
-                if (strpos($value, ":")) {
-                    $times = explode(":", $value);
-                } else if (strpos($value, '：')) {
-                    $times = explode("：", $value);
-                }
-                $h = (int) $times[0];
-                $m = (int) $times[1];
-                $s = count($times) == 3 ? (int) $times[2] : 0;
-                $value = $h * 3600 + $m * 60 + $s;
-            } else {
-                $value = (int) $value;
-            }
             $datas[] = [
                 'demand_delivery_id' => $model->id,
                 'demand_workitem_id' => $key,

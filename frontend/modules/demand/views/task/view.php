@@ -15,11 +15,12 @@ $this->title = Yii::t('rcoa/demand', 'Demand View').'：'.$model->course->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/demand', 'Demand Tasks'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-/** 判断添加课程产品【标识】 */
-if($model->getIsStatusDefault() || $model->getIsStatusAdjusimenting())
-    $mark = 1;
+/** 判断是否提示审核 */
+if($model->getIsStatusDefault() && $model->create_by == Yii::$app->user->id)
+    $isCheck = 1;
 else 
-    $mark = 0;
+   $isCheck = 0; 
+
 /** 判断是否提示创建课程开发数据 */
 if($model->getIsStatusDeveloping() && $model->undertake_person == Yii::$app->user->id)
    $isCreateDevelop = 1;
@@ -91,7 +92,7 @@ $js =
     $('.myModal').on('hidden.bs.modal', function(){
         $(".myModal").html("");
     }); 
-       
+    
     /** 提交任务操作 弹出模态框 */
     $('#task-submit-check').click(function(){
         $(".myModal").html("");

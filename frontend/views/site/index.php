@@ -60,7 +60,7 @@ $this->title = '课程中心工作平台';
             </div>
 
             <div class="col-lg-3 site-home-circlebox">
-                <a href="#">
+                <a href="/sites/default">
                     <div class="site-home-circle img-circle">
                         <?= Html::img(['/filedata/site/system/locations.png']) ?>
                         <div class="circle-bg img-circle">

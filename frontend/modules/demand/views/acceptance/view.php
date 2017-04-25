@@ -163,8 +163,8 @@ foreach ($workitem as $work){
             </tr>
             <tr>
                 <th class="text-center">奖金</th>
-                <td colspan="3"><?= isset($bonus[$demand_task_id]) ? 
-                    '￥'.number_format($bonus[$demand_task_id], 2, '.', ',').'<span class="pattern">（奖金 = 人工成本 × 资金比值 × 验收评分）</span>' : '无' ?></td>
+                <td colspan="3"><?= !empty($model->demandTask->bonus) ? 
+                    '￥'.number_format($model->demandTask->bonus, 2, '.', ',').'<span class="pattern">（奖金 = 人工成本 × 资金比值 × 验收评分）</span>' : '￥0.00' ?></td>
             </tr>
         </tbody>    
 

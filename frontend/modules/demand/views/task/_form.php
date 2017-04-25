@@ -147,7 +147,7 @@ use yii\widgets\ActiveForm;
     
     <h5><b>其他信息</b></h5>
     
-    <?= $form->field($model, 'des')->textarea(['value' => '无', 'rows' => 4]) ?>
+    <?= $form->field($model, 'des')->textarea(['value' => !$model->isNewRecord ? $model->des : '无', 'rows' => 4]) ?>
     
     <?php
         //附件上传按钮

@@ -14,7 +14,8 @@ use yii\web\View;
 $this->title = Yii::t('rcoa', 'Experts');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="container expert-index" style="padding:0;">
+
+<!--<div class="container expert-index" style="padding:0;">
     <?= Html::img(Yii::$app->request->hostInfo.'/filedata/expert/personalImage/u183.jpg', [
         'id' => 'img',
         'class' => 'col-sm-12 col-md-12 col-xs-12 ',
@@ -47,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
     </div>
-</div>
+</div>-->
 
 <?php
     ExpertAsset::register($this);

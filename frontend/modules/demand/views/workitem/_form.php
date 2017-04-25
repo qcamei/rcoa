@@ -72,7 +72,7 @@ foreach ($allModels as $model) {
         <div class="total">
             总费用：￥<span id="total-cost"><?= !empty($model->demandTask->cost) ? 
 number_format($model->demandTask->cost + $model->demandTask->cost * $model->demandTask->bonus_proportion, 2, '.', ',') : '0' ?></span>
-        <?= Html::hiddenInput('cost', 0.00, ['id' => 'total-cost-input']); ?>
+        <?= Html::hiddenInput('cost', $model->demandTask->cost, ['id' => 'total-cost-input']); ?>
         </div>
         <span class="pattern">(总费用 = 总成本 + 总成本 × 奖金比值)</span>
     </div>

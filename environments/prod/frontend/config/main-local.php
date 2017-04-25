@@ -14,6 +14,9 @@ $config = [
         'demand' => [
             'class' => 'frontend\modules\demand\Module',
         ],
+        'sites' => [
+            'class' => 'frontend\modules\sites\Module',
+        ],
     ],
 ];
 

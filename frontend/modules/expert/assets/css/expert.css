@@ -8,6 +8,12 @@ and open the template in the editor.
     Author     : Kiwi°
 */
 
+.wrap{
+    background: url("/filedata/expert/image/in_construction.jpg");
+    background-size:cover;
+    background-position: center 0;
+}
+
 .expert .personal-image{
     float: left;
 }
