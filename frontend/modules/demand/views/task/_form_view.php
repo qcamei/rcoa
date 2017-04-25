@@ -93,10 +93,10 @@ $page = [
              * 1、拥有恢复权限
              * 2、状态必须是在【已完成】
              * 3、创建者是自己
-             */
+             
             if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_RESTORE) 
                && $model->getIsStatusCompleted() && $model->create_by == Yii::$app->user->id)
-                echo Html::a('恢复', ['recovery', 'id' => $model->id], ['class' =>'btn btn-danger']).' ';
+                echo Html::a('恢复', ['recovery', 'id' => $model->id], ['class' =>'btn btn-danger']).' ';*/
             
             //审核人
             /**

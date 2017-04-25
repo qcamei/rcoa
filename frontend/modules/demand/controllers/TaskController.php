@@ -245,7 +245,7 @@ class TaskController extends Controller
         
         if ($model->load($post)) {
             $dtTool->UpdateTask($model, $post);
-            return $this->redirect(['view', 'id' => $model->id, 'sign' => 1]);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -327,6 +327,7 @@ class TaskController extends Controller
      */
     public function actionRecovery($id)
     {
+        throw new NotAcceptableHttpException('未开放！');
         $model = $this->findModel($id);
         if(!\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_RESTORE) && $model->create_by != \Yii::$app->user->id)
             throw new NotAcceptableHttpException('无权限操作！');
