@@ -4,6 +4,7 @@ namespace backend\modules\team\controllers;
 
 use common\models\team\searchs\TeamSearch;
 use common\models\team\Team;
+use common\models\team\TeamCategoryMap;
 use common\models\team\TeamMember;
 use common\models\team\TeamType;
 use wskeee\team\TeamMemberTool;
@@ -78,9 +79,9 @@ class TeamController extends Controller
     {
         $model = new Team();
         $model->loadDefaultValues();
-        TeamMemberTool::getInstance()->invalidateCache();
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            TeamMemberTool::getInstance()->invalidateCache();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -99,9 +100,9 @@ class TeamController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        TeamMemberTool::getInstance()->invalidateCache();
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            TeamMemberTool::getInstance()->invalidateCache();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
