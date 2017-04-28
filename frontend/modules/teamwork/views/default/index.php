@@ -72,10 +72,13 @@ $js = <<<JS
     });
     function size(){
         var height = $(document.body).height() - 100;
+        var width = $(document.body).width();
         if(height < 820)
             height = 820;
         $(".item-manage-index").css({height:height, display:"block"});
         var wordsH = height - $(".item-manage-team").outerHeight();
+        if(width <= 425)
+            wordsH = 200;
         $(".item-manage-words").css({height: wordsH});
     }    
     //$('.timer').each(count);  // 启动所有定时器

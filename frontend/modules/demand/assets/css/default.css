@@ -124,7 +124,18 @@ and open the template in the editor.
     border-bottom: 1px solid #b0b6b9; 
 }
 
-
+@media (max-width: 425px){
+    .demand-default-words{
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    .words-big{
+        font-size: 14px;
+    }
+    .words-small{
+        font-size: 10px;
+    }
+}
 @media (min-width: 1280px){
     .demand-default-index .container {
         width: 1280px;

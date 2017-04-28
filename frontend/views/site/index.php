@@ -14,70 +14,62 @@ $this->title = '工匠';
     <div class="container">
         <div class="site-home-logo">
             <?= Html::img(['/filedata/site/image/site_logo.png'])?>
-        </div>
-        
-        <div class="site-home-introduction">
-            <span>课程建设工作平台</span>
+            <p class="site-home-title"><span>课程建设工作平台</span></p>
             <!--<span>课程建设分散式众包平台</span>-->
         </div>
-        
-        <div class="site-home-jumbotron">
-            
-            <div class="col-lg-3 site-home-circlebox">
-                <a href="/demand/default">
-                    <div class="site-home-circle img-circle">
-                        <?= Html::img(['/filedata/site/system/task.png']) ?>
-                        <div class="circle-bg img-circle">
-                            <span class="timer ciricle-num" id="count-number" data-to="<?= $total; ?>" data-speed="550">0</span>
-                            <span class="icon">+</span>
-                            <span class="num-words">个</span>
-                        </div>
-                    </div>
-                </a>
-                <div class="site-home-words">
-                    <span class="site-home-words-ch">任务</span><br/><span class="site-home-words-en">Task</span>
-                    <i class="new-icon"></i>
-                </div>
-            </div>
+    </div>
+    <div class="container site-home-jumbotron">
 
-            <div  class="col-lg-3 netbutton">
-                
-            </div>
-
-            <div class="col-lg-3 site-home-circlebox">
-                <a href="/expert/default">
-                    <div class="site-home-circle img-circle">
-                        <?= Html::img(['/filedata/site/system/teachers.png']) ?>
-                        <div class="circle-bg img-circle">
-                            <span class="timer ciricle-num" id="count-number" data-to="<?= $expert; ?>" data-speed="550">0</span>
-                            <span class="icon">+</span>
-                            <span class="num-words">名</span>
-                        </div>
+        <div class="col-lg-3 site-home-circlebox">
+            <a href="/demand/default">
+                <div class="site-home-circle img-circle">
+                    <?= Html::img(['/filedata/site/system/task.png']) ?>
+                    <div class="circle-bg img-circle">
+                        <span class="ciricle-num" id="count-number" ><span class="timer" data-to="<?= $total; ?>" data-speed="550">0</span><span class="num-words">个</span></span>
+                        <span class="icon">+</span>
                     </div>
-                </a>
-                <div class="site-home-words">
-                    <span class="site-home-words-ch">师资</span><br/><span class="site-home-words-en">Teachers</span>
                 </div>
+            </a>
+            <div class="site-home-words">
+                <span class="site-home-words-ch">任务</span><br/><span class="site-home-words-en">Task</span>
+                <i class="new-icon"></i>
             </div>
-
-            <div class="col-lg-3 site-home-circlebox">
-                <a href="/sites/default">
-                    <div class="site-home-circle img-circle">
-                        <?= Html::img(['/filedata/site/system/locations.png']) ?>
-                        <div class="circle-bg img-circle">
-                            <span class="timer ciricle-num" id="count-number" data-to="0" data-speed="550">0</span>
-                            <span class="icon"></span>
-                            <span class="num-words">场</span>
-                        </div>
-                    </div>
-                </a>
-                <div class="site-home-words">
-                    <span class="site-home-words-ch">场地</span><br/><span class="site-home-words-en">Locations</span>
-                </div>
-            </div>
-                
         </div>
-        
+
+        <div  class="col-lg-3 netbutton">
+
+        </div>
+
+        <div class="col-lg-3 site-home-circlebox">
+            <a href="/expert/default">
+                <div class="site-home-circle img-circle">
+                    <?= Html::img(['/filedata/site/system/teachers.png']) ?>
+                    <div class="circle-bg img-circle">
+                        <span class="ciricle-num" id="count-number" ><span class="timer" data-to="<?= $expert; ?>" data-speed="550">0</span><span class="num-words">名</span></span>
+                        <span class="icon">+</span>
+                    </div>
+                </div>
+            </a>
+            <div class="site-home-words">
+                <span class="site-home-words-ch">师资</span><br/><span class="site-home-words-en">Teachers</span>
+            </div>
+        </div>
+
+        <div class="col-lg-3 site-home-circlebox">
+            <a href="/sites/default">
+                <div class="site-home-circle img-circle">
+                    <?= Html::img(['/filedata/site/system/locations.png']) ?>
+                    <div class="circle-bg img-circle">
+                        <span class="ciricle-num" id="count-number" ><span class="timer" data-to="0" data-speed="550">0</span><span class="num-words">场</span></span>
+                        <span class="icon">+</span>
+                    </div>
+                </div>
+            </a>
+            <div class="site-home-words">
+                <span class="site-home-words-ch">场地</span><br/><span class="site-home-words-en">Locations</span>
+            </div>
+        </div>
+
     </div>
                
 </div>
@@ -183,15 +175,16 @@ $hostInfo = \Yii::$app->urlManager->hostInfo;
             $(obj).children('.circle-bg').stop()
             $(obj).children('img').stop().fadeTo(200, 0, 'linear', function(){
                 $(this).next('.circle-bg').stop().fadeTo(200, 1, 'linear', function(){
-                    $(this).children('.timer').each(count);  // 启动所有定时器
+                    $(this).children().children('.timer').each(count);  // 启动所有定时器
                 });
             });
         }, function(){
             $(obj).children('img').stop()
             $(obj).children('.circle-bg').stop().fadeTo(200, 0, 'linear', function(){
                 $(obj).children('img').stop().fadeTo(200, 1);
-                $(this).children('.timer').each(stop);  // 停止所有定时器
-                $(this).children('.timer').html(0);
+                $(this).children().children('.timer').each(stop);  // 停止所有定时器
+                $(this).children().children('.timer').html(0);
+                $(this).children('.icon').fadeTo(200, 0);
             });
         });
     });  

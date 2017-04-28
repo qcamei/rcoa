@@ -6,7 +6,7 @@ use yii\web\View;
 
 /* @var $this View */
 /*has-title*/
-$this->title = '课程中心工作平台';
+$this->title = '工匠';
 ?>
 
 <div class="site-home">
