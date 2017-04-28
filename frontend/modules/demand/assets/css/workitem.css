@@ -73,11 +73,11 @@ and open the template in the editor.
     }
 }
 @media (max-width: 480px) {
-    .table th{
+    .demand-workitem-table th{
         width: 65px;
         padding: 4px !important;
     }
-    .table td{
+    .demand-workitem-table .table td{
         padding: 2px !important;
     }
     .cost-unit{

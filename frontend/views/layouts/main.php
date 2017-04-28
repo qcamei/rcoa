@@ -3,14 +3,7 @@
 /* @var $this View */
 /* @var $content string */
 
-use common\config\AppGlobalVariables;
-use common\models\System;
-use frontend\assets\AppAsset;
-use kartik\dropdown\DropdownX;
 use kartik\widgets\AlertBlock;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
 
@@ -22,6 +15,7 @@ use yii\web\View;
 <head>
     <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link type="image/x-icon" href="/gongjiang.ico" rel="shortcut icon">
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
