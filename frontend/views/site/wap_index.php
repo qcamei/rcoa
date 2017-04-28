@@ -59,7 +59,7 @@ $this->title = '课程中心工作平台';
                 </div>  
             </div>
             <div class="site-home-introduction" style="height: 50px;">
-                <a hidden="#" style="padding: 0 25px">
+                <a href="/teamwork/default" style="padding: 0 25px">
                     <div class="subset-circle img-circle">进度</div>
                 </a>
             </div>
@@ -69,7 +69,7 @@ $this->title = '课程中心工作平台';
                 </div>  
             </div>
             <div class="site-home-introduction" style="height: 50px;">
-                <a hidden="#" style="padding: 0 25px">
+                <a href="/shoot/bookdetail" style="padding: 0 25px">
                     <div class="subset-circle img-circle">预约</div>
                 </a>
             </div>
@@ -79,7 +79,7 @@ $this->title = '课程中心工作平台';
                 </div>  
             </div>
             <div class="site-home-introduction" style="height: 50px;">
-                <a hidden="#" style="padding: 0 25px">
+                <a href="/multimedia/home" style="padding: 0 25px">
                     <div class="subset-circle img-circle">视频</div>
                 </a>
             </div>
