@@ -327,7 +327,7 @@ class TeamMemberTool extends Component {
      */
     public function isContaineForCategory($user_id,$category_id,$include_is_delete=false){
         $categoryTeamMap = null;
-        if($category != null){
+        if($category_id != null){
             $categoryTeamMap = ArrayHelper::map($this->getTeamsByCategoryId($category_id), 'id', 'name');
         }
         
