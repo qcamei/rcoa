@@ -70,11 +70,11 @@ foreach ($allModels as $model) {
     
     <div class="total-cost">
         <div class="total">
-            总费用：￥<span id="total-cost"><?= !empty($model->demandTask->cost) ? 
+            <?= Yii::t('rcoa/demand', 'Total Cost') ?>：￥<span id="total-cost"><?= !empty($model->demandTask->cost) ? 
 number_format($model->demandTask->cost + $model->demandTask->cost * $model->demandTask->bonus_proportion, 2, '.', ',') : '0' ?></span>
         <?= Html::hiddenInput('cost', $model->demandTask->cost, ['id' => 'total-cost-input']); ?>
         </div>
-        <span class="pattern">(总费用 = 总成本 + 总成本 × 奖金比值)</span>
+        <span class="pattern">(总成本 = 开发成本 + 开发成本 × 绩效分值)</span>
     </div>
     
 </div>

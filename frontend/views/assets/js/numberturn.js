@@ -75,8 +75,8 @@
                     }
                     
                     function show(value){
-                           if(loopCount >= loops && value == 999)
-                               return $self.next().fadeTo(200, 1);
+                        if(loopCount >= loops && Math.ceil(value) == 999)
+                            return $self.parent().next().fadeTo(200, 1);
                     }
                     
             });

@@ -209,12 +209,12 @@ class JobManager {
       
         try {
             $job = Job::findOne(['system_id' => $systemId,'relate_id'=> $relateId]);
-            $jobNotification = JobNotification::findOne(['job_id'=>$job->id]);
-            $users;
-            $conditions = ['job_id'=>$job->id];
           
             if($job)
             {
+                $jobNotification = JobNotification::findOne(['job_id'=>$job->id]);
+                $users;
+                $conditions = ['job_id'=>$job->id];
                 if($user!=null)
                     $users = [$user];
                 if(isset($users) && count($users)>0){

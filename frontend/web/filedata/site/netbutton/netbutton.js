@@ -95,7 +95,7 @@
         for(var i= 0,len=manifest.length;i<len;i++)
             manifest[i]['src'] = this.config['path']+manifest[i]['src']
         loader.loadManifest(manifest);
-        console.log(manifest);
+        /*console.log(manifest);*/
     };
     //-------------------------------------------------------------
     //

@@ -5,6 +5,7 @@ use common\models\demand\DemandTask;
 use common\models\expert\Expert;
 use common\models\LoginForm;
 use common\models\User;
+use Detection\MobileDetect;
 use frontend\models\ContactForm;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
@@ -76,11 +77,13 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $total = $this->getDemandTaskNewCount();
+        $detect = new MobileDetect();
+        $total = $this->getDemandTaskNewCount(DemandTask::$defaultStatus);
         $expert = $this->getExpertPlaceNewCount();
-        return $this->render('index',[
+        return $this->render(!$detect->isMobile() ? 'index' : 'wap_index',[
             'total' => $total <= 999 ? $total : 999  ,
             'expert' => $expert <= 999 ? $expert : 999,
+            'undertakeCount' => $this->getDemandTaskNewCount(DemandTask::STATUS_UNDERTAKE),
         ]);
     }
 
@@ -94,12 +97,13 @@ class SiteController extends Controller
         if (!\Yii::$app->user->isGuest) {
             return $this->goHome();
         }
-
+        
+        $detect = new MobileDetect();
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {
-            return $this->render('login', [
+            return $this->render(!$detect->isMobile() ? 'login' : 'wap_login', [
                 'model' => $model,
             ]);
         }
@@ -249,15 +253,15 @@ class SiteController extends Controller
     /**
      * 获取所有新的需求任务总数
      */
-    public function getDemandTaskNewCount()
+    public function getDemandTaskNewCount($status)
     {
         return  DemandTask::find()
                 ->select(['Demand_task.id'])
                 ->from(['Demand_task' => DemandTask::tableName()])
-                ->where(['Demand_task.status' => DemandTask::$defaultStatus])
+                ->where(['Demand_task.status' => $status])
                 ->count();
     }
-    
+   
     /**
      * 获取所有师资总数
      */
@@ -268,4 +272,54 @@ class SiteController extends Controller
                 ->from(['Expert' => Expert::tableName()])
                 ->count();
     }
+    
+    /*public function beforeAction($action) {
+        if(Yii::$app->params['isLocalEnvironment'] == 'YES'){
+            return true;
+        }
+        //  return true;
+        $wxWapId = Yii::$app->controller->id;     //当前控制器
+        var_dump($wxWapId);exit;
+        if(Yii::$app->controller->id == 'site' && Yii::$app->controller->action->id == 'error'){
+            return true;
+        }
+ 
+        $detect = new MobileDetect();
+        $realWxWapId = '';
+        if($detect->isMobile()) {
+            if($detect->isWeixin()){                                     //是微信浏览器
+                if(stripos($wxWapId,"wx/") === 0 ){                         //在控制器里面查找到wx
+                    return true;
+                }else if(stripos($wxWapId,"wap/") === 0 ){                  //是手机网页的浏览器
+                    $realWxWapId = str_replace('wap/', 'wx/', $wxWapId);    //替换目录
+                }else{
+                    $realWxWapId = 'wx/'.$wxWapId;                          //加深目录
+                }
+            }else{                                      //其他手机浏览器
+                if(stripos($wxWapId,"wap/") === 0 ){    //在控制器里面查找到wx
+                    return true;
+                }else if(stripos($wxWapId,"wx/") === 0 ){                   //是手机网页的浏览器
+                    $realWxWapId = str_replace('wx/', 'wap/', $wxWapId);    //替换目录
+                }else{
+                    $realWxWapId = 'wap/'.$wxWapId;                         //加深目录
+                }
+            }
+        }else{          //PC端
+            if(stripos($wxWapId,"wx/") === 0 ){             //在控制器里面查找到wx
+                $realWxWapId = str_replace('wx/', '', $wxWapId);        //替换目录
+            }else if(stripos($wxWapId,"wap/") === 0 ){                  //是手机网页的浏览器
+                $realWxWapId = str_replace('wap/', '', $wxWapId);       //替换目录
+            }else{
+                return true;
+            }
+        }
+        if($realWxWapId){                       //需要跳转--组装新的URL
+            if($_SERVER['QUERY_STRING']){       //有查询字符串
+                $realWxWapPcUrl = 'http://'.$_SERVER['HTTP_HOST'].'/'.$realWxWapId.'/'.Yii::$app->controller->action->id.'?'.$_SERVER['QUERY_STRING'];
+            }else{
+                $realWxWapPcUrl = '/'.$realWxWapId.'/'.Yii::$app->controller->action->id;
+            }
+            $this->redirect($realWxWapPcUrl);        //跳转
+        }
+    }*/
 }

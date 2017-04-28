@@ -455,23 +455,23 @@ class AcceptanceController extends Controller {
     }
     
     /**
-     * 需求任务的奖金
+     * 需求任务的绩效得分
      * @param integer $demand_task_id
      * @param integer $delivery_id
      * @param integer $acceptance_id
      * @return array
      */
-    public function getDemandTaskBonus($demand_task_id, $delivery_id, $acceptance_id)
+    public function getDemandTaskScore($demand_task_id, $delivery_id, $acceptance_id)
     {
         /* @var $dtQuery DemandQuery */
         $dtQuery = DemandQuery::getInstance();
         
-        $bonus = (new Query())
-                ->select(['Demand_Bonus.id', 'SUM(Demand_Bonus.bonus) AS bonus'])
-                ->from(['Demand_Bonus' => $dtQuery->findDemandWorkitemTypeBonus($demand_task_id, $delivery_id, $acceptance_id)])
+        $score = (new Query())
+                ->select(['Demand_score.id', 'FORMAT(SUM(Demand_score.score),2) AS score'])
+                ->from(['Demand_score' => $dtQuery->findDemandWorkitemTypeScore($demand_task_id, $delivery_id, $acceptance_id)])
                 ->all();
         
-        return ArrayHelper::map($bonus, 'id', 'bonus');
+        return ArrayHelper::map($score, 'id', 'score');
     }
 
     /**
@@ -504,11 +504,11 @@ class AcceptanceController extends Controller {
                     \Yii::$app->db->createCommand()->update(DemandTask::tableName(), [
                         'status' => DemandTask::STATUS_UPDATEING], ['id' => $model->demand_task_id])->execute();
                 }else{
-                    $bonus = $this->getDemandTaskBonus($model->demand_task_id, $model->demand_delivery_id, $model->id);
+                    $score = $this->getDemandTaskScore($model->demand_task_id, $model->demand_delivery_id, $model->id);
                     \Yii::$app->db->createCommand()->update(DemandTask::tableName(), [
                         'status' => DemandTask::STATUS_COMPLETED,
                         'progress' => DemandTask::$statusProgress[DemandTask::STATUS_COMPLETED],
-                        'bonus' => $bonus[$model->demand_task_id],
+                        'score' => $score[$model->demand_task_id],
                         'reality_check_harvest_time' => Date('Y-m-d H:i', time()),
                         ], ['id' => $model->demand_task_id])->execute();
                 }

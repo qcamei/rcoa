@@ -108,14 +108,14 @@ class DemandQuery {
      * @param integer $acceptance_id               验收id
      * @return $query
      */
-    public function findDemandWorkitemTypeBonus($demand_task_id, $delivery_id, $acceptance_id)
+    public function findDemandWorkitemTypeScore($demand_task_id, $delivery_id, $acceptance_id)
     {
         $query = (new Query())
                 ->select([
                     'Demand_task.id', 
-                    'SUM(Demand_workitem.cost) * Demand_task.bonus_proportion * 
+                    'SUM(Demand_workitem.cost * Demand_workitem.`value`) * 
                         (if(SUM(Delivery_data.`value`) / SUM(Demand_workitem.`value`) > 1, 1, SUM(Delivery_data.`value`) / SUM(Demand_workitem.`value`)) * Demand_weight.sl_weight + 
-                         Acceptance_data.`value` / 10 * Demand_weight.zl_weight) AS bonus'
+                         Acceptance_data.`value` / 10 * Demand_weight.zl_weight) / Demand_task.cost AS score'
                 ])
                 ->from(['Demand_task' => DemandTask::tableName()])
                 ->leftJoin(['Demand_workitem' => DemandWorkitem::tableName()], 'Demand_workitem.demand_task_id = Demand_task.id')

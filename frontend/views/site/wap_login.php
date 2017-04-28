@@ -1,7 +1,7 @@
 <?php
 
 use common\models\LoginForm;
-use frontend\views\SiteAsset;
+use frontend\views\WapSiteAsset;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 use yii\web\View;
@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ])->checkbox([
                             'template' => "<div class=\"checkbox\"><label for=\"loginform-rememberme\">{input}自动登录</label></div>"
                         ]) ?>
-                        <div class="col-xs-9 site-login-button">
+                        <div class="col-xs-10 site-login-button">
                             <?= Html::submitButton('登录', [
                                 'name' => 'login-button', 
                                 'class' => 'btn btn-primary col-xs-12', 
@@ -73,9 +73,9 @@ $js = <<<JS
         $(".site-login").css({width:'100%',height:height, display:"block"});
     }
 JS;
-    $this->registerJs($js, View::POS_READY);
+    //$this->registerJs($js, View::POS_READY);
 ?>
 
 <?php
-    SiteAsset::register($this);
+    WapSiteAsset::register($this);
 ?>

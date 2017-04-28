@@ -4,168 +4,168 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 */
 /* 
-    Created on : 2016-1-19, 15:44:59
+    Created on : 2017-4-26, 15:43:45
     Author     : Kiwi°
 */
 
+
 /**
- * 首页样式
+ * 首页样式 
  */
 .site-home{
-    display: none;
-    background: url("/filedata/site/image/site_homebg.jpg");
-    background-color: #ebebeb;
+    width: 100%;
+    /*background-color: #ebebeb;*/
+}
+.site-home-logo{
+    width: 100%;
+    max-height: 340px;
+    padding: 30px 0px 5px;
+    text-align: center;
+    background: url("/filedata/site/image/wap_site_homebg.jpg");
     background-repeat: no-repeat;
     background-size:cover;
     background-position: center 0;
 }
-.site-home-logo{
-    position: relative;
-    top: 100px;
-    left: -50px;
-    z-index: 100;
-    text-align: center;
+.site-home-logo img{
+    width: 158px;
 }
-.site-home-introduction{
-    position: relative;
-    top: -30px;
-    z-index: 200;
+.site-home-title{
+    display: block;
+    width: 100%;
     font-family: '方正细倩_GBK';
-    font-size: 30px;
+    font-size: 20px;
     color: #565656;
     font-weight: 500;
     text-align: center;
 }
-.site-home-jumbotron{
+ .site-home-jumbotron{
     width: 100%;
-    position: relative;
-    top: 30px;
-    z-index: 200;
+    padding: 20px 0px;
 }
 .site-home-circlebox{
-    height: 200px;
-    position:relative;
-    top: 150px;
-    opacity: 0;
+    opacity: 1;
 }
-.netbutton{
-    text-align: center;
-    height: 200px;
-    position:relative;
-    top: 150px;
-    opacity: 0;
+.site-home-introduction{
+    width: 210px;
+    height: 70px;
+    margin: 0px auto;
 }
-@media (min-width: 1200px){
-    .netbutton canvas{
-        left: -45px;
-    }
+.site-home-circlebox a{
+    display: block;
+    padding: 0px 15px;
+    float: left;
 }
-.netbutton canvas{
-    position: relative;
-    top: -85px;
+.site-home-circlebox a:hover, a:focus{
+    color: #fff;
+    text-decoration: none;
 }
-
 .site-home-circle{
-    width: 127px;
-    height: 127px;
+    width: 70px;
+    height: 70px;
     margin: 0px auto;
-    position: relative;
-    text-align: center;
-    background-color: #aab5bb;
-}
-.circle-bg {
-    width: 127px;
-    height: 127px;
-    margin: 0px auto;
-    position: absolute;
-    top: 0px;
-    z-index: 400;
     font-family: 'FZLTCXHJW';
     color: #fff;
-    line-height: 127px;
     text-align: center;
-    letter-spacing: -7px;
+    line-height: 70px;
+    letter-spacing: 0px;
     background-color: #3f99ce;
-    opacity: 0;
 }
 .ciricle-num{
-    margin-left: -10px;
-    font-size: 65px;
+    width: 100%;
+    font-size: 25px;
+    display: block
 }
 .num-words{
-    margin-left: 5px; 
-    font-size: 15px;
+    font-size: 12px;
 }
 .icon{
-    position: absolute;
-    top: -25px;
-    right: 15px;
-    font-size: 20px;
+    position: relative;
+    top: -85px;
+    right: -25px;
+    font-size: 15px;
     opacity: 0;
 }
 .new-icon{
     width: 29px;
     height: 14px;
     display: block;
-    position: absolute;
-    top: 0px;
+    position: relative;
+    top: -55px;
     right: 25px;
     background: url("/filedata/site/image/new.png");
     opacity: 0;
 }
 .site-home-words{
-    width: 150px;
-    margin: 0px auto;
-    position: relative;
-    color: #707070;
-    font-weight: 500;
-    text-align: center;
-}
-.color-replace{
+    height: 70px;
+    padding: 15px 0px;
+    float: left;
     color: #3f98ce;
+    font-weight: 500;
+    text-align: left;
 }
+/*.color-replace{
+    color: #3f98ce;
+}*/
 .site-home-words-ch{
-    font-size: 20px;
-    color: 93bcda!important;
+    font-size: 16px;
 }
 .site-home-words-en{
-    font-size: 16px;
+    font-size: 14px;
     opacity: 0.5;
 }
-
+.line-box{
+    margin: 5px 0;
+}
+.line{
+    border-left-style: solid;  
+    border-left-color: #bdd8e9;  
+    border-left-width: 1px;  
+    height: 20px;  
+    margin-left: 50px;  
+}
+.subset-circle{
+    width: 50px;
+    height: 50px;
+    margin: 0 auto;
+    font-family: 'FZLTCXHJW';
+    color: #fff;
+    text-align: center;
+    line-height: 50px;
+    letter-spacing: 0px;
+    background-color: #3f99ce;
+}
+.subset-line{
+    height: 10px;
+}
 /**
- * 登录页样式
+ *  登录页样式
  */
 .site-login{
-    display: none;
-    background: url("/filedata/site/image/site_loginbg.jpg");
+    background: url("/filedata/site/image/wap_site_loginbg.jpg");
     background-color: #ebebeb;
     background-repeat: no-repeat;
     background-size:cover;
     background-position: center 0;
 }
 .site-login-box{
-    width: 422px;
-    height: 450px;
-    margin: 171px auto;
-    padding: 17px;
-    border-radius: 23px;
-    background: url("/filedata/site/image/site_loginboxbg.png");
-    background-repeat: no-repeat;
+    height: 480px;
+    margin: 0px auto;
+    padding: 0px 15px;
 }
 .site-login-form{
-    width: 390px;
-    height: 415px;
-    padding: 24px 37px 34px 40px;
-    border-radius: 23px;
+    height: 378px;
+    margin: 115px auto;
+    padding: 0px 15px;
 }
 .site-login-logo{
     width: 100%;
-    height: 78px;
+    height: 108px;
+    margin-bottom:40px;
+    text-align: center;
 }
 .site-login-logo img{
-    width: 69px;
-    height: 78px;
+    width: 96px;
+    height: 108px;
 }
 .site-login-logo span{
     font-family: '方正细倩_GBK';
@@ -177,9 +177,8 @@ and open the template in the editor.
     width: 100%;
 }
 .site-login-attribute{
-     margin-top: 21px;
-     padding-left: 10px !important;
-     padding-right: 10px !important;
+    margin-top: 21px;
+    padding: 0px 10px !important;
 }
 .site-login-icon{
     width:40px !important;
@@ -188,9 +187,17 @@ and open the template in the editor.
     z-index: 100
 }
 .site-login-button{
-    margin-top: 55px;
-    margin-left: 35px;
-    margin-right: 35px;
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+@media (min-width: 320px){
+    .site-login-box{
+        padding: 0px;
+    }
+    .site-login-form{
+        padding: 0px;
+    }
 }
 
 /**

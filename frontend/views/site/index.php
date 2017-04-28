@@ -29,13 +29,14 @@ $this->title = '课程中心工作平台';
                         <?= Html::img(['/filedata/site/system/task.png']) ?>
                         <div class="circle-bg img-circle">
                             <span class="timer ciricle-num" id="count-number" data-to="<?= $total; ?>" data-speed="550">0</span>
-                            <span class="new-icon"></span>
+                            <span class="icon">+</span>
                             <span class="num-words">个</span>
                         </div>
                     </div>
                 </a>
                 <div class="site-home-words">
                     <span class="site-home-words-ch">任务</span><br/><span class="site-home-words-en">Task</span>
+                    <i class="new-icon"></i>
                 </div>
             </div>
 
@@ -64,7 +65,7 @@ $this->title = '课程中心工作平台';
                     <div class="site-home-circle img-circle">
                         <?= Html::img(['/filedata/site/system/locations.png']) ?>
                         <div class="circle-bg img-circle">
-                            <span class="timer ciricle-num" id="count-number" data-to="228" data-speed="550">0</span>
+                            <span class="timer ciricle-num" id="count-number" data-to="0" data-speed="550">0</span>
                             <span class="icon"></span>
                             <span class="num-words">场</span>
                         </div>
@@ -78,14 +79,16 @@ $this->title = '课程中心工作平台';
         </div>
         
     </div>
-    
-<!--<div id="richbutton" class="col-lg-3 col-md-3 col-sm-6">您的浏览器不支持html5！请更换为chrome或者ie9以上浏览器！</div>-->
-           
+               
 </div>
 
-<?php  
+<?php
+$hostInfo = \Yii::$app->urlManager->hostInfo;
  $js =   
 <<<JS
+    if($undertakeCount > 0)
+        $('.new-icon').animate({top: '-10px;',opacity:1}, 500, 'linear');
+         
     //开发按钮     
     var netbutton;
          
@@ -129,16 +132,48 @@ $this->title = '课程中心工作平台';
         
         //初始
         netbutton = new Wskeee.ccoa.NetButton({
-			path:'filedata/site/netbutton/',
-			container:'.netbutton',
-			onSelected:onSelected
-		});
+            path:'filedata/site/netbutton/',
+            container:'.netbutton',
+            onSelected:onSelected
+        });
     }
     /**
      * 开发子按钮按下回调
      **/
     function onSelected(data){
-        console.log(data);
+        switch(data){
+            case 0:
+              location.href="$hostInfo/shoot/bookdetail";
+              break;
+            case 1:
+              //location.href="#";
+              break;
+            case 2:
+              //location.href="#";
+              break;
+            case 3:
+              //location.href="#";
+              break;
+            case 4:
+              //location.href="#";
+              break;
+            case 5:
+              location.href="$hostInfo/multimedia/home";
+              break;
+            case 6:
+              location.href="$hostInfo/teamwork/default";
+              break;
+            case 7:
+              //location.href="#";
+              break;
+            case 8:
+              //location.href="#";
+              break;
+            case 9:
+              //location.href="#";
+              break;
+            //default:
+        }
     }     
      
     window.onload = init; 

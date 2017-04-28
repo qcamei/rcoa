@@ -27,7 +27,8 @@
         "kartik-v/yii2-slider": "*",
         "phpoffice/phpexcel": "^1.8",
         "kartik-v/yii2-field-range": "*",
-        "twbs/bootstrap": "^3.3"
+        "twbs/bootstrap": "^3.3",
+        "mobiledetect/mobiledetectlib": "^2.8"
         
     },
     "require-dev": {

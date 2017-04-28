@@ -162,9 +162,9 @@ foreach ($workitem as $work){
                 </td>
             </tr>
             <tr>
-                <th class="text-center">奖金</th>
-                <td colspan="3"><?= !empty($model->demandTask->bonus) ? 
-                    '￥'.number_format($model->demandTask->bonus, 2, '.', ',').'<span class="pattern">（奖金 = 人工成本 × 资金比值 × 验收评分）</span>' : '￥0.00' ?></td>
+                <th class="text-center">绩效得分</th>
+                <td colspan="3"><?= !empty($model->demandTask->score) ? 
+                    number_format($model->demandTask->score, 2, '.', ',').'<span class="pattern">（绩效得分 = (各项数量得分 × 数量权重 + 各项质量得分 × 质量权重）× 各项开发成本 / 总开发成本 ）</span>' : '0.00' ?></td>
             </tr>
         </tbody>    
 

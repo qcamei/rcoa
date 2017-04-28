@@ -40,7 +40,6 @@ NavBar::begin([
             $menuItems[] = $_system;
         
     }
-    
     if($moduleId == 'app-frontend')
     {
         //站点经过首页或登录，直接获取当前路由
