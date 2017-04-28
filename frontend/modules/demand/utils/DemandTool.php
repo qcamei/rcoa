@@ -428,15 +428,24 @@ class DemandTool {
         $dtQuery = DemandQuery::getInstance();
         /* @var $results ActiveQuery */
         $results = $dtQuery->findDemandTaskTable();
-        $results->andFilterWhere(['or',[$mark == null ? 'or' : 'and', 
-            ['Demand_task.create_by' => $createBy], ['Demand_task.undertake_person' => $undertakePerson]],
-            isset($auditor) ? new Expression("IF(Demand_task.`status` < 10 && Demand_task.`status` != 1, Demand_task_auditor.u_id = '$auditor', '')") : NUll
-        ]);
+        /* @var $teamMember TeamMemberTool */
+        $teamMember = TeamMemberTool::getInstance();
+        $is_createBy = $teamMember->isContaineForCategory(\Yii::$app->user->id, TeamCategory::TYPE_PRODUCT_CENTER);
+        $is_undertakePerson = $rbacManager->isRole(RbacName::ROLE_DEMAND_UNDERTAKE_PERSON, \Yii::$app->user->id);
+        $is_auditor = $this->getIsAuditor('', \Yii::$app->user->id);
+        if($is_createBy || $is_auditor || $is_undertakePerson){
+            $results->andFilterWhere(['or',[$mark == null ? 'or' : 'and', 
+                ['Demand_task.create_by' => $createBy], ['Demand_task.undertake_person' => $undertakePerson]],
+                isset($auditor) ? new Expression("IF(Demand_task.`status` < 10 && Demand_task.`status` != 1, Demand_task_auditor.u_id = '$auditor', '')") : NUll
+            ]);
+        }
         
-        if($rbacManager->isRole(RbacName::ROLE_DEMAND_UNDERTAKE_PERSON, \Yii::$app->user->id) && $undertakePerson != null){
+        if($is_undertakePerson && $undertakePerson != null && $status != null){
             $results->orWhere(new Expression("IF(Demand_task.`status` = 10, Demand_task.undertake_person IS NULL, '')"));
             $results->orderBy(new Expression("FIELD(Demand_task.`status`, 10, 1, 5, 6, 7, 11, 12, 13, 14)")); 
-        }  
+        } else {
+            $results->orderBy('Demand_task.id DESC');
+        } 
         
         $results->andFilterWhere([
             'Demand_task.id' => $id,
@@ -713,11 +722,15 @@ class DemandTool {
      * @param integer $teamId           团队ID
      * @return boolean                  true为是
      */
-    public function getIsAuditor($teamId)
+    public function getIsAuditor($teamId = null, $u_id = null)
     {
-        $auditor = DemandTaskAuditor::findOne(['team_id' => $teamId]);
+        $u_id == null ? Yii::$app->user->id : $u_id;
+        $auditor = DemandTaskAuditor::find()
+                ->filterWhere(['team_id' => $teamId])
+                ->orFilterWhere(['u_id' => $u_id])
+                ->one();
         if(!empty($auditor) && isset($auditor)){
-            if(Yii::$app->user->id == $auditor->u_id)
+            if($u_id == $auditor->u_id)
                 return true;
         }
         return false;

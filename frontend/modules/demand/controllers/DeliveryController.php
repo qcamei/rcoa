@@ -183,7 +183,9 @@ class DeliveryController extends Controller {
                 'value' => $value,
             ];
         }
+       
         ArrayHelper::multisort($datas, 'demand_workitem_id', SORT_ASC);
+        
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try {

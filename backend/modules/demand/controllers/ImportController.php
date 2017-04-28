@@ -193,6 +193,7 @@ class ImportController extends Controller
                     ])
                     ->from(['Wrkitem_template' => DemandWorkitemTemplate::tableName()])
                     ->leftJoin(['Workitem_cost' => WorkitemCost::tableName()], 'Workitem_cost.workitem_id = Wrkitem_template.workitem_id')
+                    ->orderBy(['Workitem_cost.target_month' => 'DESC', 'Wrkitem_template.workitem_id' => 'DESC', 'Wrkitem_template.is_new'=> 'DESC'])
                     ->all();
         
         return $workitemTemplate;
