@@ -107,7 +107,7 @@ class TeamMemberTool extends Component {
     }
     
     /**
-     * 获取所有分类
+     * 获取所有【分类】
      * @param boolean $include_is_delete    返回数据中是否包括已删除数据         
      * @return array [[id,name,des,is_delete]]  
      */
@@ -121,7 +121,7 @@ class TeamMemberTool extends Component {
     }
     
     /**
-     * 获取分类详细
+     * 获取【分类】详细
      * @param string $id 分类id
      * @return array [
      *  id,name,des,is_delete
@@ -134,7 +134,7 @@ class TeamMemberTool extends Component {
     }
     
     /**
-     * 获取分类下的所有团队
+     * 获取【分类】下的所有【团队】
      * @param string $categoryId 分类id
      * @param boolean $include_is_delete    返回数据中是否包括已删除数据
      * @return array [[ <br/>
@@ -158,7 +158,7 @@ class TeamMemberTool extends Component {
     }
     
     /**
-     * 获取团队数据
+     * 获取【团队】的详细数据
      * @param integer|array $team_id  团队id
      * @return  array   [
      *  int     id,     团队id          <br/>
@@ -182,7 +182,7 @@ class TeamMemberTool extends Component {
     }
     
     /**
-     * 获取团队成员数据
+     * 获取【团队成员】的详细数据
      * @param integer|array $teamMemberId        团队成员id
      * @return array [
      *  int     id,             团队成员id                  <br/>
@@ -213,7 +213,7 @@ class TeamMemberTool extends Component {
     }
     
     /**
-     * 获取团队下所有成员
+     * 获取【团队】下所有【成员】
      * @param int|array $team_id  团队id
      * @param boolean $include_is_delete 是否包括已删除成员，默认不包括
      * @return array (team_id = > [teammember,teammember])
@@ -236,7 +236,7 @@ class TeamMemberTool extends Component {
         return $results;
     }
     /**
-     * 获取用户所属团队
+     * 获取【用户】的所有【团队】
      * @param string $user_id       用户id
      * @param string $category      团队类别
      * @param boolean $include_is_delete 是否包括已删除成员，默认不包括
@@ -259,7 +259,7 @@ class TeamMemberTool extends Component {
     }
     
     /**
-     * 获取用户所有团队成员
+     * 获取【用户】的所有【团队成员】身份
      * @param string $user_id           用户id
      * @param boolean $include_is_delete 是否包括已删除成员，默认不包括
      * @return array(teamember,...)
@@ -276,7 +276,7 @@ class TeamMemberTool extends Component {
     }
     
     /**
-     * 获取所有队长成员用户
+     * 获取指定【团队类型】下所有【队长】的【成员用户】
      * @param string $user_id           用户id
      * @param string $category          团队类别
      * @param boolean $include_is_delete 是否包括已删除成员，默认不包括
@@ -296,6 +296,49 @@ class TeamMemberTool extends Component {
             }
         }
         return $results;
+    }
+    
+    /**
+     * 检查【用户】是否属于指定【团队】
+     * 
+     * @param string $user_id                 目标用户id
+     * @param intger $team_id                 目标团队id
+     * @param boolean $include_is_delete       是否包括已删除成员，默认不包括
+     * @return boolean 
+     */
+    public function isContaineForTeam($user_id, $team_id, $include_is_delete = false) {
+        foreach ($this->teamMembers as $teammeber) {
+            if ($teammeber['u_id'] == $user_id && $teammeber['team_id'] == $team_id) {
+                if ($include_is_delete || $teammeber['is_delete'] == 'N'){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 检查【用户】是否属于指定的【团队分类】
+     * 
+     * @param string $user_id                  用户id
+     * @param intger $category_id              分类id
+     * @param boolean $include_is_delete       是否包括已删除成员，默认不包括
+     * @return boolean 
+     */
+    public function isContaineForCategory($user_id,$category_id,$include_is_delete=false){
+        $categoryTeamMap = null;
+        if($category != null){
+            $categoryTeamMap = ArrayHelper::map($this->getTeamsByCategoryId($category_id), 'id', 'name');
+        }
+        
+        $results = [];
+        foreach ($this->teamMembers as $teammeber) {
+            if($teammeber['u_id'] == $user_id){
+                if(($include_is_delete || $teammeber['is_delete'] == 'N') && ($categoryTeamMap != null && isset($categoryTeamMap[$teammeber['team_id']])))
+                    return true;
+            }
+        }
+        return false;
     }
     
     /**
