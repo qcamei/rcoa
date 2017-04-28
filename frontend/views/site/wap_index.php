@@ -43,8 +43,9 @@ $this->title = '工匠';
             <div class="site-home-introduction">
                 <a data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                     <div class="site-home-circle img-circle">
-                        <span class="ciricle-num"><span class="timer" data-to="0" data-speed="550">0</span><span class="num-words">条</span></span>
-                        <span class="icon">+</span>
+                        <?= Html::img(['/filedata/site/system/development.png'], ['width' => '50']) ?>
+                        <!--<span class="ciricle-num"><span class="timer" data-to="0" data-speed="550">0</span><span class="num-words">条</span></span>
+                        <span class="icon">+</span>-->
                     </div>
                 </a>
                 <div class="site-home-words">
