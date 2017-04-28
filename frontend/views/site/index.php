@@ -60,7 +60,7 @@ $this->title = '工匠';
                 <div class="site-home-circle img-circle">
                     <?= Html::img(['/filedata/site/system/locations.png']) ?>
                     <div class="circle-bg img-circle">
-                        <span class="ciricle-num" id="count-number" ><span class="timer" data-to="0" data-speed="550">0</span><span class="num-words">场</span></span>
+                        <span class="ciricle-num" id="count-number" ><span class="timer" data-to="3" data-speed="550">0</span><span class="num-words">场</span></span>
                         <span class="icon">+</span>
                     </div>
                 </div>
