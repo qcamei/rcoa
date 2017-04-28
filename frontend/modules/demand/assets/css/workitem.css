@@ -16,15 +16,15 @@ and open the template in the editor.
 .demand-workitem-table{
     width: 100%;
 }
-.table th{
+.demand-workitem-table th{
     width: 200px;
     vertical-align: middle !important;
 }
-.table td{
+.demand-workitem-table td{
     min-width: 100px;
     vertical-align: middle !important;
 }
-.table .tr{
+.demand-workitem-table .tr{
     background-color: #eee;
 }
 .text-center{
@@ -62,24 +62,8 @@ and open the template in the editor.
     color: #ccc;
     font-weight: 500;
 }
-@media (max-width: 1024px) {
-    .col-sm-6{
-        padding-left: 0px;
-        padding-right: 0px;
-    }
-    .col-sm-7{
-        padding-left: 0px;
-        padding-right: 0px;
-    }
-}
+
 @media (max-width: 480px) {
-    .demand-workitem-table th{
-        width: 65px;
-        padding: 4px !important;
-    }
-    .demand-workitem-table .table td{
-        padding: 2px !important;
-    }
     .cost-unit{
         display: none;
     }
