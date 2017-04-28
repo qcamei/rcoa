@@ -109,6 +109,19 @@ class DefaultController extends Controller {
         echo '<h2>获取用户所有团成员 getUserTeamMembers(\'36aa1fcd1f89849aede1e63aec86a7b8\')</h2>';
         var_dump(TeamMemberTool::getInstance()->getUserTeamMembers('36aa1fcd1f89849aede1e63aec86a7b8'));
         //var_dump($categorys,$product_center_category,$dev_teams,$team1,$teammanbers,$someTeammembers);
-        //33
+        
+        echo '<h2>id=1的【团队】的所有【团队成员】 getTeamMembersByTeamId(1)</h2>';
+        var_dump(TeamMemberTool::getInstance()->getTeamMembersByTeamId(1));
+        echo '<h3>检查用户是否属于团队 isContaineForTeam(\'36aa1fcd1f89849aede1e63aec86a7b8\', 1)</h3>';
+        var_dump(TeamMemberTool::getInstance()->isContaineForTeam('36aa1fcd1f89849aede1e63aec86a7b8', 1));
+        echo '<h3>检查用户是否属于团队 isContaineForTeam(\'f79b8baa143765a6dc9812c249aadd59\', 1)</h3>';
+        var_dump(TeamMemberTool::getInstance()->isContaineForTeam('f79b8baa143765a6dc9812c249aadd59', 1));
+        
+        echo '<h2>【分类id】=3的所有【团队】 getTeamsByCategoryId(\'product_center\')</h2>';
+        var_dump(TeamMemberTool::getInstance()->getTeamsByCategoryId('product_center'));
+        echo '<h3>检查用户（翁二娣不属于产品中心）是否属于团队 isContaineForCategory(\'36aa1fcd1f89849aede1e63aec86a7b8\', \'product_center\')</h3>';
+        var_dump(TeamMemberTool::getInstance()->isContaineForCategory('36aa1fcd1f89849aede1e63aec86a7b8', 'product_center'));
+        echo '<h3>检查用户（周篆霞属于产品中心）是否属于团队 isContaineForCategory(\'ef3c21bbe97e1e9e95f2a4c46ec198fa\', \'product_center\')</h3>';
+        var_dump(TeamMemberTool::getInstance()->isContaineForCategory('ef3c21bbe97e1e9e95f2a4c46ec198fa', 'product_center'));
     }
 }
