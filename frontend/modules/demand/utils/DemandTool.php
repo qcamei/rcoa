@@ -724,7 +724,7 @@ class DemandTool {
      */
     public function getIsAuditor($teamId = null, $u_id = null)
     {
-        $u_id == null ? Yii::$app->user->id : $u_id;
+        $u_id = $u_id == null ? Yii::$app->user->id : $u_id;
         $auditor = DemandTaskAuditor::find()
                 ->filterWhere(['team_id' => $teamId])
                 ->orFilterWhere(['u_id' => $u_id])
