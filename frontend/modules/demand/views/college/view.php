@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             [
                 'class' => 'yii\grid\SerialColumn',
-                'options'=>['style'=>'width:20px'],
+                'options'=>['style'=>'width:50px'],
             ],
             [
                 'class' => 'frontend\modules\demand\components\GridViewLinkCell',
@@ -68,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => ActionColumn::className(),
                 'template' => '{view} {update} {delete}',
-                'options'=>['style'=>'width:50px'],
+                'options'=>['style'=>'width:70px'],
                 'visibleButtons' => [
                     'create' => $rbac['create'],
                     'update' => $rbac['update'],

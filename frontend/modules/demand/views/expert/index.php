@@ -30,11 +30,11 @@ $this->title = Yii::t('rcoa/basedata', 'Expert');
         'columns' => [
             [
                 'class' => 'yii\grid\SerialColumn',
-                'options'=>['style'=>'width:30px'],
+                'options'=>['style'=>'width:50px'],
             ],
             [
                 'attribute'=>'personal_image',
-                'options'=>['style'=>'width:40px'],
+                'options'=>['style'=>'width:60px'],
                 'format'=>['Image',['style'=>'width:40px;height:40px;']],
             ],
             [

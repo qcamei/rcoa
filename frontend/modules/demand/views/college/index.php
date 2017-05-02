@@ -30,7 +30,7 @@ $this->title = Yii::t('demand', 'Colleges');
         'columns' => [
             [
                 'class' => 'yii\grid\SerialColumn',
-                'options'=>['style'=>'width:20px'],
+                'options'=>['style'=>'width:50px'],
             ],
            [
                 'class' => 'frontend\modules\demand\components\GridViewLinkCell',
@@ -39,7 +39,7 @@ $this->title = Yii::t('demand', 'Colleges');
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'options'=>['style'=>'width:30px'],
+                'options'=>['style'=>'width:70px'],
                 'visibleButtons' => [
                     'create' => $rbac['create'],
                     'update' => $rbac['update'],
