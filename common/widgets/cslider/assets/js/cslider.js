@@ -24,7 +24,7 @@
         this.__createChild();
         //this.reflash();
         var _this = this;
-        setTimeout(function(){
+        this.reflashID = setTimeout(function(){
             _this.reflash.call(_this);
         },10);
         
@@ -75,6 +75,8 @@
      * @returns {void}
      */
     p.reflash = function(){
+        clearTimeout(this.reflashID);
+        
         var left = this.config['value'] / (this.config['max'] - this.config['min']) * 100 +'%';
         var width = this.config['width'] ? this.config['width'] + 'px' : null;
         
@@ -94,6 +96,16 @@
         this.tooltipTxt.css({
             'background-color': this.config['tooltipColor'],
         });
+        
+        if(this.tooltip.width() == 0)
+        {
+            //console.log('render late!',this.tooltip.css('display'));
+            var _this = this;
+            this.reflashID = setTimeout(function(){
+                _this.reflash.call(_this);
+            },100);
+        }
+        //console.log(this.tooltip.width());
         //修改提示位置
         this.tooltip.css({
             'left': left,
