@@ -1,6 +1,7 @@
 <?php
 
 use common\models\demand\DemandAcceptance;
+use Detection\MobileDetect;
 use frontend\modules\demand\assets\DemandAssets;
 use yii\helpers\Html;
 use yii\web\View;
@@ -9,6 +10,7 @@ use yii\widgets\Breadcrumbs;
 
 /* @var $this View */
 /* @var $model DemandAcceptance */
+/* @var $detect MobileDetect */
 
 $this->title = Yii::t('rcoa/demand', 'Create Demand Acceptance');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/demand', 'Demand Acceptances'), 'url' => ['index']];
@@ -36,12 +38,17 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 
+<?php if(!$detect->isMobile()): ?>
 <div class="container demand-acceptance-create has-title">
-
-    <?= $this->render('_form', [
+<?php else: ?>    
+<div class="demand-acceptance-create has-title">
+<?php endif; ?>
+    <?= $this->render(!$detect->isMobile() ? '_form' : 'wap_form', [
         'model' => $model,
+        'deliveryModel' => $deliveryModel,
+        'workitemType' => $workitemType,
+        'workitem' => $workitem,
         'delivery' => $delivery,
-        'wdArrays' => $wdArrays,
         'percentage' => $percentage,
     ]) ?>
 

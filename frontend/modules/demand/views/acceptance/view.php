@@ -162,7 +162,7 @@ foreach ($workitem as $work){
                 </td>
             </tr>
             <tr>
-                <th class="text-center">绩效得分</th>
+                <th class="text-center">绩效得分<p class="pattern">(满分为10分)</p></th>
                 <td colspan="3"><?= !empty($model->demandTask->score) && $is_pass !== false && $is_pass != 0? 
                     number_format($model->demandTask->score * 10, 2, '.', ',').'<span class="pattern">（绩效得分 = (各项数量得分 × 数量权重 + 各项质量得分 × 质量权重）× 各项开发成本 / 总开发成本 ）</span>' : '无' ?></td>
             </tr>

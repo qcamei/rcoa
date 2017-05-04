@@ -17,7 +17,7 @@ and open the template in the editor.
     width: 100%;
 }
 .demand-workitem-table th{
-    width: 200px;
+    max-width: 200px;
     vertical-align: middle !important;
 }
 .demand-workitem-table td{
@@ -66,6 +66,9 @@ and open the template in the editor.
 @media (max-width: 480px) {
     .cost-unit{
         display: none;
+    }
+    .select-date{
+        width: 130px; 
     }
 }
 

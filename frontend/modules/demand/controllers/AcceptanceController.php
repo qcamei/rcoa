@@ -7,16 +7,15 @@ use common\models\demand\DemandAcceptanceData;
 use common\models\demand\DemandDelivery;
 use common\models\demand\DemandDeliveryData;
 use common\models\demand\DemandTask;
-use common\models\demand\DemandWeight;
 use common\models\demand\DemandWorkitem;
 use common\models\demand\searchs\DemandAcceptanceSearch;
 use common\models\workitem\Workitem;
 use common\models\workitem\WorkitemType;
+use Detection\MobileDetect;
 use frontend\modules\demand\utils\DemandQuery;
 use frontend\modules\demand\utils\DemandTool;
 use wskeee\rbac\RbacName;
 use Yii;
-use yii\db\ActiveQuery;
 use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -77,10 +76,11 @@ class AcceptanceController extends Controller {
      * @return mixed
      */
     public function actionView($demand_task_id, $delivery_id = null) {
+        $detect = new MobileDetect();
         $delivery = $this->findDeliveryModel($demand_task_id);
         $delivery_id = empty($delivery_id) ? $delivery->id : $delivery_id;
         $model = $this->findModel($demand_task_id, $delivery_id);
-        return $this->renderAjax('view', [
+        return $this->renderAjax(!$detect->isMobile() ? 'view' : 'wap_view', [
             'model' => $model,
             'demand_task_id' => $demand_task_id,
             'delivery_id' => $delivery_id,
@@ -101,7 +101,8 @@ class AcceptanceController extends Controller {
     public function actionCreate($demand_task_id) {
         $this->layout = '@app/views/layouts/main';
         $model = new DemandAcceptance();
-        $delivery = $this->findDeliveryModel($demand_task_id);
+        $detect = new MobileDetect();
+        $deliveryModel = $this->findDeliveryModel($demand_task_id);
         /* @var $dtTool DemandTool */
         $dtTool = DemandTool::getInstance();
         $post = Yii::$app->request->post();
@@ -126,9 +127,12 @@ class AcceptanceController extends Controller {
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'delivery' => $delivery,
-                'wdArrays' => $this->getWorkitemDeliveryDatas($delivery->id),
-                'percentage' => $this->getWorkitemTypePercentage($model->demand_task_id, $delivery->id),
+                'deliveryModel' => $deliveryModel,
+                'detect' => $detect,
+                'workitemType' => $this->getDemandWorkitemTypeData($model->demand_task_id),
+                'workitem' => $this->getDemandWorkitemData($model->demand_task_id),
+                'delivery' => $this->getDemandDeliveryData($model->demand_task_id, $deliveryModel->id),
+                'percentage' => $this->getWorkitemTypePercentage($model->demand_task_id, $deliveryModel->id),
             ]);
         }
     }
@@ -199,84 +203,7 @@ class AcceptanceController extends Controller {
         } else {
             return new DemandDelivery();
         }
-    }
-
-    /**
-     * 获取需求和支付数据
-     * @param integer $deliveryId      交付ID
-     * @return array
-     */
-    public function getWorkitemDeliveryDatas($deliveryId) {
-        $datas = (new Query())
-                ->select(['Workitem_type.id AS workitem_type_id', 'Workitem_type.name AS workitem_type_name', 'Workitem_type.icon',
-                    'Workitem.id AS workitem_id', 'Workitem.name AS workitem_name', 'Workitem.unit',
-                    'Demand_workitem.id AS demand_workitem_id', 'Demand_workitem.is_new', 'Demand_workitem.value_type', 'Demand_workitem.value AS demand_workitem_value',
-                    'Delivery_data.value AS delivery_value'
-                ])
-                ->from(['Delivery_data' => DemandDeliveryData::tableName()])
-                ->leftJoin(['Demand_workitem' => DemandWorkitem::tableName()], 'Demand_workitem.id = Delivery_data.demand_workitem_id')
-                ->leftJoin(['Workitem' => Workitem::tableName()], 'Workitem.id = Demand_workitem.workitem_id')
-                ->leftJoin(['Workitem_type' => WorkitemType::tableName()], 'Workitem_type.id = Demand_workitem.workitem_type_id')
-                ->where(['Delivery_data.demand_delivery_id' => $deliveryId])
-                ->all();
-        /** 交付数据 */
-        $deliverys = [];
-        foreach ($datas as $data) {
-            if (!isset($deliverys[$data['workitem_type_name']])){
-                $deliverys[$data['workitem_type_name']] = [
-                    'id' => $data['workitem_type_id'],
-                    'name' => $data['workitem_type_name'],
-                    'icon' => $data['icon'],
-                    'childs' => [],
-                ];
-            }
-            if(!isset($deliverys[$data['workitem_type_name']]['childs'][$data['workitem_name']])){
-                $deliverys[$data['workitem_type_name']]['childs'][$data['workitem_name']] = [
-                    'id' => $data['workitem_id'],
-                    'name' => $data['workitem_name'],
-                    'childs' => [],
-                ];
-            }
-            $deliverys[$data['workitem_type_name']]['childs'][$data['workitem_name']]['childs'][] = [
-                'is_new' => $data['is_new'],
-                'is_workitem' => 0,
-                'value_type' => $data['value_type'],
-                'value' => $data['delivery_value'],
-                'unit' => $data['unit']
-            ];
-           
-        }
-        /** 需求数据 */
-        $workitems = [];
-        foreach ($datas as $data) {
-            if (!isset($workitems[$data['workitem_type_name']])){
-                $workitems[$data['workitem_type_name']] = [
-                    'id' => $data['workitem_type_id'],
-                    'name' => $data['workitem_type_name'],
-                    'icon' => $data['icon'],
-                    'childs' => [],
-                ];
-            }
-            if(!isset($workitems[$data['workitem_type_name']]['childs'][$data['workitem_name']])){
-                $workitems[$data['workitem_type_name']]['childs'][$data['workitem_name']] = [
-                    'id' => $data['workitem_id'],
-                    'name' => $data['workitem_name'],
-                    'childs' => [],
-                ];
-            }
-            $workitems[$data['workitem_type_name']]['childs'][$data['workitem_name']]['childs'][] = [
-                'is_new' => $data['is_new'],
-                'is_workitem' => 1,
-                'value_type' => $data['value_type'],
-                'value' => $data['demand_workitem_value'],
-                'unit' => $data['unit']
-            ];
-           
-          
-        }
-        
-        return ArrayHelper::merge($workitems, $deliverys);
-    }
+    }    
     
     /**
      * 获取需求的工作项类型数据

@@ -191,7 +191,7 @@ class MemberController extends Controller
     public function getTeamMember(){
         $expert = Expert::find()->all();
         $member = User::find()
-                ->where(['not in', 'id', ArrayHelper::getColumn($expert, 'u_id')])
+                //->where(['not in', 'id', ArrayHelper::getColumn($expert, 'u_id')])
                 ->all();
         return ArrayHelper::map($member, 'id', 'nickname');
     }
