@@ -3,10 +3,11 @@
 use common\models\demand\DemandTask;
 use common\widgets\uploadFile\UploadFileAsset;
 use kartik\datecontrol\DateControl;
+use kartik\slider\Slider;
 use kartik\widgets\Select2;
 use kartik\widgets\TouchSpin;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\web\JsExpression;
 use yii\web\View;
 use yii\widgets\ActiveForm;
 
@@ -134,10 +135,25 @@ use yii\widgets\ActiveForm;
     
     <?= $form->field($model, 'bonus_proportion', [
         'template' => "{label}\n<div class=\"col-sm-2\">{input}</div>\n<div class=\"col-sm-2\">{error}</div>"
-    ])->textInput(['value' => $model->bonus_proportion, 'disabled' => 'disabled']); ?>
+    ])->widget(Slider::classname(), [
+        'value' => $model->bonus_proportion,
+        'sliderColor'=>Slider::TYPE_INFO,
+        'handleColor'=>Slider::TYPE_PRIMARY,
+        'pluginOptions'=>[
+            'min' => 0.05,
+            'max'=> 0.1,
+            'precision'=>2,
+            'handle'=>'square',
+            'step'=>0.01,
+            'tooltip'=>'always',
+            'formatter'=>new JsExpression("function(val) { 
+                return Math.round(val * 100) + '%';
+            }")
+        ],
+    ]); ?>
     
     <?php if(!$model->isNewRecord): ?>
-    <h5><b>具体信息</b></h5>
+    <h5><b>工作项信息</b></h5>
     
     <?= $this->render('/workitem/index', [
         'allModels' => $model->demandWorkitems

@@ -59,8 +59,8 @@ foreach ($workitem as $work){
         <thead>
             <tr>
                 <th></th>
-                <td class="text-center">需求</td>
-                <td class="text-center">交付</td>
+                <td class="text-center" style="width: 300px">需求</td>
+                <td class="text-center" style="width: 300px">交付</td>
                 <td class="text-center">验收</td>
             </tr>
         </thead>
@@ -91,7 +91,7 @@ foreach ($workitem as $work){
                     <?php if($work['workitem_type'] == $type['id']): ?>
                     <tr>
                         <th class="text-right"><?= $work['name'] ?></th>
-                        <td style="width: 300px">
+                        <td class="text-center">
                         <?php rsort($work['childs']); foreach ($work['childs'] as $child): ?>                         
                             <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
                             <?= $child['is_new'] == true ? 
@@ -101,7 +101,7 @@ foreach ($workitem as $work){
                             </div>
                         <?php endforeach; ?>    
                         </td>
-                        <td style="width: 300px">
+                        <td class="text-center">
                         <?php rsort($delivery[$work['id']]['childs']); foreach ($delivery[$work['id']]['childs'] as $child): ?>                         
                             <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
                             <?= $child['is_new'] == true ? 

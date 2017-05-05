@@ -1,6 +1,7 @@
 <?php
 
 use common\models\demand\DemandDelivery;
+use Detection\MobileDetect;
 use frontend\modules\demand\assets\DemandAssets;
 use yii\helpers\Html;
 use yii\web\View;
@@ -9,10 +10,12 @@ use yii\widgets\Breadcrumbs;
 
 /* @var $this View */
 /* @var $model DemandDelivery */
+/* @var $detect MobileDetect */
 
 $this->title = Yii::t('rcoa/demand', 'Create Demand Delivery');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/demand', 'Demand Deliveries'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 
 <div class="title">
@@ -36,11 +39,16 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 
+<?php if(!$detect->isMobile()): ?>
 <div class="container demand-delivery-create has-title">
+<?php else: ?>
+<div class="demand-delivery-create has-title">
+<?php endif; ?>
 
-    <?= $this->render('_form', [
+    <?= $this->render(!$detect->isMobile() ? '_form' : 'wap_form', [
         'model' => $model,
-        'workitems' => $workitems,
+        'workitemType' => $workitemType,
+        'workitem' => $workitem,
     ]) ?>
 
 </div>

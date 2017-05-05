@@ -50,14 +50,14 @@ foreach ($allModels as $model) {
                             <th class="text-right"><?= $keys ?></th>
                             <?php rsort($elements); foreach ($elements as $value): ?>
                             <td>
-                                <div class="col-lg-4 col-md-7 col-sm-7 col-xs-12">
+                                <div class="col-lg-4 col-md-7 col-sm-7 col-xs-8" style="padding:0px 5px;">
                                     <?= Html::input('number', 'value['.$value['id'].']', isset($value['value']) ? $value['value'] : 0, [
                                         'class' => 'form-control workitem-input', 'min' => 0, 
-                                        'data-cost' => $value['cost'], 'onblur' => 'totalCost()'
+                                        'data-cost' => $value['cost'], 'onblur' => 'totalCost(); inputBlur($(this));', 'onfocus' => 'inputFocus($(this))'
                                     ]) ?>
                                 </div>
-                                <div class="unit"><?= $value['unit'] ?></div>
                                 <div class="workitem-tooltip" data-toggle="tooltip" data-placement="top" title="￥<?= $value['cost'] ?> / <?= $value['unit'] ?>"></div>
+                                <div class="unit"><?= $value['unit'] ?></div>
                                 <div class="cost-unit"><span>( ￥<?= $value['cost'] ?> / <?= $value['unit'] ?> )</span></div>
                             </td>
                             <?php endforeach; ?>
@@ -97,21 +97,14 @@ $js =
     /** 小屏幕显示 */
     var width = $(document).width();
     if(width <= 480){
-        $('.col-xs-12').each(function(index, elem){
-            $(elem).children('.workitem-input').focus(function(){
-                $(elem).next('.workitem-tooltip').tooltip('show');
-            });
-            $(elem).children('.workitem-input').blur(function(){
-                $(elem).next('.workitem-tooltip').tooltip('hide');
-            });
-            $(elem).children('.input-group').children('.workitem-input').focus(function(){
-                $(elem).next('.workitem-tooltip').tooltip('show');
-            });
-            $(elem).children('.input-group').children('.workitem-input').blur(function(){
-                $(elem).next('.workitem-tooltip').tooltip('hide');
-            });
-        });    
-    }         
+        window.inputFocus = function(elem){
+            $(elem).parent().next('.workitem-tooltip').tooltip('show');
+        }    
+        window.inputBlur = function(elem){
+            $(elem).parent().next('.workitem-tooltip').tooltip('hide');
+        }    
+    }
+    
 
     /** 数字格式化 */
     function number_format(number, decimals, dec_point, thousands_sep) {  

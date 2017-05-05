@@ -7,6 +7,7 @@ use common\models\demand\DemandDelivery;
 use common\models\demand\DemandDeliveryData;
 use common\models\demand\DemandTask;
 use common\models\demand\searchs\DemandDeliverySearch;
+use Detection\MobileDetect;
 use frontend\modules\demand\utils\DemandTool;
 use wskeee\rbac\RbacName;
 use Yii;
@@ -80,6 +81,7 @@ class DeliveryController extends Controller {
     public function actionCreate($demand_task_id) {
         $this->layout = '@app/views/layouts/main';
         $model = new DemandDelivery();
+        $detect = new MobileDetect();
         /* @var $dtTool DemandTool */
         $dtTool = DemandTool::getInstance();
         $model->loadDefaultValues();
@@ -102,7 +104,9 @@ class DeliveryController extends Controller {
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'workitems' => $model->demandTask->demandWorkitems,
+                'detect' => $detect,
+                'workitemType' => $dtTool->getDemandWorkitemTypeData($demand_task_id),
+                'workitem' => $dtTool->getDemandWorkitemData($demand_task_id),
             ]);
         }
     }

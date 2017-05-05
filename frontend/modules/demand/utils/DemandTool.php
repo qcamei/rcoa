@@ -515,6 +515,130 @@ class DemandTool {
     }
     
     /**
+     * 获取需求的工作项类型数据结构
+     * @param integer $demand_task_id           需求任务ID
+     * @return array
+     */
+    public function getDemandWorkitemTypeData($demand_task_id)
+    {
+        /* @var $dtQuery DemandQuery */
+        $dtQuery = DemandQuery::getInstance();
+        /* @var $results ActiveQuery */
+        $results = $dtQuery->findDemandWorkitemTypeDataTable($demand_task_id);
+        $types = $results->all();
+        
+        $workitemType = [];
+        foreach ($types as $data) {
+            $workitemType[$data['workitem_type_id']] = [
+                'id' => $data['workitem_type_id'],
+                'name' => $data['name'],
+                'icon' => $data['icon'],
+            ];
+        }
+        
+        return $workitemType;
+    }
+
+    /**
+     * 获取需求的工作项数据结构
+     * @param integer $demand_task_id       需求任务ID
+     * @return array
+     */
+    public function getDemandWorkitemData($demand_task_id)
+    {
+        /* @var $dtQuery DemandQuery */
+        $dtQuery = DemandQuery::getInstance();
+        /* @var $results ActiveQuery */
+        $results = $dtQuery->findDemandWorkitemDataTable($demand_task_id);
+        $d_workitems = $results->all();
+        
+        $workitem = [];
+        foreach ($d_workitems as $data) {
+            if(!isset($workitem[$data['workitem_id']])){
+                $workitem[$data['workitem_id']] = [
+                    'id' => $data['workitem_id'],
+                    'workitem_type' => $data['workitem_type'],
+                    'name' => $data['name'],
+                    'demand_time' => $data['demand_time'],
+                    'des' => $data['des'],
+                    'childs' => [],
+                ];
+            }
+            $workitem[$data['workitem_id']]['childs'][] = [
+                'id' => $data['id'],
+                'is_new' => $data['is_new'],
+                'value_type' => $data['value_type'],
+                'value' => $data['value'],
+                'unit' => $data['unit']
+            ];
+        }
+        
+        return $workitem;
+    }
+    
+    /**
+     * 获取需求的交付数据结构
+     * @param integer $demand_task_id           需求任务ID
+     * @param integer $delivery_id              交付ID
+     * @return array
+     */
+    public function getDemandDeliveryData($demand_task_id, $delivery_id)
+    {
+        /* @var $dtQuery DemandQuery */
+        $dtQuery = DemandQuery::getInstance();
+        /* @var $results ActiveQuery */
+        $results = $dtQuery->findDemandDeliveryDataTable($demand_task_id, $delivery_id);
+        $deliveryDatas = $results->all();
+        
+        $delivery = [];
+        foreach ($deliveryDatas as $data) {
+            if(!isset($delivery[$data['workitem_id']])){
+                $delivery[$data['workitem_id']] = [
+                    'id' => $data['workitem_id'],
+                    'delivery_time' => date('Y-m-d H:i', $data['delivery_time']),
+                    'des' => $data['des'],
+                    'childs' => [],
+                ];
+            }
+            $delivery[$data['workitem_id']]['childs'][] = [
+                'is_new' => $data['is_new'],
+                'value_type' => $data['value_type'],
+                'value' => $data['value'],
+                'unit' => $data['unit']
+            ];
+        }
+       
+        return $delivery;
+    }
+    
+    /**
+     * 获取需求的验收记录的数据结构
+     * @param integer $demand_task_id              需求任务ID
+     * @param integer $delivery_id                 交付ID
+     * @return array
+     */
+    public function getDemandAcceptanceData($demand_task_id, $delivery_id)
+    {
+        /* @var $dtQuery DemandQuery */
+        $dtQuery = DemandQuery::getInstance();
+        /* @var $results ActiveQuery */
+        $results = $dtQuery->findDemandAcceptanceDataTable($demand_task_id, $delivery_id);
+        $acceptanceDatas = $results->all();
+        
+        $acceptance = [];
+        foreach ($acceptanceDatas as $data) {
+            $acceptance[$data['workitem_type']] = [
+                'pass' => $data['pass'],
+                'value' => $data['value'],
+                'acceptance_time' => date('Y-m-d H:i', $data['acceptance_time']),
+                'des' => $data['des']
+            ];
+        }
+        
+        return $acceptance;
+    }
+    
+    /**
      * 保存附件到表里
      * @param integer $taskId               任务ID
      * @param type $post                    
@@ -597,7 +721,7 @@ class DemandTool {
         /* @var $dtQuery DemandQuery */
         $dtQuery = DemandQuery::getInstance();
         /* @var $results ActiveQuery */
-        $results = $dtQuery->findDemandWorkitemTemplateTotal();
+        $results = $dtQuery->findDemandWorkitemTemplateTable();
         $workitems = [];
         if(!empty($results->all())){
             foreach ($results->all() as $index => $workitem) {

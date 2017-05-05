@@ -47,6 +47,7 @@ foreach ($workitem as $work){
             'name' => 'created_at',
             'value' => $delivery_id,
             'data' => $dates, 
+            'hideSearch' => true,
             'options' => [
                 'placeholder' => '请选择...',
             ]
@@ -74,7 +75,7 @@ foreach ($workitem as $work){
                         </tr>
                             <?php foreach ($workitem as $work): ?>
                                 <?php if($work['workitem_type'] == $type['id']): ?>
-                                <tr>
+                                <tr class="text-center">
                                     <th class="text-right"><?= $work['name'] ?></th>
                                     <td style="width: 300px">
                                     <?php rsort($work['childs']); foreach ($work['childs'] as $child): ?>                         
@@ -113,7 +114,7 @@ foreach ($workitem as $work){
                                 <?php if($work['workitem_type'] == $type['id']): ?>
                                 <tr>
                                     <th class="text-right"><?= $work['name'] ?></th>
-                                    <td style="width: 300px">
+                                    <td class="text-center">
                                     <?php rsort($delivery[$work['id']]['childs']); foreach ($delivery[$work['id']]['childs'] as $child): ?>                        
                                         <div class="col-lg-6 col-md-7 col-sm-7 col-xs-6">
                                         <?= $child['is_new'] == true ? 

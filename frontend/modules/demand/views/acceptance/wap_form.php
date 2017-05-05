@@ -47,7 +47,7 @@ foreach ($workitem as $work){
                     <tbody>
                         <tr>
                             <th class="text-center" style="width: 100px">时间</th>
-                            <td class="text-center"><?= reset($worktime) ?></td>
+                            <td class="text-center" style="width: 400px"><?= reset($worktime) ?></td>
                         </tr>
                         <?php foreach ($workitemType as $type): ?>
                         <tr class="tr">
@@ -58,7 +58,7 @@ foreach ($workitem as $work){
                                 <?php if($work['workitem_type'] == $type['id']): ?>
                                 <tr>
                                     <th class="text-right"><?= $work['name'] ?></th>
-                                    <td style="width: 300px">
+                                    <td class="text-center">
                                     <?php rsort($work['childs']); foreach ($work['childs'] as $child): ?>                         
                                         <div class="col-lg-6 col-md-7 col-sm-7 col-xs-6">
                                         <?= $child['is_new'] == true ? 
@@ -84,7 +84,7 @@ foreach ($workitem as $work){
                     <tbody>
                         <tr>
                             <th class="text-center" style="width: 100px">时间</th>
-                            <td class="text-center"><?= reset($deliverytime) ?></td>
+                            <td class="text-center" style="width: 400px"><?= reset($deliverytime) ?></td>
                         </tr>
                         <?php foreach ($workitemType as $type): ?>
                         <tr class="tr">
@@ -95,7 +95,7 @@ foreach ($workitem as $work){
                                 <?php if($work['workitem_type'] == $type['id']): ?>
                                 <tr>
                                     <th class="text-right"><?= $work['name'] ?></th>
-                                    <td style="width: 300px">
+                                    <td class="text-center">
                                     <?php rsort($delivery[$work['id']]['childs']); foreach ($delivery[$work['id']]['childs'] as $child): ?>                        
                                         <div class="col-lg-6 col-md-7 col-sm-7 col-xs-6">
                                         <?= $child['is_new'] == true ? 
@@ -121,7 +121,7 @@ foreach ($workitem as $work){
                     <tbody>
                         <tr>
                             <th class="text-center" style="width: 100px">时间</th>
-                            <td class="text-center"><?= date('Y-m-d H:i', time()) ?></td>
+                            <td class="text-center" style="width: 400px"><?= date('Y-m-d H:i', time()) ?></td>
                         </tr>
                         <?php foreach ($workitemType as $type): 
                             if($percentage[$type['id']] == NUll) $percentage[$type['id']] = 100; else $percentage[$type['id']];

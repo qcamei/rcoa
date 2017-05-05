@@ -72,6 +72,9 @@ $js = <<<JS
             height = 820;
         $(".site-login").css({width:'100%',height:height, display:"block"});
     }
+    
+    /** 滚动到登录框 */
+    $('html,body').animate({scrollTop:($('.site-login-form').offset().top) - 140},1000);
 JS;
     $this->registerJs($js, View::POS_READY);
 ?>
