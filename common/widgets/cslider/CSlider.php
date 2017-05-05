@@ -39,11 +39,10 @@ class CSlider extends Widget{
     //put your code here
     public function run(){
         parent::run();
-        
         $id = $this->plugName.rand(0, 10000);
         $this->plugOptions['id'] = $id;
         $ops = json_encode($this->plugOptions);
-        $script = "new window.{$this->plugName}({$ops});";
+        $script = "window.{$id}="."new window.{$this->plugName}({$ops});";
         $view = $this->getView();
         $view->registerJs($script, View::POS_LOAD);
         CSliderAssets::register($view);
