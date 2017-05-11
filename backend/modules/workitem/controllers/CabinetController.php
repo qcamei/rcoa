@@ -2,19 +2,17 @@
 
 namespace backend\modules\workitem\controllers;
 
-use common\models\workitem\searchs\WorkitemCabinetSearch;
-use common\models\workitem\searchs\WorkitemSearch;
-use common\models\workitem\Workitem;
 use Yii;
-use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
+use common\models\workitem\WorkitemCabinet;
+use common\models\workitem\searchs\WorkitemCabinetSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\filters\VerbFilter;
 
 /**
- * DefaultController implements the CRUD actions for Workitem model.
+ * CabinetController implements the CRUD actions for WorkitemCabinet model.
  */
-class DefaultController extends Controller
+class CabinetController extends Controller
 {
     /**
      * @inheritdoc
@@ -28,26 +26,16 @@ class DefaultController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
-             //access验证是否有登录
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ]
-                ],
-            ],
         ];
     }
 
     /**
-     * Lists all Workitem models.
+     * Lists all WorkitemCabinet models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new WorkitemSearch();
+        $searchModel = new WorkitemCabinetSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -57,7 +45,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * Displays a single Workitem model.
+     * Displays a single WorkitemCabinet model.
      * @param integer $id
      * @return mixed
      */
@@ -69,17 +57,19 @@ class DefaultController extends Controller
     }
 
     /**
-     * Creates a new Workitem model.
+     * Creates a new WorkitemCabinet model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($workitem_id = null)
     {
-        $model = new Workitem();
-        $model->loadDefaultValues();
+        $model = new WorkitemCabinet(['workitem_id' => $workitem_id]);
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['/workitem/default/view', 'id' => $model->workitem_id]);
         } else {
+            $model->loadDefaultValues();
+            $model->type = 'video';
             return $this->render('create', [
                 'model' => $model,
             ]);
@@ -87,7 +77,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * Updates an existing Workitem model.
+     * Updates an existing WorkitemCabinet model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -97,7 +87,7 @@ class DefaultController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['/workitem/default/view', 'id' => $model->workitem_id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -106,7 +96,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * Deletes an existing Workitem model.
+     * Deletes an existing WorkitemCabinet model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -119,15 +109,15 @@ class DefaultController extends Controller
     }
 
     /**
-     * Finds the Workitem model based on its primary key value.
+     * Finds the WorkitemCabinet model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Workitem the loaded model
+     * @return WorkitemCabinet the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Workitem::findOne($id)) !== null) {
+        if (($model = WorkitemCabinet::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

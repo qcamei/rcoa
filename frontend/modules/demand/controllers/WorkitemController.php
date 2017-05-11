@@ -4,9 +4,13 @@ namespace frontend\modules\demand\controllers;
 
 use common\models\demand\DemandWorkitem;
 use common\models\demand\searchs\DemandWorkitemSearch;
+use common\models\workitem\Workitem;
+use common\models\workitem\WorkitemCabinet;
+use common\models\workitem\WorkitemCost;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -30,6 +34,7 @@ class WorkitemController extends Controller
             //access验证是否有登录
             'access' => [
                 'class' => AccessControl::className(),
+                'only' => ['create', 'update'],
                 'rules' => [
                     [
                         'allow' => true,
@@ -52,6 +57,34 @@ class WorkitemController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+        ]);
+    }
+    
+    /**
+     * 展示样例
+     * @return mixed
+     */
+    public function actionList()
+    {
+        $this->layout = '@app/views/layouts/main';
+        $cabinets = WorkitemCabinet::find()
+                ->select(['workitem_id','path','type'])
+                ->where(['is_delete' => 'N'])
+                ->asArray()
+                ->all();
+        
+        $models = Workitem::find()->all();
+        $costs = WorkitemCost::find()
+                ->orderBy(['target_month' => SORT_ASC])
+                ->asArray()
+                ->all();
+        
+        $costs = ArrayHelper::index($costs, 'workitem_id');
+        $cabinets = ArrayHelper::index($cabinets,null,['workitem_id']);
+        return $this->render('list', [
+            'models' => $models,
+            'costs' => $costs,
+            'cabinets' => $cabinets,
         ]);
     }
 

@@ -56,7 +56,11 @@ NavBar::begin([
                     $urls[$vals['aliases']] = ArrayHelper::getValue($vals, 'url');
             } 
         }
-        $route = substr($urls[$moduleId][0], 1);
+        try{
+            $route = substr($urls[$moduleId][0], 1);
+        } catch (Exception $ex) {
+             $route = Yii::$app->controller->getRoute();    
+        }
     }
     echo Nav::widget([
         'options' => Yii::$app->user->isGuest ? ['class' =>'navbar-nav navbar-right'] : ['class' => 'navbar-nav navbar-left'],
