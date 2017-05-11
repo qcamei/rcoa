@@ -103,9 +103,10 @@ class CabinetController extends Controller
      */
     public function actionDelete($id)
     {
+        $model = $this->findModel($id);
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['/workitem/default/view','id' => $model->workitem_id]);
     }
 
     /**
