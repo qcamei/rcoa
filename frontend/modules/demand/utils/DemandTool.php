@@ -3,10 +3,12 @@ namespace frontend\modules\demand\utils;
 
 use common\config\AppGlobalVariables;
 use common\models\demand\DemandAcceptance;
+use common\models\demand\DemandAppeal;
 use common\models\demand\DemandCheck;
 use common\models\demand\DemandDelivery;
 use common\models\demand\DemandOperation;
 use common\models\demand\DemandOperationUser;
+use common\models\demand\DemandReply;
 use common\models\demand\DemandTask;
 use common\models\demand\DemandTaskAnnex;
 use common\models\demand\DemandTaskAuditor;
@@ -322,13 +324,15 @@ class DemandTool {
                 $this->saveDemandOperation($model->demand_task_id, DemandTask::STATUS_UPDATEING);
                 $this->saveOperationUser($model->demand_task_id, [$model->demandTask->developPrincipals->u_id]);
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->demand_task_id, ['status'=> DemandTask::$statusNmae[DemandTask::STATUS_UPDATEING]]);
-                $demandNotice->sendDevelopPrincipalsNotification ($model, '验收不通过', 'demand/CreateAcceptance-html', $model->demandTask->developPrincipals->user->ee);
+                $demandNotice->sendDevelopPrincipalsNotification($model, '验收不通过', 'demand/CreateAcceptance-html', $model->demandTask->developPrincipals->user->ee);
             }else if($model !== null && $model->pass == true){
+                $this->saveDemandOperation($model->demand_task_id, DemandTask::STATUS_WAITCONFIRM);
+                $this->saveOperationUser($model->demand_task_id, [$model->demandTask->developPrincipals->u_id]);
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->demand_task_id, [
-                    'progress'=> DemandTask::$statusProgress[DemandTask::STATUS_COMPLETED], 
-                    'status'=> DemandTask::$statusNmae[DemandTask::STATUS_COMPLETED],
+                    'progress'=> DemandTask::$statusProgress[DemandTask::STATUS_WAITCONFIRM], 
+                    'status'=> DemandTask::$statusNmae[DemandTask::STATUS_WAITCONFIRM],
                 ]);
-                $jobManager->cancelNotification(AppGlobalVariables::getSystemId(), $model->demand_task_id, [$model->demandTask->create_by, $model->demandTask->undertake_person]);
+                $demandNotice->sendDevelopPrincipalsNotification($model, '验收通过', 'demand/WaitConfirm-html', $model->demandTask->developPrincipals->user->ee);
             }else
                 throw new \Exception($model->getErrors());
             
@@ -340,12 +344,11 @@ class DemandTool {
         }
     }
     
-    
     /**
-     * 恢复任务操作
+     * 待确认任务操作
      * @param DemandTask $model
      */
-    public function RecoveryTask($model)
+    public function WaitConfirmTask($model)
     {
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
@@ -354,11 +357,12 @@ class DemandTool {
         $trans = Yii::$app->db->beginTransaction();
         try
         {
-            
-            if ($model->save(false, ['progress', 'status', 'reality_check_harvest_time'])){
-                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status'=>$model->getStatusName()]);
-                $jobManager->removeNotification(AppGlobalVariables::getSystemId(), $model->id, $model->undertake_person);
-                $jobManager->addNotification (AppGlobalVariables::getSystemId(), $model->id, $model->undertake_person);
+            if ($model->save(false, [ 'status',  'progress', 'finished_at'])){
+               $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, [
+                    'progress'=> DemandTask::$statusProgress[DemandTask::STATUS_COMPLETED], 
+                    'status'=> DemandTask::$statusNmae[DemandTask::STATUS_COMPLETED],
+                ]);
+               $jobManager->cancelNotification(AppGlobalVariables::getSystemId(), $model->id, [$model->create_by, $model->undertake_person]);
             }else
                 throw new \Exception($model->getErrors());
             
@@ -366,11 +370,76 @@ class DemandTool {
             Yii::$app->getSession()->setFlash('success','操作成功！');
         } catch (\Exception $ex) {
             $trans ->rollBack(); //回滚事务
-            //var_dump($ex->getMessage());exit;
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
     }
     
+    /**
+     * 提交申诉任务操作
+     * @param DemandAppeal $model
+     */
+    public function SubmitAppealTask($model)
+    {
+        /* @var $demandNotice DemandNoticeTool */
+        $demandNotice = DemandNoticeTool::getInstance();
+        /* @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
+        
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {
+            $number = DemandTask::updateAll(['status' => DemandTask::STATUS_APPEALING], ['id' => $model->demand_task_id]);
+            if ($model->save() && $number > 0){
+                $this->saveDemandOperation($model->demand_task_id, DemandTask::STATUS_APPEALING);
+                $this->saveOperationUser($model->demand_task_id, [$model->demandTask->create_by]);
+                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->demand_task_id, ['status'=> DemandTask::$statusNmae[DemandTask::STATUS_APPEALING]]);
+                $demandNotice->sendCreateByNotification($model, '任务申诉中', 'demand/SubmitAppeal-html', $model->demandTask->createBy->ee);
+            }else
+                throw new \Exception($model->getErrors());
+            
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        } catch (\Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            var_dump($ex->getMessage());exit;
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
+        }
+    }
+    
+    /**
+     * 提交回复任务操作
+     * @param DemandReply $model
+     */
+    public function SubmitReplyTask($model)
+    {
+        /* @var $demandNotice DemandNoticeTool */
+        $demandNotice = DemandNoticeTool::getInstance();
+        /* @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
+        
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {
+            $number = DemandTask::updateAll(['status' => DemandTask::STATUS_WAITCONFIRM], ['id' => $model->demandAppeal->demand_task_id]);
+            if ($model->save() && $number > 0){
+                $this->saveDemandOperation($model->demandAppeal->demand_task_id, DemandTask::STATUS_WAITCONFIRM);
+                $this->saveOperationUser($model->demandAppeal->demand_task_id, [$model->demandAppeal->demandTask->undertake_person]);
+                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->demandAppeal->demand_task_id, ['status'=> DemandTask::$statusNmae[DemandTask::STATUS_WAITCONFIRM]]);
+                $demandNotice->sendDevelopPrincipalsNotification($model, '任务回复', 'demand/SubmitReply-html', $model->demandAppeal->demandTask->developPrincipals->user->ee);
+            }else
+                throw new \Exception($model->getErrors());
+            
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        } catch (\Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            var_dump($ex->getMessage());exit;
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
+        }
+    }
+        
     /**
      * 取消任务操作
      * @param DemandTask $model
@@ -422,6 +491,7 @@ class DemandTool {
     public function getDemandTaskInfo($id = null, $status = 1, $createBy = null, $undertakePerson = null, $auditor = null,
         $itemTypeId = null, $itemId = null, $itemChildId = null, $courseId = null, $teamId = null, $keyword = null, $time = null, $mark = null)
     {
+        
         /* @var $rbacManager RbacManager */  
         $rbacManager = \Yii::$app->authManager;
         /* @var $dtQuery DemandQuery */
@@ -436,13 +506,13 @@ class DemandTool {
         if($is_createBy || $is_auditor || $is_undertakePerson){
             $results->andFilterWhere(['or',[$mark == null ? 'or' : 'and', 
                 ['Demand_task.create_by' => $createBy], ['Demand_task.undertake_person' => $undertakePerson]],
-                isset($auditor) ? new Expression("IF(Demand_task.`status` < 10 && Demand_task.`status` != 1, Demand_task_auditor.u_id = '$auditor', '')") : NUll
+                isset($auditor) ? new Expression("IF(Demand_task.`status` < ".DemandTask::STATUS_UNDERTAKE." && Demand_task.`status` != ".DemandTask::STATUS_DEFAULT.", Demand_task_auditor.u_id = '$auditor', '')") : NUll
             ]);
         }
         
         if($is_undertakePerson && $undertakePerson != null && $status != null){
-            $results->orWhere(new Expression("IF(Demand_task.`status` = 10, Demand_task.undertake_person IS NULL, '')"));
-            $results->orderBy(new Expression("FIELD(Demand_task.`status`, 10, 1, 5, 6, 7, 11, 12, 13, 14)")); 
+            $results->orWhere(new Expression("IF(Demand_task.`status` = ".DemandTask::STATUS_UNDERTAKE.", Demand_task.undertake_person IS NULL, '')"));
+            $results->orderBy(new Expression("FIELD(Demand_task.`status`, ".implode(',', DemandTask::$orderBy).")")); 
         } else {
             $results->orderBy('Demand_task.id DESC');
         } 
@@ -569,7 +639,8 @@ class DemandTool {
                 'is_new' => $data['is_new'],
                 'value_type' => $data['value_type'],
                 'value' => $data['value'],
-                'unit' => $data['unit']
+                'unit' => $data['unit'],
+                'cost' => $data['cost']
             ];
         }
         
@@ -677,7 +748,7 @@ class DemandTool {
         $values[] = [
             'task_id' => $taskId,
             'task_status' => $status,
-            'action_id' => Yii::$app->controller->action->id,
+            'action_id' => \Yii::$app->controller->id.'/'.Yii::$app->controller->action->id,
             'create_by' => Yii::$app->user->id,
             'created_at' => time(),
             'updated_at' => time(),
@@ -725,22 +796,20 @@ class DemandTool {
         $workitems = [];
         if(!empty($results->all())){
             foreach ($results->all() as $index => $workitem) {
-                if(date('Y-m', $model->created_at) >= $workitem['target_month']){
-                    unset($workitem['target_month']);
-                    $workitem += [
-                        'demand_task_id' => $model->id, 
-                        'value' => null,
-                        'created_at' => strtotime($model->plan_check_harvest_time),
-                        'updated_at' => $model->updated_at
-                    ];
-                    $workitems[] = $workitem;
-                }
+                unset($workitem['id']);
+                $workitem += [
+                    'demand_task_id' => $model->id, 
+                    'value' => null,
+                    'created_at' => strtotime($model->plan_check_harvest_time),
+                    'updated_at' => $model->updated_at
+                ];
+                $workitems[] = $workitem;
             }
         }
         
         /** 添加$values数组到表里 */
         Yii::$app->db->createCommand()->batchInsert(DemandWorkitem::tableName(),[
-            'workitem_type_id', 'workitem_id', 'is_new',  'value_type', 'cost', 'demand_task_id', 'value', 'created_at', 'updated_at'
+            'workitem_type_id', 'workitem_id', 'is_new',  'value_type', 'index', 'cost', 'demand_task_id', 'value', 'created_at', 'updated_at'
         ], $workitems)->execute();
     }
         

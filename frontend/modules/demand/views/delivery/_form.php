@@ -70,8 +70,14 @@ $workdes = ArrayHelper::getColumn($workitem, 'des');
                             <div class="col-xs-6">
                                 <div class="col-xs-9">
                                 <?= $child['is_new'] == true ? 
-                                    Html::input('number', 'value['.$child['id'].']', 0, ['class' => 'form-control  col-xs-9 workitem-input', 'min' => 0]) :
-                                    Html::input('number', 'value['.$child['id'].']', 0, ['class' => 'form-control  col-xs-9 workitem-input', 'min' => 0]);
+                                    Html::input('number', 'value['.$child['id'].']', 0, [
+                                        'class' => 'form-control  col-xs-9 workitem-input', 'min' => 0,
+                                        'data-cost' => $child['cost'], 'onblur' => 'totalCost($(this));'
+                                    ]) :
+                                    Html::input('number', 'value['.$child['id'].']', 0, [
+                                        'class' => 'form-control  col-xs-9 workitem-input', 'min' => 0,
+                                        'data-cost' => $child['cost'], 'onblur' => 'totalCost($(this));'
+                                    ]);
                                 ?>
                                 </div>
                                 <div class="unit"><?= $child['unit'] ?></div>
@@ -90,8 +96,60 @@ $workdes = ArrayHelper::getColumn($workitem, 'des');
         </tbody>
         
     </table>
+    
+    <div class="total-cost">
+        <div class="total">
+            <?= Yii::t('rcoa/demand', 'Total Cost') ?>：￥<span id="total-cost"><?= !empty($model->demandTask->cost) ? 
+number_format($model->demandTask->cost + $model->demandTask->cost * $model->demandTask->bonus_proportion, 2, '.', ',') : '0.00' ?></span>
+        <?= Html::hiddenInput('cost', $model->demandTask->cost, ['id' => 'total-cost-input']); ?>
+        </div>
+        <span class="pattern">（实际成本 = 实际开发成本 + 实际开发成本 × 绩效分值）</span>
+    </div>
         
     <?php ActiveForm::end(); ?>
     
 </div>
 
+<?php
+$bonusProportion = $model->demandTask->bonus_proportion;
+$js =   
+<<<JS
+    /** 计算总成本 */
+    window.totalCost = function(elem){
+        var totalCost = 0;
+        var r = /^[0-9]*[1-9][0-9]*$/;
+        var value = $(elem).val();
+        var bonusProportion = $bonusProportion;
+        if(!r.test(value))
+            $(elem).val(Math.floor(value));
+        $('.workitem-input').each(function(){
+            totalCost += $(this).val() * $(this).attr('data-cost');
+        });
+        $('#total-cost').text(number_format(totalCost + totalCost * bonusProportion, 2, '.', ','));
+        $('#total-cost-input').val(totalCost);
+    } 
+   
+    /** 数字格式化 */
+    function number_format(number, decimals, dec_point, thousands_sep) {  
+        var n = !isFinite(+number) ? 0 : +number,  
+            prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),  
+            sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,  
+            dec = (typeof dec_point === 'undefined') ? '.' : dec_point,  
+            s = '',  
+            toFixedFix = function (n, prec) {  
+                var k = Math.pow(10, prec);  
+                return '' + Math.round(n * k) / k;        };  
+        // Fix for IE parseFloat(0.55).toFixed(0) = 0;  
+        s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');  
+        if (s[0].length > 3) {  
+            s[0] = s[0].replace(/(\d)(?=(?:\d{3})+$)/g, '$1'+sep);  
+        }  
+        if ((s[1] || '').length < prec) {  
+            s[1] = s[1] || '';  
+            s[1] += new Array(prec - s[1].length + 1).join('0');  
+        }      
+        return s.join(dec);  
+    } 
+JS;
+    $this->registerJs($js,  View::POS_READY);
+?>

@@ -1,0 +1,221 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2017-4-18, 11:03:13
+    Author     : Kiwi°
+*/
+
+/**
+ *  主页样式
+ */
+.wrap{
+}
+.demand-default-index {
+    width: 100%;
+    position: relative;
+    display: none;
+    background: url("/filedata/demand/image/task_headbg.jpg");
+    background-color: #9da2a5;
+    background-repeat: no-repeat;
+    background-size:cover;
+    background-position: center 0;
+}
+.demand-default-words{
+    padding-left: 30px;
+    padding-right: 30px;
+    display: table-cell;
+    vertical-align: bottom;
+    /*font-family: '方正细倩_GBK';*/
+    text-align: right;
+}
+.words-big{
+    font-size: 23px;
+    color: #999;
+}
+.words-small{
+    font-size: 15px;
+    color: #9e9e9e;
+}
+.words-ch{
+    font-size: 40px;
+    color: #333;
+}
+.words-en{
+    font-size: 22px;
+    color: #666;
+}
+.demand-default-team{
+    width: 100%;
+    padding-top: 80px; 
+    padding-bottom: 80px;
+    background-color: #9da2a5;
+}
+.team{
+  height: 117px;
+  margin-bottom: 20px;
+}
+.team-logo{
+    width: 60px;
+    height: 112px;
+    float: left;
+    padding-top: 5px;
+    border-right: 2px solid #fff;
+    line-height: 112px;
+}
+.team-logo img{
+    width: 55px;
+    height: 69px;
+}
+.team-content{
+    width: 150px;
+    height: 112px;
+    margin-left: 5px;
+    float: left;
+}
+.team-content p{
+    margin: -5px 0 8px;
+}
+.team-name{
+    font-family: 'FZLTHJW';
+    font-size: 25px;
+    font-weight: 400;
+    color: #fff;
+}
+.see{
+    width: 28px;
+    height: 28px;
+    display: inline-block;
+    float: right;
+    background: url("/filedata/teamwork/image/see.png");
+}
+.team-label{
+    width: 45px;
+    font-size: 13px;
+    color: #8e9396;
+    text-align: center;
+    background: #fff;
+    display: inline-block;
+    padding: 1px; 
+    float: left;
+}
+.team-number{
+    width: 70px;
+    font-family: 'FZLTHJW';
+    font-size: 16px;
+    color: #fff;
+    display: inline-block;
+    float: left;
+    margin-top: -3px; 
+    margin-left: 5px;
+    border-bottom: 1px solid #b0b6b9; 
+}
+.team-unit{
+    width: 30px;
+    font-size: 13px;
+    text-align: right;
+    color: #fff;
+    display: inline-block;
+    float: left;
+    margin-top: 1px; 
+    margin-bottom: 8px;
+    border-bottom: 1px solid #b0b6b9; 
+}
+
+@media (max-width: 425px){
+    .demand-default-words{
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    .words-big{
+        font-size: 14px;
+    }
+    .words-small{
+        font-size: 10px;
+    }
+}
+@media (min-width: 1280px){
+    .demand-default-index .container {
+        width: 1280px;
+    }
+    .container .team{
+        width: 20%;
+    }
+}
+@media (min-width: 1400px){
+    .demand-default-index .container {
+        width: 1400px;
+        padding: 0px;
+    }
+    .container .team{
+        width: 16.66666667%;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+}
+@media (min-width: 1500px){
+    .demand-default-index .container {
+        width: 1500px;
+    }
+    .container .team{
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+@font-face{
+    font-family: '方正细倩_GBK';
+    src: url('/filedata/site/font/fangzhengxiqian.woff') format('woff'),
+         url('/filedata/site/font/fangzhengxiqian.ttf') format('ttf'),  
+         url('/filedata/site/font/fangzhengxiqian.eot') format('eot'),  
+         url('/filedata/site/font/fangzhengxiqian.svg') format('svg');
+}
+@font-face{
+    font-family: 'FZLTHJW';
+    src: url('/filedata/site/font/FZLTHJW.woff') format('woff'),
+         url('/filedata/site/font/FZLTHJW.ttf') format('ttf'),  
+         url('/filedata/site/font/FZLTHJW.eot') format('eot'),  
+         url('/filedata/site/font/FZLTHJW.svg') format('svg');
+}
+
+/**
+ * 团队成员页样式
+ */
+.member-bg {
+    width:100%;
+    height:95px;
+    background-color:rgba(119, 128, 138, 1);
+    margin-bottom: 20px;
+}
+.member-left{
+    width:80px;
+    float: left;
+}
+.member-left img {
+    width: 80px;
+    height: 80px;
+    margin-top:7.5px;
+    margin-left:5px;
+}
+.member-right{
+    margin-left: 25px;
+    margin-top: 25px;
+    float: left;
+}
+.member-right p {
+    margin-top: -5px;
+}
+.nickname{
+    font-size: 20px;
+    color: #fff;
+}
+.position{
+    font-size: 14px;
+    color: rgb(204, 204, 204);
+}
+.des{
+    font-size: 25px;
+    color: #ddd;
+    margin-bottom: 30px;
+}

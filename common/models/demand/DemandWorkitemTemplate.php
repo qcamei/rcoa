@@ -18,6 +18,7 @@ use yii\db\ActiveRecord;
  * @property integer $workitem_id                           引用工作项id
  * @property integer $is_new                                是否为新建
  * @property integer $value_type                            数量的类型
+ * @property integer $index                                 索引
  * @property integer $created_at                            创建于
  * @property integer $updated_at                            更新于
  *
@@ -49,7 +50,7 @@ class DemandWorkitemTemplate extends ActiveRecord
     {
         return [
             [['demand_workitem_template_type_id', 'workitem_type_id', 'workitem_id', 'is_new', 'value_type'], 'required'],
-            [['demand_workitem_template_type_id', 'workitem_type_id', 'workitem_id',  'is_new', 'value_type', 'created_at', 'updated_at'], 'integer'],
+            [['demand_workitem_template_type_id', 'workitem_type_id', 'workitem_id',  'is_new', 'value_type', 'index', 'created_at', 'updated_at'], 'integer'],
             [['workitem_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => WorkitemType::className(), 'targetAttribute' => ['workitem_type_id' => 'id']],
             [['demand_workitem_template_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => DemandWorkitemTemplateType::className(), 'targetAttribute' => ['demand_workitem_template_type_id' => 'id']],
             [['workitem_id'], 'exist', 'skipOnError' => true, 'targetClass' => Workitem::className(), 'targetAttribute' => ['workitem_id' => 'id']],
@@ -68,6 +69,7 @@ class DemandWorkitemTemplate extends ActiveRecord
             'workitem_id' => Yii::t('rcoa/demand', 'Workitem ID'),
             'is_new' => Yii::t('rcoa/demand', 'Is New'),
             'value_type' => Yii::t('rcoa/demand', 'Value Type'),
+            'index' => Yii::t('rcoa', 'Index'),
             'created_at' => Yii::t('rcoa/demand', 'Created At'),
             'updated_at' => Yii::t('rcoa/demand', 'Updated At'),
         ];

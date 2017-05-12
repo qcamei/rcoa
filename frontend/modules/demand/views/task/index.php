@@ -99,7 +99,7 @@ DemandTask::$productTotal = $productTotal;
                             'th'=>'hidden-xs hidden-sm hidden-md',
                         ],
                         'style' => [
-                            'width' => '145px',
+                            'width' => '135px',
                             'padding' => '8px'
                         ],
                     ],
@@ -118,7 +118,7 @@ DemandTask::$productTotal = $productTotal;
                             'th'=>'hidden-xs hidden-sm',
                         ],
                         'style' => [
-                            'width' => '135px',
+                            'width' => '115px',
                             'padding' => '8px'
                         ],
                     ],
@@ -137,7 +137,7 @@ DemandTask::$productTotal = $productTotal;
                             'th'=>'hidden-xs hidden-sm',
                         ],
                         'style' => [
-                            'width' => '195px',
+                            'width' => '165px',
                             'padding' => '8px'
                         ],
                     ],
@@ -249,6 +249,30 @@ DemandTask::$productTotal = $productTotal;
                         ],
                         'style' => [
                             'width' => '68px',
+                            'padding' => '8px'
+                        ],
+                    ],
+                    'contentOptions' =>[
+                        'class'=>'list-td hidden-xs',
+                    ],
+                ],
+                [
+                    'label' => Yii::t('rcoa/demand', 'Budget Cost'),
+                    'format' => 'raw',
+                    'value'=> function($model){
+                        /* @var $model DemandTask */
+                        if(!empty($model->budget_cost)){
+                            return '<span class="total-price">￥'.number_format(($model->budget_cost + $model->budget_cost * $model->bonus_proportion) / 10000, 2).'</span>万';
+                        }else{
+                            return null;
+                        }
+                    },
+                    'headerOptions' => [
+                        'class'=>[
+                            'th'=>'hidden-xs',
+                        ],
+                        'style' => [
+                            'width' => '78px',
                             'padding' => '8px'
                         ],
                     ],

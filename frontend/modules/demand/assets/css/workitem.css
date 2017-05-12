@@ -17,11 +17,9 @@ and open the template in the editor.
     width: 100%;
 }
 .demand-workitem-table th{
-    width: 200px;
     vertical-align: middle !important;
 }
 .demand-workitem-table td{
-    min-width: 100px;
     vertical-align: middle !important;
 }
 .demand-workitem-table .tr{

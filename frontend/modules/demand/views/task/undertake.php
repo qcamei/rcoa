@@ -34,7 +34,7 @@ use yii\widgets\ActiveForm;
                 ?>
                 <?= Html::activeHiddenInput($model, 'undertake_person', ['value' => Yii::$app->user->id]); ?>
                 <?= Html::activeHiddenInput($model, 'status', ['value' => DemandTask::STATUS_DEVELOPING])?>
-                <?= Html::activeHiddenInput($model, 'progress', ['value' => $model->getStatusProgress()])?>
+                <?= Html::activeHiddenInput($model, 'progress', ['value' => DemandTask::$statusProgress[DemandTask::STATUS_DEVELOPING]])?>
 
             <?php ActiveForm::end(); ?>
 

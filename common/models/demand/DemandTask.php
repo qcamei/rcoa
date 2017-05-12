@@ -2,17 +2,20 @@
 
 namespace common\models\demand;
 
+use common\config\AppGlobalVariables;
 use common\models\product\Product;
 use common\models\team\Team;
 use common\models\team\TeamMember;
 use common\models\teamwork\CourseManage;
 use common\models\User;
+use common\wskeee\job\JobManager;
 use wskeee\framework\models\Item;
 use wskeee\framework\models\ItemType;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\db\Exception;
 
 
 
@@ -28,7 +31,8 @@ use yii\db\ActiveRecord;
  * @property integer $lesson_time                       学时
  * @property integer $credit                            学分
  * @property string $course_description                 课程简介
- * @property integer $cost                              课程成本
+ * @property integer $budget_cost                       预算成本
+ * @property integer $cost                              实际成本
  * @property integer $bonus_proportion                  绩效比值
  * @property integer $score                             绩效得分
  * @property integer $mode                              模式
@@ -43,6 +47,7 @@ use yii\db\ActiveRecord;
  * @property integer $create_team                       创建团队
  * @property integer $created_at                        创建于
  * @property integer $updated_at                        更新于
+ * @property integer $finished_at                       结束于
  * @property string $des                                备注
  *
  * @property DemandAcceptance[] $demandAcceptances      获取所有的验收记录
@@ -70,27 +75,31 @@ class DemandTask extends ActiveRecord
     /** 改造模式 */
     const MODE_REFORM = 1;
     /** 默认状态 */
-    const STATUS_DEFAULT = 1;
+    const STATUS_DEFAULT = 100;
     /** 任务刚发出，等待审核 【待审核】 */
-    const STATUS_CHECK = 5;
+    const STATUS_CHECK = 101;
     /** 任务未通过审核，正在调整 【调整中】 */
-    const STATUS_ADJUSTMENTING = 6;
+    const STATUS_ADJUSTMENTING = 102;
     /** 任务调整完毕，正在审核 【审核中】 */
-    const STATUS_CHECKING = 7;
+    const STATUS_CHECKING = 103;
     /** 任务已通过审核，等待承接 【待承接】 */
-    const STATUS_UNDERTAKE = 10;
+    const STATUS_UNDERTAKE = 200;
     /** 任务已承接，正在开发 【开发中】 */
-    const STATUS_DEVELOPING = 11;
+    const STATUS_DEVELOPING = 201;
     /** 课程开发已完成，等待验收 【待验收】 */
-    const STATUS_ACCEPTANCE = 12;
+    const STATUS_ACCEPTANCE = 202;
     /** 课程未通过验收，正在修改 【修改中】 */
-    const STATUS_UPDATEING = 13;
+    const STATUS_UPDATEING = 203;
     /** 课程修改完毕，正在验收 【验收中】 */
-    const STATUS_ACCEPTANCEING = 14;
+    const STATUS_ACCEPTANCEING = 204;
+    /** 课程验收完毕，正在待确认 【待确认】 */
+    const STATUS_WAITCONFIRM = 205;
+    /** 协商完毕，等待修改绩效得分 【申诉中】 */
+    const STATUS_APPEALING = 206;
     /** 任务已通过验收，任务结束 【已完成】 */
-    const STATUS_COMPLETED = 15;
+    const STATUS_COMPLETED = 500;
     /** 因客观原因需要改期或者取消原定任务 【已取消】 */
-    const STATUS_CANCEL = 99;
+    const STATUS_CANCEL = 900;
 
     /**
      * 课程需求操作
@@ -124,7 +133,28 @@ class DemandTask extends ActiveRecord
         self::STATUS_ACCEPTANCE,
         self::STATUS_UPDATEING,
         self::STATUS_ACCEPTANCEING,
+        self::STATUS_WAITCONFIRM,
+        self::STATUS_APPEALING,
     ];
+    
+    /**
+     * 承接人任务排序
+     * @var array
+     */
+    public static $orderBy = [
+        self::STATUS_UNDERTAKE,
+        self::STATUS_DEFAULT,
+        self::STATUS_CHECK,
+        self::STATUS_ADJUSTMENTING,
+        self::STATUS_CHECKING,
+        self::STATUS_DEVELOPING,
+        self::STATUS_ACCEPTANCE,
+        self::STATUS_UPDATEING,
+        self::STATUS_ACCEPTANCEING,
+        self::STATUS_WAITCONFIRM,
+        self::STATUS_APPEALING,
+    ];
+
     /**
      * 状态名称
      * @var array 
@@ -139,6 +169,8 @@ class DemandTask extends ActiveRecord
         self::STATUS_ACCEPTANCE => '待验收',
         self::STATUS_UPDATEING => '修改中',
         self::STATUS_ACCEPTANCEING => '验收中',
+        self::STATUS_WAITCONFIRM => '待确认',
+        self::STATUS_APPEALING => '申诉中',
         self::STATUS_COMPLETED => '已完成',
         self::STATUS_CANCEL => '已取消',
     ];
@@ -155,6 +187,8 @@ class DemandTask extends ActiveRecord
         self::STATUS_ACCEPTANCE => 80,
         self::STATUS_UPDATEING => 80,
         self::STATUS_ACCEPTANCEING => 80,
+        self::STATUS_WAITCONFIRM => 95,
+        self::STATUS_APPEALING => 95,
         self::STATUS_COMPLETED => 100,
     ];
 
@@ -180,9 +214,9 @@ class DemandTask extends ActiveRecord
     {
         return [
             [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'teacher', 'course_description', 'lesson_time', 'credit'],'required'],
-            [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'lesson_time', 'credit', 'mode', 'team_id', 'create_team', 'develop_principals', 'status', 'progress', 'created_at', 'updated_at'], 'integer'],
+            [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'lesson_time', 'credit', 'mode', 'team_id', 'create_team', 'develop_principals', 'status', 'progress', 'created_at', 'updated_at', 'finished_at'], 'integer'],
             [['course_description', 'des'], 'string'],
-            [['cost', 'bonus_proportion', 'score'], 'number'],
+            [['budget_cost', 'cost', 'bonus_proportion', 'score'], 'number'],
             [['teacher', 'undertake_person', 'create_by'], 'string', 'max' => 36],
             [['plan_check_harvest_time', 'reality_check_harvest_time'], 'string', 'max' => 60],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Item::className(), 'targetAttribute' => ['course_id' => 'id']],
@@ -207,6 +241,7 @@ class DemandTask extends ActiveRecord
             'lesson_time' => Yii::t('rcoa/demand', 'Lesson Time'),
             'credit' => Yii::t('rcoa/demand', 'Credit'),
             'course_description' => Yii::t('rcoa/demand', 'Course Description'),
+            'budget_cost' => Yii::t('rcoa/demand', 'Budget Cost'),
             'cost' => Yii::t('rcoa/demand', 'Cost'),
             'bonus_proportion' => Yii::t('rcoa/demand', 'Bonus Proportion'),
             'score' => Yii::t('rcoa/demand', 'Score'),
@@ -222,10 +257,16 @@ class DemandTask extends ActiveRecord
             'create_team' => Yii::t('rcoa/demand', 'Create Team'),
             'created_at' => Yii::t('rcoa/demand', 'Created At'),
             'updated_at' => Yii::t('rcoa/demand', 'Updated At'),
+            'finished_at' => Yii::t('rcoa/demand', 'Finished At'),
             'des' => Yii::t('rcoa/demand', 'Des'),
         ];
     }
 
+    public function afterFind() 
+    {
+        $this->setUpOvertimeOperation();
+    }
+    
     /**
      * 获取所有的验收记录
      * @return ActiveQuery
@@ -369,7 +410,7 @@ class DemandTask extends ActiveRecord
     public function getDemandWorkitems()
     {
         return $this->hasMany(DemandWorkitem::className(), ['demand_task_id' => 'id'])
-               ->orderBy(['workitem_type_id' => 'asc', 'workitem_id' => 'asc'])
+               ->orderBy('index')
                ->with('workitem', 'workitemType', 'demandTask');
     }
 
@@ -464,6 +505,24 @@ class DemandTask extends ActiveRecord
     }
     
     /**
+     * 获取是否在【待确认】状态
+     * @return type
+     */
+    public function getIsStatusWaitConfirm()
+    {
+        return $this->status == self::STATUS_WAITCONFIRM;
+    }
+    
+    /**
+     * 获取是否在【申诉中】状态
+     * @return type
+     */
+    public function getIsStatusAppealing()
+    {
+        return $this->status == self::STATUS_APPEALING;
+    }
+    
+    /**
      * 获取是否在【已完成】状态
      * @return type
      */
@@ -497,5 +556,35 @@ class DemandTask extends ActiveRecord
     public function getStatusProgress()
     {
         return self::$statusProgress[$this->status];
+    }
+    
+    /**
+     * 超时操作
+     */
+    public function setUpOvertimeOperation()
+    {
+        $overtime = strtotime($this->reality_check_harvest_time.'+ 15 day');
+        if($this->getIsStatusWaitConfirm() && time() > $overtime){
+            /* @var $jobManager JobManager */
+            $jobManager = Yii::$app->get('jobManager');
+            
+            $this->status = self::STATUS_COMPLETED;
+            $this->progress = self::$statusProgress[self::STATUS_COMPLETED];
+            $this->finished_at = $overtime;
+            
+            //开启事务
+            $trans = Yii::$app->db->beginTransaction();
+            try
+            {
+                if($this->save(false,['status', 'progress', 'finished_at'])){
+                    $jobManager->updateJob(AppGlobalVariables::getSystemId(), $this->id, [
+                        'progress'=> self::$statusProgress[self::STATUS_COMPLETED], 'status' => self::$statusNmae[self::STATUS_COMPLETED]]); 
+                }
+                $trans->commit();   //提交
+                Yii::$app->getSession()->setFlash('error', '任务已超时！');
+            } catch (Exception $ex) {
+                $trans->rollBack();     //回滚
+            }
+        }
     }
 }

@@ -3,7 +3,7 @@
 namespace frontend\modules\demand\controllers;
 
 use common\config\AppGlobalVariables;
-use common\models\demand\DemandDelivery;
+use common\models\demand\DemandAcceptance;
 use common\models\demand\DemandTask;
 use common\models\demand\DemandTaskAnnex;
 use common\models\demand\DemandWorkitem;
@@ -81,7 +81,7 @@ class TaskController extends Controller
         $dataProvider = new ArrayDataProvider([
             'allModels' => $query->addSelect([
                 'Demand_task.item_type_id', 'Demand_task.item_id', 'Demand_task.item_child_id', 'Demand_task.course_id',
-                'Demand_task.cost', 'Demand_task.bonus_proportion',
+                'Demand_task.budget_cost', 'Demand_task.cost', 'Demand_task.bonus_proportion',
                 'Demand_task.team_id', 'Demand_task.undertake_person', 'Demand_task.create_by', 
                 'Demand_task.plan_check_harvest_time', 'Demand_task.status', 'Demand_task.mode', 'Demand_task.progress'
             ])->limit(20)->offset($page*20)->all(),
@@ -135,6 +135,7 @@ class TaskController extends Controller
         $jobManager = Yii::$app->get('jobManager');
         /* @var $rbacManager RbacManager */  
         $rbacManager = \Yii::$app->authManager;
+        
         if($model->getIsStatusCompleted() || $model->getIsStatusCancel() ){
             //取消用户与任务通知的关联
             $jobManager->cancelNotification(AppGlobalVariables::getSystemId(), $model->id, \Yii::$app->user->id); 
@@ -150,7 +151,8 @@ class TaskController extends Controller
             'rbacManager' => $rbacManager,
             'annex' => $this->getAnnex($id),
             'develop' => $develop,
-            'works' => $this->getDemandWorkitem($id),
+            'workitmType' => $dtTool->getDemandWorkitemTypeData($model->id),
+            'workitem' => $dtTool->getDemandWorkitemData($model->id),
         ]);
     }
 
@@ -230,8 +232,8 @@ class TaskController extends Controller
         $this->layout = '@app/views/layouts/main';
         $model = $this->findModel($id);
         $post = Yii::$app->request->post();
-        $model->cost = ArrayHelper::getValue($post, 'cost');
-        
+        $model->budget_cost = ArrayHelper::getValue($post, 'budget_cost');
+       
         if(!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UPDATE) && $model->create_by == \Yii::$app->user->id))
             throw new NotAcceptableHttpException('无权限操作！');
         if(!($model->getIsStatusDefault() || $model->getIsStatusAdjusimenting()))
@@ -241,7 +243,6 @@ class TaskController extends Controller
         /* @var $dtTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
         $courses = $this->getCourses($model->item_child_id);
-        
         
         if ($model->load($post)) {
             $dtTool->UpdateTask($model, $post);
@@ -257,6 +258,8 @@ class TaskController extends Controller
                 'teachers' => $this->getExpert(),
                 'team' => $twTool->getHotelTeam(),
                 'annex' => $this->getAnnex($model->id),
+                'workitmType' => $dtTool->getDemandWorkitemTypeData($model->id),
+                'workitem' => $dtTool->getDemandWorkitemData($model->id),
             ]);
         }
     }
@@ -320,11 +323,41 @@ class TaskController extends Controller
     }
     
     /**
+     * 待确定任务操作
+     * @param type $id
+     * @return type
+     * @throws NotAcceptableHttpException
+     */
+    public function actionWaitConfirm($id)
+    {
+        $model = $this->findModel($id);
+        /* @var $rbacManager RbacManager */  
+        $rbacManager = \Yii::$app->authManager;
+        /* @var $dtTool DemandTool */
+        $dtTool = DemandTool::getInstance();
+        
+        if(!($rbacManager->isRole(RbacName::ROLE_DEMAND_UNDERTAKE_PERSON, \Yii::$app->user->id) 
+             && $model->developPrincipals->u_id == Yii::$app->user->id))
+            throw new NotAcceptableHttpException('无权限操作！');
+        if(!$model->getIsStatusWaitConfirm())
+            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
+        
+        if ($model->load(Yii::$app->request->post())) {
+            $dtTool->WaitConfirmTask($model);
+            return $this->redirect(['index', 'undertake_person' => Yii::$app->user->id,]);
+        } else {
+            return $this->renderAjax('wait_confirm', [
+                'model' => $model,
+            ]);
+        }
+    }
+   
+    /**
      * 恢复任务制作操作
      * @param integer $id
      * @return type
      * @throws NotAcceptableHttpException
-     */
+     
     public function actionRecovery($id)
     {
         throw new NotAcceptableHttpException('未开放！');
@@ -334,14 +367,14 @@ class TaskController extends Controller
         if(!$model->getIsStatusCompleted())
             throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
         
-        /* @var $dtTool DemandTool */
+        /* @var $dtTool DemandTool 
         $dtTool = DemandTool::getInstance();
         $model->status = DemandTask::STATUS_UPDATEING;
         $model->progress = DemandTask::$statusProgress[DemandTask::STATUS_UPDATEING];
         $model->reality_check_harvest_time = null;
         $dtTool->RecoveryTask($model);
         return $this->redirect(['view', 'id' => $model->id]);
-    }
+    }*/
     
     /**
      * 取消任务
@@ -373,8 +406,6 @@ class TaskController extends Controller
                 'model' => $model,
             ]);
         }
-        
-        
     }
     
     /**
@@ -467,8 +498,8 @@ class TaskController extends Controller
         } else {
             throw new NotFoundHttpException(\Yii::t('rcoa', 'The requested page does not exist.'));
         }
-    }
-    
+    }    
+
     /**
      * 获取行业
      * @return type
@@ -597,54 +628,8 @@ class TaskController extends Controller
         $results = $dtQuery->findProductTotal();
         $results->select(['Task_product.task_id', 'SUM(Product.unit_price * Task_product.number) AS totals']);
         $results->groupBy('Task_product.task_id');
+        
         return ArrayHelper::map($results->all(), 'task_id', 'totals');
     }
-    
-    /**
-     * 获取需求工作项数据
-     * @param type $task_id             需求任务ID
-     * @return array
-     */
-    public function getDemandWorkitem($task_id)
-    {
-        $workitems = (new Query())
-                 ->select(['Demand_workitem.workitem_type_id', 'Workitem_type.name AS workitem_type_name', 'Workitem_type.icon',
-                       'Demand_workitem.workitem_id', 'Workitem.name AS workitem_name',  'Demand_workitem.is_new', 'Demand_workitem.value',
-                       'Demand_workitem.value_type', 'Workitem.unit'
-                     //'ROUND(SUM(if(Demand_workitem.value_type = TRUE, Demand_workitem.`value` / 60, Demand_workitem.`value`) * Demand_workitem.cost)) AS price'
-                 ])
-                 ->from(['Demand_workitem' => DemandWorkitem::tableName()])
-                 ->leftJoin(['Workitem_type' => WorkitemType::tableName()], 'Workitem_type.id = Demand_workitem.workitem_type_id')
-                 ->leftJoin(['Workitem' => Workitem::tableName()], 'Workitem.id = Demand_workitem.workitem_id')
-                 ->where(['Demand_workitem.demand_task_id' => $task_id])
-                 ->all();
-                 
-         $works = [];
-         foreach ($workitems as $items) {
-            if(!isset($works[$items['workitem_type_id']])){
-                $works[$items['workitem_type_id']] = [
-                    'id' => $items['workitem_type_id'],
-                    'name' => $items['workitem_type_name'],
-                    'icon' => $items['icon'],
-                    'childs' => [],
-                ];
-            }
-            if(!isset($works[$items['workitem_type_id']]['childs'][$items['workitem_id']])){
-                $works[$items['workitem_type_id']]['childs'][$items['workitem_id']] = [
-                    'id' => $items['workitem_id'],
-                    'name' => $items['workitem_name'],
-                    'childs' => [],
-                ];
-            }
-            $works[$items['workitem_type_id']]['childs'][$items['workitem_id']]['childs'][] = [
-                'is_new' => $items['is_new'],
-                'value_type' => $items['value_type'],
-                'value' => $items['value'],
-                'unit' => $items['unit']
-            ];
-         }
-        
-        return $works;
-    }
-    
+ 
 }

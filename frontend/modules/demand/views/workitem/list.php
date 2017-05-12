@@ -7,6 +7,8 @@ use yii\web\View;
 /* @var $this View */
 /* @var $model Workitem */
 
+$this->title = '样例库';
+
 ?>
 <div class="container workitem-cabinet-index">
     <div class="list-container md-12">

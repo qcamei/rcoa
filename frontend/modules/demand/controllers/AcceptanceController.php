@@ -4,8 +4,10 @@ namespace frontend\modules\demand\controllers;
 
 use common\models\demand\DemandAcceptance;
 use common\models\demand\DemandAcceptanceData;
+use common\models\demand\DemandAppeal;
 use common\models\demand\DemandDelivery;
 use common\models\demand\DemandDeliveryData;
+use common\models\demand\DemandReply;
 use common\models\demand\DemandTask;
 use common\models\demand\DemandWorkitem;
 use common\models\demand\searchs\DemandAcceptanceSearch;
@@ -80,6 +82,7 @@ class AcceptanceController extends Controller {
         $delivery = $this->findDeliveryModel($demand_task_id);
         $delivery_id = empty($delivery_id) ? $delivery->id : $delivery_id;
         $model = $this->findModel($demand_task_id, $delivery_id);
+        $model->demand_task_id = $demand_task_id;
         return $this->renderAjax(!$detect->isMobile() ? 'view' : 'wap_view', [
             'model' => $model,
             'demand_task_id' => $demand_task_id,
@@ -98,7 +101,7 @@ class AcceptanceController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($demand_task_id) {
+    public function actionCreate($demand_task_id, $pass = 0) {
         $this->layout = '@app/views/layouts/main';
         $model = new DemandAcceptance();
         $detect = new MobileDetect();
@@ -112,7 +115,8 @@ class AcceptanceController extends Controller {
         if(!\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE_ACCEPTANCE) 
            && $model->demandTask->create_by != \Yii::$app->user->id)
             throw new NotAcceptableHttpException('无权限操作！');
-        if(!($model->demandTask->getIsStatusAcceptance() || $model->demandTask->getIsStatusAcceptanceing()))
+        if(!($model->demandTask->getIsStatusAcceptance() || $model->demandTask->getIsStatusAcceptanceing() 
+            || $model->demandTask->getIsStatusAppealing()))
             throw new NotAcceptableHttpException('该任务状态为'.$model->demandTask->getStatusName().'！');
         
         $model->demand_delivery_id = ArrayHelper::getValue($post, 'DemandAcceptance.demand_delivery_id');
@@ -129,6 +133,7 @@ class AcceptanceController extends Controller {
                 'model' => $model,
                 'deliveryModel' => $deliveryModel,
                 'detect' => $detect,
+                'pass' => $pass,
                 'workitemType' => $dtTool->getDemandWorkitemTypeData($model->demand_task_id),
                 'workitem' => $dtTool->getDemandWorkitemData($model->demand_task_id),
                 'delivery' => $dtTool->getDemandDeliveryData($model->demand_task_id, $deliveryModel->id),
@@ -143,14 +148,25 @@ class AcceptanceController extends Controller {
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id) {
-        $model = $this->findModel($id);
-
+    public function actionUpdate($demand_task_id, $delivery_id){
+        $this->layout = '@app/views/layouts/main';
+        $detect = new MobileDetect();
+        $deliveryModel = $this->findDeliveryModel($demand_task_id);
+        $model = $this->findModel($demand_task_id, $delivery_id);
+        /* @var $dtTool DemandTool */
+        $dtTool = DemandTool::getInstance();
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'deliveryModel' => $deliveryModel,
+                'detect' => $detect,
+                'workitemType' => $dtTool->getDemandWorkitemTypeData($model->demand_task_id),
+                'workitem' => $dtTool->getDemandWorkitemData($model->demand_task_id),
+                'delivery' => $dtTool->getDemandDeliveryData($model->demand_task_id, $deliveryModel->id),
+                'percentage' => $this->getWorkitemTypePercentage($model->demand_task_id, $deliveryModel->id),
             ]);
         }
     }
@@ -174,10 +190,11 @@ class AcceptanceController extends Controller {
      * @return DemandAcceptance the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($demand_task_id, $delivery_id) {
+    protected function findModel($demand_task_id = null, $delivery_id = null) {
         $model = DemandAcceptance::find()
                 ->filterWhere(['demand_task_id' => $demand_task_id])
                 ->andFilterWhere(['demand_delivery_id' => $delivery_id])
+                ->orderBy('id desc')
                 ->one();
         if ($model !== null) {
             return $model;
@@ -196,12 +213,31 @@ class AcceptanceController extends Controller {
     protected function findDeliveryModel($demand_task_id) {
         $delivery = DemandDelivery::find()
                 ->where(['demand_task_id' => $demand_task_id])
-                ->orderBy('id DESC')
+                ->orderBy('id desc')
                 ->one();
         if ($delivery !== null) {
             return $delivery;
         } else {
             return new DemandDelivery();
+        }
+    }    
+    
+    /**
+     * Finds the DemandAppeal model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return DemandDelivery the loaded delivery
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findAppealModel($demand_task_id) {
+        $appeal = DemandAppeal::find()
+                ->where(['demand_task_id' => $demand_task_id])
+                ->orderBy('id desc')
+                ->one();
+        if ($appeal !== null) {
+            return $appeal;
+        } else {
+            return new DemandAppeal();
         }
     }    
     
@@ -276,8 +312,9 @@ class AcceptanceController extends Controller {
                 'value' => $value,
             ];
         }
-        ArrayHelper::multisort($datas, 'workitem_type_id', SORT_ASC);
         
+        ArrayHelper::multisort($datas, 'workitem_type_id', SORT_ASC);
+       
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
@@ -292,11 +329,13 @@ class AcceptanceController extends Controller {
                         'status' => DemandTask::STATUS_UPDATEING], ['id' => $model->demand_task_id])->execute();
                 }else{
                     $score = $this->getDemandTaskScore($model->demand_task_id, $model->demand_delivery_id, $model->id);
+                    $number = $model->updateAll(['score' => $score[$model->demand_task_id]], ['id' => $model->id]);
+                    $this->saveDemandReply($model->demand_task_id, $model->pass);
                     \Yii::$app->db->createCommand()->update(DemandTask::tableName(), [
-                        'status' => DemandTask::STATUS_COMPLETED,
-                        'progress' => DemandTask::$statusProgress[DemandTask::STATUS_COMPLETED],
+                        'status' => DemandTask::STATUS_WAITCONFIRM,
+                        'progress' => DemandTask::$statusProgress[DemandTask::STATUS_WAITCONFIRM],
                         'score' => $score[$model->demand_task_id],
-                        'reality_check_harvest_time' => Date('Y-m-d H:i', time()),
+                        'reality_check_harvest_time' => Date('Y-m-d H:i', $model->created_at),
                         ], ['id' => $model->demand_task_id])->execute();
                 }
             }else
@@ -310,4 +349,27 @@ class AcceptanceController extends Controller {
         }
     }
     
+    /**
+     * 保存需求回复数据到表里
+     * @param integer $demand_task_id          需求任务ID
+     * @param integer $pass                    是否同意
+     */
+    public function saveDemandReply($demand_task_id, $pass)
+    {
+        /* @var $appeal DemandAppeal */
+        $appeal = $this->findAppealModel($demand_task_id);
+        $replys[] = [
+            'demand_appeal_id' => $appeal->id,
+            'title' => '回复',
+            'pass' => $pass,
+            'des' => '无',
+            'create_by' => \Yii::$app->user->id,
+            'created_at' => time(),
+            'updated_at' => time(),
+        ];
+       
+        /** 添加$values数组到表里 */
+        Yii::$app->db->createCommand()->batchInsert(DemandReply::tableName(), 
+        ['demand_appeal_id', 'title', 'pass', 'des', 'create_by', 'created_at', 'updated_at'], $replys)->execute();
+    }
 }

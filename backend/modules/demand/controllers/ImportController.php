@@ -82,23 +82,21 @@ class ImportController extends Controller
         foreach ($tasks as $data) {
             if($data['is_new'] == true){
                 foreach ($workitem_template as $workitem) {
-                    if($workitem['target_month'] >= date('Y-m', $data['created_at'])){
-                        unset($workitem['target_month']);
-                        $workitem += [
-                            'demand_task_id' => $data['id'], 
-                            'value' => null,
-                            'created_at' => (int)$data['created_at'],
-                            'updated_at' => time(),
-                        ];
-                        $workitems[] = $workitem;
-                    }
+                    unset($workitem['id']);
+                    $workitem += [
+                        'demand_task_id' => $data['id'], 
+                        'value' => null,
+                        'created_at' => (int)$data['created_at'],
+                        'updated_at' => time(),
+                    ];
+                    $workitems[] = $workitem;
                 }
             }
         }
         
         $result = $this->batchInsert(DemandWorkitem::tableName(), [
             'workitem_type_id',  'workitem_id', 'is_new',  
-            'value_type', 'cost', 'demand_task_id', 
+            'value_type', 'index', 'cost', 'demand_task_id', 
             'value', 'created_at', 'updated_at'
         ], $workitems);
 
@@ -182,19 +180,26 @@ class ImportController extends Controller
      */
     public function findDemandWorkitemTemplate()
     {
+        $query_target_month = (new Query())
+            ->select([
+                'CONCAT(Wrkitem_template.workitem_id, "_", Wrkitem_template.is_new) AS id',
+                'Wrkitem_template.workitem_type_id',
+                'Wrkitem_template.workitem_id',
+                'Wrkitem_template.is_new',
+                'Wrkitem_template.value_type',
+                'Wrkitem_template.index',
+                'if(Wrkitem_template.is_new = TRUE, Workitem_cost.cost_new, Workitem_cost.cost_remould) AS cost'
+            ])
+            ->from(['Wrkitem_template' => DemandWorkitemTemplate::tableName()])
+            ->leftJoin(['Workitem_cost' => WorkitemCost::tableName()], 'Workitem_cost.workitem_id = Wrkitem_template.workitem_id')
+            ->orderBy(['Workitem_cost.target_month' => SORT_DESC, 'Wrkitem_template.workitem_id' => SORT_DESC, 'Wrkitem_template.is_new'=> SORT_DESC]);
+                    
+         
         $workitemTemplate = (new Query())
-                    ->select([
-                        'Wrkitem_template.workitem_type_id',
-                        'Wrkitem_template.workitem_id',
-                        'Wrkitem_template.is_new',
-                        'Wrkitem_template.value_type',
-                        'Workitem_cost.target_month',
-                        'if(Wrkitem_template.is_new = TRUE, Workitem_cost.cost_new, Workitem_cost.cost_remould) AS cost'
-                    ])
-                    ->from(['Wrkitem_template' => DemandWorkitemTemplate::tableName()])
-                    ->leftJoin(['Workitem_cost' => WorkitemCost::tableName()], 'Workitem_cost.workitem_id = Wrkitem_template.workitem_id')
-                    ->orderBy(['Workitem_cost.target_month' => 'DESC', 'Wrkitem_template.workitem_id' => 'DESC', 'Wrkitem_template.is_new'=> 'DESC'])
-                    ->all();
+            ->select(['*'])
+            ->from(['Target_month' => $query_target_month])
+            ->groupBy('Target_month.id')
+            ->all();
         
         return $workitemTemplate;
     }

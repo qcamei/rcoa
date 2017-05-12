@@ -52,7 +52,8 @@ else
     
     <?= $this->render('_form_detai', [
         'model' => $model,
-        'works' => $works,
+        'workitmType' => $workitmType,
+        'workitems' => $workitem,
     ]) ?>
         
     <span><?= Yii::t('rcoa/demand', 'Demand Task Annexes').'：'; ?></span>
@@ -128,7 +129,7 @@ $js =
         $('.myModal').modal("show").load($(this).attr("href"));
         return false;
     });
-    
+       
    /** 创建开发操作 弹出模态框 */
     if($isCreateDevelop && $develop){
         $('.myModal').modal("show");
@@ -137,6 +138,27 @@ $js =
             location.href = $('#create-develop').attr("href");
         });
     }
+        
+    /** 待确定操作 弹出模态框 */
+    $('#wait-confirm').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    });
+        
+    /** 申诉操作 弹出模态框 */
+    $('#appeal-create').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    });
+        
+    /** 回复操作 弹出模态框 */
+    $('#reply-create').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    });    
         
 JS;
     $this->registerJs($js,  View::POS_READY);

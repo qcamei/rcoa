@@ -57,6 +57,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->is_new == true ? '是' : '否';
                 }
             ],
+            [
+                'attribute' => 'index',
+                'value' => function($model){
+                    /* @var $model DemandWorkitemTemplate*/
+                    return $model->index;
+                }
+            ],
            
             // 'created_at',
             // 'updated_at',

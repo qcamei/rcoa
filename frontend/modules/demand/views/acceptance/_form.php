@@ -32,16 +32,18 @@ foreach ($workitem as $work){
 
 <div class="demand-acceptance-form">
     
+    <?= Html::a('样例展示', ['workitem/list'], ['style' => 'float: right; font-size:16px;', 'target' => '_blank']) ?>
+    
     <?php $form = ActiveForm::begin(['id' => 'demand-acceptance-form']); ?>
     
     <table class="table table-bordered demand-workitem-table">
         
         <thead>
             <tr>
-                <th></th>
-                <td class="text-center" style="width: 300px">需求</td>
-                <td class="text-center" style="width: 300px">交付</td>
-                <td class="text-center">验收</td>
+                <th style="width: 10%"></th>
+                <td class="text-center" style="width: 25%">需求</td>
+                <td class="text-center" colspan="2" style="width: 40%">交付</td>
+                <td class="text-center" style="width: 25%">验收</td>
             </tr>
         </thead>
         
@@ -49,7 +51,7 @@ foreach ($workitem as $work){
             <tr>
                 <th class="text-center">时间</th>
                 <td class="text-center"><?= reset($worktime) ?></td>
-                <td class="text-center"><?= reset($deliverytime) ?></td>
+                <td class="text-center" colspan="2"><?= reset($deliverytime) ?></td>
                 <td class="text-center"><?= date('Y-m-d H:i', time()) ?></td>
             </tr>
             <?php  foreach ($workitemType as $type): 
@@ -59,13 +61,8 @@ foreach ($workitem as $work){
             <tr class="tr">
                 <th class="text-center"><?= $type['name'] ?></th>
                 <td></td>
+                <td colspan="2"></td>
                 <td></td>
-                <td class="text-center">
-                    <?php if($is_show['id'] == $type['id'] ): ?>
-                    <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">数量</div>
-                    <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">质量</div>
-                    <?php endif; ?>
-                </td>
             </tr>
                 <?php foreach ($workitem as $work): ?>
                     <?php if($work['workitem_type'] == $type['id']): ?>
@@ -92,15 +89,16 @@ foreach ($workitem as $work){
                         <?php endforeach; ?>
                         </td>
                         <?php if(!isset($is_rowspan[$type['id']])): $is_rowspan[$type['id']] = true;?>
+                        <td class="text-center" rowspan="<?= $number[$type['id']] ?>" style="width:100px">
+                            <?php  if(isset($percentage[$type['id']])): ?>
+                            <span class="chart" data-percent="<?= $percentage[$type['id']]; ?>" data-bar-color="<?= $color; ?>">
+                                <span class="percent" style="color: <?= $color; ?>"></span>
+                            </span>
+                            <?php endif; ?>
+                        </td>
                         <td class="text-center" rowspan="<?= $number[$type['id']] ?>">
-                            <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
-                                <?php  if(isset($percentage[$type['id']])): ?>
-                                <span class="chart" data-percent="<?= $percentage[$type['id']]; ?>" data-bar-color="<?= $color; ?>">
-                                    <span class="percent" style="color: <?= $color; ?>"></span>
-                                </span>
-                                <?php endif; ?>
-                            </div>
-                            <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12" style="margin-top: 25px;">
+                            <div class="col-lg-4 col-md-7 col-sm-7 col-xs-12"><span>评分：</span></div>
+                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-12">
                                 <?= Slider::widget([
                                     'class' => 'acceptance-value',
                                     'name'=> 'value['.$type['id'].']',
@@ -139,9 +137,18 @@ foreach ($workitem as $work){
                 <?php endforeach; ?>
             <?php endforeach; ?>
             <tr class="tr">
+                <th class="text-center">成本</th>
+                <td>￥<?= number_format($model->demandTask->budget_cost, 2) ?></td>
+                <td colspan="2">
+                    <span style="color:red">￥<?= number_format($model->demandTask->cost, 2) ?></span>
+                    <span class="pattern">（超出预算￥<?= number_format($model->demandTask->cost - $model->demandTask->budget_cost, 2) ?>）</span>
+                </td>
+                <td></td>
+            </tr>
+            <tr class="tr">
                 <th class="text-center">备注</th>
                 <td><?= reset($workdes) ?></td>
-                <td><?= reset($deliverydes) ?></td>
+                <td colspan="2"><?= reset($deliverydes) ?></td>
                 <td>
                     <input type="hidden" name="DemandAcceptance[pass]" value="">
                     <div id="demandacceptance-pass">
@@ -174,6 +181,11 @@ $js =
         }); 
     });
   
+    if($pass){
+        $("input:radio[name='DemandAcceptance[pass]']").eq(0).attr("checked",'checked');
+        $("input:radio[name='DemandAcceptance[pass]']").eq(1).attr("disabled",'disabled');
+        $(".btn-danger").addClass("disabled");
+    }
     
 JS;
     $this->registerJs($js,  View::POS_READY);

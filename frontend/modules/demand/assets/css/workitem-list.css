@@ -52,9 +52,6 @@
         font-size: 30px;    
     }
     
-    .list-item{
-        //height: 318px;
-    }
     .workitem-title{
         font-size: 28px;
         margin-bottom: 33px;
@@ -74,10 +71,6 @@
     }
 }
     
-/* 列表项 */
-.page-title{
-    //color: #0a3394;
-}
 /* 列表项 */
 .list-item{
     position: relative;

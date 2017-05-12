@@ -15,7 +15,9 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="demand-workitem-index">
     
     <?= $this->render('_form', [
-        'allModels' => $allModels,
+        'model' => $model,
+        'workitmType' => $workitmType,
+        'workitem' => $workitem,
     ]) ?>
     
 </div>

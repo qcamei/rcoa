@@ -17,7 +17,7 @@ use yii\db\ActiveRecord;
  * @property integer $created_at                            创建于
  * @property integer $updated_at                            更新于
  *  
- * @property DemandAcceptanc] $demandAcceptances            获取需求验收记录数据
+ * @property DemandAcceptanc $demandAcceptances            获取需求验收记录数据
  * @property DemandTask $demandTask                         获取需求任务
  * @property DemandDeliveryData[] $demandDeliveryDatas      获取所有需求交付数据
  */

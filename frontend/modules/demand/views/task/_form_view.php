@@ -1,5 +1,6 @@
 <?php
 
+use common\models\demand\DemandAcceptance;
 use common\models\demand\DemandTask;
 use frontend\modules\demand\utils\DemandTool;
 use wskeee\rbac\RbacManager;
@@ -7,6 +8,7 @@ use wskeee\rbac\RbacName;
 use yii\helpers\Html;
 
 /* @var $model DemandTask */
+/* @var $da_model DemandAcceptance*/
 /* @var $dtTool DemandTool */ 
 /* @var $rbacManager RbacManager */  
 
@@ -62,8 +64,9 @@ $page = [
             if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_SUBMIT_CHECK) 
                && $model->getIsStatusAdjusimenting() && $model->create_by == Yii::$app->user->id )
                 echo Html::a('提交审核', ['check/submit', 'task_id' => $model->id], ['class' =>'btn btn-info']).' ';
+            
             /**
-             * 完成 按钮显示必须满足以下条件：
+             * 验收 按钮显示必须满足以下条件：
              * 1、拥有完成的权限
              * 2、状态必须是在【待验收】 or 【验收中】
              * 3、创建者是自己
@@ -71,32 +74,32 @@ $page = [
             if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_COMPLETE) 
                && ($model->getIsStatusAcceptance() || $model->getIsStatusAcceptanceing()) && $model->create_by == Yii::$app->user->id)
                 echo Html::a('验收', ['acceptance/create', 'demand_task_id' => $model->id], ['id' => 'complete', 'class' =>'btn btn-success']).' ';
+           
             /**
-             * 验收不通过 按钮显示必须满足以下条件：
-             * 1、拥有完成的权限
-             * 2、状态必须是在【待验收】 or 【验收中】
-             * 3、创建者是自己
-             
-            if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE_ACCEPTANCE) 
-               && ($model->getIsStatusAcceptance() || $model->getIsStatusAcceptanceing()) && $model->create_by == Yii::$app->user->id)
-                echo Html::a('验收不通过', ['acceptance/create', 'task_id' => $model->id], ['id' => 'acceptance-create', 'class' =>'btn btn-danger']).' ';*/
+             * 同意申诉 按钮显示必须满足以下条件：
+             * 1、状态必须是在【申诉中】
+             * 2、创建者必须是自己
+             */
+            if($model->getIsStatusAppealing() && $model->create_by == Yii::$app->user->id)
+                echo Html::a('同意申诉', ['acceptance/create', 'demand_task_id' => $model->id, 'pass' => 1], ['class' => 'btn btn-success']).' ';
+            
             /**
-             * 验收不通过 按钮显示必须满足以下条件：
+             * 不同意 按钮显示必须满足以下条件：
+             * 1、状态必须是在【申诉中】
+             * 2、创建者必须是自己
+             */
+            if($model->getIsStatusAppealing() && $model->create_by == Yii::$app->user->id)
+                echo Html::a('不同意', ['reply/create', 'demand_task_id' => $model->id], ['id' => 'reply-create', 'class' => 'btn btn-danger']).' ';
+            
+            /**
+             * 课程开发 按钮显示必须满足以下条件：
              * 1、拥有完成的权限
              * 2、状态必须是在【待验收】 or 【验收中】
              * 3、创建者是自己
              */
             if(($model->getIsStatusAcceptance() || $model->getIsStatusAcceptanceing()) && $model->create_by == Yii::$app->user->id )
                 echo Html::a('课程开发', ['/teamwork/course/view', 'demand_task_id' => $model->id], ['class' =>'btn btn-primary', 'target' => '_blank']).' ';
-            /**
-             * 恢复 按钮显示必须满足以下条件：
-             * 1、拥有恢复权限
-             * 2、状态必须是在【已完成】
-             * 3、创建者是自己
-             
-            if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_RESTORE) 
-               && $model->getIsStatusCompleted() && $model->create_by == Yii::$app->user->id)
-                echo Html::a('恢复', ['recovery', 'id' => $model->id], ['class' =>'btn btn-danger']).' ';*/
+            
             
             //审核人
             /**
@@ -157,6 +160,22 @@ $page = [
             if($model->getIsStatusUpdateing() && (Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_SUBMIT_ACCEPTANCE)
                 && $model->developPrincipals->u_id == Yii::$app->user->id))
                 echo Html::a('交付', ['delivery/create', 'demand_task_id' => $model->id], ['class' =>'btn btn-info']).' ';
+            
+            /**
+             * 确定 按钮显示必须满足以下条件：
+             * 1、状态必须是在【待确定】
+             * 2、必须是该任务的开发负责人
+             */
+            if($model->getIsStatusWaitConfirm() && $model->developPrincipals->u_id == Yii::$app->user->id)
+                echo Html::a('确定', ['wait-confirm', 'id' => $model->id], ['id' => 'wait-confirm', 'class' => 'btn btn-success']).' ';
+            
+            /**
+             * 确定 按钮显示必须满足以下条件：
+             * 1、状态必须是在【待确定】
+             * 2、必须是该任务的开发负责人
+             */
+            if($model->getIsStatusWaitConfirm() && $model->developPrincipals->u_id == Yii::$app->user->id)
+                echo Html::a('申诉', ['appeal/create', 'demand_task_id' => $model->id], ['id' => 'appeal-create', 'class' => 'btn btn-info']).' ';
         ?>
         </div>
     </div>

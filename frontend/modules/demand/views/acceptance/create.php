@@ -46,6 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $this->render(!$detect->isMobile() ? '_form' : 'wap_form', [
         'model' => $model,
         'deliveryModel' => $deliveryModel,
+        'pass' => $pass,
         'workitemType' => $workitemType,
         'workitem' => $workitem,
         'delivery' => $delivery,

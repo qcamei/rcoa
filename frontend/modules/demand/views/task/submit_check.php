@@ -21,7 +21,7 @@ use yii\widgets\ActiveForm;
             <?php $form = ActiveForm::begin(['id' => 'form-submit-check']); ?>
 
                 <?php
-                    if(empty($model->cost))
+                    if(empty($model->budget_cost))
                         echo Html::encode('工作项成本不能为空！');
                     else {
                         echo Html::encode('是否确定要提交该任务审核？');
@@ -34,7 +34,7 @@ use yii\widgets\ActiveForm;
 
         </div>
         <div class="modal-footer">
-            <?php if(empty($model->cost)): ?>
+            <?php if(empty($model->budget_cost)): ?>
             <button class="btn btn-primary" data-dismiss="modal" aria-label="Close">关闭</button>
             <?php else:?>
             <button id="submit-check-save" class="btn btn-primary">确认</button>

@@ -156,7 +156,9 @@ use yii\widgets\ActiveForm;
     <h5><b>工作项信息</b></h5>
     
     <?= $this->render('/workitem/index', [
-        'allModels' => $model->demandWorkitems
+        'model' => $model,
+        'workitmType' => $workitmType,
+        'workitem' => $workitem,
     ]) ?>
     
     <?php endif; ?>

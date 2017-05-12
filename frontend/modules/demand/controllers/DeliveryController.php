@@ -87,7 +87,7 @@ class DeliveryController extends Controller {
         $model->loadDefaultValues();
         $post = Yii::$app->request->post();
         $model->demand_task_id = $demand_task_id;
-
+        
         if (!\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_SUBMIT_ACCEPTANCE) && $model->demandTask->developPrincipals->u_id != \Yii::$app->user->id)
             throw new NotAcceptableHttpException('无权限操作！');
         if (!($model->demandTask->getIsStatusDeveloping() || $model->demandTask->getIsStatusUpdateing()))
@@ -187,7 +187,7 @@ class DeliveryController extends Controller {
                 'value' => $value,
             ];
         }
-       
+        
         ArrayHelper::multisort($datas, 'demand_workitem_id', SORT_ASC);
         
         /** 开启事务 */
@@ -196,8 +196,10 @@ class DeliveryController extends Controller {
             if ($model !== null && $datas != null) {
 
                 /** 添加$values数组到表里 */
-                Yii::$app->db->createCommand()->batchInsert(DemandDeliveryData::tableName(), ['demand_delivery_id', 'demand_workitem_id', 'value'], $datas)->execute();
+                Yii::$app->db->createCommand()->batchInsert(DemandDeliveryData::tableName(), [
+                    'demand_delivery_id', 'demand_workitem_id', 'value'], $datas)->execute();
                 Yii::$app->db->createCommand()->update(DemandTask::tableName(), [
+                    'cost' => ArrayHelper::getValue($post, 'cost'),
                     'status' => !$is_empty ? DemandTask::STATUS_ACCEPTANCE : DemandTask::STATUS_ACCEPTANCEING,
                     'progress' => DemandTask::$statusProgress[DemandTask::STATUS_ACCEPTANCE]
                 ],['id' => $model->demand_task_id])->execute();

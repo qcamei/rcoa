@@ -20,6 +20,7 @@ use yii\db\ActiveRecord;
  * @property integer $value_type                    数量的类型
  * @property integer $value                         工作项的需求数量
  * @property integer $cost                          成本
+ * @property integer $index                         索引
  * @property integer $created_at                    创建于
  * @property integer $updated_at                    更新于
  *
@@ -52,7 +53,7 @@ class DemandWorkitem extends ActiveRecord
     {
         return [
             [['demand_task_id', 'workitem_type_id', 'workitem_id', 'is_new', 'value', 'cost'], 'required'],
-            [['demand_task_id', 'workitem_type_id', 'workitem_id', 'is_new',  'value_type', 'value', 'cost', 'created_at', 'updated_at'], 'integer'],
+            [['demand_task_id', 'workitem_type_id', 'workitem_id', 'is_new',  'value_type', 'value', 'cost', 'index', 'created_at', 'updated_at'], 'integer'],
             [['workitem_id'], 'exist', 'skipOnError' => true, 'targetClass' => Workitem::className(), 'targetAttribute' => ['workitem_id' => 'id']],
             [['demand_task_id'], 'exist', 'skipOnError' => true, 'targetClass' => DemandTask::className(), 'targetAttribute' => ['demand_task_id' => 'id']],
         ];
@@ -72,6 +73,7 @@ class DemandWorkitem extends ActiveRecord
             'value_type' => Yii::t('rcoa/demand', 'Value Type'),
             'value' => Yii::t('rcoa/demand', 'Value'),
             'cost' => Yii::t('rcoa/demand', 'Cost'),
+            'index' => Yii::t('rcoa', 'Index'),
             'created_at' => Yii::t('rcoa/demand', 'Created At'),
             'updated_at' => Yii::t('rcoa/demand', 'Updated At'),
         ];

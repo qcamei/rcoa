@@ -40,7 +40,7 @@ class DemandWorkitemTemplateSearch extends DemandWorkitemTemplate
      */
     public function search($params)
     {
-        $query = DemandWorkitemTemplate::find();
+        $query = DemandWorkitemTemplate::find()->orderBy('index');
 
         // add conditions that should always apply here
 

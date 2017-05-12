@@ -72,18 +72,24 @@ class DemandQuery {
      */
     public function findDemandWorkitemTemplateTable()
     {
-        $query = (new Query())
+        $query_target_month = (new Query())
             ->select([
+                'CONCAT(dw_temp.workitem_id, "_", dw_temp.is_new) AS id',
                 'dw_temp.workitem_type_id',
                 'dw_temp.workitem_id',
                 'dw_temp.is_new',
                 'dw_temp.value_type',
-                'w_cost.target_month',
+                'dw_temp.index',
                 'if(dw_temp.is_new = TRUE, w_cost.cost_new, w_cost.cost_remould) AS cost'])
             ->from(['dw_temp'=> DemandWorkitemTemplate::tableName()])
             ->leftJoin(['w_cost'=> WorkitemCost::tableName()], 'w_cost.workitem_id=dw_temp.workitem_id')
-            ->orderBy(['w_cost.target_month' => 'DESC', 'dw_temp.workitem_id' => 'DESC',   'dw_temp.is_new'=> 'DESC']);
+            ->orderBy(['w_cost.target_month' => SORT_DESC, 'dw_temp.workitem_id' => SORT_DESC,  'dw_temp.is_new'=> SORT_DESC]);
         
+        $query = (new Query())
+            ->select(['*'])
+            ->from(['Target_month' => $query_target_month])
+            ->groupBy('Target_month.id');
+                
         return $query;
     }
     
@@ -98,7 +104,8 @@ class DemandQuery {
             ->select(['Demand_workitem.workitem_type_id', 'Workitem_type.name', 'Workitem_type.icon'])
             ->from(['Demand_workitem' => DemandWorkitem::tableName()])
             ->leftJoin(['Workitem_type' => WorkitemType::tableName()], 'Workitem_type.id = Demand_workitem.workitem_type_id')
-            ->where(['Demand_workitem.demand_task_id' => $demand_task_id]);
+            ->where(['Demand_workitem.demand_task_id' => $demand_task_id])
+            ->orderBy('Demand_workitem.index');
         
         return $query;
     }
@@ -112,14 +119,15 @@ class DemandQuery {
     {
         $query = (new Query())
             ->select(['Demand_workitem.id', 'Demand_workitem.workitem_id', 'Demand_workitem.workitem_type_id AS workitem_type', 
-                'Workitem.name', 'Workitem.unit',
-                'Demand_workitem.is_new', 'Demand_workitem.value_type', 'Demand_workitem.value',
+                'Workitem.name', 'Workitem.unit', 
+                'Demand_workitem.is_new', 'Demand_workitem.value_type', 'Demand_workitem.cost', 'Demand_workitem.value',
                 'Demand_task.plan_check_harvest_time AS demand_time', 'Demand_task.des'
             ])
             ->from(['Demand_workitem' => DemandWorkitem::tableName()])
             ->leftJoin(['Workitem' => Workitem::tableName()], 'Workitem.id = Demand_workitem.workitem_id')
             ->leftJoin(['Demand_task' => DemandTask::tableName()], 'Demand_task.id = Demand_workitem.demand_task_id')
-            ->where(['Demand_workitem.demand_task_id' => $demand_task_id]);
+            ->where(['Demand_workitem.demand_task_id' => $demand_task_id])
+            ->orderBy('Demand_workitem.index');
         
         return $query;
     }
@@ -185,6 +193,35 @@ class DemandQuery {
     }
     
     /**
+     * 查询该需求任务对应的每个工作项的实际成本
+     * @param integer $demand_task_id              需求任务id
+     * @param integer $delivery_id                 交付id
+     * @param integer $acceptance_id               验收id
+     * @return $query
+     */
+    public function findDemandWorkitemRealityCost($demand_task_id, $delivery_id, $acceptance_id)
+    {
+        $query = (new Query())
+            ->select([
+                'Demand_task.id', 
+                'Demand_task.cost',
+                'Acceptance_data.workitem_type_id',
+                'Acceptance_data.`value` / 10 AS value',
+                'Demand_workitem.`cost` * Delivery_data.`value` AS reality_cost'
+            ])
+            ->from(['Demand_task' => DemandTask::tableName()])
+            ->leftJoin(['Demand_workitem' => DemandWorkitem::tableName()], 'Demand_workitem.demand_task_id = Demand_task.id')
+            ->leftJoin(['Delivery_data' => DemandDeliveryData::tableName()], '(Delivery_data.demand_delivery_id = :delivery_id AND Delivery_data.demand_workitem_id = Demand_workitem.id)', ['delivery_id' => $delivery_id])
+            ->leftJoin(['Acceptance' => DemandAcceptance::tableName()], '(Acceptance.demand_task_id = Demand_task.id AND Acceptance.demand_delivery_id = :delivery_id)', ['delivery_id' => $delivery_id])
+            ->leftJoin(['Acceptance_data' => DemandAcceptanceData::tableName()], '(Acceptance_data.demand_acceptance_id = :acceptance_id AND Acceptance_data.workitem_type_id = Demand_workitem.workitem_type_id)', ['acceptance_id' => $acceptance_id])
+            //->leftJoin(['Demand_weight' => DemandWeight::tableName()], '(Demand_weight.demand_task_id = Demand_task.id AND Demand_weight.workitem_type_id = Acceptance_data.workitem_type_id)')
+            ->filterWhere(['Demand_task.id' => $demand_task_id])
+            ->groupBy('Delivery_data.demand_workitem_id');
+        
+        return $query;
+    }
+    
+    /**
      * 查询该需求任务对应的每个工作项类型的绩效得分
      * @param integer $demand_task_id              需求任务id
      * @param integer $delivery_id                 交付id
@@ -195,19 +232,11 @@ class DemandQuery {
     {
         $query = (new Query())
             ->select([
-                'Demand_task.id', 
-                'SUM(Demand_workitem.cost * Demand_workitem.`value`) * 
-                    (if(SUM(Delivery_data.`value`) / SUM(Demand_workitem.`value`) > 1, 1, SUM(Delivery_data.`value`) / SUM(Demand_workitem.`value`)) * Demand_weight.sl_weight + 
-                     Acceptance_data.`value` / 10 * Demand_weight.zl_weight) / Demand_task.cost AS score'
+                'Workitem_reality_cost.id',
+                'SUM(Workitem_reality_cost.reality_cost) * Workitem_reality_cost.`value` / Workitem_reality_cost.cost AS score'
             ])
-            ->from(['Demand_task' => DemandTask::tableName()])
-            ->leftJoin(['Demand_workitem' => DemandWorkitem::tableName()], 'Demand_workitem.demand_task_id = Demand_task.id')
-            ->leftJoin(['Delivery_data' => DemandDeliveryData::tableName()], '(Delivery_data.demand_delivery_id = :delivery_id AND Delivery_data.demand_workitem_id = Demand_workitem.id)', ['delivery_id' => $delivery_id])
-            ->leftJoin(['Acceptance' => DemandAcceptance::tableName()], '(Acceptance.demand_task_id = Demand_task.id AND Acceptance.demand_delivery_id = :delivery_id)', ['delivery_id' => $delivery_id])
-            ->leftJoin(['Acceptance_data' => DemandAcceptanceData::tableName()], '(Acceptance_data.demand_acceptance_id = :acceptance_id AND Acceptance_data.workitem_type_id = Demand_workitem.workitem_type_id)', ['acceptance_id' => $acceptance_id])
-            ->leftJoin(['Demand_weight' => DemandWeight::tableName()], '(Demand_weight.demand_task_id = Demand_task.id AND Demand_weight.workitem_type_id = Acceptance_data.workitem_type_id)')
-            ->filterWhere(['Demand_task.id' => $demand_task_id])
-            ->groupBy('Acceptance_data.workitem_type_id');
+            ->from(['Workitem_reality_cost' => $this->findDemandWorkitemRealityCost($demand_task_id, $delivery_id, $acceptance_id)])
+            ->groupBy('Workitem_reality_cost.workitem_type_id');
         
         return $query;
     }

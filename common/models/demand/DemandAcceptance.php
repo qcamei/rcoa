@@ -14,7 +14,8 @@ use yii\db\ActiveRecord;
  * @property integer $demand_task_id                        需求任务ID
  * @property integer $demand_delivery_id                    任务交付记录ID
  * @property integer $pass                                  是否通过
- * @property string  $des                                    描述
+ * @property integer $score                                 绩效得分
+ * @property string  $des                                   描述
  * @property integer $create_by                             创建者
  * @property integer $created_at                            创建于
  * @property integer $updated_at                            更新于
@@ -48,6 +49,7 @@ class DemandAcceptance extends ActiveRecord
         return [
             //[['demand_task_id', 'demand_delivery_id',  'create_by'], 'required'],
             [['demand_task_id', 'demand_delivery_id', 'pass', 'created_at', 'updated_at'], 'integer'],
+            [['score'], 'number'],
             [['des', 'create_by'], 'string'],
             [['demand_task_id'], 'exist', 'skipOnError' => true, 'targetClass' => DemandTask::className(), 'targetAttribute' => ['demand_task_id' => 'id']],
             [['demand_delivery_id'], 'exist', 'skipOnError' => true, 'targetClass' => DemandDelivery::className(), 'targetAttribute' => ['demand_delivery_id' => 'id']],

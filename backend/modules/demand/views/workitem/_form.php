@@ -3,6 +3,7 @@
 use common\models\demand\DemandWorkitemTemplate;
 use kartik\widgets\Select2;
 use kartik\widgets\SwitchInput;
+use kartik\widgets\TouchSpin;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
@@ -28,6 +29,14 @@ use yii\widgets\ActiveForm;
         'data' => $workitems, 'hideSearch'=>false, 'options' => ['placeholder' => '请选择...'],
     ]) ?>
 
+    <?= $form->field($model, 'index')->widget(TouchSpin::classname(), [
+        'pluginOptions' => [
+            'placeholder' => '顺序 ...',
+            'min' => -1,
+            'max' => 999999999,
+        ],
+    ])?>
+    
     <?= $form->field($model, 'is_new')->widget(SwitchInput::classname(), [
         'pluginOptions' => [
             'onText' => '是',
