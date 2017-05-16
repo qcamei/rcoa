@@ -32,9 +32,14 @@ $page = [
              * 2、状态必须是在【默认】 or【调整中】
              * 3、创建者是自己
              */
-            if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UPDATE) && ($model->getIsStatusDefault() || $model->getIsStatusAdjusimenting())
-               && $model->create_by == Yii::$app->user->id)
+            if(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_EDIT)){
                 echo Html::a('编辑', ['update', 'id' => $model->id], ['class' =>'btn btn-primary']).' ';
+            }else{
+                if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UPDATE) && ($model->getIsStatusDefault() || $model->getIsStatusAdjusimenting())
+                   && $model->create_by == Yii::$app->user->id)
+                    echo Html::a('编辑', ['update', 'id' => $model->id], ['class' =>'btn btn-primary']).' ';
+            }
+               
             /**
              * 提交审核 按钮显示必须满足以下条件：
              * 1、状态必须是在【默认】

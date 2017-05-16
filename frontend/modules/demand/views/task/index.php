@@ -18,7 +18,7 @@ $this->title = Yii::t('rcoa/demand', 'Demand Tasks');
 $this->params['breadcrumbs'][] = $this->title;
 
 DemandTask::$operation = $operation;
-DemandTask::$productTotal = $productTotal;
+//DemandTask::$productTotal = $productTotal;
 ?>
 
 <div class="container demand-task-index demand-task">

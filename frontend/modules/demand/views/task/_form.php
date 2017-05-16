@@ -154,9 +154,9 @@ use yii\widgets\ActiveForm;
     
     <?php if(!$model->isNewRecord): ?>
     <h5><b>工作项信息</b></h5>
-    
+        
     <?= $this->render('/workitem/index', [
-        'model' => $model,
+        'dt_model' => $model,
         'workitmType' => $workitmType,
         'workitem' => $workitem,
     ]) ?>

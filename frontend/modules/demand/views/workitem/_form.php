@@ -1,14 +1,12 @@
 <?php
 
-use common\models\demand\DemandWorkitem;
-use kartik\widgets\TouchSpin;
-use wskeee\utils\DateUtil;
+use common\models\demand\DemandTask;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
 
 /* @var $this View */
-/* @var $model DemandWorkitem */
+/* @var $dt_model DemandTask */
 /* @var $form ActiveForm */
 
 ?>
@@ -61,9 +59,9 @@ use yii\widgets\ActiveForm;
     
     <div class="total-cost">
         <div class="total">
-            <?= Yii::t('rcoa/demand', 'Budget Cost') ?>：￥<span id="total-cost"><?= !empty($model->budget_cost) ? 
-number_format($model->budget_cost + $model->budget_cost * $model->bonus_proportion, 2, '.', ',') : '0.00' ?></span>
-        <?= Html::hiddenInput('budget_cost', $model->budget_cost, ['id' => 'total-cost-input']); ?>
+            <?= Yii::t('rcoa/demand', 'Budget Cost') ?>：￥<span id="total-cost"><?= !empty($dt_model->budget_cost) ? 
+number_format($dt_model->budget_cost + $dt_model->budget_cost * $dt_model->bonus_proportion, 2, '.', ',') : '0.00' ?></span>
+        <?= Html::hiddenInput('budget_cost', $dt_model->budget_cost, ['id' => 'total-cost-input']); ?>
         </div>
         <span class="pattern">(预算成本 = 预算开发成本 + 预算开发成本 × 绩效分值)</span>
     </div>

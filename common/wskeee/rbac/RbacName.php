@@ -64,6 +64,8 @@ class RbacName {
     const ROLE_DEMAND_UNDERTAKE_PERSON = 'r_demand_undertake_person';
     /** 课程需求-基础数据管理人 */
     const ROLE_DEMAND_BASEDATA_ADMIN = 'r_demand_basedata_admin';
+    /** 课程需求-需求任务管理人 */
+    const ROLE_DEMAND_TASK_ADMIN = 'r_demand_task_admin';
 
 
 
@@ -170,6 +172,8 @@ class RbacName {
     const PERMSSION_DEMAND_BASEDATA_UPDATE = 'p_demand_basedata_update';
     /** 课程需求-基础数据-查操作 */
     const PERMSSION_DEMAND_BASEDATA_READ = 'p_demand_basedata_read';
+    /** 课程需求-需求任务-编辑操作 */
+    const PERMSSION_DEMAND_TASK_EDIT = 'p_demand_task_edit';
     
     
 }

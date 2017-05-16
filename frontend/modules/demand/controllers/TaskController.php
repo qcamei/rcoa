@@ -101,7 +101,7 @@ class TaskController extends Controller
             'team' => $this->getTeam(),
             'createBys' => $this->getCreateBys(),
             'undertakePersons' => $this->getUndertakePersons(),
-            'productTotal' => $this->getProductTotal(),
+            //'productTotal' => $this->getProductTotal(),
             //搜索默认字段值
             'itemTypeId' => $item_type_id,
             'itemId' => $item_id,
@@ -231,20 +231,22 @@ class TaskController extends Controller
     {
         $this->layout = '@app/views/layouts/main';
         $model = $this->findModel($id);
-        $post = Yii::$app->request->post();
-        $model->budget_cost = ArrayHelper::getValue($post, 'budget_cost');
-       
-        if(!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UPDATE) && $model->create_by == \Yii::$app->user->id))
-            throw new NotAcceptableHttpException('无权限操作！');
-        if(!($model->getIsStatusDefault() || $model->getIsStatusAdjusimenting()))
-            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        
+        if(!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_EDIT))){
+            if(!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UPDATE) && $model->create_by == \Yii::$app->user->id))
+                throw new NotAcceptableHttpException('无权限操作！');
+            if(!($model->getIsStatusDefault() || $model->getIsStatusAdjusimenting()))
+                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }
         /* @var $dtTool DemandTool */
         $dtTool = DemandTool::getInstance();
         /* @var $dtTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
+        $post = Yii::$app->request->post();
         $courses = $this->getCourses($model->item_child_id);
         
         if ($model->load($post)) {
+            $model->budget_cost = ArrayHelper::getValue($post, 'budget_cost');
             $dtTool->UpdateTask($model, $post);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -283,8 +285,7 @@ class TaskController extends Controller
         $model->status = DemandTask::STATUS_UNDERTAKE;
         $model->progress = $model->getStatusProgress();
         $dtTool->PassCheckTask($model);
-        return $this->redirect(['index','create_by' => Yii::$app->user->id, 
-            'undertake_person' => Yii::$app->user->id, 
+        return $this->redirect(['index',
             'auditor' => Yii::$app->user->id
         ]);
     }
