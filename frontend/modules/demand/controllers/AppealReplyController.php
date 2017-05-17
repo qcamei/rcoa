@@ -3,6 +3,7 @@
 namespace frontend\modules\demand\controllers;
 
 use common\models\demand\DemandAppeal;
+use common\models\demand\DemandAppealReply;
 use common\models\demand\DemandReply;
 use common\models\demand\searchs\DemandReplySearch;
 use frontend\modules\demand\utils\DemandTool;
@@ -16,7 +17,7 @@ use yii\web\NotFoundHttpException;
 /**
  * ReplyController implements the CRUD actions for DemandReply model.
  */
-class ReplyController extends Controller
+class AppealReplyController extends Controller
 {
     /**
      * @inheritdoc
@@ -77,7 +78,8 @@ class ReplyController extends Controller
      */
     public function actionCreate($demand_task_id)
     {
-        $model = new DemandReply();
+        $model = new DemandAppealReply();
+        $model->loadDefaultValues();
         $appeal = $this->findAppealModel($demand_task_id);
         /* @var $dtTool DemandTool */
         $dtTool = DemandTool::getInstance();
@@ -90,7 +92,7 @@ class ReplyController extends Controller
             throw new NotAcceptableHttpException('该任务状态为'.$model->demandTask->getStatusName().'！');
         
         if ($model->load(Yii::$app->request->post())) {
-            $dtTool->SubmitReplyTask($model);
+            $dtTool->SubmitAppealReplyTask($model);
             return $this->redirect(['task/view', 'id' => $model->demandAppeal->demand_task_id]);
         } else {
             return $this->render('create', [
@@ -140,7 +142,7 @@ class ReplyController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = DemandReply::findOne($id)) !== null) {
+        if (($model = DemandAppealReply::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

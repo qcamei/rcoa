@@ -15,6 +15,7 @@ and open the template in the editor.
 }
 .demand-workitem-table{
     width: 100%;
+    table-layout: auto !important;
 }
 .demand-workitem-table th{
     vertical-align: middle !important;

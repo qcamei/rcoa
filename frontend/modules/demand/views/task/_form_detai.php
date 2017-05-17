@@ -179,12 +179,16 @@ foreach ($workitmType as $type) {
             [
                 'label' => Yii::t('rcoa/demand', 'Budget Cost'),
                 'format' => 'raw',
-                'value' => (!empty($model->budget_cost) ? '￥'. number_format($model->budget_cost + $model->budget_cost * $model->bonus_proportion, 2).'<span class="pattern">（预算成本 = 预算开发成本 + 预算开发成本 × 绩效分值）</span>' : null ), 
+                'value' => (!empty($model->budget_cost) ? '￥'. number_format($model->budget_cost + $model->budget_cost * $model->bonus_proportion, 2).'<span class="pattern">（人工预算成本 = 人工预算成本 + 奖金）</span>' : null ), 
             ],
             [
-                'label' => Yii::t('rcoa/demand', 'Total Cost'),
+                'attribute' => 'external_budget_cost',
+                'value' => !empty($model->external_budget_cost) ? '￥'.number_format($model->external_budget_cost, 2) : null, 
+            ],
+            [
+                'label' => Yii::t('rcoa/demand', 'Total Budget Cost'),
                 'format' => 'raw',
-                'value' => (!empty($model->cost) ? '￥'. number_format($model->cost + $model->cost * $model->bonus_proportion, 2).'<span class="pattern">（实际成本 = 实际开发成本 + 实际开发成本 × 绩效分值）</span>' : null ), 
+                'value' => '￥'.number_format(($model->budget_cost + $model->budget_cost * $model->bonus_proportion) + $model->external_budget_cost, 2).'<span class="pattern">（总预算成本 = 人工预算成本 + 外部预算成本）</span>', 
             ],
             ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">其它信息</span>','value' => ''],
             [

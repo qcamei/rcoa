@@ -81,7 +81,7 @@ class TaskController extends Controller
         $dataProvider = new ArrayDataProvider([
             'allModels' => $query->addSelect([
                 'Demand_task.item_type_id', 'Demand_task.item_id', 'Demand_task.item_child_id', 'Demand_task.course_id',
-                'Demand_task.budget_cost', 'Demand_task.cost', 'Demand_task.bonus_proportion',
+                'Demand_task.budget_cost', 'Demand_task.cost',  'Demand_task.external_budget_cost', 'Demand_task.external_reality_cost', 'Demand_task.bonus_proportion',
                 'Demand_task.team_id', 'Demand_task.undertake_person', 'Demand_task.create_by', 
                 'Demand_task.plan_check_harvest_time', 'Demand_task.status', 'Demand_task.mode', 'Demand_task.progress'
             ])->limit(20)->offset($page*20)->all(),

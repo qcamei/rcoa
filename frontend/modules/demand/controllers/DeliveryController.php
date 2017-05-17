@@ -57,8 +57,8 @@ class DeliveryController extends Controller {
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-                    'searchModel' => $searchModel,
-                    'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -94,6 +94,8 @@ class DeliveryController extends Controller {
             throw new NotAcceptableHttpException('该任务状态为' . $model->demandTask->getStatusName() . '！');
 
         $model->create_by = \Yii::$app->user->id;
+        $model->reality_cost = ArrayHelper::getValue($post, 'cost');
+        $model->external_reality_cost = ArrayHelper::getValue($post, 'external_reality_cost');
         $model->des = ArrayHelper::getValue($post, 'des');
         $is_empty = $this->findDemandAcceptances($model->demand_task_id);
         
@@ -199,7 +201,8 @@ class DeliveryController extends Controller {
                 Yii::$app->db->createCommand()->batchInsert(DemandDeliveryData::tableName(), [
                     'demand_delivery_id', 'demand_workitem_id', 'value'], $datas)->execute();
                 Yii::$app->db->createCommand()->update(DemandTask::tableName(), [
-                    'cost' => ArrayHelper::getValue($post, 'cost'),
+                    'cost' => $model->reality_cost,
+                    'external_reality_cost' => $model->external_reality_cost,
                     'status' => !$is_empty ? DemandTask::STATUS_ACCEPTANCE : DemandTask::STATUS_ACCEPTANCEING,
                     'progress' => DemandTask::$statusProgress[DemandTask::STATUS_ACCEPTANCE]
                 ],['id' => $model->demand_task_id])->execute();

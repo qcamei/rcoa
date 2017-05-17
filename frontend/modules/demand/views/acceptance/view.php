@@ -21,6 +21,8 @@ $is_show = reset($workitemType);   //获取数组的第一个值
 $is_rowspan = [];  //是否合并单元格
 $worktime = ArrayHelper::getColumn($workitem, 'demand_time');
 $workdes = ArrayHelper::getColumn($workitem, 'des');
+$d_realityCost = ArrayHelper::getColumn($delivery, 'reality_cost');
+$d_externalRealityCost = ArrayHelper::getColumn($delivery, 'external_reality_cost');
 $deliverytime = ArrayHelper::getColumn($delivery, 'delivery_time');
 $deliverydes = ArrayHelper::getColumn($delivery, 'des');
 $acceptancetime = ArrayHelper::getColumn($acceptance, 'acceptance_time');
@@ -138,19 +140,18 @@ foreach ($workitem as $work){
                 <?php endforeach; ?>
             <?php endforeach; ?>
             <tr class="tr">
-                <th class="text-center">成本</th>
+                <th class="text-center">人工成本</th>
                 <td>￥<?= number_format($model->demandTask->budget_cost, 2) ?></td>
                 <td colspan="2">
-                    <span style="color:red">￥<?= number_format($model->demandTask->cost, 2) ?></span>
-                    <span class="pattern">（超出预算￥<?= number_format($model->demandTask->cost - $model->demandTask->budget_cost, 2) ?>）</span>
+                    <?php $surplus = reset($d_realityCost) - $model->demandTask->budget_cost; 
+                        if(reset($d_realityCost) > $model->demandTask->budget_cost): ?>
+                    <span style="color:red">￥<?= number_format(reset($d_realityCost), 2) ?></span>
+                    <span class="pattern" style="color: #000">（超出预算￥<?= number_format($surplus, 2) ?>）</span>
+                    <?php  else: ?>
+                    <span>￥<?= number_format(reset($d_realityCost), 2) ?></span>
+                    <?php endif; ?>
                 </td>
-                <td></td>
-            </tr>
-            <tr class="tr">
-                <th class="text-center">备注</th>
-                <td><?= reset($workdes) ?></td>
-                <td colspan="2"><?= reset($deliverydes) ?></td>
-                <td>
+                <td rowspan="3">
                     <?php $is_pass = reset($acceptancepass); ?>
                     <?php if($is_pass !== false): ?>
                     <div class="acceptance-pass">结果：
@@ -160,6 +161,53 @@ foreach ($workitem as $work){
                         <span class="btn btn-success btn-sm">验收通过</span>
                         <?php endif; ?>
                     </div>
+                    <?php endif; ?>
+                </td>
+            </tr>
+            <tr class="tr">
+                <th class="text-center">外部成本</th>
+                <td>￥<?= number_format($model->demandTask->external_budget_cost, 2) ?></td>
+                <?php $surplus = reset($d_externalRealityCost) - $model->demandTask->external_budget_cost; 
+                        if(reset($d_externalRealityCost) > $model->demandTask->external_budget_cost): ?>
+                <td colspan="2" style="color:red">
+                    ￥<?= number_format(reset($d_externalRealityCost), 2) ?>
+                    <span class="pattern" style="color: #000">（超出预算￥<?= number_format($surplus, 2) ?>）</span>
+                </td>
+                <?php else: ?>
+                <td colspan="2">￥<?= number_format(reset($d_externalRealityCost), 2) ?></td>
+                <?php endif; ?>
+            </tr>
+            <tr class="tr">
+                <th class="text-center">总成本</th>
+                <?php $budgetCost = $model->demandTask->budget_cost + $model->demandTask->budget_cost * $model->demandTask->bonus_proportion;
+                       $totalBudgetCost = $budgetCost + $model->demandTask->external_budget_cost;
+                       $realityCost = reset($d_realityCost) * $model->demandTask->bonus_proportion;
+                       $totalRealityCost = $realityCost + reset($d_externalRealityCost);?>
+                <td>
+                    ￥<?= number_format($totalBudgetCost, 2) ?>
+                    <p class="pattern">（总成本 = 人工成本 + 奖金 + 外部成本）</p>
+                </td>
+                <?php $surplus = $totalRealityCost - $totalBudgetCost;
+                    if($totalRealityCost > $totalBudgetCost): ?>
+                <td colspan="2" style="color:red">
+                    ￥<?= number_format($totalRealityCost, 2) ?>
+                    <span class="pattern" style="color: #000">（超出预算￥<?= number_format($surplus, 2) ?>）</span>
+                    <p class="pattern">（总成本 = 人工成本 + 奖金 + 外部成本）</p>
+                </td>
+                <?php else: ?>
+                <td colspan="2">
+                    ￥<?= number_format($totalRealityCost, 2) ?>
+                    <p class="pattern">（总成本 = 人工成本 + 奖金 + 外部成本）</p>
+                </td>
+                <?php endif; ?>
+            </tr>
+            <tr class="tr">
+                <th class="text-center">备注</th>
+                <td><?= reset($workdes) ?></td>
+                <td colspan="2"><?= reset($deliverydes) ?></td>
+                <td>
+                    <?php $is_pass = reset($acceptancepass); ?>
+                    <?php if($is_pass !== false): ?>
                     <div class="acceptance-des">
                         原因：<?= reset($acceptancedes) ?>
                     </div>
@@ -174,6 +222,7 @@ foreach ($workitem as $work){
         </tbody>    
 
     </table> 
+    <span class="pattern" style="float: right; margin-top: -15px;">（最大奖金 = 人工成本 + 人工成本 × 绩效分值）</span>
     <?php endif; ?>
 
 </div>

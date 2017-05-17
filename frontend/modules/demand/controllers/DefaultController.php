@@ -91,7 +91,7 @@ class DefaultController extends Controller
         $teamCost = (new Query())
                     ->select([
                         'Demamd_task.create_team',
-                        'CEIL(SUM(Demamd_task.cost + Demamd_task.cost * Demamd_task.bonus_proportion)) / 10000 AS cost'
+                        'CEIL(SUM((Demamd_task.cost + Demamd_task.cost * Demamd_task.bonus_proportion) + Demamd_task.external_reality_cost )) / 10000 AS cost'
                     ])
                     ->from(['Demamd_task' => DemandTask::tableName()])
                     ->where(['!=', 'Demamd_task.status', DemandTask::STATUS_CANCEL])

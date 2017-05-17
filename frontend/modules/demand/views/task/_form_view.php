@@ -94,7 +94,7 @@ $page = [
              * 2、创建者必须是自己
              */
             if($model->getIsStatusAppealing() && $model->create_by == Yii::$app->user->id)
-                echo Html::a('不同意', ['reply/create', 'demand_task_id' => $model->id], ['id' => 'reply-create', 'class' => 'btn btn-danger']).' ';
+                echo Html::a('不同意', ['appeal-reply/create', 'demand_task_id' => $model->id], ['id' => 'reply-create', 'class' => 'btn btn-danger']).' ';
             
             /**
              * 课程开发 按钮显示必须满足以下条件：

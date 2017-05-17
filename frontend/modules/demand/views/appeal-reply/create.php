@@ -1,15 +1,15 @@
 <?php
 
-use common\models\demand\DemandReply;
+use common\models\demand\DemandAppealReply;
 use frontend\modules\demand\assets\DemandAssets;
 use yii\web\View;
 
 
 /* @var $this View */
-/* @var $model DemandReply */
+/* @var $model DemandAppealReply */
 
-$this->title = Yii::t('rcoa/demand', 'Create Demand Reply');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/demand', 'Demand Replies'), 'url' => ['index']];
+$this->title = Yii::t('rcoa/demand', 'Create Demand Appeal Reply');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/demand', 'Demand Appeal Replies'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 

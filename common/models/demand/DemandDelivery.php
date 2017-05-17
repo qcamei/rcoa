@@ -12,6 +12,8 @@ use yii\db\ActiveRecord;
  *
  * @property integer $id                                    ID
  * @property integer $demand_task_id                        引用需求任务ID
+ * @property integer $reality_cost                          实际开发成本
+ * @property integer $external_reality_cost                 外部实际成本
  * @property string $des                                    描述
  * @property integer $create_by                             创建者
  * @property integer $created_at                            创建于
@@ -46,6 +48,7 @@ class DemandDelivery extends ActiveRecord
         return [
             //[['demand_task_id', 'des', 'create_by'], 'required'],
             [['demand_task_id', 'created_at', 'updated_at'], 'integer'],
+            [['reality_cost', 'external_reality_cost'], 'number'],
             [['create_by', 'des'], 'string'],
             [['demand_task_id'], 'exist', 'skipOnError' => true, 'targetClass' => DemandTask::className(), 'targetAttribute' => ['demand_task_id' => 'id']],
         ];
@@ -59,6 +62,8 @@ class DemandDelivery extends ActiveRecord
         return [
             'id' => Yii::t('rcoa/demand', 'ID'),
             'demand_task_id' => Yii::t('rcoa/demand', 'Demand Task ID'),
+            'reality_cost' => Yii::t('rcoa/demand', 'Reality Cost'),
+            'external_reality_cost' => Yii::t('rcoa/demand', 'External Reality Cost'),
             'des' => Yii::t('rcoa/demand', 'Des'),
             'create_by' => Yii::t('rcoa/demand', 'Create By'),
             'created_at' => Yii::t('rcoa/demand', 'Created At'),

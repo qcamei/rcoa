@@ -11,8 +11,6 @@ use yii\widgets\ActiveForm;
 /* @var $form ActiveForm */
 
 $is_show = reset($workitemType);   //获取数组的第一个值
-$worktime = ArrayHelper::getColumn($workitem, 'demand_time');
-$workdes = ArrayHelper::getColumn($workitem, 'des');
 
 ?>
 
@@ -33,7 +31,7 @@ $workdes = ArrayHelper::getColumn($workitem, 'des');
         <tbody>
             <tr>
                 <th class="text-center">时间</th>
-                <td class="text-center"><?= reset($worktime) ?></td>
+                <td class="text-center"><?= $model->demandTask->plan_check_harvest_time ?></td>
                 <td class="text-center"><?= date('Y-m-d H:i', time()) ?></td>
             </tr>
             <?php  foreach ($workitemType as $type): ?>
@@ -89,8 +87,13 @@ $workdes = ArrayHelper::getColumn($workitem, 'des');
                 <?php endforeach; ?>
             <?php endforeach; ?>
             <tr class="tr">
+                <th class="text-center">外部成本</th>
+                <td><?= !empty($model->demandTask->external_budget_cost) ? '￥'.number_format($model->demandTask->external_budget_cost, 2) : '无' ?></td>
+                <td><?=  Html::textInput('external_reality_cost', '0.00', ['class' => 'form-control', 'type' => 'number']); ?></td>
+            </tr>
+            <tr class="tr">
                 <th class="text-center">备注</th>
-                <td><?= reset($workdes) ?></td>
+                <td><?= !empty($model->demandTask->des) ? $model->demandTask->des : '无' ?></td>
                 <td><?=  Html::textarea('des', '无', ['class' => 'form-control', 'rows' => 4]); ?></td>
             </tr>
         </tbody>
@@ -103,7 +106,7 @@ $workdes = ArrayHelper::getColumn($workitem, 'des');
 number_format($model->demandTask->cost + $model->demandTask->cost * $model->demandTask->bonus_proportion, 2, '.', ',') : '0.00' ?></span>
         <?= Html::hiddenInput('cost', $model->demandTask->cost, ['id' => 'total-cost-input']); ?>
         </div>
-        <span class="pattern">（实际成本 = 实际开发成本 + 实际开发成本 × 绩效分值）</span>
+        <span class="pattern">（人工实际成本 = 人工实际成本 + 奖金）</span>
     </div>
         
     <?php ActiveForm::end(); ?>

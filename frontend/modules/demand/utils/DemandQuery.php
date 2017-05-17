@@ -143,6 +143,7 @@ class DemandQuery {
         $query = (new Query())
             ->select(['Demand_workitem.workitem_id','Workitem.unit',
                 'Demand_workitem.is_new', 'Demand_workitem.value_type', 'Delivery_data.value',
+                'Delivery.reality_cost', 'Delivery.external_reality_cost',
                 'Delivery.created_at AS delivery_time', 'Delivery.des'
             ])
             ->from(['Delivery_data' => DemandDeliveryData::tableName()])

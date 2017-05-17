@@ -63,7 +63,7 @@ use yii\widgets\ActiveForm;
 number_format($dt_model->budget_cost + $dt_model->budget_cost * $dt_model->bonus_proportion, 2, '.', ',') : '0.00' ?></span>
         <?= Html::hiddenInput('budget_cost', $dt_model->budget_cost, ['id' => 'total-cost-input']); ?>
         </div>
-        <span class="pattern">(预算成本 = 预算开发成本 + 预算开发成本 × 绩效分值)</span>
+        <span class="pattern">(人工预算成本 = 人工预算成本 + 奖金)</span>
     </div>
     
 </div>

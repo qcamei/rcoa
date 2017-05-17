@@ -152,6 +152,11 @@ use yii\widgets\ActiveForm;
         ],
     ]); ?>
     
+    <?= $form->field($model, 'external_budget_cost', [
+        'labelOptions' => ['style' => 'padding-left:0px; padding-right:0px;color: #999999;font-weight: normal;'],
+        'template' => "{label}\n<div class=\"col-sm-4\">{input}</div>\n<div class=\"col-sm-4\">{error}</div>"
+    ])->textInput(['type' => 'number', 'min' => 0]) ?>
+    
     <?php if(!$model->isNewRecord): ?>
     <h5><b>工作项信息</b></h5>
         
@@ -161,7 +166,7 @@ use yii\widgets\ActiveForm;
         'workitem' => $workitem,
     ]) ?>
     
-    <?php endif; ?>
+    <?php endif; ?>   
     
     <h5><b>其他信息</b></h5>
     

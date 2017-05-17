@@ -5,9 +5,9 @@ namespace frontend\modules\demand\controllers;
 use common\models\demand\DemandAcceptance;
 use common\models\demand\DemandAcceptanceData;
 use common\models\demand\DemandAppeal;
+use common\models\demand\DemandAppealReply;
 use common\models\demand\DemandDelivery;
 use common\models\demand\DemandDeliveryData;
-use common\models\demand\DemandReply;
 use common\models\demand\DemandTask;
 use common\models\demand\DemandWorkitem;
 use common\models\demand\searchs\DemandAcceptanceSearch;
@@ -237,7 +237,7 @@ class AcceptanceController extends Controller {
         if ($appeal !== null) {
             return $appeal;
         } else {
-            return new DemandAppeal();
+            return null;
         }
     }    
     
@@ -330,7 +330,8 @@ class AcceptanceController extends Controller {
                 }else{
                     $score = $this->getDemandTaskScore($model->demand_task_id, $model->demand_delivery_id, $model->id);
                     $number = $model->updateAll(['score' => $score[$model->demand_task_id]], ['id' => $model->id]);
-                    $this->saveDemandReply($model->demand_task_id, $model->pass);
+                    if($model->demandTask->getIsStatusAppealing())
+                        $this->saveDemandAppealReply($model->demand_task_id, $model->pass);
                     \Yii::$app->db->createCommand()->update(DemandTask::tableName(), [
                         'status' => DemandTask::STATUS_WAITCONFIRM,
                         'progress' => DemandTask::$statusProgress[DemandTask::STATUS_WAITCONFIRM],
@@ -354,7 +355,7 @@ class AcceptanceController extends Controller {
      * @param integer $demand_task_id          需求任务ID
      * @param integer $pass                    是否同意
      */
-    public function saveDemandReply($demand_task_id, $pass)
+    public function saveDemandAppealReply($demand_task_id, $pass)
     {
         /* @var $appeal DemandAppeal */
         $appeal = $this->findAppealModel($demand_task_id);
@@ -369,7 +370,7 @@ class AcceptanceController extends Controller {
         ];
        
         /** 添加$values数组到表里 */
-        Yii::$app->db->createCommand()->batchInsert(DemandReply::tableName(), 
+        Yii::$app->db->createCommand()->batchInsert(DemandAppealReply::tableName(), 
         ['demand_appeal_id', 'title', 'pass', 'des', 'create_by', 'created_at', 'updated_at'], $replys)->execute();
     }
 }

@@ -55,7 +55,9 @@ else
         'workitmType' => $workitmType,
         'workitems' => $workitem,
     ]) ?>
-        
+    
+    <span class="pattern" style="float: right; margin-top: -15px;">（最大奖金 = 人工成本 + 人工成本 × 绩效分值）</span>
+    
     <span><?= Yii::t('rcoa/demand', 'Demand Task Annexes').'：'; ?></span>
     <?php
         foreach ($annex as $value) {

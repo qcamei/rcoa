@@ -4,11 +4,11 @@ namespace frontend\modules\demand\utils;
 use common\config\AppGlobalVariables;
 use common\models\demand\DemandAcceptance;
 use common\models\demand\DemandAppeal;
+use common\models\demand\DemandAppealReply;
 use common\models\demand\DemandCheck;
 use common\models\demand\DemandDelivery;
 use common\models\demand\DemandOperation;
 use common\models\demand\DemandOperationUser;
-use common\models\demand\DemandReply;
 use common\models\demand\DemandTask;
 use common\models\demand\DemandTaskAnnex;
 use common\models\demand\DemandTaskAuditor;
@@ -409,9 +409,9 @@ class DemandTool {
     
     /**
      * 提交回复任务操作
-     * @param DemandReply $model
+     * @param DemandAppealReply $model
      */
-    public function SubmitReplyTask($model)
+    public function SubmitAppealReplyTask($model)
     {
         /* @var $demandNotice DemandNoticeTool */
         $demandNotice = DemandNoticeTool::getInstance();
@@ -427,7 +427,7 @@ class DemandTool {
                 $this->saveDemandOperation($model->demandAppeal->demand_task_id, DemandTask::STATUS_WAITCONFIRM);
                 $this->saveOperationUser($model->demandAppeal->demand_task_id, [$model->demandAppeal->demandTask->undertake_person]);
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->demandAppeal->demand_task_id, ['status'=> DemandTask::$statusNmae[DemandTask::STATUS_WAITCONFIRM]]);
-                $demandNotice->sendDevelopPrincipalsNotification($model, '任务回复', 'demand/SubmitReply-html', $model->demandAppeal->demandTask->developPrincipals->user->ee);
+                $demandNotice->sendDevelopPrincipalsNotification($model, '任务回复', 'demand/SubmitAppealReply-html', $model->demandAppeal->demandTask->developPrincipals->user->ee);
             }else
                 throw new \Exception($model->getErrors());
             
@@ -668,6 +668,8 @@ class DemandTool {
                     'id' => $data['workitem_id'],
                     'delivery_time' => date('Y-m-d H:i', $data['delivery_time']),
                     'des' => $data['des'],
+                    'reality_cost' => $data['reality_cost'],
+                    'external_reality_cost' => $data['external_reality_cost'],
                     'childs' => [],
                 ];
             }

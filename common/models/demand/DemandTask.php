@@ -31,8 +31,10 @@ use yii\db\Exception;
  * @property integer $lesson_time                       学时
  * @property integer $credit                            学分
  * @property string $course_description                 课程简介
- * @property integer $budget_cost                       预算成本
- * @property integer $cost                              实际成本
+ * @property integer $budget_cost                       预算开发成本
+ * @property integer $cost                              实际开发成本
+ * @property integer $external_budget_cost              外部预算成本
+ * @property integer $external_reality_cost             外部实际成本
  * @property integer $bonus_proportion                  绩效比值
  * @property integer $score                             绩效得分
  * @property integer $mode                              模式
@@ -216,7 +218,7 @@ class DemandTask extends ActiveRecord
             [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'teacher', 'course_description', 'lesson_time', 'credit'],'required'],
             [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'lesson_time', 'credit', 'mode', 'team_id', 'create_team', 'develop_principals', 'status', 'progress', 'created_at', 'updated_at', 'finished_at'], 'integer'],
             [['course_description', 'des'], 'string'],
-            [['budget_cost', 'cost', 'bonus_proportion', 'score'], 'number'],
+            [['budget_cost', 'cost', 'external_budget_cost', 'external_reality_cost', 'bonus_proportion', 'score'], 'number'],
             [['teacher', 'undertake_person', 'create_by'], 'string', 'max' => 36],
             [['plan_check_harvest_time', 'reality_check_harvest_time'], 'string', 'max' => 60],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Item::className(), 'targetAttribute' => ['course_id' => 'id']],
@@ -243,6 +245,8 @@ class DemandTask extends ActiveRecord
             'course_description' => Yii::t('rcoa/demand', 'Course Description'),
             'budget_cost' => Yii::t('rcoa/demand', 'Budget Cost'),
             'cost' => Yii::t('rcoa/demand', 'Cost'),
+            'external_budget_cost' => Yii::t('rcoa/demand', 'External Budget Cost'),
+            'external_reality_cost' => Yii::t('rcoa/demand', 'External Reality Cost'),
             'bonus_proportion' => Yii::t('rcoa/demand', 'Bonus Proportion'),
             'score' => Yii::t('rcoa/demand', 'Score'),
             'mode' => Yii::t('rcoa/demand', 'Mode'),

@@ -99,7 +99,7 @@ DemandTask::$operation = $operation;
                             'th'=>'hidden-xs hidden-sm hidden-md',
                         ],
                         'style' => [
-                            'width' => '135px',
+                            'width' => '125px',
                             'padding' => '8px'
                         ],
                     ],
@@ -118,7 +118,7 @@ DemandTask::$operation = $operation;
                             'th'=>'hidden-xs hidden-sm',
                         ],
                         'style' => [
-                            'width' => '115px',
+                            'width' => '105px',
                             'padding' => '8px'
                         ],
                     ],
@@ -137,7 +137,7 @@ DemandTask::$operation = $operation;
                             'th'=>'hidden-xs hidden-sm',
                         ],
                         'style' => [
-                            'width' => '165px',
+                            'width' => '155px',
                             'padding' => '8px'
                         ],
                     ],
@@ -209,7 +209,7 @@ DemandTask::$operation = $operation;
                             'th'=>'hidden-xs',
                         ],
                         'style' => [
-                            'width' => '65px',
+                            'width' => '55px',
                             'padding' => '8px'
                         ],
                     ],
@@ -228,7 +228,7 @@ DemandTask::$operation = $operation;
                             //'th'=>'hidden-xs',
                         ],
                         'style' => [
-                            'width' => '65px',
+                            'width' => '55px',
                             'padding' => '8px'
                         ],
                     ],
@@ -257,12 +257,14 @@ DemandTask::$operation = $operation;
                     ],
                 ],
                 [
-                    'label' => Yii::t('rcoa/demand', 'Budget Cost'),
+                    'label' => '预算成本',
                     'format' => 'raw',
                     'value'=> function($model){
                         /* @var $model DemandTask */
                         if(!empty($model->budget_cost)){
-                            return '<span class="total-price">￥'.number_format(($model->budget_cost + $model->budget_cost * $model->bonus_proportion) / 10000, 2).'</span>万';
+                            $budgetCost = $model->budget_cost + $model->budget_cost * $model->bonus_proportion;
+                            $totalBudgetCost = $budgetCost + $model->external_budget_cost;
+                            return '<span class="total-price">￥'. number_format($totalBudgetCost / 10000, 2).'</span>万';
                         }else{
                             return null;
                         }
@@ -272,7 +274,7 @@ DemandTask::$operation = $operation;
                             'th'=>'hidden-xs',
                         ],
                         'style' => [
-                            'width' => '78px',
+                            'width' => '88px',
                             'padding' => '8px'
                         ],
                     ],
@@ -281,12 +283,14 @@ DemandTask::$operation = $operation;
                     ],
                 ],
                 [
-                    'label' => Yii::t('rcoa/demand', 'Total Cost'),
+                    'label' => '实际成本',
                     'format' => 'raw',
                     'value'=> function($model){
                         /* @var $model DemandTask */
                         if(!empty($model->cost)){
-                            return '<span class="total-price">￥'.number_format(($model->cost + $model->cost * $model->bonus_proportion) / 10000, 2).'</span>万';
+                            $realityCost = $model->cost + $model->cost * $model->bonus_proportion;
+                            $totalRealityCost = $realityCost + $model->external_reality_cost;
+                            return '<span class="total-price">￥'.number_format($totalRealityCost / 10000, 2).'</span>万';
                         }else{
                             return null;
                         }
@@ -296,7 +300,7 @@ DemandTask::$operation = $operation;
                             'th'=>'hidden-xs',
                         ],
                         'style' => [
-                            'width' => '78px',
+                            'width' => '88px',
                             'padding' => '8px'
                         ],
                     ],

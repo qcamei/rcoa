@@ -9,7 +9,7 @@ use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
- * This is the model class for table "{{%demand_reply}}".
+ * This is the model class for table "{{%demand_appeal_reply}}".
  *
  * @property integer $id                                id
  * @property integer $demand_appeal_id                  引用申诉id
@@ -23,14 +23,14 @@ use yii\db\ActiveRecord;
  * @property DemandAppeal $demandAppeal                 获取申诉信息
  * @property User $createBy                             获取创建者
  */
-class DemandReply extends ActiveRecord
+class DemandAppealReply extends ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%demand_reply}}';
+        return '{{%demand_appeal_reply}}';
     }
     
     public function behaviors() 
