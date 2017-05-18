@@ -209,7 +209,7 @@ DemandTask::$operation = $operation;
                             'th'=>'hidden-xs',
                         ],
                         'style' => [
-                            'width' => '55px',
+                            'width' => '65px',
                             'padding' => '8px'
                         ],
                     ],
@@ -228,7 +228,7 @@ DemandTask::$operation = $operation;
                             //'th'=>'hidden-xs',
                         ],
                         'style' => [
-                            'width' => '55px',
+                            'width' => '65px',
                             'padding' => '8px'
                         ],
                     ],

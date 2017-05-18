@@ -46,7 +46,7 @@ $page = [
              * 2、创建者是自己
              */
             if($model->getIsStatusDefault() && $model->create_by == Yii::$app->user->id)
-                echo Html::a('提交审核', ['submit-check', 'id' => $model->id], ['id' => 'task-submit-check', 'class' => 'btn btn-info']).' ';
+                echo Html::a('提交审核', ['check/create', 'demand_task_id' => $model->id], ['id' => 'check-create', 'class' => 'btn btn-info']).' ';
             /**
              * 取消 按钮显示必须满足以下条件：
              * 1、拥有取消的权限
@@ -68,7 +68,7 @@ $page = [
              */
             if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_SUBMIT_CHECK) 
                && $model->getIsStatusAdjusimenting() && $model->create_by == Yii::$app->user->id )
-                echo Html::a('提交审核', ['check/submit', 'task_id' => $model->id], ['class' =>'btn btn-info']).' ';
+                echo Html::a('提交审核', ['check/submit', 'demand_task_id' => $model->id], ['id' => 'check-update', 'class' =>'btn btn-info']).' ';
             
             /**
              * 验收 按钮显示必须满足以下条件：
@@ -94,7 +94,7 @@ $page = [
              * 2、创建者必须是自己
              */
             if($model->getIsStatusAppealing() && $model->create_by == Yii::$app->user->id)
-                echo Html::a('不同意', ['appeal-reply/create', 'demand_task_id' => $model->id], ['id' => 'reply-create', 'class' => 'btn btn-danger']).' ';
+                echo Html::a('不同意', ['appeal-reply/create', 'demand_task_id' => $model->id], ['id' => 'appeal-reply-create', 'class' => 'btn btn-danger']).' ';
             
             /**
              * 课程开发 按钮显示必须满足以下条件：
@@ -114,7 +114,7 @@ $page = [
              * 3、审核记录状态必须已完成
              */
             if(($model->getIsStatusCheck() || $model->getIsStatusChecking()) && $dtTool->getIsAuditor($model->create_team))
-                echo Html::a('通过审核', ['pass-check', 'id' => $model->id], ['class' =>'btn btn-success']).' ';
+                echo Html::a('通过', ['check-reply/create', 'demand_task_id' => $model->id, 'pass' => 1], ['id' => 'pass-check', 'class' =>'btn btn-success']).' ';
             /**
              * 审核不通过 按钮显示必须满足以下条件：
              * 1、必须拥有添加审核权限
@@ -125,7 +125,7 @@ $page = [
              */
             if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE_CHECK) 
                && ($model->getIsStatusCheck() || $model->getIsStatusChecking())&& $dtTool->getIsAuditor($model->create_team))
-                echo Html::a('审核不通过', ['check/create', 'task_id' => $model->id], ['id' => 'check-create', 'class' =>'btn btn-danger']).' ';
+                echo Html::a('不通过', ['check-reply/create', 'demand_task_id' => $model->id, 'pass' => 0], ['id' => 'check-reply-create', 'class' =>'btn btn-danger']).' ';
             
             //承接人
             /**

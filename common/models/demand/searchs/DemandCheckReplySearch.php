@@ -5,12 +5,12 @@ namespace common\models\demand\searchs;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\demand\DemandCheck;
+use common\models\demand\DemandCheckReply;
 
 /**
- * DemandCheckSearch represents the model behind the search form about `common\models\demand\DemandCheck`.
+ * DemandCheckReplySearch represents the model behind the search form about `common\models\demand\DemandCheckReply`.
  */
-class DemandCheckSearch extends DemandCheck
+class DemandCheckReplySearch extends DemandCheckReply
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class DemandCheckSearch extends DemandCheck
     public function rules()
     {
         return [
-            [['id', 'demand_task_id', 'created_at', 'updated_at'], 'integer'],
-            [['title', 'content', 'des', 'create_by'], 'safe'],
+            [['id', 'demand_check_id', 'pass', 'created_at', 'updated_at'], 'integer'],
+            [['title', 'des', 'create_by'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class DemandCheckSearch extends DemandCheck
      */
     public function search($params)
     {
-        $query = DemandCheck::find();
+        $query = DemandCheckReply::find();
 
         // add conditions that should always apply here
 
@@ -60,13 +60,13 @@ class DemandCheckSearch extends DemandCheck
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'demand_task_id' => $this->demand_task_id,
+            'demand_check_id' => $this->demand_check_id,
+            'pass' => $this->pass,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);
 
         $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'content', $this->content])
             ->andFilterWhere(['like', 'des', $this->des])
             ->andFilterWhere(['like', 'create_by', $this->create_by]);
 

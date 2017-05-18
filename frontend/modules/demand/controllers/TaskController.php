@@ -3,14 +3,10 @@
 namespace frontend\modules\demand\controllers;
 
 use common\config\AppGlobalVariables;
-use common\models\demand\DemandAcceptance;
 use common\models\demand\DemandTask;
 use common\models\demand\DemandTaskAnnex;
-use common\models\demand\DemandWorkitem;
 use common\models\expert\Expert;
 use common\models\team\TeamCategory;
-use common\models\workitem\Workitem;
-use common\models\workitem\WorkitemType;
 use common\wskeee\job\JobManager;
 use frontend\modules\demand\utils\DemandQuery;
 use frontend\modules\demand\utils\DemandTool;
@@ -24,7 +20,6 @@ use wskeee\team\TeamMemberTool;
 use Yii;
 use yii\data\ArrayDataProvider;
 use yii\db\ActiveQuery;
-use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -190,35 +185,6 @@ class TaskController extends Controller
             ]);
         }
     }
-    
-    /**
-     * 任务提交审核操作
-     * @param integer $id
-     * @return type
-     * @throws NotAcceptableHttpException
-     */
-    public function actionSubmitCheck($id)
-    {
-        $model = $this->findModel($id);
-        /* @var $dtTool DemandTool */
-        $dtTool = DemandTool::getInstance();
-        if(!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE) && $model->create_by == \Yii::$app->user->id))
-            throw new NotAcceptableHttpException('无权限操作！');
-        if(!$model->getIsStatusDefault())
-            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
-                
-        if ($model->load(Yii::$app->request->post())) {
-            $dtTool->TaskSubmitCheck($model);
-            return $this->redirect(['index','create_by' => Yii::$app->user->id, 
-                    'undertake_person' => Yii::$app->user->id, 
-                    'auditor' => Yii::$app->user->id
-                ]);
-        } else {
-            return $this->renderPartial('submit_check', [
-                'model' => $model,
-            ]);
-        }
-    }
 
     /**
      * Updates an existing DemandTask model.
@@ -266,30 +232,6 @@ class TaskController extends Controller
         }
     }
 
-    /**
-     * 通过审核操作
-     * @param integer $id
-     * @return type
-     * @throws NotAcceptableHttpException
-     */
-    public function actionPassCheck($id)
-    {
-        $model = $this->findModel($id);
-        /* @var $dtTool DemandTool */
-        $dtTool = DemandTool::getInstance();
-        if(!$dtTool->getIsAuditor($model->create_team))
-            throw new NotAcceptableHttpException('无权限操作！');
-        if(!($model->getIsStatusCheck() || $model->getIsStatusChecking()))
-            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
-        
-        $model->status = DemandTask::STATUS_UNDERTAKE;
-        $model->progress = $model->getStatusProgress();
-        $dtTool->PassCheckTask($model);
-        return $this->redirect(['index',
-            'auditor' => Yii::$app->user->id
-        ]);
-    }
-    
     /**
      * 承接任务操作
      * @param integer $id
@@ -352,30 +294,6 @@ class TaskController extends Controller
             ]);
         }
     }
-   
-    /**
-     * 恢复任务制作操作
-     * @param integer $id
-     * @return type
-     * @throws NotAcceptableHttpException
-     
-    public function actionRecovery($id)
-    {
-        throw new NotAcceptableHttpException('未开放！');
-        $model = $this->findModel($id);
-        if(!\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_RESTORE) && $model->create_by != \Yii::$app->user->id)
-            throw new NotAcceptableHttpException('无权限操作！');
-        if(!$model->getIsStatusCompleted())
-            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
-        
-        /* @var $dtTool DemandTool 
-        $dtTool = DemandTool::getInstance();
-        $model->status = DemandTask::STATUS_UPDATEING;
-        $model->progress = DemandTask::$statusProgress[DemandTask::STATUS_UPDATEING];
-        $model->reality_check_harvest_time = null;
-        $dtTool->RecoveryTask($model);
-        return $this->redirect(['view', 'id' => $model->id]);
-    }*/
     
     /**
      * 取消任务
@@ -414,13 +332,13 @@ class TaskController extends Controller
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
-     
+     */
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
-    }*/
+    }
     
     /**
      * 获取课程

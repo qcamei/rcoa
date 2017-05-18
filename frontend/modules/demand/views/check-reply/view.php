@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\demand\DemandCheck */
+/* @var $model common\models\demand\DemandCheckReply */
 
 $this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/demand', 'Demand Checks'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/demand', 'Demand Check Replies'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="demand-check-view">
+<div class="demand-check-reply-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -29,9 +29,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'demand_task_id',
+            'demand_check_id',
             'title',
-            'content:ntext',
+            'pass',
             'des:ntext',
             'create_by',
             'created_at',

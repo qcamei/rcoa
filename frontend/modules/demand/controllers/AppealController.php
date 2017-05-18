@@ -97,7 +97,7 @@ class AppealController extends Controller
         $model->create_by = \Yii::$app->user->id;
         
         if ($model->load($post)) {
-            $dtTool->SubmitAppealTask($model);
+            $dtTool->CreateAppealTask($model);
             return $this->redirect(['task/view', 'id' => $model->demand_task_id]);
         } else {
             return $this->render('create', [

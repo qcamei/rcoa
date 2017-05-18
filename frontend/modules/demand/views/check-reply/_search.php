@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\demand\searchs\DemandCheckSearch */
+/* @var $model common\models\demand\searchs\DemandCheckReplySearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="demand-check-search">
+<div class="demand-check-reply-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
@@ -17,11 +17,11 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'demand_task_id') ?>
+    <?= $form->field($model, 'demand_check_id') ?>
 
     <?= $form->field($model, 'title') ?>
 
-    <?= $form->field($model, 'content') ?>
+    <?= $form->field($model, 'pass') ?>
 
     <?= $form->field($model, 'des') ?>
 

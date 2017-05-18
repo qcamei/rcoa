@@ -2,15 +2,13 @@
 namespace frontend\modules\demand\utils;
 
 use common\config\AppGlobalVariables;
+use common\models\demand\DemandCheckReply;
 use common\models\demand\DemandTask;
 use common\models\demand\DemandTaskAuditor;
-use common\models\team\TeamCategory;
-use common\models\team\TeamMember;
 use common\wskeee\job\JobManager;
 use wskeee\ee\EeManager;
 use wskeee\rbac\RbacManager;
 use wskeee\rbac\RbacName;
-use wskeee\team\TeamMemberTool;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -212,7 +210,7 @@ class DemandNoticeTool {
     
     /**
      * 设置承接人用户任务通知关联
-     * @param DemandTask $model
+     * @param DemandCheckReply $model
      */
     public  function setUndertakeNotification($model){
         /* @var $authManager RbacManager */
@@ -224,14 +222,16 @@ class DemandNoticeTool {
         $undertakeId = array_filter(ArrayHelper::getColumn($undertakePerson, 'id'));
        
         //更新任务通知表
-        $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->getStatusProgress(), 'status' => $model->getStatusName()]); 
+        $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->demandCheck->demand_task_id, [
+            'progress'=> DemandTask::$statusProgress[DemandTask::STATUS_UNDERTAKE], 'status' => DemandTask::$statusNmae[DemandTask::STATUS_UNDERTAKE]
+        ]); 
         //清空用户任务通知关联
-        $jobManager->removeNotification(AppGlobalVariables::getSystemId(), $model->id, $undertakeId);
+        $jobManager->removeNotification(AppGlobalVariables::getSystemId(), $model->demandCheck->demand_task_id, $undertakeId);
         //添加用户任务通知关联
-        if(empty($model->undertake_person))
-            $jobManager->addNotification(AppGlobalVariables::getSystemId(), $model->id, $undertakeId);
+        if(empty($model->demandCheck->demandTask->undertake_person))
+            $jobManager->addNotification(AppGlobalVariables::getSystemId(), $model->demandCheck->demand_task_id, $undertakeId);
         else
-            $jobManager->addNotification(AppGlobalVariables::getSystemId(), $model->id, $model->undertake_person);
+            $jobManager->addNotification(AppGlobalVariables::getSystemId(), $model->demandCheck->demand_task_id, $model->demandCheck->demandTask->undertake_person);
         
     }
     

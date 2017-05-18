@@ -5,6 +5,7 @@ namespace frontend\modules\demand\controllers;
 use wskeee\framework\models\ItemType;
 use wskeee\framework\models\searchs\ItemTypeSearch;
 use Yii;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 
@@ -23,6 +24,16 @@ class BusinessController extends BasedataController
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                ],
+            ],
+            //access验证是否有登录
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
                 ],
             ],
         ];

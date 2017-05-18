@@ -31,7 +31,7 @@ use yii\widgets\ActiveForm;
         ], 
     ]); ?>
 
-    <?= $form->field($model, 'reason')->textarea(['rows' => 4]) ?>
+    <?= $form->field($model, 'reason')->textarea(['value' => '无', 'rows' => 5]) ?>
     
     <?= Html::activeHiddenInput($model, 'des', ['value' => '无']);?> 
 

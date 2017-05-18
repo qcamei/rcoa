@@ -1,21 +1,22 @@
 <?php
 
 use common\models\demand\DemandCheck;
-use common\models\demand\DemandTask;
+use common\models\demand\DemandCheckReply;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
 
 /* @var $this View */
-/* @var $model DemandCheck */
+/* @var $model DemandCheckReply */
+/* @var $check DemandCheck */
 /* @var $form ActiveForm */
 ?>
 
-<div class="demand-check-form">
+<div class="demand-check-reply-form">
 
     <?php $form = ActiveForm::begin([
         'options'=>[
-            'id' => 'demand-check-form',
+            'id' => 'demand-check-reply-form',
             'class'=>'form-horizontal',
         ],
         'fieldConfig' => [  
@@ -30,21 +31,11 @@ use yii\widgets\ActiveForm;
             ],  
         ], 
     ]); ?>
-
-    <?php if(empty($model->demandTask->budget_cost)): ?>
     
-    <?= Html::encode('工作项成本不能为空！'); ?>
+    <?= $form->field($model, 'des')->textarea(['value' => '无', 'rows' => 5]) ?>
     
-    <?php else: ?>
-    
-    <?php if($model->isNewRecord && $model->demandTask->getIsStatusDefault())
-        echo Html::activeHiddenInput($model, 'content', ['value' => '任务创建']);
-    ?>
-    
-    <?= $form->field($model, 'des')->textarea(['value' => !$model->isNewRecord ? $model->des : '无', 'rows' => 5]) ?>
-    
-    <?php endif; ?>
-
+    <?= Html::activeHiddenInput($model, 'pass', ['value' => $pass]) ?>
+        
     <?php ActiveForm::end(); ?>
 
 </div>

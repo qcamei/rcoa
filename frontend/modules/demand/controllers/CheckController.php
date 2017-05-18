@@ -3,18 +3,17 @@
 namespace frontend\modules\demand\controllers;
 
 use common\models\demand\DemandCheck;
-use common\models\demand\searchs\DemandCheckSearch;
+use common\models\demand\DemandCheckReply;
+use common\models\User;
 use frontend\modules\demand\utils\DemandTool;
 use wskeee\rbac\RbacName;
 use Yii;
+use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
-
-
-
 
 /**
  * CheckController implements the CRUD actions for DemandCheck model.
@@ -50,14 +49,11 @@ class CheckController extends Controller
      * Lists all DemandCheck models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($demand_task_id)
     {
-        $searchModel = new DemandCheckSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+        return $this->renderAjax('index', [
+            'checks' => $this->getDemandCheck($demand_task_id),
+            'checkReplies' => $this->getDemandCheckReply($demand_task_id)
         ]);
     }
 
@@ -68,7 +64,7 @@ class CheckController extends Controller
      */
     public function actionView($id)
     {
-        return $this->renderPartial('view', [
+        return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
     }
@@ -78,29 +74,61 @@ class CheckController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($task_id)
+    public function actionCreate($demand_task_id)
     {
         $model = new DemandCheck();
         /* @var $dtTool DemandTool */
         $dtTool = DemandTool::getInstance();
-        $dtTool::$table = DemandCheck::tableName();
-        if(!\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE_CHECK) || $dtTool->getIsCompleteCheck($task_id))
-            throw new NotAcceptableHttpException('无权限操作！');
-        $model->task_id = $task_id;
-        $model->create_by = \Yii::$app->user->id;
-        if(!($model->task->getIsStatusCheck() || $model->task->getIsStatusChecking()))
-            throw new NotAcceptableHttpException('该任务状态为'.$model->task->getStatusName().'！');
+        $model->loadDefaultValues();
+        $model->demand_task_id = $demand_task_id;
         
+        if(!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE) && $model->demandTask->create_by == \Yii::$app->user->id))
+            throw new NotAcceptableHttpException('无权限操作！');
+        if(!($model->demandTask->getIsStatusDefault()))
+            throw new NotAcceptableHttpException('该任务状态为'.$model->demandTask->getStatusName().'！');
+        
+        $model->create_by = \Yii::$app->user->id;
+
         if ($model->load(Yii::$app->request->post())) {
             $dtTool->CreateCheckTask($model);
-            return $this->redirect(['task/view', 'id' => $model->task_id]);
+            return $this->redirect(['task/view', 'id' => $model->demand_task_id]);
         } else {
-            return $this->renderPartial('create', [
+            return $this->renderAjax('create', [
                 'model' => $model,
             ]);
         }
     }
 
+    /**
+     * Submit a new DemandCheck model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionSubmit($demand_task_id)
+    {
+        $model = new DemandCheck();
+        /* @var $dtTool DemandTool */
+        $dtTool = DemandTool::getInstance();
+        $model->loadDefaultValues();
+        $model->demand_task_id = $demand_task_id;
+        
+        if(!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE) && $model->demandTask->create_by == \Yii::$app->user->id))
+            throw new NotAcceptableHttpException('无权限操作！');
+        if(!($model->demandTask->getIsStatusAdjusimenting()))
+            throw new NotAcceptableHttpException('该任务状态为'.$model->demandTask->getStatusName().'！');
+        
+        $model->create_by = \Yii::$app->user->id;
+
+        if ($model->load(Yii::$app->request->post())) {
+            $dtTool->UpdateCheckTask($model);
+            return $this->redirect(['task/view', 'id' => $model->demand_task_id]);
+        } else {
+            return $this->renderAjax('create', [
+                'model' => $model,
+            ]);
+        }
+    } 
+    
     /**
      * Updates an existing DemandCheck model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -110,63 +138,28 @@ class CheckController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        /* @var $dtTool DemandTool */
-        $dtTool = DemandTool::getInstance();
-        $dtTool::$table = DemandCheck::tableName();
-        if((!\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UPDATE_CHECK)
-           && $model->create_by != \Yii::$app->user->id) || !$dtTool->getIsCompleteCheck($model->task_id))
-            throw new NotAcceptableHttpException('无权限操作！');
-        if(!$model->task->getIsStatusAdjusimenting())
-            throw new NotAcceptableHttpException('该任务状态为'.$model->task->getStatusName().'！');
-        
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['task/view', 'id' => $model->task_id]);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            return $this->renderPartial('update', [
+            return $this->render('update', [
                 'model' => $model,
             ]);
         }
     }
 
     /**
-     * 提交审核记录
-     * @param integer $task_id                      任务ID
-     * @throws NotAcceptableHttpException
-     */
-    public function actionSubmit($task_id)
-    {
-        /* @var $model DemandCheck */
-        $model = DemandCheck::findOne(['task_id' => $task_id, 'status' => DemandCheck::STATUS_NOTCOMPLETE]);
-        /* @var $dtTool DemandTool */
-        $dtTool = DemandTool::getInstance();
-        $dtTool::$table = DemandCheck::tableName();
-        if(!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_SUBMIT_CHECK) && $model->task->create_by == Yii::$app->user->id
-            && $dtTool->getIsCompleteCheck($task_id)))
-            throw new NotAcceptableHttpException('无权限操作！');
-        if(!$model->task->getIsStatusAdjusimenting())
-            throw new NotAcceptableHttpException('该任务状态为'.$model->task->getStatusName().'！');
-        
-        $model->complete_time = date('Y-m-d H:i', time());
-        $model->status = DemandCheck::STATUS_COMPLETE;
-        $dtTool->SubmitCheckTask($model);
-        $this->redirect(['task/index', 'create_by' => Yii::$app->user->id,
-            'undertake_person' => Yii::$app->user->id, 
-            'auditor' => Yii::$app->user->id,
-        ]);
-    }
-    
-    /**
      * Deletes an existing DemandCheck model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
-     
+     */
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
-    }*/
+    }
 
     /**
      * Finds the DemandCheck model based on its primary key value.
@@ -182,5 +175,71 @@ class CheckController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    
+    /**
+     * 获取审核记录数据
+     * @param integer $demand_task_id           需求任务ID
+     * @return array
+     */
+    public function getDemandCheck($demand_task_id)
+    {
+        $results = (new Query())
+                ->select([
+                    'Demand_check.id', 'Demand_check.title', 'Demand_check.content', 'Demand_check.des',
+                    'User.nickname', 'Demand_check.created_at'
+                ])
+                ->from(['Demand_check' => DemandCheck::tableName()])
+                ->leftJoin(['User' => User::tableName()], 'User.id = Demand_check.create_by')
+                ->where(['Demand_check.demand_task_id' => $demand_task_id])
+                ->all();
+        
+        $checks = [];
+        foreach ($results as $data) {
+            $checks[] = [
+                'id' => $data['id'],
+                'title' => $data['title'],
+                'content' => !empty($data['content']) ? $data['content'] : '无',
+                'des' => $data['des'],
+                'name' => $data['nickname'],
+                'time' => date('Y-m-d H:i', $data['created_at']),
+            ];
+        }
+        
+        return $checks;
+    }
+    
+    /**
+     * 获取审核回复数据
+     * @param integer $demand_task_id           需求任务ID
+     * @return array
+     */
+    public function getDemandCheckReply($demand_task_id)
+    {
+        $results = (new Query())
+                ->select([
+                    'Demand_check_reply.id', 'Demand_check_reply.demand_check_id AS check_id',
+                    'Demand_check_reply.title', 'Demand_check_reply.pass', 'Demand_check_reply.des',
+                    'User.nickname', 'Demand_check_reply.created_at'
+                ])
+                ->from(['Demand_check_reply' => DemandCheckReply::tableName()])
+                ->leftJoin(['Demand_check' => DemandCheck::tableName()], 'Demand_check.id = Demand_check_reply.demand_check_id')
+                ->leftJoin(['User' => User::tableName()], 'User.id = Demand_check_reply.create_by')
+                ->where(['Demand_check.demand_task_id' => $demand_task_id])
+                ->all();
+        
+        $checkReplies = [];
+        foreach ($results as $data) {
+            $checkReplies[$data['check_id']] = [
+                'id' => $data['id'],
+                'title' => $data['title'],
+                'pass' => $data['pass'],
+                'des' => $data['des'],
+                'name' => $data['nickname'],
+                'time' => date('Y-m-d H:i', $data['created_at']),
+            ];
+        }
+        
+        return $checkReplies;
     }
 }

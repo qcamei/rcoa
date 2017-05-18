@@ -11,26 +11,21 @@ use yii\db\ActiveRecord;
 /**
  * This is the model class for table "{{%demand_check}}".
  *
- * @property integer $id                        ID
- * @property integer $task_id                   任务ID
- * @property string $title                      标题
- * @property string $remark                     备注
- * @property string $create_by                  创建者
- * @property integer $created_at                创建于
- * @property integer $updated_at                更新于
- * @property string $complete_time              完成时间
- * @property integer $status                    状态
+ * @property integer $id                               ID
+ * @property integer $demand_task_id                   引用需求任务ID
+ * @property string $title                             标题
+ * @property string $content                           内容
+ * @property string $des                               备注
+ * @property string $create_by                         创建者
+ * @property integer $created_at                       创建于
+ * @property integer $updated_at                       更新于
  *
- * @property DemandTask $task                   获取需求任务
- * @property User $createBy                     获取创建者
+ * @property User $createBy                            获取创建者
+ * @property DemandTask $demandTask                    获取需求任务
+ * @property DemandCheckReply $demandCheckReply        获取所有需求审核回复
  */
 class DemandCheck extends ActiveRecord
 {
-    /** 未完成 */
-    const STATUS_NOTCOMPLETE = 0;
-    /** 已完成 */
-    const STATUS_COMPLETE = 1;
-    
     /**
      * @inheritdoc
      */
@@ -52,12 +47,11 @@ class DemandCheck extends ActiveRecord
     public function rules()
     {
         return [
-            [['task_id', 'created_at', 'updated_at', 'status'], 'integer'],
-            [['remark'], 'string'],
+            [['demand_task_id', 'created_at', 'updated_at'], 'integer'],
+            [['content', 'des'], 'string'],
             [['title'], 'string', 'max' => 255],
             [['create_by'], 'string', 'max' => 36],
-            [['complete_time'], 'string', 'max' => 60],
-            [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => DemandTask::className(), 'targetAttribute' => ['task_id' => 'id']],
+            [['demand_task_id'], 'exist', 'skipOnError' => true, 'targetClass' => DemandTask::className(), 'targetAttribute' => ['demand_task_id' => 'id']],
         ];
     }
 
@@ -68,39 +62,16 @@ class DemandCheck extends ActiveRecord
     {
         return [
             'id' => Yii::t('rcoa/demand', 'ID'),
-            'task_id' => Yii::t('rcoa/demand', 'Task ID'),
-            'title' => Yii::t('rcoa', 'Title'),
-            'remark' => Yii::t('rcoa', 'Remark'),
+            'demand_task_id' => Yii::t('rcoa/demand', 'Demand Task ID'),
+            'title' => Yii::t('rcoa/demand', 'Title'),
+            'content' => Yii::t('rcoa/demand', 'Content'),
+            'des' => Yii::t('rcoa/demand', 'Des'),
             'create_by' => Yii::t('rcoa/demand', 'Create By'),
             'created_at' => Yii::t('rcoa/demand', 'Created At'),
             'updated_at' => Yii::t('rcoa/demand', 'Updated At'),
-            'complete_time' => Yii::t('rcoa/demand', 'Complete Time'),
-            'status' => Yii::t('rcoa/demand', 'Status'),
         ];
     }
-    
-    public function beforeSave($insert) {
-        if(parent::beforeSave($insert))
-        {
-            $this->remark = htmlentities($this->remark);
-            return true;
-        }
-    }
-    public function afterFind() {
-        
-        $this->remark = html_entity_decode($this->remark);
-    }
-    
 
-    /**
-     * 获取需求任务
-     * @return ActiveQuery
-     */
-    public function getTask()
-    {
-        return $this->hasOne(DemandTask::className(), ['id' => 'task_id']);
-    }
-    
     /**
      * 获取创建者
      * @return ActiveQuery
@@ -108,5 +79,23 @@ class DemandCheck extends ActiveRecord
     public function getCreateBy()
     {
         return $this->hasOne(User::className(), ['id' => 'create_by']);
+    }
+    
+    /**
+     * 获取需求任务
+     * @return ActiveQuery
+     */
+    public function getDemandTask()
+    {
+        return $this->hasOne(DemandTask::className(), ['id' => 'demand_task_id']);
+    }
+
+    /**
+     * 获取需求审核回复
+     * @return ActiveQuery
+     */
+    public function getDemandCheckReply()
+    {
+        return $this->hasOne(DemandCheckReply::className(), ['demand_check_id' => 'id']);
     }
 }

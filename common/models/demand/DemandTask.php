@@ -53,6 +53,7 @@ use yii\db\Exception;
  * @property string $des                                备注
  *
  * @property DemandAcceptance[] $demandAcceptances      获取所有的验收记录
+ * @property DemandCheck $demandCheck                   获取最新的审核记录
  * @property DemandCheck[] $demandChecks                获取所有的审核记录
  * @property Item $course                               获取课程
  * @property Item $itemChild                            获取专业/工种
@@ -281,12 +282,22 @@ class DemandTask extends ActiveRecord
     }
 
     /**
+     * 获取最新的审核记录
+     * @return ActiveQuery
+     */
+    public function getDemandCheck()
+    {
+        return $this->hasOne(DemandCheck::className(), ['demand_task_id' => 'id'])
+               ->orderBy('id desc');
+    }
+    
+    /**
      * 获取所有的审核记录
      * @return ActiveQuery
      */
     public function getDemandChecks()
     {
-        return $this->hasMany(DemandCheck::className(), ['task_id' => 'id']);
+        return $this->hasMany(DemandCheck::className(), ['demand_task_id' => 'id']);
     }
     
     /**

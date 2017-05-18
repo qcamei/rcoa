@@ -1,6 +1,6 @@
 <?php
 
-use common\models\demand\DemandTask;
+use common\models\demand\DemandCheckReply;
 use yii\helpers\Html;
 
 /**
@@ -11,7 +11,7 @@ use yii\helpers\Html;
     马上查看(连接到任务详细页)
  */
 
- /* @var $model DemandTask */
+ /* @var $model DemandCheckReply */
 
 ?>
 
@@ -19,14 +19,14 @@ use yii\helpers\Html;
     
     <p>您好！任务审核已通过。</p>
     
-    <p><b>课程名</b>：<?= Html::encode($model->course->name) ?></p>
+    <p><b>课程名</b>：<?= Html::encode($model->demandCheck->demandTask->course->name) ?></p>
     
-    <p><b>计划验收时间</b>：<span style="color:red"><?= Html::encode($model->plan_check_harvest_time) ?></span></p>
+    <p><b>计划验收时间</b>：<span style="color:red"><?= Html::encode($model->demandCheck->demandTask->plan_check_harvest_time) ?></span></p>
     
     <p><b>备注</b>：<?= Html::encode($model->des) ?></p>
     
     <?= Html::a('马上查看', 
-            Yii::$app->urlManager->createAbsoluteUrl(['/demand/task/view','id' => $model->id]), 
+            Yii::$app->urlManager->createAbsoluteUrl(['/demand/task/view','id' => $model->demandCheck->demand_task_id]), 
             [   
                 'class'=>'btn btn-default', 
                 'target'=>'_blank'

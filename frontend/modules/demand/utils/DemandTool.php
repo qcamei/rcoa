@@ -6,6 +6,7 @@ use common\models\demand\DemandAcceptance;
 use common\models\demand\DemandAppeal;
 use common\models\demand\DemandAppealReply;
 use common\models\demand\DemandCheck;
+use common\models\demand\DemandCheckReply;
 use common\models\demand\DemandDelivery;
 use common\models\demand\DemandOperation;
 use common\models\demand\DemandOperationUser;
@@ -70,39 +71,7 @@ class DemandTool {
             $trans ->rollBack(); //回滚事务
             throw new NotFoundHttpException("操作失败！".$ex->getMessage()); 
         }
-    }
-    
-    /**
-     * 任务提交审核操作
-     * @param DemandTask $model
-     */
-    public function TaskSubmitCheck($model)
-    {
-        /* @var $demandNotice DemandNoticeTool */
-        $demandNotice = DemandNoticeTool::getInstance();
-        /* @var $jobManager JobManager */
-        $jobManager = Yii::$app->get('jobManager');
-        $user = ArrayHelper::getValue($demandNotice->getAuditor($model->create_team), 'u_id');
-        
-        /** 开启事务 */
-        $trans = Yii::$app->db->beginTransaction();
-        try
-        {
-            if ($model->save(false, ['status', 'progress'])){
-                $this->saveDemandOperation($model->id, $model->status);
-                $this->saveOperationUser($model->id, $user);
-                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['status'=> DemandTask::$statusNmae[DemandTask::STATUS_CHECK]]);
-                $demandNotice->sendAuditorNotification($model, $model->create_team, '任务待审核', 'demand/Create-html');
-            }else
-                throw new \Exception($model->getErrors());
-            
-            $trans->commit();  //提交事务
-            Yii::$app->getSession()->setFlash('success','操作成功！');
-        } catch (\Exception $ex) {
-            $trans ->rollBack(); //回滚事务
-            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
-        }
-    }
+    }    
     
     /**
      * 更新任务操作
@@ -135,10 +104,76 @@ class DemandTool {
     }
     
     /**
-     * 通过审核任务操作
-     * @param DemandTask $model
+     * 创建审核任务操作
+     * @param DemandCheck $model
      */
-    public function PassCheckTask($model)
+    public function CreateCheckTask($model)
+    {
+        /* @var $demandNotice DemandNoticeTool */
+        $demandNotice = DemandNoticeTool::getInstance();
+        /* @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
+        $user = ArrayHelper::getValue($demandNotice->getAuditor($model->demandTask->create_team), 'u_id');
+        
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {
+            $number = DemandTask::updateAll(['status' => DemandTask::STATUS_CHECK, 'progress' => DemandTask::$statusProgress[DemandTask::STATUS_CHECK]], ['id' => $model->demand_task_id]);
+            if ($model->save() && $number > 0){
+                $this->saveDemandOperation($model->demand_task_id, $model->demandTask->status);
+                $this->saveOperationUser($model->demand_task_id, $user);
+                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->demand_task_id, ['status'=> DemandTask::$statusNmae[DemandTask::STATUS_CHECK]]);
+                $demandNotice->sendAuditorNotification($model, $model->demandTask->create_team, '任务待审核', 'demand/CreateCheck-html');
+            }else
+                throw new \Exception($model->getErrors());
+            
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        } catch (\Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
+        }
+    }
+    
+    /**
+     * 更新审核任务操作
+     * @param DemandCheck $model
+     */
+    public function UpdateCheckTask($model)
+    {
+        /* @var $demandNotice DemandNoticeTool */
+        $demandNotice = DemandNoticeTool::getInstance();
+        /* @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
+        $user = ArrayHelper::getValue($demandNotice->getAuditor($model->demandTask->create_team), 'u_id');
+        
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {
+            $number = DemandTask::updateAll(['status'=> DemandTask::STATUS_CHECKING], ['id' => $model->demand_task_id]);
+            if($model->save() && $number > 0){
+                $this->saveDemandOperation($model->demand_task_id, DemandTask::STATUS_CHECKING);
+                $this->saveOperationUser($model->demand_task_id, $user);
+                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->demand_task_id, ['status'=> DemandTask::$statusNmae[DemandTask::STATUS_CHECKING]]);
+                $demandNotice->sendAuditorNotification($model, $model->demandTask->create_team, '任务待审核', 'demand/UpdateCheck-html');
+            }else
+                throw new \Exception($model->getErrors());
+            
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        } catch (\Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
+        }
+    }
+    
+    /**
+     * 通过审核回复任务操作
+     * @param DemandCheckReply $model
+     */
+    public function PassCheckReplyTask($model)
     {
         /* @var $demandNotice DemandNoticeTool */
         $demandNotice = DemandNoticeTool::getInstance();
@@ -146,7 +181,7 @@ class DemandTool {
         $jobManager = Yii::$app->get('jobManager');
         /* @var $authManager RbacManager */
         $authManager = Yii::$app->authManager;
-        $auditor = $demandNotice->getAuditor($model->create_team);
+        $auditor = $demandNotice->getAuditor($model->demandCheck->demandTask->create_team);
         $auditorId = implode(',', array_filter(ArrayHelper::getValue($auditor, 'u_id')));
         //查找所有承接人
         $undertakePerson = $authManager->getItemUsers(RbacName::ROLE_DEMAND_UNDERTAKE_PERSON);
@@ -156,12 +191,13 @@ class DemandTool {
         $trans = Yii::$app->db->beginTransaction();
         try
         {
-            if ($model->save(false, ['status', 'progress'])){
-                $this->saveDemandOperation($model->id, $model->status);
-                $this->saveOperationUser($model->id, $undertakeId);
+            $number = DemandTask::updateAll(['status' => DemandTask::STATUS_UNDERTAKE, 'progress' => DemandTask::$statusProgress[DemandTask::STATUS_UNDERTAKE]], ['id' => $model->demandCheck->demand_task_id]);
+            if ($model->save() && $number > 0){
+                $this->saveDemandOperation($model->demandCheck->demand_task_id, DemandTask::STATUS_UNDERTAKE);
+                $this->saveOperationUser($model->demandCheck->demand_task_id, $undertakeId);
                 $demandNotice->setUndertakeNotification($model);
-                $jobManager->cancelNotification(AppGlobalVariables::getSystemId(), $model->id, $auditorId);
-                $demandNotice->sendCreateByNotification($model, '审核已通过', 'demand/PassCheck-html', $model->createBy->ee);
+                $jobManager->cancelNotification(AppGlobalVariables::getSystemId(), $model->demandCheck->demand_task_id, $auditorId);
+                $demandNotice->sendCreateByNotification($model, '审核已通过', 'demand/PassCheckReply-html', $model->demandCheck->demandTask->createBy->ee);
                 $demandNotice->sendUndertakePersonNotification($model, '新任务发布', 'demand/Undertake-html');
             }else
                 throw new \Exception($model->getErrors());
@@ -175,10 +211,10 @@ class DemandTool {
     }
     
     /**
-     * 创建审核记录操作
-     * @param DemandCheck $model
+     * 创建审核回复任务操作
+     * @param DemandCheckReply $model
      */
-    public function CreateCheckTask($model)
+    public function CreateCheckReplyTask($model)
     {
         /* @var $demandNotice DemandNoticeTool */
         $demandNotice = DemandNoticeTool::getInstance();
@@ -189,12 +225,12 @@ class DemandTool {
         $trans = Yii::$app->db->beginTransaction();
         try
         {
-            $number = DemandTask::updateAll(['status' => DemandTask::STATUS_ADJUSTMENTING], ['id' => $model->task_id]);
+            $number = DemandTask::updateAll(['status' => DemandTask::STATUS_ADJUSTMENTING], ['id' => $model->demandCheck->demand_task_id]);
             if($model->save() && $number > 0){
-                $this->saveDemandOperation($model->task_id, DemandTask::STATUS_ADJUSTMENTING);
-                $this->saveOperationUser($model->task_id, [$model->task->create_by]);
-                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->task_id, ['status'=> DemandTask::$statusNmae[DemandTask::STATUS_ADJUSTMENTING]]);
-                $demandNotice->sendCreateByNotification ($model, '审核不通过', 'demand/CreateCheck-html', $model->task->createBy->ee);
+                $this->saveDemandOperation($model->demandCheck->demand_task_id, DemandTask::STATUS_ADJUSTMENTING);
+                $this->saveOperationUser($model->demandCheck->demand_task_id, [$model->demandCheck->create_by]);
+                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->demandCheck->demand_task_id, ['status'=> DemandTask::$statusNmae[DemandTask::STATUS_ADJUSTMENTING]]);
+                $demandNotice->sendCreateByNotification ($model, '审核不通过', 'demand/CreateCheckReply-html', $model->demandCheck->demandTask->createBy->ee);
             }else
                 throw new \Exception($model->getErrors());
             
@@ -204,40 +240,7 @@ class DemandTool {
             $trans ->rollBack(); //回滚事务
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
-    }
-    
-    /**
-     * 提交审核操作
-     * @param DemandCheck $model
-     */
-    public function SubmitCheckTask($model)
-    {
-        /* @var $demandNotice DemandNoticeTool */
-        $demandNotice = DemandNoticeTool::getInstance();
-        /* @var $jobManager JobManager */
-        $jobManager = Yii::$app->get('jobManager');
-        $user = ArrayHelper::getValue($demandNotice->getAuditor($model->task->create_team), 'u_id');
-        
-        /** 开启事务 */
-        $trans = Yii::$app->db->beginTransaction();
-        try
-        {
-            $number = DemandTask::updateAll(['status'=> DemandTask::STATUS_CHECKING], ['id' => $model->task_id]);
-            if($model->save(false, ['complete_time', 'status']) && $number > 0){
-                $this->saveDemandOperation($model->task_id, DemandTask::STATUS_CHECKING);
-                $this->saveOperationUser($model->task_id, $user);
-                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->task_id, ['status'=> DemandTask::$statusNmae[DemandTask::STATUS_CHECKING]]);
-                $demandNotice->sendAuditorNotification($model, $model->task->create_team, '任务待审核', 'demand/SubmitCheck-html');
-            }else
-                throw new \Exception($model->getErrors());
-            
-            $trans->commit();  //提交事务
-            Yii::$app->getSession()->setFlash('success','操作成功！');
-        } catch (\Exception $ex) {
-            $trans ->rollBack(); //回滚事务
-            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
-        }
-    }
+    }    
     
     /**
      * 承接任务操作
@@ -306,7 +309,7 @@ class DemandTool {
     }
     
     /**
-     * 创建验收记录操作
+     * 创建验收任务记录操作
      * @param DemandAcceptance $model
      */
     public function CreateAcceptanceTask($model)
@@ -375,10 +378,10 @@ class DemandTool {
     }
     
     /**
-     * 提交申诉任务操作
+     * 创建申诉任务操作
      * @param DemandAppeal $model
      */
-    public function SubmitAppealTask($model)
+    public function CreateAppealTask($model)
     {
         /* @var $demandNotice DemandNoticeTool */
         $demandNotice = DemandNoticeTool::getInstance();
@@ -408,10 +411,10 @@ class DemandTool {
     }
     
     /**
-     * 提交回复任务操作
+     * 创建申诉回复任务操作
      * @param DemandAppealReply $model
      */
-    public function SubmitAppealReplyTask($model)
+    public function CreateAppealReplyTask($model)
     {
         /* @var $demandNotice DemandNoticeTool */
         $demandNotice = DemandNoticeTool::getInstance();

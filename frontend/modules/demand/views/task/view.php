@@ -56,8 +56,6 @@ else
         'workitems' => $workitem,
     ]) ?>
     
-    <span class="pattern" style="float: right; margin-top: -15px;">（最大奖金 = 人工成本 + 人工成本 × 绩效分值）</span>
-    
     <span><?= Yii::t('rcoa/demand', 'Demand Task Annexes').'：'; ?></span>
     <?php
         foreach ($annex as $value) {
@@ -65,12 +63,11 @@ else
         }
     ?>
     
-    <?= $this->render('/check/index',[
-        'model' => $model->demandChecks,
-    ]) ?>
+    <h4><?= Html::encode(Yii::t('rcoa/demand', 'Demand Checks')); ?></h4>
+    <div id="demand-check-index">没有找到数据。</div>
     
     <h4><?= Html::encode(Yii::t('rcoa/demand', 'Demand Acceptances')) ?></h4>
-    <div id="demand-acceptance-view"></div>    
+    <div id="demand-acceptance-view">没有找到数据。</div>    
     
 </div>
 
@@ -88,43 +85,51 @@ else
 $js = 
 <<<JS
         
-    //加载课程验收记录
+    //加载需求任务审核记录
+    $("#demand-check-index").load("/demand/check/index?demand_task_id=$model->id");    
+    //加载需求任务验收记录
     $("#demand-acceptance-view").load("/demand/acceptance/view?demand_task_id=$model->id");    
       
     /** 此事件在模态框被隐藏（并且同时在 CSS 过渡效果完成）之后被触发。 */
     $('.myModal').on('hidden.bs.modal', function(){
         $(".myModal").html("");
     }); 
-    
-    /** 提交任务操作 弹出模态框 */
-    $('#task-submit-check').click(function(){
-        $(".myModal").html("");
-        $('.myModal').modal("show").load($(this).attr("href"));
-        return false;
-    });    
-       
- 
-    /** 取消操作 弹出模态框 */
-    $('#cancel').click(function(){
-        $(".myModal").html("");
-        $('.myModal').modal("show").load($(this).attr("href"));
-        return false;
-    });
-     
-    /** 审核不通过操作 弹出模态框 */
+            
+    /** 审核创建操作 弹出模态框 */
     $('#check-create').click(function(){
         $(".myModal").html("");
         $('.myModal').modal("show").load($(this).attr("href"));
         return false;
-    });
+    }); 
+        
+    /** 审核更新操作 弹出模态框 */
+    $('#check-update').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    });      
     
     /** 查看审核记录 */   
-    $('.view-check').click(function(){
+    $('.check-view').click(function(){
        $(".myModal").html("");
        $('.myModal').modal("show").load($(this).attr("href"));
         return false;
     });
         
+    /** 审核回复操作 弹出模态框 */
+    $('#check-reply-create').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    });
+        
+    /** 审核回复操作 弹出模态框 */
+    $('#pass-check').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    });
+            
     /** 承接操作 弹出模态框 */
     $('#undertake').click(function(){
         $(".myModal").html("");
@@ -155,12 +160,19 @@ $js =
         return false;
     });
         
-    /** 回复操作 弹出模态框 */
-    $('#reply-create').click(function(){
+    /** 申诉回复操作 弹出模态框 */
+    $('#appeal-reply-create').click(function(){
         $(".myModal").html("");
         $('.myModal').modal("show").load($(this).attr("href"));
         return false;
-    });    
+    });
+        
+    /** 取消操作 弹出模态框 */
+    $('#cancel').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    });
         
 JS;
     $this->registerJs($js,  View::POS_READY);
