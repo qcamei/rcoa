@@ -181,7 +181,7 @@ foreach ($workitem as $work){
                 <th class="text-center">总成本</th>
                 <?php $budgetCost = $model->demandTask->budget_cost + $model->demandTask->budget_cost * $model->demandTask->bonus_proportion;
                        $totalBudgetCost = $budgetCost + $model->demandTask->external_budget_cost;
-                       $realityCost = reset($d_realityCost) * $model->demandTask->bonus_proportion;
+                       $realityCost = reset($d_realityCost) + reset($d_realityCost) * $model->demandTask->bonus_proportion;
                        $totalRealityCost = $realityCost + reset($d_externalRealityCost);?>
                 <td>
                     ￥<?= number_format($totalBudgetCost, 2) ?>
@@ -217,7 +217,7 @@ foreach ($workitem as $work){
             <tr>
                 <th class="text-center">绩效得分<p class="pattern">(满分为10分)</p></th>
                 <td colspan="4"><?= !empty($model->demandTask->score) && $is_pass !== false && $is_pass != 0? 
-                    number_format($model->demandTask->score * 10, 2, '.', ',').'<span class="pattern">（ 绩效得分 = 各项评分 × 各项实际成本 / 总实际成本 ）</span>' : '无' ?></td>
+                    number_format($model->demandTask->score * 10, 2, '.', ',').'<span class="pattern">（ 绩效得分 = 各项评分 × 各项实际成本 ÷ 总实际成本 ）</span>' : '无' ?></td>
             </tr>
         </tbody>    
 

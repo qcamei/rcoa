@@ -86,7 +86,7 @@ $page = [
              * 2、创建者必须是自己
              */
             if($model->getIsStatusAppealing() && $model->create_by == Yii::$app->user->id)
-                echo Html::a('同意申诉', ['acceptance/create', 'demand_task_id' => $model->id, 'pass' => 1], ['class' => 'btn btn-success']).' ';
+                echo Html::a('同意', ['acceptance/create', 'demand_task_id' => $model->id, 'pass' => 1], ['class' => 'btn btn-success']).' ';
             
             /**
              * 不同意 按钮显示必须满足以下条件：

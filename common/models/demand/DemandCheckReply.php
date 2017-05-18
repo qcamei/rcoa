@@ -62,12 +62,12 @@ class DemandCheckReply extends ActiveRecord
         return [
             'id' => Yii::t('rcoa/demand', 'ID'),
             'demand_check_id' => Yii::t('rcoa/demand', 'Demand Check ID'),
-            'title' => Yii::t('rcoa/demand', 'Title'),
+            'title' => Yii::t('rcoa', 'Title'),
             'pass' => Yii::t('rcoa/demand', 'Pass'),
-            'des' => Yii::t('rcoa/demand', 'Des'),
-            'create_by' => Yii::t('rcoa/demand', 'Create By'),
-            'created_at' => Yii::t('rcoa/demand', 'Created At'),
-            'updated_at' => Yii::t('rcoa/demand', 'Updated At'),
+            'des' => Yii::t('rcoa', 'Des'),
+            'create_by' => Yii::t('rcoa', 'Create By'),
+            'created_at' => Yii::t('rcoa', 'Created At'),
+            'updated_at' => Yii::t('rcoa', 'Updated At'),
         ];
     }
 

@@ -175,7 +175,7 @@ foreach ($workitem as $work){
                 <th class="text-center">总成本</th>
                 <?php $budgetCost = $model->demandTask->budget_cost + $model->demandTask->budget_cost * $model->demandTask->bonus_proportion;
                        $totalBudgetCost = $budgetCost + $model->demandTask->external_budget_cost;
-                       $realityCost = reset($d_realityCost) * $model->demandTask->bonus_proportion;
+                       $realityCost = reset($d_realityCost) + reset($d_realityCost) * $model->demandTask->bonus_proportion;
                        $totalRealityCost = $realityCost + reset($d_externalRealityCost);?>
                 <td>
                     ￥<?= number_format($totalBudgetCost, 2) ?>

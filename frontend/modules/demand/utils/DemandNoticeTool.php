@@ -217,6 +217,7 @@ class DemandNoticeTool {
         $authManager = Yii::$app->authManager;
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
+        
         //查找所有承接人
         $undertakePerson = $authManager->getItemUsers(RbacName::ROLE_DEMAND_UNDERTAKE_PERSON);
         $undertakeId = array_filter(ArrayHelper::getColumn($undertakePerson, 'id'));

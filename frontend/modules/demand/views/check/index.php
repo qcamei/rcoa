@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <td style="font-size: 10px; padding: 2px 8px;"><?= $check['time'] ?></td>
                 <td class="hidden-xs"><?= $check['name'] ?></td>
                 <td style="padding: 2px 8px;">
-                    <?= Html::a('查看', ['view', 'id' => $check['id']], ['class' => 'btn btn-default btn-small']) ?>
+                    <?= Html::a('查看', ['view', 'id' => $check['id']], ['class' => 'btn btn-default btn-small', 'onclick' => 'return checkView($(this));']) ?>
                 </td>
             </tr>
                 <?php if(isset($checkReplies[$check['id']])): ?>
@@ -54,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <td style="font-size: 10px; padding: 2px 8px;"><?= $checkReplies[$check['id']]['time'] ?></td>
                     <td class="hidden-xs"><?= $checkReplies[$check['id']]['name'] ?></td>
                     <td style="padding: 2px 8px;">
-                        <?= Html::a('查看', ['check-reply/view', 'id' => $checkReplies[$check['id']]['id']], ['class' => 'btn btn-default btn-small']) ?>
+                        <?= Html::a('查看', ['check-reply/view', 'id' => $checkReplies[$check['id']]['id']], ['class' => 'btn btn-default btn-small', 'onclick' => 'return checkView($(this));']) ?>
                     </td>
                 </tr>
                 <?php endif; ?>
@@ -66,6 +66,20 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php endif; ?>
     
 </div>
+
+
+<?php
+$js =   
+<<<JS
+    /** 查看审核和回复记录 */
+    window.checkView = function(elem){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(elem).attr("href"));
+        return false;
+    }
+JS;
+    $this->registerJs($js,  View::POS_READY);
+?>
 
 <?php
     DemandAssets::register($this);

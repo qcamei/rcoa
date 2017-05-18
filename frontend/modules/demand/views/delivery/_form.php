@@ -89,7 +89,7 @@ $is_show = reset($workitemType);   //获取数组的第一个值
             <tr class="tr">
                 <th class="text-center">外部成本</th>
                 <td><?= !empty($model->demandTask->external_budget_cost) ? '￥'.number_format($model->demandTask->external_budget_cost, 2) : '无' ?></td>
-                <td><?=  Html::textInput('external_reality_cost', '0.00', ['class' => 'form-control', 'type' => 'number']); ?></td>
+                <td><?=  Html::textInput('external_reality_cost', '0.00', ['id' => 'external-reality-cost', 'class' => 'form-control', 'type' => 'number', 'onblur' => 'totalCost();']); ?></td>
             </tr>
             <tr class="tr">
                 <th class="text-center">备注</th>
@@ -102,9 +102,8 @@ $is_show = reset($workitemType);   //获取数组的第一个值
     
     <div class="total-cost">
         <div class="total">
-            <?= Yii::t('rcoa/demand', 'Total Cost') ?>：￥<span id="total-cost"><?= !empty($model->demandTask->cost) ? 
-number_format($model->demandTask->cost + $model->demandTask->cost * $model->demandTask->bonus_proportion, 2, '.', ',') : '0.00' ?></span>
-        <?= Html::hiddenInput('cost', $model->demandTask->cost, ['id' => 'total-cost-input']); ?>
+            <?= Yii::t('rcoa/demand', 'Total Cost') ?>：￥<span id="total-cost">0.00</span>
+        <?= Html::hiddenInput('cost', '0.00', ['id' => 'total-cost-input']); ?>
         </div>
         <span class="pattern">（人工实际成本 = 人工实际成本 + 奖金）</span>
     </div>
@@ -119,16 +118,22 @@ $js =
 <<<JS
     /** 计算总成本 */
     window.totalCost = function(elem){
+        if(elem != null){
+            var r = /^[0-9]*[1-9][0-9]*$/;
+            var value = $(elem).val();
+            if(!r.test(value))
+                $(elem).val(Math.floor(value));
+        }
         var totalCost = 0;
-        var r = /^[0-9]*[1-9][0-9]*$/;
-        var value = $(elem).val();
         var bonusProportion = $bonusProportion;
-        if(!r.test(value))
-            $(elem).val(Math.floor(value));
+        //var er_cost = $('#external-reality-cost').val();
+        
         $('.workitem-input').each(function(){
             totalCost += $(this).val() * $(this).attr('data-cost');
         });
-        $('#total-cost').text(number_format(totalCost + totalCost * bonusProportion, 2, '.', ','));
+        
+        var totalRealityCost = (totalCost + totalCost * bonusProportion); //+ Number(er_cost);
+        $('#total-cost').text(number_format(totalRealityCost, 2, '.', ','));
         $('#total-cost-input').val(totalCost);
     } 
    

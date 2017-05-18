@@ -86,4 +86,5 @@ return[
     'External Budget Cost' => '外部预算成本',
     'External Reality Cost' => '外部实际成本',
     'Reality Cost' => '实际开发成本',
+    'Pass' => '是否通过',
 ];

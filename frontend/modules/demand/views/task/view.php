@@ -108,22 +108,15 @@ $js =
         $('.myModal').modal("show").load($(this).attr("href"));
         return false;
     });      
-    
-    /** 查看审核记录 */   
-    $('.check-view').click(function(){
-       $(".myModal").html("");
-       $('.myModal').modal("show").load($(this).attr("href"));
-        return false;
-    });
         
-    /** 审核回复操作 弹出模态框 */
+    /** 审核不通过回复操作 弹出模态框 */
     $('#check-reply-create').click(function(){
         $(".myModal").html("");
         $('.myModal').modal("show").load($(this).attr("href"));
         return false;
     });
         
-    /** 审核回复操作 弹出模态框 */
+    /** 审核通过回复操作 弹出模态框 */
     $('#pass-check').click(function(){
         $(".myModal").html("");
         $('.myModal').modal("show").load($(this).attr("href"));

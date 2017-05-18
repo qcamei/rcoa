@@ -63,12 +63,12 @@ class DemandCheck extends ActiveRecord
         return [
             'id' => Yii::t('rcoa/demand', 'ID'),
             'demand_task_id' => Yii::t('rcoa/demand', 'Demand Task ID'),
-            'title' => Yii::t('rcoa/demand', 'Title'),
-            'content' => Yii::t('rcoa/demand', 'Content'),
+            'title' => Yii::t('rcoa', 'Title'),
+            'content' => Yii::t('rcoa', 'Content'),
             'des' => Yii::t('rcoa/demand', 'Des'),
-            'create_by' => Yii::t('rcoa/demand', 'Create By'),
-            'created_at' => Yii::t('rcoa/demand', 'Created At'),
-            'updated_at' => Yii::t('rcoa/demand', 'Updated At'),
+            'create_by' => Yii::t('rcoa', 'Create By'),
+            'created_at' => Yii::t('rcoa', 'Created At'),
+            'updated_at' => Yii::t('rcoa', 'Updated At'),
         ];
     }
 

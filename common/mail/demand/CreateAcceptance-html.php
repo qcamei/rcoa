@@ -24,9 +24,9 @@ use yii\helpers\Html;
     
     <p><b>发布人</b>：<?= Html::encode($model->demandTask->createBy->nickname) ?></p>
     
-    <p><b>计划验收时间</b>：<span style="color:red"><?= Html::encode($model->demandTask->plan_check_harvest_time) ?></span></p>
+    <p><b>计划验收时间</b>：<?= Html::encode($model->demandTask->plan_check_harvest_time) ?></p>
     
-    <p><b>备注</b>：<?= Html::encode($model->des) ?></p>
+    <p><b>备注</b>：<span style="color:red"><?= Html::encode($model->des) ?></span></p>
     
     <?= Html::a('马上查看', 
             Yii::$app->urlManager->createAbsoluteUrl(['/demand/task/view','id' => $model->id]), 
