@@ -125,15 +125,15 @@ $js =
                 $(elem).val(Math.floor(value));
         }
         var totalCost = 0;
-        //var bonusProportion = $bonusProportion;
-        //var er_cost = $('#external-reality-cost').val();
+        var bonusProportion = $bonusProportion;
+        var er_cost = $('#external-reality-cost').val();
         
         $('.workitem-input').each(function(){
             totalCost += $(this).val() * $(this).attr('data-cost');
         });
         
-        //var totalRealityCost = (totalCost + totalCost * bonusProportion); //+ Number(er_cost);
-        //$('#total-cost').text(number_format(totalRealityCost, 2, '.', ','));
+        var totalRealityCost = (totalCost + totalCost * bonusProportion) + Number(er_cost);
+        $('#total-cost').text(number_format(totalRealityCost, 2, '.', ','));
         $('#total-cost-input').val(totalCost);
     } 
    
