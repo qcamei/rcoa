@@ -596,7 +596,6 @@ class DemandTask extends ActiveRecord
                         'progress'=> self::$statusProgress[self::STATUS_COMPLETED], 'status' => self::$statusNmae[self::STATUS_COMPLETED]]); 
                 }
                 $trans->commit();   //提交
-                Yii::$app->getSession()->setFlash('error', '任务已超时！');
             } catch (Exception $ex) {
                 $trans->rollBack();     //回滚
             }

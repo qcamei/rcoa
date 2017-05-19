@@ -85,7 +85,7 @@ class ImportController extends Controller
                     unset($workitem['id']);
                     $workitem += [
                         'demand_task_id' => $data['id'], 
-                        'value' => null,
+                        'value' => 0,
                         'created_at' => (int)$data['created_at'],
                         'updated_at' => time(),
                     ];

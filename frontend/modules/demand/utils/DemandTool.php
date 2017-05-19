@@ -90,7 +90,15 @@ class DemandTool {
             if($model->save()){
                 DemandTaskAnnex::deleteAll(['task_id' => $model->id]);
                 $this->saveDemandTaskAnnex($model->id, (!empty($post['DemandTaskAnnex']) ? $post['DemandTaskAnnex'] : []));
-                $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['subject' => $model->course->name]);
+                if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_EDIT)){
+                    //创建job表任务
+                    $jobManager->createJob(AppGlobalVariables::getSystemId(), $model->id, $model->course->name, 
+                            '/demand/task/view?id='.$model->id, $model->getStatusName(), $model->progress);
+                    //添加通知
+                    $jobManager->addNotification(AppGlobalVariables::getSystemId(), $model->id, [$model->create_by, $model->undertake_person]);
+                }
+                else
+                    $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['subject' => $model->course->name]);
                 $this->UpdateDemandWorkitem($post);
             }else
                 throw new \Exception($model->getErrors());
@@ -121,7 +129,7 @@ class DemandTool {
         {
             $number = DemandTask::updateAll(['status' => DemandTask::STATUS_CHECK, 'progress' => DemandTask::$statusProgress[DemandTask::STATUS_CHECK]], ['id' => $model->demand_task_id]);
             if ($model->save() && $number > 0){
-                $this->saveDemandOperation($model->demand_task_id, $model->demandTask->status);
+                $this->saveDemandOperation($model->demand_task_id, DemandTask::STATUS_CHECK);
                 $this->saveOperationUser($model->demand_task_id, $user);
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->demand_task_id, ['status'=> DemandTask::$statusNmae[DemandTask::STATUS_CHECK]]);
                 $demandNotice->sendAuditorNotification($model, $model->demandTask->create_team, '任务待审核', 'demand/CreateCheck-html');

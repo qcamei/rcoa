@@ -78,7 +78,7 @@ class TaskController extends Controller
                 'Demand_task.item_type_id', 'Demand_task.item_id', 'Demand_task.item_child_id', 'Demand_task.course_id',
                 'Demand_task.budget_cost', 'Demand_task.cost',  'Demand_task.external_budget_cost', 'Demand_task.external_reality_cost', 'Demand_task.bonus_proportion',
                 'Demand_task.team_id', 'Demand_task.undertake_person', 'Demand_task.create_by', 
-                'Demand_task.plan_check_harvest_time', 'Demand_task.status', 'Demand_task.mode', 'Demand_task.progress'
+                'Demand_task.plan_check_harvest_time', 'Demand_task.reality_check_harvest_time', 'Demand_task.status', 'Demand_task.mode', 'Demand_task.progress'
             ])->limit(20)->offset($page*20)->all(),
         ]);
         $taskIds = ArrayHelper::getColumn($dataProvider->allModels, 'id');
@@ -360,6 +360,29 @@ class TaskController extends Controller
                 ->where(['parent_id'=> $id])
                 ->andFilterWhere(['NOT IN','id', $courseId])
                 ->all(); 
+        } catch (Exception $ex) {
+            $errors [] = $ex->getMessage();
+        }
+        return [
+            'type'=>'S',
+            'data' => $items,
+            'error' => $errors
+        ];
+    }
+    
+    /**
+     * 获取团队成员
+     * @param type $team_id              团队ID
+     * @return type JSON
+     */
+    public function actionSearchTeamMembers($team_id)
+    {
+        Yii::$app->getResponse()->format = 'json';
+        $errors = [];
+        $items = [];
+        try
+        {
+            $items = TeamMemberTool::getInstance()->getTeamMembersByTeamId($team_id);
         } catch (Exception $ex) {
             $errors [] = $ex->getMessage();
         }

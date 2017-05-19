@@ -290,7 +290,7 @@ class AcceptanceController extends Controller {
         $dtQuery = DemandQuery::getInstance();
         
         $score = (new Query())
-                ->select(['Demand_score.id', 'FORMAT(SUM(Demand_score.score), 2) AS score'])
+                ->select(['Demand_score.id', 'SUM(Demand_score.score) AS score'])
                 ->from(['Demand_score' => $dtQuery->findDemandWorkitemTypeScore($demand_task_id, $delivery_id, $acceptance_id)])
                 ->all();
         

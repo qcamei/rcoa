@@ -86,7 +86,7 @@ $page = [
              * 2、创建者必须是自己
              */
             if($model->getIsStatusAppealing() && $model->create_by == Yii::$app->user->id)
-                echo Html::a('同意', ['acceptance/create', 'demand_task_id' => $model->id, 'pass' => 1], ['class' => 'btn btn-success']).' ';
+                echo Html::a('调整绩效', ['acceptance/create', 'demand_task_id' => $model->id, 'pass' => 1], ['class' => 'btn btn-success']).' ';
             
             /**
              * 不同意 按钮显示必须满足以下条件：
@@ -94,7 +94,7 @@ $page = [
              * 2、创建者必须是自己
              */
             if($model->getIsStatusAppealing() && $model->create_by == Yii::$app->user->id)
-                echo Html::a('不同意', ['appeal-reply/create', 'demand_task_id' => $model->id], ['id' => 'appeal-reply-create', 'class' => 'btn btn-danger']).' ';
+                echo Html::a('驳回申诉', ['appeal-reply/create', 'demand_task_id' => $model->id], ['id' => 'appeal-reply-create', 'class' => 'btn btn-danger']).' ';
             
             /**
              * 课程开发 按钮显示必须满足以下条件：

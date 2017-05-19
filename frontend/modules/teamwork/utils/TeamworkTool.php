@@ -3,6 +3,7 @@
 namespace frontend\modules\teamwork\utils;
 
 use common\models\demand\DemandTask;
+use common\models\team\TeamCategory;
 use common\models\teamwork\CourseAnnex;
 use common\models\teamwork\CourseLink;
 use common\models\teamwork\CourseManage;
@@ -396,12 +397,14 @@ class TeamworkTool{
      */
     public function getHotelTeam()
     {
-        $teamMember = TeamMemberTool::getInstance()->getUserTeam(Yii::$app->user->id);
-        $teamIds = ArrayHelper::getColumn($teamMember, 'id');
+        $userTeam = TeamMemberTool::getInstance()->getUserTeam(Yii::$app->user->id);
+        if($userTeam == null)
+            $userTeam = TeamMemberTool::getInstance()->getTeamsByCategoryId(TeamCategory::TYPE_PRODUCT_CENTER);
+        $teamIds = ArrayHelper::getColumn($userTeam, 'id');
         if(!empty($teamIds) && count($teamIds) == 1)
             return $teamIds[0];
         else
-            return ArrayHelper::map($teamMember, 'id', 'name');
+            return ArrayHelper::map($userTeam, 'id', 'name');
     } 
 
     /**

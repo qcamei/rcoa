@@ -6,6 +6,7 @@ use kartik\datecontrol\DateControl;
 use kartik\slider\Slider;
 use kartik\widgets\Select2;
 use kartik\widgets\TouchSpin;
+use wskeee\rbac\RbacName;
 use yii\helpers\Html;
 use yii\web\JsExpression;
 use yii\web\View;
@@ -94,16 +95,15 @@ use yii\widgets\ActiveForm;
         ],     
     ]) ?>
 
-    <?php
-        if(is_array($team)){
-            echo $form->field($model, 'create_team')->widget(Select2::classname(), [
-                'id' => 'demandtask-create_team', 'data' => $team, 'options' => ['placeholder' => '请选择...']
-            ]);
-        }
-        else{
+    <?php if(is_array($team))
+            echo $form->field($model, 'create_team')->widget(Select2::classname(), ['id' => 'demandtask-create_team','data' => $team, 'options' => ['placeholder' => '请选择...']]);
+        else
             echo Html::activeHiddenInput($model, 'create_team', ['value' => $team]);
-        }
     ?> 
+    
+    <?php if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_EDIT))
+            echo $form->field($model, 'create_by')->widget(Select2::classname(), ['id' => 'demandtask-create_by', 'data' => [], 'options' => ['placeholder' => '请选择...']]); 
+    ?>
     
     <?php
         echo Html::beginTag('div', ['class' => 'form-group field-demandtask-plan_check_harvest_time has-success']);
@@ -239,6 +239,21 @@ $js =
         $("#demandtask-course_id").html("");
         $('#select2-demandtask-course_id-container').html('<span class="select2-selection__placeholder">请选择...</span>');
         wx(url, element, '请选择...');
+    });
+    /** 下拉选择【发布者】 */
+    $('#demandtask-create_team').change(function(){
+        var url = "/demand/task/search-team-members?team_id="+$(this).val(),
+            element = $('#demandtask-create_by');
+        $("#demandtask-create_by").html("");
+        $('#select2-demandtask-create_by-container').html('<span class="select2-selection__placeholder">请选择...</span>');
+        $.post(url,function(data)
+        {
+            $('<option/>').val('').text(text).appendTo(element);
+            $.each(data['data'],function()
+            {
+                $('<option>').val(this['u_id']).text(this['nickname']).appendTo(element);
+            });
+        });
     });
     
    /** 滚动到添加课程产品处 */

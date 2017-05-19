@@ -207,7 +207,7 @@ class DemandQuery {
                 'Demand_task.id', 
                 'Demand_task.cost',
                 'Acceptance_data.workitem_type_id',
-                'FORMAT(Acceptance_data.`value` / 10, 2) AS value',
+                'Acceptance_data.`value` / 10 AS `value`',
                 'Demand_workitem.`cost` * Delivery_data.`value` AS reality_cost'
             ])
             ->from(['Demand_task' => DemandTask::tableName()])
@@ -234,7 +234,7 @@ class DemandQuery {
         $query = (new Query())
             ->select([
                 'Workitem_reality_cost.id',
-                'FORMAT(SUM(Workitem_reality_cost.reality_cost) * Workitem_reality_cost.`value` / Workitem_reality_cost.cost, 2) AS score'
+                'SUM(Workitem_reality_cost.reality_cost) * Workitem_reality_cost.`value` / Workitem_reality_cost.cost AS score'
             ])
             ->from(['Workitem_reality_cost' => $this->findDemandWorkitemRealityCost($demand_task_id, $delivery_id, $acceptance_id)])
             ->groupBy('Workitem_reality_cost.workitem_type_id');
