@@ -72,7 +72,7 @@ class DemandQuery {
      */
     public function findDemandWorkitemTemplateTable()
     {
-        $query_target_month = (new Query())
+        $query_child = (new Query())
             ->select([
                 'CONCAT(dw_temp.workitem_id, "_", dw_temp.is_new) AS id',
                 'dw_temp.workitem_type_id',
@@ -87,7 +87,7 @@ class DemandQuery {
         
         $query = (new Query())
             ->select(['*'])
-            ->from(['Target_month' => $query_target_month])
+            ->from(['Target_month' => $query_child])
             ->groupBy('Target_month.id');
                 
         return $query;
@@ -109,6 +109,21 @@ class DemandQuery {
         
         return $query;
     }
+    
+    /**
+     * 查询需求任务工作项类型模版数据表
+     * @return $query
+     */
+    public function _findDemandWorkitemTypeDataTable()
+    {
+        $query = (new Query())
+            ->select(['Demand_workitem_template.workitem_type_id', 'Workitem_type.name', 'Workitem_type.icon'])
+            ->from(['Demand_workitem_template' => DemandWorkitemTemplate::tableName()])
+            ->leftJoin(['Workitem_type' => WorkitemType::tableName()], 'Workitem_type.id = Demand_workitem_template.workitem_type_id')
+            ->orderBy('Demand_workitem_template.index');
+        
+        return $query;
+    }
 
     /**
      * 查询需求任务工作项数据表
@@ -118,16 +133,46 @@ class DemandQuery {
     public function findDemandWorkitemDataTable($demand_task_id)
     {
         $query = (new Query())
-            ->select(['Demand_workitem.id', 'Demand_workitem.workitem_id', 'Demand_workitem.workitem_type_id AS workitem_type', 
+            ->select([
+                'Demand_workitem.id', 'Demand_workitem.workitem_id', 'Demand_workitem.workitem_type_id AS workitem_type', 
                 'Workitem.name', 'Workitem.unit', 
                 'Demand_workitem.is_new', 'Demand_workitem.value_type', 'Demand_workitem.cost', 'Demand_workitem.value',
-                'Demand_task.plan_check_harvest_time AS demand_time', 'Demand_task.des'
+                'Demand_task.plan_check_harvest_time AS demand_time', 'Demand_task.des','Demand_workitem.index'
             ])
             ->from(['Demand_workitem' => DemandWorkitem::tableName()])
             ->leftJoin(['Workitem' => Workitem::tableName()], 'Workitem.id = Demand_workitem.workitem_id')
             ->leftJoin(['Demand_task' => DemandTask::tableName()], 'Demand_task.id = Demand_workitem.demand_task_id')
             ->where(['Demand_workitem.demand_task_id' => $demand_task_id])
-            ->orderBy('Demand_workitem.index');
+            ->orderBy('Demand_workitem.index ASC');
+        
+        return $query;
+    }
+    
+    /**
+     * 查询需求工作项模版数据表
+     * @return $query
+     */
+    public function _findDemandWorkitemDataTable()
+    {
+        $query_child = (new Query())
+            ->select([
+                'CONCAT(Demand_workitem_template.workitem_id, "_", Demand_workitem_template.is_new) AS id',
+                'Demand_workitem_template.workitem_id', 'Demand_workitem_template.workitem_type_id AS workitem_type', 
+                'Workitem.name', 'Workitem.unit', 
+                'Demand_workitem_template.is_new', 'Demand_workitem_template.value_type', 
+                'IF(Demand_workitem_template.is_new = TRUE, Workitem_cost.cost_new, Workitem_cost.cost_remould) AS cost',
+                'Demand_workitem_template.index',
+            ])
+            ->from(['Demand_workitem_template' => DemandWorkitemTemplate::tableName()])
+            ->leftJoin(['Workitem' => Workitem::tableName()], 'Workitem.id = Demand_workitem_template.workitem_id')
+            ->leftJoin(['Workitem_cost' => WorkitemCost::tableName()], 'Workitem_cost.workitem_id = Demand_workitem_template.workitem_id')
+            ->orderBy(['Workitem_cost.target_month' => SORT_DESC, 'Demand_workitem_template.workitem_id' => SORT_DESC,  'Demand_workitem_template.is_new'=> SORT_DESC]);
+        
+        $query = (new Query())
+            ->select(['*'])
+            ->from(['Query_child' => $query_child])
+            ->groupBy('Query_child.id')
+            ->orderBy('Query_child.index');
         
         return $query;
     }

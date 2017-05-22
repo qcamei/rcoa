@@ -43,6 +43,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'courses' => $courses,
         'teachers' => $teachers,
         'team' => $team,
+        'workitmType' => $workitmType,
+        'workitem' => $workitem,
         'mark' => 0,
     ]) ?>
 

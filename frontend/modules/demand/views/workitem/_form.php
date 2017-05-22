@@ -9,6 +9,7 @@ use yii\widgets\ActiveForm;
 /* @var $dt_model DemandTask */
 /* @var $form ActiveForm */
 
+
 ?>
 
 <div class="demand-workitem-form">
@@ -28,21 +29,26 @@ use yii\widgets\ActiveForm;
             <tbody>
                 <?php foreach ($workitmType as $type): ?>
                 <tr class="tr">
-                    <th class="text-center"><?= $type['name'] ?></th>
+                    <th class="text-center">
+                        <?= $type['name'] ?>
+                    </th>
                     <td></td>
                     <td></td>
                 </tr>
                     <?php foreach ($workitem as $work): ?>
                         <?php if($work['workitem_type'] == $type['id']): ?>
                         <tr>
-                            <th class="text-right"><?= $work['name'] ?></th>
+                            <th class="text-right">
+                                <?= $work['name'] ?>
+                            </th>
                             <?php foreach ($work['childs'] as $child): ?>     
                             <td>
                                 <div class="col-lg-4 col-md-7 col-sm-7 col-xs-8" style="padding:0px 5px;">
-                                    <?= Html::input('number', 'value['.$child['id'].']', isset($child['value']) ? $child['value'] : 0, [
+                                    <?= Html::input('number', 'DemandWorkitem[value]['.$child['id'].']', isset($child['value']) ? $child['value'] : 0, 
+                                    [
                                         'class' => 'form-control workitem-input', 'min' => 0, 
                                         'data-cost' => $child['cost'], 'onblur' => 'totalCost($(this));'
-                                    ]) ?>
+                                    ]); ?>
                                 </div>
                                 <div class="workitem-tooltip" data-toggle="tooltip" data-placement="top" title="￥<?= $child['cost'] ?> / <?= $child['unit'] ?>"></div>
                                 <div class="unit"><?= $child['unit'] ?></div>
@@ -61,7 +67,7 @@ use yii\widgets\ActiveForm;
         <div class="total">
             <?= Yii::t('rcoa/demand', 'Budget Cost') ?>：￥<span id="total-cost"><?= !empty($dt_model->budget_cost) ? 
 number_format($dt_model->budget_cost + $dt_model->budget_cost * $dt_model->bonus_proportion, 2, '.', ',') : '0.00' ?></span>
-        <?= Html::hiddenInput('budget_cost', $dt_model->budget_cost, ['id' => 'total-cost-input']); ?>
+            <?= Html::hiddenInput('DemandTask[budget_cost]', $dt_model->budget_cost, ['id' => 'total-cost-input']) ?>
         </div>
         <span class="pattern">(人工预算成本 = 人工预算成本 + 奖金)</span>
     </div>

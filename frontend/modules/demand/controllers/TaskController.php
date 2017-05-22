@@ -172,7 +172,7 @@ class TaskController extends Controller
        
         if ($model->load($post)) {
             $dtTool->CreateTask($model, $post);
-            return $this->redirect(['update', 'id' => $model->id, 'sign' => 1]);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -182,6 +182,8 @@ class TaskController extends Controller
                 'courses' => [],
                 'teachers' => $this->getExpert(),
                 'team' => $twTool->getHotelTeam(),
+                'workitmType' => $dtTool->getDemandWorkitemTypeData(),
+                'workitem' => $dtTool->getDemandWorkitemData(),
             ]);
         }
     }
@@ -190,10 +192,9 @@ class TaskController extends Controller
      * Updates an existing DemandTask model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
-     * @param boolean $sign             标记：1为添加需求工作项数据，默认为0
      * @return mixed
      */
-    public function actionUpdate($id, $sign = 0)
+    public function actionUpdate($id)
     {
         $this->layout = '@app/views/layouts/main';
         $model = $this->findModel($id);
@@ -212,13 +213,11 @@ class TaskController extends Controller
         $courses = $this->getCourses($model->item_child_id);
         
         if ($model->load($post)) {
-            $model->budget_cost = ArrayHelper::getValue($post, 'budget_cost');
             $dtTool->UpdateTask($model, $post);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
-                'sign' => $sign,
                 'itemTypes' => $this->getItemType(),
                 'items' => $this->getCollegesForSelect(),
                 'itemChilds' => $this->getChildren($model->item_id),

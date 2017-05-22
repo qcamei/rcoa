@@ -59,7 +59,7 @@ class DemandTool {
                 $this->saveDemandOperation($model->id, $model->status);
                 $this->saveOperationUser($model->id, [$model->create_by]);
                 $this->saveDemandTaskAnnex($model->id, (!empty($post['DemandTaskAnnex']) ? $post['DemandTaskAnnex'] : []));
-                $this->saveDemandWorkitem($model);
+                $this->saveDemandWorkitem($model, $post);
                 $this->saveDemandWeight($model);
                 $demandNotice->saveJobManager($model);
             }else
@@ -600,12 +600,12 @@ class DemandTool {
      * @param integer $demand_task_id           需求任务ID
      * @return array
      */
-    public function getDemandWorkitemTypeData($demand_task_id)
+    public function getDemandWorkitemTypeData($demand_task_id = null)
     {
         /* @var $dtQuery DemandQuery */
         $dtQuery = DemandQuery::getInstance();
         /* @var $results ActiveQuery */
-        $results = $dtQuery->findDemandWorkitemTypeDataTable($demand_task_id);
+        $results = $demand_task_id == null ? $dtQuery->_findDemandWorkitemTypeDataTable() : $dtQuery->findDemandWorkitemTypeDataTable($demand_task_id);
         $types = $results->all();
         
         $workitemType = [];
@@ -619,18 +619,18 @@ class DemandTool {
         
         return $workitemType;
     }
-
+    
     /**
      * 获取需求的工作项数据结构
      * @param integer $demand_task_id       需求任务ID
      * @return array
      */
-    public function getDemandWorkitemData($demand_task_id)
+    public function getDemandWorkitemData($demand_task_id = null)
     {
         /* @var $dtQuery DemandQuery */
         $dtQuery = DemandQuery::getInstance();
         /* @var $results ActiveQuery */
-        $results = $dtQuery->findDemandWorkitemDataTable($demand_task_id);
+        $results = $demand_task_id == null ? $dtQuery->_findDemandWorkitemDataTable() : $dtQuery->findDemandWorkitemDataTable($demand_task_id);
         $d_workitems = $results->all();
         
         $workitem = [];
@@ -640,8 +640,8 @@ class DemandTool {
                     'id' => $data['workitem_id'],
                     'workitem_type' => $data['workitem_type'],
                     'name' => $data['name'],
-                    'demand_time' => $data['demand_time'],
-                    'des' => $data['des'],
+                    'demand_time' => isset($data['demand_time']) ? $data['demand_time'] : null,
+                    'des' => isset($data['des']) ? $data['des'] : null,
                     'childs' => [],
                 ];
             }
@@ -649,15 +649,15 @@ class DemandTool {
                 'id' => $data['id'],
                 'is_new' => $data['is_new'],
                 'value_type' => $data['value_type'],
-                'value' => $data['value'],
+                'value' => isset($data['value']) ? $data['value'] : null,
                 'unit' => $data['unit'],
-                'cost' => $data['cost']
+                'cost' => $data['cost'],
             ];
         }
         
         return $workitem;
     }
-    
+        
     /**
      * 获取需求的交付数据结构
      * @param integer $demand_task_id           需求任务ID
@@ -800,22 +800,24 @@ class DemandTool {
      * 保存数据到需求工作项表
      * @param DemandTask $model
      */
-    public function saveDemandWorkitem($model)
+    public function saveDemandWorkitem($model, $post)
     {
         /* @var $dtQuery DemandQuery */
         $dtQuery = DemandQuery::getInstance();
         /* @var $results ActiveQuery */
         $results = $dtQuery->findDemandWorkitemTemplateTable();
+        $values = ArrayHelper::getValue($post, 'DemandWorkitem.value');
+        
         $workitems = [];
         if(!empty($results->all())){
             foreach ($results->all() as $index => $workitem) {
-                unset($workitem['id']);
                 $workitem += [
                     'demand_task_id' => $model->id, 
-                    'value' => null,
+                    'value' => $values[$workitem['id']],
                     'created_at' => strtotime($model->plan_check_harvest_time),
                     'updated_at' => $model->updated_at
                 ];
+                unset($workitem['id']);
                 $workitems[] = $workitem;
             }
         }
@@ -832,7 +834,8 @@ class DemandTool {
      */
     public function UpdateDemandWorkitem($post)
     {
-        $values = ArrayHelper::getValue($post, 'value');
+        $values = ArrayHelper::getValue($post, 'DemandWorkitem.value');
+      
         foreach ($values as $key => $value) {
             \Yii::$app->db->createCommand()->update(DemandWorkitem::tableName(), ['value' => $value], ['id' => $key])->execute();
         }

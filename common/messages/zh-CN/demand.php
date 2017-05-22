@@ -75,7 +75,7 @@ return[
     'Workitem ID' => '工作项',
     'Is New' => '是否是新建',
     'Value Type' => '数量的类型',
-    'Bonus Proportion' => '绩效分值',
+    'Bonus Proportion' => '绩效比值',
     'Budget Cost' => '人工预算成本',
     'Total Budget Cost' => '总预算成本',
     'Score' => '绩效得分',

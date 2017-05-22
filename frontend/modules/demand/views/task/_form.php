@@ -151,13 +151,7 @@ use yii\widgets\ActiveForm;
             }")
         ],
     ]); ?>
-    
-    <?= $form->field($model, 'external_budget_cost', [
-        'labelOptions' => ['style' => 'padding-left:0px; padding-right:0px;color: #999999;font-weight: normal;'],
-        'template' => "{label}\n<div class=\"col-sm-4\">{input}</div>\n<div class=\"col-sm-4\">{error}</div>"
-    ])->textInput(['type' => 'number', 'min' => 0]) ?>
-    
-    <?php if(!$model->isNewRecord): ?>
+        
     <h5><b>工作项信息</b></h5>
         
     <?= $this->render('/workitem/index', [
@@ -165,8 +159,11 @@ use yii\widgets\ActiveForm;
         'workitmType' => $workitmType,
         'workitem' => $workitem,
     ]) ?>
-    
-    <?php endif; ?>   
+        
+    <?= $form->field($model, 'external_budget_cost', [
+        'labelOptions' => ['style' => 'padding-left:0px; padding-right:0px;color: #999999;font-weight: normal;'],
+        'template' => "{label}\n<div class=\"col-sm-4\">{input}</div>\n<div class=\"col-sm-4\">{error}</div>"
+    ])->textInput(['type' => 'number', 'min' => 0]) ?>
     
     <h5><b>其他信息</b></h5>
     
@@ -255,11 +252,7 @@ $js =
             });
         });
     });
-    
-   /** 滚动到添加课程产品处 */
-    if($sign)
-        $('html,body').animate({scrollTop:($('.demand-workitem-index').offset().top) - 140},1000);
-    
+        
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>

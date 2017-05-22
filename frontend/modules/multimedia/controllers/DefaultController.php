@@ -6,7 +6,7 @@ use common\config\AppGlobalVariables;
 use common\models\multimedia\MultimediaContentType;
 use common\models\multimedia\MultimediaProducer;
 use common\models\multimedia\MultimediaTask;
-use common\models\team\Team;
+use common\models\team\TeamCategory;
 use common\models\team\TeamMember;
 use common\wskeee\job\JobManager;
 use frontend\modules\multimedia\utils\MultimediaConvertRule;
@@ -16,6 +16,7 @@ use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\ItemType;
 use wskeee\rbac\RbacManager;
 use wskeee\rbac\RbacName;
+use wskeee\team\TeamMemberTool;
 use Yii;
 use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
@@ -487,13 +488,17 @@ class DefaultController extends Controller
      * @param type $teamId  团队ID
      * @return type
      */
-    public function getTeams($teamId = null){
-        $team = Team::find()
-                ->andFilterWhere(['not in', 'id', $teamId])
-                ->orderBy('index asc')
-                ->all();
-        
-        return ArrayHelper::map($team, 'id', 'name');
+    public function getTeams($teamId = null)
+    {
+        /* @var $tmTool TeamMemberTool */
+        $tmTool = TeamMemberTool::getInstance();
+        $results = $tmTool->getTeamsByCategoryId(TeamCategory::TYPE_CCOA_DEV_TEAM);
+        $teams = [];
+        foreach ($results as $team) {
+            $teams[] = $team;
+        }
+        ArrayHelper::multisort($teams, 'index', SORT_ASC);    
+        return ArrayHelper::map($teams, 'id', 'name');
     }
 
     /**

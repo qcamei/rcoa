@@ -131,7 +131,7 @@ use yii\widgets\ActiveForm;
 
     <h5><b>其它信息</b></h5>
     
-    <?= $form->field($model, 'des')->textarea(['rows' => 4]) ?>
+    <?= $form->field($model, 'des')->textarea(['rows' => 4, 'value' => !$model->isNewRecord ? $model->des : '无']) ?>
 
     <?php ActiveForm::end(); ?>
 

@@ -37,7 +37,6 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa/demand', 'Update');
 
     <?= $this->render('_form', [
         'model' => $model,
-        'sign' => $sign,
         'itemTypes' => $itemTypes,
         'items' => $items,
         'itemChilds' => $itemChilds,
