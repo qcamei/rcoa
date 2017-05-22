@@ -1,6 +1,6 @@
 <?php
 
-use common\models\teamwork\CourseManage;
+use common\models\demand\DemandTask;
 use common\models\teamwork\ItemManage;
 use common\widgets\charts\ChartAsset;
 use kartik\daterange\DateRangePicker;
@@ -22,7 +22,7 @@ $statisticsName = ($type == 0 ? '学时':'元');
 ?>
 <div class="container statistics-content">
     <div class="btn-group">
-        <?php echo Html::a("按时长统计", Url::to('/demand/statistics?type=0'), ['class'=>"btn btn-default".($type == 0 ? ' active': '')]); ?>
+        <?php echo Html::a("按学时统计", Url::to('/demand/statistics?type=0'), ['class'=>"btn btn-default".($type == 0 ? ' active': '')]); ?>
         <?php echo Html::a('按花费统计', Url::to('/demand/statistics?type=1'), ['class'=>'btn btn-default'.($type == 1 ? ' active': '')]); ?>
     </div>
     <hr/> 
@@ -141,7 +141,7 @@ $statisticsName = ($type == 0 ? '学时':'元');
                 echo Select2::widget([
                     'value'=> $status,
                     'name' => 'status',
-                    'data' => CourseManage::$statusName,
+                    'data' => DemandTask::$statusNmae,
                     'options' => [
                         'placeholder' => Yii::t('rcoa/teamwork', 'Statistics-Team-prompt'),
                     ],
