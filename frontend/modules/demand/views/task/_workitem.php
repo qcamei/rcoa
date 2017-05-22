@@ -25,3 +25,5 @@ foreach ($workitmType as $type) {
         }
     }
 }
+
+echo $workitem;

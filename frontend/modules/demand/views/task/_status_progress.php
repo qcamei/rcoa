@@ -54,3 +54,5 @@ if($model->status == DemandTask::STATUS_CANCEL || $model->status == DemandTask::
         $statusProgress .= $status_value == DemandTask::STATUS_COMPLETED ? '' : '<img src="/filedata/multimedia/image/direction-arrow.png" class="direction-arrow hidden-xs" />';
     }
 }
+
+echo $statusProgress;
