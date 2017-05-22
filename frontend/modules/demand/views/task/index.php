@@ -264,7 +264,7 @@ DemandTask::$operation = $operation;
                         if(!empty($model->budget_cost)){
                             $budgetCost = $model->budget_cost + $model->budget_cost * $model->bonus_proportion;
                             $totalBudgetCost = $budgetCost + $model->external_budget_cost;
-                            return '<span class="total-price">￥'. number_format($totalBudgetCost / 10000, 2).'</span>万';
+                            return '<span class="total-price">￥'.number_format($totalBudgetCost / 10000, 2).'</span>万';
                         }else{
                             return null;
                         }
@@ -274,7 +274,7 @@ DemandTask::$operation = $operation;
                             'th'=>'hidden-xs',
                         ],
                         'style' => [
-                            'width' => '88px',
+                            'width' => '98px',
                             'padding' => '8px'
                         ],
                     ],
@@ -300,7 +300,7 @@ DemandTask::$operation = $operation;
                             'th'=>'hidden-xs',
                         ],
                         'style' => [
-                            'width' => '88px',
+                            'width' => '98px',
                             'padding' => '8px'
                         ],
                     ],
