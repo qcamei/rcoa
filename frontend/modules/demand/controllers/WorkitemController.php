@@ -73,7 +73,9 @@ class WorkitemController extends Controller
                 ->asArray()
                 ->all();
         
-        $models = Workitem::find()->all();
+        $models = Workitem::find()
+                ->orderBy(['index' => SORT_ASC])
+                ->all();
         $costs = WorkitemCost::find()
                 ->orderBy(['target_month' => SORT_ASC])
                 ->asArray()
