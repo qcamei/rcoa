@@ -100,7 +100,7 @@ class AppealController extends Controller
             $dtTool->CreateAppealTask($model);
             return $this->redirect(['task/view', 'id' => $model->demand_task_id]);
         } else {
-            return $this->render('create', [
+            return $this->renderAjax('create', [
                 'model' => $model,
             ]);
         }
