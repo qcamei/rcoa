@@ -80,7 +80,7 @@ use yii\widgets\ActiveForm;
         ],
     ]) ?>
   
-    <?= $form->field($model, 'course_description')->textarea(['value' => '无', 'rows' => 3]) ?>
+    <?= $form->field($model, 'course_description')->textarea(['value' => !$model->isNewRecord ? $model->course_description : '无', 'rows' => 3]) ?>
 
     <h5><b>开发信息</b></h5>
         

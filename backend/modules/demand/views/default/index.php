@@ -31,14 +31,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'team_id',
                 'value' => function($model){
                     /* @var $model DemandTaskAuditor*/
-                    return $model->team->name;
+                    return !empty($model->team) ? $model->team->name : null;
                 }
             ],
             [
                 'attribute' => 'u_id',
                 'value' => function($model){
                     /* @var $model DemandTaskAuditor*/
-                    return $model->taskUser->nickname;
+                    return !empty($model->taskUser) ? $model->taskUser->nickname : null;
                 }
             ],
 
