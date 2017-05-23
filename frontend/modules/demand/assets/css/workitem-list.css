@@ -67,7 +67,7 @@
     
     /* 描述样式 */
     .workitem-des{
-        padding-top: 33px;
+        padding-top: 17px;
     }
 }
     
@@ -111,13 +111,20 @@
 .workitem-cost{
     color: #eb6100;
 }
+.workitem-unit{
+    font-size: 14px;
+}
 /* 描述样式 */
 .workitem-des{
     font-size: 14px;
-    text-indent: 25px;
+    //text-indent: 25px;
     margin-top: 5px;
     border-top: 1px solid #d2d0d0;
     color: #aaaaaa;
     overflow-y: auto;
     max-height: 198px;
+}
+
+.workitem-des p{
+        margin: 0px;
 }

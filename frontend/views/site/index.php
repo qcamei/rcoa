@@ -37,7 +37,19 @@ $this->title = '工匠';
         </div>
 
         <div  class="col-lg-3 netbutton">
-            <image src='/filedata/site/netbutton/images/Development.png'/>
+            <a href="#">
+                <div class="site-home-circle img-circle">
+                    <?= Html::img(['/filedata/site/system/development_loading.png']) ?>
+                    <div class="circle-bg img-circle">
+                        <span class="ciricle-num" id="count-number" ><span class="timer" data-to="0" data-speed="550">0</span><span class="num-words">个</span></span>
+                        <span class="icon">+</span>
+                    </div>
+                </div>
+            </a>
+            <div class="site-home-words">
+                <span class="site-home-words-ch">开发</span><br/><span class="site-home-words-en">Development</span>
+                <i class="new-icon"></i>
+            </div>
         </div>
 
         <div class="col-lg-3 site-home-circlebox">
