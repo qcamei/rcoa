@@ -136,7 +136,7 @@ and open the template in the editor.
         font-size: 10px;
     }
 }
-@media (min-width: 1280px){
+/*@media (min-width: 1280px){
     .demand-default-index .container {
         width: 1280px;
     }
@@ -163,7 +163,7 @@ and open the template in the editor.
         padding-left: 15px;
         padding-right: 15px;
     }
-}
+}*/
 @font-face{
     font-family: '方正细倩_GBK';
     src: url('/filedata/site/font/fangzhengxiqian.woff') format('woff'),
