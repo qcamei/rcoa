@@ -19,7 +19,7 @@ $page = [
 
 <div class="controlbar">
     <div class="container">
-        <?= Html::a(Yii::t('rcoa', 'Back'), $page, ['class' => 'btn btn-default', /*'onclick'=>'history.go(-1)'*/]) ?>
+        <?= Html::a(Yii::t('rcoa', 'Back'), $page, ['class' => 'btn btn-default', /*'onclick'=> 'history.go(-1)'*/]) ?>
         <?php
             if($model->coursePrincipal->u_id == Yii::$app->user->id || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id))
             {        
@@ -62,7 +62,27 @@ $page = [
                  * 5、必须是【开发管理员】
                  */
                 if($model->getIsNormal())
+                    echo Html::a('暂停', ['pause', 'id' => $model->id], ['id' => 'pause', 'class' => 'btn btn-info']).' ';
+                
+                /**
+                 * 完成 按钮显示必须满足以下条件：
+                 * 1、必须是状态为【在建中】
+                 * 2、必须拥有完成权限
+                 * 3、创建者是自己
+                 * 4、课程负责人是自己
+                 * 5、必须是【开发管理员】
+                 */
+                if($model->getIsNormal())
                     echo Html::a('完成', ['carry-out', 'id' => $model->id], ['id' => 'carry-out', 'class' => 'btn btn-danger']).' ';
+                
+                 /**
+                 * 恢复 按钮显示必须满足以下条件：
+                 * 1、必须是状态为【暂停中】
+                 * 2、必须拥有恢复权限
+                 * 3、必须是 【课程负责人是自己】 或 【开发管理员】
+                 */
+                if($model->getIsPause())
+                    echo Html::a('恢复', ['normal', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
             }
             
             echo Html::a('进度', ['courselink/progress', 'course_id' => $model->id], ['class' => 'btn btn-primary']).' ';
@@ -74,18 +94,19 @@ $page = [
                  * 2、必须拥有移交权限
                  * 3、必须是【开发管理员】
                  */
-                if($model->getIsNormal())
+                if($rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id) && $model->getIsNormal())
                     echo Html::a('移交', ['change', 'id' => $model->id], ['id' => 'change', 'class' => 'btn btn-danger']).' ';
 
                 /**
                  * 恢复 按钮显示必须满足以下条件：
                  * 1、必须是状态为【已完成】
                  * 2、必须拥有恢复权限
-                 * 3、必须是【开发管理员】
+                 * 3、必须是 【开发管理员】
                  */
                 if($model->getIsCarryOut())
                     echo Html::a('恢复', ['normal', 'id' => $model->id], ['class' => 'btn btn-danger']).' ';
-            }
+            }                
+            
         ?>
     </div>
 </div>

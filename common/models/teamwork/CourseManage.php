@@ -66,11 +66,13 @@ class CourseManage extends ActiveRecord
     const SCENARIO_CHANGE = 'change';
     
     /** 待开始 */
-    const STATUS_WAIT_START = 5;
+    const STATUS_WAIT_START = 100;
     /** 在建中 */
-    const STATUS_NORMAL = 10;
+    const STATUS_NORMAL = 200;
+    /** 暂停中 */
+    const STATUS_PAUSE = 205;
     /** 已完成 */
-    const STATUS_CARRY_OUT = 15;
+    const STATUS_CARRY_OUT = 500;
     
     /** 新建模式 */
     const MODE_NEWBUILT = 0;
@@ -93,6 +95,7 @@ class CourseManage extends ActiveRecord
     public static $statusName = [
         self::STATUS_WAIT_START => '待开始',
         self::STATUS_NORMAL => '在建中',
+        self::STATUS_PAUSE => '暂停中',
         self::STATUS_CARRY_OUT => '已完成',
     ];
     
@@ -313,24 +316,6 @@ class CourseManage extends ActiveRecord
     {
         return $this->hasOne(TeamMember::className(), ['id' => 'course_principal']);
     }
-
-    /**
-     * 获取课程
-     * @return ActiveQuery
-     
-    public function getCourse()
-    {
-        return $this->hasOne(Item::className(), ['id' => 'course_id']);
-    }*/
-    
-    /**
-     * 获取主讲讲师
-     * @return ActiveQuery
-     
-    public function getSpeakerTeacher()
-    {
-        return $this->hasOne(User::className(), ['id' => 'teacher']);
-    }*/
     
     /**
      * 获取课程需求任务
@@ -340,15 +325,6 @@ class CourseManage extends ActiveRecord
     {
         return $this->hasOne(DemandTask::className(), ['id' => 'demand_task_id']);
     }
-
-    /**
-     * 获取项目管理
-     * @return ActiveQuery
-    
-    public function getProject()
-    {
-        return $this->hasOne(ItemManage::className(), ['id' => 'project_id']);
-    } */
 
     /**
      * 获取所有阶段
@@ -402,13 +378,21 @@ class CourseManage extends ActiveRecord
     {
         return $this->status == self::STATUS_WAIT_START;
     }        
-
+    
     /**
      * 获取状态是否为【在建中】
      */
     public function getIsNormal()
     {
         return $this->status == self::STATUS_NORMAL;
+    }
+    
+    /**
+     * 获取状态是否为【暂停中】
+     */
+    public function getIsPause()
+    {
+        return $this->status == self::STATUS_PAUSE;
     }
     
     /**

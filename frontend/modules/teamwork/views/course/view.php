@@ -75,10 +75,10 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 $js = 
 <<<JS
-    /** 此事件在模态框被隐藏（并且同时在 CSS 过渡效果完成）之后被触发。 */
+    /** 此事件在模态框被隐藏（并且同时在 CSS 过渡效果完成）之后被触发。*/
     $('.myModal').on('hidden.bs.modal', function(){
         window.location.reload();
-    }); 
+    });  
         
     /** 完成操作 弹出模态框 */
     $('#carry-out').click(function()

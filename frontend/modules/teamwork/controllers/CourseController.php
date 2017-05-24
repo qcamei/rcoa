@@ -224,6 +224,28 @@ class CourseController extends Controller
     }
     
     /**
+     * Deletes an existing CourseManage model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     
+    public function actionDelete($id, $project_id)
+    {
+        $model = $this->findModel(['id' => $id, 'project_id' => $project_id]);
+        /* @var $twTool TeamworkTool 
+        $twTool = TeamworkTool::getInstance();
+        
+        if(!$model->getIsCarryOut() && (($twTool->getIsAuthority('is_leader', 'Y') && $model->create_by == \Yii::$app->user->id)
+            || $twTool->getIsAuthority('id', $model->course_principal)|| Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
+            $model->delete();
+        else 
+            throw new NotFoundHttpException('无权限操作！');
+        
+        $this->redirect(['list','project_id' => $project_id]);
+    }*/
+
+    
+    /**
      * 更改团队/课程负责人
      * @param type $id
      * @return type
@@ -287,26 +309,26 @@ class CourseController extends Controller
     }
     
     /**
-     * 更改状态为【在建中】
+     * 更改状态为【暂停中】
      * Normal an existing ItemManage model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
      */
-    public function actionNormal($id)
+    public function actionPause($id)
     {
         $model = $this->findModel($id);
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
         /* @var $rbacManager RbacManager */  
         $rbacManager = \Yii::$app->authManager;
-        if (!$rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)) 
-            throw new NotFoundHttpException('无权限操作！');
-        if($model != null && !$model->getIsCarryOut())
+        if(!($model->coursePrincipal->u_id == \Yii::$app->user->id
+          || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)))
+           throw new NotAcceptableHttpException('无权限操作！');
+        if($model != null && !$model->getIsNormal())
             throw new NotFoundHttpException('该课程'.$model->getStatusName().'！');
         
-        $model->real_carry_out = null;
-        $model->status = CourseManage::STATUS_NORMAL;
+        $model->status = CourseManage::STATUS_PAUSE;
         $model->save();
         $this->redirect(['view', 'id' => $model->id]);
     }
@@ -347,26 +369,34 @@ class CourseController extends Controller
     }
     
     /**
-     * Deletes an existing CourseManage model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * 更改状态为【在建中】
+     * Normal an existing ItemManage model.
+     * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
-     
-    public function actionDelete($id, $project_id)
+     */
+    public function actionNormal($id)
     {
-        $model = $this->findModel(['id' => $id, 'project_id' => $project_id]);
-        /* @var $twTool TeamworkTool 
+        $model = $this->findModel($id);
+         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
-        
-        if(!$model->getIsCarryOut() && (($twTool->getIsAuthority('is_leader', 'Y') && $model->create_by == \Yii::$app->user->id)
-            || $twTool->getIsAuthority('id', $model->course_principal)|| Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER)))
-            $model->delete();
-        else 
-            throw new NotFoundHttpException('无权限操作！');
-        
-        $this->redirect(['list','project_id' => $project_id]);
-    }*/
+        /* @var $rbacManager RbacManager */  
+        $rbacManager = \Yii::$app->authManager;
+        if($model != null && !($model->getIsPause() || $model->getIsCarryOut())){
+            throw new NotFoundHttpException('该课程'.$model->getStatusName().'！');
+        }
 
+        if($rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id) || 
+                ($model->coursePrincipal->u_id == \Yii::$app->user->id && $model->getIsPause())){
+            $model->real_carry_out = null;
+            $model->status = CourseManage::STATUS_NORMAL;
+            $model->save();
+            $this->redirect(['view', 'id' => $model->id]);
+        }else{
+            throw new NotAcceptableHttpException('无权限操作！');
+        }
+    }
+    
     /**
      * 获取课程负责人
      * @param type $team_id              团队ID
