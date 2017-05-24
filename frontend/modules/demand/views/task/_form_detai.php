@@ -86,7 +86,8 @@ $workitem = $this->render('_workitem', [
             ],
             [
                 'attribute' => 'plan_check_harvest_time',
-                'value' => $model->plan_check_harvest_time,
+                'format' => 'raw',
+                'value' => '<span style="color:#ff0000">'.$model->plan_check_harvest_time.'</span>',
             ],
             [
                 'attribute' => 'reality_check_harvest_time',
