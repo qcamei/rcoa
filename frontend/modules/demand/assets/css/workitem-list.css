@@ -128,3 +128,6 @@
 .workitem-des p{
         margin: 0px;
 }
+.workitem-des ul{
+        margin-bottom: 0px;
+}
