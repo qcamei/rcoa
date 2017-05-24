@@ -71,6 +71,7 @@ class DefaultController extends Controller
         $query = $multimedia->getMultimediaTask($create_by, $producer, $assignPerson, 
                     $create_team, $make_team, $content_type, $item_type_id, $item_id, $item_child_id, $course_id,
                     $status, $time, $keyword, $mark);
+        $count = $query->count();
         
         $dataProvider = new ArrayDataProvider([
             'allModels' => $query->addSelect([
@@ -86,6 +87,7 @@ class DefaultController extends Controller
         return $this->render('list', [
             'dataProvider' => $dataProvider,
             'multimedia' => $multimedia,
+            'count' => $count,
             'team' => $this->getTeams(),
             'contentType' => $this->getContentType(),
             'itemType' => $this->getItemType(),
