@@ -22,8 +22,8 @@ $is_show = reset($workitemType);   //获取数组的第一个值
         
         <thead>
             <tr>
-                <th></th>
-                <td class="text-center" style="width: 450px">需求</td>
+                <th style="width: 15%"></th>
+                <td class="text-center" style="width: 40%">需求</td>
                 <td class="text-center">交付</td>
             </tr>
         </thead>
@@ -40,10 +40,10 @@ $is_show = reset($workitemType);   //获取数组的第一个值
                 <td></td>
                 <td class="text-center">
                     <?php if($is_show['id'] == $type['id'] ): ?>
-                    <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
+                    <div class="col-xs-6">
                         <?= Html::img(['/filedata/demand/image/mode_newbuilt.png'], ['style' => 'margin-right: 10px;']) ?>新建
                     </div>
-                    <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
+                    <div class="col-xs-6">
                         <?= Html::img(['/filedata/demand/image/mode_reform.png'], ['style' => 'margin-right: 10px;']) ?>改造
                     </div>
                     <?php endif; ?>

@@ -42,9 +42,9 @@ foreach ($workitem as $work){
         
         <thead>
             <tr>
-                <th style="width: 10%"></th>
+                <th style="width: 15%"></th>
                 <td class="text-center" style="width: 25%">需求</td>
-                <td class="text-center" colspan="2" style="width: 40%">交付</td>
+                <td class="text-center" colspan="2" style="width: 35%">交付</td>
                 <td class="text-center" style="width: 25%">验收</td>
             </tr>
         </thead>
@@ -72,7 +72,7 @@ foreach ($workitem as $work){
                         <th class="text-right"><?= $work['name'] ?></th>
                         <td class="text-center">
                         <?php rsort($work['childs']); foreach ($work['childs'] as $child): ?>                         
-                            <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
+                            <div class="col-xs-6">
                             <?= $child['is_new'] == true ? 
                                    Html::img(['/filedata/demand/image/mode_newbuilt.png'], ['style' => 'margin-right: 10px;']).$child['value'].$child['unit'] :
                                    Html::img(['/filedata/demand/image/mode_reform.png'], ['style' => 'margin-right: 10px;']).$child['value'].$child['unit'];
@@ -82,7 +82,7 @@ foreach ($workitem as $work){
                         </td>
                         <td class="text-center">
                         <?php rsort($delivery[$work['id']]['childs']); foreach ($delivery[$work['id']]['childs'] as $child): ?>                         
-                            <div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
+                            <div class="col-xs-6">
                             <?= $child['is_new'] == true ? 
                                    Html::img(['/filedata/demand/image/mode_newbuilt.png'], ['style' => 'margin-right: 10px;']).$child['value'].$child['unit'] :
                                    Html::img(['/filedata/demand/image/mode_reform.png'], ['style' => 'margin-right: 10px;']).$child['value'].$child['unit'];
@@ -91,7 +91,7 @@ foreach ($workitem as $work){
                         <?php endforeach; ?>
                         </td>
                         <?php if(!isset($is_rowspan[$type['id']])): $is_rowspan[$type['id']] = true;?>
-                        <td class="text-center" rowspan="<?= $number[$type['id']] ?>" style="width:100px">
+                        <td class="text-center" rowspan="<?= $number[$type['id']] ?>">
                             <?php  if(isset($percentage[$type['id']])): ?>
                             <span class="chart" data-percent="<?= $percentage[$type['id']]; ?>" data-bar-color="<?= $color; ?>">
                                 <span class="percent" style="color: <?= $color; ?>"></span>
@@ -99,8 +99,8 @@ foreach ($workitem as $work){
                             <?php endif; ?>
                         </td>
                         <td class="text-center" rowspan="<?= $number[$type['id']] ?>">
-                            <div class="col-lg-4 col-md-7 col-sm-7 col-xs-12"><span>评分：</span></div>
-                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-12">
+                            <div class="col-xs-4"><span>评分：</span></div>
+                            <div class="col-xs-8">
                                 <?= Slider::widget([
                                     'class' => 'acceptance-value',
                                     'name'=> 'value['.$type['id'].']',
@@ -144,8 +144,8 @@ foreach ($workitem as $work){
                 <td colspan="2">
                     <?php $surplus = reset($d_realityCost) - $model->demandTask->budget_cost; 
                         if(reset($d_realityCost) > $model->demandTask->budget_cost): ?>
-                    <span style="color:red">￥<?= number_format(reset($d_realityCost), 2) ?></span>
-                    <span class="pattern" style="color: #000">（超出预算￥<?= number_format($surplus, 2) ?>）</span>
+                    <span style="color:#ff0000">￥<?= number_format(reset($d_realityCost), 2) ?></span>
+                    <span style="color: #000">（超出预算￥<?= number_format($surplus, 2) ?>）</span>
                     <?php  else: ?>
                     <span>￥<?= number_format(reset($d_realityCost), 2) ?></span>
                     <?php endif; ?>
@@ -161,15 +161,15 @@ foreach ($workitem as $work){
             <tr class="tr">
                 <th class="text-center">外部成本</th>
                 <td>￥<?= number_format($model->demandTask->external_budget_cost, 2) ?></td>
-                <?php $surplus = reset($d_externalRealityCost) - $model->demandTask->external_budget_cost; 
+                <td colspan="2" >
+                    <?php $surplus = reset($d_externalRealityCost) - $model->demandTask->external_budget_cost; 
                         if(reset($d_externalRealityCost) > $model->demandTask->external_budget_cost): ?>
-                <td colspan="2" style="color:red">
-                    ￥<?= number_format(reset($d_externalRealityCost), 2) ?>
-                    <span class="pattern" style="color: #000">（超出预算￥<?= number_format($surplus, 2) ?>）</span>
+                    <span style="color:#ff0000">￥<?= number_format(reset($d_externalRealityCost), 2) ?></span>
+                    <span style="color: #000">（超出预算￥<?= number_format($surplus, 2) ?>）</span>
+                    <?php else: ?>
+                    <span>￥<?= number_format(reset($d_externalRealityCost), 2) ?></span>
+                    <?php endif; ?>
                 </td>
-                <?php else: ?>
-                <td colspan="2">￥<?= number_format(reset($d_externalRealityCost), 2) ?></td>
-                <?php endif; ?>
             </tr>
             <tr class="tr">
                 <th class="text-center">总成本</th>
@@ -181,19 +181,17 @@ foreach ($workitem as $work){
                     ￥<?= number_format($totalBudgetCost, 2) ?>
                     <p class="pattern">（总成本 = 人工成本 + 奖金 + 外部成本）</p>
                 </td>
-                <?php $surplus = $totalRealityCost - $totalBudgetCost;
-                    if($totalRealityCost > $totalBudgetCost): ?>
-                <td colspan="2" style="color:red">
-                    ￥<?= number_format($totalRealityCost, 2) ?>
-                    <span class="pattern" style="color: #000">（超出预算￥<?= number_format($surplus, 2) ?>）</span>
-                    <p class="pattern">（总成本 = 人工成本 + 奖金 + 外部成本）</p>
-                </td>
-                <?php else: ?>
                 <td colspan="2">
-                    ￥<?= number_format($totalRealityCost, 2) ?>
+                    <?php $surplus = $totalRealityCost - $totalBudgetCost;
+                        if($totalRealityCost > $totalBudgetCost): ?>
+                    <span style="color:#ff0000">￥<?= number_format($totalRealityCost, 2) ?></span>
+                    <span style="color: #000">（超出预算￥<?= number_format($surplus, 2) ?>）</span>
                     <p class="pattern">（总成本 = 人工成本 + 奖金 + 外部成本）</p>
+                    <?php else: ?>
+                    <span>￥<?= number_format($totalRealityCost, 2) ?></span>
+                    <p class="pattern">（总成本 = 人工成本 + 奖金 + 外部成本）</p>
+                    <?php endif; ?>
                 </td>
-                <?php endif; ?>
             </tr>
             <tr class="tr">
                 <th class="text-center">备注</th>
@@ -205,7 +203,7 @@ foreach ($workitem as $work){
         </tbody>
         
     </table>
-    <span class="pattern" style="float: right; margin-top: -15px;">（最大奖金 = 人工成本 + 人工成本 × 绩效分值）</span>
+    <span class="pattern" style="float: right; margin-top: -15px;">（最大奖金 = 人工成本 + 人工成本 × 绩效比值）</span>
     
     <?= Html::activeHiddenInput($model, 'demand_delivery_id', ['value' => $deliveryModel->id]); ?>
     
