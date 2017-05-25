@@ -65,25 +65,25 @@
 /**
  * 任务详细页面样式 
  */
-.viewdetail-th
+.shoot-bookdetail .viewdetail-th
 {
     color: #666666;
-    width: 150px;
+    width: 23%;
     font-weight: normal;
     text-align: right;
     min-width: 73px;
+    vertical-align: middle;
 }
 .viewdetail-th-head
 {
     color: #000000;
-    width: 150px;
     text-align: left;
     font-weight: bold;
 }
-.viewdetail td
+.shoot-bookdetail .viewdetail-td
 {
-    width: 150px;
     min-width: 100px;
+    vertical-align: middle;
 }
 
 .edithistory-table

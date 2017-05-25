@@ -27,7 +27,7 @@ $workitem = $this->render('_workitem', [
         //'options' => ['class' => 'table table-bordered detail-view'],
         'template' => '<tr><th class="viewdetail-th">{label}</th><td class="viewdetail-td">{value}</td></tr>',
         'attributes' => [
-            ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">基本信息</span>','value' => ''],
+            ['label' => '<span class="btn-block viewdetail-th-head">基本信息</span>','value' => ''],
             [
                 'attribute' => 'item_type_id',
                 'value' => !empty($model->item_type_id) ? $model->itemType->name : null,
@@ -61,7 +61,7 @@ $workitem = $this->render('_workitem', [
                 'format' => 'raw',
                 'value' => '<div style="height:65px; vertical-align:middle; display:table-cell">'.$model->course_description.'</div>',
             ],
-            ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">开发信息</span>','value' => ''],
+            ['label' => '<span class="btn-block viewdetail-th-head">开发信息</span>','value' => ''],
             [
                 'attribute' => 'mode',
                 'format' => 'raw',
@@ -121,7 +121,7 @@ $workitem = $this->render('_workitem', [
                 'format' => 'raw',
                 'value' => '￥'.number_format(($model->budget_cost + $model->budget_cost * $model->bonus_proportion) + $model->external_budget_cost, 2).'<span class="pattern">（总预算成本 = 人工预算成本 + 外部预算成本）</span>', 
             ],
-            ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">其它信息</span>','value' => ''],
+            ['label' => '<span class="btn-block viewdetail-th-head">其它信息</span>','value' => ''],
             [
                 'attribute' => 'create_by',
                 'value' => !empty($model->create_by) ? $model->createBy->nickname : null,

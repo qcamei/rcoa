@@ -19,7 +19,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail Details') . ' : ' . $model->id;
     </div>
 </div>
 
-<div class="container has-title shoot-bookdetail-view" style="padding-left:0px;padding-right: 0px; ">
+<div class="container has-title shoot-bookdetail-view shoot-bookdetail" style="padding-left:0px;padding-right: 0px; ">
     <?= $this->render('_form_detail2', [
         'model' => $model,
         'shootmans' => $shootmans,

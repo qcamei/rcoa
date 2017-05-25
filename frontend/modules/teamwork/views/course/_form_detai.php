@@ -36,7 +36,7 @@ CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($model->id
         //'options' => ['class' => 'table table-bordered detail-view'],
         'template' => '<tr><th class="viewdetail-th">{label}</th><td class="viewdetail-td">{value}</td></tr>',
         'attributes' => [
-            ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">基本信息</span>','value' => ''],
+            ['label' => '<span class="btn-block viewdetail-th-head">基本信息</span>','value' => ''],
             [
                 'attribute' => 'demandTask.item_type_id',
                 'value' => !empty($model->demandTask->item_type_id) ? $model->demandTask->itemType->name : null,
@@ -81,7 +81,7 @@ CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($model->id
                 'attribute' => 'activity_number',
                 'value' => $model->activity_number,
             ],
-            ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">开发信息</span>','value' => ''],
+            ['label' => '<span class="btn-block viewdetail-th-head">开发信息</span>','value' => ''],
             [
                 'attribute' => 'demandTask.mode',
                 'format' => 'raw',
@@ -132,7 +132,7 @@ CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($model->id
                 'format' => 'raw',
                 'value' => !empty($model->path) ? $model->path : null,
             ],
-            ['label' => '<span class="btn-block viewdetail-th-head" style="width:100%">其它信息</span>','value' => ''],
+            ['label' => '<span class="btn-block viewdetail-th-head">其它信息</span>','value' => ''],
             [
                 'attribute' => 'create_by',
                 'value' => !empty($model->create_by) ? $model->createBy->nickname : null,
