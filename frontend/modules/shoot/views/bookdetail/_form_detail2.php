@@ -33,13 +33,9 @@ use yii\widgets\DetailView;
         'attributes' => [
             ['label' => '<span class="btn-block viewdetail-th-head">基本信息</span>','value'=>''],
             [
-                'attribute' => 'status',
-                'value' => $model->getStatusName(),
-            ],
-            [
                 'attribute' => 'u_booker',
                 'format' => 'raw',
-                'value' => $model->booker->nickname. '('.  Html::a($model->booker->phone, 'tel:'.$model->booker->phone).' )',
+                'value' => $model->booker->nickname. '（'.Html::a($model->booker->phone, 'tel:'.$model->booker->phone).'）',
             ],
             [
                 'attribute' => 'u_contacter',
@@ -50,7 +46,13 @@ use yii\widgets\DetailView;
                 'attribute' => 'start_time',
                 'value' => $model->start_time,
             ],
-            
+            [
+                'attribute' => 'status',
+                'format' => 'raw',
+                'value' => $model->getStatusName(),
+                'value' =>  '<div class="status-progress-div status-have-to">'.
+                                '<p class="have-to-status">'.$model->getStatusName().'</p></div>',
+            ],
             ['label' => '<span class="btn-block viewdetail-th-head">课程信息</span>','value'=>''],
             [
                 'attribute' => 'business_id',
@@ -85,7 +87,7 @@ use yii\widgets\DetailView;
             [
                 'attribute' => 'u_teacher',
                 'format' => 'raw',
-                'value' => $model->teacher->user->nickname.'('. Html::a($model->teacher->user->phone, 'tel:'.$model->teacher->user->phone) .')',
+                'value' => $model->teacher->user->nickname.'（'. Html::a($model->teacher->user->phone, 'tel:'.$model->teacher->user->phone) .'）',
             ],
             [
                 'attribute' => 'teacher_email',
@@ -96,11 +98,13 @@ use yii\widgets\DetailView;
             ['label' => '<span class="btn-block viewdetail-th-head">拍摄信息</span>','value'=>''],
             [
                 'attribute' => 'content_type',
-                'value' => $model->getContentTypeName(),
+                'format' => 'raw',
+                'value' => '<span class="content-type">'.$model->getContentTypeName().'</span>',
             ],
             [
                 'attribute' => 'photograph',
-                'value' => $model->photograph ? '是' : '否',
+                'format' => 'raw',
+                'value' => $model->photograph == true ? '<span class="photograph photograph-success">是</span>' : '<span class="photograph photograph-danger">否</span>',
             ],
             [
                 'attribute' => 'u_shoot_man', 
@@ -134,8 +138,8 @@ use yii\widgets\DetailView;
             ],
             [
                 'attribute' => 'remark',
-                //'format' => 'raw',
-                'value' =>  $model->remark,
+                'format' => 'raw',
+                'value' => '<div style="height:65px; vertical-align:middle; display:table-cell">'.$model->remark.'</div>',
             ],
         ],
     ]);

@@ -31,7 +31,7 @@
     padding: 5px;
 }
 .content-type {
-    background-color: #333;
+    background-color: rgba(243, 123, 83, 1);
     display: block;
     width: 30px;
     font-size: 12px;
@@ -40,6 +40,7 @@
     color: #fff;
     border-radius: 5px;
 }
+
 /*
 @media (min-width: 480px) {
   .bookdetail-list .course-name{
@@ -98,6 +99,37 @@
 .edithistory-table>tbody>tr>td
 {
     padding: 8px;
+}
+.status-progress-div {
+    width: 60px;
+    height: 60px;
+    float: left;
+    padding-top: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+.status-have-to {
+    background-color: #f37b53;
+    line-height: 35px;
+}
+.have-to-status {
+    margin-bottom: 0px; 
+    color: #fff;
+}
+.shoot-bookdetail .photograph{
+    width: 30px;
+    padding:2px 8px;
+    display: block;
+    font-size: 12px;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+}
+.shoot-bookdetail .photograph-success{
+    background-color: #5cb85c;
+}
+.shoot-bookdetail .photograph-danger{
+    background-color: #d9534f;
 }
 
 /**

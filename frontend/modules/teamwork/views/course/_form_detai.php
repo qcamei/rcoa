@@ -59,11 +59,11 @@ CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($model->id
             ],
             [
                 'attribute' => 'demandTask.lesson_time',
-                'value' => $model->demandTask->lesson_time,
+                'value' => !empty($model->demandTask) ? $model->demandTask->lesson_time : null,
             ],
             [
                 'attribute' => 'demandTask.credit',
-                'value' => $model->demandTask->credit,
+                'value' => !empty($model->demandTask) ? $model->demandTask->credit : null,
             ],
             [
                 'attribute' => 'video_length',
@@ -85,9 +85,9 @@ CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($model->id
             [
                 'attribute' => 'demandTask.mode',
                 'format' => 'raw',
-                'value' => $model->demandTask->mode == DemandTask::MODE_NEWBUILT ?
+                'value' => !empty($model->demandTask) ? $model->demandTask->mode == DemandTask::MODE_NEWBUILT ?
                     Html::img(['/filedata/demand/image/mode_newbuilt.png'], ['style' => 'margin-right: 10px;']).DemandTask::$modeName[$model->demandTask->mode] : 
-                    Html::img(['/filedata/demand/image/mode_reform.png'], ['style' => 'margin-right: 10px;']).DemandTask::$modeName[$model->demandTask->mode],
+                    Html::img(['/filedata/demand/image/mode_reform.png'], ['style' => 'margin-right: 10px;']).DemandTask::$modeName[$model->demandTask->mode] : null,
             ],
             [
                 'attribute' => 'team_id',
