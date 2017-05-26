@@ -66,7 +66,6 @@ class WorkitemController extends Controller
      */
     public function actionList()
     {
-        $this->layout = '@app/views/layouts/main';
         $cabinets = WorkitemCabinet::find()
                 ->select(['workitem_id','path','type'])
                 ->where(['is_delete' => 'N'])

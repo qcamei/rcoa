@@ -11,7 +11,7 @@ use yii\web\View;
 /* @var $searchModel ItemTypeSearch */
 /* @var $dataProvider ActiveDataProvider */
 
-$this->title = Yii::t('rcoa/basedata', 'Item Types');
+$this->title = '基础数据';//Yii::t('rcoa/basedata', 'Item Types');
 ?>
 <div class="container item-type-index">
 

@@ -49,6 +49,13 @@ use yii\helpers\Html;
                     'options'=>['/demand/business'],                   //跳转选项，第一索引为地址，第二起为传参
                     'class'=>'footer-demand-menu-item',                //样式
                 ],
+                [   
+                    'controllerId'=> 'workitem',                         //控制ID
+                    'name'=>'样例库',                                    //名称
+                    'icon'=>'/filedata/demand/image/yangliku.png',    //图标路径
+                    'options'=>['/demand/workitem/list'],             //跳转选项，第一索引为地址，第二起为传参
+                    'class'=>'footer-demand-menu-item',                //样式
+                ],
                 [   //任务页-子按钮-新建
                     'controllerId'=>'task',                             //控制ID
                     'name'=>'创建任务',                                     //名称
