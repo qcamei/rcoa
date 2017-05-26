@@ -40,8 +40,8 @@ use yii\web\View;
 </div>
 
 <footer class="footer">
-    <div class="container">
-        <p class="pull-left">&copy; 国家开放大学在线教育运营服务中心&nbsp;&nbsp;版本号：v1.50 </p>
+    <div class="container" style="padding: 5px 10px;">
+        <p class="pull-left" style="margin-top: 15px;">&copy; 国家开放大学在线教育运营服务中心&nbsp;&nbsp;版本号：v1.50 </p>
     </div>
 </footer>
 
