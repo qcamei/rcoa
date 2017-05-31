@@ -155,7 +155,7 @@ use yii\widgets\ActiveForm;
                     'id' => 'courseproducer-producer',
                     //'maintainOrder' => true,
                     'name' => 'producer',
-                    'value' => is_array($team) ? '' : array_keys($producer),
+                    'value' => array_keys($producer),
                     'data' => $producerList,
                     'options' => [
                         'placeholder' => '请选择...',
@@ -179,7 +179,7 @@ use yii\widgets\ActiveForm;
     ?>
     
     <?= $form->field($model, 'weekly_editors_people')->widget(Select2::classname(), [
-        'data' => is_array($team) ? [] : $weeklyEditors, 
+        'data' => $weeklyEditors, 
         'options' => ['placeholder' => '请选择...']
     ]) ?> 
     

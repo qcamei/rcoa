@@ -8,12 +8,17 @@
 
 namespace wskeee\rbac;
 
-use common\models\User;
+use wskeee\rbac\models\Permission;
+use wskeee\rbac\models\Role;
 use Yii;
 use yii\caching\Cache;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\rbac\DbManager;
+use yii\rbac\Item;
+use yii\web\User;
+
+
 /**
  * Description of RbacManager
  *
@@ -72,7 +77,7 @@ class RbacManager extends DbManager{
                 $this->childs[$row['parent']][] = $row['child'];
             }
         }
-        
+                
         //create roleToUsers;
         //$this->$assignments = [];
         /* 
@@ -84,6 +89,31 @@ class RbacManager extends DbManager{
         }*/
         
         $this->cache->set($this->cacheKey, [$this->items, $this->rules, $this->parents]);
+    }
+    
+     /**
+     * 生成权限/角色需求
+     * @param type $row
+     * @return \wskeee\rbac\class
+     */
+    protected function populateItem($row)
+    {
+        $class = $row['type'] == Item::TYPE_PERMISSION ? Permission::className() : Role::className();
+
+        if (!isset($row['data']) || ($data = @unserialize($row['data'])) === false) {
+            $data = null;
+        }
+
+        return new $class([
+            'name' => $row['name'],
+            'system_id' => $row['system_id'],
+            'type' => $row['type'],
+            'description' => $row['description'],
+            'ruleName' => $row['rule_name'],
+            'data' => $data,
+            'createdAt' => $row['created_at'],
+            'updatedAt' => $row['updated_at'],
+        ]);
     }
     
     /**

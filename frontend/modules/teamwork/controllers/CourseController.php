@@ -213,7 +213,7 @@ class CourseController extends Controller
                 'model' => $model,
                 'twTool' => $twTool,
                 'team' => $twTool->getHotelTeam(),
-                'weeklyEditors' => ArrayHelper::map($this->getAssignProducers($model->id), 'producer', 'producerOne.user.nickname'),
+                'weeklyEditors' => $this->getSameTeamMember(),
                 'producerList' => $this->getTeamMemberList(),
                 'producer' => ArrayHelper::map($this->getAssignProducers($model->id), 'producer', 'producerOne.user.nickname'),
                 'annex' => $this->getCourseAnnex($model->id),
@@ -546,9 +546,13 @@ class CourseController extends Controller
         $twTool = TeamworkTool::getInstance();
         /* @var $tmTool TeamMemberTool */
         $tmTool = TeamMemberTool::getInstance();
-        $sameTeamMembers = $tmTool->getTeamMembersByTeamId($twTool->getHotelTeam());
+        if(is_array($twTool->getHotelTeam()))
+            $key = key($twTool->getHotelTeam());
+        else
+            $key = $twTool->getHotelTeam();
+        $sameTeamMembers = $tmTool->getTeamMembersByTeamId($key);
         ArrayHelper::multisort($sameTeamMembers, 'position_level', SORT_ASC);
-
+         
         return ArrayHelper::map($sameTeamMembers, 'id', 'nickname');
     }
 

@@ -4,35 +4,61 @@ namespace wskeee\rbac\models;
 
 use Yii;
 use yii\rbac\Item;
-use yii\helpers\ArrayHelper;
-use yii\behaviors\TimestampBehavior;
+use yii\rbac\ManagerInterface;
+
 
 /**
  *
- * @property string $name
- * @property integer $type
- * @property string $description
- * @property string $rule_name
- * @property string $data
+ * @property string $name                       名称
+ * @property integer $system_id                 所属系统模块id
+ * @property integer $type                      类型
+ * @property string $description                描述
+ * @property string $rule_name                  规则名
+ * @property string $data                       数据
  * 
- * @property yii\rbac\Item $item 数据
+ * @property Item $item 数据
  */
-class AuthItem extends \yii\base\Model
+class AuthItem extends yii\base\Model
 {
+    /**
+     * 名称
+     * @var string 
+     */
     public $name;
+    /**
+     * 所属系统模块ID
+     * @var integer 
+     */
+    public $system_id;
+    /**
+     * 类型
+     * @var integer 
+     */
     public $type;
+    /**
+     * 描述
+     * @var string 
+     */
     public $description;
+    /**
+     * 规则名称
+     * @var string 
+     */
     public $ruleName;
+    /**
+     * 数据
+     * @var string 
+     */
     public $data;
 
     /**
-     * @var yii\rbac\Item
+     * @var Item
      */
     private $_item;
     
     /**
      *
-     * @var yii\rbac\ManagerInterface
+     * @var ManagerInterface
      */
     protected $authManager;
 
@@ -44,11 +70,12 @@ class AuthItem extends \yii\base\Model
      */
     public function __construct($item,$config = array()) 
     {
-        $this->authManager = Yii::$app->authManager;
+        $this->authManager = \Yii::$app->assetManager;
         $this->_item = $item;
         if($item !== null)
         {
             $this->name = $item->name;
+            $this->system_id = $item->system_id;
             $this->type = $item->type;
             $this->description = $item->description;
             $this->ruleName = $item->ruleName;
@@ -71,15 +98,15 @@ class AuthItem extends \yii\base\Model
     public function rules()
     {
         return [
-            [['name', 'type'], 'required'],
+            [['modular', 'name', 'type'], 'required'],
             [['name'],'unique','when'=>function()
                 {
                     return $this->getIsNewRecord() || ($this->_item->name != $this->name);
                 }],
             [['name'], 'match', 'pattern' => '/^[\w-]+$/'],
             [['type'], 'integer'],
-            [['description', 'data'], 'string'],
-            [['name', 'ruleName'], 'string', 'max' => 64],
+            [['modular', 'description', 'data'], 'string'],
+            [['modular', 'name', 'ruleName'], 'string', 'max' => 64],
             [['ruleName'],'in',
                 'range'=>  array_keys($this->authManager->getRules()),
                 'message'=>'没有找到对应规则!'],
@@ -178,6 +205,7 @@ class AuthItem extends \yii\base\Model
                 $oldName = $this->_item->name;
             }
             $this->_item->name = $this->name;
+            $this->_item->system_id = $this->system_id;
             $this->_item->description = $this->description;
             $this->_item->ruleName = $this->ruleName;
             $this->_item->data = $this->data === null || $this->data === '' ? null : json_decode($this->data);
