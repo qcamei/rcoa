@@ -399,7 +399,7 @@ class TeamworkTool{
     {
         $userTeam = TeamMemberTool::getInstance()->getUserTeam(Yii::$app->user->id);
         if($userTeam == null)
-            $userTeam = TeamMemberTool::getInstance()->getTeamsByCategoryId(TeamCategory::TYPE_PRODUCT_CENTER);
+            $userTeam = TeamMemberTool::getInstance()->getTeamsByCategoryId(TeamCategory::TYPE_CCOA_DEV_TEAM);
         $teamIds = ArrayHelper::getColumn($userTeam, 'id');
         if(!empty($teamIds) && count($teamIds) == 1)
             return $teamIds[0];

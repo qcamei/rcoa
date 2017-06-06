@@ -868,6 +868,22 @@ class DemandTool {
             'workitem_type_id', 'weight', 'sl_weight',  'zl_weight', 'demand_task_id', 'created_at', 'updated_at'
         ], $weights)->execute();
     }
+    
+    /**
+     * 获取创建者所在团队
+     * @return integer|array    
+     */
+    public function getHotelTeam()
+    {
+        $userTeam = TeamMemberTool::getInstance()->getUserTeam(Yii::$app->user->id);
+        if($userTeam == null)
+            $userTeam = TeamMemberTool::getInstance()->getTeamsByCategoryId(TeamCategory::TYPE_PRODUCT_CENTER);
+        $teamIds = ArrayHelper::getColumn($userTeam, 'id');
+        if(!empty($teamIds) && count($teamIds) == 1)
+            return $teamIds[0];
+        else
+            return ArrayHelper::map($userTeam, 'id', 'name');
+    }
 
     /**
      * 获取开发负责人所在团队成员表里的ID

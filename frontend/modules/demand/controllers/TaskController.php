@@ -165,8 +165,6 @@ class TaskController extends Controller
         $model->loadDefaultValues();
         /* @var $dtTool DemandTool */
         $dtTool = DemandTool::getInstance();
-        /* @var $dtTool TeamworkTool */
-        $twTool = TeamworkTool::getInstance();
         $post = Yii::$app->request->post();
         $model->create_by = \Yii::$app->user->id;
        
@@ -181,7 +179,7 @@ class TaskController extends Controller
                 'itemChilds' => [],
                 'courses' => [],
                 'teachers' => $this->getExpert(),
-                'team' => $twTool->getHotelTeam(),
+                'team' => $dtTool->getHotelTeam(),
                 'workitmType' => $dtTool->getDemandWorkitemTypeData(),
                 'workitem' => $dtTool->getDemandWorkitemData(),
             ]);
@@ -207,8 +205,6 @@ class TaskController extends Controller
         }
         /* @var $dtTool DemandTool */
         $dtTool = DemandTool::getInstance();
-        /* @var $dtTool TeamworkTool */
-        $twTool = TeamworkTool::getInstance();
         $post = Yii::$app->request->post();
         $courses = $this->getCourses($model->item_child_id);
         
@@ -223,7 +219,7 @@ class TaskController extends Controller
                 'itemChilds' => $this->getChildren($model->item_id),
                 'courses' => ArrayHelper::merge([$model->course_id => $model->course->name], $courses),
                 'teachers' => $this->getExpert(),
-                'team' => $twTool->getHotelTeam(),
+                'team' => $dtTool->getHotelTeam(),
                 'annex' => $this->getAnnex($model->id),
                 'workitmType' => $dtTool->getDemandWorkitemTypeData($model->id),
                 'workitem' => $dtTool->getDemandWorkitemData($model->id),
