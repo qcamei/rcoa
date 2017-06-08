@@ -7,7 +7,7 @@ use yii\helpers\Html;
 use yii\web\View;
 
 /* @var $this View */
-$this->title = '需求主页';//Yii::t('rcoa/demand', 'Demand Tasks');
+$this->title = '任务-主页';//Yii::t('rcoa/demand', 'Demand Tasks');
 ?>
 <div class="demand-default-index">
     <div class="container">

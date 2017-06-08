@@ -15,7 +15,7 @@ use yii\web\View;
 /* @var $dataProvider ActiveDataProvider */
 
 
-$this->title = Yii::t('rcoa/teamwork', 'Statistics');
+$this->title = Yii::t('rcoa/demand', 'Demand Statistics');
 $this->params['breadcrumbs'][] = $this->title;
 
 $statisticsName = ($type == 0 ? '学时':'元');

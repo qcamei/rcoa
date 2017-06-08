@@ -8,7 +8,7 @@
 
 return[
     //需求任务-公共
-    'Demand Tasks' => '需求任务',
+    'Demand Tasks' => '任务-课程',
     'Demand View' => '任务详情',
     'Create Demand Task' => '创建-需求任务',
     'Update Demand Task' => '更新-需求任务',
@@ -42,6 +42,7 @@ return[
     'Create Demand Appeal' => '创建-申诉',
     'Demand Appeal Replies' => '申诉回复',
     'Create Demand Appeal Reply' => '创建-申诉回复',
+    'Demand Statistics' => '任务-统计',
     
     //需求任务-字段
     'Item Type' => '行业',

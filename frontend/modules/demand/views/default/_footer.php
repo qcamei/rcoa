@@ -24,7 +24,7 @@ use yii\helpers\Html;
                 ],
                 [   
                     'controllerId'=>'task',                             //控制ID
-                    'name'=>'任务',                                     //名称
+                    'name'=>'课程',                                     //名称
                     'icon'=>'/filedata/demand/image/list-check.png',    //图标路径
                     'options'=>[
                         '/demand/task/index', 
