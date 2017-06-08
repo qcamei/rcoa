@@ -161,7 +161,7 @@ class BookdetailController extends Controller
      */
     public function actionCreate()
     {
-        if (!Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CREATE))
+        if (!Yii::$app->user->can(RbacName::PERMSSION_SHOOT_CREATE))
             throw new UnauthorizedHttpException('无权操作！');
         $post = Yii::$app->getRequest()->getQueryParams();
         $body = Yii::$app->getRequest()->getBodyParams();
@@ -282,7 +282,7 @@ class BookdetailController extends Controller
         /* @var $bookdetailTool BookdetailTool */
         $bookdetailTool = Yii::$app->get('bookdetailTool');
       
-        if(Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL) || ($model->u_booker == \Yii::$app->user->id && $model->book_time > strtotime('+1 day')))
+        if(Yii::$app->user->can(RbacName::PERMSSION_SHOOT_CANCEL) || ($model->u_booker == \Yii::$app->user->id && $model->book_time > strtotime('+1 day')))
         {
             if(!($model->getIsAssign() || $model->getIsStausShootIng()))
                 throw new NotAcceptableHttpException('该任务'.$model->getStatusName());

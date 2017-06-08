@@ -114,7 +114,7 @@ class AppraiseController extends Controller
         $u_id = \Yii::$app->user->id;
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
-        if(!Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_APPRAISE,['job'=>$this->findBookdetail($b_id)]))
+        if(!Yii::$app->user->can(RbacName::PERMSSION_SHOOT_APPRAISE,['job'=>$this->findBookdetail($b_id)]))
             throw new NotAcceptableHttpException("无权限操作！");
         $tran = \Yii::$app->db->beginTransaction();
         $values = [];

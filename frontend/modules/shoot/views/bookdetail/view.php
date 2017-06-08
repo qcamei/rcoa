@@ -40,14 +40,14 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail Details') . ' : ' . $model->id;
              * 1、拥有【指派】权限
              * 2、在拍摄任务完成前，即评价发生前
              */
-            if(Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_ASSIGN) && $model->canAssign())
+            if(Yii::$app->user->can(RbacName::PERMSSION_SHOOT_ASSIGN) && $model->canAssign())
                 echo Html::a('提交', 'javascript:;', ['id'=>'submit', 'class' => 'btn btn-info']).' ';
             /**
              * 编辑 按钮显示必须满足以下条件：
              * 1、拥有【编辑】权限(管理员或者任务的发起者)
              * 2、在摄影师指派前
              */
-            if($model->canEdit() && Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_UPDATE,['job'=>$model]) && $model->u_booker)
+            if($model->canEdit() && Yii::$app->user->can(RbacName::PERMSSION_SHOOT_UPDATE,['job'=>$model]) && $model->u_booker)
                 echo Html::a('编辑', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']).' ';
             /**
              * 评价 按钮显示必须满足以下条件：
@@ -69,7 +69,7 @@ $this->title = Yii::t('rcoa', 'Shoot Bookdetail Details') . ' : ' . $model->id;
             
             if((($model->getIsAssign() || $model->getIsStausShootIng())
                     && ($model->u_booker == Yii::$app->user->id && $model->book_time > strtotime('+1 day'))) 
-                    || Yii::$app->user->can(RbacName::PERMSSIONT_SHOOT_CANCEL))
+                    || Yii::$app->user->can(RbacName::PERMSSION_SHOOT_CANCEL))
                 echo Html::a('取消', 'javascript::', ['id'=>'cancel', 'class' => 'btn btn-danger']).' ';
         ?>
     </div>

@@ -1,17 +1,19 @@
 <?php
 
-use yii\helpers\Html;
+use wskeee\rbac\models\searchs\AuthItemSearch;
+use yii\data\ArrayDataProvider;
 use yii\grid\GridView;
-use yii\widgets\Pjax;
+use yii\helpers\Html;
+use yii\web\View;
 
-/* @var $this yii\web\View */
-/* @var $searchModel common\modules\rbac\models\searchs\AuthItem */
-/* @var $dataProvider yii\data\ArrayDataProvider */
+/* @var $this View */
+/* @var $searchModel AuthItemSearch */
+/* @var $dataProvider ArrayDataProvider */
 
 $this->title = '用户角色';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="auth-item-index">
+<div class="user-role-index rbac">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -34,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'data-pjax' => '0',
                         ];
                         return Html::a('分配', 
-                            ['view', 'id' => $model->id], $options);
+                            ['view', 'user_id' => $model->id], $options);
                     },
                 ],
                 'template' => '{view}',

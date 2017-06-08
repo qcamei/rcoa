@@ -1,12 +1,21 @@
-<div class="rbac-default-index">
-    <h1><?= $this->context->action->uniqueId ?></h1>
-    <p>
-        This is the view content for action "<?= $this->context->action->id ?>".
-        The action belongs to the controller "<?= get_class($this->context) ?>"
-        in the "<?= $this->context->module->id ?>" module.
-    </p>
-    <p>
-        You may customize this page by editing the following file:<br>
-        <code><?= __FILE__ ?></code>
-    </p>
+<?php
+
+use wskeee\rbac\models\searchs\AuthItemSearch;
+use yii\data\ArrayDataProvider;
+use yii\grid\GridView;
+use yii\helpers\Html;
+use yii\web\View;
+
+/* @var $this View */
+/* @var $searchModel AuthItemSearch */
+/* @var $dataProvider ArrayDataProvider */
+
+$this->title = '更新角色与权限';
+$this->params['breadcrumbs'][] = $this->title;
+?>
+
+<div class="default-index rbac">
+    
+    <?= Html::a('更新', ['index', 'is_make' => true], ['class' => 'btn btn-primary', 'data' => ['method' => 'post']]) ?>
+
 </div>

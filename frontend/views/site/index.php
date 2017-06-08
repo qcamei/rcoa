@@ -48,7 +48,6 @@ $this->title = '工匠';
             </a>
             <div class="site-home-words">
                 <span class="site-home-words-ch">开发</span><br/><span class="site-home-words-en">Development</span>
-                <i class="new-icon"></i>
             </div>
         </div>
 

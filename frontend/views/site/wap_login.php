@@ -68,12 +68,12 @@ $js = <<<JS
     size();
     function size(){
         var height = $(document.body).height() - 100;
-        if(height < 820)
+        if(height >= 1366)
             height = 820;
         $(".site-login").css({width:'100%',height:height, display:"block"});
     }
 JS;
-    //$this->registerJs($js, View::POS_READY);
+    $this->registerJs($js, View::POS_READY);
 ?>
 
 <?php

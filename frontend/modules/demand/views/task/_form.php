@@ -65,8 +65,10 @@ use yii\widgets\ActiveForm;
     ])->widget(TouchSpin::classname(),  [
         'pluginOptions' => [
             'placeholder' => '学时 ...',
-            'min' => 0,
-            'max' => 999999,
+            'step' => 0.1,
+            'decimals' => 2,
+            'min' => 0.0,
+            'max' => 999999.99,
         ],
     ]) ?>
     
@@ -75,8 +77,10 @@ use yii\widgets\ActiveForm;
     ])->widget(TouchSpin::classname(),  [
         'pluginOptions' => [
             'placeholder' => '学分 ...',
-            'min' => 0,
-            'max' => 999999,
+            'step' => 0.1,
+            'decimals' => 2,
+            'min' => 0.0,
+            'max' => 999999.99,
         ],
     ]) ?>
   
@@ -102,7 +106,7 @@ use yii\widgets\ActiveForm;
     ?> 
     
     <?php if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_EDIT))
-            echo $form->field($model, 'create_by')->widget(Select2::classname(), ['id' => 'demandtask-create_by', 'data' => [], 'options' => ['placeholder' => '请选择...']]); 
+            echo $form->field($model, 'create_by')->widget(Select2::classname(), ['id' => 'demandtask-create_by', 'data' => $members, 'options' => ['placeholder' => '请选择...']]); 
     ?>
     
     <?php

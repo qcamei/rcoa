@@ -2,7 +2,11 @@
 
 namespace wskeee\rbac\models;
 
+use common\models\System;
+use wskeee\rbac\RbacManager;
 use Yii;
+use yii\base\Model;
+use yii\db\ActiveQuery;
 use yii\rbac\Item;
 use yii\rbac\ManagerInterface;
 
@@ -16,20 +20,21 @@ use yii\rbac\ManagerInterface;
  * @property string $rule_name                  规则名
  * @property string $data                       数据
  * 
+ * @property System $roleCategory               角色类别
  * @property Item $item 数据
  */
-class AuthItem extends yii\base\Model
+class AuthItem extends Model
 {
-    /**
-     * 名称
-     * @var string 
-     */
-    public $name;
     /**
      * 所属系统模块ID
      * @var integer 
      */
     public $system_id;
+    /**
+     * 名称
+     * @var string 
+     */
+    public $name;
     /**
      * 类型
      * @var integer 
@@ -57,6 +62,13 @@ class AuthItem extends yii\base\Model
     private $_item;
     
     /**
+     * 类别
+     * @var array 
+     */
+    public static $category = [];
+
+
+    /**
      *
      * @var ManagerInterface
      */
@@ -70,7 +82,7 @@ class AuthItem extends yii\base\Model
      */
     public function __construct($item,$config = array()) 
     {
-        $this->authManager = \Yii::$app->assetManager;
+        $this->authManager = \Yii::$app->authManager;
         $this->_item = $item;
         if($item !== null)
         {
@@ -81,6 +93,7 @@ class AuthItem extends yii\base\Model
             $this->ruleName = $item->ruleName;
             $this->data = $item->data === null ? null : json_decode($time->data);
         }
+        
         parent::__construct($config);
     }
     
@@ -98,15 +111,15 @@ class AuthItem extends yii\base\Model
     public function rules()
     {
         return [
-            [['modular', 'name', 'type'], 'required'],
+            [['system_id', 'name', 'type'], 'required'],
             [['name'],'unique','when'=>function()
                 {
                     return $this->getIsNewRecord() || ($this->_item->name != $this->name);
                 }],
             [['name'], 'match', 'pattern' => '/^[\w-]+$/'],
             [['type'], 'integer'],
-            [['modular', 'description', 'data'], 'string'],
-            [['modular', 'name', 'ruleName'], 'string', 'max' => 64],
+            [['description', 'data'], 'string'],
+            [['name', 'ruleName'], 'string', 'max' => 64],
             [['ruleName'],'in',
                 'range'=>  array_keys($this->authManager->getRules()),
                 'message'=>'没有找到对应规则!'],
@@ -137,6 +150,7 @@ class AuthItem extends yii\base\Model
     public function attributeLabels()
     {
         return [
+            'system_id' => '所属模块',
             'name' => '名称',
             'type' => '类型',
             'description' => '描述',
@@ -192,31 +206,72 @@ class AuthItem extends yii\base\Model
     {
         if($this->validate())
         {
+            /* @var $rbacManager RbacManager */
+            $rbacManager = Yii::$app->authManager;
             if($this->_item === null)
             {
-                if($this->type == Item::TYPE_ROLE)
-                    $this->_item = $this->authManager->createRole($this->name);
-                else
-                    $this->_item = $this->authManager->createPermission ($this->name);
+                if($this->type == Item::TYPE_ROLE){
+                    $this->_item = (array)$this->authManager->createRole($this->name);
+                    $this->_item += ['system_id' => null];
+                }
+                else{
+                    $this->_item = (array)$this->authManager->createPermission ($this->name);
+                    $this->_item += ['system_id' => null];
+                }
                 $isNew = true;
             }else
             {
                 $isNew = false;
-                $oldName = $this->_item->name;
+                $this->_item = (array)$this->_item;
+                $oldName = $this->_item['name'];
             }
-            $this->_item->name = $this->name;
-            $this->_item->system_id = $this->system_id;
-            $this->_item->description = $this->description;
-            $this->_item->ruleName = $this->ruleName;
-            $this->_item->data = $this->data === null || $this->data === '' ? null : json_decode($this->data);
             
-            if($isNew)
-                $this->authManager->add ($this->_item);
-            else
-                $this->authManager->update ($oldName, $this->_item);
+            $this->_item['name'] = $this->name;
+            $this->_item['system_id'] = $this->system_id;
+            $this->_item['description'] = $this->description;
+            $this->_item['ruleName'] = $this->ruleName;
+            $this->_item['data'] = $this->data === null || $this->data === '' ? null : json_decode($this->data);
+            $this->_item['createdAt'] = time();
+            $this->_item['updatedAt'] = time();   
+            
+            if($isNew){
+                Yii::$app->db->createCommand()->insert('ccoa_auth_item',[
+                    'name' => $this->_item['name'],
+                    'system_id' => $this->_item['system_id'],
+                    'type' => $this->_item['type'],
+                    'description' => $this->_item['description'], 
+                    'rule_name' => $this->_item['ruleName'], 
+                    'data'=> $this->_item['data'], 
+                    'created_at' => $this->_item['createdAt'], 
+                    'updated_at' => $this->_item['updatedAt'], 
+                ])->execute();
+                $rbacManager->invalidateCache();
+                //$this->authManager->add ($this->_item);
+            }
+            else{
+                Yii::$app->db->createCommand()->update ('ccoa_auth_item', [
+                    'name' => $this->_item['name'],
+                    'system_id' => $this->_item['system_id'],
+                    'type' => $this->_item['type'],
+                    'description' => $this->_item['description'], 
+                    'rule_name' => $this->_item['ruleName'], 
+                    'data'=> $this->_item['data'], 
+                    'updated_at' => $this->_item['updatedAt'], ], ['name' => $oldName])->execute();
+                $rbacManager->invalidateCache();
+                //$this->authManager->update ($oldName, $this->_item);
+            }
             return true;
         }else
             return false;
+    }
+    
+    /**
+     * 
+     * @return ActiveQuery
+     */
+    public function getRoleCategory()
+    {
+        return $this->hasOne(System::className(), ['id' => 'system_id']);
     }
     
     /**

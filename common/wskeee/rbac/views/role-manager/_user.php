@@ -1,17 +1,22 @@
 <?php
 
+use kartik\widgets\Select2;
+use wskeee\rbac\models\AuthItem;
 use yii\helpers\Html;
 use yii\web\View;
-
+use yii\widgets\ActiveForm;
 
 /* @var $this View */
-/* @var $model common\modules\rbac\models\AuthItem */
+/* @var $model AuthItem */
+/* @var $form ActiveForm */
 
-$this->title = '添加角色';
+$this->title = '添加用户';
 $this->params['breadcrumbs'][] = ['label' => 'Auth Items', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
-<div class="user-role-create rbac">
+
+<div class="role-manager-user rbac">
 
     <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -21,10 +26,19 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <div class="modal-body">
             
-            <?= $this->render('_form', [
-                'roleCategorys' => $roleCategorys,
-                'roles' => $roles,
-            ]) ?>
+            <?php $form = ActiveForm::begin([
+                'id' => 'assignment-user-form',
+            ]); ?>
+                
+            <?php foreach($users as $userItem): ?>
+
+            <p>
+                <?= Html::checkbox('user_id[]', '', ['value' => $userItem['id']]) ?><?= $userItem['nickname'] ?>
+            </p>
+
+            <?php endforeach; ?>
+                
+            <?php ActiveForm::end(); ?>
 
         </div>
         <div class="modal-footer">
@@ -40,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
     /** 承接操作 提交表单 */
     $("#submit-create-save").click(function()
     {
-        $('#user-role-create-form').submit();
+        $('#assignment-user-form').submit();
     });
 </script>
 
@@ -53,13 +67,13 @@ $js =
         
     //全选
     $("#user-role-create-selectAll").click(function(){
-        $("input[name='item_name[]']:checkbox").each(function(){
+        $("input[name='user_id[]']:checkbox").each(function(){
             $(this).prop("checked",true);
         });
     });
     //全不选
     $("#user-role-create-unSelect").click(function(){
-        $("input[name='item_name[]']:checkbox").each(function(){
+        $("input[name='user_id[]']:checkbox").each(function(){
             $(this).prop("checked",false);
         });
     });

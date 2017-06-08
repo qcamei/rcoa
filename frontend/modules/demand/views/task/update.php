@@ -46,6 +46,7 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa/demand', 'Update');
         'annex' => $annex,
         'workitmType' => $workitmType,
         'workitem' => $workitem,
+        'members' => $members,
     ]) ?>
 
 </div>

@@ -217,9 +217,9 @@ class DemandTask extends ActiveRecord
     {
         return [
             [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'teacher', 'course_description', 'lesson_time', 'credit'],'required'],
-            [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'lesson_time', 'credit', 'mode', 'team_id', 'create_team', 'develop_principals', 'status', 'progress', 'created_at', 'updated_at', 'finished_at'], 'integer'],
+            [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'mode', 'team_id', 'create_team', 'develop_principals', 'status', 'progress', 'created_at', 'updated_at', 'finished_at'], 'integer'],
             [['course_description', 'des'], 'string'],
-            [['budget_cost', 'cost', 'external_budget_cost', 'external_reality_cost', 'bonus_proportion', 'score'], 'number'],
+            [['lesson_time', 'credit', 'budget_cost', 'cost', 'external_budget_cost', 'external_reality_cost', 'bonus_proportion', 'score'], 'number'],
             [['teacher', 'undertake_person', 'create_by'], 'string', 'max' => 36],
             [['plan_check_harvest_time', 'reality_check_harvest_time'], 'string', 'max' => 60],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Item::className(), 'targetAttribute' => ['course_id' => 'id']],

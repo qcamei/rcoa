@@ -182,6 +182,7 @@ class TaskController extends Controller
                 'team' => $dtTool->getHotelTeam(),
                 'workitmType' => $dtTool->getDemandWorkitemTypeData(),
                 'workitem' => $dtTool->getDemandWorkitemData(),
+                'members' => [],
             ]);
         }
     }
@@ -207,6 +208,8 @@ class TaskController extends Controller
         $dtTool = DemandTool::getInstance();
         $post = Yii::$app->request->post();
         $courses = $this->getCourses($model->item_child_id);
+        $members = $this->getTeamMembers($model->createTeam);
+        
         
         if ($model->load($post)) {
             $dtTool->UpdateTask($model, $post);
@@ -223,6 +226,7 @@ class TaskController extends Controller
                 'annex' => $this->getAnnex($model->id),
                 'workitmType' => $dtTool->getDemandWorkitemTypeData($model->id),
                 'workitem' => $dtTool->getDemandWorkitemData($model->id),
+                'members'  => ArrayHelper::merge([$model->create_by => $model->createBy->nickname], $members),
             ]);
         }
     }
@@ -529,7 +533,7 @@ class TaskController extends Controller
     
     /**
      * 获取所有创建者
-     * @return type
+     * @return array
      */
     public function getCreateBys()
     {
@@ -541,8 +545,20 @@ class TaskController extends Controller
     }
     
     /**
+     * 获取团队成员  
+     * @param integer $team_id          团队id
+     * @return array
+     */
+    public function getTeamMembers($team_id)
+    {
+        $items = TeamMemberTool::getInstance()->getTeamMembersByTeamId($team_id);
+        
+        return ArrayHelper::map($items, 'id', 'nickname');
+    }
+
+    /**
      * 获取所有承接人
-     * @return type
+     * @return array
      */
     public function getUndertakePersons()
     {

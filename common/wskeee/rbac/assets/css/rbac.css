@@ -1,0 +1,48 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2017-5-31, 14:07:17
+    Author     : Kiwi°
+*/
+.rbac .rbac-frame{
+    width: 100%;
+    height: 500px;
+    border: 1px #ddd solid;
+    border-radius: 10px;
+}
+.rbac .rbac-number{
+    width: 100%;
+    height: 50px; 
+    padding-left: 15px;
+    padding-right: 15px;
+    border-bottom: 1px #ddd solid;
+    line-height: 50px;
+}
+.rbac .rbac-delete-form{
+    width: 100%;
+    height: 400px;
+    overflow: auto;
+    padding: 10px 15px;
+}
+.rbac .rbac-btn{
+    width: 100%;
+    height: 50px;
+    padding-left: 15px;
+    padding-right: 15px;
+    border-top: 1px #ddd solid;
+    text-align: right;
+    line-height: 50px;
+}
+.rbac .prompt{
+    color: #9d9d9d;
+}
+.rbac .modal-dialog{
+    width: 1170px;
+}
+.rbac .modal-body{
+    height: 790px;
+    overflow: auto;
+}

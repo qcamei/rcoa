@@ -102,7 +102,7 @@ class RuleController extends Controller
     public function beforeAction($action) {
         if(parent::beforeAction($action))
         {
-            if(!\Yii::$app->user->can(RbacName::PERMSSIONT_RBAC_ADMIN))
+            if(!\Yii::$app->user->can(RbacName::PERMSSION_RBAC_ADMIN))
                 throw new NotAcceptableHttpException('无权限操作！');
             else
                 return true;

@@ -5,7 +5,9 @@ namespace wskeee\rbac;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 use yii\web\AssetBundle;
+use const YII_DEBUG;
 /**
  * Description of RbacAsset
  *
@@ -15,14 +17,17 @@ class RbacAsset extends AssetBundle
 {
     //public $basePath = '@webroot/assets';
     //public $baseUrl = '@web/assets';
-    public $sourcePath = '@wskeee/rbac/assets';
+    public $sourcePath = '@common/wskeee/rbac/assets';
     public $css = [
-       
+       'css/rbac.css'
     ];
     public $js = [
         'js/rbac.admin.js'
     ];
     public $depends = [
         'yii\web\YiiAsset'
+    ];
+    public $publishOptions = [
+        'forceCopy' => YII_DEBUG,
     ];
 }

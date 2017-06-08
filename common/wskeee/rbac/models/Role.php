@@ -1,4 +1,5 @@
 <?php
+
 namespace wskeee\rbac\models;
 
 use yii\rbac\Role AS RbacRole;
@@ -15,6 +16,10 @@ use yii\rbac\Role AS RbacRole;
  * @author Administrator
  */
 class Role extends RbacRole{
-    //put your code here
+  
+    /**
+     * @inheritdoc
+     */
     public $system_id;
+    
 }

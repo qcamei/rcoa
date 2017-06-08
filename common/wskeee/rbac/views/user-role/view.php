@@ -1,92 +1,101 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\DetailView;
-use yii\helpers\Json;
-use yii\helpers\Url;
-
+use common\models\User;
+use wskeee\rbac\models\AuthItem;
 use wskeee\rbac\RbacAsset;
+use yii\helpers\Html;
+use yii\web\View;
+use yii\widgets\ActiveForm;
 
-/* @var $this yii\web\View */
-/* @var $model wskeee\rbac\models\AuthItem */
+/* @var $this View */
+/* @var $model User */
+/* @var $roleItems AuthItem */
 
-$this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Role', 'url' => ['index']];
+$this->title = '用户角色详情：'.$model->nickname;
+$this->params['breadcrumbs'][] = ['label' => '用户角色', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
-<div class="auth-item-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<div class="user-role-view rbac">
 
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->name], ['class' => 'btn btn-primary','data-confirm'=>'确认添加?']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->name], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'name',
-            'description:ntext',
-            'ruleName',
-            'data:ntext',
-        ],
-    ]) ?>
-    <div class="row">
-        <div class="col-lg-5">
-            可分配：
-            <input id="search-avaliable"><br />
-            <select id="list-avaliable" multiple size="15" style="width: 100%">
-            </select>
+    <div class="rbac-frame" style="height: 800px">
+        
+        <div class="rbac-number">
+            已分配角色（<?= count($roles)?>个）
         </div>
-        <div class="col-lg-1">
-            <br><br>
-            <a href="#" id="btn-add" class="btn btn-success" style="width: 100%">&gt;&gt;</a><br>
-            <a href="#" id="btn-remove" class="btn btn-danger" style="width: 100%">&lt;&lt;</a>
+        
+        <?php $form = ActiveForm::begin([
+            'id' => 'user-role-delete-form',
+            'action' => '/rbac/user-role/delete?user_id='.$model->id
+        ]); ?>
+        
+        <div class="rbac-delete-form" style="height: 700px">
+            
+            <?php foreach($roleCategorys as $roleCategory): ?>
+            <p><b><?= $roleCategory['name'] ?></b></p>
+                <?php foreach($roles as $roleItems): ?>
+                    <?php if($roleItems->system_id == $roleCategory['id']): ?>
+                    <p style="padding-left: 20px;">
+                        <?= Html::checkbox('item_name[]', '', ['value' => $roleItems->name]) ?><?= $roleItems->description ?>
+                        <span class="prompt">（角色）</span>
+                    </p>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            <?php endforeach; ?>
+                    
         </div>
-        <div class="col-lg-5">
-            已分配：
-            <input id="search-assigned"><br />
-            <select id="list-assigned" multiple size="15" style="width: 100%">
-            </select>
+        
+        <?php ActiveForm::end(); ?>
+        
+        <div class="rbac-btn">
+            <?= Html::a('全选', 'javascript:;', ['id' => 'user-role-selectAll', 'style' => 'float: left; margin-right: 15px;']); ?>
+            <?= Html::a('全不选', 'javascript:;', ['id' => 'user-role-unSelect', 'style' => 'float: left;']); ?>
+            <?= Html::a('余除已选择角色', 'javascript:;', ['id' => 'user-role-delete', 'class' => 'btn btn-danger', 'data' => ['method' => 'post']]); ?>
+            <?= Html::a('添加角色', ['create', 'user_id' => $model->id], ['id' => 'user-role-create', 'class' => 'btn btn-success']); ?>
         </div>
+        
     </div>
+   
+</div>
+
+<div class="rbac-model">
+    <?= $this->render('_form_model')?>    
 </div>
 
 <?php
-    RbacAsset::register($this);
-    $properties = Json::htmlEncode([
-        'id'=>$model->name,
-        'assignUrl'=>  Url::to('assign'),
-        'searchUrl'=>  Url::to('search')
-    ]);
-    $js = 
+$js = 
 <<<JS
-wskeee.rbac.initProperties($properties);
-
-$('#search-avaliable').keydown(function(){
-    wskeee.rbac.searchRole('avaliable');
-});
-$('#search-assigned').keydown(function(){
-    wskeee.rbac.searchAssign('assigned');
-});
-$('#btn-add').click(function(){
-    wskeee.rbac.addChild("assign");
-    return false;
-});
-$('#btn-remove').click(function(){
-    wskeee.rbac.addChild("remove");
-    return false;
-});
-wskeee.rbac.searchRole('avaliable', true);
-wskeee.rbac.searchAssign('assigned', true);
+        
+    /** 删除操作 提交表单 */
+    $('#user-role-delete').click(function()
+    {       
+        $('#user-role-delete-form').submit();
+    });   
+    /** 添加操作 提交表单 */
+    $('#user-role-create').click(function()
+    {       
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    });
+    //全选
+    $("#user-role-selectAll").click(function(){
+        $("input[name='item_name[]']:checkbox").each(function(){
+            $(this).prop("checked",true);
+        });
+    });
+    //全不选
+    $("#user-role-unSelect").click(function(){
+        $("input[name='item_name[]']:checkbox").each(function(){
+            $(this).prop("checked",false);
+        });
+    });
+        
 JS;
-    $this->registerJs($js, yii\web\View::POS_READY);
+    $this->registerJs($js, View::POS_READY);
 ?>
 
+<?php
+    RbacAsset::register($this);
+?>

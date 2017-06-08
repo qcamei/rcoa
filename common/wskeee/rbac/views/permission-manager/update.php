@@ -3,19 +3,21 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model common\modules\rbac\models\AuthItem */
+/* @var $model common\modules\rbac\models\Permission */
 
-$this->title = 'Update Auth Item: ' . ' ' . $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Auth Items', 'url' => ['index']];
+$this->title = 'Update Permission: ' . ' ' . $model->name;
+$this->params['breadcrumbs'][] = ['label' => 'Permissions', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->name]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
-<div class="user-role-update rbac">
+<div class="permission-update">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [
         'model' => $model,
+        'roleCategory' => $roleCategory,
+        'rules' => $rules
     ]) ?>
 
 </div>

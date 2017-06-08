@@ -8,6 +8,7 @@
 
 namespace wskeee\rbac;
 
+use common\models\User;
 use wskeee\rbac\models\Permission;
 use wskeee\rbac\models\Role;
 use Yii;
@@ -16,7 +17,6 @@ use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\rbac\DbManager;
 use yii\rbac\Item;
-use yii\web\User;
 
 
 /**

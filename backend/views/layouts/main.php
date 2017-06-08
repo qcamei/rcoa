@@ -69,8 +69,6 @@ AppAsset::register($this);
             'items' => [
                  ['label' => '用户管理', 'url' => '/user'],
                  ['label' => '权限管理', 'url' => '/rbac/user-role'],
-                 ['label' => '角色', 'url' => '/rbac/role'],
-                 ['label' => '权限', 'url' => '/rbac/permission'],
                  ['label' => Yii::t('rcoa/position', 'Positions'), 'url' => '/position'],
                  ['label' => '规则', 'url' => '/rbac/rule'],
             ]
