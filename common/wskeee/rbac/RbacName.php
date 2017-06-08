@@ -106,7 +106,7 @@ class RbacName{
 	/** 课程开发-周报编辑 */
 	const PERMSSION_TEAMWORK_WEEKLY_UPDATE = "p_teamwork_weekly_update";
 	/** 测试权限 */
-	const PERMSSION_TESTS = "p_tests";
+	const PERMSSION_TEST = "p_test";
 	/** 管理员 */
 	const ROLE_ADMIN = "r_admin";
 	/** 课程中心组 */
@@ -137,8 +137,6 @@ class RbacName{
 	const ROLE_NEW_PUBLISHER = "r_new_publisher";
 	/** 项目管理员  */
 	const ROLE_PROJECT_MANAGER = "r_project_manager";
-	/** 测试角色 */
-	const ROLE_RADMIN = "r_radmin";
 	/** 摄影组长 */
 	const ROLE_SHOOT_LEADER = "r_shoot_leader";
 	/** 摄影师 */
@@ -155,12 +153,12 @@ class RbacName{
 	const ROLE_TEAMWORK_DEVELOP_MANAGER = "r_teamwork_develop_manager";
 	/** 课程开发周报开发者 */
 	const ROLE_TEAMWORK_WEEKLY_DEVELOPER = "r_teamwork_weekly_developer";
+	/** 测试角色 */
+	const ROLE_TEST = "r_test";
 	/** 所有用户 */
 	const ROLE_USERS = "r_users";
 	/** 编导 */
 	const ROLE_WD = "r_wd";
 	/** 编导组长 */
 	const ROLE_WD_LEADER = "r_wd_leader";
-	/** 天天弱弱 */
-	const TTRR = "ttrr";
 }

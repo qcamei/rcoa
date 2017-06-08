@@ -61,7 +61,7 @@ class RoleManagerController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'roleCategory' => $this->getRoleCategory(),
+            'categorys' => $this->getCategory(),
         ]);
     }
 
@@ -96,7 +96,7 @@ class RoleManagerController extends Controller
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'roleCategory' => ArrayHelper::map($this->getRoleCategory(), 'id', 'name'),
+                'categorys' => $this->getCategory(),
             ]);
         }
     }
@@ -116,7 +116,7 @@ class RoleManagerController extends Controller
         } else {
             return $this->render('update', [
                 'model' => $model,
-                'roleCategory' => ArrayHelper::map($this->getRoleCategory(), 'id', 'name'),
+                'categorys' => $this->getCategory(),
             ]);
         }
     }
@@ -191,6 +191,26 @@ class RoleManagerController extends Controller
     } 
     
     /**
+     * 获取所有模块分类
+     * @return type
+     */
+    public function getCategory()
+    {
+        $public[] = ['id' => 0, 'name' => '公共'];
+        $categorys = (new Query())
+                    ->select(['id', 'name'])
+                    ->from(['System' => System::tableName()])
+                    ->where(['is_delete' => 'N'])
+                    ->orderBy('System.index')
+                    ->all();
+        
+        $category = ArrayHelper::merge($public, $categorys);
+        
+        return ArrayHelper::map($category, 'id', 'name');
+    }
+
+
+    /**
      * 获取角色类别
      * @param string $name            角色名
      * @param string $is_null
@@ -202,10 +222,8 @@ class RoleManagerController extends Controller
             $items = Yii::$app->authManager->getRoles();
         else{
             $childRoles = Yii::$app->authManager->getChildRoles($name);
-            
             $permissions = Yii::$app->authManager->getPermissionsByRole($name);
             $items = ArrayHelper::merge($childRoles, $permissions);
-           
         }
         $itemCategory = [];
         foreach ($items as $item) 

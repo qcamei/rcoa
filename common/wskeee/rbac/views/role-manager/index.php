@@ -16,7 +16,7 @@ use yii\web\View;
 $this->title = '角色管理';
 $this->params['breadcrumbs'][] = $this->title;
 
-AuthItem::$category = ArrayHelper::map($roleCategory, 'id', 'name');
+AuthItem::$category = $categorys;
 
 ?>
 <div class="role-manager-index rbac">

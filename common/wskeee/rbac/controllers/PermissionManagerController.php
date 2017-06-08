@@ -58,7 +58,7 @@ class PermissionManagerController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'roleCategory' => $this->getRoleCategory(),
+            'categorys' => $this->getCategory(),
         ]);
     }
 
@@ -91,7 +91,7 @@ class PermissionManagerController extends Controller
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'roleCategory' => ArrayHelper::map($this->getRoleCategory(), 'id', 'name'),
+                'categorys' => $this->getCategory(),
                 'rules' => $this->getRulesForSelect()
             ]);
         }
@@ -105,14 +105,14 @@ class PermissionManagerController extends Controller
      */
     public function actionUpdate($name)
     {
-        $model = $this->findModel($id);
+        $model = $this->findModel($name);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'name' => $model->name]);
         } else {
             return $this->render('update', [
                 'model' => $model,
-                'roleCategory' => ArrayHelper::map($this->getRoleCategory(), 'id', 'name'),
+                'categorys' => $this->getCategory(),
                 'rules' => $this->getRulesForSelect()
             ]);
         }
@@ -146,6 +146,25 @@ class PermissionManagerController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    
+    /**
+     * 获取所有模块分类
+     * @return type
+     */
+    public function getCategory()
+    {
+        $public[] = ['id' => 0, 'name' => '公共'];
+        $categorys = (new Query())
+                    ->select(['id', 'name'])
+                    ->from(['System' => System::tableName()])
+                    ->where(['is_delete' => 'N'])
+                    ->orderBy('System.index')
+                    ->all();
+        
+        $category = ArrayHelper::merge($public, $categorys);
+        
+        return ArrayHelper::map($category, 'id', 'name');
     }
     
     /**
@@ -235,5 +254,9 @@ class PermissionManagerController extends Controller
     }
 
 
-   
+    protected function getRulesForSelect()
+    {
+        Yii::trace(ArrayHelper::map(Yii::$app->authManager->getRules(), 'name', 'name'));
+        return ArrayHelper::map(Yii::$app->authManager->getRules(), 'name', 'name');
+    }
 }

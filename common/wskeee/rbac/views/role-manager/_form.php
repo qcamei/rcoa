@@ -16,7 +16,7 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'system_id')->widget(Select2::classname(), [
-        'data' => $roleCategory, 'options' => ['placeholder' => '请选择...']
+        'data' => $categorys, 'options' => ['placeholder' => '请选择...']
     ]) ?>
     
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>

@@ -39,7 +39,7 @@ $roleCategoryItem = ArrayHelper::map($roleCategorys, 'id', 'name');
     <div class="rbac-frame" style="width: 45%; float: left;">
         
         <div class="rbac-number">
-            拥有的角色或权限（<?= count($permissions) + count($childRoles)?>个）
+            拥有的角色或权限（<?= count($permissions) + ($childRoles[$model->name]->name != $model->name? count($childRoles) : 0)?>个）
         </div>
 
         <?php $form = ActiveForm::begin([
