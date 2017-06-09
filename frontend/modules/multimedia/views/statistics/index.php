@@ -8,7 +8,12 @@ use yii\helpers\BaseHtml;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\View;
+
 /* @var $this View */
+
+$this->title = '开发-'.Yii::t('rcoa/multimedia', 'Multimedia Statistics');
+$this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="container statistics-content">
     <div class="btn-group">

@@ -10,7 +10,7 @@ use yii\web\View;
 /* @var $searchModel MultimediaTaskSearch */
 /* @var $dataProvider ActiveDataProvider */
 
-$this->title = Yii::t('rcoa/multimedia', 'Multimedia Manages');
+$this->title = '开发-'.Yii::t('rcoa/multimedia', 'Multimedia Index');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="multimedia-task-index multimedia-task multimedia-home">

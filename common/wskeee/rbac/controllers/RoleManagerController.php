@@ -90,8 +90,11 @@ class RoleManagerController extends Controller
     {
         $model = new AuthItem(null);
         $model->type = Item::TYPE_ROLE;
+        /* @var $rbacManager RbacManager */
+        $rbacManager = Yii::$app->authManager;
         
         if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
+            $rbacManager->invalidateCache();
             return $this->redirect(['view', 'name' => $model->name]);
         } else {
             return $this->render('create', [
@@ -110,8 +113,11 @@ class RoleManagerController extends Controller
     public function actionUpdate($name)
     {
         $model = $this->findModel($name);
+        /* @var $rbacManager RbacManager */
+        $rbacManager = Yii::$app->authManager;
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $rbacManager->invalidateCache();
             return $this->redirect(['view', 'name' => $model->name]);
         } else {
             return $this->render('update', [
@@ -219,7 +225,7 @@ class RoleManagerController extends Controller
     public function getRoleCategory($name = null, $is_null = true)
     {
         if($is_null)
-            $items = Yii::$app->authManager->getRoles();
+            $items = Yii::$app->authManager->getPermissions();
         else{
             $childRoles = Yii::$app->authManager->getChildRoles($name);
             $permissions = Yii::$app->authManager->getPermissionsByRole($name);
@@ -235,7 +241,7 @@ class RoleManagerController extends Controller
                     ->where(['id' => array_values($itemCategory)])
                     ->orderBy('System.index')
                     ->all();
-     
+        
         return ArrayHelper::merge($public, $roleCategory);
     }
     

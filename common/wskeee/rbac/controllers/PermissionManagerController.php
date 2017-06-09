@@ -6,6 +6,7 @@ use common\models\System;
 use common\models\User;
 use wskeee\rbac\models\AuthItem;
 use wskeee\rbac\models\searchs\AuthItemSearch;
+use wskeee\rbac\RbacManager;
 use Yii;
 use yii\db\Query;
 use yii\filters\AccessControl;
@@ -86,7 +87,11 @@ class PermissionManagerController extends Controller
     public function actionCreate()
     {
         $model = new AuthItem(null,['type'=>  Item::TYPE_PERMISSION]);
+        /* @var $rbacManager RbacManager */
+        $rbacManager = Yii::$app->authManager;
+            
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $rbacManager->invalidateCache();
             return $this->redirect(['view', 'name' => $model->name]);
         } else {
             return $this->render('create', [
@@ -106,8 +111,11 @@ class PermissionManagerController extends Controller
     public function actionUpdate($name)
     {
         $model = $this->findModel($name);
-
+        /* @var $rbacManager RbacManager */
+        $rbacManager = Yii::$app->authManager;
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $rbacManager->invalidateCache();
             return $this->redirect(['view', 'name' => $model->name]);
         } else {
             return $this->render('update', [
@@ -193,7 +201,7 @@ class PermissionManagerController extends Controller
                     ->where(['id' => array_values($itemCategory)])
                     ->orderBy('System.index')
                     ->all();
-     
+        
         return ArrayHelper::merge($public, $roleCategory);
     }
     

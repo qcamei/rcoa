@@ -21,7 +21,7 @@ AuthItem::$category = $categorys;
 ?>
 <div class="role-manager-index rbac">
     <p>
-        <?= Html::a('创建权限', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('创建角色', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?php
     //Pjax::begin(['enablePushState'=>false]);

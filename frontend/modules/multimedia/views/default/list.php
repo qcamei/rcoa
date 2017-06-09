@@ -14,7 +14,7 @@ use yii\widgets\LinkPager;
 /* @var $model MultimediaTask */
 /* @var $dataProvider ActiveDataProvider */
 
-$this->title = Yii::t('rcoa/multimedia', 'Multimedia Manages');
+$this->title = '开发-'.Yii::t('rcoa/multimedia', 'Multimedia Task');
 $this->params['breadcrumbs'][] = $this->title;
 
 $taskIds = ArrayHelper::getColumn($dataProvider->allModels, 'id');

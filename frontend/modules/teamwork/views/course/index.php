@@ -16,7 +16,7 @@ use yii\widgets\LinkPager;
 /* @var $twTool TeamworkTool */
 /* @var $dataProvider ActiveDataProvider */
 
-$this->title = Yii::t('rcoa/teamwork', 'Course Manages');
+$this->title = '开发-'.Yii::t('rcoa/teamwork', 'Teamwork Course');
 $this->params['breadcrumbs'][] = $this->title;
 
 $courseIds = ArrayHelper::getColumn($dataProvider->allModels, 'id');

@@ -8,7 +8,7 @@ use yii\web\View;
 /* @var $this View */
 /* @var $model AuthItem */
 
-$this->title = 'Create Auth Item';
+$this->title = '创建角色';
 $this->params['breadcrumbs'][] = ['label' => 'Auth Items', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

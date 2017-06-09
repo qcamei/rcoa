@@ -7,8 +7,13 @@
  */
 
 return[
-    //多媒体模块 - 公共部分 
-    'Multimedia' => '多媒体',
+    /* 多媒体模块 - 公共部分 */
+    //前台-公共部分
+    'Multimedia' => '视频',
+    'Multimedia Index' => '视频-主页',
+    'Multimedia Task' => '视频-任务',
+    'Multimedia Statistics' => '视频-统计',
+    
     'Multimedia Content Types' => '内容类型',
     'Create Multimedia Content Type' => '创建-内容类型',
     'Update Multimedia Content Type' => '更新-内容类型',

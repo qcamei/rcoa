@@ -3,7 +3,6 @@
 namespace wskeee\rbac\models;
 
 use common\models\System;
-use wskeee\rbac\RbacManager;
 use Yii;
 use yii\base\Model;
 use yii\db\ActiveQuery;
@@ -206,8 +205,6 @@ class AuthItem extends Model
     {
         if($this->validate())
         {
-            /* @var $rbacManager RbacManager */
-            $rbacManager = Yii::$app->authManager;
             if($this->_item === null)
             {
                 if($this->type == Item::TYPE_ROLE){
@@ -245,7 +242,6 @@ class AuthItem extends Model
                     'created_at' => $this->_item['createdAt'], 
                     'updated_at' => $this->_item['updatedAt'], 
                 ])->execute();
-                $rbacManager->invalidateCache();
                 //$this->authManager->add ($this->_item);
             }
             else{
@@ -257,7 +253,6 @@ class AuthItem extends Model
                     'rule_name' => $this->_item['ruleName'], 
                     'data'=> $this->_item['data'], 
                     'updated_at' => $this->_item['updatedAt'], ], ['name' => $oldName])->execute();
-                $rbacManager->invalidateCache();
                 //$this->authManager->update ($oldName, $this->_item);
             }
             return true;

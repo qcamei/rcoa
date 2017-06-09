@@ -62,10 +62,10 @@ return [
     
     
     //拍摄预约-公共部分
-    'Shoot Bookdetail' => '课程预约拍摄平台',
-    'Create Shoot Bookdetail' => '创建-课程预约拍摄',
-    'Update Shoot Bookdetail' => '更新-课程预约拍摄',
-    'Shoot Bookdetail Details' => '预约拍摄任务详情',
+    'Shoot Bookdetail' => '开发-预约',
+    'Create Shoot Bookdetail' => '创建预约',
+    'Update Shoot Bookdetail' => '更新预约',
+    'Shoot Bookdetail Details' => '预约详情',
     //拍摄预约-字段
     'Business' => '行业',
     'Fw College' => '层次/类型',
