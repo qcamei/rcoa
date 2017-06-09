@@ -68,8 +68,9 @@ use yii\widgets\ActiveForm;
         'options'=>['disabled' => 'disabled'],
         'pluginOptions' => [
             'placeholder' => '学时 ...',
-            'min' => 0,
-            'max' => 999999,
+            'min' => 0.00,
+            'max' => 999999.99,
+            'decimals' => 2,
             'initval' => $model->demandTask->lesson_time,
         ],
     ]) ?>
@@ -80,8 +81,9 @@ use yii\widgets\ActiveForm;
         'options'=>['disabled' => 'disabled'],
         'pluginOptions' => [
             'placeholder' => '学分 ...',
-            'min' => 0,
-            'max' => 999999,
+            'min' => 0.00,
+            'max' => 999999.99,
+            'decimals' => 2,
             'initval' => $model->demandTask->credit,
         ],
     ]) ?>
