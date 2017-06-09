@@ -92,7 +92,7 @@ class RbacName{
 	/** 课程开发-课程移交 */
 	const PERMSSION_TEAMWORK_COURSE_TRANSFER = "p_teamwork_course_transfer";
 	/** 课程开发-任务配置 */
-	const PERMSSION_TEAMWORK_TAKS_COLLOCATION = "p_teamwork_taks_collocation";
+	const PERMSSION_TEAMWORK_TASK_COLLOCATION = "p_teamwork_task_collocation";
 	/** 课程开发-任务完成 */
 	const PERMSSION_TEAMWORK_TAKS_COMPLETE = "p_teamwork_taks_complete";
 	/** 课程开发-任务开始 */

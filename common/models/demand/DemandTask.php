@@ -424,9 +424,7 @@ class DemandTask extends ActiveRecord
      */
     public function getDemandWorkitems()
     {
-        return $this->hasMany(DemandWorkitem::className(), ['demand_task_id' => 'id'])
-               ->orderBy('index')
-               ->with('workitem', 'workitemType', 'demandTask');
+        return $this->hasMany(DemandWorkitem::className(), ['demand_task_id' => 'id']);
     }
 
 

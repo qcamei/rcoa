@@ -807,7 +807,7 @@ class DemandTool {
         /* @var $results ActiveQuery */
         $results = $dtQuery->findDemandWorkitemTemplateTable();
         $values = ArrayHelper::getValue($post, 'DemandWorkitem.value');
-        
+
         $workitems = [];
         if(!empty($results->all())){
             foreach ($results->all() as $index => $workitem) {
@@ -821,11 +821,24 @@ class DemandTool {
                 $workitems[] = $workitem;
             }
         }
-        
-        /** 添加$values数组到表里 */
-        Yii::$app->db->createCommand()->batchInsert(DemandWorkitem::tableName(),[
-            'workitem_type_id', 'workitem_id', 'is_new',  'value_type', 'index', 'cost', 'demand_task_id', 'value', 'created_at', 'updated_at'
-        ], $workitems)->execute();
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {
+            if($model != null && empty($model->demandWorkitems)){
+                /** 添加$values数组到表里 */
+                Yii::$app->db->createCommand()->batchInsert(DemandWorkitem::tableName(),[
+                    'workitem_type_id', 'workitem_id', 'is_new',  'value_type', 'index', 'cost', 'demand_task_id', 'value', 'created_at', 'updated_at'
+                ], $workitems)->execute();
+            }else
+                throw new \Exception($model->getErrors());
+            
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        } catch (\Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
+        }
     }
         
     /**
