@@ -482,6 +482,15 @@ class DemandTask extends ActiveRecord
     }
     
     /**
+     * 获取是否在【开发中】之前状态
+     * @return type
+     */
+    public function getIsStatusDevelopingBefore()
+    {
+        return $this->status < self::STATUS_DEVELOPING;
+    }
+    
+    /**
      * 获取是否在【开发中】状态
      * @return type
      */

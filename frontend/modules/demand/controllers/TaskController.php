@@ -305,7 +305,7 @@ class TaskController extends Controller
         $model = $this->findModel($id);
         if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CANCEL) && $model->create_by != \Yii::$app->user->id)
             throw new NotAcceptableHttpException('无权限操作！');
-        if(!($model->getIsStatusCheck() || $model->getIsStatusUndertake()))
+        if(!$model->getIsStatusDevelopingBefore())
             throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
         $oldStatus = $model->status;
         /* @var $dtTool DemandTool */

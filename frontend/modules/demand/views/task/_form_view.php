@@ -55,7 +55,7 @@ $page = [
              * 4、必须是在取消支撑下
              */
             if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CANCEL) 
-               && ($model->getIsStatusCheck() || $model->getIsStatusUndertake()) 
+               && $model->getIsStatusDevelopingBefore() 
                && $model->create_by == Yii::$app->user->id)
                 echo Html::a('取消', ['cancel', 'id' => $model->id], ['id' => 'cancel', 'class' =>'btn btn-danger', 'style' => 'margin-right:15px;']).' ';
             /**

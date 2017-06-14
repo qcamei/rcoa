@@ -62,6 +62,7 @@ AppAsset::register($this);
             'label' => '专家库',
             'items' => [
                  ['label' => '专家管理', 'url' => '/expert/default/'],
+                 ['label' => '导入专家', 'url' => '/expert/import/upload'],
             ]
         ];
         $menuItems[] = [
