@@ -6,7 +6,7 @@ use yii\widgets\ActiveForm;
 /* @var $this View */
 /* @var $form ActiveForm */
 ?>
-<h1>课程数据导入</h1>
+<h1>老师信息数据导入</h1>
 
 <div class="import-form">
     
@@ -22,4 +22,3 @@ use yii\widgets\ActiveForm;
     
     <?php ActiveForm::end(); ?>
 </div>
-

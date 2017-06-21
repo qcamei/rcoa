@@ -70,25 +70,31 @@ class ImportController extends Controller
                     'item_child_id'     =>  $columns[2][$vIndex],           //专业/工种
                     'course_id'         =>  $columns[3][$vIndex],           //课程
                     'teacher'           =>  $columns[4][$vIndex],           //主讲讲师
-                    'mode'              =>  $columns[5][$vIndex],           //建设模式
-                    'credit'            =>  $columns[6][$vIndex],           //学分    
-                    'lesson_time'       =>  $columns[7][$vIndex],           //学时
-                    'video_length'      =>  $columns[8][$vIndex],           //视频时长
-                    'question_mete'     =>  $columns[9][$vIndex],           //题量
-                    'case_number'       =>  $columns[10][$vIndex],          //案例数
-                    'activity_number'   =>  $columns[11][$vIndex],          //活动数
-                    'team_id'           =>  $columns[12][$vIndex],          //团队
-                    'dev_users'         =>  $columns[13][$vIndex],          //开发人员
-                    'course_ops'        =>  $columns[14][$vIndex],          //运维人
-                    'real_carry_out'    =>  $columns[15][$vIndex],          //实际完成时间
-                    'path'              =>  $columns[16][$vIndex],          //路径
-                    'des'               =>  $columns[17][$vIndex],          //描述
+                    //'teacher_synopsis'  =>  $columns[5][$vIndex],           //讲师简介
+                    'mode'              =>  $columns[6][$vIndex],           //建设模式
+                    'credit'            =>  $columns[7][$vIndex],           //学分    
+                    'lesson_time'       =>  $columns[8][$vIndex],           //学时
+                    'video_length'      =>  $columns[9][$vIndex],           //视频时长
+                    'question_mete'     =>  $columns[10][$vIndex],          //题量
+                    'case_number'       =>  $columns[11][$vIndex],          //案例数
+                    'activity_number'   =>  $columns[12][$vIndex],          //活动数
+                    'product_team'      =>  $columns[13][$vIndex],          //产品团队
+                    //'product_director'  =>  $columns[14][$vIndex],          //产品总监
+                    'product_manager'   =>  $columns[15][$vIndex],          //产品经理
+                    'dev_team'          =>  $columns[16][$vIndex],          //开发团队
+                    'dev_users'         =>  $columns[17][$vIndex],          //开发人员
+                    'course_ops'        =>  $columns[18][$vIndex],          //运维人
+                    'real_carry_out'    =>  $columns[19][$vIndex],          //实际完成时间
+                    'path'              =>  $columns[20][$vIndex],          //路径
+                    'course_des'        =>  $columns[21][$vIndex],          //课程简介
+                    'des'               =>  $columns[22][$vIndex],          //描述
                     'demand_task_id'    =>  null,                           //课程需求id
                     'course_task_id'    =>  null,                           //课程开发id
                     'create_by'         =>  null,                           //课程创建人，默认使用 开发人员 的第一位
                     'create_by_teammeber'=> null,                           //课程创建人 成员id，默认使用 开发人员 的第一位
                 ];
             }
+            
             $code = 0;
             $msg = '';
             try{
@@ -96,7 +102,7 @@ class ImportController extends Controller
                 $this->checkUser();
                 //更新团队
                 $this->updateTeam();
-                 //创建基础数据 行业
+                //创建基础数据 行业
                 $this->createFmItemType();
                 //插入基础数据 - 层次/类型
                 $this->createFmItem('层次/类型', 'item_id', null, Item::LEVEL_COLLEGE);
@@ -149,7 +155,7 @@ class ImportController extends Controller
             $code = 1;
             $msg = $ex->getMessage();
         }
-        return ['code'=>$code,'msg'=>$msg,'logs'=>$this->logs];
+        return (['code'=>$code,'msg'=>$msg,'logs'=>$this->logs,'courses'=>$this->courses]); 
     }
     
      /**
@@ -158,13 +164,17 @@ class ImportController extends Controller
     private function checkUser(){
         //教师
         $teachers = ArrayHelper::getColumn($this->courses, 'teacher');
+        //产品经理
+        $pro_manager = ArrayHelper::getColumn($this->courses, 'product_manager');
         //开发人
         $dev_users = ArrayHelper::getColumn($this->courses, 'dev_users');
-        //运营人
+        //运维人
         $course_ops = ArrayHelper::getColumn($this->courses, 'course_ops');
         
         $allTeamMemberNames = array_unique(array_merge(explode(',',implode(',',$dev_users)),$course_ops));
+        $allTeamMemberNames = array_unique(array_merge($pro_manager, $allTeamMemberNames));
         $allUsers = array_unique(array_merge($teachers, $allTeamMemberNames));
+        
         $unFindUser = [];
         
         //=======================
@@ -187,6 +197,7 @@ class ImportController extends Controller
             else
                 $teamMemberUserIds[] = $userMap[$name];
         }
+        
         $this->teamMembers = $teamMembers = (new Query())
                     ->select(['TeamMember.id','TeamMember.team_id','TeamMember.u_id','User.nickname AS name'])
                     ->from(['TeamMember'=>  TeamMember::tableName()])
@@ -206,6 +217,18 @@ class ImportController extends Controller
                 $unFindUser[] = $teacherName;
             else
                 $course['teacher'] = $userMap[$teacherName];
+            
+            //产品经理
+            $_pro_managers = explode(',', $course['product_manager']);
+            $_pro_manager_team_ids = [];
+            foreach ($_pro_managers as $name) {
+                if(!isset($teamMemberMap[$name]))
+                    $unFindUser [] = $name;
+                else
+                    $_pro_manager_team_ids [] = $teamMemberMap[$name];
+            }
+            $course['product_manager'] = implode(',', $_pro_manager_team_ids);
+            
             //开发人员
             $_dev_users = explode(',', $course['dev_users']);
             $_dev_users_team_ids = [];
@@ -215,10 +238,14 @@ class ImportController extends Controller
                 else
                     $_dev_users_team_ids [] = $teamMemberMap[$name];
             }
+            
             $course['dev_users'] = implode(',', $_dev_users_team_ids);
-            //创建create_by
-            $course['create_by'] = $userMap[$_dev_users[0]];
+            //创建需求create_by
+            $course['dem_create_by'] = $userMap[$_pro_managers[0]];
+            //创建开发create_by
+            $course['dev_create_by'] = $userMap[$_dev_users[0]];
             $course['create_by_teammeber'] = $_dev_users_team_ids[0];
+            
             //运营人
             $opsName = $course['course_ops'];
             if(!isset($teamMemberMap[$opsName]))
@@ -226,11 +253,12 @@ class ImportController extends Controller
             else
                 $course['course_ops'] = $teamMemberMap[$opsName];
         }
+        
         $unFindUser = array_unique($unFindUser);
         $unFindNum = count($unFindUser);
         $this->addLog('用户检查', sprintf('检查完成，共有 %d 个用户，其中 %d 个为未知用户：%s', count($allUsers), $unFindNum,  $unFindNum > 0 ? implode(',', $unFindUser) : '无'), $unFindNum==0);
         
-        if($unFindNum>0){
+        if($unFindNum > 0){
             throw new Exception('发现未知用户！');
             return;
         }
@@ -240,7 +268,11 @@ class ImportController extends Controller
      * 更新团队
      */
     private function updateTeam(){
-        $teamNames = array_unique(ArrayHelper::getColumn($this->courses, 'team_id'));
+        //产品团队
+        $proTeamNames = array_unique(ArrayHelper::getColumn($this->courses, 'product_team'));
+        //开发团队
+        $devTeamNames = array_unique(ArrayHelper::getColumn($this->courses, 'dev_team'));
+        $teamNames = ArrayHelper::merge($proTeamNames, $devTeamNames);
         $unFindTmeas = [];
         //查询团队
         $teams = (new Query())
@@ -248,22 +280,30 @@ class ImportController extends Controller
                 ->from(Team::tableName())
                 ->where(['name' => $teamNames])
                 ->all();
+        
         $teamMap = ArrayHelper::map($teams, 'name', 'id');
-
+        
         //更新
         foreach ($this->courses as &$course) {
-            $teamName = $course['team_id'];
-            if (!isset($teamMap[$teamName]))
-                $unFindTmeas[] = $teamName;
+            $proTeamName = $course['product_team'];
+            $devTeamName = $course['dev_team'];
+            //产品团队
+            if (!isset($teamMap[$proTeamName]))
+                $unFindTmeas[] = $proTeamName;
             else
-                $course['team_id'] = $teamMap[$teamName];
+                $course['product_team'] = $teamMap[$proTeamName];
+            //开发团队
+            if(!isset($teamMap[$devTeamName]))
+                $unFindTmeas[] = $devTeamName;
+            else
+                $course['dev_team'] = $teamMap[$devTeamName];
         }
-        
         $unFindTmeas = array_unique($unFindTmeas);
         $unFindNum = count($unFindTmeas);
+        
         $this->addLog('团队检查', sprintf('检查完成，共有 %d 个团队，其中 %d 个为未知团队：%s', count($teamNames),  $unFindNum,  $unFindNum > 0 ? implode(',', $unFindTmeas) : '无'), $unFindNum==0);
         
-        if($unFindNum>0){
+        if($unFindNum > 0){
             throw new Exception('发现未知团队！');
             return;
         }
@@ -278,6 +318,7 @@ class ImportController extends Controller
         $unFinds = [];
         //所有需要添加的行业
         $names = array_unique(ArrayHelper::getColumn($this->courses,'item_type_id'));
+        
 
         //已存在数据
         $doneItems = (new Query())
@@ -287,6 +328,7 @@ class ImportController extends Controller
                     ->column(Yii::$app->db);
         
         $doneItems = array_diff($names, $doneItems);
+        
         /* 组装数据 */
         $items = [];
         foreach ($doneItems as $name){
@@ -319,7 +361,9 @@ class ImportController extends Controller
             else
                 $course['item_type_id'] = $results[$course['item_type_id']];
         } 
+        
         $unFinds = array_unique($unFinds);
+        
         if(count($unFinds)>0)
             $this->addLog('行业', sprintf('数据更新错误！共 %d 找不到：%s ', count($unFinds), implode(',', $unFinds)),false);
         
@@ -342,10 +386,11 @@ class ImportController extends Controller
         $unFinds = [];
         //是否存parent_id
         $noParent = $item_parent_key == null;
+        
         //所有需要添加的
         $news = [];
         $parent_ids = $noParent ? [] : array_unique(ArrayHelper::getColumn($this->courses, $item_parent_key));
-        $names = array_unique(ArrayHelper::getColumn($this->courses, $item_key));;
+        $names = array_unique(ArrayHelper::getColumn($this->courses, $item_key));
         $curTime = time();
         
         //已存在数据
@@ -357,7 +402,6 @@ class ImportController extends Controller
                     ->all(Yii::$app->db);
         
         $doneItems = ArrayHelper::map($doneItems, 'p_n', 'p_n');
-        
         
         /* 组装数据 */
         $items = [];
@@ -398,6 +442,7 @@ class ImportController extends Controller
             else
                 $course[$item_key] = $doneItems[$pn];
         }
+        
         $unFinds = array_unique($unFinds);
         if(count($unFinds)>0)
             $this->addLog($title, sprintf('数据更新错误！共 %d 找不到：%s ',count($unFinds), implode(',', $unFinds)),false);
@@ -425,8 +470,9 @@ class ImportController extends Controller
                         ->from(['DemandTask'=> $tableName])
                         ->leftJoin(['Course'=>  Item::tableName()], 'DemandTask.course_id = Course.id')
                         ->where(['course_id'=>$courseIds])
+                        ->andWhere(['!=', 'status', DemandTask::STATUS_CANCEL])
                         ->all();
-        
+         
         $doneCourseMap = ArrayHelper::map($doneCourses, 'course_id', 'name');
         
         //组合数据
@@ -436,7 +482,7 @@ class ImportController extends Controller
             if(!isset($doneCourseMap[$course_id]))
             {
                 $demandTaskRows [] = [
-                    null,                                                       //id，自增    
+                    //null,                                                       //id，自增    
                     $course['item_type_id'],                                    //行业
                     $course['item_id'],                                         //层次/类型
                     $course['item_child_id'],                                   //专业/工种
@@ -445,26 +491,39 @@ class ImportController extends Controller
                     $course['lesson_time'],                                     //课时
                     $course['credit'],                                          //学分
                     '无',                                                       //课程简介
+                    0.00,                                                       //预算开发成本，不包含提成奖金
+                    0.00,                                                       //实际开发成本，不包含提成奖金
+                    0.00,                                                       //外部预算成本
+                    0.00,                                                       //外部实际成本
+                    0.05,                                                       //资金占人工成本的比值，默认为5%
+                    0.000000000,                                                //绩效得分=人工成本*资金比值*验收评分
                     trim($course['mode']) == '新建' ? 0 : 1,                    //模式
-                    $course['team_id'],                                         //开发团队ID
-                    $course['create_by'],                                       //承接人，选择开发人员第一个,
-                    '2012-12-12 12:12',                                         //计划验收时间
-                    '2012-12-12 12:12',                                         //实际验收时间
-                    15,                                                         //状态
-                    100,                                                        //进度
-                    'ef3c21bbe97e1e9e95f2a4c46ec198fa',                         //创建者
-                    null,                                                       //创建团队
-                    strtotime('2012-12-12 12:12'),                              //创建时间
-                    strtotime('2012-12-12 12:12'),                              //更新时间
+                    $course['dev_team'],                                        //开发团队ID
+                    $course['dev_create_by'],                                   //承接人，选择开发人员第一个,
+                    $course['dev_create_by'],                                   //开发负责人,
+                    date('Y-m-d H:i', strtotime($course['real_carry_out'])),    //计划验收时间
+                    date('Y-m-d H:i', strtotime($course['real_carry_out'])),    //实际验收时间
+                    DemandTask::STATUS_COMPLETED,                               //状态
+                    DemandTask::$statusProgress[DemandTask::STATUS_COMPLETED],  //进度                                                    //进度
+                    $course['dem_create_by'],                                   //创建者
+                    $course['product_team'],                                    //创建团队
+                    strtotime($course['real_carry_out']),                       //创建时间
+                    strtotime($course['real_carry_out']),                       //更新时间
+                    strtotime($course['real_carry_out']),                       //完成时间
                     '无 (任务为自动创建)',                                       //描述
                 ];
             }else
                 $hasCreateds [] = $doneCourseMap[$course_id];
         }
-        
+        //需要插入如的对应字段
+        $columns = [
+            'item_type_id', 'item_id', 'item_child_id', 'course_id', 'teacher', 'lesson_time', 'credit', 'course_description',
+            'budget_cost', 'cost', 'external_budget_cost', 'external_reality_cost', 'bonus_proportion', 'score',
+            'mode', 'team_id', 'undertake_person', 'develop_principals', 'plan_check_harvest_time', 'reality_check_harvest_time',
+            'status', 'progress', 'create_by', 'create_team', 'created_at', 'updated_at', 'finished_at', 'des'
+        ];
         //插入新数据(过滤已存在数据)，并且返回插入的数据条数
-        $data = $this->batchInsert($tableName, [], $demandTaskRows);
-        
+        $data = $this->batchInsert($tableName, $columns, $demandTaskRows);       
         $this->addLog('课程需求',sprintf('数据创建完成！本次需要插入 %d 条，新增 %d 条！以下课程已经存在：%s',count($courseIds), $data['num'], (count($hasCreateds)>0 ? implode(',', $hasCreateds) : '无')),$data['result']);
         
         if(!$data['result'])
@@ -483,7 +542,7 @@ class ImportController extends Controller
                 ->all();
         
         $demandTaskMap = ArrayHelper::map($demandTasks, 'course_id', 'id');
-       
+        
         foreach ($this->courses as &$course){
             $course['demand_task_id'] = $demandTaskMap[$course['course_id']];
         }
@@ -509,35 +568,38 @@ class ImportController extends Controller
                         ->leftJoin(['Course'=>  Item::tableName()], 'DemandTask.course_id = Course.id')
                         ->where(['course_id'=>$courseIds])
                         ->all();
-        
+       
         $doneCourseMap = ArrayHelper::map($doneCourses, 'course_id', 'name');
+        
         //组合数据
         $devCourseRows = [];
         foreach ($this->courses as $course) {
             $course_id = $course['course_id'];
+            
             if (!isset($doneCourseMap[$course_id])) {
                 $devCourseRows [] = [
-                    $course['demand_task_id'],                                              //课程需求id
-                    DateUtil::timeToInt($course['video_length']),                           //视频时长
-                    is_numeric($course['question_mete']) ? $course['question_mete'] : 0,    //题目数
-                    is_numeric($course['case_number']) ? $course['case_number'] : 0,        //案例数
-                    is_numeric($course['activity_number']) ? $course['activity_number'] : 0,//活动数
-                    $course['team_id'],                                                     //创建团队
-                    $course['course_ops'],                                                  //运营人
-                    $course['create_by'],                                                   //创建者，选择开发人员第一个,,
-                    strtotime('2012-12-12 12:12'),                                          //创建时间        
-                    strtotime('2012-12-12 12:12'),                                          //更新时间
-                    '2012-12-12 12:12',                                                     //计划开始时间
-                    '2012-12-12 12:12',                                                     //计划结束时间
-                    '2012-12-12 12:12',                                                     //实际开始时间
-                    '2012-12-12 12:12',                                                     //实际结束时间
-                    15,                                                                     //状态
-                    $course['des'],                                                         //描述
-                    $course['path'],                                                        //成品路径
+                    $course['demand_task_id'],                                                  //课程需求id
+                    DateUtil::timeToInt($course['video_length']),                               //视频时长
+                    is_numeric($course['question_mete']) ? $course['question_mete'] : 0,        //题目数
+                    is_numeric($course['case_number']) ? $course['case_number'] : 0,            //案例数
+                    is_numeric($course['activity_number']) ? $course['activity_number'] : 0,    //活动数
+                    $course['dev_team'],                                                        //创建团队
+                    $course['course_ops'],                                                      //运营人
+                    $course['dev_create_by'],                                                   //创建者，选择开发人员第一个
+                    strtotime($course['real_carry_out']),                                       //创建时间        
+                    strtotime($course['real_carry_out']),                                       //更新时间
+                    date('Y-m-d H:i', strtotime($course['real_carry_out'])),                    //计划开始时间
+                    date('Y-m-d H:i', strtotime($course['real_carry_out'])),                    //计划结束时间
+                    date('Y-m-d H:i', strtotime($course['real_carry_out'])),                    //实际开始时间
+                    date('Y-m-d H:i', strtotime($course['real_carry_out'])),                    //实际结束时间
+                    CourseManage::STATUS_CARRY_OUT,                                             //状态
+                    $course['des'],                                                             //描述
+                    $course['path'],                                                            //成品路径
                 ];
             } else
                 $hasCreateds [] = $doneCourseMap[$course_id];
         }
+        
         //插入新数据(过滤已存在数据)，并且返回插入的数据条数
         $data = $this->batchInsert($tableName, [
             'demand_task_id',
@@ -617,7 +679,7 @@ class ImportController extends Controller
             } else
                 $hasCreateds [] = $course_task_id;
         }
-        
+       
         //插入新数据(过滤已存在数据)，并且返回插入的数据条数
         $data = $this->batchInsert($tableName, [], $rows);
         $hasCreateds = array_unique($hasCreateds);
