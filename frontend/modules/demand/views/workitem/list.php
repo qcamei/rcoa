@@ -23,7 +23,13 @@ $this->title = '样例库';
                     </div>
                     <div class="col-md-6 col-sm-12 workitem-info">
                         <div class="workitem-title"><?= $model->name ?></div>
-                        <div class="workitem-cost"><span class="workitem-unit">￥</span><?= $costs[$model->id]['cost_new']?><span class="workitem-unit"><?= " / $model->unit" ?></span></div>
+                        <?php if(!Yii::$app->user->isGuest): ?>
+                        <div class="workitem-cost">
+                            <span class="workitem-unit">￥</span>
+                            <?= $costs[$model->id]['cost_new']?>
+                            <span class="workitem-unit"><?= " / $model->unit" ?></span>
+                        </div>
+                        <?php endif; ?>
                         <div class="workitem-des"><?= $model->content ?></div>
                     </div>
                 </div>

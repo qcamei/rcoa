@@ -38,7 +38,7 @@ class WorkitemController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => ['index', 'view', 'create', 'update', 'delete'],
                     ]
                 ],
             ],

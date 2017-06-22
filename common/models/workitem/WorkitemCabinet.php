@@ -65,6 +65,7 @@ class WorkitemCabinet extends ActiveRecord
     }
     
     public function beforeSave($insert) {
+        
         if(parent::beforeSave($insert))
         {
             $this->content = htmlentities($this->content);
@@ -88,6 +89,9 @@ class WorkitemCabinet extends ActiveRecord
             }
             if(trim($this->path) == '' && $this->type == 'image')
                 $this->path = '/filedata/workitem/cabinet/defalut.jpg';
+            
+            if(trim($this->poster) == '' && $this->type == 'video')
+                    $this->poster = $this->getOldAttribute ('poster');
             
             return true;
         }

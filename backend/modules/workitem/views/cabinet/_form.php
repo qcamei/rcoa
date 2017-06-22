@@ -35,6 +35,7 @@ use yii\widgets\ActiveForm;
         'options' => [
             'accept' => 'image/*',
             'multiple' => false,
+           // 'value' => !$model->isNewRecord && $model->type == 'video' ? $model->poster : $model->path
         ],
         'pluginOptions' => [
             'resizeImages' => true,

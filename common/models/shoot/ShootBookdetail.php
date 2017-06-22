@@ -96,6 +96,10 @@ class ShootBookdetail extends ActiveRecord
     const CONTENT_TYPE_BLUEBOX = 2;
     /** 内容类型-外拍 */
     const CONTENT_TYPE_WAIPAI = 3;
+    /** 内容类型-白布 */
+    const CONTENT_TYPE_WHITECLOTH = 4;
+    /** 内容类型-书架 */
+    const CONTENT_TYPE_BOOKSHELVES = 5;
 
 
     /** 时段 上午 */
@@ -136,6 +140,8 @@ class ShootBookdetail extends ActiveRecord
         self::CONTENT_TYPE_BOARDBOOK => '板书',
         self::CONTENT_TYPE_BLUEBOX => '蓝箱',
         self::CONTENT_TYPE_WAIPAI => '外拍',
+        self::CONTENT_TYPE_WHITECLOTH => '白布',
+        self::CONTENT_TYPE_BOOKSHELVES => '书架',
     ];
 
         /** 时间段名称 */

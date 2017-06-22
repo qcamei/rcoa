@@ -2,12 +2,13 @@
 
 namespace backend\modules\workitem\controllers;
 
-use Yii;
-use common\models\workitem\WorkitemCabinet;
 use common\models\workitem\searchs\WorkitemCabinetSearch;
+use common\models\workitem\WorkitemCabinet;
+use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * CabinetController implements the CRUD actions for WorkitemCabinet model.
@@ -85,7 +86,7 @@ class CabinetController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['/workitem/default/view', 'id' => $model->workitem_id]);
         } else {
