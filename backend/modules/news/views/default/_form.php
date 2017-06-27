@@ -1,6 +1,7 @@
 <?php
 
 use common\models\System;
+use kartik\widgets\Select2;
 use kartik\widgets\TouchSpin;
 use yii\helpers\Html;
 use yii\web\View;
@@ -27,6 +28,10 @@ use yii\widgets\ActiveForm;
             ],
     ])?>
 
+    <?= $form->field($model, 'parent_id')->widget(Select2::className(), [
+        'data' => $parentIds, 'options' => ['placeholder' => '请选择...']
+    ]) ?>
+    
     <?= $form->field($model, 'module_image')->textInput(['maxlength' => true,'placeholder'=> '/图片路径/图片名称']) ?>
     
     <?= $form->field($model, 'module_link')->textInput(['maxlength' => true,'placeholder'=> '非跳转页面：/url，跳转页面：http://域名/url']) ?>

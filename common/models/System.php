@@ -18,9 +18,12 @@ use yii\db\ActiveRecord;
  * @property string $des                            模块描述
  * @property string $isjump                         是否跳转页面
  * @property integer $index                         顺序
- * @property integer parent_id                      上一级ID
+ * @property integer $parent_id                     上一级ID
+ * @property string $is_delete                      是否删除
  *
  * @property Job[] $jobs                            获取所有任务通知
+ * @property System $parent                         获取上一级
+ * @property System[] $systems                      
  */
 class System extends ActiveRecord
 {
@@ -38,10 +41,13 @@ class System extends ActiveRecord
     public function rules()
     {
         return [
+            [['name', 'aliases', 'index'], 'required'],
             [['isjump', 'index', 'parent_id'], 'integer'],
             [['name'], 'string', 'max' => 64],
             [['module_image', 'module_link', 'des', 'aliases'], 'string', 'max' => 255],
+            [['is_delete'], 'string', 'max' => 4],
             [['aliases'], 'unique'],
+            [['parent_id'], 'exist', 'skipOnError' => true, 'targetClass' => System::className(), 'targetAttribute' => ['parent_id' => 'id']],
         ];
     }
 
@@ -59,7 +65,8 @@ class System extends ActiveRecord
             'isjump' => Yii::t('rcoa', 'Isjump'),
             'aliases' => Yii::t('rcoa', 'Aliases'),
             'index' => Yii::t('rcoa', 'Index'),
-            'parent_id' => Yii::t('rcoa', 'Parent Id'),
+            'parent_id' => Yii::t('rcoa', 'Parent ID'),
+            'is_delete' => Yii::t('rcoa', 'Is Delete'),
         ];
     }
 
@@ -70,5 +77,22 @@ class System extends ActiveRecord
     public function getJobs()
     {
         return $this->hasMany(Job::className(), ['system_id' => 'id']);
+    }
+
+    /**
+     * 获取上一级
+     * @return ActiveQuery
+     */
+    public function getParent()
+    {
+        return $this->hasOne(System::className(), ['id' => 'parent_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getSystems()
+    {
+        return $this->hasMany(System::className(), ['parent_id' => 'id']);
     }
 }

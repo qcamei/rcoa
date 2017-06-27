@@ -5,8 +5,10 @@ namespace backend\modules\news\controllers;
 use common\models\searchs\SystemSearch;
 use common\models\System;
 use Yii;
+use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -73,14 +75,14 @@ class DefaultController extends Controller
     public function actionCreate()
     {
         $model = new System();
-        $post = Yii::$app->request->post();
-        if ($model->load($post)) {
-            $model->isjump = $post['System']['isjump'];
-            $model->save();
+        $model->loadDefaultValues();
+        
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'parentIds' => $this->getSystemParentIds(),
             ]);
         }
     }
@@ -100,6 +102,7 @@ class DefaultController extends Controller
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'parentIds' => $this->getSystemParentIds(),
             ]);
         }
     }
@@ -112,7 +115,9 @@ class DefaultController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->is_delete = 'Y';
+        $model->update();
 
         return $this->redirect(['index']);
     }
@@ -131,5 +136,20 @@ class DefaultController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    
+    /**
+     * 获取所有上一级
+     * @return type
+     */
+    public function getSystemParentIds()
+    {
+        $parent_ids = (new Query())
+                    ->select(['id', 'name'])
+                    ->from(System::tableName())
+                    ->where(['is_delete' => 'N'])
+                    ->all();
+        
+        return ArrayHelper::map($parent_ids, 'id', 'name');
     }
 }

@@ -41,6 +41,14 @@ $this->params['breadcrumbs'][] = $this->title;
             //'isjump',
             'aliases',
             'index',
+            [
+                'attribute' => 'parent_id',
+                'value' => !empty($model->parent_id) ? $model->parent->name : null,
+            ],
+            [
+                'attribute' => 'is_delete',
+                'value' => $model->is_delete == 'N' ? '否' : '是',
+            ],
         ],
     ]) ?>
 

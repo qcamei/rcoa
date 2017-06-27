@@ -1,6 +1,7 @@
 <?php
 
 use common\models\searchs\SystemSearch;
+use common\models\System;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -28,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             //['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
             'name',
             'aliases',
             //'module_image',
@@ -36,6 +37,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'des',
             // 'isjump',
             'index',
+            [
+                'attribute' => 'parent_id',
+                'value' => function($model){
+                    /* @var $model System */
+                    return !empty($model->parent_id) ? $model->parent->name : null;
+                },
+            ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

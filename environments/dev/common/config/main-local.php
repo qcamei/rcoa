@@ -115,5 +115,8 @@ return [
         'multimedia' => [
             'class' => 'frontend\modules\multimedia\Module',
         ],
+        'worksystem' => [
+            'class' => 'frontend\modules\worksystem\Module',
+        ],
     ],
 ];
