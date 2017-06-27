@@ -31,7 +31,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'RBAC',
+        //'brandLabel' => 'RBAC',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -133,6 +133,17 @@ AppAsset::register($this);
                ['label' => '工作项模版', 'url' => '/demand/workitem'],
                ['label' => '权重模版', 'url' => '/demand/weight'],
                ['label' => '工作项和权重', 'url' => '/demand/import'],
+            ],
+        ];
+        $menuItems[] = [
+            'label' => '工作系统',
+            'items' => [
+               ['label' => '指派', 'url' => '/worksystem/assign-team'],
+               ['label' => '任务类别', 'url' => '/worksystem/task-type'],
+               ['label' => '内容信息', 'url' => '/worksystem/content'],
+               ['label' => '附加属性', 'url' => '/worksystem/attributes'],
+               ['label' => '附加属性模版', 'url' => '/worksystem/attributes-template'],
+              
             ],
         ];
 

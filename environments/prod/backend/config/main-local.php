@@ -56,6 +56,9 @@ $config = [
         'workitem' => [
             'class' => 'backend\modules\workitem\Module',
         ],
+        'worksystem' => [
+            'class' => 'backend\modules\worksystem\Module',
+        ],
     ],
 ];
 

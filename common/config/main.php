@@ -26,6 +26,7 @@ return [
                         'rcoa/basedata' => 'basedata.php',
                         'rcoa/product' => 'product.php',
                         'rcoa/workitem' => 'workitem.php',
+                        'rcoa/worksystem' => 'worksystem.php',
                     ],
                 ],
                
