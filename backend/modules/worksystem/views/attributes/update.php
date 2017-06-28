@@ -18,7 +18,6 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa', 'Update') .'：'. $model->name;
 
     <?= $this->render('_form', [
         'model' => $model,
-        'taskTypes' => $taskTypes,
     ]) ?>
 
 </div>

@@ -91,22 +91,22 @@ class RbacName{
 	const PERMSSION_TEAMWORK_COURSE_RESTORE = "p_teamwork_course_restore";
 	/** 课程开发-课程移交 */
 	const PERMSSION_TEAMWORK_COURSE_TRANSFER = "p_teamwork_course_transfer";
-	/** 课程开发-任务配置 */
-	const PERMSSION_TEAMWORK_TASK_COLLOCATION = "p_teamwork_task_collocation";
 	/** 课程开发-任务完成 */
 	const PERMSSION_TEAMWORK_TAKS_COMPLETE = "p_teamwork_taks_complete";
 	/** 课程开发-任务开始 */
 	const PERMSSION_TEAMWORK_TAKS_START = "p_teamwork_taks_start";
 	/** 课程开发-任务更新 */
 	const PERMSSION_TEAMWORK_TAKS_UPDATE = "p_teamwork_taks_update";
+	/** 课程开发-任务配置 */
+	const PERMSSION_TEAMWORK_TASK_COLLOCATION = "p_teamwork_task_collocation";
 	/** 课程开发-任务创建 */
 	const PERMSSION_TEAMWORK_TASK_CREATE = "p_teamwork_task_create";
 	/** 课程开发-周报创建 */
 	const PERMSSION_TEAMWORK_WEEKLY_CREATE = "p_teamwork_weekly_create";
 	/** 课程开发-周报编辑 */
 	const PERMSSION_TEAMWORK_WEEKLY_UPDATE = "p_teamwork_weekly_update";
-	/** 测试权限 */
-	const PERMSSION_TEST = "p_test";
+	/** 工作系统-任务创建 */
+	const PERMSSION_WORKSYSTEM_TASK_CREATE = "p_worksystem_task_create";
 	/** 管理员 */
 	const ROLE_ADMIN = "r_admin";
 	/** 课程中心组 */
@@ -153,12 +153,12 @@ class RbacName{
 	const ROLE_TEAMWORK_DEVELOP_MANAGER = "r_teamwork_develop_manager";
 	/** 课程开发周报开发者 */
 	const ROLE_TEAMWORK_WEEKLY_DEVELOPER = "r_teamwork_weekly_developer";
-	/** 测试角色 */
-	const ROLE_TEST = "r_test";
 	/** 所有用户 */
 	const ROLE_USERS = "r_users";
 	/** 编导 */
 	const ROLE_WD = "r_wd";
 	/** 编导组长 */
 	const ROLE_WD_LEADER = "r_wd_leader";
+	/** 工作系统-任务发布人 */
+	const ROLE_WORKSYSTEM_PUBLISHER = "r_worksystem_publisher";
 }

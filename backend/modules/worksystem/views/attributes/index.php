@@ -29,13 +29,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             //'id',
-            [
-                'attribute' => 'worksystem_task_type_id',
-                'value' => function ($model){
-                    /* @var $model WorksystemAttributes */
-                    return !empty($model->worksystem_task_type_id) ? $model->worksystemTaskType->name : null;
-                }
-            ],
             'name',
             [
                 'attribute' => 'type',
@@ -51,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return WorksystemAttributes::$inputTypeName[$model->input_type];
                 }
             ],
-            // 'value_list:ntext',
+             'value_list:ntext',
             // 'index',
             // 'is_delete',
             // 'created_at',

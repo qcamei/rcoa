@@ -31,10 +31,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            [
-                'attribute' => 'worksystem_task_type_id',
-                'value' => !empty($model->worksystem_task_type_id) ? $model->worksystemTaskType->name : null,
-            ],
             'name',
             [
                 'attribute' => 'type',

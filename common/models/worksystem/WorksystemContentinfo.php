@@ -3,27 +3,30 @@
 namespace common\models\worksystem;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%worksystem_contentinfo}}".
  *
- * @property integer $id
- * @property integer $worksystem_task_id
- * @property integer $worksystem_content_id
- * @property string $price
- * @property integer $budget_number
- * @property string $budget_cost
- * @property integer $reality_number
- * @property string $reality_cost
- * @property integer $index
- * @property integer $is_delete
- * @property integer $created_at
- * @property integer $updated_at
+ * @property integer $id                                    id
+ * @property integer $worksystem_task_id                    引用工作系统任务id
+ * @property integer $worksystem_content_id                 引用基础内容信息id
+ * @property string $price                                  单价
+ * @property integer $budget_number                         预计数量
+ * @property string $budget_cost                            预计成本
+ * @property integer $reality_number                        实际数量
+ * @property string $reality_cost                           实际成本
+ * @property integer $index                                 索引
+ * @property integer $is_delete                             是否删除：0为否，1为是
+ * @property integer $created_at                            创建于
+ * @property integer $updated_at                            更新于
  *
- * @property WorksystemContent $worksystemContent
- * @property WorksystemTask $worksystemTask
+ * @property WorksystemContent $worksystemContent           获取基础内容信息
+ * @property WorksystemTask $worksystemTask                 获取工作系统任务
  */
-class WorksystemContentinfo extends \yii\db\ActiveRecord
+class WorksystemContentinfo extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -31,6 +34,13 @@ class WorksystemContentinfo extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return '{{%worksystem_contentinfo}}';
+    }
+    
+    public function behaviors() 
+    {
+        return [
+            TimestampBehavior::className()
+        ];
     }
 
     /**
@@ -68,7 +78,8 @@ class WorksystemContentinfo extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * 获取基础内容信息
+     * @return ActiveQuery
      */
     public function getWorksystemContent()
     {
@@ -76,7 +87,8 @@ class WorksystemContentinfo extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * 获取工作系统任务
+     * @return ActiveQuery
      */
     public function getWorksystemTask()
     {

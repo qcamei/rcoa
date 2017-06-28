@@ -84,7 +84,6 @@ class AttributesController extends Controller
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'taskTypes' => $this->getWorksystemTaskTypes(),
             ]);
         }
     }
@@ -104,7 +103,6 @@ class AttributesController extends Controller
         } else {
             return $this->render('update', [
                 'model' => $model,
-                'taskTypes' => $this->getWorksystemTaskTypes(),
             ]);
         }
     }
@@ -136,19 +134,5 @@ class AttributesController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
-    }
-    
-    /**
-     * 获取所有工作系统任务类别
-     * @return array
-     */
-    public function getWorksystemTaskTypes()
-    {
-        $taskTypes = (new Query())
-                    ->select(['id', 'name'])
-                    ->from(WorksystemTaskType::tableName())
-                    ->all();
-        
-        return ArrayHelper::map($taskTypes, 'id', 'name');
     }
 }

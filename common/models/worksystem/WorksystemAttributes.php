@@ -11,7 +11,6 @@ use yii\db\ActiveRecord;
  * This is the model class for table "{{%worksystem_attributes}}".
  *
  * @property integer $id                                        id
- * @property integer $worksystem_task_type_id                   引用工作系统任务类型id
  * @property string $name                                       属性名称
  * @property integer $type                                      属性类型：0 唯一属性，1 单选属性，2 复选属性
  * @property integer $input_type                                输入类型：0 手工录入， 1 从列表中选择， 2 多行文本框
@@ -22,7 +21,6 @@ use yii\db\ActiveRecord;
  * @property integer $updated_at                                更新于
  *
  * @property WorksystemAddAttributes[] $worksystemAddAttributes 获取所有的工作系统任务附加附加属性
- * @property WorksystemTaskType $worksystemTaskType             获取工作系统任务类型
  */
 class WorksystemAttributes extends ActiveRecord
 {
@@ -82,11 +80,11 @@ class WorksystemAttributes extends ActiveRecord
     public function rules()
     {
         return [
-            [['worksystem_task_type_id', 'name', 'type', 'input_type'], 'required'],
-            [['worksystem_task_type_id', 'type', 'input_type', 'index', 'is_delete', 'created_at', 'updated_at'], 'integer'],
+            [['name', 'type', 'input_type'], 'required'],
+            [['name'], 'unique'],
+            [['type', 'input_type', 'index', 'is_delete', 'created_at', 'updated_at'], 'integer'],
             [['value_list'], 'string'],
             [['name'], 'string', 'max' => 255],
-            [['worksystem_task_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => WorksystemTaskType::className(), 'targetAttribute' => ['worksystem_task_type_id' => 'id']],
         ];
     }
 
@@ -97,7 +95,6 @@ class WorksystemAttributes extends ActiveRecord
     {
         return [
             'id' => Yii::t('rcoa/worksystem', 'ID'),
-            'worksystem_task_type_id' => Yii::t('rcoa/worksystem', 'Worksystem Task Type ID'),
             'name' => Yii::t('rcoa', 'Name'),
             'type' => Yii::t('rcoa', 'Type'),
             'input_type' => Yii::t('rcoa/worksystem', 'Input Type'),
@@ -116,14 +113,5 @@ class WorksystemAttributes extends ActiveRecord
     public function getWorksystemAddAttributes()
     {
         return $this->hasMany(WorksystemAddAttributes::className(), ['worksystem_attributes_id' => 'id']);
-    }
-
-    /**
-     * 获取工作系统任务类型
-     * @return ActiveQuery
-     */
-    public function getWorksystemTaskType()
-    {
-        return $this->hasOne(WorksystemTaskType::className(), ['id' => 'worksystem_task_type_id']);
     }
 }

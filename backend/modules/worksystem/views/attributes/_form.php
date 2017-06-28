@@ -15,10 +15,6 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'worksystem_task_type_id')->widget(Select2::className(), [
-        'data' => $taskTypes, 'options' => ['placeholder' => '请选择...']
-    ]) ?>
-
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'type')->dropDownList(WorksystemAttributes::$typeName) ?>

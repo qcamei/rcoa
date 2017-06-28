@@ -18,7 +18,7 @@ class WorksystemAttributestSearch extends WorksystemAttributes
     public function rules()
     {
         return [
-            [['id', 'worksystem_task_type_id', 'type', 'input_type', 'index', 'is_delete', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'type', 'input_type', 'index', 'is_delete', 'created_at', 'updated_at'], 'integer'],
             [['name', 'value_list'], 'safe'],
         ];
     }
@@ -60,7 +60,6 @@ class WorksystemAttributestSearch extends WorksystemAttributes
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'worksystem_task_type_id' => $this->worksystem_task_type_id,
             'type' => $this->type,
             'input_type' => $this->input_type,
             'index' => $this->index,

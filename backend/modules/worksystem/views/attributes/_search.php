@@ -1,11 +1,13 @@
 <?php
 
+use common\models\worksystem\searchs\WorksystemAttributestSearch;
 use yii\helpers\Html;
+use yii\web\View;
 use yii\widgets\ActiveForm;
 
-/* @var $this yii\web\View */
-/* @var $model common\models\worksystem\searchs\WorksystemAttributestSearch */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $this View */
+/* @var $model WorksystemAttributestSearch */
+/* @var $form ActiveForm */
 ?>
 
 <div class="worksystem-attributes-search">
@@ -17,15 +19,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'worksystem_task_type_id') ?>
-
     <?= $form->field($model, 'name') ?>
 
     <?= $form->field($model, 'type') ?>
 
     <?= $form->field($model, 'input_type') ?>
 
-    <?php // echo $form->field($model, 'value_list') ?>
+    <?= $form->field($model, 'value_list') ?>
 
     <?php // echo $form->field($model, 'index') ?>
 
