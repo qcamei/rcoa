@@ -2,6 +2,7 @@
 
 namespace common\models\worksystem;
 
+use common\models\User;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
@@ -22,6 +23,7 @@ use yii\db\ActiveRecord;
  * @property integer $updated_at                        更新于
  *
  * @property WorksystemTask $worksystemTask                         获取工作系统任务
+ * @property User $createBy                                         获取创建者
  * @property WorksystemOperationUser[] $worksystemOperationUsers    获取所有操作用户
  */
 class WorksystemOperation extends ActiveRecord
@@ -68,7 +70,7 @@ class WorksystemOperation extends ActiveRecord
             'title' => Yii::t('rcoa/worksystem', 'Title'),
             'content' => Yii::t('rcoa/worksystem', 'Content'),
             'des' => Yii::t('rcoa/worksystem', 'Des'),
-            'create_by' => Yii::t('rcoa/worksystem', 'Create By'),
+            'create_by' => Yii::t('rcoa', 'Create By'),
             'created_at' => Yii::t('rcoa/worksystem', 'Created At'),
             'updated_at' => Yii::t('rcoa/worksystem', 'Updated At'),
         ];
@@ -83,6 +85,15 @@ class WorksystemOperation extends ActiveRecord
         return $this->hasOne(WorksystemTask::className(), ['id' => 'worksystem_task_id']);
     }
 
+    /**
+     * 获取创建者
+     * @return ActiveQuery
+     */
+    public function getCreateBy()
+    {
+        return $this->hasOne(User::className(), ['id' => 'create_by']);
+    }
+    
     /**
      * 获取所有操作用户
      * @return ActiveQuery

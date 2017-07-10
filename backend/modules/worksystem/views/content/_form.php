@@ -45,9 +45,9 @@ use yii\widgets\ActiveForm;
     ]);
     ?>
 
-    <?= $form->field($model, 'is_new')->radioList(WorksystemContent::$modeName) ?>
-
-    <?= $form->field($model, 'price')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'price_new')->textInput(['maxlength' => true]) ?>
+    
+    <?= $form->field($model, 'price_remould')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'unit')->textInput(['maxlength' => true]) ?>
 

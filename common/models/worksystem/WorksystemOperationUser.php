@@ -14,6 +14,7 @@ use yii\db\ActiveRecord;
  * @property integer $worksystem_operation_id               引用工作系统操作记录id
  * @property string $user_id                                引用用户id：操作用户
  * @property integer $brace_mark                            支撑标识：0标识不支撑，1表示支撑
+ * @property integer $epiboly_mark                          外包标识：0标识不外包，1表示外包
  * @property integer $created_at                            创建于
  * @property integer $updated_at                            更新于
  *
@@ -42,7 +43,7 @@ class WorksystemOperationUser extends ActiveRecord
     public function rules()
     {
         return [
-            [['worksystem_operation_id', 'brace_mark', 'created_at', 'updated_at'], 'integer'],
+            [['worksystem_operation_id', 'brace_mark', 'epiboly_mark', 'created_at', 'updated_at'], 'integer'],
             [['user_id'], 'string', 'max' => 36],
             [['worksystem_operation_id'], 'exist', 'skipOnError' => true, 'targetClass' => WorksystemOperation::className(), 'targetAttribute' => ['worksystem_operation_id' => 'id']],
         ];
@@ -58,6 +59,7 @@ class WorksystemOperationUser extends ActiveRecord
             'worksystem_operation_id' => Yii::t('rcoa/worksystem', 'Worksystem Operation ID'),
             'user_id' => Yii::t('rcoa/worksystem', 'User ID'),
             'brace_mark' => Yii::t('rcoa/worksystem', 'Brace Mark'),
+            'epiboly_mark' => Yii::t('rcoa/worksystem', 'Epiboly Mark'),
             'created_at' => Yii::t('rcoa/worksystem', 'Created At'),
             'updated_at' => Yii::t('rcoa/worksystem', 'Updated At'),
         ];

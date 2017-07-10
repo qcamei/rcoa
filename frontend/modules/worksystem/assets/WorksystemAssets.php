@@ -27,9 +27,15 @@ class WorksystemAssets extends AssetBundle{
     ];
     public $css = [
         'css/_worksystem.css',
+        'css/_task_index.css',
+        'css/_task_create.css',
+        'css/_task_view.css',
+        'css/_task_search.css',
+        'css/_contentinfo.css',
         'css/_footer.css'
     ];
     public $js = [
-       
+        'js/search-select.js',
+        'js/create-table.js',
     ];
 }

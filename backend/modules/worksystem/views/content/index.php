@@ -39,17 +39,17 @@ $this->params['breadcrumbs'][] = $this->title;
             'type_name',
             //'icon',
             [
-                'attribute' => 'is_new',
+                'attribute' => 'price_new',
                 'value' => function($model){
                     /* @var $model WorksystemContent */
-                    return WorksystemContent::$modeName[$model->is_new];
+                    return '￥'. number_format($model->price_new, 2, '.', ',');
                 },
             ],
             [
-                'attribute' => 'price',
+                'attribute' => 'price_remould',
                 'value' => function($model){
                     /* @var $model WorksystemContent */
-                    return '￥'. number_format($model->price, 2, '.', ',');
+                    return '￥'. number_format($model->price_remould, 2, '.', ',');
                 },
             ],
             'unit',

@@ -105,8 +105,24 @@ class RbacName{
 	const PERMSSION_TEAMWORK_WEEKLY_CREATE = "p_teamwork_weekly_create";
 	/** 课程开发-周报编辑 */
 	const PERMSSION_TEAMWORK_WEEKLY_UPDATE = "p_teamwork_weekly_update";
+	/** 工作系统-管理编辑 */
+	const PERMSSION_WORKSYSTEM_ADMIN_EDIT = "p_worksystem_admin_edit";
+	/** 工作系统-创建指派 */
+	const PERMSSION_WORKSYSTEM_CREATE_ASSIGN = "p_worksystem_create_assign";
+	/** 工作系统-添加审核 */
+	const PERMSSION_WORKSYSTEM_CREATE_CHECK = "p_worksystem_create_check";
+	/** 工作系统-提交验收 */
+	const PERMSSION_WORKSYSTEM_SUBMIT_ACCEPTANCE = "p_worksystem_submit_acceptance";
+	/** 工作系统-提交审核 */
+	const PERMSSION_WORKSYSTEM_SUBMIT_CHECK = "p_worksystem_submit_check";
+	/** 工作系统-任务验收 */
+	const PERMSSION_WORKSYSTEM_TASK_ACCEPTANCE = "p_worksystem_task_acceptance";
 	/** 工作系统-任务创建 */
 	const PERMSSION_WORKSYSTEM_TASK_CREATE = "p_worksystem_task_create";
+	/** 工作系统-任务承接 */
+	const PERMSSION_WORKSYSTEM_TASK_UNDERTAKE = "p_worksystem_task_undertake";
+	/** 工作系统-任务更新 */
+	const PERMSSION_WORKSYSTEM_TASK_UPDATE = "p_worksystem_task_update";
 	/** 管理员 */
 	const ROLE_ADMIN = "r_admin";
 	/** 课程中心组 */
@@ -159,6 +175,12 @@ class RbacName{
 	const ROLE_WD = "r_wd";
 	/** 编导组长 */
 	const ROLE_WD_LEADER = "r_wd_leader";
-	/** 工作系统-任务发布人 */
+	/** 工作系统-管理员 */
+	const ROLE_WORKSYSTEM_ADMIN = "r_worksystem_admin";
+	/** 工作系统-指派人 */
+	const ROLE_WORKSYSTEM_ASSIGNS = "r_worksystem_assigns";
+	/** 工作系统-制作人 */
+	const ROLE_WORKSYSTEM_PRODUCER = "r_worksystem_producer";
+	/** 工作系统-发布人 */
 	const ROLE_WORKSYSTEM_PUBLISHER = "r_worksystem_publisher";
 }

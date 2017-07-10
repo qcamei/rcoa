@@ -35,7 +35,11 @@ return[
     
     
     //工作系统标题名称(前台)
+    'Worksystem' => '工作系统',
     'Worksystem Tasks' => '开发-工作系统-任务',
+    'Create Worksystem Task' => '创建-工作系统任务',
+    'Update Worksystem Task' => '更新-工作系统任务',
+    'Worksystem Contentinfos' => '开发-工作系统-内容信息',
     
     
     
@@ -55,7 +59,8 @@ return[
     'Worksystem Task Type ID' => '类别',
     'Type Name' => '类型',
     'Is New' => '新建/改造',
-    'Price' => '单价',
+    'Price New' => '新建单价',
+    'Price Remould' => '改造单价',
     'Unit' => '单位',
     
     //基础附加属性
@@ -68,6 +73,53 @@ return[
     'Input Type' => '输入类型',
     'Value List' => '候选值',
     
+    
     //工作系统字段属性名称(前台)
-    '' => '',
+    //工作系统任务
+    'Item Type ID' => '行业',
+    'Item ID' => '层次/类型',
+    'Item Child ID' => '专业/工种',
+    'Course ID' => '课程名称',
+    'Task Type' => '类型',
+    'Task Type ID' => '任务类型',
+    'Name' => '任务名称',
+    'Level' => '等级',
+    'Is Brace' => '是否支撑',
+    'Is Epiboly' => '是否外包',
+    'Budget Cost' => '预计成本',
+    'Reality Cost' => '实际成本',
+    'Budget Bonus' => '预计奖金',
+    'Reality Bonus' => '实际奖金',
+    'Task Cost' => '成本（预计/实际）',
+    'Task Bonus' => '奖金（预计/实际）',
+    'Demand Time' => '需求时间',
+    'Plan End Time' => '要求完成时间',
+    'External Team' => '制作团队',
+    'Producer' => '制作人员',
+    'Phase' => '阶段',
+    'Create Team' => '创建团队',
+    'Create → Brace' => '创建 → 支撑',
+    'Created At' => '创建时间',
+    'Updated At' => '编辑时间',
+    'Finished At' => '完成时间',
+    'Des' => '备注',
+    
+    //工作系统任务制作人员
+    'Producer' => '制作人',
+    
+    //工作系统内容信息
+    'Price' => '单价',
+    'Budget Number' => '预计数量',
+    'Budget Cost' => '预计成本',
+    'Reality Number' => '实际数量',
+    'Reality Cost' => '实际成本',
+    'Info Cost' => '成本',
+    'Build Mode' => '建设模式',
+    
+    //工作系统操作记录
+    'Title' => '标题',
+    'Content' => '内容',
+    'Time' => '时间',
+    'Operation People' => '操作人',
+    
 ];

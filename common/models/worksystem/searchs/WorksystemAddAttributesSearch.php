@@ -18,7 +18,7 @@ class WorksystemAddAttributesSearch extends WorksystemAddAttributes
     public function rules()
     {
         return [
-            [['id', 'worksystem_task_id', 'worksystem_task_type_id', 'worksystem_attributes_id', 'index', 'is_delete', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'worksystem_task_id', 'worksystem_attributes_id', 'index', 'is_delete', 'created_at', 'updated_at'], 'integer'],
             [['value'], 'safe'],
         ];
     }
@@ -61,7 +61,6 @@ class WorksystemAddAttributesSearch extends WorksystemAddAttributes
         $query->andFilterWhere([
             'id' => $this->id,
             'worksystem_task_id' => $this->worksystem_task_id,
-            'worksystem_task_type_id' => $this->worksystem_task_type_id,
             'worksystem_attributes_id' => $this->worksystem_attributes_id,
             'index' => $this->index,
             'is_delete' => $this->is_delete,

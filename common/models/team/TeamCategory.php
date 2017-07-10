@@ -32,8 +32,14 @@ class TeamCategory extends ActiveRecord
      * @des 发布的制作任务
      */
     const TYPE_PRODUCT_CENTER = 'product_center';
+    
+    /**
+     * @name 外包团队
+     * @des 承接发布的外包制作任务
+     */
+    const TYPE_EPIBOLY_TEAM = 'epiboly_team';
 
-        /**
+    /**
      * @inheritdoc
      */
     public static function tableName()

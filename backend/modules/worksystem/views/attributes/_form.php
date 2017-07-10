@@ -21,7 +21,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'input_type')->dropDownList(WorksystemAttributes::$inputTypeName) ?>
 
-    <?= $form->field($model, 'value_list')->textarea(['rows' => 6, 'placeholder' => '输入类型非【列表中选择】，可忽略不填']) ?>
+    <?= $form->field($model, 'value_list')->textarea(['rows' => 6, 'placeholder' => '输入类型非【列表选择】，可忽略']) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

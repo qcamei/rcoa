@@ -30,6 +30,7 @@ use yii\widgets\ActiveForm;
         </div>
     </div>
 </div>
+
 <div class="collapse" id="collapseExample">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 search-list">
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding: 5px 0px;">

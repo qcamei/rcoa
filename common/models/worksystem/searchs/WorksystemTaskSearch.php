@@ -18,7 +18,7 @@ class WorksystemTaskSearch extends WorksystemTask
     public function rules()
     {
         return [
-            [['id', 'item_type_id', 'item_id', 'item_child_id', 'course_id', 'task_type_id', 'level', 'is_epiboly', 'external_team', 'status', 'progress', 'create_team', 'index', 'is_delete', 'created_at', 'updated_at', 'finished_at'], 'integer'],
+            [['id', 'item_type_id', 'item_id', 'item_child_id', 'course_id', 'task_type_id', 'level', 'is_brace', 'is_epiboly', 'external_team', 'status', 'progress', 'create_team', 'index', 'is_delete', 'created_at', 'updated_at', 'finished_at'], 'integer'],
             [['name', 'plan_end_time', 'create_by', 'des'], 'safe'],
             [['budget_cost', 'reality_cost', 'budget_bonus', 'reality_bonus'], 'number'],
         ];
@@ -67,6 +67,7 @@ class WorksystemTaskSearch extends WorksystemTask
             'course_id' => $this->course_id,
             'task_type_id' => $this->task_type_id,
             'level' => $this->level,
+            'is_epiboly' => $this->is_brace,
             'is_epiboly' => $this->is_epiboly,
             'budget_cost' => $this->budget_cost,
             'reality_cost' => $this->reality_cost,

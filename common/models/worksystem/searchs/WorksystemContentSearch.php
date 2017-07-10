@@ -18,9 +18,9 @@ class WorksystemContentSearch extends WorksystemContent
     public function rules()
     {
         return [
-            [['id', 'worksystem_task_type_id', 'is_new', 'index', 'is_delete', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'worksystem_task_type_id', 'index', 'is_delete', 'created_at', 'updated_at'], 'integer'],
             [['type_name', 'icon', 'unit', 'des'], 'safe'],
-            [['price'], 'number'],
+            [['price_new', 'price_remould'], 'number'],
         ];
     }
 
@@ -62,8 +62,8 @@ class WorksystemContentSearch extends WorksystemContent
         $query->andFilterWhere([
             'id' => $this->id,
             'worksystem_task_type_id' => $this->worksystem_task_type_id,
-            'is_new' => $this->is_new,
-            'price' => $this->price,
+            'price_new' => $this->price_new,
+            'price_remould' => $this->price_remould,
             'index' => $this->index,
             'is_delete' => $this->is_delete,
             'created_at' => $this->created_at,

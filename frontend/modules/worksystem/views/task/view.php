@@ -1,59 +1,160 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\DetailView;
+use common\models\worksystem\WorksystemTask;
+use frontend\modules\worksystem\assets\WorksystemAssets;
+use yii\web\View;
 
-/* @var $this yii\web\View */
-/* @var $model common\models\worksystem\WorksystemTask */
+/* @var $this View */
+/* @var $model WorksystemTask */
 
-$this->title = $model->name;
+$this->title = Yii::t('rcoa/worksystem', 'Worksystem Tasks');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/worksystem', 'Worksystem Tasks'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="worksystem-task-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<?= $this->render('/layouts/_title', [
+    'params' => ['index', 
+        'create_by' => Yii::$app->user->id, 
+        'producer' => Yii::$app->user->id, 
+        'assign_people' => Yii::$app->user->id,
+        'status' => WorksystemTask::STATUS_DEFAULT,
+        'mark' => false,
+    ],
+    'title' => Yii::t('rcoa', 'View').'：'.$model->name,
+]) ?>
 
-    <p>
-        <?= Html::a(Yii::t('rcoa/worksystem', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('rcoa/worksystem', 'Delete'), ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => Yii::t('rcoa/worksystem', 'Are you sure you want to delete this item?'),
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
+<div class="container worksystem worksystem-task-view has-title">
 
-    <?= DetailView::widget([
+    <?= $this->render('_form_detai', [
         'model' => $model,
-        'attributes' => [
-            'id',
-            'item_type_id',
-            'item_id',
-            'item_child_id',
-            'course_id',
-            'task_type_id',
-            'name',
-            'level',
-            'is_epiboly',
-            'budget_cost',
-            'reality_cost',
-            'budget_bonus',
-            'reality_bonus',
-            'plan_end_time',
-            'external_team',
-            'status',
-            'progress',
-            'create_team',
-            'create_by',
-            'index',
-            'is_delete',
-            'created_at',
-            'updated_at',
-            'finished_at',
-            'des:ntext',
-        ],
+        'producer' => $producer,
     ]) ?>
+    
+    <?= $this->render('/contentinfo/view', [
+        'allModels' => $model->worksystemContentinfos,
+    ]) ?>
+    
+    <?= $this->render('/operation/index', [
+        'allModels' => $model->worksystemOperations,
+        '_wsOp' => $_wsOp,
+    ]) ?>
+    
+    <?= $this->render('/layouts/_model') ?>
 
 </div>
+
+<?= $this->render('_form_view', [
+    'model' => $model,
+    'is_assigns' => $is_assigns,
+    'is_producer' => $is_producer
+]) ?>
+
+
+<?php
+$js = 
+<<<JS
+      
+    /** 此事件在模态框被隐藏（并且同时在 CSS 过渡效果完成）之后被触发。 */
+    $('.myModal').on('hidden.bs.modal', function(){
+        $(".myModal").html("");
+    }); 
+            
+    /** 审核提交操作 弹出模态框 */
+    $('#check-submit').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    }); 
+    
+    /** 审核创建操作 弹出模态框 */
+    $('#check-create').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    }); 
+        
+    /** 指派创建操作 弹出模态框 */
+    $('#assign-create').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    }); 
+        
+    /** 支撑创建操作 弹出模态框 */
+    $('#brace-create').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    }); 
+        
+    /** 支撑取消操作 弹出模态框 */
+    $('#brace-cancel').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    }); 
+        
+    /** 外包创建操作 弹出模态框 */
+    $('#epiboly-create').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    }); 
+        
+    /** 外包取消操作 弹出模态框 */
+    $('#epiboly-cancel').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    }); 
+        
+    /** 开始制作操作 弹出模态框 */
+    $('#start-make').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    }); 
+        
+    /** 开始制作操作 弹出模态框 */
+    $('#acceptance-submit').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    }); 
+        
+    /** 承接制作操作 弹出模态框 */
+    $('#undertake-create').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    });
+        
+    /** 取消承接操作 弹出模态框 */
+    $('#undertake-cancel').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    }); 
+        
+    /** 创建验收操作 弹出模态框 */
+    $('#acceptance-create').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    }); 
+        
+    /** 完成验收操作 弹出模态框 */
+    $('#acceptance-complete').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    }); 
+    
+JS;
+    $this->registerJs($js,  View::POS_READY);
+?>
+
+
+<?php
+    WorksystemAssets::register($this);
+?>

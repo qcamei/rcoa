@@ -12,7 +12,6 @@ use yii\db\ActiveRecord;
  *
  * @property integer $id                                        id
  * @property integer $worksystem_task_id                        引用工作系统任务id
- * @property integer $worksystem_task_type_id                   引用工作系统任务类别id
  * @property integer $worksystem_attributes_id                  引用基础附加属性id
  * @property string $value                                      属性值
  * @property integer $index                                     索引
@@ -22,7 +21,6 @@ use yii\db\ActiveRecord;
  *
  * @property WorksystemAttributes $worksystemAttributes         获取基础附加属性
  * @property WorksystemTask $worksystemTask                     获取工作系统任务
- * @property WorksystemTaskType $worksystemTaskType             获取工作系统任务类别
  */
 class WorksystemAddAttributes extends ActiveRecord
 {
@@ -48,11 +46,10 @@ class WorksystemAddAttributes extends ActiveRecord
     {
         return [
             [['value'], 'required'],
-            [['worksystem_task_id', 'worksystem_task_type_id', 'worksystem_attributes_id', 'index', 'is_delete', 'created_at', 'updated_at'], 'integer'],
+            [['worksystem_task_id','worksystem_attributes_id', 'index', 'is_delete', 'created_at', 'updated_at'], 'integer'],
             [['value'], 'string', 'max' => 255],
             [['worksystem_attributes_id'], 'exist', 'skipOnError' => true, 'targetClass' => WorksystemAttributes::className(), 'targetAttribute' => ['worksystem_attributes_id' => 'id']],
             [['worksystem_task_id'], 'exist', 'skipOnError' => true, 'targetClass' => WorksystemTask::className(), 'targetAttribute' => ['worksystem_task_id' => 'id']],
-            [['worksystem_task_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => WorksystemTaskType::className(), 'targetAttribute' => ['worksystem_task_type_id' => 'id']],
         ];
     }
 
@@ -64,7 +61,6 @@ class WorksystemAddAttributes extends ActiveRecord
         return [
             'id' => Yii::t('rcoa/worksystem', 'ID'),
             'worksystem_task_id' => Yii::t('rcoa/worksystem', 'Worksystem Task ID'),
-            'worksystem_task_type_id' => Yii::t('rcoa/worksystem', 'Worksystem Task Type ID'),
             'worksystem_attributes_id' => Yii::t('rcoa/worksystem', 'Worksystem Attributes ID'),
             'value' => Yii::t('rcoa/worksystem', 'Value'),
             'index' => Yii::t('rcoa', 'Index'),
@@ -90,14 +86,5 @@ class WorksystemAddAttributes extends ActiveRecord
     public function getWorksystemTask()
     {
         return $this->hasOne(WorksystemTask::className(), ['id' => 'worksystem_task_id']);
-    }
-
-    /**
-     * 获取工作系统任务类别
-     * @return ActiveQuery
-     */
-    public function getWorksystemTaskType()
-    {
-        return $this->hasOne(WorksystemTaskType::className(), ['id' => 'worksystem_task_type_id']);
-    }
+    }    
 }

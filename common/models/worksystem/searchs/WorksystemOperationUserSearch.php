@@ -18,7 +18,7 @@ class WorksystemOperationUserSearch extends WorksystemOperationUser
     public function rules()
     {
         return [
-            [['id', 'worksystem_operation_id', 'brace_mark', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'worksystem_operation_id', 'brace_mark', 'epiboly_mark', 'created_at', 'updated_at'], 'integer'],
             [['user_id'], 'safe'],
         ];
     }
@@ -62,6 +62,7 @@ class WorksystemOperationUserSearch extends WorksystemOperationUser
             'id' => $this->id,
             'worksystem_operation_id' => $this->worksystem_operation_id,
             'brace_mark' => $this->brace_mark,
+            'epiboly_mark' => $this->epiboly_mark,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);

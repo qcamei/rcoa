@@ -38,12 +38,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'type_name',
             'icon',
             [
-                'attribute' => 'is_new',
-                'value' => WorksystemContent::$modeName[$model->is_new],
+                'attribute' => 'price_new',
+                'value' => '￥'. number_format($model->price_new, 2, '.', ','),
             ],
             [
-                'attribute' => 'price',
-                'value' => '￥'. number_format($model->price, 2, '.', ','),
+                'attribute' => 'price_remould',
+                'value' => '￥'. number_format($model->price_remould, 2, '.', ','),
             ],
             'unit',
             'des:ntext',

@@ -8,6 +8,42 @@ and open the template in the editor.
     Author     : Kiwi°
 */
 
-.worksystem{
-    width: 100%;
+@media (max-width: 480px) {
+    .wrap .worksystem{
+        padding-left: 0px;
+        padding-right: 0px;
+
+    }
+}
+.worksystem .course-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.worksystem .list-td {
+    color: #666;
+    font-size: 13px;
+}
+.worksystem .breadcrumb-title {
+    padding: 0px;
+    margin-bottom: 20px;
+    margin-top: 0px;
+    list-style: none;
+    background-color: #2e6da4;
+    border-radius: 4px;
+}
+.worksystem .breadcrumb a{
+    color: #fff;
+}
+.worksystem .breadcrumb .active {
+    min-width: 80px;
+    color: #ccc;
+}
+.worksystem .error-warn {
+    color: #F00;
+}
+.worksystem .reference {
+    font-size: 14px;
+    color: rgb(204, 204, 204);
+    font-weight: 400;
 }

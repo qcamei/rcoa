@@ -136,6 +136,10 @@ class RoleManagerController extends Controller
     public function actionDelete($name)
     {
         $post = Yii::$app->request->post();
+        /* @var $rbacManager RbacManager */
+        $rbacManager = Yii::$app->authManager;
+        $rbacManager->invalidateCache();
+        
         $child = ArrayHelper::getValue($post, 'child');
         Yii::$app->db->createCommand()->delete('ccoa_auth_item_child', [
             'parent' => $name, 'child' => $child])->execute();
@@ -150,6 +154,9 @@ class RoleManagerController extends Controller
     public function actionAssignmentPermission($name)
     {
         $post = Yii::$app->request->post();
+        /* @var $rbacManager RbacManager */
+        $rbacManager = Yii::$app->authManager;
+        $rbacManager->invalidateCache();
         
         if (\Yii::$app->getRequest()->isPost) {
             $this->saveAuthAssignment($name, $post, 1);
@@ -169,6 +176,9 @@ class RoleManagerController extends Controller
     public function actionAssignmentUser($name)
     {
         $post = Yii::$app->request->post();
+        /* @var $rbacManager RbacManager */
+        $rbacManager = Yii::$app->authManager;
+        $rbacManager->invalidateCache();
         
         if (\Yii::$app->getRequest()->isPost) {
             $this->saveAuthAssignment($name, $post, 2);

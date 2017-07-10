@@ -1,0 +1,60 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2017-6-28, 14:13:55
+    Author     : Kiwi°
+*/
+.worksystem .flag{
+    width: 16px;
+    height: 16px;
+}
+.worksystem .task-type-span{
+    width: 30px;
+    padding: 2px;
+    display: block;
+    font-size: 12px;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    background-color: #0ca389;
+}
+.worksystem .team-span {
+    width: 40px;
+    padding: 2px;
+    display: block;
+    font-size: 12px;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    background-color: #333;
+}
+.worksystem .epiboly-team-span {
+    background-color: #f0ad4e;
+}
+.worksystem .team-span-left{
+    float: left;
+}
+.worksystem .team-span-right{
+    float: right;
+}
+.worksystem .brace{
+    width: 15px;
+    height: 15px;
+    float: left; 
+    margin: 3px 3px;
+}
+.worksystem .progress{
+    height: 12px;
+    margin: 2px 0;
+    border-radius: 0px;
+}
+.worksystem .progress-bg {
+    background-image: linear-gradient(to bottom, #ddd, #ccc);
+}
+.worksystem .progress-words {
+    font-size: 10px;
+    line-height: 12px;
+}

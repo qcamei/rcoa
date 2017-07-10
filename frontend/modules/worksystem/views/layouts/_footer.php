@@ -1,5 +1,6 @@
 <?php
 
+use common\models\worksystem\WorksystemTask;
 use frontend\modules\worksystem\assets\WorksystemAssets;
 use wskeee\rbac\RbacName;
 use yii\helpers\Html;
@@ -28,8 +29,10 @@ use yii\helpers\Html;
                         'options'=>[
                             '/worksystem/task/index', 
                             //'create_by' => Yii::$app->user->id, 
-                            //'undertake_person' => Yii::$app->user->id, 
-                            //'auditor' => Yii::$app->user->id
+                            //'producer' => Yii::$app->user->id, 
+                            //'assign_people' => Yii::$app->user->id,
+                            'status' => WorksystemTask::STATUS_DEFAULT,
+                            'mark' => false,
                         ],                                                  //跳转选项，第一索引为地址，第二起为传参
                         'class'=>'footer-menu-item',                 //样式
                     ],

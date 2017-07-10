@@ -1,11 +1,13 @@
 <?php
 
+use common\models\worksystem\searchs\WorksystemContentSearch;
 use yii\helpers\Html;
+use yii\web\View;
 use yii\widgets\ActiveForm;
 
-/* @var $this yii\web\View */
-/* @var $model common\models\worksystem\searchs\WorksystemContentSearch */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $this View */
+/* @var $model WorksystemContentSearch */
+/* @var $form ActiveForm */
 ?>
 
 <div class="worksystem-content-search">
@@ -23,9 +25,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'icon') ?>
 
-    <?= $form->field($model, 'is_new') ?>
+    <?= $form->field($model, 'price_new') ?>
 
-    <?php // echo $form->field($model, 'price') ?>
+    <?php // echo $form->field($model, 'price_remould') ?>
 
     <?php // echo $form->field($model, 'unit') ?>
 
@@ -40,8 +42,8 @@ use yii\widgets\ActiveForm;
     <?php // echo $form->field($model, 'updated_at') ?>
 
     <div class="form-group">
-        <?= Html::submitButton(Yii::t('rcoa/worksystem', 'Search'), ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton(Yii::t('rcoa/worksystem', 'Reset'), ['class' => 'btn btn-default']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
+        <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

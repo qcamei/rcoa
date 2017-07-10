@@ -1,0 +1,45 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2017-6-28, 18:51:40
+    Author     : Kiwi°
+*/
+
+.worksystem .worksystem-task-type{
+    width: 100px;
+    height: 100px;
+    margin: 10px auto;
+    padding: 10px 0;
+    text-align: center;
+    border: 1px #ccc solid;
+    border-radius: 6px;
+    background-color: rgba(238, 238, 238, 1);
+}
+.worksystem .task-type-name{
+    margin-top: 6px;
+}
+.worksystem .selected{
+    color: #000;
+    text-decoration: none;
+}
+.worksystem .selected:hover{
+    cursor: pointer;
+}
+@media (min-width: 768px){
+.worksystem .myModal .col-sm-2 {
+        width: 18.666667%;
+    }
+}
+@media (min-width: 992px){
+.worksystem .myModal .col-md-3 {
+        width: 22%;
+    }
+}
+@media (min-width: 1200px){
+.worksystem .myModal .col-lg-3 {
+       width: 18.666667%;
+    }
+}

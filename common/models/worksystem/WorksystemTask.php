@@ -2,6 +2,7 @@
 
 namespace common\models\worksystem;
 
+use common\models\demand\DemandTask;
 use common\models\team\Team;
 use common\models\User;
 use wskeee\framework\models\Item;
@@ -22,6 +23,7 @@ use yii\db\ActiveRecord;
  * @property integer $task_type_id                          引用工作系统任务类别id
  * @property string $name                                   任务名称
  * @property integer $level                                 任务等级：0为普通，1为加急
+ * @property integer $is_brace                              是否支撑：0为否，1为是
  * @property integer $is_epiboly                            是否外包：0为否，1为是
  * @property string $budget_cost                            预计成本
  * @property string $reality_cost                           实际成本
@@ -41,7 +43,6 @@ use yii\db\ActiveRecord;
  * @property string $des                                    描述
  *
  * @property WorksystemAddAttributes[] $worksystemAddAttributes     获取所有附加属性
- * @property WorksystemCheck[] $worksystemChecks                    获取所有审核记录
  * @property WorksystemContentinfo[] $worksystemContentinfos        获取所有内容信息
  * @property WorksystemOperation[] $worksystemOperations            获取所有操作记录
  * @property User $createBy                                         获取创建者
@@ -56,6 +57,10 @@ use yii\db\ActiveRecord;
  */
 class WorksystemTask extends ActiveRecord
 {
+    /** 创建场景 */
+    const SCENARIO_CREATE = 'create';
+    /** 更新场景 */
+    const SCENARIO_UPDATE = 'update';
     /** 普通等级 */
     const LEVEL_ORDINARY = 0;
     /** 加急等级 */
@@ -64,6 +69,10 @@ class WorksystemTask extends ActiveRecord
     const  CANCEL_BRACE_MARK = 0;
     /** 寻求支撑 */
     const  SEEK_BRACE_MARK = 1;
+    /** 取消外包 */
+    const  CANCEL_EPIBOLY_MARK = 0;
+    /** 寻求外包 */
+    const  SEEK_EPIBOLY_MARK = 1;
     
     /** 默认状态 */
     const STATUS_DEFAULT = 100;
@@ -163,6 +172,31 @@ class WorksystemTask extends ActiveRecord
         return '{{%worksystem_task}}';
     }
     
+    public function scenarios() 
+    {
+        return [
+            self::SCENARIO_CREATE => [
+                'item_type_id', 'item_id', 'item_child_id', 'course_id', 'task_type_id', 
+                'level', 'external_team', 'create_team', 'created_at', 'updated_at',
+                'budget_cost', 'budget_bonus',
+                'des', 'name', 'plan_end_time', 'create_by'
+            ],
+            self::SCENARIO_UPDATE => [
+                'item_type_id', 'item_id', 'item_child_id', 'course_id', 'task_type_id', 
+                'level', 'external_team', 'create_team', 'created_at', 'updated_at',
+                'budget_cost', 'budget_bonus',
+                'des', 'name', 'plan_end_time', 'create_by'
+            ],
+            self::SCENARIO_DEFAULT => [
+                'item_type_id', 'item_id', 'item_child_id', 'course_id', 'task_type_id', 
+                'level', 'is_brace', 'is_epiboly', 'external_team', 'status', 'progress', 'create_team', 
+                'index', 'is_delete', 'created_at', 'updated_at', 'finished_at',
+                'budget_cost', 'reality_cost', 'budget_bonus', 'reality_bonus',
+                'des', 'name', 'plan_end_time', 'create_by'
+            ]
+        ];
+    }
+    
     public function behaviors() 
     {
         return [
@@ -176,8 +210,8 @@ class WorksystemTask extends ActiveRecord
     public function rules()
     {
         return [
-            [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'task_type_id', 'name'], 'required'],
-            [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'task_type_id', 'level', 'is_epiboly', 'external_team', 'status', 'progress', 'create_team', 'index', 'is_delete', 'created_at', 'updated_at', 'finished_at'], 'integer'],
+            [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'task_type_id', 'name', 'plan_end_time', 'create_team'], 'required', 'on'=>[self::SCENARIO_CREATE,self::SCENARIO_UPDATE]],
+            [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'task_type_id', 'level', 'is_brace', 'is_epiboly', 'external_team', 'status', 'progress', 'create_team', 'index', 'is_delete', 'created_at', 'updated_at', 'finished_at'], 'integer'],
             [['budget_cost', 'reality_cost', 'budget_bonus', 'reality_bonus'], 'number'],
             [['des'], 'string'],
             [['name'], 'string', 'max' => 255],
@@ -208,6 +242,7 @@ class WorksystemTask extends ActiveRecord
             'task_type_id' => Yii::t('rcoa/worksystem', 'Task Type ID'),
             'name' => Yii::t('rcoa/worksystem', 'Name'),
             'level' => Yii::t('rcoa/worksystem', 'Level'),
+            'is_brace' => Yii::t('rcoa/worksystem', 'Is Brace'),
             'is_epiboly' => Yii::t('rcoa/worksystem', 'Is Epiboly'),
             'budget_cost' => Yii::t('rcoa/worksystem', 'Budget Cost'),
             'reality_cost' => Yii::t('rcoa/worksystem', 'Reality Cost'),
@@ -215,11 +250,11 @@ class WorksystemTask extends ActiveRecord
             'reality_bonus' => Yii::t('rcoa/worksystem', 'Reality Bonus'),
             'plan_end_time' => Yii::t('rcoa/worksystem', 'Plan End Time'),
             'external_team' => Yii::t('rcoa/worksystem', 'External Team'),
-            'status' => Yii::t('rcoa/worksystem', 'Status'),
-            'progress' => Yii::t('rcoa/worksystem', 'Progress'),
+            'status' => Yii::t('rcoa', 'Status'),
+            'progress' => Yii::t('rcoa', 'Progress'),
             'create_team' => Yii::t('rcoa/worksystem', 'Create Team'),
-            'create_by' => Yii::t('rcoa/worksystem', 'Create By'),
-            'index' => Yii::t('rcoa/worksystem', 'Index'),
+            'create_by' => Yii::t('rcoa', 'Create By'),
+            'index' => Yii::t('rcoa', 'Index'),
             'is_delete' => Yii::t('rcoa/worksystem', 'Is Delete'),
             'created_at' => Yii::t('rcoa/worksystem', 'Created At'),
             'updated_at' => Yii::t('rcoa/worksystem', 'Updated At'),
@@ -229,6 +264,7 @@ class WorksystemTask extends ActiveRecord
     }
 
     /**
+     * 获取所有附加属性
      * @return ActiveQuery
      */
     public function getWorksystemAddAttributes()
@@ -237,14 +273,7 @@ class WorksystemTask extends ActiveRecord
     }
 
     /**
-     * @return ActiveQuery
-     */
-    public function getWorksystemChecks()
-    {
-        return $this->hasMany(WorksystemCheck::className(), ['worksystem_task_id' => 'id']);
-    }
-
-    /**
+     * 获取所有内容信息
      * @return ActiveQuery
      */
     public function getWorksystemContentinfos()
@@ -253,6 +282,7 @@ class WorksystemTask extends ActiveRecord
     }
 
     /**
+     * 获取所有操作记录
      * @return ActiveQuery
      */
     public function getWorksystemOperations()
@@ -261,14 +291,16 @@ class WorksystemTask extends ActiveRecord
     }
 
     /**
+     * 获取创建者
      * @return ActiveQuery
      */
     public function getCreateBy()
     {
         return $this->hasOne(User::className(), ['id' => 'create_by']);
     }
-
+    
     /**
+     * 获取基础行业
      * @return ActiveQuery
      */
     public function getItemType()
@@ -277,6 +309,7 @@ class WorksystemTask extends ActiveRecord
     }
 
     /**
+     * 获取基础层次/类型
      * @return ActiveQuery
      */
     public function getItem()
@@ -285,6 +318,7 @@ class WorksystemTask extends ActiveRecord
     }
 
     /**
+     * 获取基础专业/工种
      * @return ActiveQuery
      */
     public function getItemChild()
@@ -293,6 +327,7 @@ class WorksystemTask extends ActiveRecord
     }
 
     /**
+     * 获取基础课程
      * @return ActiveQuery
      */
     public function getCourse()
@@ -310,6 +345,7 @@ class WorksystemTask extends ActiveRecord
     }
 
     /**
+     * 获取创建团队
      * @return ActiveQuery
      */
     public function getCreateTeam()
@@ -318,6 +354,7 @@ class WorksystemTask extends ActiveRecord
     }
 
     /**
+     * 获取外部团队
      * @return ActiveQuery
      */
     public function getExternalTeam()
@@ -326,6 +363,7 @@ class WorksystemTask extends ActiveRecord
     }
 
     /**
+     * 获取所有制作人员
      * @return ActiveQuery
      */
     public function getWorksystemTaskProducers()
@@ -335,7 +373,7 @@ class WorksystemTask extends ActiveRecord
     
     /**
      * 获取是否在【默认】状态
-     * @return type
+     * @return boolean
      */
     public function getIsStatusDefault()
     {
@@ -344,7 +382,7 @@ class WorksystemTask extends ActiveRecord
     
     /**
      * 获取是否在【待审核】状态
-     * @return type
+     * @return boolean
      */
     public function getIsStatusWaitCheck()
     {
@@ -353,7 +391,7 @@ class WorksystemTask extends ActiveRecord
     
     /**
      * 获取是否在【调整中】状态
-     * @return type
+     * @return boolean
      */
     public function getIsStatusAdjustmenting()
     {
@@ -362,7 +400,7 @@ class WorksystemTask extends ActiveRecord
     
     /**
      * 获取是否在【审核中】状态
-     * @return type
+     * @return boolean
      */
     public function getIsStatusChecking()
     {
@@ -371,7 +409,7 @@ class WorksystemTask extends ActiveRecord
     
     /**
      * 获取是否在【待指派】状态
-     * @return type
+     * @return boolean
      */
     public function getIsStatusWaitAssign()
     {
@@ -380,7 +418,7 @@ class WorksystemTask extends ActiveRecord
     
     /**
      * 获取是否在【待承接】状态
-     * @return type
+     * @return boolean
      */
     public function getIsStatusWaitUndertake()
     {
@@ -389,7 +427,7 @@ class WorksystemTask extends ActiveRecord
     
     /**
      * 获取是否在【待开始】状态
-     * @return type
+     * @return boolean
      */
     public function getIsStatusToStart()
     {
@@ -398,7 +436,7 @@ class WorksystemTask extends ActiveRecord
     
     /**
      * 获取是否在【制作中】状态
-     * @return type
+     * @return boolean
      */
     public function getIsStatusWorking()
     {
@@ -407,7 +445,7 @@ class WorksystemTask extends ActiveRecord
     
     /**
      * 获取是否在【待验收】状态
-     * @return type
+     * @return boolean
      */
     public function getIsStatusWaitAcceptance()
     {
@@ -416,7 +454,7 @@ class WorksystemTask extends ActiveRecord
     
     /**
      * 获取是否在【修改中】状态
-     * @return type
+     * @return boolean
      */
     public function getIsStatusUpdateing()
     {
@@ -425,7 +463,7 @@ class WorksystemTask extends ActiveRecord
     
     /**
      * 获取是否在【验收中】状态
-     * @return type
+     * @return boolean
      */
     public function getIsStatusAcceptanceing()
     {
@@ -434,7 +472,7 @@ class WorksystemTask extends ActiveRecord
     
     /**
      * 获取是否在【已完成】状态
-     * @return type
+     * @return boolean
      */
     public function getIsStatusCompleted()
     {
@@ -443,7 +481,7 @@ class WorksystemTask extends ActiveRecord
     
     /**
      * 获取是否在【已取消】状态
-     * @return type
+     * @return boolean
      */
     public function getIsStatusCancel()
     {
@@ -451,8 +489,44 @@ class WorksystemTask extends ActiveRecord
     }
     
     /**
+     * 获取是否【寻求支撑】
+     * @return boolean
+     */
+    public function getIsSeekBrace()
+    {
+        return $this->is_brace == self::SEEK_BRACE_MARK;
+    }
+    
+    /**
+     * 获取是否【取消支撑】
+     * @return boolean
+     */
+    public function getIsCancelBrace()
+    {
+        return $this->is_brace == self::CANCEL_BRACE_MARK;
+    }
+    
+    /**
+     * 获取是否【寻求外包】
+     * @return boolean
+     */
+    public function getIsSeekEpiboly()
+    {
+        return $this->is_epiboly == self::SEEK_EPIBOLY_MARK;
+    }
+    
+    /**
+     * 获取是否【取消外包】
+     * @return boolean
+     */
+    public function getIsCancelEpiboly()
+    {
+        return $this->is_epiboly == self::CANCEL_EPIBOLY_MARK;
+    }
+    
+    /**
      * 获取状态名称
-     * @return type
+     * @return string
      */
     public function getStatusName()
     {
@@ -461,7 +535,7 @@ class WorksystemTask extends ActiveRecord
     
     /**
      * 获取状态进度
-     * @return type
+     * @return string
      */
     public function getStatusProgress()
     {

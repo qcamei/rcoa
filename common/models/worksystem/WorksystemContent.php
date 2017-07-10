@@ -15,8 +15,8 @@ use yii\web\UploadedFile;
  * @property integer $worksystem_task_type_id           引用工作系统任务类别id
  * @property string $type_name                          类型名称
  * @property string $icon                               图标
- * @property integer $is_new                            新建/改造：1为新建，0为改造
- * @property string $price                              单价
+ * @property string $price_new                          新建单价
+ * @property string $price_remould                      改造单价
  * @property string $unit                               单位
  * @property string $des                                描述
  * @property integer $index                             顺序
@@ -65,8 +65,8 @@ class WorksystemContent extends ActiveRecord
     {
         return [
             [['worksystem_task_type_id', 'type_name', 'unit'], 'required'],
-            [['worksystem_task_type_id', 'is_new', 'index', 'is_delete', 'created_at', 'updated_at'], 'integer'],
-            [['price'], 'number'],
+            [['worksystem_task_type_id', 'index', 'is_delete', 'created_at', 'updated_at'], 'integer'],
+            [['price_new', 'price_remould'], 'number'],
             [['des'], 'string'],
             [['type_name', 'icon'], 'string', 'max' => 255],
             [['unit'], 'string', 'max' => 60],
@@ -84,8 +84,8 @@ class WorksystemContent extends ActiveRecord
             'worksystem_task_type_id' => Yii::t('rcoa/worksystem', 'Worksystem Task Type ID'),
             'type_name' => Yii::t('rcoa/worksystem', 'Type Name'),
             'icon' => Yii::t('rcoa/worksystem', 'Icon'),
-            'is_new' => Yii::t('rcoa/worksystem', 'Is New'),
-            'price' => Yii::t('rcoa/worksystem', 'Price'),
+            'price_new' => Yii::t('rcoa/worksystem', 'Price New'),
+            'price_remould' => Yii::t('rcoa/worksystem', 'Price Remould'),
             'unit' => Yii::t('rcoa/worksystem', 'Unit'),
             'des' => Yii::t('rcoa', 'Des'),
             'index' => Yii::t('rcoa', 'Index'),

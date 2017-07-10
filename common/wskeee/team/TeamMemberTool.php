@@ -261,14 +261,91 @@ class TeamMemberTool extends Component {
     /**
      * 获取【用户】的所有【团队成员】身份
      * @param string $user_id           用户id
+     * @param string $category      团队类别
      * @param boolean $include_is_delete 是否包括已删除成员，默认不包括
      * @return array(teamember,...)
      */
-    public function getUserTeamMembers($user_id,$include_is_delete=false){
+    public function getUserTeamMembers($user_id,$category=null,$include_is_delete=false){
+        $results = [];
+        $categoryTeamMap = null;
+        if($category != null){
+            $categoryTeamMap = ArrayHelper::map($this->getTeamsByCategoryId($category), 'id', 'name');
+        }
+        
+        foreach ($this->teamMembers as $teammeber) {
+            if($teammeber['u_id'] == $user_id && ($categoryTeamMap == null || isset($categoryTeamMap[$teammeber['team_id']]))){
+                if($include_is_delete || $teammeber['is_delete'] == 'N')
+                    $results [] = $teammeber;
+            }
+        }
+        return $results;
+    }
+    
+    /**
+     * 获取指定【团队类型】下指定【职称】的所有【成员用户】
+     * @param string $category              团队类别
+     * @param integer|string $position      职称
+     * @param boolean $include_is_delete 是否包括已删除成员，默认不包括
+     * @return array(teamember,...)
+     */
+    public function getAppointPositionTeamMembers($category=null,$position=null, $include_is_delete=false){
+        $categoryTeamMap = null;
+        if($category != null){
+            $categoryTeamMap = ArrayHelper::map($this->getTeamsByCategoryId($category), 'id', 'name');
+        }
         $results = [];
         foreach ($this->teamMembers as $teammeber) {
-            if($teammeber['u_id'] == $user_id){
-                if($include_is_delete || $teammeber['is_delete'] == 'N')
+            if(($include_is_delete || $teammeber['is_delete'] == 'N') && ($categoryTeamMap == null || isset($categoryTeamMap[$teammeber['team_id']]))){
+                if($teammeber['position_id'] == $position || $teammeber['position_name'] == $position)
+                    $results [] = $teammeber;
+            }
+        }
+        return $results;
+    }
+    
+    /**
+     * 获取指定【团队类型】下指定【用户职称】的所有【成员用户】
+     * @param string $user_id               用户id
+     * @param string $category              团队类别
+     * @param integer|string $position      职称
+     * @param boolean $include_is_delete 是否包括已删除成员，默认不包括
+     * @return array(teamember,...)
+     */
+    public function getAppointUserPositionTeamMembers($user_id,$category=null,$position=null, $include_is_delete=false){
+        $categoryTeamMap = null;
+        if($category != null){
+            $categoryTeamMap = ArrayHelper::map($this->getTeamsByCategoryId($category), 'id', 'name');
+        }
+        $teamMap = ArrayHelper::getColumn($this->getUserTeam($user_id, $category), 'id');
+        $results = [];
+        foreach ($this->teamMembers as $teammeber) {
+            if(in_array($teammeber['team_id'], $teamMap)){
+                if(($include_is_delete || $teammeber['is_delete'] == 'N') && ($categoryTeamMap == null || isset($categoryTeamMap[$teammeber['team_id']]))){
+                    if($teammeber['position_id'] == $position || $teammeber['position_name'] == $position)
+                        $results [] = $teammeber;
+                }
+            }
+        }
+        return $results;
+    }
+    
+    /**
+     * 获取指定【团队类型】下指定【用户】的所有【成员用户】
+     * @param string $user_id           用户id
+     * @param string $category          团队类别
+     * @param boolean $include_is_delete 是否包括已删除成员，默认不包括
+     * @return array(teamember,...)
+     */
+    public function getAppointUserTeamMembers($user_id,$category=null,$include_is_delete=false){
+        $categoryTeamMap = null;
+        if($category != null){
+            $categoryTeamMap = ArrayHelper::map($this->getTeamsByCategoryId($category), 'id', 'name');
+        }
+        $teamMap = ArrayHelper::getColumn($this->getUserTeam($user_id, $category), 'id');
+        $results = [];
+        foreach ($this->teamMembers as $teammeber) {
+            if(in_array($teammeber['team_id'], $teamMap)){
+                if(($include_is_delete || $teammeber['is_delete'] == 'N') && ($categoryTeamMap == null || isset($categoryTeamMap[$teammeber['team_id']])))
                     $results [] = $teammeber;
             }
         }
@@ -294,6 +371,26 @@ class TeamMemberTool extends Component {
                 if(($include_is_delete || $teammeber['is_delete'] == 'N') && $teammeber['is_leader'] == 'Y' && ($categoryTeamMap == null || isset($categoryTeamMap[$teammeber['team_id']])))
                     $results [] = $teammeber;
             }
+        }
+        return $results;
+    }
+    
+    /**
+     * 获取指定【团队类型】下所有【成员用户】的【队长】
+     * @param string $category          团队类别
+     * @param boolean $include_is_delete 是否包括已删除成员，默认不包括
+     * @return array(teamember,...)
+     */
+    public function getTeamMembersUserLeaders($category,$include_is_delete=false){
+        $categoryTeamMap = null;
+        if($category != null){
+            $categoryTeamMap = ArrayHelper::map($this->getTeamsByCategoryId($category), 'id', 'name');
+        }
+        
+        $results = [];
+        foreach ($this->teamMembers as $teammeber) {
+            if(($include_is_delete || $teammeber['is_delete'] == 'N') && $teammeber['is_leader'] == 'Y' && ($categoryTeamMap == null || isset($categoryTeamMap[$teammeber['team_id']])))
+                $results [] = $teammeber;
         }
         return $results;
     }

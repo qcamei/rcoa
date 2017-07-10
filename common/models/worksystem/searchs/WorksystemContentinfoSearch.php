@@ -2,10 +2,9 @@
 
 namespace common\models\worksystem\searchs;
 
-use Yii;
+use common\models\worksystem\WorksystemContentinfo;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\worksystem\WorksystemContentinfo;
 
 /**
  * WorksystemContentinfoSearch represents the model behind the search form about `common\models\worksystem\WorksystemContentinfo`.
@@ -18,7 +17,7 @@ class WorksystemContentinfoSearch extends WorksystemContentinfo
     public function rules()
     {
         return [
-            [['id', 'worksystem_task_id', 'worksystem_content_id', 'budget_number', 'reality_number', 'index', 'is_delete', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'worksystem_task_id', 'worksystem_content_id', 'is_new', 'budget_number', 'reality_number', 'index', 'is_delete', 'created_at', 'updated_at'], 'integer'],
             [['price', 'budget_cost', 'reality_cost'], 'number'],
         ];
     }
@@ -55,6 +54,7 @@ class WorksystemContentinfoSearch extends WorksystemContentinfo
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
             return $dataProvider;
+            
         }
 
         // grid filtering conditions
@@ -62,6 +62,7 @@ class WorksystemContentinfoSearch extends WorksystemContentinfo
             'id' => $this->id,
             'worksystem_task_id' => $this->worksystem_task_id,
             'worksystem_content_id' => $this->worksystem_content_id,
+            'is_new' => $this->is_new,
             'price' => $this->price,
             'budget_number' => $this->budget_number,
             'budget_cost' => $this->budget_cost,

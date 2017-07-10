@@ -13,6 +13,7 @@ use yii\db\ActiveRecord;
  * @property integer $id                                    id
  * @property integer $worksystem_task_id                    引用工作系统任务id
  * @property integer $worksystem_content_id                 引用基础内容信息id
+ * @property integer $is_new                                新建/改造：1为新建，0为改造
  * @property string $price                                  单价
  * @property integer $budget_number                         预计数量
  * @property string $budget_cost                            预计成本
@@ -49,7 +50,7 @@ class WorksystemContentinfo extends ActiveRecord
     public function rules()
     {
         return [
-            [['worksystem_task_id', 'worksystem_content_id', 'budget_number', 'reality_number', 'index', 'is_delete', 'created_at', 'updated_at'], 'integer'],
+            [['worksystem_task_id', 'worksystem_content_id', 'is_new', 'budget_number', 'reality_number', 'index', 'is_delete', 'created_at', 'updated_at'], 'integer'],
             [['price', 'budget_cost', 'reality_cost'], 'number'],
             [['worksystem_content_id'], 'exist', 'skipOnError' => true, 'targetClass' => WorksystemContent::className(), 'targetAttribute' => ['worksystem_content_id' => 'id']],
             [['worksystem_task_id'], 'exist', 'skipOnError' => true, 'targetClass' => WorksystemTask::className(), 'targetAttribute' => ['worksystem_task_id' => 'id']],
@@ -65,6 +66,7 @@ class WorksystemContentinfo extends ActiveRecord
             'id' => Yii::t('rcoa/worksystem', 'ID'),
             'worksystem_task_id' => Yii::t('rcoa/worksystem', 'Worksystem Task ID'),
             'worksystem_content_id' => Yii::t('rcoa/worksystem', 'Worksystem Content ID'),
+            'is_new' => Yii::t('rcoa/worksystem', 'Is New'),
             'price' => Yii::t('rcoa/worksystem', 'Price'),
             'budget_number' => Yii::t('rcoa/worksystem', 'Budget Number'),
             'budget_cost' => Yii::t('rcoa/worksystem', 'Budget Cost'),

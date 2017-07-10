@@ -2,12 +2,13 @@
 
 namespace frontend\modules\worksystem\controllers;
 
-use Yii;
-use common\models\worksystem\WorksystemOperation;
 use common\models\worksystem\searchs\WorksystemOperationSearch;
+use common\models\worksystem\WorksystemOperation;
+use frontend\modules\worksystem\utils\WorksystemOperationHtml;
+use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * OperationController implements the CRUD actions for WorksystemOperation model.
@@ -46,13 +47,17 @@ class OperationController extends Controller
 
     /**
      * Displays a single WorksystemOperation model.
+     * @param WorksystemOperationHtml $_wsOp
      * @param integer $id
      * @return mixed
      */
     public function actionView($id)
     {
-        return $this->render('view', [
+        $_wsOp = WorksystemOperationHtml::getInstance();
+        
+        return $this->renderAjax('view', [
             'model' => $this->findModel($id),
+            '_wsOp' => $_wsOp,
         ]);
     }
 

@@ -33,11 +33,11 @@ class WorksystemAttributes extends ActiveRecord
     const CHECKSTYPE = 2; 
     
     /** 输入类型 手工录入 */
-    const INPUTMANUALENTRY = 0;
-    /** 输入类型 列表中选择 */
-    const INPUTLISTSELECTION = 1; 
+    const HANDWORKINPUT = 0;
+    /** 输入类型 列表选择 */
+    const LISTSELECTINPUT = 1; 
     /** 输入类型 多行文本 */
-    const INPUTMULTILINETEXT = 2; 
+    const MULTILINETEXTINPUT = 2; 
 
     /**
      * 类别名称
@@ -54,9 +54,9 @@ class WorksystemAttributes extends ActiveRecord
      * @var array 
      */
     public static $inputTypeName = [
-        self::INPUTMANUALENTRY => '手工录入',
-        self::INPUTLISTSELECTION => '列表中选择',
-        self::INPUTMULTILINETEXT => '多行文本',
+        self::HANDWORKINPUT => '手工录入',
+        self::LISTSELECTINPUT => '列表选择',
+        self::MULTILINETEXTINPUT => '多行文本',
     ];
 
     /**
@@ -113,5 +113,77 @@ class WorksystemAttributes extends ActiveRecord
     public function getWorksystemAddAttributes()
     {
         return $this->hasMany(WorksystemAddAttributes::className(), ['worksystem_attributes_id' => 'id']);
+    }
+    
+    /**
+     * 获取是否为【唯一】类型
+     * @return boolean
+     */
+    public function getIsUniqueType()
+    {
+        return $this->type == self::UNIQUETYPE;
+    }
+    
+    /**
+     * 获取是否为【单选】类型
+     * @return boolean
+     */
+    public function getIsSingleSelectionType()
+    {
+        return $this->type == self::SINGLESELECTIONTYPE;
+    }
+    
+    /**
+     * 获取是否为【复选】类型
+     * @return boolean
+     */
+    public function getIsChecksType()
+    {
+        return $this->type == self::CHECKSTYPE;
+    }
+    
+    /**
+     * 获取是否为【手工录入】输入类型
+     * @return boolean
+     */
+    public function getIsHandworkInput()
+    {
+        return $this->input_type == self::HANDWORKINPUT;
+    }
+    
+    /**
+     * 获取是否为【列表选择】输入类型
+     * @return boolean
+     */
+    public function getIsListSelectInput()
+    {
+        return $this->input_type == self::LISTSELECTINPUT;
+    }
+    
+    /**
+     * 获取是否为【多行文本】输入类型
+     * @return boolean
+     */
+    public function getIsMultilineTextInput()
+    {
+        return $this->input_type == self::MULTILINETEXTINPUT;
+    }
+    
+    /**
+     * 获取类型名称
+     * @return string
+     */
+    public function getTypeName()
+    {
+        return self::$typeName[$this->type];
+    }
+    
+    /**
+     * 获取输入类型名称
+     * @return string
+     */
+    public function getInputTypeName()
+    {
+        return self::$inputTypeName[$this->type];
     }
 }

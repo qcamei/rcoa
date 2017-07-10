@@ -1,10 +1,9 @@
 <?php
 
-use common\models\multimedia\MultimediaTask;
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use common\models\worksystem\WorksystemTask;
+use frontend\modules\worksystem\assets\WorksystemAssets;
     
-/* @var $model MultimediaTask */
+/* @var $model WorksystemTask */
 
 ?>
 
@@ -26,3 +25,7 @@ use yii\widgets\ActiveForm;
        </div>
     </div> 
 </div>
+
+<?php
+    WorksystemAssets::register($this);
+?>
