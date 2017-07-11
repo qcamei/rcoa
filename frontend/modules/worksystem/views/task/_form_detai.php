@@ -72,7 +72,7 @@ $statusProgress = $this->render('_form_phase', [
         <?php foreach($attributes as $item): ?>
         <tr>
             <th class="viewdetail-th"><?= $item['name'] ?></th>
-            <td class="viewdetail-td"><?= str_replace("\r\n", "、", $item['value']) ?></td>
+            <td class="viewdetail-td"><?= str_replace(",", "、", $item['value']) ?></td>
         </tr>
         <?php endforeach; ?>
         <tr>

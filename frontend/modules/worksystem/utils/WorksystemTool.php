@@ -228,8 +228,8 @@ class WorksystemTool
                     $element['value_list'] = $valueList;
                 }
                 if(isset($element['value'])){
-                    if(strpos($element['value'] ,"\r\n")){
-                        $element['value'] = explode("\r\n", $element['value']);
+                    if(strpos($element['value'] ,",")){
+                        $element['value'] = explode(",", $element['value']);
                     }
                 }else{   
                     $element['value'] = null;
@@ -350,7 +350,7 @@ class WorksystemTool
             $values[] = [
                 'worksystem_task_id' => $model->id,
                 'worksystem_attributes_id' => $index,
-                'value' => !is_array($items) ? $items : implode("\r\n", $items),
+                'value' => !is_array($items) ? $items : implode(",", $items),
                 'index' => $attributes['index'][$index],
                 'is_delete' => $attributes['is_delete'][$index],
                 'created_at' => time(),
