@@ -8,6 +8,7 @@ use common\models\team\TeamMember;
 use common\models\User;
 use common\models\worksystem\WorksystemAddAttributes;
 use common\models\worksystem\WorksystemAssignTeam;
+use common\models\worksystem\WorksystemAttributes;
 use common\models\worksystem\WorksystemContentinfo;
 use common\models\worksystem\WorksystemOperation;
 use common\models\worksystem\WorksystemOperationUser;
@@ -188,6 +189,27 @@ class WorksystemTool
     }
     
     /**
+     * 获取所有工作系统任务附加属性
+     * @param integer $taskId               工作系统任务id
+     * @return array
+     */
+    public function getWorksystemTaskAddAttributes($taskId)
+    {
+        $attributes = (new Query())
+                ->select([
+                    'Ws_add_attributes.worksystem_attributes_id AS id', 'Ws_add_attributes.value',
+                    'Ws_attributes.name', 'Ws_attributes.type', 'Ws_attributes.input_type',
+                    'Ws_attributes.value_list', 'Ws_attributes.index', 'Ws_attributes.is_delete'
+                ])
+                ->from(['Ws_add_attributes' => WorksystemAddAttributes::tableName()])
+                ->leftJoin(['Ws_attributes' => WorksystemAttributes::tableName()], 'Ws_attributes.id = Ws_add_attributes.worksystem_attributes_id')
+                ->where(['worksystem_task_id' => $taskId])
+                ->all();
+           
+        return $attributes;
+    }
+    
+    /**
      * 工作系统基础附加属性格式化
      * @param array $items                  格式化对象
      * @return array
@@ -199,15 +221,15 @@ class WorksystemTool
         if(!empty($items) && is_array($items)){
             foreach ($items as $element) {
                 if($element['value_list'] != null){
-                    $valueLists = explode('|', $element['value_list']);
+                    $valueLists = explode("\r\n", $element['value_list']);
                     foreach ($valueLists as $value) {
                         $valueList[$value] = $value;
                     }
                     $element['value_list'] = $valueList;
                 }
                 if(isset($element['value'])){
-                    if(strpos($element['value'] ,"|")){
-                        $element['value'] = explode("|", $element['value']);
+                    if(strpos($element['value'] ,"\r\n")){
+                        $element['value'] = explode("\r\n", $element['value']);
                     }
                 }else{   
                     $element['value'] = null;
@@ -215,7 +237,7 @@ class WorksystemTool
                 $itemResults[] = $element;
             }
         }
-        
+       
         return $itemResults;
     }
     
@@ -328,7 +350,7 @@ class WorksystemTool
             $values[] = [
                 'worksystem_task_id' => $model->id,
                 'worksystem_attributes_id' => $index,
-                'value' => !is_array($items) ? $items : implode('|', $items),
+                'value' => !is_array($items) ? $items : implode("\r\n", $items),
                 'index' => $attributes['index'][$index],
                 'is_delete' => $attributes['is_delete'][$index],
                 'created_at' => time(),

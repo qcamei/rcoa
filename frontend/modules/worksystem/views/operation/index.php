@@ -21,12 +21,12 @@ use yii\web\View;
 
         <thead>
             <tr>
-                <th style="width: 8%"><?= Yii::t('rcoa/worksystem', 'Title') ?></th>
-                <th style="width: 33.5%"><?= Yii::t('rcoa/worksystem', 'Content') ?></th>
-                <th style="width: 33.5%"><?= Yii::t('rcoa/worksystem', 'Des') ?></th>
-                <th style="width: 10%"><?= Yii::t('rcoa/worksystem', 'Time') ?></th>
-                <th style="width: 10%"><?= Yii::t('rcoa/worksystem', 'Operation People') ?></th>
-                <th style="width: 5%"><?= Yii::t('rcoa', 'Operating') ?></th>
+                <th style="width: 14%"><?= Yii::t('rcoa/worksystem', 'Title') ?></th>
+                <th style="width: 35%"><?= Yii::t('rcoa/worksystem', 'Content') ?></th>
+                <th class="hidden-xs" style="width: 35%"><?= Yii::t('rcoa/worksystem', 'Des') ?></th>
+                <th class="hidden-xs" style="width: 8%"><?= Yii::t('rcoa/worksystem', 'Time') ?></th>
+                <th class="hidden-xs" style="width: 8%"><?= Yii::t('rcoa/worksystem', 'Operation People') ?></th>
+                <th style="width: 1%"><?= Yii::t('rcoa', 'Operating') ?></th>
             </tr>
         </thead>
 
@@ -42,9 +42,9 @@ use yii\web\View;
                 <tr>
                     <td><?= $model->title ?></td>
                     <?= $_wsOp->getOperationTypeHtml($model->controller_action, $model->content); ?>
-                    <td class="course-name"><?= $model->des ?></td>
-                    <td style="font-size: 10px; padding: 2px 8px;"><?= date('Y-m-d H:i', $model->created_at) ?></td>
-                    <td><?= $model->createBy->nickname ?></td>
+                    <td class="course-name hidden-xs"><?= $model->des ?></td>
+                    <td class="hidden-xs" style="font-size: 10px; padding: 2px 8px;"><?= date('Y-m-d H:i', $model->created_at) ?></td>
+                    <td class="hidden-xs"><?= $model->createBy->nickname ?></td>
                     <td style="padding: 4px 8px;"><?= Html::a('查看', ['operation/view', 'id' => $model->id], ['class' => 'btn btn-default btn-sm', 'onclick' => 'view($(this)); return false;']) ?></td>
                 </tr>
 

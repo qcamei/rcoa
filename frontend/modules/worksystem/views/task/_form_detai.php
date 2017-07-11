@@ -14,120 +14,116 @@ $statusProgress = $this->render('_form_phase', [
 
 ?>
 
-<?php 
-    echo DetailView::widget([
-        'model' => $model,
-        //'options' => ['class' => 'table table-bordered detail-view'],
-        'template' => '<tr><th class="viewdetail-th">{label}</th><td class="viewdetail-td">{value}</td></tr>',
-        'attributes' => [
-            ['label' => '<span class="btn-block viewdetail-th-head">基本信息</span>','value' => ''],
-            [
-                'attribute' => 'item_type_id',
-                'format' => 'raw',
-                'value' => !empty($model->item_type_id) ? $model->itemType->name: '空',
-            ],
-            [
-                'attribute' => 'item_id',
-                'format' => 'raw',
-                'value' => !empty($model->item_id) ? $model->item->name : '空',
-            ],
-            [
-                'attribute' => 'item_child_id',
-                'format' => 'raw',
-                'value' => !empty($model->item_child_id) ? $model->itemChild->name : '空',
-            ],
-            [
-                'attribute' => 'course_id',
-                'format' => 'raw',
-                'value' => !empty($model->course_id) ? $model->course->name : '空',
-            ],
-            [
-                'attribute' => 'name',
-                'format' => 'raw',
-                'value' => $model->name,
-            ],
-            ['label' => '<span class="btn-block viewdetail-th-head">开发信息</span>','value' => ''],
-            [
-                'attribute' => 'level',
-                'format' => 'raw',
-                'value' => $model->level == WorksystemTask::LEVEL_ORDINARY ? '普通' : 
-                           '<span class="error-warn">加急</span>',
-            ],
-            [
-                'attribute' => 'is_epiboly',
-                'format' => 'raw',
-                'value' => $model->is_epiboly == false ? '否' : '是',
-            ],
-            [
-                'attribute' => 'task_type_id',
-                'format' => 'raw',
-                'value' => !empty($model->task_type_id) ? $model->worksystemTaskType->name : null,
-            ],
-            [
-                'label' => Yii::t('rcoa/worksystem', 'Task Cost'),
-                'format' => 'raw',
-                'value' =>  !empty($model->budget_cost) || !empty($model->reality_cost) ? 
-                            '￥'.number_format($model->budget_cost, 2, '.', ',').' / ￥'.number_format($model->reality_cost, 2, '.', ',') : null,
-            ],
-            [
-                'label' => Yii::t('rcoa/worksystem', 'Task Bonus'),
-                'format' => 'raw',
-                'value' => !empty($model->budget_bonus) || !empty($model->reality_bonus) ? 
-                            '￥'.number_format($model->budget_bonus, 2, '.', ',').' / ￥'.number_format($model->reality_bonus, 2, '.', ',') : null,
-            ],
-            [
-                'attribute' => 'plan_end_time',
-                'format' => 'raw',
-                'value' => '<span class="error-warn">'.$model->plan_end_time.'</span>',
-            ],
-            [
-                'attribute' => 'external_team',
-                'format' => 'raw',
-                'value' => !empty($model->external_team) && !empty($model->create_team) ? 
+<table id="w0" class="table table-striped table-bordered detail-view">
+    
+    <tbody>
+        <!--基本信息-->
+        <tr>
+            <th class="viewdetail-th"><span class="btn-block viewdetail-th-head">基本信息</span></th>
+            <td class="viewdetail-td"></td>
+        </tr>
+        <tr>
+            <th class="viewdetail-th"><?= Yii::t('rcoa/worksystem', 'Item Type ID') ?></th>
+            <td class="viewdetail-td"><?= !empty($model->item_type_id) ? $model->itemType->name: '<span class="not-set">(未设置)</span>' ?></td>
+        </tr>
+        <tr>
+            <th class="viewdetail-th"><?= Yii::t('rcoa/worksystem', 'Item ID') ?></th>
+            <td class="viewdetail-td"><?= !empty($model->item_id) ? $model->item->name : '<span class="not-set">(未设置)</span>' ?></td>
+        </tr>
+        <tr>
+            <th class="viewdetail-th"><?= Yii::t('rcoa/worksystem', 'Item Child ID') ?></th>
+            <td class="viewdetail-td"><?= !empty($model->item_child_id) ? $model->itemChild->name : '<span class="not-set">(未设置)</span>' ?></td>
+        </tr>
+        <tr>
+            <th class="viewdetail-th"><?= Yii::t('rcoa/worksystem', 'Course ID') ?></th>
+            <td class="viewdetail-td"><?= !empty($model->course_id) ? $model->course->name : '<span class="not-set">(未设置)</span>' ?></td>
+        </tr>
+        <tr>
+            <th class="viewdetail-th"><?= Yii::t('rcoa/worksystem', 'Name') ?></th>
+            <td class="viewdetail-td"><?= !empty($model->name) ? $model->name : '<span class="not-set">(未设置)</span>' ?></td>
+        </tr>
+        <!--开发信息-->
+        <tr>
+            <th class="viewdetail-th"><span class="btn-block viewdetail-th-head">开发信息</span></th>
+            <td class="viewdetail-td"></td>
+        </tr>
+        <tr>
+            <th class="viewdetail-th"><?= Yii::t('rcoa/worksystem', 'Level') ?></th>
+            <td class="viewdetail-td"><?= $model->level == WorksystemTask::LEVEL_ORDINARY ? WorksystemTask::$levelName[$model->level] : '<span class="error-warn">'.WorksystemTask::$levelName[$model->level].'</span>' ?></td>
+        </tr>
+        <tr>
+            <th class="viewdetail-th"><?= Yii::t('rcoa/worksystem', 'Is Epiboly') ?></th>
+            <td class="viewdetail-td"><?= $model->getIsCancelEpiboly() ? '否' : '是' ?></td>
+        </tr>
+        <tr>
+            <th class="viewdetail-th"><?= Yii::t('rcoa/worksystem', 'Task Type ID') ?></th>
+            <td class="viewdetail-td"><?= !empty($model->task_type_id) ? $model->worksystemTaskType->name : '<span class="not-set">(未设置)</span>' ?></td>
+        </tr>
+        <tr>
+            <th class="viewdetail-th"><?= Yii::t('rcoa/worksystem', 'Task Cost') ?></th>
+            <td class="viewdetail-td"><?= !empty($model->budget_cost) || !empty($model->reality_cost) ? 
+                            '￥'.number_format($model->budget_cost, 2, '.', ',').' / ￥'.number_format($model->reality_cost, 2, '.', ',') : '<span class="not-set">(未设置)</span>' ?></td>
+        </tr>
+        <tr>
+            <th class="viewdetail-th"><?= Yii::t('rcoa/worksystem', 'Task Bonus') ?></th>
+            <td class="viewdetail-td"><?= !empty($model->budget_bonus) || !empty($model->reality_bonus) ? 
+                            '￥'.number_format($model->budget_bonus, 2, '.', ',').' / ￥'.number_format($model->reality_bonus, 2, '.', ',') : '<span class="not-set">(未设置)</span>' ?></td>
+        </tr>
+        <?php foreach($attributes as $item): ?>
+        <tr>
+            <th class="viewdetail-th"><?= $item['name'] ?></th>
+            <td class="viewdetail-td"><?= str_replace("\r\n", "、", $item['value']) ?></td>
+        </tr>
+        <?php endforeach; ?>
+        <tr>
+            <th class="viewdetail-th"><?= Yii::t('rcoa/worksystem', 'Plan End Time') ?></th>
+            <td class="viewdetail-td"><span class="error-warn"><?= $model->plan_end_time ?></span></td>
+        </tr>
+        <tr>
+            <th class="viewdetail-th"><?= Yii::t('rcoa/worksystem', 'External Team') ?></th>
+            <td class="viewdetail-td"><?= !empty($model->external_team) && !empty($model->create_team) ? 
                            ($model->external_team != $model->create_team && $model->getIsSeekEpiboly() ? '<span class="team-span team-span-left">'.$model->createTeam->name.'</span>'. Html::img(['/filedata/worksystem/image/brace.png'], ['class' => 'brace']) . '<span class="team-span team-span-left epiboly-team-span">'.$model->externalTeam->name.'</span>' : 
-                           ($model->external_team != $model->create_team && $model->getIsSeekBrace() ? '<span class="team-span team-span-left">'.$model->createTeam->name.'</span>'. Html::img(['/filedata/worksystem/image/brace.png'], ['class' => 'brace']) . '<span class="team-span team-span-left">'.$model->externalTeam->name.'</span>' : '<span class="team-span">'.$model->createTeam->name.'</span>')) : null,
-            ],
-            [
-                'label' => Yii::t('rcoa/worksystem', 'Producer'),
-                'format' => 'raw',
-                'value' =>  !empty($producer) ? $producer : null,
-            ],
-            [
-                'label' => Yii::t('rcoa/worksystem', 'Phase'),
-                'format' => 'raw',
-                'value' => null //$statusProgress,
-            ],
-            ['label' => '<span class="btn-block viewdetail-th-head">其它信息</span>','value' => ''],
-            [
-                'attribute' => 'create_team',
-                'format' => 'raw',
-                'value' => !empty($model->create_team) ? '<span class="team-span">'.$model->createTeam->name.'</span>' : null,
-            ],
-            [
-                'attribute' => 'create_by',
-                'format' => 'raw',
-                'value' => !empty($model->create_by) ? $model->createBy->nickname : null,
-            ],
-            [
-                'attribute' => 'created_at',
-                'format' => 'raw',
-                'value' => date('Y-m-d H:i', $model->created_at),
-            ],
-            [
-                'attribute' => 'updated_at',
-                'value' => date('Y-m-d H:i', $model->updated_at),
-            ],
-            [
-                'attribute' => 'finished_at',
-                'format' => 'raw',
-                'value' => !empty($model->finished_at) ? date('Y-m-d H:i', $model->finished_at) : null,
-            ],
-            [
-                'attribute' => 'des',
-                'format' => 'raw',
-                'value' => '<div style="height:65px; vertical-align:middle; display:table-cell">'.$model->des.'</div>',
-            ],
-        ]   
-    ]); 
-?>
+                           ($model->external_team != $model->create_team && $model->getIsSeekBrace() ? '<span class="team-span team-span-left">'.$model->createTeam->name.'</span>'. Html::img(['/filedata/worksystem/image/brace.png'], ['class' => 'brace']) . '<span class="team-span team-span-left">'.$model->externalTeam->name.'</span>' : '<span class="team-span">'.$model->createTeam->name.'</span>')) : '<span class="not-set">(未设置)</span>' ?></td>
+        </tr>
+        <tr>
+            <th class="viewdetail-th"><?= Yii::t('rcoa/worksystem', 'Producer') ?></th>
+            <td class="viewdetail-td"><?= !empty($producer) ? $producer : '<span class="not-set">(未设置)</span>' ?></td>
+        </tr>
+        <tr>
+            <th class="viewdetail-th"><?= Yii::t('rcoa/worksystem', 'Phase') ?></th>
+            <td class="viewdetail-td"><?= $statusProgress ?></td>
+        </tr>
+        <!--其它信息-->
+        <tr>
+            <th class="viewdetail-th"><span class="btn-block viewdetail-th-head">其它信息</span></th>
+            <td class="viewdetail-td"></td>
+        </tr>
+        <tr>
+            <th class="viewdetail-th"><?= Yii::t('rcoa/worksystem', 'Create Team') ?></th>
+            <td class="viewdetail-td"><?= !empty($model->create_team) ? '<span class="team-span">'.$model->createTeam->name.'</span>' : '<span class="not-set">(未设置)</span>' ?></td>
+        </tr>
+        <tr>
+            <th class="viewdetail-th"><?= Yii::t('rcoa', 'Create By') ?></th>
+            <td class="viewdetail-td"><?= !empty($model->create_by) ? $model->createBy->nickname : '<span class="not-set">(未设置)</span>' ?></td>
+        </tr>
+        <tr>
+            <th class="viewdetail-th"><?= Yii::t('rcoa/worksystem', 'Created At') ?></th>
+            <td class="viewdetail-td"><?= date('Y-m-d H:i', $model->created_at) ?></td>
+        </tr>
+        <tr>
+            <th class="viewdetail-th"><?= Yii::t('rcoa/worksystem', 'Updated At') ?></th>
+            <td class="viewdetail-td"><?= date('Y-m-d H:i', $model->updated_at) ?></td>
+        </tr>
+        <tr>
+            <th class="viewdetail-th"><?= Yii::t('rcoa/worksystem', 'Finished At') ?></th>
+            <td class="viewdetail-td"><?= !empty($model->finished_at) ? date('Y-m-d H:i', $model->finished_at) : '<span class="not-set">(未设置)</span>' ?></td>
+        </tr>
+        <tr>
+            <th class="viewdetail-th"><?= Yii::t('rcoa/worksystem', 'Des') ?></th>
+            <td class="viewdetail-td" style="height:65px;"><?= str_replace("\r\n", "<br/>", $model->des) ?></td>
+        </tr>
+        
+    </tbody>
+    
+</table>
 

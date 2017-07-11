@@ -76,6 +76,35 @@ class WorksystemAction
     }
     
     /**
+     * 取消任务操作
+     * @param WorksystemTask $model
+     * @param WorksystemTool $_wsTool
+     * @param type $post
+     */
+    public function CancelTask($model, $post)
+    {
+        $_wsTool = WorksystemTool::getInstance();
+        $des = ArrayHelper::getValue($post, 'WorksystemOperation.des');
+        
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {  
+            if($model->save()){
+                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_CANCEL, '取消任务', '因客观原因取消原定任务', $des);
+                $_wsTool->saveWorksystemOperationUser($model->id, $model->create_by, $model->is_brace, $model->is_epiboly);
+            }else
+                throw new \Exception($model->getErrors());
+            
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        }catch (Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
+        }
+    }
+    
+    /**
      * 提交审核任务操作
      * @param WorksystemTask $model
      * @param WorksystemTool $_wsTool

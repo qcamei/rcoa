@@ -2,6 +2,7 @@
 
 use common\models\worksystem\WorksystemOperation;
 use frontend\modules\worksystem\utils\WorksystemOperationHtml;
+use yii\helpers\Html;
 use yii\web\View;
 
 /* @var $this View */
@@ -14,11 +15,11 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="worksystem worksystem-operation-view">
 
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">取消支撑</h4>
+                <h4 class="modal-title" id="myModalLabel"><?= Html::encode($model->title) ?></h4>
             </div>
             <div class="modal-body">
                     

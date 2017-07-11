@@ -27,7 +27,7 @@ $js =
     $('#submit').click(function()
     {
         var value = $('#task_type_id-worksystemtask-task_type_id').val();
-        if(value == null)
+        if(value == '')
             $('.myModal').modal("show");
         else
             $('#worksystem-task-form').submit();

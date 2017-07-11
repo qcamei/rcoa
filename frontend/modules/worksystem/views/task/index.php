@@ -306,7 +306,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'view' => function ($url, $model) use($operation) {
                         /* @var $model WorksystemTask */
                         $options = [
-                            'class' => $model->getIsStatusCancel() ? 'btn btn-error btn-sm' :
+                            'class' => $model->getIsStatusCancel() ? 'btn btn-danger btn-sm' :
                                 ($model->getIsStatusCompleted() ? 'btn btn-success btn-sm' : 
                                     ($model->getIsStatusWorking() ? 'btn btn-info btn-sm' : 
                                         (!empty($operation[$model->id]) ? 'btn btn-primary btn-sm' : 'btn btn-default btn-sm'))),

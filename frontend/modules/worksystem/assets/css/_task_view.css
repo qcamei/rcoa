@@ -28,3 +28,30 @@ and open the template in the editor.
     text-align: left;
     font-weight: bold;
 }
+.worksystem .phase{
+    width: 60px;
+    height: 60px;
+    float: left;
+    padding-top: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+.worksystem .phase-words{
+    margin-bottom: 0px; 
+    color: #fff;
+    line-height: 35px;
+}
+.worksystem .arrow{
+    width: 32px;
+    height: 16px;
+    float: left;
+    margin: 20px 0px;
+    margin-right: 5px;
+}
+.worksystem .have-to{
+    background-color: #f37b53;
+}
+.worksystem .not-to {
+    background-color: #dddddd;
+}
+

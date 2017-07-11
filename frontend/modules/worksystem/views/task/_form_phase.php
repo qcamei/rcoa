@@ -1,42 +1,41 @@
 <?php
 
-use common\models\multimedia\MultimediaTask;
+use common\models\worksystem\WorksystemTask;
+use yii\helpers\Html;
 
-/* @var $model MultimediaTask */
+
+/* @var $model WorksystemTask */
 
 $statusProgress = '';
 /** 先创建一条线状态 */
-$status = [
-    MultimediaTask::STATUS_ASSIGN,
-    MultimediaTask::STATUS_TOSTART,
-    MultimediaTask::STATUS_WORKING,
+$statusArray = [
+    WorksystemTask::STATUS_DEFAULT => '创建',
+    WorksystemTask::STATUS_WAITCHECK => '审核',
+    WorksystemTask::STATUS_ADJUSTMENTING => '审核',
+    WorksystemTask::STATUS_CHECKING => '审核',
+    WorksystemTask::STATUS_WAITASSIGN => '审核',
+    WorksystemTask::STATUS_WAITUNDERTAKE => '审核',
+    WorksystemTask::STATUS_TOSTART => '制作',
+    WorksystemTask::STATUS_WORKING => '制作',
+    WorksystemTask::STATUS_WAITACCEPTANCE => '验收',
+    WorksystemTask::STATUS_UPDATEING => '验收',
+    WorksystemTask::STATUS_ACCEPTANCEING => '验收',
+    WorksystemTask::STATUS_COMPLETED => '完成',
 ];
-/** 待审核、审核中、修改中 只保留一个 */
-if($model->status == MultimediaTask::STATUS_UPDATEING || $model->status == MultimediaTask::STATUS_CHECKING)
-    $status [] = $model->status;
-else
-    $status [] = MultimediaTask::STATUS_WAITCHECK;
-//强制添加 完成状态
-$status [] = MultimediaTask::STATUS_COMPLETED;
-
-//已取消或者已完成状态单独显示
-if($model->status == MultimediaTask::STATUS_CANCEL || $model->status == MultimediaTask::STATUS_COMPLETED)
-{
-    $statusProgress =  '<div class="status-progress-div have-to">'
-                            .'<p class="have-to-status">'.MultimediaTask::$statusNmae[$model->status].'</p>'
-                            .'<p class="progress-strip">('.$model->progress.'%)</p>'
-                        . '</div>';
-}else{
-    foreach ($status as $status_value){
-        //小屏时显示一个状态
-        $isHidden = $status_value != $model->status ? ' hidden-xs' : '';
-         /** 如果$status_value <= 当前状态输出样式"have-to"和显示进度 否则输出"not-to"和不显示进度 */
-        $haDone = $status_value <= $model->status;
-        $statusProgress .=  '<div class="status-progress-div '.($haDone ? 'have-to' : 'not-to').$isHidden.'">'
-                                .'<p class="have-to-status">'.MultimediaTask::$statusNmae[$status_value].'</p>'
-                     .($haDone ? '<p class="progress-strip">('.MultimediaTask::$statusProgress[$status_value].'%)</p>' : '') .
-                            '</div>';
-        $statusProgress .= $status_value == MultimediaTask::STATUS_COMPLETED ? '' : '<img src="/filedata/multimedia/image/direction-arrow.png" class="direction-arrow hidden-xs" />';
+//过滤，重组阶段
+$phaseArray = [];
+foreach ($statusArray as $status => $phase){
+    $phaseArray[$phase] = $status;
+}
+/** 已取消单独显示 */
+if($model->status == WorksystemTask::STATUS_CANCEL){
+    $statusProgress = '<div class="phase have-to"><p class="phase-words">取消</p></div>';
+}else{    
+    foreach ($phaseArray as $index => $items){
+        $isHidden = $index != $statusArray[$model->status] ? ' hidden-xs' : '';
+        $haDone = $index == $statusArray[$model->status] || $items <= $model->status;
+        $statusProgress .= '<div class="phase'.($haDone ? ' have-to' : ' not-to').$isHidden.'"><p class="phase-words">'.$index.'</p></div>';
+        $statusProgress .= $index == $statusArray[WorksystemTask::STATUS_COMPLETED] ?  null : Html::img(['/filedata/worksystem/image/arrow.png'], ['class' => 'arrow hidden-xs']);
     }
 }
 

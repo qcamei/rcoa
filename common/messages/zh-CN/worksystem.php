@@ -58,7 +58,7 @@ return[
     //基础内容信息
     'Worksystem Task Type ID' => '类别',
     'Type Name' => '类型',
-    'Is New' => '新建/改造',
+    'Is New' => '新/改',
     'Price New' => '新建单价',
     'Price Remould' => '改造单价',
     'Unit' => '单位',
@@ -108,6 +108,7 @@ return[
     'Producer' => '制作人',
     
     //工作系统内容信息
+    'Worksystem Content ID' => '类型',
     'Price' => '单价',
     'Budget Number' => '预计数量',
     'Budget Cost' => '预计成本',

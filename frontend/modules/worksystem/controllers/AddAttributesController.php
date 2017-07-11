@@ -125,7 +125,7 @@ class AddAttributesController extends Controller
         }*/
         
         $_wsTool = WorksystemTool::getInstance();
-        $items = $this->getWorksystemTaskAddAttributes($task_id);
+        $items = $_wsTool->getWorksystemTaskAddAttributes($task_id);
         $datas = $_wsTool->WorksystemAttributesFormat($items);
         
         return $this->renderAjax('update', [
@@ -181,27 +181,6 @@ class AddAttributesController extends Controller
                    ->from(WorksystemAttributes::tableName())
                    ->where(['id' => ArrayHelper::getColumn($templates, 'worksystem_attributes_id')])
                    ->all();
-           
-        return $attributes;
-    }
-    
-    /**
-     * 获取所有工作系统任务附加属性
-     * @param integer $taskId               工作系统任务id
-     * @return array
-     */
-    public function getWorksystemTaskAddAttributes($taskId)
-    {
-        $attributes = (new Query())
-                ->select([
-                    'Ws_add_attributes.worksystem_attributes_id AS id', 'Ws_add_attributes.value',
-                    'Ws_attributes.name', 'Ws_attributes.type', 'Ws_attributes.input_type',
-                    'Ws_attributes.value_list', 'Ws_attributes.index', 'Ws_attributes.is_delete'
-                ])
-                ->from(['Ws_add_attributes' => WorksystemAddAttributes::tableName()])
-                ->leftJoin(['Ws_attributes' => WorksystemAttributes::tableName()], 'Ws_attributes.id = Ws_add_attributes.worksystem_attributes_id')
-                ->where(['worksystem_task_id' => $taskId])
-                ->all();
            
         return $attributes;
     }

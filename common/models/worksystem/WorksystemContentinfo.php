@@ -72,7 +72,7 @@ class WorksystemContentinfo extends ActiveRecord
             'budget_cost' => Yii::t('rcoa/worksystem', 'Budget Cost'),
             'reality_number' => Yii::t('rcoa/worksystem', 'Reality Number'),
             'reality_cost' => Yii::t('rcoa/worksystem', 'Reality Cost'),
-            'index' => Yii::t('rcoa/worksystem', 'Index'),
+            'index' => Yii::t('rcoa', 'Index'),
             'is_delete' => Yii::t('rcoa/worksystem', 'Is Delete'),
             'created_at' => Yii::t('rcoa/worksystem', 'Created At'),
             'updated_at' => Yii::t('rcoa/worksystem', 'Updated At'),

@@ -3,74 +3,105 @@
 use common\models\worksystem\WorksystemContent;
 use common\models\worksystem\WorksystemContentinfo;
 use frontend\modules\worksystem\assets\WorksystemAssets;
-use yii\data\ArrayDataProvider;
-use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\web\View;
+use yii\widgets\DetailView;
 
 /* @var $this View */
 /* @var $model WorksystemContentinfo */
 
-//$this->title = $model->id;
-//$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/worksystem', 'Worksystem Contentinfos'), 'url' => ['index']];
-//$this->params['breadcrumbs'][] = $this->title;
+$this->title = $model->id;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/worksystem', 'Worksystem Contentinfos'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="worksystem worksystem-contentinfo-view">
+<div class="container worksystem worksystem-contentinfo-view">
 
-    <h4><?= Html::encode('内容信息') ?></h4>
-    
-    <table class="table table-striped table-list">
-
-        <thead>
-            <tr>
-                <th style="width: 12.5%"><?= Yii::t('rcoa/worksystem', 'Type Name') ?></th>
-                <th style="width: 12.5%"><?= Yii::t('rcoa/worksystem', 'Is New') ?></th>
-                <th style="width: 15%"><?= Yii::t('rcoa/worksystem', 'Price') ?><span class="reference">（参考）</span></th>
-                <th style="width: 10%"><?= Yii::t('rcoa/worksystem', 'Budget Number') ?></th>
-                <th style="width: 17%"><?= Yii::t('rcoa/worksystem', 'Budget Cost') ?><span class="reference">（单价×数量）</span></th>
-                <th style="width: 10%"><?= Yii::t('rcoa/worksystem', 'Reality Number') ?></th>
-                <th style="width: 17%"><?= Yii::t('rcoa/worksystem', 'Reality Cost') ?><span class="reference">（单价×数量）</span></th>
-                <th style="width: 6%"></th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <?php if($allModels == null): ?>
-            <tr>
-                <td colspan="8"><div class="empty">没有找到数据。</div></td>
-            </tr>
-            <?php else: ?>
-                <?php foreach($allModels as $model): ?>
-
-                <tr>
-                    <td><?= $model->worksystemContent->type_name ?></td>
-                    <?php if($model->is_new == WorksystemContent::MODE_NEWLYBUILD): ?>
-                    <td>新建</td>
-                    <td><?= $model->price ?><span class="reference">（<?= $model->worksystemContent->price_new ?>/<?= $model->worksystemContent->unit ?>）</span></td>
-                    <?php else: ?>
-                    <td>改造</td>
-                    <td><?= $model->price ?><span class="reference">（<?= $model->worksystemContent->price_remould ?>/<?= $model->worksystemContent->unit ?>）</span></td>
-                    <?php endif; ?>
-                    <td><?= $model->budget_number ?><span class="reference"><?= $model->worksystemContent->unit ?></span></td>
-                    <td>￥<?= number_format($model->budget_cost, 2, '.', ',') ?></td>
-                    <td><?= $model->reality_number ?><span class="reference"><?= $model->worksystemContent->unit ?></span></td>
-                    <td>￥<?= number_format($model->reality_cost, 2, '.', ',') ?></td>
-                    <td style="padding: 4px 8px;"><?= Html::a('查看', '', ['class' => 'btn btn-default btn-sm']) ?></td>
-                </tr>
-
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </tbody>
-
-    </table>    
-        
-    <div class="cost">
-          
-        <span class="reference"><b>总成本（预计/实际）：￥<?= number_format($model->worksystemTask->budget_cost, 2, '.', ',') ?> / ￥<?= number_format($model->worksystemTask->reality_cost, 2, '.', ',') ?></b></span>
-         
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel"><?= Html::encode($model->worksystemContent->type_name.'-'.WorksystemContent::$modeName[$model->is_new]) ?></h4>
+            </div>
+            <div class="modal-body">
+                    
+               <?= DetailView::widget([
+                    'model' => $model,
+                    'template' => '<tr><th class="viewdetail-th">{label}</th><td class="viewdetail-td">{value}</td></tr>',
+                    'attributes' => [
+                        [
+                            'attribute' => 'worksystem_content_id',
+                            'format' => 'raw',
+                            'value' => !empty($model->worksystem_content_id) ? $model->worksystemContent->type_name : null,
+                        ],
+                        [
+                            'attribute' => 'is_new',
+                            'format' => 'raw',
+                            'value' => WorksystemContent::$modeName[$model->is_new],
+                        ],
+                        [
+                            'attribute' => 'price',
+                            'format' => 'raw',
+                            'value' => '￥'. number_format($model->price, 2, '.', ','),
+                        ],
+                        [
+                            'attribute' => 'budget_number',
+                            'format' => 'raw',
+                            'value' => $model->budget_number.(!empty($model->worksystem_content_id) ? $model->worksystemContent->unit : ''),
+                        ],
+                        [
+                            'attribute' => 'budget_cost',
+                            'format' => 'raw',
+                            'value' => '￥'. number_format($model->budget_cost, 2, '.', ','),
+                        ],
+                        [
+                            'attribute' => 'reality_number',
+                            'format' => 'raw',
+                            'value' => $model->reality_number.(!empty($model->worksystem_content_id) ? $model->worksystemContent->unit : ''),
+                        ],
+                        [
+                            'attribute' => 'reality_cost',
+                            'format' => 'raw',
+                            'value' => '￥'. number_format($model->reality_number, 2, '.', ','),
+                        ],
+                        [
+                            'attribute' => 'index',
+                            'format' => 'raw',
+                            'value' => $model->index,
+                        ],
+                        [
+                            'attribute' => 'is_delete',
+                            'format' => 'raw',
+                            'value' => $model->is_delete == false ? '否' : '是',
+                        ],
+                        [
+                            'attribute' => 'created_at',
+                            'format' => 'raw',
+                            'value' => date('Y-m-d H:i', $model->created_at),
+                        ],
+                        [
+                            'attribute' => 'updated_at',
+                            'format' => 'raw',
+                            'value' => date('Y-m-d H:i', $model->updated_at),
+                        ],
+                    ],
+                ]) ?>
+                
+            </div>
+            <div class="modal-footer">
+                <button id="submit-save" class="btn btn-default" data-dismiss="modal" aria-label="Close">关闭</button>
+            </div>
+       </div>
     </div>
     
 </div>
+
+<?php
+$js =   
+<<<JS
+     
+JS;
+    //$this->registerJs($js,  View::POS_READY);
+?>
 
 <?php
     WorksystemAssets::register($this);

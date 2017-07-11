@@ -81,7 +81,7 @@ class ContentinfoController extends Controller
             ];
         }
         
-        return $this->renderAjax('index');
+        return $this->renderAjax('_form');
     }
 
     /**
@@ -91,7 +91,7 @@ class ContentinfoController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
+        return $this->renderAjax('view', [
             'model' => $this->findModel($id),
         ]);
     }

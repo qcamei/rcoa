@@ -27,10 +27,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form_detai', [
         'model' => $model,
+        'attributes' => $attributes,
         'producer' => $producer,
     ]) ?>
     
-    <?= $this->render('/contentinfo/view', [
+    <?= $this->render('/contentinfo/index', [
         'allModels' => $model->worksystemContentinfos,
     ]) ?>
     
@@ -145,6 +146,13 @@ $js =
         
     /** 完成验收操作 弹出模态框 */
     $('#acceptance-complete').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    }); 
+        
+    /** 取消任务操作 弹出模态框 */
+    $('#cancel').click(function(){
         $(".myModal").html("");
         $('.myModal').modal("show").load($(this).attr("href"));
         return false;

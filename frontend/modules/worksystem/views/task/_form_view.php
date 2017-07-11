@@ -52,6 +52,14 @@ use yii\helpers\Html;
              */
             if((Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_TASK_ACCEPTANCE) && $model->create_by == Yii::$app->user->id) && ($model->getIsStatusWaitAcceptance() || $model->getIsStatusAcceptanceing()))
                 echo Html::a('验收不通过', ['create-acceptance', 'task_id' => $model->id], ['id' => 'acceptance-create', 'class' => 'btn btn-danger']). ' ';
+            /**
+             * 取消 按钮显示必须满足以下条件：
+             * 1、拥有取消的权限
+             * 2、必须创建人是自己
+             * 3、状态必须是在【制作中】之前
+             */
+            if((Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_TASK_CANCEL) && $model->create_by == Yii::$app->user->id) && ($model->status < WorksystemTask::STATUS_WORKING))
+                echo Html::a('取消', ['cancel', 'id' => $model->id], ['id' => 'cancel', 'class' => 'btn btn-danger']). ' ';
             
             //指派人
             /**

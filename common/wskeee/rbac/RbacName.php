@@ -117,6 +117,8 @@ class RbacName{
 	const PERMSSION_WORKSYSTEM_SUBMIT_CHECK = "p_worksystem_submit_check";
 	/** 工作系统-任务验收 */
 	const PERMSSION_WORKSYSTEM_TASK_ACCEPTANCE = "p_worksystem_task_acceptance";
+	/** 工作系统-任务取消 */
+	const PERMSSION_WORKSYSTEM_TASK_CANCEL = "p_worksystem_task_cancel";
 	/** 工作系统-任务创建 */
 	const PERMSSION_WORKSYSTEM_TASK_CREATE = "p_worksystem_task_create";
 	/** 工作系统-任务承接 */
@@ -183,4 +185,6 @@ class RbacName{
 	const ROLE_WORKSYSTEM_PRODUCER = "r_worksystem_producer";
 	/** 工作系统-发布人 */
 	const ROLE_WORKSYSTEM_PUBLISHER = "r_worksystem_publisher";
+	/** 工作系统-承接人 */
+	const ROLE_WORKSYSTEM_UNDERTAKE = "r_worksystem_undertake";
 }

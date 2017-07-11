@@ -129,6 +129,7 @@ class TaskController extends Controller
             'model' => $model,
             '_wsOp' => $_wsOp,
             'producer' => implode(',', ArrayHelper::getValue($_wsTool->getWorksystemTaskProducer($model->id), 'nickname')),
+            'attributes' => $_wsTool->getWorksystemTaskAddAttributes($model->id),
             'is_assigns' => $_wsTool->getIsAssignPeople($model->create_team),
             'is_producer' =>$_wsTool->getIsProducer($model->id),
         ]);
@@ -217,6 +218,34 @@ class TaskController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+    
+    /**
+     * Cancel an existing WorksystemTask model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param WorksystemAction $_wsAction
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionCancel($id)
+    {
+        $model = $this->findModel($id);
+        $_wsAction = WorksystemAction::getInstance();
+        $post = Yii::$app->request->post();
+        
+        if(!(Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_TASK_CANCEL) && $model->create_by == Yii::$app->user->id))
+            throw new NotAcceptableHttpException('无权限操作！');
+        if(!($model->status < WorksystemTask::STATUS_WORKING))
+            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        
+        if ($model->load($post)) {
+            $_wsAction->CancelTask($model, $post);
+            return $this->redirect(['index', 'create_by' => Yii::$app->user->id, 'status' => WorksystemTask::STATUS_DEFAULT, 'mark' => false,]);
+        } else {
+            return $this->renderAjax('_cancel', [
+                'model' => $model,
+            ]);
+        }
     }
     
     /**
