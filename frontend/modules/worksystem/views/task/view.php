@@ -2,6 +2,7 @@
 
 use common\models\worksystem\WorksystemTask;
 use frontend\modules\worksystem\assets\WorksystemAssets;
+use yii\helpers\Html;
 use yii\web\View;
 
 /* @var $this View */
@@ -30,6 +31,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => $attributes,
         'producer' => $producer,
     ]) ?>
+    
+    <span><?= Yii::t('rcoa/worksystem', 'Worksystem Annexes').'：'; ?></span>
+    <?php
+        foreach ($annexs as $item) 
+            echo Html::a($item['name'], ['annex/view', 'id' => $item['id']], ['style' => 'margin-right:10px;']);
+    ?>
     
     <?= $this->render('/contentinfo/index', [
         'allModels' => $model->worksystemContentinfos,

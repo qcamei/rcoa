@@ -22,12 +22,12 @@ use yii\widgets\ActiveForm;
 
             <thead>
                 <tr>
-                    <th style="width: 10%"><?= Yii::t('rcoa/worksystem', 'Type Name') ?></th>
-                    <th style="width: 9%"><?= Yii::t('rcoa/worksystem', 'Is New') ?></th>
-                    <th style="width: 25%"><?= Yii::t('rcoa/worksystem', 'Price') ?><span class="reference">（参考）</span></th>
-                    <th style="width: 18%"><?= Yii::t('rcoa/worksystem', 'Budget Number') ?></th>
-                    <th style="width: 15%"><?= Yii::t('rcoa/worksystem', 'Info Cost') ?><span class="reference">（单价×数量）</span></th>
-                    <th style="width: 3%">
+                    <th style="width: 12.5%"><?= Yii::t('rcoa/worksystem', 'Type Name') ?></th>
+                    <th style="width: 14.5%"><?= Yii::t('rcoa/worksystem', 'Is New') ?></th>
+                    <th style="width: 18%"><?= Yii::t('rcoa/worksystem', 'Price') ?><span class="reference hidden-xs">（参考）</span></th>
+                    <th style="width: 21%"><?= Yii::t('rcoa/worksystem', 'Budget Number') ?></th>
+                    <th class="hidden-xs" style="width: 117px"><?= Yii::t('rcoa/worksystem', 'Info Cost') ?><span class="reference">（单价×数量）</span></th>
+                    <th style="width: 45px">
                         <?= Html::a('添加', ['contentinfo/create'], [
                             'id' => 'add-to',
                             'class' => 'btn btn-success btn-sm',
@@ -57,19 +57,23 @@ use yii\widgets\ActiveForm;
                         <?= Html::input('number', 'WorksystemContentinfo['.$item['id'].'_'.$item['is_new'].'][price]', $item['price'], [
                             'id' => 'Worksystemcontentinfo-price-'.$item['id'].'_'.$item['is_new'],
                             'class' => 'price',
-                            'onblur' => 'infoCost()',
+                            'onfocus' => 'show($(this))',
+                            'onblur' => 'infoCost(); hide($(this))',
                         ]) ?>
-                        <span class="reference">（￥<?= $item['price_new'].'/'.$item['unit'] ?>）</span>
+                        <span class="hidden-xs reference">（￥<?= $item['price_new'].'/'.$item['unit'] ?>）</span>
+                        <div class="worksystem-tooltip" data-toggle="tooltip" data-placement="bottom" title="￥<?= $item['price_new'].'/'.$item['unit'] ?>"></div>
                     </td>
                     <td>
                         <?= Html::input('number', 'WorksystemContentinfo['.$item['id'].'_'.$item['is_new'].'][budget_number]', $item['budget_number'], [
                             'id' => 'Worksystemcontentinfo-budget_number-'.$item['id'].'_'.$item['is_new'],
                             'class' => 'number',
-                            'onblur' => 'infoCost()',
+                            'onfocus' => 'show($(this))',
+                            'onblur' => 'infoCost(); hide($(this))',
                         ]) ?>
-                        <span class="reference">（<?= $item['unit'] ?>）</span>
+                        <span class="hidden-xs reference">（<?= $item['unit'] ?>）</span>
+                        <div class="worksystem-tooltip" data-toggle="tooltip" data-placement="bottom" title="<?= $item['unit'] ?>"></div>
                     </td>
-                    <td>
+                    <td class="hidden-xs">
                         ￥<span id="Worksystemcontentinfo-budget_cost-number-<?= $item['id'].'_'.$item['is_new'] ?>"><?= number_format($item['budget_cost'], 2, '.', ',') ?></span>
                         <?= Html::input('hidden', 'WorksystemContentinfo['.$item['id'].'_'.$item['is_new'].'][budget_cost]', $item['budget_cost'], [
                             'id' => 'Worksystemcontentinfo-budget_cost-cost-'.$item['id'].'_'.$item['is_new'],
@@ -85,19 +89,23 @@ use yii\widgets\ActiveForm;
                         <?= Html::input('number', 'WorksystemContentinfo['.$item['id'].'_'.$item['is_new'].'][price]', $item['price'], [
                             'id' => 'Worksystemcontentinfo-price-'.$item['id'].'_'.$item['is_new'],
                             'class' => 'price',
-                            'onblur' => 'infoCost()',
+                            'onfocus' => 'show($(this))',
+                            'onblur' => 'infoCost();hide($(this))',
                         ]) ?>
-                        <span class="reference">（￥<?= $item['price_remould'].'/'.$item['unit'] ?>）</span>
+                        <span class="hidden-xs reference">（￥<?= $item['price_remould'].'/'.$item['unit'] ?>）</span>
+                        <div class="worksystem-tooltip" data-toggle="tooltip" data-placement="bottom" title="￥<?= $item['price_remould'].'/'.$item['unit'] ?>"></div>
                     </td>
                     <td>
                         <?= Html::input('number', 'WorksystemContentinfo['.$item['id'].'_'.$item['is_new'].'][budget_number]', $item['budget_number'], [
                             'id' => 'Worksystemcontentinfo-budget_number-'.$item['id'].'_'.$item['is_new'],
                             'class' => 'number',
-                            'onblur' => 'infoCost()',
+                            'onfocus' => 'show($(this))',
+                            'onblur' => 'infoCost();hide($(this))',
                         ]) ?>
-                        <span class="reference">（<?= $item['unit'] ?>）</span>
+                        <span class="hidden-xs reference">（<?= $item['unit'] ?>）</span>
+                        <div class="worksystem-tooltip" data-toggle="tooltip" data-placement="bottom" title="<?= $item['unit'] ?>"></div>
                     </td>
-                    <td>
+                    <td class="hidden-xs">
                         ￥<span id="Worksystemcontentinfo-budget_cost-number-<?= $item['id'].'_'.$item['is_new'] ?>"><?= number_format($item['budget_cost'], 2, '.', ',') ?></span>
                         <?= Html::input('hidden', 'WorksystemContentinfo['.$item['id'].'_'.$item['is_new'].'][budget_cost]', $item['budget_cost'], [
                             'id' => 'Worksystemcontentinfo-budget_cost-cost-'.$item['id'].'_'.$item['is_new'],
@@ -165,6 +173,7 @@ $js =
             var infocost = Number(price)*Number(number);
             $('#Worksystemcontentinfo-budget_cost-number-'+$(this).attr('id')).text(number_format(infocost, 2, '.', ','));
             $('#Worksystemcontentinfo-budget_cost-cost-'+$(this).attr('id')).val(infocost);
+            
         });
         $('.info-cost').each(function(){
             totalCost += Number($(this).val());
@@ -172,6 +181,20 @@ $js =
         $('#Worksystemtask-budget_cost-number').text(number_format(totalCost, 2, '.', ','));
         $('#Worksystemtask-budget_cost-value').val(totalCost);
     };
+        
+    /** 小屏幕显示 */
+    window.show = function(elem){
+        var width = $(document).width();
+        if(width <= 480){
+            $(elem).next().next('.worksystem-tooltip').tooltip('show');
+        }
+    }
+    window.hide = function(elem){
+        var width = $(document).width();
+        if(width <= 480){
+            $(elem).next().next('.worksystem-tooltip').tooltip('hide');
+        }
+    }
     
     /** 数字格式化 */
     function number_format(number, decimals, dec_point, thousands_sep) {  

@@ -41,6 +41,8 @@ return[
     'Update Worksystem Task' => '更新-工作系统任务',
     'Worksystem Contentinfos' => '开发-工作系统-内容信息',
     
+    //工作系统附件
+    'Worksystem Annexes' => '工作系统附件',
     
     
     //工作系统字段属性名称(公共)

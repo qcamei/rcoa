@@ -56,22 +56,12 @@ $this->params['breadcrumbs'][] = $this->title;
                         [
                             'attribute' => 'reality_number',
                             'format' => 'raw',
-                            'value' => $model->reality_number.(!empty($model->worksystem_content_id) ? $model->worksystemContent->unit : ''),
+                            'value' => $model->reality_number == 0 ? null : $model->reality_number.(!empty($model->worksystem_content_id) ? $model->worksystemContent->unit : ''),
                         ],
                         [
                             'attribute' => 'reality_cost',
                             'format' => 'raw',
-                            'value' => '￥'. number_format($model->reality_number, 2, '.', ','),
-                        ],
-                        [
-                            'attribute' => 'index',
-                            'format' => 'raw',
-                            'value' => $model->index,
-                        ],
-                        [
-                            'attribute' => 'is_delete',
-                            'format' => 'raw',
-                            'value' => $model->is_delete == false ? '否' : '是',
+                            'value' => $model->reality_number == 0 ?  null : '￥'. number_format($model->reality_number, 2, '.', ','),
                         ],
                         [
                             'attribute' => 'created_at',

@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $js = 
 <<<JS
     
-    $('.myModal').modal("show");
+    $('.myModal').modal({show:'show', backdrop:'static', keyboard:false});
         
     $('.clickselected').click(function(){
         var dataValue = $(this).attr('data-value');

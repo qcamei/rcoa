@@ -7,6 +7,7 @@ use common\models\team\TeamCategory;
 use common\models\team\TeamMember;
 use common\models\User;
 use common\models\worksystem\WorksystemAddAttributes;
+use common\models\worksystem\WorksystemAnnex;
 use common\models\worksystem\WorksystemAssignTeam;
 use common\models\worksystem\WorksystemAttributes;
 use common\models\worksystem\WorksystemContentinfo;
@@ -14,6 +15,7 @@ use common\models\worksystem\WorksystemOperation;
 use common\models\worksystem\WorksystemOperationUser;
 use common\models\worksystem\WorksystemTask;
 use common\models\worksystem\WorksystemTaskProducer;
+use wskeee\rbac\RbacName;
 use wskeee\team\TeamMemberTool;
 use Yii;
 use yii\db\ActiveQuery;
@@ -37,11 +39,16 @@ class WorksystemTool
     {
         $_wsQuery = WorksystemQuery::getInstance();
         $results = $_wsQuery->findWorksystemTaskTable();
-        
+                
         $results->andFilterWhere(['or',[ArrayHelper::getValue($params, 'mark') == false ? 'or' : 'and', 
            ['Worksystem_task.create_by' => ArrayHelper::getValue($params, 'create_by')], ['TeamMember.u_id' => ArrayHelper::getValue($params, 'producer')]], 
            ['or', ['Create_team.user_id' => ArrayHelper::getValue($params, 'assign_people')], ['External_team.user_id' => ArrayHelper::getValue($params, 'assign_people')]]
         ]);
+             
+        if(\Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_CREATE_ASSIGN))
+            $results->orFilterWhere(['Worksystem_task.is_brace' => WorksystemTask::SEEK_BRACE_MARK]);
+        if(\Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_TASK_UNDERTAKE))
+            $results->orFilterWhere(['Worksystem_task.is_epiboly' => WorksystemTask::SEEK_EPIBOLY_MARK]);
         
         $results->andFilterWhere([
             'Worksystem_task.id' => null,
@@ -98,14 +105,14 @@ class WorksystemTool
                 ->where(['team_id' => $teamId])
                 ->all();
         
-        $user = [
+        $users = [
             'user_id' => ArrayHelper::getColumn($assigns, 'user_id'),
             'nickname' => ArrayHelper::getColumn($assigns, 'nickname'),
             'ee' => ArrayHelper::getColumn($assigns, 'ee'),
             'email' => ArrayHelper::getColumn($assigns, 'email'),
         ];
         
-        return $user;
+        return $users;
     }
     
     /**
@@ -123,14 +130,14 @@ class WorksystemTool
                 $leaderUsers[] = $leader;
         }
         
-        $user = [
+        $users = [
             'user_id' => ArrayHelper::getColumn($leaderUsers, 'u_id'),
             'nickname' => ArrayHelper::getColumn($leaderUsers, 'nickname'),
             'ee' => ArrayHelper::getColumn($leaderUsers, 'ee'),
             'email' => ArrayHelper::getColumn($leaderUsers, 'email'),
         ];
         
-        return $user;
+        return $users;
     }
     
     /**
@@ -153,14 +160,14 @@ class WorksystemTool
         }
         $epibolyUsers = !$is_cancel ? $epibolys : $epibolyUsers;
         
-        $user = [
+        $users = [
             'user_id' => ArrayHelper::getColumn($epibolyUsers, 'u_id'),
             'nickname' => ArrayHelper::getColumn($epibolyUsers, 'nickname'),
             'ee' => ArrayHelper::getColumn($epibolyUsers, 'ee'),
             'email' => ArrayHelper::getColumn($epibolyUsers, 'email'),
         ];
         
-        return $user;
+        return $users;
     }
 
     /**
@@ -521,7 +528,36 @@ class WorksystemTool
         }
     }
 
-    
+    /**
+     * 保存附件到表里
+     * @param integer $taskId                       工作系统任务id
+     * @param type $post                          
+     */
+    public function saveWorksystemAnnex($taskId, $post)
+    {
+        $annex = ArrayHelper::getValue($post, 'WorksystemAnnex');
+        $annex = $annex != null ? $annex : ['name'=> [], 'path'=> []];
+        
+        /** 重组提交的数据为$values数组 */
+        $values = [];
+        foreach ($annex['name'] as $key => $value) {
+           $values[] = [
+               'worksystem_task_id' => $taskId,
+               'name' => $value,
+               'path' => $annex['path'][$key],
+               'create_by' => Yii::$app->user->id,
+               'created_at' => time(),
+               'updated_at' => time(),
+           ];
+        }
+        
+        Yii::$app->db->createCommand()->delete(WorksystemAnnex::tableName(), ['worksystem_task_id' => $taskId])->execute();
+        if($values != null){
+            /** 添加$values数组到表里 */
+            Yii::$app->db->createCommand()->batchInsert(WorksystemAnnex::tableName(), [
+                'worksystem_task_id', 'name', 'path', 'create_by', 'created_at', 'updated_at'], $values)->execute();
+        }
+    }
 
     /**
      * 获取单例

@@ -1,6 +1,7 @@
 <?php
 
 use common\models\worksystem\WorksystemTask;
+use common\widgets\uploadFile\UploadFileAsset;
 use kartik\datecontrol\DateControl;
 use kartik\widgets\Select2;
 use yii\helpers\Html;
@@ -22,12 +23,7 @@ use yii\widgets\ActiveForm;
         'fieldConfig' => [  
             'template' => "{label}\n<div class=\"col-lg-10 col-md-10\">{input}</div>\n<div class=\"col-lg-10 col-md-10\">{error}</div>",  
             'labelOptions' => [
-                'class' => 'col-lg-1 col-md-1 control-label',
-                'style'=>[
-                    'color'=>'#999999',
-                    'font-weight'=>'normal',
-                    'padding-right' => '0'
-                ]
+                'class' => 'col-lg-1 col-md-1 control-label form-label',
             ],  
         ], 
     ]); ?>
@@ -72,12 +68,9 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'plan_end_time', [
         'template' => "{label}\n<div class=\"col-lg-4 col-md-4\">{input}</div>\n<div class=\"col-lg-4 col-md-4\">{error}</div>",
         'labelOptions' => [
-                'class' => 'col-lg-1 col-md-1 control-label',
+                'class' => 'col-lg-1 col-md-1 control-label form-label',
                 'style'=>[
-                    'color'=>'#999999',
-                    'font-weight'=>'normal',
                     'padding-left' => '0',
-                    'padding-right' => '0',
                 ]
             ],
     ])->widget(DateControl::classname(),[
@@ -116,7 +109,43 @@ use yii\widgets\ActiveForm;
     <h5><b>其他信息</b></h5>
 
     <?= $form->field($model, 'des')->textarea(['rows' => 6, 'value' => $model->isNewRecord ? '无' : $model->des]) ?>
-
+    
+    <div class="form-group field-worksystemannex-annex">
+        <label class="col-lg-1 col-md-1 control-label form-label" for="worksystemannex-annex"><?= Yii::t('rcoa/teamwork', 'Annex') ?></label>
+        <div class="'col-lg-10 col-md-10">
+            <?= Html::textInput('', '文件上传', [
+                'id'=> 'upload',
+                'class' => 'form-group',
+                'type' => 'button',
+                'style' => 'margin-left: 5px;margin-top: 3px;margin-bottom:5px;',
+                'onclick' => 'uploadFile()'
+            ]); ?>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="col-lg-1 col-md-1 control-label form-label"></label>
+        <div id="worksystemannex" class="col-lg-10 col-md-10">
+            
+            <?php if(!$model->isNewRecord): ?>
+            
+                <?php foreach($annexs as $item): ?>
+                
+                <div class="col-lg-12 col-md-12" style="margin-bottom:10px; padding:0px;">
+                    <div class="col-lg-12 col-md-12" style="padding:0px">
+                        <?= Html::textInput('WorksystemAnnex[name][]', $item['name'], ['type' => 'text', 'class' => 'form-control']) ?>
+                        <?= Html::textInput('WorksystemAnnex[path][]', $item['name'], ['type' => 'hidden']) ?>
+                    </div>
+                    <?= Html::img(['/filedata/teamwork/image/delete.png'], ['class' => 'form-img', 'onclick' => 'removeAnnex($(this))']) ?>
+                </div>
+            
+                <?php endforeach; ?>
+            
+            <?php endif; ?>
+        </div>
+        <div id="annex-prompt" class="col-xs-10"></div>
+    </div>
+    
     <?php ActiveForm::end(); ?>
 
 </div>
@@ -124,6 +153,8 @@ use yii\widgets\ActiveForm;
 <?php
 $js =   
 <<<JS
+    
+        
     /** 下拉选择【专业/工种】 */
     $('#worksystemtask-item_id').change(function(){
         var url = "/framework/api/search?id="+$(this).val(),
@@ -163,4 +194,73 @@ $js =
     $('#worksystemtask-plan_end_time-disp').attr('name', '');
 JS;
     $this->registerJs($js,  View::POS_READY);
+?>
+
+<script type="text/javascript">
+window['process'] = function(result){
+        window['FILELIST'] = JSON.parse(result['data']);
+}
+
+function uploadFile(){
+    //var testPath = 'http://eechat.tt.gzedu.com/';
+    //var formalPath = 'http://eechat.gzedu.com/'; 
+    var api = $.dialog({
+        id: 'LHG76D',
+        //content: 'url:http://127.0.0.1:8080/ee_fis/upload/toUpload.do?formMap.filetype=ppt|doc|docx|xls|xlsx|pptx|txt|rar|zip|mp3|mp4|rmvb|wmv|flv|swf|3gp|jpg&formMap.filecwd=/files1/file&formMap.appId=APP005&formMap.filenum=2&formMap.origin=http://127.0.0.1:8080/ee_fis/uploadIframe.html&formMap.convert=Y&formMap.appType=oos&formMap.fileName=mp4/object_name&formMap.bucket=ougz-video',
+        content: 'url:http://eefile.gzedu.com/upload/toUpload.do?formMap.filetype=ppt|doc|docx|xls|xlsx|pptx|txt|rar|zip|mp3|mp4|rmvb|wmv|flv|swf|3gp|jpg&formMap.filecwd=/files1/file&formMap.appId=APP015&formMap.filenum=1&formMap.origin=<?php echo WEB_ROOT?>/uploadIframe/uploadIframe.html',
+        //content: 'url:http://eefile.gzedu.com/upload/toUpload.do?formMap.filetype=ppt|doc|docx|xls|xlsx|pptx|txt|rar|zip|mp3|mp4|rmvb|wmv|flv|swf|3gp|jpg&formMap.filecwd=/files1/file&formMap.appId=APP005&formMap.filenum=2&formMap.origin=http://127.0.0.1:8080/ee_chat/uploadIframe.html&formMap.convert=Y&formMap.appType=oos&formMap.fileName=mp4/object_name&formMap.bucket=ougz-video',		
+        title: '文件上传',
+        width: 460,
+        height: 360,
+        button:[{
+            name : '取消上传',
+            callback : function(win){}
+        },{
+            name: '完成上传',
+            callback: function (win) {
+                var fileList = win['FILELIST'], 
+                        filelist = [],
+                        fileName = [],
+                        NameMD5List = [];
+
+                if(fileList && fileList.length > 0){
+                    for(var i = 0; i < fileList.length; i++){
+                        filelist.push(fileList[i].FileURL);
+                        fileName.push(fileList[i].CFileName);
+                        NameMD5List.push(fileList[i].FileMD5);
+                    }
+                    var is_return = true;
+                    $("#worksystemannex .form-control").each(function(index, elem){
+                        if(fileName == $(this).val()){
+                            $('#annex-prompt').html('<span class="error-warn">请不要重复上传相同附件！</span>');
+                            is_return = false;
+                        }
+                    });
+                    if(is_return == false)
+                        return;
+                    
+                    $('#annex-prompt').html('');
+                    var Html = '<div class="col-lg-12 col-md-12" style="margin-bottom:10px; padding:0px;"><div class="col-lg-12 col-md-12" style="padding:0px"><input type="text" class="form-control" name="WorksystemAnnex[name][]" value="'+fileName.join('')+'"><input type="hidden" name="WorksystemAnnex[path][]" value="'+filelist.join('')+'"></div><img class="form-img" src="/filedata/teamwork/image/delete.png" onclick="removeAnnex($(this))"></div>';
+                    $(Html).appendTo($("#worksystemannex"));
+                    
+                    //$('#md5').val(NameMD5List.join(''));
+                    window['FILELIST'] = [];
+                }
+            },
+            focus : true
+        }]
+    });
+}
+
+/* 移除附件 */
+function removeAnnex(object)
+{
+    $(object).parent().remove();
+    //$(object).next().remove();
+    //$(object).remove();
+}
+</script>
+
+<?php
+    UploadFileAsset::register($this);
 ?>

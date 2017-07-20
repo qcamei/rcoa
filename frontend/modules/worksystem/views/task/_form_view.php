@@ -68,7 +68,7 @@ use yii\helpers\Html;
              * 2、如果是【支撑】or【外包】自己不显示，否则自己才显示
              */
             if($model->getIsSeekBrace() || $model->getIsSeekEpiboly()){
-                if(Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_CREATE_ASSIGN) && !$is_assigns && $model->getIsCancelEpiboly())
+                if(Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_CREATE_ASSIGN) && !$is_assigns && $model->getIsCancelEpiboly() && $model->getIsStatusWaitAssign())
                     echo Html::a('指派', ['create-assign', 'task_id' => $model->id], ['id' => 'assign-create', 'class' => 'btn btn-primary']).' '; 
             }else {
                 if(Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_CREATE_ASSIGN) && $is_assigns && ($model->getIsStatusWaitCheck() || $model->getIsStatusChecking()))

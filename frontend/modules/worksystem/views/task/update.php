@@ -35,6 +35,7 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa/worksystem', 'Update');
         'courses' => $courses,
         'taskTypes' => ArrayHelper::map($taskTypes, 'id', 'name'),
         'teams' => $teams,
+        'annexs' => $annexs,
     ]) ?>
     
     <!-- 显示模态框 -->

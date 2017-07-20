@@ -21,12 +21,12 @@ use yii\web\View;
 
         <thead>
             <tr>
-                <th style="width: 14%"><?= Yii::t('rcoa/worksystem', 'Title') ?></th>
-                <th style="width: 35%"><?= Yii::t('rcoa/worksystem', 'Content') ?></th>
-                <th class="hidden-xs" style="width: 35%"><?= Yii::t('rcoa/worksystem', 'Des') ?></th>
-                <th class="hidden-xs" style="width: 8%"><?= Yii::t('rcoa/worksystem', 'Time') ?></th>
-                <th class="hidden-xs" style="width: 8%"><?= Yii::t('rcoa/worksystem', 'Operation People') ?></th>
-                <th style="width: 1%"><?= Yii::t('rcoa', 'Operating') ?></th>
+                <th style="width: 100px"><?= Yii::t('rcoa/worksystem', 'Title') ?></th>
+                <th style="min-width: 80px"><?= Yii::t('rcoa/worksystem', 'Content') ?></th>
+                <th class="hidden-xs" style="width: 350px"><?= Yii::t('rcoa/worksystem', 'Des') ?></th>
+                <th class="hidden-xs" style="width: 85px"><?= Yii::t('rcoa/worksystem', 'Time') ?></th>
+                <th class="hidden-xs" style="width: 70px"><?= Yii::t('rcoa/worksystem', 'Operation People') ?></th>
+                <th style="width: 60px"><?= Yii::t('rcoa', 'Operating') ?></th>
             </tr>
         </thead>
 

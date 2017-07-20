@@ -13,28 +13,25 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="worksystem-task-search">
-
+    
     <?php $form = ActiveForm::begin([
-        'options'=>[
-            'id' => 'worksystem-task-search',
-            'class'=>'form-horizontal',
-            'action' => ['index'],
-            'method' => 'post',
-        ],
-        'fieldConfig' => [
+        'id' => 'worksystem-task-search',
+        'action' => ['index'],
+        'method' => 'get',
+        /*'fieldConfig' => [
             'options' => [
                 'class' => 'col-sm-4 col-xs-12',
             ],
-            'template' => "{label}\n<div class=\"col-lg-9 col-md-9\" style=\"padding: 7px 10px\">{input}</div>\n",  
+            'template' => "{label}\n<div class=\"col-sm-9 col-md-9\" style=\"padding: 7px 10px\">{input}</div>\n",  
             'labelOptions' => [
-                'class' => 'col-lg-3 col-md-3 control-label',
+                'class' => 'col-sm-3 col-md-3 control-label',
             ],  
-        ], 
+        ],*/
     ]); ?>
     
     <div class="col-xs-12 search"> 
         <div class="search-input">
-            <?= Html::textInput('WorksystemTask[keyword]', ArrayHelper::getValue($params, 'keyword'), [
+            <?= Html::textInput('keyword', ArrayHelper::getValue($params, 'keyword'), [
                 'class' => 'form-control search-text-input',
                 'placeholder' => '请输入关键字...'
             ]); ?>
@@ -50,198 +47,241 @@ use yii\widgets\ActiveForm;
     
     <div class="collapse" id="collapseExample">
         <div class="col-xs-12 condition">
-        
-        <?= $form->field($model, 'task_type_id')->checkboxList($taskTypes, [
-            'value' => ArrayHelper::getValue($params, 'task_type_id'),
-            'itemOptions'=>[
-                'labelOptions'=>[
-                    'style'=>[
-                        'margin-right'=>'10px',
-                        'margin-top' => '5px'
-                    ]
-                ]
-            ],     
-        ]) ?>
-            
-        <div class="col-sm-4 col-xs-12">
-            <label id="label-team_id" for="team_id" class="col-lg-3 col-xs-12 control-label" style="padding: 15px 0 !important;">
-                <?= Yii::t('rcoa/worksystem', 'Create → Brace'); ?>
-            </label>
-             <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5" style="padding: 7px 0 7px 10px">
-                <?= Select2::widget([
-                    'value' => ArrayHelper::getValue($params, 'create_team'),
-                    'name' => 'WorksystemTask[create_team]',
-                    'data' => $teams,
-                    'options' => [
-                        'placeholder' => '全部',
-                    ],
-                ]); ?>
+            <!--任务类型-->
+            <div class="col-lg-12 col-xs-12 control">
+                <label id="label-task_type_id" for="worksystemtask-task_type_id" class="col-lg-1 control-label">
+                    <?= Yii::t('rcoa/worksystem', 'Task Type ID'); ?>
+                </label>
+                <div class="col-lg-11  control-widget" style="padding: 0 10px;">
+                    <?= Select2::widget([
+                        'id' => 'worksystemtask-task_type_id',
+                        'value' => ArrayHelper::getValue($params, 'task_type_id'),
+                        'name' => 'task_type_id',
+                        'data' => $taskTypes,
+                        'options' => [
+                            'placeholder' => '全部',
+                            'multiple' => true, 
+                        ],
+                        'toggleAllSettings' => [
+                            'selectLabel' => '<i class="glyphicon glyphicon-ok-circle"></i> 添加全部',
+                            'unselectLabel' => '<i class="glyphicon glyphicon-remove-circle"></i> 取消全部',
+                            'selectOptions' => ['class' => 'text-success'],
+                            'unselectOptions' => ['class' => 'text-danger'],
+                        ],
+                    ]); ?>
+                </div>
             </div>
-            <?=  Html::img(['/filedata/multimedia/image/brace.png'], [
-                'width' => '15', 
-                'height' => '15', 
-                'style' => 'float: left; margin: 15px 0px;'
-            ])?>
-            <div class="col-lg-4 col-md-6 col-sm-5 col-xs-6" style="padding: 7px 0 7px 10px">
-                <?= Select2::widget([
-                    'value' => ArrayHelper::getValue($params, 'external_team'),
-                    'name' => 'WorksystemTask[external_team]',
-                    'data' => $teams,
-                    'options' => [
-                        'placeholder' => '全部',
-                    ],
-                ]); ?>
+            <!--创建 → 支撑-->
+            <div class="col-lg-4 col-xs-12 control">
+                <label id="label-team_id" for="worksystemtask-team_id" class="col-sm-3 col-xs-12 control-label" style="padding: 7px 0px 0px">
+                    <?= Yii::t('rcoa/worksystem', 'Create → Brace'); ?>
+                </label>
+                <div class="col-sm-4 col-xs-5 control-widget">
+                    <?= Select2::widget([
+                        //'id' => 'worksystemtask-team_id',
+                        'value' => ArrayHelper::getValue($params, 'create_team'),
+                        'name' => 'create_team',
+                        'data' => $createTeams,
+                        'options' => [
+                            'placeholder' => '全部',
+                        ],
+                        'pluginOptions' => [
+                            'allowClear' => true
+                        ],
+                    ]); ?>
+                </div>
+                <div class="col-sm-1 col-xs-2" style="padding: 9px 15px 9px 0;"><?=  Html::img(['/filedata/worksystem/image/brace.png'], ['class' => 'brace']) ?></div>
+                <div class="col-sm-4 col-xs-5 control-widget" style="float: right;">
+                    <?= Select2::widget([
+                        //'id' => 'worksystemtask-team_id',
+                        'value' => ArrayHelper::getValue($params, 'external_team'),
+                        'name' => 'external_team',
+                        'data' => $externalTeams,
+                        'options' => [
+                            'placeholder' => '全部',
+                        ],
+                        'pluginOptions' => [
+                            'allowClear' => true
+                        ],
+                    ]); ?>
+                </div>
             </div>
-        </div>   
-            
-        <div class="col-sm-4 col-xs-12">
-            <label id="label-item_type_id" for="item_type_id" class="col-lg-3 control-label">
-                <?= Yii::t('rcoa/worksystem', 'Item Type ID'); ?>
-            </label>
-            <div class="col-lg-9" style="padding: 7px 10px">
-                <?= Select2::widget([
-                    'id' => 'worksystemtask-item_type_id',
-                    'value' => ArrayHelper::getValue($params, 'item_type_id'),
-                    'name' => 'WorksystemTask[item_type_id]',
-                    'data' => $itemTypes,
-                    'options' => [
-                        'placeholder' => '全部',
-                    ],
-                ]); ?>
+            <!--行业-->            
+            <div class="col-lg-4 col-xs-12 control">
+                <label id="label-item_type_id" for="worksystemtask-item_type_id" class="col-sm-3 control-label">
+                    <?= Yii::t('rcoa/worksystem', 'Item Type ID'); ?>
+                </label>
+                <div class="col-sm-9 control-widget">
+                    <?= Select2::widget([
+                        'id' => 'worksystemtask-item_type_id',
+                        'value' => ArrayHelper::getValue($params, 'item_type_id'),
+                        'name' => 'item_type_id',
+                        'data' => $itemTypes,
+                        'options' => [
+                            'placeholder' => '全部',
+                        ],
+                        'pluginOptions' => [
+                            'allowClear' => true
+                        ],
+                    ]); ?>
+                </div>
             </div>
-        </div>
-            
-        <div class="col-sm-4 col-xs-12">
-            <label id="label-item_id" for="item_id" class="col-lg-3 control-label">
-                <?= Yii::t('rcoa/worksystem', 'Item ID'); ?>
-            </label>
-            <div class="col-lg-9" style="padding: 7px 10px">
-                <?= Select2::widget([
-                    'id' => 'worksystemtask-item_id',
-                    'value' => ArrayHelper::getValue($params, 'item_id'),
-                    'name' => 'WorksystemTask[item_id]',
-                    'data' => $items,
-                    'options' => [
-                        'placeholder' => '全部',
-                    ],
-                ]); ?>
+            <!--层次/类型-->            
+            <div class="col-lg-4 col-xs-12 control">
+                <label id="label-item_id" for="worksystemtask-item_id" class="col-sm-3 control-label">
+                    <?= Yii::t('rcoa/worksystem', 'Item ID'); ?>
+                </label>
+                <div class="col-sm-9 control-widget">
+                    <?= Select2::widget([
+                        'id' => 'worksystemtask-item_id',
+                        'value' => ArrayHelper::getValue($params, 'item_id'),
+                        'name' => 'item_id',
+                        'data' => $items,
+                        'options' => [
+                            'placeholder' => '全部',
+                        ],
+                        'pluginOptions' => [
+                            'allowClear' => true
+                        ],
+                    ]); ?>
+                </div>
             </div>
-        </div>
-            
-       <div class="col-sm-4 col-xs-12">
-            <label id="label-item_child_id" for="item_child_id" class="col-lg-3 control-label">
-                <?= Yii::t('rcoa/worksystem', 'Item Child ID'); ?>
-            </label>
-            <div class="col-lg-9" style="padding: 7px 10px">
-                <?= Select2::widget([
-                    'id' => 'worksystemtask-item_child_id',
-                    'value' => ArrayHelper::getValue($params, 'item_child_id'),
-                    'name' => 'WorksystemTask[item_child_id]',
-                    'data' => $itemChilds,
-                    'options' => [
-                        'placeholder' => '全部',
-                    ],
-                ]); ?>
+            <!--层次/类型-->            
+            <div class="col-lg-4 col-xs-12  control">
+                <label id="label-item_child_id" for="worksystemtask-item_child_id" class="col-sm-3 control-label">
+                    <?= Yii::t('rcoa/worksystem', 'Item Child ID'); ?>
+                </label>
+                <div class="col-sm-9 control-widget">
+                    <?= Select2::widget([
+                        'id' => 'worksystemtask-item_child_id',
+                        'value' => ArrayHelper::getValue($params, 'item_child_id'),
+                        'name' => 'item_child_id',
+                        'data' => $itemChilds,
+                        'options' => [
+                            'placeholder' => '全部',
+                        ],
+                        'pluginOptions' => [
+                            'allowClear' => true
+                        ],
+                    ]); ?>
+                </div>
             </div>
-        </div> 
-            
-        <div class="col-sm-4 col-xs-12">
-            <label id="label-course_id" for="course_id" class="col-lg-3 control-label">
-                <?= Yii::t('rcoa/worksystem', 'Course ID'); ?>
-            </label>
-            <div class="col-lg-9" style="padding: 7px 10px">
-                <?= Select2::widget([
-                    'id' => 'worksystemtask-course_id',
-                    'value' => ArrayHelper::getValue($params, 'course_id'),
-                    'name' => 'WorksystemTask[course_id]',
-                    'data' => $courses,
-                    'options' => [
-                        'placeholder' => '全部',
-                    ],
-                ]); ?>
+            <!--课程名称-->            
+            <div class="col-lg-4 col-xs-12 control">
+                <label id="label-course_id" for="worksystemtask-course_id" class="col-sm-3 control-label">
+                    <?= Yii::t('rcoa/worksystem', 'Course ID'); ?>
+                </label>
+                <div class="col-sm-9 control-widget">
+                    <?= Select2::widget([
+                        'id' => 'worksystemtask-course_id',
+                        'value' => ArrayHelper::getValue($params, 'course_id'),
+                        'name' => 'course_id',
+                        'data' => $courses,
+                        'options' => [
+                            'placeholder' => '全部',
+                        ],
+                        'pluginOptions' => [
+                            'allowClear' => true
+                        ],
+                    ]); ?>
+                </div>
             </div>
-        </div>    
-                        
-        <div class="col-sm-4 col-xs-12">
-            <label id="label-create_by" for="create_by" class="col-lg-3 control-label">
-                <?= Yii::t('rcoa', 'Create By'); ?>
-            </label>
-            <div class="col-lg-9" style="padding: 7px 10px">
-                <?= Select2::widget([
-                    'value' => ArrayHelper::getValue($params, 'create_by'),
-                    'name' => 'WorksystemTask[create_by]',
-                    'data' => $createBys,
-                    'options' => [
-                        'placeholder' => '全部',
-                    ],
-                ]); ?>
+            <!--创建者-->            
+            <div class="col-lg-4 col-xs-12 control">
+                <label id="label-create_by" for="worksystemtask-create_by" class="col-sm-3 control-label">
+                    <?= Yii::t('rcoa', 'Create By'); ?>
+                </label>
+                <div class="col-sm-9 control-widget">
+                    <?= Select2::widget([
+                        'id' => 'worksystemtask-create_by',
+                        'value' => ArrayHelper::getValue($params, 'create_by'),
+                        'name' => 'create_by',
+                        'data' => $createBys,
+                        'options' => [
+                            'placeholder' => '全部',
+                        ],
+                        'pluginOptions' => [
+                            'allowClear' => true
+                        ],
+                    ]); ?>
+                </div>
             </div>
-        </div>
-            
-        <div class="col-sm-4 col-xs-12">
-            <label id="label-producer" for="producer" class="col-lg-3 control-label">
-                <?= Yii::t('rcoa/worksystem', 'Producer'); ?>
-            </label>
-            <div class="col-lg-9" style="padding: 7px 10px">
-                <?= Select2::widget([
-                    'value' => ArrayHelper::getValue($params, 'producer'),
-                    'name' => 'WorksystemTask[producer]',
-                    'data' => $producers,
-                    'options' => [
-                        'placeholder' => '全部',
-                    ],
-                ]); ?>
+            <!--制作人-->  
+            <div class="col-lg-4 col-xs-12 control">
+                <label id="label-producer" for="worksystemtask-producer" class="col-sm-3 control-label">
+                    <?= Yii::t('rcoa/worksystem', 'Producer'); ?>
+                </label>
+                <div class="col-sm-9 control-widget">
+                    <?= Select2::widget([
+                        'id' => 'worksystemtask-producer',
+                        'value' => ArrayHelper::getValue($params, 'producer'),
+                        'name' => 'producer',
+                        'data' => $producers,
+                        'options' => [
+                            'placeholder' => '全部',
+                        ],
+                        'pluginOptions' => [
+                            'allowClear' => true
+                        ],
+                    ]); ?>
+                </div>
             </div>
-        </div>    
-            
-        <div class="col-sm-4 col-xs-12">
-            <label id="label-status" for="status" class="col-lg-3 control-label">
-                <?= Yii::t('rcoa', 'Status'); ?>
-            </label>
-            <div class="col-lg-9" style="padding: 7px 10px">
-                <?= Select2::widget([
-                    'value' => ArrayHelper::getValue($params, 'status'),
-                    'name' => 'WorksystemTask[status]',
-                    'data' => [WorksystemTask::STATUS_DEFAULT => '未完成', WorksystemTask::STATUS_COMPLETED => '已完成'], 'options' => ['placeholder' => '全部'],
-                    'options' => [
-                        'placeholder' => '全部',
-                    ],
-                ]); ?>
+            <!--状态-->  
+            <div class="col-lg-4 col-xs-12 control">
+                <label id="label-status" for="worksystemtask-status" class="col-sm-3 control-label">
+                    <?= Yii::t('rcoa', 'Status'); ?>
+                </label>
+                <div class="col-sm-9 control-widget">
+                    <?= Select2::widget([
+                        'id' => 'worksystemtask-status',
+                        'value' => ArrayHelper::getValue($params, 'status'),
+                        'name' => 'status',
+                        'data' => [WorksystemTask::STATUS_DEFAULT => '未完成', WorksystemTask::STATUS_COMPLETED => '已完成'], 'options' => ['placeholder' => '全部'],
+                        'options' => [
+                            'placeholder' => '全部',
+                        ],
+                        'pluginOptions' => [
+                            'allowClear' => true
+                        ],
+                    ]); ?>
+                </div>
             </div>
-        </div>    
-            
-        <div class="col-sm-4 col-xs-12">
-            <label for="time" class="col-lg-3 control-label">
-                <?= Yii::t('rcoa/teamwork', 'Statistics-Time-Rang'); ?>
-            </label>
-            <div class="col-lg-9" style="padding: 7px 10px;">
-                <?= DateRangePicker::widget([
-                    'value' => ArrayHelper::getValue($params, 'time'),
-                    'name' => 'WorksystemTask[time]',
-                    //'presetDropdown' => true,
-                    'hideInput' => true,
-                    'convertFormat'=>true,
-                    'pluginOptions'=>[
-                        'locale'=>['format' => 'Y-m-d'],
-                        'allowClear' => true,
-                        'ranges' => [
-                            Yii::t('rcoa/teamwork', "Statistics-Prev-Week") => ["moment().startOf('week').subtract(1,'week')", "moment().endOf('week').subtract(1,'week')"],
-                            Yii::t('rcoa/teamwork', "Statistics-This-Week") => ["moment().startOf('week')", "moment().endOf('week')"],
-                            Yii::t('rcoa/teamwork', "Statistics-Prev-Month") => ["moment().startOf('month').subtract(1,'month')", "moment().endOf('month').subtract(1,'month')"],
-                            Yii::t('rcoa/teamwork', "Statistics-This-Month") => ["moment().startOf('month')", "moment().endOf('month')"],
-                            Yii::t('rcoa/teamwork', "Statistics-First-Half-Year") => ["moment().startOf('year')", "moment().startOf('year').add(5,'month').endOf('month')"],
-                            Yii::t('rcoa/teamwork', "Statistics-Next-Half-Year") => ["moment().startOf('year').add(6,'month')", "moment().endOf('year')"],
-                            Yii::t('rcoa/teamwork', "Statistics-Full-Year") => ["moment().startOf('year')", "moment().endOf('year')"],
-                        ]
-                    ],
-                ]); ?>
+            <!--时间段-->  
+            <div class="col-lg-4 col-xs-12 control">
+                <label id="label-time" for="worksystemtask-time" class="col-sm-3 control-label">
+                    <?= Yii::t('rcoa/teamwork', 'Statistics-Time-Rang'); ?>
+                </label>
+                <div class="col-sm-9 control-widget">
+                   <?= DateRangePicker::widget([
+                       'id' => 'worksystemtask-time',
+                        'value' => ArrayHelper::getValue($params, 'time'),
+                        'name' => 'time',
+                        //'presetDropdown' => true,
+                        'hideInput' => true,
+                        'convertFormat'=>true,
+                        'pluginOptions'=>[
+                            'locale'=>['format' => 'Y-m-d'],
+                            'allowClear' => true,
+                            'opens'=>'right',
+                            'ranges' => [
+                                Yii::t('rcoa/teamwork', "Statistics-Prev-Week") => ["moment().startOf('week').subtract(1,'week')", "moment().endOf('week').subtract(1,'week')"],
+                                Yii::t('rcoa/teamwork', "Statistics-This-Week") => ["moment().startOf('week')", "moment().endOf('week')"],
+                                Yii::t('rcoa/teamwork', "Statistics-Prev-Month") => ["moment().startOf('month').subtract(1,'month')", "moment().endOf('month').subtract(1,'month')"],
+                                Yii::t('rcoa/teamwork', "Statistics-This-Month") => ["moment().startOf('month')", "moment().endOf('month')"],
+                                Yii::t('rcoa/teamwork', "Statistics-First-Half-Year") => ["moment().startOf('year')", "moment().startOf('year').add(5,'month').endOf('month')"],
+                                Yii::t('rcoa/teamwork', "Statistics-Next-Half-Year") => ["moment().startOf('year').add(6,'month')", "moment().endOf('year')"],
+                                Yii::t('rcoa/teamwork', "Statistics-Full-Year") => ["moment().startOf('year')", "moment().endOf('year')"],
+                            ],
+                        ],
+                    ]); ?>
+                </div>
             </div>
-        </div>
+           
 
         </div>
     </div>
     
-    <?= Html::hiddenInput('WorksystemTask[mark]', true) ?>
+    <?= Html::hiddenInput('mark', true) ?>
     
     <?php ActiveForm::end(); ?>
 

@@ -27,10 +27,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="container">
 
                     <div class="col-xs-12">
-                        <label id="label-item_type_id" for="item_type_id" class="col-xs-1 control-label">
+                        <label id="label-item_type_id" for="item_type_id" class="col-lg-1 control-label">
                             <?= Yii::t('rcoa/worksystem', 'Type Name'); ?>
                         </label>
-                        <div class="col-xs-3" style="padding: 7px 10px">
+                        <div class="col-lg-3" style="padding: 7px 10px">
                             <?= Select2::widget([
                                 'id' => 'Worksystemcontent-type_name',
                                 'name' => 'WorksystemContent[type_name]',
@@ -43,10 +43,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
 
                     <div class="col-xs-12 Worksystemcontent-is_new">
-                        <label id="label-item_type_id" for="item_type_id" class="col-xs-1 control-label">
+                        <label id="label-item_type_id" for="item_type_id" class="col-lg-1 control-label">
                             <?= Yii::t('rcoa/worksystem', 'Build Mode'); ?>
                         </label>
-                        <div class="col-xs-3" style="padding: 7px 10px">
+                        <div class="col-lg-3" style="padding: 7px 10px">
                             <?= Html::radioList('WorksystemContent[is_new]', WorksystemContent::MODE_NEWLYBUILD, WorksystemContent::$modeName, [
                                 'id' => 'Worksystemcontent-is_new',
                                 'itemOptions'=>[

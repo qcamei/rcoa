@@ -2,10 +2,13 @@
 
 namespace frontend\modules\worksystem\controllers;
 
+use common\config\AppGlobalVariables;
 use common\models\demand\DemandTask;
 use common\models\team\TeamCategory;
+use common\models\worksystem\WorksystemAnnex;
 use common\models\worksystem\WorksystemTask;
 use common\models\worksystem\WorksystemTaskType;
+use common\wskeee\job\JobManager;
 use frontend\modules\worksystem\utils\WorksystemAction;
 use frontend\modules\worksystem\utils\WorksystemOperationHtml;
 use frontend\modules\worksystem\utils\WorksystemTool;
@@ -62,12 +65,8 @@ class TaskController extends Controller
      */
     public function actionIndex($page = null)
     {
-        $model = new WorksystemTask();
         $page = $page == null ? 0 : $page-1; 
-        $params = !\Yii::$app->getRequest()->isPost ? 
-                    Yii::$app->request->queryParams : 
-                    ArrayHelper::getValue(Yii::$app->request->post(), 'WorksystemTask');
-       
+        $params = Yii::$app->request->queryParams;
         $_wsTool = WorksystemTool::getInstance();
         $query = $_wsTool->getWorksystemTaskResult($params);
         
@@ -90,7 +89,6 @@ class TaskController extends Controller
         $producer = ArrayHelper::getValue($_wsTool->getWorksystemTaskProducer($taskIds), 'nickname');
                 
         return $this->render('index', [
-            'model' => $model,
             'params' => $params,
             'dataProvider' => $dataProvider,
             'count' => $count,
@@ -104,7 +102,8 @@ class TaskController extends Controller
             'courses' => ArrayHelper::getValue($params, 'mark')? 
                             $this->getChildrens(ArrayHelper::getValue($params, 'item_child_id')) : [],
             'taskTypes' => $this->getWorksystemTaskTypes(),
-            'teams' => $this->getCourseDevelopTeams(),
+            'createTeams' => $this->getCourseDevelopTeams(),
+            'externalTeams' => ArrayHelper::merge($this->getCourseDevelopTeams(), $this->getEpibolyTeams()),
             'createBys' => $this->getCreateBys(),
             'producers' => $this->getProducerList(),
         ]);
@@ -115,6 +114,7 @@ class TaskController extends Controller
      * Displays a single WorksystemTask model.
      * @param WorksystemTool $_wsTool
      * @param WorksystemOperationHtml $_wsOp
+     * @param JobManager $jobManager
      * @param integer $id
      * @return mixed
      */
@@ -124,12 +124,23 @@ class TaskController extends Controller
         $model = $this->findModel($id);
         $_wsTool = WorksystemTool::getInstance();
         $_wsOp = WorksystemOperationHtml::getInstance();
+        /* @var $jobManager JobManager */
+        $jobManager = Yii::$app->get('jobManager');
+        
+        if($model->getIsStatusCompleted() || $model->getIsStatusCancel() ){
+            //取消用户与任务通知的关联
+            $jobManager->cancelNotification(AppGlobalVariables::getSystemId(), $model->id, Yii::$app->user->id); 
+        }else {
+            //设置用户对通知已读
+            $jobManager->setNotificationHasReady(AppGlobalVariables::getSystemId(), Yii::$app->user->id, $model->id);  
+        }
         
         return $this->render('view', [
             'model' => $model,
             '_wsOp' => $_wsOp,
             'producer' => implode(',', ArrayHelper::getValue($_wsTool->getWorksystemTaskProducer($model->id), 'nickname')),
             'attributes' => $_wsTool->getWorksystemTaskAddAttributes($model->id),
+            'annexs' => $this->getWorksystemAnnexs($model->id),
             'is_assigns' => $_wsTool->getIsAssignPeople($model->create_team),
             'is_producer' =>$_wsTool->getIsProducer($model->id),
         ]);
@@ -203,6 +214,7 @@ class TaskController extends Controller
                 'courses' => $this->getChildrens($model->item_child_id),
                 'taskTypes' => $this->getWorksystemTaskTypes(),
                 'teams' => $this->getUserTeam(),
+                'annexs' => $this->getWorksystemAnnexs($model->id),
             ]);
         }
     }
@@ -732,6 +744,19 @@ class TaskController extends Controller
     }
     
     /**
+     * 获取所有外包团队
+     * @param TeamMemberTool $_tmTool
+     * @return array
+     */
+    public function getEpibolyTeams()
+    {
+        $_tmTool = TeamMemberTool::getInstance();
+        $teams = $_tmTool->getTeamsByCategoryId(TeamCategory::TYPE_EPIBOLY_TEAM);
+        
+        return ArrayHelper::map($teams, 'id', 'name');
+    }
+    
+    /**
      * 获取所有创建者
      * @param RbacManager $rbacManager
      * @return array
@@ -802,5 +827,20 @@ class TaskController extends Controller
             'team_id' => ArrayHelper::getColumn($teamMembers, 'team_id')
         ];
                 
+    }
+    
+    /**
+     * 获取所有工作系统附件
+     * @param integer $taskId                   工作系统任务id
+     * @return array
+     */
+    public function getWorksystemAnnexs($taskId)
+    {
+        $annexs = (new Query())
+                ->from(WorksystemAnnex::tableName())
+                ->where(['worksystem_task_id' => $taskId])
+                ->all();
+        
+        return $annexs;
     }
 }

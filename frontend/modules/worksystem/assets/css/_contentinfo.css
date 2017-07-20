@@ -12,12 +12,18 @@ and open the template in the editor.
     width: 80%;
     margin: 0 auto;
 }
-
-.worksystem .price {
-    width: 75px;
+@media (max-width: 480px) {
+    .worksystem .contentinfo-table{
+        width: 100%;
+        margin: 0 auto;
+    }
 }
+.worksystem .price {
+    width: 55px;
+}
+
 .worksystem .number {
-    width: 70px;
+    width: 55px;
 }
 .worksystem .prompt {
     float: left;

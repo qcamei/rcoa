@@ -23,7 +23,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="container worksystem worksystem-task-index">
 
     <?= $this->render('_search',[
-        'model' => $model,
         'params' => $params,
         //条件
         'itemTypes' => $itemTypes,
@@ -31,7 +30,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'itemChilds' => $itemChilds,
         'courses' => $courses,
         'taskTypes' => ArrayHelper::map($taskTypes, 'id', 'name'),
-        'teams' => $teams,
+        'createTeams' => $createTeams,
+        'externalTeams' => $externalTeams,
         'createBys' => $createBys,
         'producers' => $producers,
     ]) ?>
@@ -127,11 +127,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
             ],
-            [
+            /*[
                 'label' => Yii::t('rcoa/worksystem', 'Item Type ID'),
                 'format' => 'raw',
                 'value'=> function($model){
-                    /* @var $model WorksystemTask */
+                    /* @var $model WorksystemTask 
                     return !empty($model->item_type_id) ? $model->itemType->name : null;
                 },
                 'headerOptions' => [
@@ -139,14 +139,14 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs hidden-sm hidden-md',
                     ],
                     'style' => [
-                        'width' => '110px',
+                        'width' => '100px',
                         'padding' => '8px'
                     ],
                 ],
                 'contentOptions' =>[
                     'class'=>'hidden-xs course-name list-td hidden-sm hidden-md',
                 ],
-            ],
+            ],*/
             [
                 'label' => Yii::t('rcoa/worksystem', 'Item ID'),
                 'format' => 'raw',
@@ -159,7 +159,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs hidden-sm hidden-md',
                     ],
                     'style' => [
-                        'width' => '100px',
+                        'width' => '80px',
                         'padding' => '8px'
                     ],
                 ],
@@ -199,7 +199,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs hidden-sm',
                     ],
                     'style' => [
-                        'width' => '150px',
+                        'width' => '126px',
                         'padding' => '8px'
                     ],
                 ],
@@ -224,7 +224,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'headerOptions' => [
                     'style' => [
-                        'min-width' => '84px',
+                        
                         'padding' => '8px 4px',
                     ],
                 ],
@@ -247,7 +247,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '85px',
+                        'width' => '83px',
                         'padding' => '8px'
                     ],
                 ],
@@ -291,7 +291,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '75px',
+                        'width' => '64px',
                         'padding' => '8px'
                     ],
                 ],
@@ -308,8 +308,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         $options = [
                             'class' => $model->getIsStatusCancel() ? 'btn btn-danger btn-sm' :
                                 ($model->getIsStatusCompleted() ? 'btn btn-success btn-sm' : 
-                                    ($model->getIsStatusWorking() ? 'btn btn-info btn-sm' : 
-                                        (!empty($operation[$model->id]) ? 'btn btn-primary btn-sm' : 'btn btn-default btn-sm'))),
+                                    (!empty($operation[$model->id]) ? 'btn btn-primary btn-sm' : 'btn btn-default btn-sm')),
                             'style' => 'width: 55px;'
                         ];
                         return Html::a($model->getStatusName(), [

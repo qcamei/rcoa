@@ -15,6 +15,13 @@ and open the template in the editor.
 
     }
 }
+.worksystem .worksystem-task-form{
+    padding-left: 15px;
+    padding-right: 15px; 
+}
+.worksystem .table {
+    table-layout: fixed;
+}
 .worksystem .course-name {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -46,4 +53,17 @@ and open the template in the editor.
     font-size: 14px;
     color: rgb(204, 204, 204);
     font-weight: 400;
+}
+.worksystem .form-label{
+    color: #999999;
+    font-weight: normal;
+    padding-right: 0px;
+}
+.worksystem .form-img {
+    position: absolute;
+    top: 10px;
+    right: 5px;
+}
+.worksystem .form-img:hover{
+     cursor:pointer;
 }

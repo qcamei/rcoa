@@ -78,7 +78,7 @@ class WorksystemTask extends ActiveRecord
     const STATUS_DEFAULT = 100;
     /** 任务刚发出，等待审核 【待审核】 */
     const STATUS_WAITCHECK = 200;
-    /**任务审核不通过，等待调整 【调整中】 */
+    /** 任务审核不通过，等待调整 【调整中】 */
     const STATUS_ADJUSTMENTING = 205;
     /** 任务已经修改完成，等待继续审核 【审核中】 */
     const STATUS_CHECKING = 210;

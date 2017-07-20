@@ -28,9 +28,9 @@ use yii\helpers\Html;
                         'icon'=>'/filedata/demand/image/list-check.png',    //图标路径
                         'options'=>[
                             '/worksystem/task/index', 
-                            //'create_by' => Yii::$app->user->id, 
-                            //'producer' => Yii::$app->user->id, 
-                            //'assign_people' => Yii::$app->user->id,
+                            'create_by' => Yii::$app->user->id, 
+                            'producer' => Yii::$app->user->id, 
+                            'assign_people' => Yii::$app->user->id,
                             'status' => WorksystemTask::STATUS_DEFAULT,
                             'mark' => false,
                         ],                                                  //跳转选项，第一索引为地址，第二起为传参

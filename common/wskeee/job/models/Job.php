@@ -50,7 +50,7 @@ class Job extends ActiveRecord
             [['system_id', 'relate_id'], 'required'],
             [['relate_id', 'progress'], 'integer'],
             [['content'], 'string'],
-            [['system_id'], 'integer', 'max' => 11],
+            [['system_id'], 'integer'],
             [['status'], 'string', 'max' => 64],
             [['subject', 'link'], 'string', 'max' => 255]
         ];

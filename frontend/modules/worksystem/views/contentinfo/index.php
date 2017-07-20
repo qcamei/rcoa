@@ -21,14 +21,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
         <thead>
             <tr>
-                <th style="width: 18.5%;padding:8px 4px;"><?= Yii::t('rcoa/worksystem', 'Type Name') ?></th>
-                <th style="width: 8%;padding:8px 4px;"><?= Yii::t('rcoa/worksystem', 'Is New') ?></th>
-                <th class="hidden-xs" style="width: 15%;padding:8px 4px;"><?= Yii::t('rcoa/worksystem', 'Price') ?><span class="reference">（参考）</span></th>
-                <th style="width: 13%;padding:8px 4px;"><?= Yii::t('rcoa/worksystem', 'Budget Number') ?></th>
-                <th class="hidden-xs" style="width: 17%;padding:8px 4px;"><?= Yii::t('rcoa/worksystem', 'Budget Cost') ?><span class="reference">（单价×数量）</span></th>
-                <th style="width: 13%;padding:8px 4px;"><?= Yii::t('rcoa/worksystem', 'Reality Number') ?></th>
-                <th class="hidden-xs" style="width: 17%;padding:8px 4px;"><?= Yii::t('rcoa/worksystem', 'Reality Cost') ?><span class="reference">（单价×数量）</span></th>
-                <th style="width: 1%;padding:8px 4px;"></th>
+                <th style="width: 11.5%;"><?= Yii::t('rcoa/worksystem', 'Type Name') ?></th>
+                <th style="width: 12.5%"><?= Yii::t('rcoa/worksystem', 'Is New') ?></th>
+                <th class="hidden-xs" style="width: 151px;"><?= Yii::t('rcoa/worksystem', 'Price') ?><span class="reference">（参考）</span></th>
+                <th style="width: 20%;"><?= Yii::t('rcoa/worksystem', 'Budget Number') ?></th>
+                <th class="hidden-xs" style="width: 167px"><?= Yii::t('rcoa/worksystem', 'Budget Cost') ?><span class="reference">（单价×数量）</span></th>
+                <th style="width: 20%;"><?= Yii::t('rcoa/worksystem', 'Reality Number') ?></th>
+                <th class="hidden-xs" style="width: 167px;"><?= Yii::t('rcoa/worksystem', 'Reality Cost') ?><span class="reference">（单价×数量）</span></th>
+                <th style="width: 50px;"></th>
             </tr>
         </thead>
 
@@ -41,19 +41,27 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php foreach($allModels as $model): ?>
 
                 <tr>
-                    <td style="padding:8px 4px;"><?= $model->worksystemContent->type_name ?></td>
+                    <td class="course-name"><?= $model->worksystemContent->type_name ?></td>
                     <?php if($model->is_new == WorksystemContent::MODE_NEWLYBUILD): ?>
-                    <td style="padding:8px 4px;">新建</td>
-                    <td class="hidden-xs" style="padding:8px 4px;"><?= $model->price ?><span class="reference">（<?= $model->worksystemContent->price_new ?>/<?= $model->worksystemContent->unit ?>）</span></td>
+                    <td>新建</td>
+                    <td class="hidden-xs"><?= $model->price ?><span class="reference">（<?= $model->worksystemContent->price_new ?>/<?= $model->worksystemContent->unit ?>）</span></td>
                     <?php else: ?>
-                    <td style="padding:8px 4px;">改造</td>
-                    <td class="hidden-xs" style="padding:8px 4px;"><?= $model->price ?><span class="reference">（<?= $model->worksystemContent->price_remould ?>/<?= $model->worksystemContent->unit ?>）</span></td>
+                    <td>改造</td>
+                    <td class="hidden-xs"><?= $model->price ?><span class="reference">（<?= $model->worksystemContent->price_remould ?>/<?= $model->worksystemContent->unit ?>）</span></td>
                     <?php endif; ?>
-                    <td style="padding:8px 4px;"><?= $model->budget_number ?><span class="reference"><?= $model->worksystemContent->unit ?></span></td>
-                    <td class="hidden-xs" style="padding:8px 4px;">￥<?= number_format($model->budget_cost, 2, '.', ',') ?></td>
-                    <td style="padding:8px 4px;"><?= $model->reality_number ?><span class="reference"><?= $model->worksystemContent->unit ?></span></td>
-                    <td class="hidden-xs" style="padding:8px 4px;"> ￥<?= number_format($model->reality_cost, 2, '.', ',') ?></td>
-                    <td style="padding: 4px 4px;"><?= Html::a('查看', ['contentinfo/view', 'id' => $model->id], ['class' => 'btn btn-default btn-sm', 'onclick' => 'view($(this)); return false;']) ?></td>
+                    <td><?= $model->budget_number ?><span class="reference"><?= $model->worksystemContent->unit ?></span></td>
+                    <td class="hidden-xs">￥<?= number_format($model->budget_cost, 2, '.', ',') ?></td>
+                    <?php if($model->reality_number != 0): ?>
+                    <td><?= $model->reality_number ?><span class="reference"><?= $model->worksystemContent->unit ?></span></td>
+                    <?php else: ?>
+                    <td><span class="not-set">(未设置)</span></td>
+                    <?php endif;?>
+                    <?php if($model->reality_cost != 0): ?>
+                    <td class="hidden-xs"> ￥<?= number_format($model->reality_cost, 2, '.', ',') ?></td>
+                    <?php else: ?>
+                    <td class="hidden-xs"><span class="not-set">(未设置)</span></td>
+                    <?php endif;?>
+                    <td style="padding: 4px 2px;"><?= Html::a('查看', ['contentinfo/view', 'id' => $model->id], ['class' => 'btn btn-default btn-sm', 'onclick' => 'view($(this)); return false;']) ?></td>
                 </tr>
 
                 <?php endforeach; ?>
