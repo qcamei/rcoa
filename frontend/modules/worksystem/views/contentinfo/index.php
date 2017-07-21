@@ -71,9 +71,11 @@ $this->params['breadcrumbs'][] = $this->title;
     </table>    
         
     <div class="cost">
-          
+        <?php if(!empty($model->worksystem_task_id)): ?>  
         <span class="reference"><b>总成本（预计/实际）：￥<?= number_format($model->worksystemTask->budget_cost, 2, '.', ',') ?> / ￥<?= number_format($model->worksystemTask->reality_cost, 2, '.', ',') ?></b></span>
-         
+        <?php else: ?>
+        <span class="reference"><b>总成本（预计/实际）：￥0.00/￥0.00</b></span>
+        <?php endif; ?>
     </div>
             
 </div>

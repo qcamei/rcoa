@@ -80,8 +80,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value'=> function($model){
                     /* @var $model WorksystemTask */
                     return !empty($model->task_type_id) ? 
-                            '<span class="task-type-span">'.$model->worksystemTaskType->name.'</span>' : 
-                            null;
+                            '<span class="task-type-span">'.$model->worksystemTaskType->name.'</span>' : '';
                 },
                 'headerOptions' => [
                     'class'=>[

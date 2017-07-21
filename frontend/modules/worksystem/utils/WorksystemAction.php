@@ -378,7 +378,7 @@ class WorksystemAction
             if($model->save()){
                 $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_CHECKING, '取消外包', '取消外包', $des);
                 $_wsTool->saveWorksystemOperationUser($model->id, $teamUserId);
-                $jobManager->removeNotification(AppGlobalVariables::getSystemId(), $model->id, $epibolyUserid);
+                $jobManager->removeNotification(AppGlobalVariables::getSystemId(), $model->id, $epibolyUserId);
             }else
                 throw new Exception($model->getErrors());
             

@@ -2,6 +2,8 @@
 
 namespace frontend\modules\worksystem\controllers;
 
+use common\models\worksystem\WorksystemTask;
+use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -42,6 +44,14 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        return $this->redirect([
+            'task/index', 
+            'create_by' => Yii::$app->user->id, 
+            'producer' => Yii::$app->user->id, 
+            'assign_people' => Yii::$app->user->id,
+            'status' => WorksystemTask::STATUS_DEFAULT,
+            'mark' => false,
+        ]);
+        //return $this->render('index');
     }
 }
