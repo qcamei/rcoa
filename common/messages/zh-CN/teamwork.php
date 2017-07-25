@@ -9,10 +9,10 @@
 return[
     /* 团队工作模块 - 公共部分 */
     //前台-公共部分
-    'Teamwork' => '进度',
-    'Teamwork Index' => '进度-主页',
-    'Teamwork Course' => '进度-课程',
-    'Teamwork Statistics' => '进度-统计',
+    'Teamwork' => '开发',
+    'Teamwork Index' => '开发-主页',
+    'Teamwork Course' => '开发-课程',
+    'Teamwork Statistics' => '开发-统计',
     
     'Template Types' => '模版类型',
     'Create Template Type' => '创建-模版类型',
