@@ -8,6 +8,7 @@ use common\models\expert\Expert;
 use common\models\team\Team;
 use common\models\User;
 use Yii;
+use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -157,16 +158,22 @@ class DefaultController extends Controller
     }
     
     /**
-     * 获取用户
+     * 获取所有用户
      * @return array
      */
-    public function getUser()
+    public function getAssignUsers()
     {
-        $expert = Expert::find()->all();
-        $user = User::find()
+        $expert = (new Query())
+                ->select(['u_id', 'nickname'])
+                ->from(Expert::tableName())
+                ->leftJoin(['User' => User::tableName()], 'User.id = u_id')
+                ->all();
+        $user = (new Query())
+                ->select(['id', 'nickname'])
+                ->from(User::tableName())
                 ->where(['not in', 'id', ArrayHelper::getColumn($expert, 'u_id')])
                 ->all();
-        
+                
         return ArrayHelper::map($user, 'id', 'nickname');
     }
 }

@@ -33,7 +33,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'user.sex',
                 'value'=> User::$sexName[$model->user->sex],
             ],
-            'type',
+            [
+                'attribute' => 'type',
+                'value'=>  !empty($model->type) ? $model->expertType->name : null,
+            ],
             'birth',
             'user.phone',
             'job_title',

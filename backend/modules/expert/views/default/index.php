@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => '专家类型',
                 'value' => function($model){
                     /* @var $model Expert */
-                    return $model->expertType->name;
+                    return !empty($model->type) ? $model->expertType->name : null;
                 },
                 'filter' => ArrayHelper::map(ExpertType::find()->all(), 'id', 'name')
             ],
