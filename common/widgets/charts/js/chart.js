@@ -165,8 +165,9 @@
             {
                 //只计算显示的分类
                 if(filterLegend[legend_name])
-                    vv += datas[i][legend_name];
+                    vv += Number(datas[i][legend_name]);
             }
+            vv = Math.round(vv * 100) / 100;
             //添加到数组方便排序
             arr.push({name:i,value:vv});
         }

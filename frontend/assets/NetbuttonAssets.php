@@ -29,8 +29,8 @@ class NetbuttonAssets extends AssetBundle{
     ];
     public $js = [
         'filedata/site/netbutton/createjs-2015.11.26.min.js',
-        'filedata/site/netbutton/netbutton.js',
-        'filedata/site/netbutton/netbuttonskin.js',
+        'filedata/site/netbutton/netbutton.js?id=20170725',
+        'filedata/site/netbutton/netbuttonskin.js?id=20170725',
     ];
     public $depends = [
         'yii\web\YiiAsset'
