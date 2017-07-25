@@ -64,6 +64,10 @@ class DefaultController extends Controller
         $datas = $_wsStatistics->findWorksystemTaskData($time);
         $dataInitial = $_wsStatistics->getDataInitial();
         $teamInitias = $_wsStatistics->getDataInitialTeams();
+        $datas_counts = [];
+        $datas_totalCosts = [];
+        $datas_epibolyCosts = [];
+        $datas_teamCosts = [];
         $counts = 0;
         $countCost = 0;
         $epibolyCost = 0;
@@ -90,7 +94,7 @@ class DefaultController extends Controller
                 $datas_teamCost[$keys][$value['name']] = $value['value'];
             }
         }
-        
+       
         return $this->render('index', [
             'datas_count' => array_values(ArrayHelper::merge($dataInitial, $datas_counts)),
             'datas_totalCost' => array_values(ArrayHelper::merge($dataInitial, $datas_totalCosts)),

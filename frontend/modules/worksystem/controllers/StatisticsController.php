@@ -68,6 +68,10 @@ class StatisticsController extends Controller
         $datas = $_wsStatistics->findWorksystemTaskData($time);
         $dataInitial = $_wsStatistics->getDataInitial();
         $teamInitias = $_wsStatistics->getDataInitialTeams();
+        $datas_counts = [];
+        $datas_totalCosts = [];
+        $datas_epibolyCosts = [];
+        $datas_teamCosts = [];
         $counts = 0;
         $countCost = 0;
         $epibolyCost = 0;

@@ -48,20 +48,20 @@ use yii\web\View;
                             ]
                         ], 
                     ]) ?>
-            
-                 <?php elseif($element['type'] == WorksystemAttributes::CHECKSTYPE): ?>
-                    <!-- 类型：复选 -->
-                    <?= Html::checkboxList('WorksystemAddAttributes[value]['.$element['id'].']', $element['value'], $element['value_list'], [
-                        'id' => 'worksystem-attribute-'.$element['id'],
-                        'itemOptions'=>[
-                            'labelOptions'=>[
-                                'style'=>[
-                                    'margin-right'=>'30px',
-                                    'margin-top' => '5px'
-                                ]
-                            ]
-                        ], 
-                    ]) ?>
+                  
+                <?php elseif($element['type'] == WorksystemAttributes::CHECKSTYPE): ?>
+                   <!-- 类型：复选 -->
+                   <?= Html::checkboxList('WorksystemAddAttributes[value]['.$element['id'].']', $element['value'], $element['value_list'], [
+                       'id' => 'worksystem-attribute-'.$element['id'],
+                       'itemOptions'=>[
+                           'labelOptions'=>[
+                               'style'=>[
+                                   'margin-right'=>'30px',
+                                   'margin-top' => '5px'
+                               ]
+                           ]
+                       ], 
+                   ]) ?>
             
                  <?php endif; ?>
             <!-- 输入类型：多行文本 -->
@@ -83,3 +83,12 @@ use yii\web\View;
     <?php endforeach; ?>
     
 </div>
+
+<?php
+
+$js = <<<JS
+       
+       
+JS;
+    //$this->registerJs($js, View::POS_READY);
+?>

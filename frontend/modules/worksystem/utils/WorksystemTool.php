@@ -21,6 +21,7 @@ use Yii;
 use yii\db\ActiveQuery;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
+use yii\web\NotFoundHttpException;
 
 
 
@@ -358,18 +359,21 @@ class WorksystemTool
         $attributes = ArrayHelper::getValue($post, 'WorksystemAddAttributes');
         
         $values = [];
-        foreach ($attributes['value'] as $index => $items){
-            $values[] = [
-                'worksystem_task_id' => $model->id,
-                'worksystem_attributes_id' => $index,
-                'value' => !is_array($items) ? $items : implode(",", $items),
-                'index' => $attributes['index'][$index],
-                'is_delete' => $attributes['is_delete'][$index],
-                'created_at' => time(),
-                'updated_at' => time(),
-            ];
+        if(isset($attributes['value'])){
+            foreach ($attributes['value'] as $index => $items){
+                $values[] = [
+                    'worksystem_task_id' => $model->id,
+                    'worksystem_attributes_id' => $index,
+                    'value' => !is_array($items) ? $items : implode(",", $items),
+                    'index' => $attributes['index'][$index],
+                    'is_delete' => $attributes['is_delete'][$index],
+                    'created_at' => time(),
+                    'updated_at' => time(),
+                ];
+            }
+        } else {
+            throw new NotFoundHttpException("操作失败！附加属性值不能为空！"); 
         }
-        
         if($values != null){
             Yii::$app->db->createCommand()->delete(WorksystemAddAttributes::tableName(), ['worksystem_task_id' => $model->id])->execute();
             /** 添加$values数组到表里 */
@@ -395,16 +399,19 @@ class WorksystemTool
         $budgetBonus = $budgetCost * $results->score;
         
         $values = [];
-        foreach ($contents as $index => $items){
-            $items += [
-                'worksystem_task_id' => $model->id,
-                'created_at' => time(),
-                'updated_at' => time(),
-            ];
-            
-            $values[] = $items;
+        if($contents != null){
+            foreach ($contents as $index => $items){
+                $items += [
+                    'worksystem_task_id' => $model->id,
+                    'created_at' => time(),
+                    'updated_at' => time(),
+                ];
+
+                $values[] = $items;
+            }
+        } else {
+            throw new NotFoundHttpException("操作失败！内容信息不能为空！"); 
         }
-        
         if($values != null){
             \Yii::$app->db->createCommand()->update(WorksystemTask::tableName(), ['budget_bonus' => $budgetBonus], ['id' => $model->id])->execute();
             Yii::$app->db->createCommand()->delete(WorksystemContentinfo::tableName(), ['worksystem_task_id' => $model->id])->execute();

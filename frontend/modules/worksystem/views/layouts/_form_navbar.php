@@ -27,8 +27,12 @@ $js =
     $('#submit').click(function()
     {
         var value = $('#task_type_id-worksystemtask-task_type_id').val();
-        if(value == '')
+        //var value = $('input[name="WorksystemAddAttributes[value]"]').val();
+        //console.log(value);
+        if(value == ''){
             $('.myModal').modal("show");
+            //$('.worksystem-add-attributes-form .help-block').html('不能为空');
+        }
         else
             $('#worksystem-task-form').submit();
     });

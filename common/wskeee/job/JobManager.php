@@ -78,8 +78,9 @@ class JobManager {
         $job = Job::findOne(['system_id'=>$systemId,'relate_id'=>$relateId]);
         if($job == null)
         {
-            throw new NotFoundHttpException("找不到对应任务！system_id：$systemId, relate_id：$relateId");
-            return;
+            if(YII_DEBUG)
+                throw new NotFoundHttpException("找不到对应任务！system_id：$systemId, relate_id：$relateId");
+            return true;
         }
         
         foreach($params as $key => $value)
@@ -135,8 +136,10 @@ class JobManager {
                         ->batchInsert(JobNotification::tableName(), ['job_id','u_id'], $rows)
                         ->execute();
                 
-            }else
-                throw new Exception ("找不到对应通知：systme_id:$systemId,relate_id:$relateId");
+            }else{
+                if(YII_DEBUG)
+                    throw new Exception ("找不到对应通知：systme_id:$systemId,relate_id:$relateId");
+            }
             return true;
         } catch (Exception $ex) {
             Yii::error("添加通知关联失败！<br/>".$ex->getMessage(), __METHOD__);
@@ -186,8 +189,10 @@ class JobManager {
                     }
                 }   
                     //echo json_encode($rows);
-            }else
-                throw new Exception ("找不到对应通知：systme_id:$systemId,relate_id:$relateId");
+            }else{
+                if(YII_DEBUG)
+                    throw new Exception ("找不到对应通知：systme_id:$systemId,relate_id:$relateId");            
+            }
             return true;
         } catch (Exception $ex) {
             Yii::error("删除通知关联失败！<br/>".$ex->getMessage(), __METHOD__);
@@ -227,8 +232,10 @@ class JobManager {
                         ->update(JobNotification::tableName(), ['status'=>  JobNotification::STATUS_END], $conditions)
                         ->execute();
                 return true;
-            }else
-                throw new Exception ("找不到对应通知：systme_id:$systemId,relate_id:$relateId, user:$user");
+            }else{
+                if(YII_DEBUG)
+                    throw new Exception ("找不到对应通知：systme_id:$systemId,relate_id:$relateId, user:$user");
+            }
             
         } catch (Exception $ex) {
             Yii::error("取消通知关联失败！<br/>".$ex->getMessage(), __METHOD__);
