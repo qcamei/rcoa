@@ -317,10 +317,12 @@ class WorksystemTool
                 ->where(['team_id' => $teamId])
                 ->one();
        
-        if(in_array(Yii::$app->user->id, $assigns))
-            return true;
-        else
-            return false;
+        if($assigns != null){
+            if(in_array(Yii::$app->user->id, $assigns))
+                return true;
+        }
+        
+         return false;
     }
     
     /**
@@ -338,10 +340,12 @@ class WorksystemTool
                 ->all();
         $results = ArrayHelper::getColumn($producers, 'u_id');
         
-        if(in_array(\Yii::$app->user->id, $results))
-            return true;
-        else
-            return false;
+        if($results != null){
+            if(in_array(\Yii::$app->user->id, $results))
+                return true;
+        }
+        
+        return false;
     }
         
     /**

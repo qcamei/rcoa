@@ -9,8 +9,8 @@ use yii\web\View;
 /* @var $this View */
 /* @var $model WorksystemContentinfo */
 
-$this->title = Yii::t('rcoa/worksystem', 'Worksystem Contentinfos');
-$this->params['breadcrumbs'][] = $this->title;
+//$this->title = Yii::t('rcoa/worksystem', 'Worksystem Contentinfos');
+//$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="worksystem worksystem-contentinfo-index">

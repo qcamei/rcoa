@@ -13,7 +13,7 @@ use yii\web\View;
 /* @var $dataProvider ActiveDataProvider */
 
 
-$this->title = '开发-'.Yii::t('rcoa/teamwork', 'Teamwork Statistics');
+$this->title = Yii::t('rcoa/teamwork', 'Teamwork Statistics');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container statistics-content">

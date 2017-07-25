@@ -30,10 +30,10 @@ and open the template in the editor.
     color: #555;
 }
 .worksystem .content .title-number{
-    font-size: 50px;
+    font-family: 'Arial';  
     font-weight: 500;
-    margin: 40px 0px 5px;
-    color: #000;
+    font-size: 35px;  
+    color: #333;
 }
 .worksystem .content .main-title .icon{
     width: 24px;

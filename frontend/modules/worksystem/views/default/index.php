@@ -6,7 +6,7 @@ use yii\web\View;
 
 /* @var $this View */
 
-$this->title = '开发-工作-主页';
+$this->title = '任务-主页';
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>

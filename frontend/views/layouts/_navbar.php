@@ -71,7 +71,7 @@ NavBar::begin([
     
     if(!Yii::$app->user->isGuest){
         echo Html::beginTag('ul', ['class'=>'navbar-nav navbar-right nav']);
-        echo '<li class="dropdown">'.Html::a(Html::img('/filedata/image/u23.png',[
+        /*echo '<li class="dropdown">'.Html::a(Html::img('/filedata/image/u23.png',[
                 'width'=>'20',
                 'height'=>'20'
             ]), '', ['class'=>'dropdown-toggle', 'style'=>'height:50px', 'data-toggle'=>'dropdown'])
@@ -80,7 +80,7 @@ NavBar::begin([
                 'width'=>'20',
                 'height'=>'20'
             ]), '', ['class'=>'dropdown-toggle', 'style'=>'height:50px', 'data-toggle'=>'dropdown'])
-            .$this->render('_notification', ['system' => $system]).'</li>';
+            .$this->render('_notification', ['system' => $system]).'</li>';*/
         echo '<li class="dropdown">'.Html::a(Html::img(Yii::$app->user->identity->avatar,[
             'width'=> '25', 
             'height' => '25',

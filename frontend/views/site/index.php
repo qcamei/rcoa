@@ -47,7 +47,7 @@ $this->title = '工匠';
                 </div>
             </a>
             <div class="site-home-words">
-                <span class="site-home-words-ch">进度</span><br/><span class="site-home-words-en">Progress</span>
+                <span class="site-home-words-ch">开发</span><br/><span class="site-home-words-en">Development</span>
             </div>
         </div>
 
@@ -67,7 +67,7 @@ $this->title = '工匠';
         </div>
         
         <div class="col-lg-3 site-home-circlebox">
-            <a href="/sites/default">
+            <a href="/shoot/bookdetail">
                 <div class="site-home-circle img-circle">
                     <?= Html::img(['/filedata/site/system/locations.png']) ?>
                     <div class="circle-bg img-circle">

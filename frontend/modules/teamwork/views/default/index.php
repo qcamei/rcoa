@@ -12,7 +12,7 @@ use yii\web\View;
 /* @var $twTool TeamworkTool */
 
 
-$this->title = '开发-'.Yii::t('rcoa/teamwork', 'Teamwork Index');
+$this->title = Yii::t('rcoa/teamwork', 'Teamwork Index');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 

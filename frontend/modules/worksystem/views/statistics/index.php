@@ -7,7 +7,7 @@ use yii\web\View;
 
 /* @var $this View */
 
-$this->title = '开发-工作-统计';
+$this->title = '任务-统计';
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>

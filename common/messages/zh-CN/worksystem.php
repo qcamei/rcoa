@@ -35,14 +35,14 @@ return[
     
     
     //工作系统标题名称(前台)
-    'Worksystem' => '工作系统',
-    'Worksystem Tasks' => '开发-工作系统-任务',
-    'Create Worksystem Task' => '创建-工作系统任务',
-    'Update Worksystem Task' => '更新-工作系统任务',
-    'Worksystem Contentinfos' => '开发-工作系统-内容信息',
+    'Worksystem' => '任务',
+    'Worksystem Tasks' => '任务-信息',
+    'Create Worksystem Task' => '创建-任务',
+    'Update Worksystem Task' => '更新-任务',
+    'Worksystem Contentinfos' => '任务-内容信息',
     
     //工作系统附件
-    'Worksystem Annexes' => '工作系统附件',
+    'Worksystem Annexes' => '任务附件',
     
     
     //工作系统字段属性名称(公共)
