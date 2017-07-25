@@ -1,6 +1,7 @@
 <?php
 
 use common\models\worksystem\WorksystemOperation;
+use frontend\modules\worksystem\assets\WorksystemAssets;
 use frontend\modules\worksystem\utils\WorksystemOperationHtml;
 use yii\helpers\Html;
 use yii\web\View;
@@ -27,24 +28,24 @@ $this->params['breadcrumbs'][] = $this->title;
                     <tbody>
                         
                         <tr>
-                            <th><?= Yii::t('rcoa/worksystem', 'Title') ?></th>
-                            <td><?= $model->title ?></td>
+                            <th class="viewdetail-th"><?= Yii::t('rcoa/worksystem', 'Title') ?></th>
+                            <td class="viewdetail-td"><?= $model->title ?></td>
                         </tr>
                         <tr>
-                            <th><?= Yii::t('rcoa/worksystem', 'Content') ?></th>
+                            <th class="viewdetail-th"><?= Yii::t('rcoa/worksystem', 'Content') ?></th>
                             <?= $_wsOp->getOperationTypeHtml($model->controller_action, $model->content) ?>
                         </tr>
                         <tr>
-                            <th><?= Yii::t('rcoa/worksystem', 'Des') ?></th>
-                            <td><?= $model->des ?></td>
+                            <th class="viewdetail-th"><?= Yii::t('rcoa/worksystem', 'Des') ?></th>
+                            <td class="viewdetail-td"><?= str_replace("\r\n", "<br/>", $model->des) ?></td>
                         </tr>
                         <tr>
-                            <th><?= Yii::t('rcoa/worksystem', 'Time') ?></th>
-                            <td><?= date('Y-m-d H:i', $model->created_at) ?></td>
+                            <th class="viewdetail-th"><?= Yii::t('rcoa/worksystem', 'Time') ?></th>
+                            <td class="viewdetail-td"><?= date('Y-m-d H:i', $model->created_at) ?></td>
                         </tr>
                         <tr>
-                            <th><?= Yii::t('rcoa/worksystem', 'Operation People') ?></th>
-                            <td><?= $model->createBy->nickname ?></td>
+                            <th class="viewdetail-th"><?= Yii::t('rcoa/worksystem', 'Operation People') ?></th>
+                            <td class="viewdetail-td"><?= $model->createBy->nickname ?></td>
                         </tr>
                         
                     </tbody>
@@ -58,3 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
 </div>
+
+<?php
+    WorksystemAssets::register($this);
+?>

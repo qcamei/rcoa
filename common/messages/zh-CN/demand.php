@@ -42,7 +42,7 @@ return[
     'Create Demand Appeal' => '创建-申诉',
     'Demand Appeal Replies' => '申诉回复',
     'Create Demand Appeal Reply' => '创建-申诉回复',
-    'Demand Statistics' => '任务-统计',
+    'Demand Statistics' => '需求-统计',
     
     //需求任务-字段
     'Item Type' => '行业',
