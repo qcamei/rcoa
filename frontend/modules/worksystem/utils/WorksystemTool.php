@@ -39,15 +39,16 @@ class WorksystemTool
     {
         $_wsQuery = WorksystemQuery::getInstance();
         $results = $_wsQuery->findWorksystemTaskTable();
-                
+              
+       
         $results->andFilterWhere(['or',[ArrayHelper::getValue($params, 'mark') == false ? 'or' : 'and', 
            ['Worksystem_task.create_by' => ArrayHelper::getValue($params, 'create_by')], ['TeamMember.u_id' => ArrayHelper::getValue($params, 'producer')]], 
            ['or', ['Create_team.user_id' => ArrayHelper::getValue($params, 'assign_people')], ['External_team.user_id' => ArrayHelper::getValue($params, 'assign_people')]]
         ]);
-             
-        if(\Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_CREATE_ASSIGN))
+        
+        if(\Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_CREATE_ASSIGN) && ArrayHelper::getValue($params, 'mark') == false)
             $results->orFilterWhere(['Worksystem_task.is_brace' => WorksystemTask::SEEK_BRACE_MARK]);
-        if(\Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_TASK_UNDERTAKE))
+        if(\Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_TASK_UNDERTAKE) && ArrayHelper::getValue($params, 'mark') == false)
             $results->orFilterWhere(['Worksystem_task.is_epiboly' => WorksystemTask::SEEK_EPIBOLY_MARK]);
         
         $results->andFilterWhere([

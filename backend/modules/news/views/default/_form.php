@@ -29,7 +29,9 @@ use yii\widgets\ActiveForm;
     ])?>
 
     <?= $form->field($model, 'parent_id')->widget(Select2::className(), [
-        'data' => $parentIds, 'options' => ['placeholder' => '请选择...']
+        'data' => $parentIds, 'options' => ['placeholder' => '请选择...'], 'pluginOptions' => [
+                            'allowClear' => true
+                        ],
     ]) ?>
     
     <?= $form->field($model, 'module_image')->textInput(['maxlength' => true,'placeholder'=> '/图片路径/图片名称']) ?>

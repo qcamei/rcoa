@@ -31,8 +31,23 @@ $this->title = '工匠';
                 </div>
             </a>
             <div class="site-home-words">
-                <span class="site-home-words-ch">任务</span><br/><span class="site-home-words-en">Task</span>
+                <span class="site-home-words-ch">需求</span><br/><span class="site-home-words-en">Demand</span>
                 <i class="new-icon"></i>
+            </div>
+        </div>
+
+        <div class="col-lg-3 site-home-circlebox">
+            <a href="/teamwork/default">
+                <div class="site-home-circle img-circle">
+                    <?= Html::img(['/filedata/site/system/teachers.png']) ?>
+                    <div class="circle-bg img-circle">
+                        <span class="ciricle-num" id="count-number" ><span class="timer" data-to="<?= $teamwork; ?>" data-speed="550">0</span><span class="num-words">个</span></span>
+                        <span class="icon">+</span>
+                    </div>
+                </div>
+            </a>
+            <div class="site-home-words">
+                <span class="site-home-words-ch">进度</span><br/><span class="site-home-words-en">Progress</span>
             </div>
         </div>
 
@@ -47,25 +62,10 @@ $this->title = '工匠';
                 </div>
             </a>
             <div class="site-home-words">
-                <span class="site-home-words-ch">开发</span><br/><span class="site-home-words-en">Development</span>
+                <span class="site-home-words-ch">任务</span><br/><span class="site-home-words-en">Task</span>
             </div>
         </div>
-
-        <div class="col-lg-3 site-home-circlebox">
-            <a href="/expert/default">
-                <div class="site-home-circle img-circle">
-                    <?= Html::img(['/filedata/site/system/teachers.png']) ?>
-                    <div class="circle-bg img-circle">
-                        <span class="ciricle-num" id="count-number" ><span class="timer" data-to="<?= $expert; ?>" data-speed="550">0</span><span class="num-words">名</span></span>
-                        <span class="icon">+</span>
-                    </div>
-                </div>
-            </a>
-            <div class="site-home-words">
-                <span class="site-home-words-ch">师资</span><br/><span class="site-home-words-en">Teachers</span>
-            </div>
-        </div>
-
+        
         <div class="col-lg-3 site-home-circlebox">
             <a href="/sites/default">
                 <div class="site-home-circle img-circle">
@@ -164,7 +164,7 @@ $hostInfo = \Yii::$app->urlManager->hostInfo;
               //location.href="$hostInfo/multimedia/home";
               break;
             case 6:
-              location.href="$hostInfo/teamwork/default";
+              location.href="$hostInfo/worksystem/default";
               break;
             case 7:
               //location.href="#";

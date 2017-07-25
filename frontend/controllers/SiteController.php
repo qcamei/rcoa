@@ -4,6 +4,7 @@ namespace frontend\controllers;
 use common\models\demand\DemandTask;
 use common\models\expert\Expert;
 use common\models\LoginForm;
+use common\models\teamwork\CourseManage;
 use common\models\User;
 use Detection\MobileDetect;
 use frontend\models\ContactForm;
@@ -79,10 +80,10 @@ class SiteController extends Controller
     {
         $detect = new MobileDetect();
         $total = $this->getDemandTaskNewCount(DemandTask::$defaultStatus);
-        $expert = $this->getExpertPlaceNewCount();
+        $teamwork = $this->getTeamworkNewCount();
         return $this->render(!$detect->isMobile() ? 'index' : 'wap_index',[
             'total' => $total <= 999 ? $total : 999  ,
-            'expert' => $expert <= 999 ? $expert : 999,
+            'teamwork' => $teamwork <= 999 ? $teamwork : 999,
             'undertakeCount' => $this->getDemandTaskNewCount(DemandTask::STATUS_UNDERTAKE),
         ]);
     }
@@ -263,13 +264,14 @@ class SiteController extends Controller
     }
    
     /**
-     * 获取所有师资总数
+     * 获取所有进度总数
      */
-    public function getExpertPlaceNewCount()
+    public function getTeamworkNewCount()
     {
-        return  Expert::find()
-                ->select(['Expert.u_id'])
-                ->from(['Expert' => Expert::tableName()])
+        return CourseManage::find()
+                ->select(['Course.id'])
+                ->from(['Course' => CourseManage::tableName()])
+                ->where(['!=', 'Course.status', CourseManage::STATUS_CARRY_OUT])
                 ->count();
     }
     
