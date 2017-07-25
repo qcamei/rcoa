@@ -65,7 +65,7 @@
         }
         this.container = $(this.config['container']);
         this.container.empty();
-        this.canvas = $('<canvas id="canvas" width="340" height="340"></canvas>').appendTo(this.container)[0];
+        this.canvas = $('<canvas id="canvas" width="340" height="370"></canvas>').appendTo(this.container)[0];
         var _this = this;
 
 
@@ -95,7 +95,6 @@
         for(var i= 0,len=manifest.length;i<len;i++)
             manifest[i]['src'] = this.config['path']+manifest[i]['src']
         loader.loadManifest(manifest);
-        /*console.log(manifest);*/
     };
     //-------------------------------------------------------------
     //
@@ -258,6 +257,9 @@
         var b;
         for(var i=0,len=this.consts['btnnum'];i<len;i++){
             b = this.btns[i];
+            if(i==6){
+                b.ideui.cursor = 'pointer';
+            }
             b.ideui.on('click',function(evt){
                 _this.__iconMinClick(this.index);
             },b);
