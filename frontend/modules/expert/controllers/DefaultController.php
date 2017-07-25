@@ -45,10 +45,11 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
-        $modelType = ExpertType::find()->all();
-        return $this->render('index', [
+        return $this->redirect(['/worksystem/default']);
+        //$modelType = ExpertType::find()->all();
+        /*return $this->render('index', [
             'modelType' => $modelType,
-        ]);
+        ])*/;
     }
 
     /**

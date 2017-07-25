@@ -9,11 +9,9 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 
-/**
- * Default controller for the `worksystem` module
- */
-class DefaultController extends Controller
-{    
+class StatisticsController extends Controller
+{   
+    
     /**
      * @inheritdoc
      */
@@ -56,10 +54,14 @@ class DefaultController extends Controller
     public function getStatistics()
     {
         $_wsStatistics = WorksystemStatistics::getInstance();
-        $time = [
-            date('Y-m-01 0:0:0', time()), 
-            date('Y-m-t 23:59:59', time())  
-        ];
+        $date = Yii::$app->getRequest()->getQueryParam("dateRange");
+        $time = explode(" - ", $date);
+        if($date == null){
+            $time = [
+                date('Y-m-01 0:0:0', time()),  
+                date('Y-m-t 23:59:59', time())
+            ];
+        }
        
         $results = $_wsStatistics->getWorksystemTaskTypes();
         $datas = $_wsStatistics->findWorksystemTaskData($time);
@@ -104,8 +106,8 @@ class DefaultController extends Controller
             //计算总数
             'counts' => $counts,
             'countCost' => $countCost,
-            'epibolyCost' => $epibolyCost
+            'epibolyCost' => $epibolyCost,
+            'dateRange' => $date,
         ]);
     }
-    
 }

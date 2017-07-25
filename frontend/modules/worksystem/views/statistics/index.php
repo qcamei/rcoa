@@ -1,21 +1,20 @@
 <?php
 
-use frontend\modules\multimedia\assets\StatisticsAsset;
+use common\widgets\charts\ChartAsset;
+use frontend\modules\worksystem\assets\WorksystemAssets;
 use kartik\daterange\DateRangePicker;
-use yii\helpers\BaseHtml;
-use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\web\View;
+
 /* @var $this View */
+
+$this->title = '开发-工作-统计';
+$this->params['breadcrumbs'][] = $this->title;
+
 ?>
-<div class="container statistics-content">
-    <div class="btn-group">
-        <?php echo Html::a('标准工作量', Url::to('/multimedia/statistics?type=0'), ['class'=>'btn btn-default']); ?>
-        <?php echo Html::a('成品时长', Url::to('/multimedia/statistics?type=1'), ['class'=>'btn btn-default active']); ?>
-    </div>
-    <hr/> 
+
+<div class="worksystem container statistics-content">
+    
     <form class="form-horizontal">
-        <input type="hidden" name="type" value="1"/>
         <div class="form-group">
           <label for="dateRange" class="col-sm-2 control-label"><?php echo Yii::t('rcoa/multimedia', 'Statistics-Year') ?></label>
           <div class="col-sm-10">
@@ -52,49 +51,51 @@ use yii\web\View;
         </div>
     </form>
     <hr/> 
-    <div id="summar-content">
-        <div class="summar-title">
-            <span class="summar-icon"></span>总成品时长:
-            <span  class="num"><?= $allWorkload ?></span>分钟
+    
+
+    <div class="container content">
+
+        <div class="main-title">
+            <span class="icon statistics-disable-icon"></span>已完成工作量统计
         </div>
-        <br/>
-        <span class="chart-title">课程中心</span>
-        <div id="datas_all_type" class="chart"></div>
-        <div class="row team-chart-container"></div>
+
+        <div class="title">总任务数：<span class="title-number"><?= number_format($counts) ?></span>个</div>
+        <div id="datas-count-canvas" class="chart"></div>
+
+        <div class="title">总成本：<span class="title-number"><?= number_format($countCost,2) ?></span>元</div>
+        <div id="datas-totalCost-canvas" class="chart"></div>
+
+        <div class="title">总外包成本：<span class="title-number"><?= number_format($epibolyCost,2) ?></span>元</div>
+        <div id="datas-epibolyCost-canvas" class="chart"></div>
+
+        <div class="title">团队内容统计：</div>
+        <div id="datas-teamCost-canvas" class="chart"></div>
+
     </div>
+
+    
 </div>
 
-<?php echo $this->render('../default/_footer',['multimedia'=>$multimedia]); ?>
-<?php 
-    /**
-     * 
-     * @param Array $arr    [typeA:xxx,typeB:xxx]
-     * @param Array $rules  规则 [0:typeA,1:typeB]
-     * @return array [name:xx,value:xxx]
-     */
-    function convertFun($arr,$rules){
-        $newArr = [];
-        foreach($rules AS $name){
-            $newArr [] = ['name'=>$name,'value'=>  isset($arr[$name]) ? $arr[$name] : 0];
-        }
-        return $newArr;
-    }
-    $rules = array_values($rules);//取值保顺序
+<?php
 
-    $datas_all_type = json_encode(convertFun($datas_all_type['data'],$rules));
-    foreach($datas_team_type AS $team_name => $team_type_result)
-        $datas_team_type[$team_name] =  convertFun($team_type_result,$rules);
-    $datas_team_type = json_encode($datas_team_type);
-    //转js格式
-    $rules = json_encode($rules);
-    $js = <<<JS
-        console.log($datas_team_type);
-        new multimedia.PicChart('',document.getElementById('datas_all_type'),$datas_all_type,$rules);
-        var datas_team_type = $datas_team_type;
-        for(var i in datas_team_type){
-            new multimedia.PicChart(i,$('<div class="team-chart col-md-6"></div>').appendTo($('.team-chart-container'))[0],datas_team_type[i],$rules);
-        }
+$datas_count = json_encode($datas_count);
+$datas_totalCost = json_encode($datas_totalCost);
+$datas_epibolyCost = json_encode($datas_epibolyCost);
+$datas_teamCost = json_encode($datas_teamCost);
+$types = json_encode($types);
+$js = <<<JS
+        var itemTypeChart = new ccoacharts.PicChart({title:"",itemLabelFormatter:'{b} ( {c} 个) {d}%',tooltipFormatter:'{a} <br/>{b} : {c}个 ({d}%)'},document.getElementById('datas-count-canvas'),$datas_count);
+        var itemChart = new ccoacharts.PicChart({title:"",itemLabelFormatter:'{b} ( {c} 元) {d}%',tooltipFormatter:'{a} <br/>{b} : {c}元 ({d}%)'},document.getElementById('datas-totalCost-canvas'),$datas_totalCost);
+        var itemChildChart = new ccoacharts.PicChart({title:"",itemLabelFormatter:'{b} ( {c} 元) {d}%',tooltipFormatter:'{a} <br/>{b} : {c}元 ({d}%)'},document.getElementById('datas-epibolyCost-canvas'),$datas_epibolyCost);
+        var teamChart = new ccoacharts.MultiBarChart({title:"",itemLabelFormatter:'{c}元'},document.getElementById('datas-teamCost-canvas'),$datas_teamCost,$types);
+
+        
+       
 JS;
-    $this->registerJs($js);
-    StatisticsAsset::register($this);
+    $this->registerJs($js, View::POS_READY);
+?>
+
+<?php
+    WorksystemAssets::register($this);
+    ChartAsset::register($this);
 ?>

@@ -15,6 +15,8 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        
+        return $this->redirect(['/shoot/bookdetail']);
+        //return $this->render('index');
     }
 }

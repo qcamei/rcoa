@@ -40,7 +40,7 @@ use yii\web\View;
                 <?php foreach($allModels as $model): ?>
 
                 <tr>
-                    <td><?= $model->title ?></td>
+                    <td class="course-name"><?= $model->title ?></td>
                     <?= $_wsOp->getOperationTypeHtml($model->controller_action, $model->content); ?>
                     <td class="course-name hidden-xs"><?= $model->des ?></td>
                     <td class="hidden-xs" style="font-size: 10px; padding: 2px 8px;"><?= date('Y-m-d H:i', $model->created_at) ?></td>

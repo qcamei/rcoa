@@ -27,6 +27,7 @@ class WorksystemAssets extends AssetBundle{
     ];
     public $css = [
         'css/_worksystem.css',
+        'css/_default.css',
         'css/_task_index.css',
         'css/_task_create.css',
         'css/_task_view.css',

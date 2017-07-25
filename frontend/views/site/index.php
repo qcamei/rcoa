@@ -146,7 +146,7 @@ $hostInfo = \Yii::$app->urlManager->hostInfo;
     function onSelected(data){
         switch(data){
             case 0:
-              location.href="$hostInfo/shoot/bookdetail";
+              //location.href="$hostInfo/shoot/bookdetail";
               break;
             case 1:
               //location.href="#";
@@ -161,7 +161,7 @@ $hostInfo = \Yii::$app->urlManager->hostInfo;
               //location.href="#";
               break;
             case 5:
-              location.href="$hostInfo/multimedia/home";
+              //location.href="$hostInfo/multimedia/home";
               break;
             case 6:
               location.href="$hostInfo/teamwork/default";

@@ -83,7 +83,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php echo $this->render('../default/_footer',['multimedia'=>$multimedia]); ?>
 <?php 
-
+                var_dump($datas_team);
     $datas_team = json_encode($datas_team);
     $datas_team_own_aid = json_encode($datas_team_own_aid);
     $datas_producer = json_encode($datas_producer);

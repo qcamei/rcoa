@@ -15,13 +15,13 @@ use yii\helpers\Html;
                 $actionId = Yii::$app->controller->action->id;      //当前行为方法
                 $selectClass = ' footer-menu-bg';             //选择样式
                 $menu = [
-                    /*[   
+                    [   
                         'controllerId'=>'default',                          //控制ID
                         'name'=>'主页',                                     //名称
                         'icon'=>'/filedata/demand/image/home.png',          //图标路径
-                        'options'=>['/demand/default'],                     //跳转选项，第一索引为地址，第二起为传参
+                        'options'=>['/worksystem/default'],                     //跳转选项，第一索引为地址，第二起为传参
                         'class'=>'footer-menu-item',                 //样式
-                    ],*/
+                    ],
                     [   
                         'controllerId'=>'task',                             //控制ID
                         'name'=>'任务',                                     //名称
@@ -36,13 +36,13 @@ use yii\helpers\Html;
                         ],                                                  //跳转选项，第一索引为地址，第二起为传参
                         'class'=>'footer-menu-item',                 //样式
                     ],
-                    /*[   
+                    [   
                         'controllerId'=>'statistics',                       //控制ID
                         'name'=>'统计',                                     //名称
                         'icon'=>'/filedata/demand/image/statistics.png',    //图标路径
-                        'options'=>['/demand/statistics'],                  //跳转选项，第一索引为地址，第二起为传参
+                        'options'=>['/worksystem/statistics'],                  //跳转选项，第一索引为地址，第二起为传参
                         'class'=>'footer-menu-item',                 //样式
-                    ],*/
+                    ],
                     [   //任务页-子按钮-新建
                         'controllerId'=>'task',                             //控制ID
                         'name'=>'创建任务',                                     //名称
