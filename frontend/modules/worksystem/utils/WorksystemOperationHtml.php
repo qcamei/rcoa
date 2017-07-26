@@ -14,22 +14,31 @@ class WorksystemOperationHtml
         switch ($controllerAction)
         {
             case 'task/create-check':
-                if($content == 1)
-                    echo '<td class="course-name" style="padding: 4px 8px;">'.Html::button('审核通过', ['class' => 'btn btn-success btn-sm']).'</td>';
-                else
-                    echo '<td class="course-name" style="padding: 4px 8px;">'.Html::button('审核不通过', ['class' => 'btn btn-danger btn-sm']).'</td>';
+                if(is_numeric($content)){
+                    if($content == 1)
+                        echo '<td class="course-name" style="padding: 4px 8px;">'.Html::button('审核通过', ['class' => 'btn btn-success btn-sm']).'</td>';
+                    else
+                        echo '<td class="course-name" style="padding: 4px 8px;">'.Html::button('审核不通过', ['class' => 'btn btn-danger btn-sm']).'</td>';
+                }else
+                    echo '<td class="course-name">'.$content.'</td>';
                 break;  
             case 'task/create-acceptance':
-                if($content == 1)
-                    echo '<td class="course-name" style="padding: 4px 8px;">'.Html::button('验收通过', ['class' => 'btn btn-success btn-sm']).'</td>';
-                else
-                    echo '<td class="course-name" style="padding: 4px 8px;">'.Html::button('验收不通过', ['class' => 'btn btn-danger btn-sm']).'</td>';
+                if(is_numeric($content)){
+                    if($content == 1)
+                        echo '<td class="course-name" style="padding: 4px 8px;">'.Html::button('验收通过', ['class' => 'btn btn-success btn-sm']).'</td>';
+                    else
+                        echo '<td class="course-name" style="padding: 4px 8px;">'.Html::button('验收不通过', ['class' => 'btn btn-danger btn-sm']).'</td>';
+                }else
+                    echo '<td class="course-name">'.$content.'</td>';
                 break;
             case 'task/complete-acceptance':
-                if($content == 1)
-                    echo '<td class="course-name" style="padding: 4px 8px;">'.Html::button('验收通过', ['class' => 'btn btn-success btn-sm']).'</td>';
-                else
-                    echo '<td class="course-name" style="padding: 4px 8px;">'.Html::button('验收不通过', ['class' => 'btn btn-danger btn-sm']).'</td>';
+                if(is_numeric($content)){
+                    if($content == 1)
+                        echo '<td class="course-name" style="padding: 4px 8px;">'.Html::button('验收通过', ['class' => 'btn btn-success btn-sm']).'</td>';
+                    else
+                        echo '<td class="course-name" style="padding: 4px 8px;">'.Html::button('验收不通过', ['class' => 'btn btn-danger btn-sm']).'</td>';
+                }else
+                    echo '<td class="course-name">'.$content.'</td>';
                 break;
             default:
                 echo '<td class="course-name">'.$content.'</td>';

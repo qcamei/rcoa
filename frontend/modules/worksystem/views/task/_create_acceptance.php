@@ -53,6 +53,16 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="col-lg-10 col-md-10"><div class="help-block"></div></div>
                 </div>
                 
+                <div class="form-group field-worksystemoperation-conversion">
+                    <label class="col-lg-1 col-md-1 control-label" style="color: #999999; font-weight: normal; padding-right: 0;" for="worksystemoperation-conversion">
+                        <?= Yii::t('rcoa/worksystem', 'Conversion') ?>
+                    </label>
+                    <div class="col-lg-10 col-md-10">
+                         <?= Html::checkbox('WorksystemOperation[conversion]', null, ['style' => 'margin-top: 10px;']) ?>
+                    </div>
+                    <div class="col-lg-10 col-md-10"><div class="help-block"></div></div>
+                </div>
+                
                 <?= Html::activeHiddenInput($model, 'status', ['value' => WorksystemTask::STATUS_UPDATEING])?>
                 <?= Html::activeHiddenInput($model, 'progress', ['value' => WorksystemTask::$statusProgress[WorksystemTask::STATUS_UPDATEING]])?>
                 

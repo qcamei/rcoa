@@ -125,4 +125,6 @@ return[
     'Time' => '时间',
     'Operation People' => '操作人',
     
+    //其他
+    'Conversion' => '转码',
 ];

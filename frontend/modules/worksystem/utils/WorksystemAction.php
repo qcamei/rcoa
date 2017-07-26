@@ -37,7 +37,7 @@ class WorksystemAction
                 $_wsTool->saveWorksystemAddAttributes($model, $post);
                 $_wsTool->saveWorksystemContentinfo($model, $post);
                 $_wsTool->saveWorksystemAnnex($model->id, $post);
-                $_wsTool->saveWorksystemOperation($model->id, $model->status, '任务创建', '任务创建');
+                $_wsTool->saveWorksystemOperation($model->id, $model->status, '创建', '任务创建');
                 $_wsTool->saveWorksystemOperationUser($model->id, $model->create_by);
                 $_wsNotice->saveJobManager($model);
             }else
@@ -69,7 +69,7 @@ class WorksystemAction
                 $_wsTool->saveWorksystemAddAttributes($model, $post);
                 $_wsTool->saveWorksystemContentinfo($model, $post);
                 $_wsTool->saveWorksystemAnnex($model->id, $post);
-                $_wsTool->saveWorksystemOperation($model->id, $model->status, '任务修改', '任务修改');
+                $_wsTool->saveWorksystemOperation($model->id, $model->status, '修改', '任务修改');
                 $_wsTool->saveWorksystemOperationUser($model->id, $model->create_by);
             }else
                 throw new Exception($model->getErrors());
@@ -98,7 +98,7 @@ class WorksystemAction
         try
         {  
             if($model->save()){
-                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_CANCEL, '取消任务', '因客观原因取消原定任务', $des);
+                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_CANCEL, '取消', '因客观原因取消原定任务', $des);
                 $_wsTool->saveWorksystemOperationUser($model->id, $model->create_by, $model->is_brace, $model->is_epiboly);
             }else
                 throw new Exception($model->getErrors());
@@ -133,9 +133,9 @@ class WorksystemAction
         {  
             if($model->save()){
                 if($model->status == WorksystemTask::STATUS_WAITCHECK)
-                    $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_WAITCHECK, '提交审核', '提交审核');
+                    $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_WAITCHECK, '审核', '提交审核');
                 else
-                    $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_CHECKING, '提交审核', '提交审核');
+                    $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_CHECKING, '审核', '提交审核');
                 $_wsTool->saveWorksystemOperationUser($model->id, $teamUserId);
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status' => $model->getStatusName()]);
                 if(!in_array($model->create_by, $teamUserId)){
@@ -174,7 +174,7 @@ class WorksystemAction
         try
         {  
             if($model->save()){
-                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_ADJUSTMENTING, '审核不通过', 0, $des);
+                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_ADJUSTMENTING, '审核', 0, $des);
                 $_wsTool->saveWorksystemOperationUser($model->id, $model->create_by);
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status' => $model->getStatusName()]);
                 $_wsNotice->sendCreateByNotification($model, '审核申请结果', 'worksystem/_create_check_task_html', $teamNickname, $des);
@@ -224,7 +224,7 @@ class WorksystemAction
                 $users = $_wsTool->getWorksystemTaskProducer($model->id);
                 $producerUserId = ArrayHelper::getValue($users, 'user_id');
                 $producerName = ArrayHelper::getValue($users, 'nickname');
-                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_TOSTART, '指派', '选定制作人【'.implode(',', $producerName).'】');
+                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_TOSTART, '分配', '选定制作人【'.implode(',', $producerName).'】');
                 $_wsTool->saveWorksystemOperationUser($model->id, $producerUserId);
                 $_wsNotice->setAssignNotification($model, $producerUserId);
                 $_wsNotice->sendCreateByNotification($model, '任务-指派', 'worksystem/_create_assign_task_html', $producerName);
@@ -263,7 +263,7 @@ class WorksystemAction
         try
         {  
             if($model->save()){
-                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_WAITASSIGN, '寻求支撑', '寻求对象【'.implode(',', $leadersName).'】', $des);
+                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_WAITASSIGN, '分配', '寻求对象【'.implode(',', $leadersName).'】', $des);
                 $_wsTool->saveWorksystemOperationUser($model->id, $leadersUserId, WorksystemTask::SEEK_BRACE_MARK);
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status' => $model->getStatusName()]);
                 $jobManager->addNotification(AppGlobalVariables::getSystemId(), $model->id, $leadersUserId);
@@ -301,7 +301,7 @@ class WorksystemAction
         try
         {  
             if($model->save()){
-                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_CHECKING, '取消支撑', '取消支撑', $des);
+                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_CHECKING, '分配', '取消支撑', $des);
                 $_wsTool->saveWorksystemOperationUser($model->id, $teamUserId);
                 $jobManager->removeNotification(AppGlobalVariables::getSystemId(), $model->id, $leaderUserId);
             }else
@@ -338,7 +338,7 @@ class WorksystemAction
         try
         {  
             if($model->save()){
-                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_WAITUNDERTAKE, '寻求外包', '寻求对象【'.implode(',', $epibolyName).'】', $des);
+                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_WAITUNDERTAKE, '分配', '寻求对象【'.implode(',', $epibolyName).'】', $des);
                 $_wsTool->saveWorksystemOperationUser($model->id, $epibolyUserId, null, WorksystemTask::SEEK_EPIBOLY_MARK);
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status' => $model->getStatusName()]);
                 $jobManager->addNotification(AppGlobalVariables::getSystemId(), $model->id, $epibolyUserId);
@@ -376,7 +376,7 @@ class WorksystemAction
         try
         {  
             if($model->save()){
-                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_CHECKING, '取消外包', '取消外包', $des);
+                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_CHECKING, '分配', '取消外包', $des);
                 $_wsTool->saveWorksystemOperationUser($model->id, $teamUserId);
                 $jobManager->removeNotification(AppGlobalVariables::getSystemId(), $model->id, $epibolyUserId);
             }else
@@ -409,7 +409,7 @@ class WorksystemAction
         try
         {  
             if($model->save()){
-                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_WORKING, '开始制作', '开始制作时间');
+                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_WORKING, '制作', '开始制作时间');
                 $_wsTool->saveWorksystemOperationUser($model->id, $producerUserId);
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status' => $model->getStatusName()]);
             }else
@@ -448,7 +448,7 @@ class WorksystemAction
                 $producerUsers = $_wsTool->getWorksystemTaskProducer($model->id);
                 $producerUserId = ArrayHelper::getValue($producerUsers, 'user_id');
                 $producerName = ArrayHelper::getValue($producerUsers, 'nickname');
-                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_TOSTART, '承接', '承接人【'.implode(',', $producerName).'】');
+                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_TOSTART, '分配', '承接人【'.implode(',', $producerName).'】');
                 $_wsTool->saveWorksystemOperationUser($model->id, $producerUserId);
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status' => $model->getStatusName()]);
                 $jobManager->removeNotification(AppGlobalVariables::getSystemId(), $model->id, $epibolyUserid);
@@ -487,7 +487,7 @@ class WorksystemAction
         {  
             if($model->save()){
                 Yii::$app->db->createCommand()->delete(WorksystemTaskProducer::tableName(), ['worksystem_task_id' => $model->id])->execute();
-                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_TOSTART, '取消承接', $epibolyName, $des);
+                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_TOSTART, '分配', $epibolyName, $des);
                 $_wsTool->saveWorksystemOperationUser($model->id, $epibolyUserid);
                 $jobManager->removeNotification(AppGlobalVariables::getSystemId(), $model->id, $allUsers);
             }else
@@ -525,9 +525,9 @@ class WorksystemAction
             if($model->save()){
                 $_wsTool->updateWorksystemContentinfo($model, $post);
                 if($model->status == WorksystemTask::STATUS_WAITACCEPTANCE)
-                    $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_WAITACCEPTANCE, '提交验收', '提交验收', $des);
+                    $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_WAITACCEPTANCE, '验收', '提交验收', $des);
                 else
-                    $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_ACCEPTANCEING, '提交验收', '提交验收', $des);
+                    $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_ACCEPTANCEING, '验收', '提交验收', $des);
                 $_wsTool->saveWorksystemOperationUser($model->id, $model->create_by);
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status' => $model->getStatusName()]);   
                 $_wsNotice->sendCreateByNotification($model, '验收申请', 'worksystem/_submit_acceptance_task_html', $producerName);
@@ -556,6 +556,7 @@ class WorksystemAction
         $_wsNotice = WorksystemNotice::getInstance();
         $jobManager = Yii::$app->get('jobManager');
         $des = ArrayHelper::getValue($post, 'WorksystemOperation.des');
+        $is_conversion = ArrayHelper::getValue($post, 'WorksystemOperation.conversion');
         $producerUsers = $_wsTool->getWorksystemTaskProducer($model->id);
         $producerUserId = ArrayHelper::getValue($producerUsers, 'user_id');
         
@@ -564,7 +565,10 @@ class WorksystemAction
         try
         {  
             if($model->save()){
-                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_UPDATEING, '验收不通过', 0, $des);
+                if($is_conversion == true)
+                    $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_UPDATEING, '验收', '转码', $des);
+                else
+                    $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_UPDATEING, '验收', 0, $des);
                 $_wsTool->saveWorksystemOperationUser($model->id, $producerUserId);
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status' => $model->getStatusName()]);   
                 $_wsNotice->sendProducerNotification($model, $producerUsers, '验收不通过', 'worksystem/_create_acceptance_task_html', $des);
@@ -599,7 +603,7 @@ class WorksystemAction
         try
         {  
             if($model->save()){
-                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_COMPLETED, '验收通过', 1);
+                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_COMPLETED, '验收', 1);
                 $_wsTool->saveWorksystemOperationUser($model->id, $model->create_by);
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status' => $model->getStatusName()]);   
                 $_wsNotice->sendProducerNotification($model, $producerUsers, '验收通过', 'worksystem/_complete_acceptance_task_html');
