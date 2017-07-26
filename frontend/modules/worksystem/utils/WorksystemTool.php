@@ -125,7 +125,7 @@ class WorksystemTool
     public function getTeamMembersUserLeaders()
     {
         $_tmTool = TeamMemberTool::getInstance();
-        $leaders = $_tmTool->getTeamMembersUserLeaders(TeamCategory::TYPE_CCOA_DEV_TEAM);
+        $leaders = $_tmTool->getTeamMembersUserLeaders(TeamCategory::TYPE_WORKSYSTEM_TEAM);
         $leaderUsers = [];
         foreach ($leaders as $leader){
             if($leader['u_id'] != Yii::$app->user->id)

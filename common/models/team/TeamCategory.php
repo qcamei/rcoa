@@ -34,6 +34,12 @@ class TeamCategory extends ActiveRecord
     const TYPE_PRODUCT_CENTER = 'product_center';
     
     /**
+     * @name 工作系统团队
+     * @des 发布和承接工作系统任务
+     */
+    const TYPE_WORKSYSTEM_TEAM = 'worksystem_team';
+    
+    /**
      * @name 外包团队
      * @des 承接发布的外包制作任务
      */

@@ -102,8 +102,8 @@ class TaskController extends Controller
             'courses' => ArrayHelper::getValue($params, 'mark')? 
                             $this->getChildrens(ArrayHelper::getValue($params, 'item_child_id')) : [],
             'taskTypes' => $this->getWorksystemTaskTypes(),
-            'createTeams' => $this->getCourseDevelopTeams(),
-            'externalTeams' => ArrayHelper::merge($this->getCourseDevelopTeams(), $this->getEpibolyTeams()),
+            'createTeams' => $this->getWorksystemTeams(TeamCategory::TYPE_CCOA_DEV_TEAM),
+            'externalTeams' => ArrayHelper::merge($this->getWorksystemTeams(TeamCategory::TYPE_WORKSYSTEM_TEAM), $this->getEpibolyTeams()),
             'createBys' => $this->getCreateBys(),
             'producers' => $this->getProducerList(),
         ]);
@@ -347,7 +347,7 @@ class TaskController extends Controller
             return $this->renderAjax('_create_assign', [
                 'model' => $model,
                 'teams' => $this->getUserTeam(true),
-                'producerList' => $this->getAssignProducerList($model)
+                'producerList' => $this->getAssignProducerList()
             ]);
         }        
     }
@@ -731,14 +731,15 @@ class TaskController extends Controller
     }
     
     /**
-     * 获取所有课程开发团队
+     * 获取所有工作系统团队
+     * @param type $categoryId
      * @param TeamMemberTool $_tmTool
      * @return array
      */
-    public function getCourseDevelopTeams()
+    public function getWorksystemTeams($categoryId)
     {
         $_tmTool = TeamMemberTool::getInstance();
-        $teams = $_tmTool->getTeamsByCategoryId(TeamCategory::TYPE_CCOA_DEV_TEAM);
+        $teams = $_tmTool->getTeamsByCategoryId($categoryId);
         
         return ArrayHelper::map($teams, 'id', 'name');
     }
@@ -771,15 +772,14 @@ class TaskController extends Controller
     
     /**
      * 获取所有被指派的制作人员
-     * @param WorksystemTask $model
      * @param TeamMemberTool $_tmTool
      * @return array
      */
-    public function getAssignProducerList($model)
+    public function getAssignProducerList()
     {
         $_tmTool = TeamMemberTool::getInstance();
-        $category = !$model->getIsSeekEpiboly() ? TeamCategory::TYPE_CCOA_DEV_TEAM : null;
-        $producers = $_tmTool->getAppointUserPositionTeamMembers(Yii::$app->user->id, $category);
+        
+        $producers = $_tmTool->getAppointUserPositionTeamMembers(Yii::$app->user->id, TeamCategory::TYPE_WORKSYSTEM_TEAM);
         
         return ArrayHelper::map($producers, 'id', 'nickname');
     }
@@ -808,7 +808,7 @@ class TaskController extends Controller
     public function getUserTeam($is_validate = false)
     {
         $_tmTool = TeamMemberTool::getInstance();
-        $teams = $_tmTool->getUserTeam(Yii::$app->user->id, TeamCategory::TYPE_CCOA_DEV_TEAM);
+        $teams = $_tmTool->getUserTeam(Yii::$app->user->id, TeamCategory::TYPE_WORKSYSTEM_TEAM);
         
         if(count($teams) == 1 || $is_validate)
             return ArrayHelper::getColumn($teams, 'id');
