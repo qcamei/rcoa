@@ -779,7 +779,7 @@ class TaskController extends Controller
     {
         $_tmTool = TeamMemberTool::getInstance();
         $category = !$model->getIsSeekEpiboly() ? TeamCategory::TYPE_CCOA_DEV_TEAM : null;
-        $producers = $_tmTool->getAppointUserPositionTeamMembers(Yii::$app->user->id, $category, '影视后期');
+        $producers = $_tmTool->getAppointUserPositionTeamMembers(Yii::$app->user->id, $category);
         
         return ArrayHelper::map($producers, 'id', 'nickname');
     }
@@ -790,10 +790,13 @@ class TaskController extends Controller
      */
     public function getProducerList()
     {
-        $_tmTool = TeamMemberTool::getInstance();
-        $producers = $_tmTool->getAppointPositionTeamMembers(null, '影视后期');
-       
-        return ArrayHelper::map($producers, 'u_id', 'nickname');
+        //$_tmTool = TeamMemberTool::getInstance();
+        //$producers = $_tmTool->getAppointPositionTeamMembers();
+        
+        $rbacManager = Yii::$app->authManager;
+        $producers = $rbacManager->getItemUsers(RbacName::ROLE_WORKSYSTEM_PRODUCER);
+        
+        return ArrayHelper::map($producers, 'id', 'nickname');
     }
     
     /**

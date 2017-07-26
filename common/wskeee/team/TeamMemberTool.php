@@ -321,7 +321,7 @@ class TeamMemberTool extends Component {
         foreach ($this->teamMembers as $teammeber) {
             if(in_array($teammeber['team_id'], $teamMap)){
                 if(($include_is_delete || $teammeber['is_delete'] == 'N') && ($categoryTeamMap == null || isset($categoryTeamMap[$teammeber['team_id']]))){
-                    if($teammeber['position_id'] == $position || $teammeber['position_name'] == $position)
+                    if($position == null || $teammeber['position_id'] == $position || $teammeber['position_name'] == $position)
                         $results [] = $teammeber;
                 }
             }
