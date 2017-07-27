@@ -555,8 +555,8 @@ class WorksystemAction
         $_wsTool = WorksystemTool::getInstance();
         $_wsNotice = WorksystemNotice::getInstance();
         $jobManager = Yii::$app->get('jobManager');
+        $content = ArrayHelper::getValue($post, 'WorksystemOperation.content');
         $des = ArrayHelper::getValue($post, 'WorksystemOperation.des');
-        $is_conversion = ArrayHelper::getValue($post, 'WorksystemOperation.conversion');
         $producerUsers = $_wsTool->getWorksystemTaskProducer($model->id);
         $producerUserId = ArrayHelper::getValue($producerUsers, 'user_id');
         
@@ -565,10 +565,7 @@ class WorksystemAction
         try
         {  
             if($model->save()){
-                if($is_conversion == true)
-                    $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_UPDATEING, '验收', '转码', $des);
-                else
-                    $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_UPDATEING, '验收', 0, $des);
+                $_wsTool->saveWorksystemOperation($model->id, WorksystemTask::STATUS_UPDATEING, '验收', $content, $des);
                 $_wsTool->saveWorksystemOperationUser($model->id, $producerUserId);
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status' => $model->getStatusName()]);   
                 $_wsNotice->sendProducerNotification($model, $producerUsers, '验收不通过', 'worksystem/_create_acceptance_task_html', $des);

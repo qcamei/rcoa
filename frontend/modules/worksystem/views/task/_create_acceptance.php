@@ -43,22 +43,22 @@ $this->params['breadcrumbs'][] = $this->title;
                     ], 
                 ]); ?>
                 
+                <div class="form-group field-worksystemoperation-conversion">
+                    <label class="col-lg-1 col-md-1 control-label" style="color: #999999; font-weight: normal; padding-right: 0;" for="worksystemoperation-conversion">
+                        <?= Yii::t('rcoa/worksystem', 'Content') ?>
+                    </label>
+                    <div class="col-lg-10 col-md-10">
+                         <?= Html::textInput('WorksystemOperation[content]', null, ['class' => 'form-control', 'maxlength' => 10, 'placeholder' => '输入数字‘0’表示验收不通过']) ?>
+                    </div>
+                    <div class="col-lg-10 col-md-10"><div class="help-block"></div></div>
+                </div>
+                
                 <div class="form-group field-worksystemoperation-des">
                     <label class="col-lg-1 col-md-1 control-label" style="color: #999999; font-weight: normal; padding-right: 0;" for="worksystemoperation-des">
                         <?= Yii::t('rcoa/worksystem', 'Des') ?>
                     </label>
                     <div class="col-lg-10 col-md-10">
                          <textarea id="worksystemoperation-des" class="form-control" name="WorksystemOperation[des]" rows="4" aria-invalid="false">无</textarea>
-                    </div>
-                    <div class="col-lg-10 col-md-10"><div class="help-block"></div></div>
-                </div>
-                
-                <div class="form-group field-worksystemoperation-conversion">
-                    <label class="col-lg-1 col-md-1 control-label" style="color: #999999; font-weight: normal; padding-right: 0;" for="worksystemoperation-conversion">
-                        <?= Yii::t('rcoa/worksystem', 'Conversion') ?>
-                    </label>
-                    <div class="col-lg-10 col-md-10">
-                         <?= Html::checkbox('WorksystemOperation[conversion]', null, ['style' => 'margin-top: 10px;']) ?>
                     </div>
                     <div class="col-lg-10 col-md-10"><div class="help-block"></div></div>
                 </div>

@@ -51,7 +51,7 @@ use yii\helpers\Html;
              * 3、创建者是自己
              */
             if((Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_TASK_ACCEPTANCE) && $model->create_by == Yii::$app->user->id) && ($model->getIsStatusWaitAcceptance() || $model->getIsStatusAcceptanceing()))
-                echo Html::a('验收不通过', ['create-acceptance', 'task_id' => $model->id], ['id' => 'acceptance-create', 'class' => 'btn btn-danger']). ' ';
+                echo Html::a('添加修改', ['create-acceptance', 'task_id' => $model->id], ['id' => 'acceptance-create', 'class' => 'btn btn-danger']). ' ';
             /**
              * 取消 按钮显示必须满足以下条件：
              * 1、拥有取消的权限
