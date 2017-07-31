@@ -1,205 +1,71 @@
 <?php
 
+use backend\assets\AppAsset;
+use common\models\User;
+use yii\helpers\Html;
+use yii\web\View;
+
 /* @var $this View */
 /* @var $content string */
 
-use backend\assets\AppAsset;
-use common\widgets\Alert;
-use kartik\dropdown\DropdownX;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\helpers\Html;
-use yii\web\View;
-use yii\widgets\Breadcrumbs;
 
-AppAsset::register($this);
+if (Yii::$app->controller->action->id === 'login') { 
+/**
+ * Do not use this code in your template. Remove it. 
+ * Instead, use the code  $this->layout = '//main-login'; in your controller.
+ */
+    echo $this->render(
+        'main-login',
+        ['content' => $content]
+    );
+} else {
 
-?>
-<?php $this->beginPage() ?>
-<!DOCTYPE html>
-<html lang="<?= Yii::$app->language ?>">
-<head>
-    <meta charset="<?= Yii::$app->charset ?>">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <?= Html::csrfMetaTags() ?>
-    <title><?= Html::encode($this->title) ?></title>
-    <?php $this->head() ?>
-</head>
-<body>
-<?php $this->beginBody() ?>
-
-<div class="wrap">
-    <?php
-    NavBar::begin([
-        //'brandLabel' => 'RBAC',
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
-        ],
-    ]);
-    $menuItems = [
-        [
-            'label' => '首页', 
-            'items' => [
-                ['label' => '新闻事件', 'url' => '/news/default'],
-                ['label' => '宣传栏', 'url' => '/banner/default'],
-            ]
-        ]
-    ];
-    if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+    if (class_exists('backend\assets\AppAsset')) {
+        AppAsset::register($this);
     } else {
-        $menuItems[] = [
-            'label' => '拍摄',
-            'items' => [
-                 ['label' => Yii::t('rcoa', 'Shoot Appraises'), 'url' => '/shoot/appraise'],
-                 ['label' => '场地管理', 'url' => '/shoot/site'],
-            ]
-        ];
-        /*$menuItems[] = ['label' => '多媒体制作','url' => '#'];
-        $menuItems[] = ['label' => '评优','url' => '#'];*/
-        $menuItems[] = [
-            'label' => '专家库',
-            'items' => [
-                 ['label' => '专家管理', 'url' => '/expert/default/'],
-                 ['label' => '导入专家', 'url' => '/expert/import/upload'],
-            ]
-        ];
-        $menuItems[] = [
-            'label' => '用户',
-            'items' => [
-                 ['label' => '用户管理', 'url' => '/user'],
-                 ['label' => '权限管理', 'url' => '/rbac/user-role'],
-                 ['label' => Yii::t('rcoa/position', 'Positions'), 'url' => '/position'],
-                 ['label' => '规则', 'url' => '/rbac/rule'],
-            ]
-        ];
-        $menuItems[] = [
-            'label' => '项目',
-            'items' => [
-                ['label' => Yii::t('rcoa/framework', 'Item Types'), 'url' => '/framework/type'],
-                ['label' => Yii::t('rcoa/framework', 'Items'), 'url' => '/framework/college'],
-                ['label' => Yii::t('rcoa/framework', 'Projects'), 'url' => '/framework/project'],
-                ['label' => Yii::t('rcoa/framework', 'Courses'), 'url' => '/framework/course'],
-                ['label' => Yii::t('rcoa/teamwork', 'Phases'), 'url' => '/teamwork/phase'],
-            ]
-        ];
-        $menuItems[] = [
-            'label' => Yii::t('rcoa/multimedia', 'Multimedia'),
-            'items' => [
-                ['label' => Yii::t('rcoa/multimedia', 'Multimedia Content Types'), 'url' => '/multimedia/contenttype'],
-                ['label' => Yii::t('rcoa/multimedia', 'Multimedia Assign Teams'), 'url' => '/multimedia/assignteam'],
-            ]
-        ];
-        $menuItems[] = [
-            'label' => '题库',
-            'items' => [
-                ['label' => '题目管理', 'url' => '/question'],
-            ]
-        ];
-        $menuItems[] = [
-            'label' => '资源',
-            'items' => [
-                ['label' => '资源管理', 'url' => '/resource/default'],
-            ],
-        ];
-        $menuItems[] = [
-            'label' => '文档',
-            'items' => [
-                ['label' => '文档目录', 'url' => '/filemanage/default'],
-                ['label' => '文档详情', 'url' => '/filemanage/detail'],
-            ],
-        ];
-        $menuItems[] = [
-            'label' => '团队',
-            'items' => [
-               ['label' => '团队管理', 'url' => '/teammanage/team'],
-               ['label' => '团队分类', 'url' => '/teammanage/team-category'],
-            ],
-        ];
-        $menuItems[] = [
-            'label' => '工作项',
-            'items' => [
-               ['label' => '类别', 'url' => '/workitem/type'],
-               ['label' => '工作项', 'url' => '/workitem/default'],
-               ['label' => '价值', 'url' => '/workitem/cost'],
-            ],
-        ];
-        $menuItems[] = [
-            'label' => '需求',
-            'items' => [
-               ['label' => '审核人指派', 'url' => '/demand/default'],
-               ['label' => '模版类型', 'url' => '/demand/templatetype'],
-               ['label' => '工作项模版', 'url' => '/demand/workitem'],
-               ['label' => '权重模版', 'url' => '/demand/weight'],
-               ['label' => '工作项和权重', 'url' => '/demand/import'],
-            ],
-        ];
-        $menuItems[] = [
-            'label' => '工作系统',
-            'items' => [
-               ['label' => '指派', 'url' => '/worksystem/assign-team'],
-               ['label' => '任务类别', 'url' => '/worksystem/task-type'],
-               ['label' => '内容信息', 'url' => '/worksystem/content'],
-               ['label' => '附加属性', 'url' => '/worksystem/attributes'],
-               ['label' => '附加属性模版', 'url' => '/worksystem/attributes-template'],
-              
-            ],
-        ];
-
-
-    /*$menuItems[] = [
-            'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
-            'url' => ['/site/logout'],
-            'linkOptions' => ['data-method' => 'post']
-        ];
-        
-        //$menuItems[] = '<li><img class=".img-responsive"  src="'.WEB_ROOT.Yii::$app->user->identity->avatar.'" width="30" height="30"  ></li>';*/
+        app\assets\AppAsset::register($this);
     }
-    echo Nav::widget([
-        'options' =>Yii::$app->user->isGuest ? ['class' =>'navbar-nav navbar-right'] : ['class' => 'navbar-nav navbar-left'],
-        'items' => $menuItems,
-    ]);
-    if(!Yii::$app->user->isGuest){
-        echo Html::beginTag('ul', ['class'=>'navbar-nav navbar-right nav']);
-        echo '<li class="dropdown">'.Html::a(Html::img(WEB_ROOT . Yii::$app->user->identity->avatar,[
-            'width'=> '30', 
-            'height' => '30',
-            'style' => 'border: 1px solid #ccc;margin-top:-13px; margin-right:5px;',
-            ]).Yii::$app->user->identity->nickname.'<b class="caret"></b>','',[
-                'class'=>'dropdown-toggle',
-                'data-toggle' => 'dropdown',
-                'aria-expanded' => 'false',
-            ]).DropdownX::widget([
-                'options'=>['class'=>'dropdown-menu'], // for a right aligned dropdown menu
-                'items' => [
-                    //['label' => '我的属性', 'url' => '/site/reset-info'],
-                    ['label' => '登出', 'url' => ['/site/logout'], 'linkOptions' => ['data-method' => 'post','class'=>'glyphicon glyphicon-log-out','style'=>'padding-left:5px;']],
-                ],
-            ]).'</li>'; 
-        echo Html::endTag('ul');
-    }
-    NavBar::end();
+
+    dmstr\web\AdminLteAsset::register($this);
+
+    $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
+    /* @var $user User */
+    $user = Yii::$app->user->identity;
     ?>
+    <?php $this->beginPage() ?>
+    <!DOCTYPE html>
+    <html lang="<?= Yii::$app->language ?>">
+    <head>
+        <meta charset="<?= Yii::$app->charset ?>"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <?= Html::csrfMetaTags() ?>
+        <title><?= Html::encode($this->title) ?></title>
+        <?php $this->head() ?>
+    </head>
+    <body class="hold-transition skin-blue sidebar-mini">
+    <?php $this->beginBody() ?>
+    <div class="wrapper">
 
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-            'homeLink'=>false,
-        ]) ?>
-        <?= Alert::widget() ?>
-        <?= $content ?>
+        <?= $this->render(
+            'header.php',
+            ['directoryAsset' => $directoryAsset,'user' => $user]
+        ) ?>
+
+        <?= $this->render(
+            'left.php',
+            ['directoryAsset' => $directoryAsset,'user' => $user]
+        )
+        ?>
+
+        <?= $this->render(
+            'content.php',
+            ['content' => $content, 'directoryAsset' => $directoryAsset]
+        ) ?>
+
     </div>
-</div>
 
-<footer class="footer">
-    <div class="container">
-        <p class="pull-left">&copy; 广州远程教育中心有限公司</p>
-
-    </div>
-</footer>
-
-<?php $this->endBody() ?>
-</body>
-</html>
-<?php $this->endPage() ?>
+    <?php $this->endBody() ?>
+    </body>
+    </html>
+    <?php $this->endPage() ?>
+<?php } ?>

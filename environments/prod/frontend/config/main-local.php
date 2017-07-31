@@ -14,8 +14,31 @@ $config = [
         'demand' => [
             'class' => 'frontend\modules\demand\Module',
         ],
+        /*
         'sites' => [
             'class' => 'frontend\modules\sites\Module',
+        ],
+        'resource' => [
+            'class' => 'frontend\modules\resource\Module',
+        ],
+       'filemanage' => [
+            'class' => 'common\wskeee\filemanage\Module',
+        ],*/
+        'expert' => [
+            'class' => 'frontend\modules\expert\Module'
+        ],
+       'teamwork' => [
+            'class' => 'frontend\modules\teamwork\Module',
+        ],
+        'datecontrol' =>  [
+            'class' => '\kartik\datecontrol\Module',
+        ],
+        /*
+        'multimedia' => [
+            'class' => 'frontend\modules\multimedia\Module',
+        ],*/
+        'worksystem' => [
+            'class' => 'frontend\modules\worksystem\Module',
         ],
     ],
 ];

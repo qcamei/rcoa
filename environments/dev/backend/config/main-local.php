@@ -8,56 +8,58 @@ $config = [
         ],
     ],
     'modules' => [
-        'shoot' => [
-            'class' => 'backend\modules\shoot\Module',
+        'shoot_admin' => [
+            'class' => 'backend\modules\shoot_admin\Module',
         ],
-        'question' => [
-            'class' => 'backend\modules\question\Module',
+        'question_admin' => [
+            'class' => 'backend\modules\question_admin\Module',
         ],
-        'user' => [
-            'class' => 'backend\modules\user\Module',
+        'user_admin' => [
+            'class' => 'backend\modules\user_admin\Module',
         ],
-        'position' => [
-            'class' => 'backend\modules\position\Module',
+        'position_admin' => [
+            'class' => 'backend\modules\position_admin\Module',
         ],
-        'expert' => [
-            'class' => 'backend\modules\expert\Module',
+        'expert_admin' => [
+            'class' => 'backend\modules\expert_admin\Module',
         ],
-        'news' => [
-            'class' => 'backend\modules\news\Module'
+        'system_admin' => [
+            'class' => 'backend\modules\system_admin\Module'
         ],
-        'banner' => [
-            'class' => 'backend\modules\banner\Module'
+        /*
+        'banner_admin' => [
+            'class' => 'backend\modules\banner_admin\Module'
         ],
-        'resource' => [
-            'class' => 'backend\modules\resource\Module',
+        'resource_admin' => [
+            'class' => 'backend\modules\resource_admin\Module',
         ],
-        'filemanage' => [
-            'class' => 'common\wskeee\filemanage\Module',
+        'filemanage_admin' => [
+            'class' => 'common\wskeee\filemanage_admin\Module',
+        ],*/
+        'teammanage_admin' => [
+            'class' => 'backend\modules\team_admin\Module',
         ],
-        'teammanage' => [
-            'class' => 'backend\modules\team\Module',
+        'teamwork_admin' => [
+            'class' => 'backend\modules\teamwork_admin\Module',
         ],
-        'teamwork' => [
-            'class' => 'backend\modules\teamwork\Module',
+        'unittest_admin' => [
+            'class' => 'backend\modules\unittest_admin\Module',
         ],
-        'unittest' => [
-            'class' => 'backend\modules\unittest\Module',
+        /*
+        'multimedia_admin' => [
+            'class' => 'backend\modules\multimedia_admin\Module',
         ],
-        'multimedia' => [
-            'class' => 'backend\modules\multimedia\Module',
+        'product_admin' => [
+            'class' => 'backend\modules\product_admin\Module',
+        ],*/
+        'demand_admin' => [
+            'class' => 'backend\modules\demand_admin\Module',
         ],
-        'product' => [
-            'class' => 'backend\modules\product\Module',
+        'workitem_admin' => [
+            'class' => 'backend\modules\workitem_admin\Module',
         ],
-        'demand' => [
-            'class' => 'backend\modules\demand\Module',
-        ],
-        'workitem' => [
-            'class' => 'backend\modules\workitem\Module',
-        ],
-        'worksystem' => [
-            'class' => 'backend\modules\worksystem\Module',
+        'worksystem_admin' => [
+            'class' => 'backend\modules\worksystem_admin\Module',
         ],
     ],
 ];

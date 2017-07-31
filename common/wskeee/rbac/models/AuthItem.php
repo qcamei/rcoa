@@ -3,17 +3,18 @@
 namespace wskeee\rbac\models;
 
 use common\models\System;
+use Exception;
+use wskeee\rbac\RbacManager;
 use Yii;
 use yii\base\Model;
-use yii\db\ActiveQuery;
+use yii\helpers\Json;
 use yii\rbac\Item;
-use yii\rbac\ManagerInterface;
 
 
 /**
  *
  * @property string $name                       名称
- * @property integer $system_id                 所属系统模块id
+ * @property integer $group_id                  所属分组id
  * @property integer $type                      类型
  * @property string $description                描述
  * @property string $rule_name                  规则名
@@ -21,14 +22,18 @@ use yii\rbac\ManagerInterface;
  * 
  * @property System $roleCategory               角色类别
  * @property Item $item 数据
+ * @property AuthGroup $authGroup               分组
  */
 class AuthItem extends Model
 {
+    /* 权限 */
+    const ITEM_GTOUP_TABLENAME = '{{%auth_item_group}}';
+    
     /**
-     * 所属系统模块ID
-     * @var integer 
+     * 分组id
+     * @var int 
      */
-    public $system_id;
+    public $group_id;
     /**
      * 名称
      * @var string 
@@ -60,20 +65,13 @@ class AuthItem extends Model
      */
     private $_item;
     
-    /**
-     * 类别
-     * @var array 
-     */
-    public static $category = [];
-
 
     /**
      *
-     * @var ManagerInterface
+     * @var RbacManager
      */
     protected $authManager;
-
-
+    
     /**
      * 初始对象
      * @param Item $item
@@ -86,7 +84,6 @@ class AuthItem extends Model
         if($item !== null)
         {
             $this->name = $item->name;
-            $this->system_id = $item->system_id;
             $this->type = $item->type;
             $this->description = $item->description;
             $this->ruleName = $item->ruleName;
@@ -101,7 +98,7 @@ class AuthItem extends Model
      */
     public static function tableName()
     {
-        return 'eblog_auth_item';
+        return '{{%auth_item}}';
     }
     
     /**
@@ -110,7 +107,7 @@ class AuthItem extends Model
     public function rules()
     {
         return [
-            [['system_id', 'name', 'type'], 'required'],
+            [['group_id', 'name', 'type'], 'required'],
             [['name'],'unique','when'=>function()
                 {
                     return $this->getIsNewRecord() || ($this->_item->name != $this->name);
@@ -149,14 +146,15 @@ class AuthItem extends Model
     public function attributeLabels()
     {
         return [
-            'system_id' => '所属模块',
-            'name' => '名称',
-            'type' => '类型',
-            'description' => '描述',
-            'ruleName' => '规则名',
+            'group_id' => Yii::t('app/rbac', 'Group ID'),
+            'authgroup.name' => Yii::t('app/rbac', 'Group ID'),
+            'name' => Yii::t('app', 'Name'),
+            'type' => Yii::t('app', 'Type'),
+            'description' => Yii::t('app', 'Des'),
+            'ruleName' => Yii::t('app/rbac', 'Rule Name'),
             'data' => 'Data',
-            'created_at' => '创建于',
-            'updated_at' => '更新于',
+            'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
     
@@ -167,19 +165,6 @@ class AuthItem extends Model
     public function getIsNewRecord()
     {
         return $this->_item === null;
-    }
-    
-    /**
-     * 查找角色
-     * @param string $id
-     * @return null|\self
-     */
-    public static function find($id)
-    {
-        $item = Yii::$app->authManager->getRole($id);
-        if($item !== null)
-            return new self($item);
-        return null;
     }
     
     /**
@@ -203,70 +188,146 @@ class AuthItem extends Model
      */
     public function save()
     {
-        if($this->validate())
-        {
-            if($this->_item === null)
-            {
-                if($this->type == Item::TYPE_ROLE){
-                    $this->_item = (array)$this->authManager->createRole($this->name);
-                    $this->_item += ['system_id' => null];
-                }
-                else{
-                    $this->_item = (array)$this->authManager->createPermission ($this->name);
-                    $this->_item += ['system_id' => null];
+        if ($this->validate()) {
+            $manager = $this->authManager;
+            if ($this->_item === null) {
+                if ($this->type == Item::TYPE_ROLE) {
+                    $this->_item = $manager->createRole($this->name);
+                } else {
+                    $this->_item = $manager->createPermission($this->name);
                 }
                 $isNew = true;
-            }else
-            {
+            } else {
                 $isNew = false;
-                $this->_item = (array)$this->_item;
-                $oldName = $this->_item['name'];
+                $oldName = $this->_item->name;
             }
-            
-            $this->_item['name'] = $this->name;
-            $this->_item['system_id'] = $this->system_id;
-            $this->_item['description'] = $this->description;
-            $this->_item['ruleName'] = $this->ruleName;
-            $this->_item['data'] = $this->data === null || $this->data === '' ? null : json_decode($this->data);
-            $this->_item['createdAt'] = time();
-            $this->_item['updatedAt'] = time();   
-            
-            if($isNew){
-                Yii::$app->db->createCommand()->insert('ccoa_auth_item',[
-                    'name' => $this->_item['name'],
-                    'system_id' => $this->_item['system_id'],
-                    'type' => $this->_item['type'],
-                    'description' => $this->_item['description'], 
-                    'rule_name' => $this->_item['ruleName'], 
-                    'data'=> $this->_item['data'], 
-                    'created_at' => $this->_item['createdAt'], 
-                    'updated_at' => $this->_item['updatedAt'], 
-                ])->execute();
-                //$this->authManager->add ($this->_item);
+            $this->_item->name = $this->name;
+            $this->_item->description = $this->description;
+            $this->_item->ruleName = $this->ruleName;
+            $this->_item->data = $this->data === null || $this->data === '' ? null : Json::decode($this->data);
+            if ($isNew) {
+                if($manager->add($this->_item)){
+                    //添加成功，关联分组
+                    Yii::$app->db->createCommand()->insert(self::ITEM_GTOUP_TABLENAME, [
+                                'item_name' => $this->name,
+                                'group_id' => $this->group_id,
+                            ])->execute();
+                }
+            } else {
+                
+                $manager->update($oldName, $this->_item);
+                //关联分组
+                Yii::$app->db->createCommand()->update(self::ITEM_GTOUP_TABLENAME, 
+                    ['item_name' => $this->name,'group_id' => $this->group_id,],['item_name' => $oldName])->execute();
             }
-            else{
-                Yii::$app->db->createCommand()->update ('ccoa_auth_item', [
-                    'name' => $this->_item['name'],
-                    'system_id' => $this->_item['system_id'],
-                    'type' => $this->_item['type'],
-                    'description' => $this->_item['description'], 
-                    'rule_name' => $this->_item['ruleName'], 
-                    'data'=> $this->_item['data'], 
-                    'updated_at' => $this->_item['updatedAt'], ], ['name' => $oldName])->execute();
-                //$this->authManager->update ($oldName, $this->_item);
-            }
+            $manager->invalidateCache();
             return true;
-        }else
+        } else {
             return false;
+        }
     }
-    
     /**
-     * 
-     * @return ActiveQuery
+     * 向一个权限或者角色添加子对象
+     * Adds an item as a child of another item.
+     * @param array $items
+     * @return int
      */
-    public function getRoleCategory()
+    public function addChildren($items)
     {
-        return $this->hasOne(System::className(), ['id' => 'system_id']);
+        /* @var $manager RbacManager */
+        $manager = Yii::$app->authManager;
+        $item = $this;
+        $success = 0;
+        if ($item->item) {
+            foreach ($items as $name) {
+                $child = $manager->getPermission($name);
+                if ($item->type == Item::TYPE_ROLE && $child === null) {
+                    $child = $manager->getRole($name);
+                }
+                try {
+                    $manager->addChild($item->item, $child);
+                    $success++;
+                } catch (Exception $exc) {
+                    Yii::error($exc->getMessage(), __METHOD__);
+                }
+            }
+        }
+        if ($success > 0) {
+            $manager->invalidateCache();
+        }
+        return $success;
+    }
+
+    /**
+     * 把对象从一个权限或者角色的子对象列表里删除
+     * Remove an item as a child of another item.
+     * @param array $items
+     * @return int
+     */
+    public function removeChildren($items)
+    {
+        /* @var $manager RbacManager */
+        $manager = Yii::$app->authManager;
+        $item = $this;
+        $success = 0;
+        if ($item->item !== null) {
+            foreach ($items as $name) {
+                $child = $manager->getPermission($name);
+                if ($item->type == Item::TYPE_ROLE && $child === null) {
+                    $child = $manager->getRole($name);
+                }
+                try {
+                    $manager->removeChild($item->item, $child);
+                    $success++;
+                } catch (Exception $exc) {
+                    Yii::error($exc->getMessage(), __METHOD__);
+                }
+            }
+        }
+        if ($success > 0) {
+            $manager->invalidateCache();
+        }
+        return $success;
+    }
+
+    /**
+     * 获取目标对象【可配置】和【已配置】的子对象
+     * Get items
+     * @param string $itemName  目标对象 
+     * @return array(available,assigned)
+     */
+    public function getItems()
+    {
+        /* @var $manager RbacManager */
+        $manager = Yii::$app->authManager;
+        $item = $this;
+        $available = [];
+        if ($item->type == Item::TYPE_ROLE) {
+            foreach (array_keys($manager->getRoles()) as $name) {
+                $available[$name] = 'role';
+            }
+        }
+        foreach (array_keys($manager->getPermissions()) as $name) {
+            $available[$name] = $name[0] == '/' ? 'route' : 'permission';
+        }
+
+        $assigned = [];
+        foreach ($manager->getChildren($item->item->name) as $item) {
+            $assigned[$item->name] = $item->type == 1 ? 'role' : ($item->name[0] == '/' ? 'route' : 'permission');
+            unset($available[$item->name]);
+        }
+        unset($available[$item->name]);
+        return [
+            'available' => $available,
+            'assigned' => $assigned,
+        ];
+    }
+    /**
+     * 分组
+     * @return AuthGroup
+     */
+    public function getAuthGroup(){
+        return AuthGroup::find()->where(['id' => $this->group_id])->one();
     }
     
     /**

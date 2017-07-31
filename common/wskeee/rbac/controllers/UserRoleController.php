@@ -42,8 +42,6 @@ class UserRoleController extends Controller
         ];
     }
 
-    public $layout = 'basedata';
-    
     /**
      * Lists all AuthItem models.
      * @return mixed
@@ -69,70 +67,63 @@ class UserRoleController extends Controller
     {
         return $this->render('view', [
             'model' => $this->findModel($user_id),
-            'roleCategorys' => $this->getRoleCategory($user_id),
             'roles' => \Yii::$app->authManager->getRolesByUser($user_id),
         ]);
     }
 
     /**
-     * Creates a new AuthItem model.
+     * 添加角色.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($user_id)
+    public function actionAddRole($user_id)
     {
-        $post = Yii::$app->getRequest()->post();
-        
         if (\Yii::$app->getRequest()->isPost) {
-            $this->saveAuthAssignment($user_id, $post);
+            /**
+             * 整理提交上来的权限
+             */
+            $post = Yii::$app->getRequest()->post();
+            $items = $post['roles'];
+            $success = Yii::$app->authManager->assign( $items ,$user_id);
+            
             return $this->redirect(['view', 'user_id' => $user_id]);
         } else {
-            return $this->renderAjax('create', [
-                'roleCategorys' => $this->getRoleCategory(),
-                'roles' => \Yii::$app->authManager->getRoles(),
+            /* 添加角色模态框. */
+            return $this->renderAjax('_model_add_role', [
+                'available' => $this->getAvailableRole($user_id),
+                'id' => $user_id,
             ]);
         }
     }
 
     /**
-     * Updates an existing AuthItem model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $id
-     * @return mixed
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->name]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Deletes an existing AuthItem model.
+     * 移除用户角色 
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id
      * @return mixed
      */
-    public function actionDelete($user_id = null, $item_name = null, $is_rbacName = false)
+    public function actionRemove($user_id)
     {
-        $post = Yii::$app->request->post();
-        if(!$is_rbacName)
-            $item_name = ArrayHelper::getValue($post, 'item_name');
-        else
-            $user_id = ArrayHelper::getValue($post, 'user_id');
-        
-        Yii::$app->db->createCommand()->delete('ccoa_auth_assignment', [
-            'user_id' => $user_id, 'item_name' => $item_name])->execute();
-        if(!$is_rbacName)
-            return $this->redirect(['view', 'user_id' => $user_id]);
-        else
-            return $this->redirect(['role-manager/view', 'name' => $item_name]);
+        /**
+         * 整理提交上来的权限
+         */
+        $post = Yii::$app->getRequest()->post();
+        $items = $post['roles'];
+        $success = Yii::$app->authManager->revoke( $items ,$user_id);
+
+        return $this->redirect(['view', 'user_id' => $user_id]);
+    }
+    
+    /**
+     * 获取可用的角色
+     * @param type $id 用户id
+     * @return array (name=>des)
+     */
+    private function getAvailableRole($id){
+        $auth = \Yii::$app->authManager;
+        $allRoles = ArrayHelper::map($auth->getRoles(), 'name', 'description');
+        $hasRole = ArrayHelper::map($auth->getRolesByUser($id), 'name', 'description');
+        return array_diff($allRoles, $hasRole);
     }
     
     /**
@@ -149,84 +140,5 @@ class UserRoleController extends Controller
             return $model;
         else
             throw new NotFoundHttpException('The requested page does not exist.');
-    }
-    /**
-     * Finds the AuthItem model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
-     * @return AuthItem the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-    
-    protected function findModel($id)
-    {
-        $item = \Yii::$app->authManager->getRole($id);
-        if($item !== null)
-            return new AuthItem($item);
-        else
-            throw new NotFoundHttpException('The requested page does not exist.');
-    } */
-    
-    /**
-     * 获取角色类别
-     * @param string $user_id               用户id
-     * @return array
-     */
-    public function getRoleCategory($user_id = null)
-    {
-        if($user_id != null)
-            $items = \Yii::$app->authManager->getRolesByUser($user_id);
-        else
-            $items = \Yii::$app->authManager->getRoles();
-        
-        $itemCategory = [];
-        foreach ($items as $item) 
-            $itemCategory[] = ArrayHelper::getValue($item, 'system_id');
-        $public[] = ['id' => 0, 'name' => '公共'];
-        $roleCategory = (new Query())
-                    ->select(['id', 'name'])
-                    ->from(['System' => System::tableName()])
-                    ->where(['id' => array_values($itemCategory)])
-                    ->orderBy('System.index')
-                    ->all();
-        
-        return ArrayHelper::merge($public, $roleCategory);
-    }
-    
-    /**
-     * 保存数据到分配表
-     * @param string $user_id               用户id
-     * @param type $post
-     */
-    public function saveAuthAssignment($user_id, $post)
-    {
-        $values = ArrayHelper::getValue($post, 'item_name');
-        $assignment = [];
-        if($values != null){
-            foreach ($values as $value) {
-                $assignment[] = [
-                    'item_name' => $value, 
-                    'user_id' => $user_id,
-                    'created_at' => time(),
-                ];
-            }
-        }
-        
-        /** 开启事务 */
-        $trans = Yii::$app->db->beginTransaction();
-        try
-        {  
-            Yii::$app->db->createCommand()->delete('ccoa_auth_assignment', [
-                'user_id' => $user_id, 'item_name' => $values])->execute();   
-            /** 添加$assignment数组到表里 */
-            $numInsert = Yii::$app->db->createCommand()->batchInsert('ccoa_auth_assignment',[
-                'item_name', 'user_id', 'created_at'], $assignment)->execute();
-            if($numInsert > 0){
-                
-            }else
-                throw new \Exception($model->getErrors());
-            $trans->commit();  //提交事务
-        }catch (\Exception $ex) {
-            $trans ->rollBack(); //回滚事务
-        }
     }
 }

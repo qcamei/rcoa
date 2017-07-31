@@ -4,15 +4,17 @@ namespace wskeee\rbac\models\searchs;
 
 use Yii;
 use yii\base\Model;
-use yii\rbac\Item;
 use yii\data\ArrayDataProvider;
+use yii\db\Query;
+use yii\helpers\ArrayHelper;
+use yii\rbac\Item;
 
 /**
  * AuthItemSearch
  */
 class AuthItemSearch extends Model
 {
-    public $system_id;
+    public $group_id;
     public $name;
     public $type;
     public $description;
@@ -22,43 +24,64 @@ class AuthItemSearch extends Model
     public function rules()
     {
         return [
-            [['system_id', 'name', 'description'], 'safe'],
-            [['system_id', 'type'], 'integer'],
+            [['group_id', 'name', 'description'], 'safe'],
+            [['group_id', 'type'], 'integer'],
         ];
     }
-
+    
     /**
      * 查找 authitem 认证
      *
      * @param array $params 过滤数据
      *
-     * @return yii\data\ArrayDataProvider
+     * @return ArrayDataProvider
      */
     public function search($params)
     {
         /* @var yii\rbac\AuthManager $authManager */
         $authManager = Yii::$app->authManager;
-        if($this->type == Item::TYPE_ROLE)
-            $items = $authManager->getRoles();
-        else
-            $items = $authManager->getPermissions();
+        //权限与权限分组的关系
+        $groupMap = ArrayHelper::map((new Query())->from('{{%auth_item_group}}')->all(),'item_name','group_id');
         
-        if($this->load($params) && $this->validate() && (trim($this->system_id)!=='' || trim($this->name)!=='' || trim($this->description)!==''))
-        {
-            $system_id = strtolower(trim($this->system_id));
-            $name = strtolower(trim($this->name));
-            $des = strtolower(trim($this->description));
-            $items = array_filter($items, function($item) use($system_id, $name, $des)
-            {
-                $item->system_id = !isset($item->system_id) ? '0' : $item->system_id;
-                return (!isset($system_id) || $item->system_id == $system_id) 
-                        && (empty($name) || strpos(strtolower($item->name), $name) !== false) 
-                        && (empty($des) || strpos(strtolower($item->description), $des) !== false);
+        if ($this->type == Item::TYPE_ROLE) {
+            $items = $authManager->getRoles();
+        } else {
+            $items = array_filter($authManager->getPermissions(), function($item) {
+                return $this->type == Item::TYPE_PERMISSION xor strncmp($item->name, '/', 1) === 0;
             });
         }
-     
+        $this->load($params);
+        if ($this->validate()) {
+            $search = mb_strtolower(trim($this->name));
+            $desc = mb_strtolower(trim($this->description));
+            $group_id = mb_strtolower(trim($this->group_id));
+            $targets = [];
+            foreach ($items as $name => $item) {
+                
+                $f = (empty($search) || mb_strpos(mb_strtolower($item->name), $search) !== false) &&
+                    (empty($desc) || mb_strpos(mb_strtolower($item->description), $desc) !== false) &&
+                    (empty($group_id) || $groupMap[$name] == $group_id);
+                if ($f) {
+                    $targets [] = new self([
+                        'name' => $item->name,
+                        'type' => $item->type,
+                        'group_id' => isset($groupMap[$name]) ? $groupMap[$name] : null,
+                        'description' => $item->description,
+                    ]);
+                }
+            }
+        }
+        
         return new ArrayDataProvider([
-            'allModels'=>$items
+            'allModels'=>$targets
         ]);
+    }
+    
+    public function attributeLabels(){
+        return [
+            'group_id' => Yii::t('app/rbac', 'Group ID'),
+            'name' => Yii::t('app', 'Name'),
+            'description' => Yii::t('app', 'Des'),
+        ];
     }
 }

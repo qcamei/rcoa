@@ -11,13 +11,13 @@ use yii\widgets\Breadcrumbs;
 
 /* 添加基础数据头部导航 */
 $breadcrumbs = Breadcrumbs::widget([
-            'options' => ['class' => 'breadcrumb basedata-breadcrumbs'],
+            'options' => ['class' => 'breadcrumb rbac-breadcrumbs'],
             'homeLink'=>false,
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
     ]);
-$head = '<div class="container" style="padding:5px 0px;">'
+$head = '<div class="head" style="padding:5px 0px;">'
             .$this->render('../basedata/_navbar')
-            //.$breadcrumbs
+            .$breadcrumbs
         .'</div>';
 $content = $head.$content;
 
