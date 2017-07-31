@@ -3,6 +3,7 @@
 use common\models\User;
 use wskeee\rbac\models\AuthItem;
 use wskeee\rbac\RbacAsset;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
@@ -11,91 +12,96 @@ use yii\widgets\ActiveForm;
 /* @var $model User */
 /* @var $roleItems AuthItem */
 
-$this->title = '用户角色详情：'.$model->nickname;
-$this->params['breadcrumbs'][] = ['label' => '用户角色', 'url' => ['index']];
+$this->title = Yii::t(null, '{User}{Detail}：{Name}', [
+            'User' => Yii::t('app', 'User'),
+            'Detail' => Yii::t('app', 'Detail'),
+            'Name' => $model->nickname]);
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'User') . Yii::t('app/rbac', 'Role'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
+$roles = ArrayHelper::map($roles, 'name', 'description');
 ?>
 
 <div class="user-role-view rbac">
 
-    <div class="rbac-frame" style="height: 800px">
-        
-        <div class="rbac-number">
-            已分配角色（<?= count($roles)?>个）
+    <div class="rbac-frame">
+
+        <div class="frame-title">
+            已分配角色（<?= count($roles) ?>个）
+        </div>
+
+        <?php
+        $form = ActiveForm::begin([
+                    'id' => 'user-role-remove-form',
+        ]);?>
+
+        <div class="frame-body" id="rolelist">
+        <?php foreach ($roles as $name => $description): ?>
+            <div>
+                <input type="checkbox" name="roles[]" value="<?= $name ?>"/>
+                <span class="priv"><?= $description ?></span>
+            </div>
+        <?php endforeach; ?>           
         </div>
         
-        <?php $form = ActiveForm::begin([
-            'id' => 'user-role-delete-form',
-            'action' => '/rbac/user-role/delete?user_id='.$model->id
-        ]); ?>
-        
-        <div class="rbac-delete-form" style="height: 700px">
-            
-            <?php foreach($roleCategorys as $roleCategory): ?>
-            <p><b><?= $roleCategory['name'] ?></b></p>
-                <?php foreach($roles as $roleItems): ?>
-                    <?php if($roleItems->system_id == $roleCategory['id']): ?>
-                    <p style="padding-left: 20px;">
-                        <?= Html::checkbox('item_name[]', '', ['value' => $roleItems->name]) ?><?= $roleItems->description ?>
-                        <span class="prompt">（角色）</span>
-                    </p>
-                    <?php endif; ?>
-                <?php endforeach; ?>
-            <?php endforeach; ?>
-                    
+        <div class="frame-footer">
+            <?= Html::a(Yii::t('app/rbac', 'Select All'), 'javascript:;', ['onclick' => 'selectAll("rolelist",true);', 'style' => 'float: left; margin-right: 15px;']); ?>
+            <?= Html::a(Yii::t('app/rbac', 'Select None'), 'javascript:;', ['onclick' => 'selectAll("rolelist",false);', 'style' => 'float: left;']); ?>
+            <?=
+            Html::a(Yii::t('app/rbac', 'Remove Selected'), ['remove', 'user_id' => $model->id], [
+                'type' => 'submit',
+                'data-method' => 'post',
+                'class' => 'btn btn-danger'
+            ])
+            ?>
+            <?= Html::a(Yii::t('app', 'Add'), ['add-role', 'user_id' => $model->id], ['id' => 'btn-add-role', 'class' => 'btn btn-success']); ?>
         </div>
-        
         <?php ActiveForm::end(); ?>
-        
-        <div class="rbac-btn">
-            <?= Html::a('全选', 'javascript:;', ['id' => 'user-role-selectAll', 'style' => 'float: left; margin-right: 15px;']); ?>
-            <?= Html::a('全不选', 'javascript:;', ['id' => 'user-role-unSelect', 'style' => 'float: left;']); ?>
-            <?= Html::a('余除已选择角色', 'javascript:;', ['id' => 'user-role-delete', 'class' => 'btn btn-danger', 'data' => ['method' => 'post']]); ?>
-            <?= Html::a('添加角色', ['create', 'user_id' => $model->id], ['id' => 'user-role-create', 'class' => 'btn btn-success']); ?>
-        </div>
-        
     </div>
-   
+
 </div>
 
 <div class="rbac-model">
-    <?= $this->render('_form_model')?>    
+<?= $this->render('_form_model') ?>    
 </div>
 
+<script type="text/javascript">
+    /**
+    * 选择全部
+    **/
+    function selectAll(scope, checked) {
+        if (scope) {
+            $('#' + scope + ' input').each(function () {
+                $(this).prop("checked", checked)
+            });
+        } else {
+            $('input:checkbox').each(function () {
+                $(this).prop("checked", checked)
+            });
+        }
+    }
+</script>
+
 <?php
-$js = 
-<<<JS
-        
-    /** 删除操作 提交表单 */
-    $('#user-role-delete').click(function()
-    {       
-        $('#user-role-delete-form').submit();
-    });   
-    /** 添加操作 提交表单 */
-    $('#user-role-create').click(function()
-    {       
+$js = <<<JS
+    /**
+     * 弹出模块框面板
+     */ 
+    $('#btn-add-role').click(loadModel);
+    
+    /**
+     * 弹出模态框
+     */     
+    function loadModel(){
         $(".myModal").html("");
         $('.myModal').modal("show").load($(this).attr("href"));
         return false;
-    });
-    //全选
-    $("#user-role-selectAll").click(function(){
-        $("input[name='item_name[]']:checkbox").each(function(){
-            $(this).prop("checked",true);
-        });
-    });
-    //全不选
-    $("#user-role-unSelect").click(function(){
-        $("input[name='item_name[]']:checkbox").each(function(){
-            $(this).prop("checked",false);
-        });
-    });
+    }    
         
 JS;
-    $this->registerJs($js, View::POS_READY);
+$this->registerJs($js, View::POS_READY);
 ?>
 
 <?php
-    RbacAsset::register($this);
+RbacAsset::register($this);
 ?>

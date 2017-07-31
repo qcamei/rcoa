@@ -4,6 +4,7 @@ namespace frontend\modules\demand\controllers;
 
 use common\models\expert\Expert;
 use common\models\expert\searchs\BasedataExperSearch;
+use common\models\User;
 use frontend\modules\demand\models\BasedataExpert;
 use Yii;
 use yii\filters\VerbFilter;
@@ -67,7 +68,14 @@ class ExpertController extends BasedataController
     {
         parent::actionCreate();
         
-        $model = new BasedataExpert();
+        $post = Yii::$app->request->post();
+        if(isset($post['BasedataExpert']) && isset($post['BasedataExpert']['username'])){
+            $user = User::findOne(['username' => $post['BasedataExpert']['username']]);
+            if($user)
+                $model = BasedataExpert::find($user->id);
+        }
+        if(!isset($model))
+            $model = new BasedataExpert();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->u_id]);

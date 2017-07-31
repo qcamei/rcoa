@@ -1,6 +1,7 @@
 <?php
 return [
     'language' => 'zh-CN',
+    'name' => '工匠',
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [
         'cache' => [
@@ -27,6 +28,15 @@ return [
                         'rcoa/product' => 'product.php',
                         'rcoa/workitem' => 'workitem.php',
                         'rcoa/worksystem' => 'worksystem.php',
+                        'rcoa/rbac' => 'rbac.php',
+                    ],
+                ],
+                'app*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@common/messages',
+                    'fileMap' => [
+                        'app' => 'rcoa.php',
+                        'app/rbac' => 'rbac.php',
                     ],
                 ],
                

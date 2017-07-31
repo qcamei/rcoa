@@ -9,14 +9,15 @@
 namespace wskeee\rbac;
 
 use common\models\User;
-use wskeee\rbac\models\Permission;
-use wskeee\rbac\models\Role;
+use Exception;
+use wskeee\rbac\components\Helper;
 use Yii;
 use yii\caching\Cache;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
+use yii\rbac\Assignment;
 use yii\rbac\DbManager;
-use yii\rbac\Item;
+use yii\rbac\Role;
 
 
 /**
@@ -25,6 +26,12 @@ use yii\rbac\Item;
  * @author Administrator
  */
 class RbacManager extends DbManager{
+    
+    /**
+     * 默认管理角色，
+     * @var type 
+     */
+    public $defaultAdminRole = 'admin';
     
     public function init() 
     {
@@ -91,31 +98,87 @@ class RbacManager extends DbManager{
         $this->cache->set($this->cacheKey, [$this->items, $this->rules, $this->parents]);
     }
     
-     /**
-     * 生成权限/角色需求
-     * @param type $row
-     * @return \wskeee\rbac\class
-     */
-    protected function populateItem($row)
-    {
-        $class = $row['type'] == Item::TYPE_PERMISSION ? Permission::className() : Role::className();
-
-        if (!isset($row['data']) || ($data = @unserialize($row['data'])) === false) {
-            $data = null;
-        }
-
-        return new $class([
-            'name' => $row['name'],
-            'system_id' => $row['system_id'],
-            'type' => $row['type'],
-            'description' => $row['description'],
-            'ruleName' => $row['rule_name'],
-            'data' => $data,
-            'createdAt' => $row['created_at'],
-            'updatedAt' => $row['updated_at'],
-        ]);
+    public function invalidateCache() {
+        Helper::invalidate();
+        parent::invalidateCache();
     }
     
+    /**
+     * 是否为管理员
+     * @param string|array $roles 指定的管理角色
+     */
+    public function isAdmin($roles = []){
+        $roles = (empty($roles) || $roles == null) ? [] : (is_array($roles) ? $roles : [$roles]);
+        
+        $roles = array_merge(is_array($this->defaultAdminRole) ? $this->defaultAdminRole: [$this->defaultAdminRole], $roles);
+        foreach ($roles as $role){
+            if($this->checkAccess(Yii::$app->user->id, $role)){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * 用户分给角色或者权限
+     * @param string|array $itemName
+     * @param string|array $users
+     * @return Assignment|bool 分配单个返回Assignment ;批量分配返回结果true 成功，false失败
+     */
+    public function assign($role,$userId){
+        /* 两个同时为数组时失败 */
+        if(is_array($userId) && is_array($role)){
+            return false;
+        }
+        
+        if(!is_array($userId) && !is_array($role)){
+            $role = ($role instanceof Role) ? $role : $this->getRole($role);
+            return parent::assign($role, $userId);
+        }else{
+            $rows =[];
+            $time = time();
+            if(is_array($userId)){
+                foreach ($userId as $user_id){
+                    $rows[]=[$role,$user_id,$time];
+                }
+            }else if(is_array($role)){
+                foreach ($role as $role_name){
+                    $rows[]=[$role_name,$userId,$time];
+                }
+            }
+            
+            try{
+                $num = $this->db->createCommand()->batchInsert($this->assignmentTable, ['item_name','user_id','created_at'], $rows)->execute();
+                $this->invalidateCache();
+            } catch (Exception $ex) {
+                $num = 0;
+            }
+            return $num > 0;
+        }
+    }
+    /**
+     * 删除用户的角色或者权限
+     * @param string|array $itemName
+     * @param string|array $users
+     * @return bool 分配单个返回Assignment ;批量分配返回结果true 成功，false失败
+     */
+    public function revoke($role,$userId){
+        if(empty($userId) || count($userId) == 0)
+            return false;
+        
+        if(!is_array($userId) && !is_array($role)){
+            $role = ($role instanceof Role) ? : $this->getRole($role);
+            return parent::revoke($role, $userId);
+        }else{
+            try{
+                $num = $this->db->createCommand()->delete($this->assignmentTable,['item_name' => $role,'user_id' => $userId])->execute();
+                $this->invalidateCache();
+            } catch (Exception $ex) {
+                $num = 0;
+            }
+            return $num > 0;
+        }
+    }
     /**
      * @inheritdoc
      */

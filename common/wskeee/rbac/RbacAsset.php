@@ -7,7 +7,6 @@ namespace wskeee\rbac;
  */
 
 use yii\web\AssetBundle;
-use const YII_DEBUG;
 /**
  * Description of RbacAsset
  *

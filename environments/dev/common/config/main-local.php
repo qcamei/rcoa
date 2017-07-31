@@ -97,26 +97,31 @@ return [
         'job' => [
             'class' => 'common\wskeee\job\Module'
         ],
-        'expert' => [
-            'class' => 'frontend\modules\expert\Module'
-        ],
-        'resource' => [
-            'class' => 'frontend\modules\resource\Module',
-        ],
        'filemanage' => [
             'class' => 'common\wskeee\filemanage\Module',
         ],
-       'teamwork' => [
-            'class' => 'frontend\modules\teamwork\Module',
-        ],
-        'datecontrol' =>  [
-            'class' => '\kartik\datecontrol\Module',
-        ],
-        'multimedia' => [
-            'class' => 'frontend\modules\multimedia\Module',
-        ],
-        'worksystem' => [
-            'class' => 'frontend\modules\worksystem\Module',
-        ],
+    ],
+    'as access' => [
+        'class' => 'wskeee\rbac\components\AccessControl',
+        'allowActions' => [
+            'site/*',
+            'gii/*',
+            'debug/*',
+            'datecontrol/*',
+            'rbac/*',
+            'framework/*',
+            'job/*',
+            'expert/*',
+            'user/*',
+            'demand/*',
+            'teamwork/*',
+            'worksystem/*',
+            'shoot/*',
+            // The actions listed here will be allowed to everyone including guests.
+            // So, 'admin/*' should not appear here in the production, of course.
+            // But in the earlier stages of your development, you may probably want to
+            // add a lot of actions here until you finally completed setting up rbac,
+            // otherwise you may not even take a first step.
+        ]
     ],
 ];

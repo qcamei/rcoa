@@ -15,12 +15,22 @@ $menus = [
    ],
    [
        'name'=> '角色管理',
-       'url'=>['/rbac/role-manager'],
+       'url'=>['/rbac/role'],
        'class'=>'btn btn-default',
    ],
    [
        'name'=>  '权限管理',
-       'url'=>['/rbac/permission-manager'],
+       'url'=>['/rbac/permission'],
+       'class'=>'btn btn-default',
+   ],
+   [
+       'name'=>  '路由管理',
+       'url'=>['/rbac/route'],
+       'class'=>'btn btn-default',
+   ],
+   [
+       'name'=>  '分组管理',
+       'url'=>['/rbac/auth-group'],
        'class'=>'btn btn-default',
    ],
    [
@@ -33,11 +43,13 @@ $controllerId = $controllerId = Yii::$app->controller->id;          //当前控�
 
 RbacAsset::register($this);
 ?>
-<div class="basedata-navbar">
+<div class="rbac-navbar">
     <div class="btn-group">
         <?php
         foreach ($menus AS $index => $menuItem) {
-            $active = strpos($menuItem['url'][0], $controllerId)>0 ? ' active' : '';
+            $url = $menuItem['url'][0];
+            $url = substr($url,strrpos($url,'/')+1);
+            $active = $url == $controllerId ? ' active' : '';
             echo Html::a($menuItem['name'], Url::to($menuItem['url']), ['class' => $menuItem['class'].$active ]);
         }
         ?>
