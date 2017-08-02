@@ -28,18 +28,3 @@ and open the template in the editor.
 .worksystem .selected:hover{
     cursor: pointer;
 }
-@media (min-width: 768px){
-.worksystem .myModal .col-sm-2 {
-        width: 18.666667%;
-    }
-}
-@media (min-width: 992px){
-.worksystem .myModal .col-md-3 {
-        width: 22%;
-    }
-}
-@media (min-width: 1200px){
-.worksystem .myModal .col-lg-3 {
-       width: 18.666667%;
-    }
-}

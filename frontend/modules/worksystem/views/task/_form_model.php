@@ -21,11 +21,11 @@ use yii\web\View;
             </div>
             
             <div class="modal-body" id="myModalBody">
-                <div class="container">
+                <div class="row">
                     
                 <?php foreach ($taskTypes as $element): ?>
                 
-                    <div class="col-lg-3 col-md-3 col-sm-2 col-xs-6">
+                    <div class="col-sm-3 col-xs-6">
                         <a class="selected clickselected" data-dismiss="modal" aria-label="Close" data-value="<?= $element->id ?>">
                             <div class="worksystem-task-type">
                                 <?= Html::img([$element->icon], ['width' => '80', 'height' => '60']); ?>
