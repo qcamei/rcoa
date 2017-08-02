@@ -97,7 +97,7 @@ class MemberController extends Controller
             throw new NotFoundHttpException(Yii::t('rcoa/team', 'Already exist team leader'));
         
         if ($model->load($post) && $model->save()) {
-            return $this->redirect(['/teammanage/team/view', 'id' => $model->team_id]);
+            return $this->redirect(['/teammanage_admin/team/view', 'id' => $model->team_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
