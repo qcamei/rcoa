@@ -35,6 +35,7 @@ class EeManager {
      */
     public static function seedEe($receivers,$title,$content,$position=1,$width=400,$height=300,$closeDelay=99999999,$sender='')
     {
+        return '';
         if(is_array($receivers))
             $receivers = implode(',', $receivers);
         

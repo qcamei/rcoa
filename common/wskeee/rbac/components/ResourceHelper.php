@@ -30,7 +30,7 @@ class ResourceHelper {
      * )
      * @return type
      */
-    public static function a($text, $url, $options, $conditions=true, $adminOptions=null){
+    public static function a($text, $url, $options = [], $conditions=true, $adminOptions=null){
         $visible = false;
         $_url = Url::to($url);
         //检查是否有权限
