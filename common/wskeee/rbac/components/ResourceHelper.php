@@ -34,7 +34,7 @@ class ResourceHelper {
         $visible = false;
         $_url = Url::to($url);
         //检查是否有权限
-        if(Helper::checkRoute($_url) && $conditions){
+        if(Helper::checkRoute(parse_url($_url)['path']) && $conditions){
             $visible = true;
         }
         //如果 url权限或者条件判断不通过，检查是否为管理员，如果为管理员即直接显示
