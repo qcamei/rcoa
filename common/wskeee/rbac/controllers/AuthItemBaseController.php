@@ -245,7 +245,7 @@ class AuthItemBaseController extends Controller
         $itemName = ArrayHelper::getColumn($roleItems, 'name');
         $itemName += [$name];
         $userItems = (new Query())
-            ->select(['User.id AS user_id','User.nickname AS nickname','Item.name AS item_name'])
+            ->select(['User.id AS user_id','User.nickname AS nickname','Item.description AS item_name'])
             ->from(['UserToItem' => self::ASSIGNMENT_TABLE])
             ->leftJoin(['User' => User::tableName()], 'User.id = UserToItem.user_id')
             ->leftJoin(['Item' => self::AUTH_ITEM_TABLE], 'Item.name = UserToItem.item_name')    

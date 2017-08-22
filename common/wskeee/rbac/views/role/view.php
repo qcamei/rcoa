@@ -83,7 +83,7 @@ $group_permissions = ArrayHelper::map($childs, 'name', 'des', 'group_name');
             <?php ActiveForm::end(); ?>
         </div>
 
-        <div class="rbac-frame user" style="width: 27%;">
+        <div class="rbac-frame user" style="width: 28%;">
 
             <div class="frame-title">
                 已分配该角色的用户（<?= count($users) ?>个）

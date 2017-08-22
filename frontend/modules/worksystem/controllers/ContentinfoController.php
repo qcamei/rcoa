@@ -34,16 +34,6 @@ class ContentinfoController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
-            //access验证是否有登录
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ]
-                ],
-            ],
         ];
     }
 
@@ -104,9 +94,6 @@ class ContentinfoController extends Controller
     public function actionCreate($task_type_id)
     {
         
-        if(!\Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_TASK_CREATE))
-            throw new NotAcceptableHttpException('无权限操作！');
-        
         /* $model = new WorksystemContentinfo();
          if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -164,15 +151,16 @@ class ContentinfoController extends Controller
     public function actionSubmit($task_id)
     {
         $_wsTaskModel = $this->findWorksystemTask($task_id);
-        $_wsAction = WorksystemAction::getInstance();
         $_wsTool = WorksystemTool::getInstance();
-        $post = Yii::$app->request->post();
         $is_producer = $_wsTool->getIsProducer($_wsTaskModel->id);
-        
-        if(!(Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_SUBMIT_ACCEPTANCE) && $is_producer))
+        if($is_producer){
+            if(!($_wsTaskModel->getIsStatusWorking() || $_wsTaskModel->getIsStatusUpdateing()))
+                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }else{
             throw new NotAcceptableHttpException('无权限操作！');
-        if(!($_wsTaskModel->getIsStatusWorking() || $_wsTaskModel->getIsStatusUpdateing()))
-            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }
+        $post = Yii::$app->request->post();
+        $_wsAction = WorksystemAction::getInstance();
         
         if ($_wsTaskModel->load($post)) {
             $_wsAction->SubmitAcceptanceTask($_wsTaskModel, $post);

@@ -20,7 +20,6 @@ use wskeee\team\TeamMemberTool;
 use Yii;
 use yii\data\ArrayDataProvider;
 use yii\db\Query;
-use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -42,16 +41,6 @@ class TaskController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
-                ],
-            ],
-            //access验证是否有登录
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ]
                 ],
             ],
         ];
@@ -155,8 +144,6 @@ class TaskController extends Controller
     public function actionCreate()
     {
         $this->layout = '@app/views/layouts/main';
-        if(!\Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_TASK_CREATE))
-            throw new NotAcceptableHttpException('无权限操作！');
         
         $model = new WorksystemTask();
         $model->loadDefaultValues();
@@ -190,17 +177,16 @@ class TaskController extends Controller
     public function actionUpdate($id)
     {
         $this->layout = '@app/views/layouts/main';
-        $model = $this->findModel($id);
+        $model = $this->findModel($id);        
+        if($model->create_by == Yii::$app->user->id){
+            if(!($model->getIsStatusDefault() || $model->getIsStatusAdjustmenting()))
+                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }else {
+            throw new NotAcceptableHttpException('无权限操作！');
+        }
         $model->scenario = WorksystemTask::SCENARIO_UPDATE;
         $post = Yii::$app->request->post();
         $_wsAction = WorksystemAction::getInstance();
-        
-        if(!(Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_ADMIN_EDIT))){
-            if(!(Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_TASK_UPDATE) && $model->create_by == Yii::$app->user->id))
-                throw new NotAcceptableHttpException('无权限操作！');
-            if(!($model->getIsStatusDefault() || $model->getIsStatusAdjustmenting()))
-                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
-        }
         
         if ($model->load($post)) {
             $_wsAction->UpdateTask($model, $post);
@@ -242,13 +228,14 @@ class TaskController extends Controller
     public function actionCancel($id)
     {
         $model = $this->findModel($id);
-        $_wsAction = WorksystemAction::getInstance();
-        $post = Yii::$app->request->post();
-        
-        if(!(Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_TASK_CANCEL) && $model->create_by == Yii::$app->user->id))
+        if($model->create_by == Yii::$app->user->id){
+            if(!($model->status < WorksystemTask::STATUS_WORKING))
+                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }else{
             throw new NotAcceptableHttpException('无权限操作！');
-        if(!($model->status < WorksystemTask::STATUS_WORKING))
-            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }
+        $post = Yii::$app->request->post();
+        $_wsAction = WorksystemAction::getInstance();
         
         if ($model->load($post)) {
             $_wsAction->CancelTask($model, $post);
@@ -270,13 +257,15 @@ class TaskController extends Controller
     public function actionSubmitCheck($task_id)
     {
         $model = $this->findModel($task_id);
-        $_wsAction = WorksystemAction::getInstance();
-        $post = Yii::$app->request->post();
-        
-        if(!(Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_SUBMIT_CHECK) && $model->create_by == Yii::$app->user->id))
+        if($model->create_by == Yii::$app->user->id){
+            if(!($model->getIsStatusDefault() || $model->getIsStatusAdjustmenting()))
+                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }else{
             throw new NotAcceptableHttpException('无权限操作！');
-        if(!($model->getIsStatusDefault() || $model->getIsStatusAdjustmenting()))
-            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }
+        $post = Yii::$app->request->post();
+        $_wsAction = WorksystemAction::getInstance();     
+        
         
         if ($model->load($post)) {
             $_wsAction->SubmitCheckTask($model, $post);
@@ -299,15 +288,16 @@ class TaskController extends Controller
     public function actionCreateCheck($task_id)
     {
         $model = $this->findModel($task_id);
-        $_wsAction = WorksystemAction::getInstance();
         $_wsTool = WorksystemTool::getInstance();
-        $post = Yii::$app->request->post();
         $is_assigns = $_wsTool->getIsAssignPeople($model->create_team);
-        
-        if(!(Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_CREATE_CHECK) && $is_assigns))
+        if($is_assigns){
+            if(!($model->getIsStatusWaitCheck() || $model->getIsStatusChecking()))
+                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }else{
             throw new NotAcceptableHttpException('无权限操作！');
-        if(!($model->getIsStatusWaitCheck() || $model->getIsStatusChecking()))
-            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }
+        $post = Yii::$app->request->post();
+        $_wsAction = WorksystemAction::getInstance();
         
         if ($model->load($post)) {
             $_wsAction->CreateCheckTask($model, $post);
@@ -330,15 +320,10 @@ class TaskController extends Controller
     public function actionCreateAssign($task_id)
     {
         $model = $this->findModel($task_id);
-        $_wsAction = WorksystemAction::getInstance();
-        //$_wsTool = WorksystemTool::getInstance();
-        $post = Yii::$app->request->post();
-        //$is_assigns = $_wsTool->getIsAssignPeople($model->create_team);
-        
-        if(!(Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_CREATE_ASSIGN)))
-            throw new NotAcceptableHttpException('无权限操作！');
         if(!($model->getIsStatusWaitCheck() || $model->getIsStatusChecking() || $model->getIsStatusWaitAssign()))
             throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        $post = Yii::$app->request->post();
+        $_wsAction = WorksystemAction::getInstance();
         
         if ($model->load($post)) {
             $_wsAction->CreateAssignTask($model, $post);
@@ -363,15 +348,16 @@ class TaskController extends Controller
     public function actionCreateBrace($task_id)
     {
         $model = $this->findModel($task_id);
-        $_wsAction = WorksystemAction::getInstance();
         $_wsTool = WorksystemTool::getInstance();
-        $post = Yii::$app->request->post();
         $is_assigns = $_wsTool->getIsAssignPeople($model->create_team);
-        
-        if(!(Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_CREATE_ASSIGN) && $is_assigns))
+        if($is_assigns && $model->getIsCancelBrace()){
+            if(!($model->getIsStatusWaitCheck() || $model->getIsStatusChecking()))
+                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }else{
             throw new NotAcceptableHttpException('无权限操作！');
-        if(!($model->getIsStatusWaitCheck() || $model->getIsStatusChecking()))
-            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }
+        $post = Yii::$app->request->post();
+        $_wsAction = WorksystemAction::getInstance();        
         
         if ($model->load($post)) {
             $_wsAction->CreateBraceTask($model, $post);
@@ -394,15 +380,16 @@ class TaskController extends Controller
     public function actionCancelBrace($task_id)
     {
         $model = $this->findModel($task_id);
-        $_wsAction = WorksystemAction::getInstance();
         $_wsTool = WorksystemTool::getInstance();
-        $post = Yii::$app->request->post();
         $is_assigns = $_wsTool->getIsAssignPeople($model->create_team);
-        
-        if(!(Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_CREATE_ASSIGN) && $is_assigns && $model->getIsSeekBrace()))
+        if($is_assigns && $model->getIsSeekBrace()){
+            if(!($model->getIsStatusWaitAssign()))
+                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }else{
             throw new NotAcceptableHttpException('无权限操作！');
-        if(!($model->getIsStatusWaitAssign()))
-            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }
+        $post = Yii::$app->request->post();
+        $_wsAction = WorksystemAction::getInstance();
         
         if ($model->load($post)) {
             $_wsAction->CancelBraceTask($model, $post);
@@ -425,13 +412,17 @@ class TaskController extends Controller
     public function actionCreateEpiboly($task_id)
     {
         $model = $this->findModel($task_id);
-        $_wsAction = WorksystemAction::getInstance();
         $_wsTool = WorksystemTool::getInstance();
-        $post = Yii::$app->request->post();
         $is_assigns = $_wsTool->getIsAssignPeople($model->create_team);
-        
-        if(!(Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_CREATE_ASSIGN) && $is_assigns))
+        if($is_assigns && $model->getIsCancelEpiboly()){
+            if(!($model->getIsStatusWaitCheck() || $model->getIsStatusChecking()))
+                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }else{
             throw new NotAcceptableHttpException('无权限操作！');
+        }
+        $post = Yii::$app->request->post();
+        $_wsAction = WorksystemAction::getInstance();
+      
         if(!($model->getIsStatusWaitCheck() || $model->getIsStatusChecking()))
             throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
         
@@ -456,15 +447,16 @@ class TaskController extends Controller
     public function actionCancelEpiboly($task_id)
     {
         $model = $this->findModel($task_id);
-        $_wsAction = WorksystemAction::getInstance();
         $_wsTool = WorksystemTool::getInstance();
-        $post = Yii::$app->request->post();
         $is_assigns = $_wsTool->getIsAssignPeople($model->create_team);
-        
-        if(!(Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_CREATE_ASSIGN) && $is_assigns && $model->getIsSeekEpiboly()))
+        if($is_assigns && $model->getIsSeekEpiboly()){
+            if(!($model->getIsStatusWaitUndertake()))
+                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }else{
             throw new NotAcceptableHttpException('无权限操作！');
-        if(!($model->getIsStatusWaitUndertake()))
-            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }
+        $post = Yii::$app->request->post();
+        $_wsAction = WorksystemAction::getInstance();
         
         if ($model->load($post)) {
             $_wsAction->CancelEpibolyTask($model, $post);
@@ -487,15 +479,16 @@ class TaskController extends Controller
     public function actionStartMake($task_id)
     {
         $model = $this->findModel($task_id);
-        $_wsAction = WorksystemAction::getInstance();
         $_wsTool = WorksystemTool::getInstance();
-        $post = Yii::$app->request->post();
         $is_producer = $_wsTool->getIsProducer($model->id);
-        
-        if(!($is_producer))
+        if($is_producer){
+            if(!($model->getIsStatusToStart()))
+                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }else{
             throw new NotAcceptableHttpException('无权限操作！');
-        if(!($model->getIsStatusToStart()))
-            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }
+        $post = Yii::$app->request->post();
+        $_wsAction = WorksystemAction::getInstance();
         
         if ($model->load($post)) {
             $_wsAction->StartMakeTask($model, $post);
@@ -517,13 +510,10 @@ class TaskController extends Controller
     public function actionCreateUndertake($task_id)
     {
         $model = $this->findModel($task_id);
-        $_wsAction = WorksystemAction::getInstance();
-        $post = Yii::$app->request->post();
-        
-        if(!(Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_TASK_UNDERTAKE) && $model->getIsSeekEpiboly()))
-            throw new NotAcceptableHttpException('无权限操作！');
         if(!($model->getIsStatusWaitUndertake()))
             throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        $post = Yii::$app->request->post();
+        $_wsAction = WorksystemAction::getInstance();
         
         if ($model->load($post)) {
             $_wsAction->CreateUndertakeTask($model, $post);
@@ -548,15 +538,16 @@ class TaskController extends Controller
     public function actionCancelUndertake($task_id)
     {
         $model = $this->findModel($task_id);
-        $_wsAction = WorksystemAction::getInstance();
         $_wsTool = WorksystemTool::getInstance();
-        $post = Yii::$app->request->post();
         $is_producer = $_wsTool->getIsProducer($model->id);
-        
-        if(!(Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_TASK_UNDERTAKE) && $is_producer && $model->getIsSeekEpiboly()))
+        if($is_producer){
+            if(!($model->getIsStatusToStart()))
+                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }else{
             throw new NotAcceptableHttpException('无权限操作！');
-        if(!($model->getIsStatusToStart()))
-            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }
+        $post = Yii::$app->request->post();
+        $_wsAction = WorksystemAction::getInstance();
         
         if ($model->load($post)) {
             $_wsAction->CancelUndertakeTask($model, $post);
@@ -578,13 +569,14 @@ class TaskController extends Controller
     public function actionCreateAcceptance($task_id)
     {
         $model = $this->findModel($task_id);
-        $_wsAction = WorksystemAction::getInstance();
-        $post = Yii::$app->request->post();
-        
-        if(!(Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_TASK_ACCEPTANCE) && $model->create_by == Yii::$app->user->id))
+        if($model->create_by == Yii::$app->user->id){
+            if(!($model->getIsStatusWaitAcceptance() || $model->getIsStatusAcceptanceing()))
+                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }else{
             throw new NotAcceptableHttpException('无权限操作！');
-        if(!($model->getIsStatusWaitAcceptance() || $model->getIsStatusAcceptanceing()))
-            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }
+        $post = Yii::$app->request->post();
+        $_wsAction = WorksystemAction::getInstance();
         
         if ($model->load($post)) {
             $_wsAction->CreateAcceptanceTask($model, $post);
@@ -606,13 +598,14 @@ class TaskController extends Controller
     public function actionCompleteAcceptance($task_id)
     {
         $model = $this->findModel($task_id);
-        $_wsAction = WorksystemAction::getInstance();
-        $post = Yii::$app->request->post();
-        
-        if(!(Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_TASK_ACCEPTANCE) && $model->create_by == Yii::$app->user->id))
+        if($model->create_by == Yii::$app->user->id){
+            if(!($model->getIsStatusWaitAcceptance() || $model->getIsStatusAcceptanceing()))
+                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }else{
             throw new NotAcceptableHttpException('无权限操作！');
-        if(!($model->getIsStatusWaitAcceptance() || $model->getIsStatusAcceptanceing()))
-            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }
+        $post = Yii::$app->request->post();
+        $_wsAction = WorksystemAction::getInstance();
         
         if ($model->load($post)) {
             $_wsAction->CompleteAcceptanceTask($model, $post);

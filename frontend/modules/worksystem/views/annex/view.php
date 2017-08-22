@@ -3,7 +3,7 @@
 use common\models\worksystem\WorksystemAnnex;
 use common\models\worksystem\WorksystemTask;
 use frontend\modules\worksystem\assets\WorksystemAssets;
-use yii\helpers\Html;
+use wskeee\rbac\components\ResourceHelper;
 use yii\web\View;
 
 /* @var $this View */
@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="controlbar">
     <div class="container">
-        <?= Html::a(Yii::t('rcoa', 'Back'), ['task/view', 'id' => $model->worksystem_task_id], ['class' => 'btn btn-default',/*'onclick'=>'history.go(-1)'*/]) ?>
+        <?= ResourceHelper::a(Yii::t('rcoa', 'Back'), ['task/view', 'id' => $model->worksystem_task_id], ['class' => 'btn btn-default']) ?>
     </div>
 </div>
 

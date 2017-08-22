@@ -57,15 +57,16 @@ $userGroups = ArrayHelper::map($users, 'user_id', 'nickname', 'item_name');
 
             <div class="frame-body">
                 <?php foreach ($parentGroups as $name => $parentGroup): ?>
-                    <p><b><?= $name; ?></b></p>
+                <div style="margin-bottom: 10px">
+                    <p style="margin-bottom: 0px"><b><?= $name; ?></b></p>
 
                     <?php foreach ($parentGroup as $itemName): ?>
-                        <p style="padding-left: 20px;">
+                        <p style="padding-left: 20px; text-align: left;">
                             <?= $itemName ?>
                             <span class="prompt">（角色）</span>
                         </p>
                     <?php endforeach; ?>
-
+                </div>
                 <?php endforeach; ?>
 
             </div>
@@ -80,14 +81,15 @@ $userGroups = ArrayHelper::map($users, 'user_id', 'nickname', 'item_name');
 
             <div class="frame-body">
                 <?php foreach ($userGroups as $name => $userGroup): ?>
-                    <p><b><?= $name; ?></b><span class="prompt">（角色）</span></p>
+                <div style="margin-bottom: 10px">
+                    <p style="margin-bottom: 0px"><b><?= $name; ?></b><span class="prompt">（角色）</span></p>
 
                     <?php foreach ($userGroup as $user_id => $nickname): ?>
-                        <p style="padding-left: 20px;">
+                        <span style="padding-left: 20px; text-align: left; display: inline-block">
                             <?= $nickname ?>
-                        </p>
+                        </span>
                     <?php endforeach; ?>
-
+                </div>
                 <?php endforeach; ?>
 
             </div>

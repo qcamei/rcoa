@@ -92,8 +92,6 @@ class AddAttributesController extends Controller
                 'model' => $model,
             ]);
         }*/
-        if(!\Yii::$app->user->can(RbacName::PERMSSION_WORKSYSTEM_TASK_CREATE))
-            throw new NotAcceptableHttpException('无权限操作！');
         
         $_wsTool = WorksystemTool::getInstance();
         $items = $this->getWorksystemAttributes($task_type_id);
@@ -114,16 +112,6 @@ class AddAttributesController extends Controller
      */
     public function actionUpdate($task_id)
     {
-        /*$model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }*/
-        
         $_wsTool = WorksystemTool::getInstance();
         $items = $_wsTool->getWorksystemTaskAddAttributes($task_id);
         $datas = $_wsTool->WorksystemAttributesFormat($items);
