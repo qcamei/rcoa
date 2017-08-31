@@ -17,13 +17,12 @@ use yii\widgets\LinkPager;
 
 $this->title = Yii::t('rcoa/worksystem', 'Worksystem Tasks');
 $this->params['breadcrumbs'][] = $this->title;
-
 ?>
 
 <div class="container worksystem worksystem-task-index">
 
     <?= $this->render('_search',[
-        'params' => $params,
+        'params' => $param,
         //条件
         'itemTypes' => $itemTypes,
         'items' => $items,
@@ -36,121 +35,92 @@ $this->params['breadcrumbs'][] = $this->title;
         'producers' => $producers,
     ]) ?>
     
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'layout' => "{items}\n{summary}\n{pager}",
-        'summaryOptions' => [
-            //'class' => 'summary',
-            'class' => 'hidden',
-            //'style' => 'float: left'
-        ],
-        'pager' => [
-            'options' => [
-                //'class' => 'pagination',
-                'class' => 'hidden',
-                //'style' => 'float: right; margin: 0px;'
-            ]
-        ],
-        'tableOptions' => ['class' => 'table table-striped table-list'],
-        'columns' => [
-            [
-                'label' => '',
-                'format' => 'raw',
-                'value'=> function($model){
-                    /* @var $model WorksystemTask */
-                    return $model->level == WorksystemTask::LEVEL_URGENT ? 
-                                Html::img(['/filedata/worksystem/image/flag.png'], [
-                                    'class' => 'flag']) : '';
-                },
-                'headerOptions' => [
-                    'style' => [
-                        'width' => '20px',
-                        'padding' => '8px 2px',
-                    ],
-                ],
-                'contentOptions' =>[
-                    'style' => [
-                        'padding' => '8px 2px',
-                    ]
-                ],
-            ],
-            [
-                'label' => Yii::t('rcoa/worksystem', 'Task Type'),
-                'format' => 'raw',
-                'value'=> function($model){
-                    /* @var $model WorksystemTask */
-                    return !empty($model->task_type_id) ? 
-                            '<span class="task-type-span">'.$model->worksystemTaskType->name.'</span>' : '';
-                },
-                'headerOptions' => [
-                    'class'=>[
-                        'th'=>'hidden-xs',
-                    ],
-                    'style' => [
-                        'width' => '65px',
-                        'padding' => '8px 2px;'  
-                    ],
-                ],
-                'contentOptions' =>[
-                    'class'=>'hidden-xs',
-                    'style' => [
-                        'padding' => '8px 2px;'  
-                    ],
-                ],
-            ],
-            [
-                'label' => Yii::t('rcoa/worksystem', 'Create → Brace'),
-                'format' => 'raw',
-                'value'=> function($model){
-                    /* @var $model WorksystemTask */
-                    if(!empty($model->external_team) && !empty($model->create_team)){
-                        if($model->external_team != $model->create_team && $model->getIsSeekEpiboly())
-                            return '<span class="team-span team-span-left">'.$model->createTeam->name.'</span>'. Html::img(['/filedata/worksystem/image/brace.png'], ['class' => 'brace']) .'<span class="team-span team-span-left epiboly-team-span">'.$model->externalTeam->name.'</span>';
-                        else if($model->external_team != $model->create_team && $model->getIsSeekBrace())
-                            return '<span class="team-span team-span-left">'.$model->createTeam->name.'</span>'. Html::img(['/filedata/worksystem/image/brace.png'], ['class' => 'brace']) . '<span class="team-span team-span-left">'.$model->externalTeam->name.'</span>';
+    <?php 
+       echo GridView::widget([
+           'dataProvider' => $dataProvider,
+           'layout' => "{items}\n{summary}\n{pager}",
+           'summaryOptions' => [
+               //'class' => 'summary',
+               'class' => 'hidden',
+               //'style' => 'float: left'
+           ],
+           'pager' => [
+               'options' => [
+                   //'class' => 'pagination',
+                   'class' => 'hidden',
+                   //'style' => 'float: right; margin: 0px;'
+               ]
+           ],
+           'tableOptions' => ['class' => 'table table-striped table-list'],
+           'columns' => [
+               [
+                   'label' => '',
+                   'format' => 'raw',
+                   'value'=> function ($data) {
+                       return $data['level'] ? Html::img(['/filedata/worksystem/image/flag.png'], ['class' => 'flag']) : '';
+                   },
+                   'headerOptions' => [
+                       'style' => [
+                           'width' => '20px',
+                           'padding' => '8px 2px',
+                       ],
+                   ],
+                   'contentOptions' =>[
+                       'style' => [
+                           'padding' => '8px 2px',
+                       ]
+                   ],
+               ],
+               [
+                   'label' => Yii::t('rcoa/worksystem', 'Task Type'),
+                   'format' => 'raw',
+                   'value'=> function($data){
+                       return !empty($data['task_type_name']) ? '<span class="task-type-span">'.$data['task_type_name'].'</span>' : '';
+                    },
+                   'headerOptions' => [
+                       'class'=>[
+                           'th'=>'hidden-xs',
+                       ],
+                       'style' => [
+                           'width' => '65px',
+                           'padding' => '8px 2px;'  
+                       ],
+                   ],
+                   'contentOptions' =>[
+                       'class'=>'hidden-xs',
+                       'style' => [
+                           'padding' => '8px 2px;'  
+                       ],
+                   ],
+               ],
+               [
+                   'label' => Yii::t('rcoa/worksystem', 'Create → Brace'),
+                   'format' => 'raw',
+                   'value'=> function($data){
+                        if(!empty($data['external_team_name']) && $data['is_epiboly'] == WorksystemTask::SEEK_EPIBOLY_MARK)
+                            return "<span class=\"team-span team-span-left\">{$data['create_team_name']}</span>".Html::img(['/filedata/worksystem/image/brace.png'], ['class' => 'brace'])."<span class=\"team-span team-span-left epiboly-team-span\">{$data['external_team_name']}</span>";
+                        else if(!empty($data['external_team_name']) && $data['is_epiboly'] == WorksystemTask::SEEK_BRACE_MARK)
+                            return "<span class=\"team-span team-span-left\">{$data['create_team_name']}</span>".Html::img(['/filedata/worksystem/image/brace.png'], ['class' => 'brace'])."<span class=\"team-span team-span-left epiboly-team-span\">{$data['external_team_name']}</span>";
                         else 
-                            return '<span class="team-span">'.$model->createTeam->name.'</span>';
-                    }else
-                        return null;                      
-                },
-                'headerOptions' => [
-                    'style' => [
-                        'width' => '105px',
-                        'padding' => '8px 2px',
-                    ],
-                ],
-                'contentOptions' =>[
-                    'style' => [
-                        'padding' => '8px 2px'
-                    ],
-                ],
-            ],
-            /*[
-                'label' => Yii::t('rcoa/worksystem', 'Item Type ID'),
-                'format' => 'raw',
-                'value'=> function($model){
-                    /* @var $model WorksystemTask 
-                    return !empty($model->item_type_id) ? $model->itemType->name : null;
-                },
-                'headerOptions' => [
-                    'class'=>[
-                        'th'=>'hidden-xs hidden-sm hidden-md',
-                    ],
-                    'style' => [
-                        'width' => '100px',
-                        'padding' => '8px'
-                    ],
-                ],
-                'contentOptions' =>[
-                    'class'=>'hidden-xs course-name list-td hidden-sm hidden-md',
-                ],
-            ],*/
-            [
+                             return "<span class=\"team-span\">{$data['create_team_name']}</span>";
+                    },
+                   'headerOptions' => [
+                       'style' => [
+                           'width' => '105px',
+                           'padding' => '8px 2px',
+                       ],
+                   ],
+                   'contentOptions' =>[
+                       'style' => [
+                           'padding' => '8px 2px'
+                       ],
+                   ],
+               ],
+               [
                 'label' => Yii::t('rcoa/worksystem', 'Item ID'),
                 'format' => 'raw',
-                'value'=> function($model){
-                    /* @var $model WorksystemTask */
-                    return !empty($model->item_id) ? $model->item->name : null;
+                'value'=> function($data){
+                    return !empty($data['item_name']) ? $data['item_name'] : null;
                 },
                 'headerOptions' => [
                     'class'=>[
@@ -168,9 +138,8 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label' => Yii::t('rcoa/worksystem', 'Item Child ID'),
                 'format' => 'raw',
-                'value'=> function($model){
-                    /* @var $model WorksystemTask */
-                    return !empty($model->item_child_id) ? $model->itemChild->name : null;
+                'value'=> function($data){
+                    return !empty($data['item_child_name']) ? $data['item_child_name'] : null;
                 },
                 'headerOptions' => [
                     'class'=>[
@@ -188,9 +157,8 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label' => Yii::t('rcoa/worksystem', 'Course ID'),
                 'format' => 'raw',
-                'value'=> function($model){
-                    /* @var $model WorksystemTask */
-                    return !empty($model->course_id) ? $model->course->name : null;
+                'value'=> function($data){
+                    return !empty($data['item_course_name']) ? $data['item_course_name'] : null;
                 },
                 'headerOptions' => [
                     'class'=>[
@@ -208,15 +176,14 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label' => Yii::t('rcoa/worksystem', 'Name'),
                 'format' => 'raw',
-                'value'=> function($model){
-                    /* @var $model WorksystemTask */
-                    return '<div class="course-name">'.(!empty($model->name) ? $model->name : null).'</div>'.
+                'value'=> function($data){
+                    return '<div class="course-name">'.(!empty($data['name']) ? $data['name'] : null).'</div>'.
                             Html::beginTag('div', [
                                 'class' => 'progress progress-bg',
                             ]).Html::beginTag('div', [
                                     'class' => 'progress-bar progress-words', 
-                                    'style' => 'width:'.($model->progress ).'%;',
-                               ]).($model->progress).'%'.
+                                    'style' => 'width:'.($data['progress']).'%;',
+                               ]).($data['progress']).'%'.
                                Html::endTag('div').
                             Html::endTag('div');
                 },
@@ -236,9 +203,8 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label' => Yii::t('rcoa/worksystem', 'Demand Time'),
                 'format' => 'raw',
-                'value'=> function($model){
-                    /* @var $model WorksystemTask */
-                    return !empty($model->plan_end_time) ? $model->plan_end_time : null;
+                'value'=> function($data){
+                    return !empty($data['plan_end_time']) ? $data['plan_end_time'] : null;
                 },
                 'headerOptions' => [
                     'class'=>[
@@ -260,9 +226,8 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label' => Yii::t('rcoa', 'Create By'),
                 'format' => 'raw',
-                'value'=> function($model){
-                    /* @var $model WorksystemTask */
-                    return !empty($model->create_by) ? $model->createBy->nickname : null;
+                'value'=> function($data){
+                    return !empty($data['create_by']) ? $data['create_by'] : null;
                 },
                 'headerOptions' => [
                     'class'=>[
@@ -280,9 +245,8 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label' => Yii::t('rcoa/worksystem', 'Producer'),
                 'format' => 'raw',
-                'value'=> function($model) use($producer){
-                    /* @var $model WorksystemTask */
-                    return isset($producer[$model->id]) ? (is_array($producer[$model->id]) ? implode(',', $producer[$model->id]) : $producer[$model->id]) : null;
+                'value'=> function($data){
+                    return !empty($data['producer_nickname']) ? $data['producer_nickname'] : null;
                 },
                 'headerOptions' => [
                     'class'=>[
@@ -301,16 +265,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'yii\grid\ActionColumn',
                 'header' => Yii::t('rcoa', 'Operating'),
                 'buttons' => [
-                    'view' => function ($url, $model) use($operation) {
-                        /* @var $model WorksystemTask */
+                    'view' => function ($url, $data) use($operation) {
                         $options = [
-                            'class' => $model->getIsStatusCancel() ? 'btn btn-danger btn-sm' :
-                                ($model->getIsStatusCompleted() ? 'btn btn-success btn-sm' : 
-                                    (!empty($operation[$model->id]) ? 'btn btn-primary btn-sm' : 'btn btn-default btn-sm')),
+                            'class' => isset($operation[Yii::$app->user->id][$data['id']]) ? 
+                                       ($operation[Yii::$app->user->id][$data['id']] == WorksystemTask::STATUS_CANCEL ? 'btn btn-danger btn-sm' : 
+                                       ($operation[Yii::$app->user->id][$data['id']] == WorksystemTask::STATUS_COMPLETED ? 'btn btn-success btn-sm' : 
+                                       ($operation[Yii::$app->user->id][$data['id']] ? 'btn btn-primary btn-sm' : 'btn btn-default btn-sm'))) : 
+                                       ($data['status'] == WorksystemTask::STATUS_CANCEL ? 'btn btn-danger btn-sm' : ($data['status'] == WorksystemTask::STATUS_COMPLETED ? 'btn btn-success btn-sm' : 'btn btn-default btn-sm')),
                             'style' => 'width: 55px;'
                         ];
-                        return Html::a($model->getStatusName(), [
-                            'view', 'id' => $model->id], $options);
+                        return Html::a(WorksystemTask::$statusNmae[$data['status']], ['view', 'id' => $data['id']], $options);
                     },
                 ],
                 'headerOptions' => [
@@ -327,14 +291,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'template' => '{view}',
             ],
-        ],
-    ]); ?>
+           ],
+       ]); 
+    ?>
     
-    <div class="summary">总共<b><?= $count ?></b>条数据</div>
+    <div class="summary">总共<b><?= $totalCount ?></b>条数据</div>
         
     <?= LinkPager::widget([  
         'pagination' => new Pagination([
-            'totalCount' => $count,  
+            'totalCount' => $totalCount,  
         ]),  
     ]) ?> 
     

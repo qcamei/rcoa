@@ -41,7 +41,7 @@ use yii\widgets\ActiveForm;
     ]) ?>
     
     <?= $form->field($model, 'course_id')->widget(Select2::classname(), [
-        'data' => $courses, 'options' => ['placeholder' => '请选择...']
+        'data' => $courses, 'options' => ['data-add' => 'true', 'placeholder' => '请选择...']
     ]) ?>
     
     <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'placeholder' => '请输入任务名称...']) ?>
@@ -61,7 +61,6 @@ use yii\widgets\ActiveForm;
     ]) ?>
 
     <?= $form->field($model, 'task_type_id')->dropDownList($taskTypes, ['prompt' => '请选择...', 'disabled' => 'disabled']) ?>
-    <?= Html::activeHiddenInput($model, 'task_type_id', ['id' => 'task_type_id-worksystemtask-task_type_id']) ?>
 
     <div id="add-attribute"></div>
     
@@ -87,18 +86,17 @@ use yii\widgets\ActiveForm;
             ],
         ],
     ]) ?>
-
-    <?php if(count($teams) == 1)
-            echo Html::activeHiddenInput($model, 'external_team', ['value' => $teams[0]]);
-        else
-            echo $form->field($model, 'external_team')->dropDownList($teams);
-    ?>
     
-    <?php if(count($teams) == 1)
-            echo Html::activeHiddenInput($model, 'create_team', ['value' => $teams[0]]);
-        else
-            echo $form->field($model, 'create_team')->dropDownList($teams);
-    ?>
+    <?= $form->field($model, 'create_team', [
+        //'template' => "{label}\n<div class=\"col-lg-10 col-md-10\">{input}</div>\n<div class=\"col-lg-4 col-md-4\">{error}</div>",
+        'labelOptions' => [
+            //'class' => 'col-lg-1 col-md-1 control-label form-label',
+            'style' => [
+                'padding-left' => '0',
+                'display' =>  count($teams) > 1 ? 'block' : 'none'
+             ]
+        ]
+    ])->dropDownList($teams, ['style ' => count($teams) > 1 ? 'display:block' : 'display:none']) ?>
     
     <?= Html::activeHiddenInput($model, 'create_by', ['value' => Yii::$app->user->id]) ?>
     
@@ -141,7 +139,7 @@ use yii\widgets\ActiveForm;
             
                 <?php endforeach; ?>
             
-            <?php endif; ?>
+            <?php endif;?>
         </div>
         <div id="annex-prompt" class="col-xs-10"></div>
     </div>
@@ -153,14 +151,15 @@ use yii\widgets\ActiveForm;
 <?php
 $js =   
 <<<JS
-    
-        
     /** 下拉选择【专业/工种】 */
     $('#worksystemtask-item_id').change(function(){
         var url = "/framework/api/search?id="+$(this).val(),
             element = $('#worksystemtask-item_child_id');
         $("#worksystemtask-item_child_id").html("");
         $('#select2-worksystemtask-item_child_id-container').html('<span class="select2-selection__placeholder">请选择...</span>');
+        $('.field-worksystemtask-course_id').removeClass('has-error');
+        $(".field-worksystemtask-course_id .help-block").text('');
+        $("#worksystemtask-course_id").attr("data-add", "true");
         $("#worksystemtask-course_id").html('<option value="">全部</option>');
         $('#select2-worksystemtask-course_id-container').html('<span class="select2-selection__placeholder">请选择...</span>');
         wx(url, element, '请选择...');
@@ -171,22 +170,30 @@ $js =
             element = $('#worksystemtask-course_id');
         $('.field-worksystemtask-course_id').removeClass('has-error');
         $(".field-worksystemtask-course_id .help-block").text('');
+        $("#worksystemtask-course_id").attr("data-add", "true");
         $("#worksystemtask-course_id").html("");
         $('#select2-worksystemtask-course_id-container').html('<span class="select2-selection__placeholder">请选择...</span>');
         wx(url, element, '请选择...');
     });
     /** 检查【课程】是否存在 */
     $('#worksystemtask-course_id').change(function(){
+        $(this).attr("data-add", "true");
         var url = "/worksystem/task/check-exist?course_id="+$(this).val();
         $.post(url,function(data)
         {
-            if(data['type'] == 1){
-               $('.field-worksystemtask-course_id').addClass('has-error').removeClass("has-success");
-               $(".field-worksystemtask-course_id .help-block").text(data['message']);
-            }else{
+            if(data['type']){
                 $('#worksystemtask-item_type_id').find('option[value='+data['data']['item_type_id']+']').attr('selected', true);
-                if(data['data']['team_id'] != '')
-                    $('#worksystemtask-create_team').find('option[value='+data['data']['team_id']+']').attr('selected', true);      
+                $('#worksystemtask-item_type_id').parent().parent().removeClass("has-error").addClass("has-success");
+                $('#worksystemtask-item_type_id').parent().next().children().html("");
+                $('#worksystemtask-create_team').find('option[value='+data['data']['team_id']+']').attr('selected', true);
+            }else{
+                if(data['isAdd'] == 0){
+                    $("#worksystemtask-course_id").attr("data-add", "false");
+                }
+                $('.field-worksystemtask-course_id').removeClass("has-success").addClass('has-error');
+                $(".field-worksystemtask-course_id .help-block").text(data['message']);
+                
+                
             }
         });
     });        
@@ -256,8 +263,6 @@ function uploadFile(){
 function removeAnnex(object)
 {
     $(object).parent().remove();
-    //$(object).next().remove();
-    //$(object).remove();
 }
 </script>
 

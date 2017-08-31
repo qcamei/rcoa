@@ -21,7 +21,8 @@ class DefaultController extends Controller
             $myfile = fopen($file_path, "w");   //打开或创建文件
             $rbacName = '';
             foreach ($authItems as $key => $value) 
-                $rbacName .= "\r\n\t".'/** '.$value['description'].' */'."\r\n\t".'const '. str_replace($value['type'] == 1 ? 'R_' : 'P_', $value['type'] == 1 ? 'ROLE_' : 'PERMSSION_', strtoupper($value['name'])).' = "'.$value['name'].'";';
+                if($value['description'] != null)
+                    $rbacName .= "\r\n\t".'/** '.$value['description'].' */'."\r\n\t".'const '. str_replace($value['type'] == 1 ? 'R_' : 'P_', $value['type'] == 1 ? 'ROLE_' : 'PERMSSION_', strtoupper($value['name'])).' = "'.$value['name'].'";';
             //组装生成文件内容
             $format = '<?php'."\r\n".'namespace wskeee\rbac;'."\r\n".'class RbacName{'.$rbacName."\r\n".'}';
 

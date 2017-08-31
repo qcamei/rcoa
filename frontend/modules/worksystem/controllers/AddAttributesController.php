@@ -83,16 +83,6 @@ class AddAttributesController extends Controller
      */
     public function actionCreate($task_type_id = null)
     {
-        /*$model = new WorksystemAddAttributes();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }*/
-        
         $_wsTool = WorksystemTool::getInstance();
         $items = $this->getWorksystemAttributes($task_type_id);
         $datas = $_wsTool->WorksystemAttributesFormat($items);

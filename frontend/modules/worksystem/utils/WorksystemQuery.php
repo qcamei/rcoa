@@ -22,7 +22,7 @@ class WorksystemQuery
      * 查询工作系统任务数据
      * @return $query
      */
-    public function findWorksystemTaskTable()
+    public function findWorksystemTask()
     {
         $query = WorksystemTask::find()
             ->select(['Worksystem_task.id'])

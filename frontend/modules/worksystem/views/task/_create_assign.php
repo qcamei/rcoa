@@ -7,13 +7,11 @@ use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
 
-
 /* @var $this View */
 /* @var $model WorksystemTask */
 
 $this->title = Yii::t('rcoa/worksystem', 'Worksystem Tasks');
 $this->params['breadcrumbs'][] = $this->title;
-
 ?>
 
 <div class="worksystem worksystem-task-create_assign">
@@ -25,25 +23,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 <h4 class="modal-title" id="myModalLabel">选择制作人</h4>
             </div>
             <div class="modal-body">
-                    
+
                 <?php $form = ActiveForm::begin([
-                    'options'=>[
+                    'options' => [
                         'id' => 'worksystem-task-form',
-                        'class'=>'form-horizontal',
+                        'class' => 'form-horizontal',
                     ],
-                    'fieldConfig' => [  
-                        'template' => "{label}\n<div class=\"col-lg-10 col-md-10\">{input}</div>\n<div class=\"col-lg-10 col-md-10\">{error}</div>",  
-                        'labelOptions' => [
-                            'class' => 'col-lg-1 col-md-1 control-label',
-                            'style'=>[
-                                'color'=>'#999999',
-                                'font-weight'=>'normal',
-                                'padding-right' => '0'
-                            ]
-                        ],  
-                    ], 
-                ]); ?>
-                
+                ]);?>
+
                 <div class="form-group field-worksystemoperation-des">
                     <label class="col-lg-2 col-md-2 control-label" style="color: #999999; font-weight: normal; padding-right: 0;" for="worksystemproducer-team_member_id">
                         <?= Yii::t('rcoa/worksystem', 'Producer') ?>
@@ -57,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'data' => $producerList,
                                 'options' => [
                                     'placeholder' => '请选择制作人...',
-                                    //'multiple' => true
+                                //'multiple' => true
                                 ],
                                 'toggleAllSettings' => [
                                     'selectLabel' => '<i class="glyphicon glyphicon-ok-circle"></i> 添加全部',
@@ -70,30 +57,38 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'maximumInputLength' => 10,
                                     'allowClear' => true,
                                 ],
-                            ]) 
+                            ])
                         ?>
                     </div>
                     <div class="col-lg-10 col-md-10"><div class="help-block"></div></div>
                 </div>
-                
-                <?= Html::activeHiddenInput($model, 'external_team', ['value' => $teams[0]]); ?>
-                <?= Html::activeHiddenInput($model, 'status', ['value' => WorksystemTask::STATUS_TOSTART])?>
-                <?= Html::activeHiddenInput($model, 'progress', ['value' => WorksystemTask::$statusProgress[WorksystemTask::STATUS_TOSTART]])?>
-                
+
+                <?= $form->field($model, 'external_team', [
+                    'template' => "{label}\n<div class=\"col-lg-10 col-md-10\">{input}</div>\n<div class=\"col-lg-4 col-md-4\">{error}</div>",
+                    'labelOptions' => [
+                        'class' => 'col-lg-2 col-md-2 control-label form-label',
+                        'style' => [
+                            'padding-left' => '0',
+                            'display' =>  count($teams) > 1 ? 'block' : 'none'
+                         ]
+                    ]
+                ])->dropDownList($teams, ['style ' => count($teams) > 1 ? 'display:block' : 'display:none']) ?>
+                <?= Html::activeHiddenInput($model, 'status', ['value' => WorksystemTask::STATUS_TOSTART]) ?>
+                <?= Html::activeHiddenInput($model, 'progress', ['value' => WorksystemTask::$statusProgress[WorksystemTask::STATUS_TOSTART]]) ?>
+
                 <?php ActiveForm::end(); ?>
-                
+
             </div>
             <div class="modal-footer">
                 <button id="submit-save" class="btn btn-primary" data-dismiss="modal" aria-label="Close">确认</button>
             </div>
-       </div>
+        </div>
     </div>
 
 </div>
 
 <?php
-$js =   
-<<<JS
+$js = <<<JS
         
     $('#submit-save').click(function()
     {
@@ -101,6 +96,6 @@ $js =
     });
         
 JS;
-    $this->registerJs($js,  View::POS_READY);
+$this->registerJs($js, View::POS_READY);
 ?>
 

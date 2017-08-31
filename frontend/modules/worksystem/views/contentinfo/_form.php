@@ -149,15 +149,10 @@ $js =
         
     /** 添加操作 弹出模态框 */
     $('#add-to').click(function(){
-        var value = $('#task_type_id-worksystemtask-task_type_id').val();
-        if(value == ''){
-            $('.myModal').modal("show");
-        }else{
-            var val = $('#task_type_id-worksystemtask-task_type_id').val();
-            var href = $(this).attr("href")+'?task_type_id='+val;
-            $(".myModal").html("");
-            $('.myModal').modal("show").load(href);
-        }
+        var val = $("#worksystemtask-task_type_id option:selected").val();
+        var href = $(this).attr("href")+'?task_type_id='+val;
+        $(".myModal").html("");
+        $('.myModal').modal("show").load(href);
         return false;
     });     
         

@@ -242,6 +242,29 @@ class RbacManager extends DbManager{
     }
     
     /**
+     * 获取拥有该路由的所有用户，<br/>
+     * 比如 Url::to(['/rbac/route/index']) 或者 '/rbac/route/index'
+     * @param string|array $routes  路由(
+     *      Url::to(['/rbac/route/index']) 或者 '/rbac/route/index', 
+     *      [Url::to(['/rbac/route/index']), Url::to(['/rbac/route/view'])] 或者 [''/rbac/route/index'', '/rbac/route/view']
+     * )
+     * @return array [id=>name,id=>name]
+     */
+    public function getItemUserLists($routes)
+    {
+        $result = (new Query())
+                ->select(['User.id', 'User.nickname'])
+                ->from(['Permission' => $this->itemChildTable])
+                ->leftJoin(['Role' => $this->itemChildTable], 'Role.child = Permission.parent')
+                ->leftJoin(['Assignment'=> $this->assignmentTable],"Assignment.item_name = Role.parent")
+                ->leftJoin(['User' => User::tableName()], 'User.id = Assignment.user_id')
+                ->where(['Permission.child' => $routes])
+               ->all(Yii::$app->db);
+                
+        return ArrayHelper::map($result, 'id', 'nickname');
+    }
+
+    /**
      * 判断用户是否属于{$roseName} 角色
      * @param type $roleName    目标角色
      * @param type $userId      目标id

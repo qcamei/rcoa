@@ -52,7 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="col-lg-10 col-md-10"><div class="help-block"></div></div>
                 </div>
                
-                <?= Html::activeHiddenInput($model, 'external_team', ['value' => $model->create_team]); ?>
+                <?= Html::activeHiddenInput($model, 'external_team', ['value' => 0]); ?>
                 <?= Html::activeHiddenInput($model, 'status', ['value' => WorksystemTask::STATUS_WAITUNDERTAKE])?>
                 <?= Html::activeHiddenInput($model, 'progress', ['value' => WorksystemTask::$statusProgress[WorksystemTask::STATUS_WAITUNDERTAKE]])?>
                 

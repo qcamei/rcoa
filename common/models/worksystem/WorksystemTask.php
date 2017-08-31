@@ -177,13 +177,13 @@ class WorksystemTask extends ActiveRecord
         return [
             self::SCENARIO_CREATE => [
                 'item_type_id', 'item_id', 'item_child_id', 'course_id', 'task_type_id', 
-                'level', 'external_team', 'create_team', 'created_at', 'updated_at',
+                'level', 'create_team', 'created_at', 'updated_at',
                 'budget_cost', 'budget_bonus',
                 'des', 'name', 'plan_end_time', 'create_by'
             ],
             self::SCENARIO_UPDATE => [
                 'item_type_id', 'item_id', 'item_child_id', 'course_id', 'task_type_id', 
-                'level', 'external_team', 'create_team', 'created_at', 'updated_at',
+                'level', 'create_team', 'created_at', 'updated_at',
                 'budget_cost', 'budget_bonus',
                 'des', 'name', 'plan_end_time', 'create_by'
             ],
@@ -224,7 +224,7 @@ class WorksystemTask extends ActiveRecord
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Item::className(), 'targetAttribute' => ['course_id' => 'id']],
             [['task_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => WorksystemTaskType::className(), 'targetAttribute' => ['task_type_id' => 'id']],
             [['create_team'], 'exist', 'skipOnError' => true, 'targetClass' => Team::className(), 'targetAttribute' => ['create_team' => 'id']],
-            [['external_team'], 'exist', 'skipOnError' => true, 'targetClass' => Team::className(), 'targetAttribute' => ['external_team' => 'id']],
+            //[['external_team'], 'exist', 'skipOnError' => true, 'targetClass' => Team::className(), 'targetAttribute' => ['external_team' => 'id']],
         ];
     }
 

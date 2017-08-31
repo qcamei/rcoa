@@ -160,7 +160,7 @@ class Team extends ActiveRecord
     {
         return $this->hasMany(TeamMember::className(), ['team_id' => 'id'])
                 ->leftJoin(['Position' => Position::tableName()], 'Position.id = position_id')
-                ->where(['!=', 'is_delete', TeamMember::SURE_DELETE])
+                ->where(['is_delete' => TeamMember::CANCEL_DELETE])
                 ->with('user')
                 ->with('position')
                 ->orderBy('Position.level asc');

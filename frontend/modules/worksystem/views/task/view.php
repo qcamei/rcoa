@@ -14,13 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <?= $this->render('/layouts/_title', [
-    'params' => ['index', 
-        'create_by' => Yii::$app->user->id, 
-        'producer' => Yii::$app->user->id, 
-        'assign_people' => Yii::$app->user->id,
-        'status' => WorksystemTask::STATUS_DEFAULT,
-        'mark' => false,
-    ],
+    'params' => ['index'],
     'title' => Yii::t('rcoa', 'View').'：'.$model->name,
 ]) ?>
 
@@ -53,8 +47,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?= $this->render('_form_view', [
     'model' => $model,
-    'is_assigns' => $is_assigns,
-    'is_producer' => $is_producer
+    'isHaveAssign' => $isHaveAssign,
+    'isHaveMake' => $isHaveMake
 ]) ?>
 
 

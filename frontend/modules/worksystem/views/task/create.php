@@ -54,14 +54,12 @@ $js =
 <<<JS
     
     $('.myModal').modal({show:'show', backdrop:'static', keyboard:false});
-        
     $('.clickselected').click(function(){
         var dataValue = $(this).attr('data-value');
         $('#worksystemtask-task_type_id').find('option[value='+dataValue+']').attr('selected', true);
-        $('#task_type_id-worksystemtask-task_type_id').val(dataValue);
         $('#add-attribute').load("/worksystem/add-attributes/create?task_type_id="+dataValue);
     });
-    
+        
     $('#contentinfo').load("/worksystem/contentinfo/index");
 JS;
     $this->registerJs($js,  View::POS_READY);

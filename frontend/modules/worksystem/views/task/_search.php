@@ -194,7 +194,7 @@ use yii\widgets\ActiveForm;
                 <div class="col-sm-9 control-widget">
                     <?= Select2::widget([
                         'id' => 'worksystemtask-create_by',
-                        'value' => ArrayHelper::getValue($params, 'create_by'),
+                        'value' => ArrayHelper::getValue($params, 'create_by', Yii::$app->user->id),
                         'name' => 'create_by',
                         'data' => $createBys,
                         'options' => [
@@ -214,7 +214,7 @@ use yii\widgets\ActiveForm;
                 <div class="col-sm-9 control-widget">
                     <?= Select2::widget([
                         'id' => 'worksystemtask-producer',
-                        'value' => ArrayHelper::getValue($params, 'producer'),
+                        'value' => ArrayHelper::getValue($params, 'producer', Yii::$app->user->id),
                         'name' => 'producer',
                         'data' => $producers,
                         'options' => [
@@ -234,7 +234,7 @@ use yii\widgets\ActiveForm;
                 <div class="col-sm-9 control-widget">
                     <?= Select2::widget([
                         'id' => 'worksystemtask-status',
-                        'value' => ArrayHelper::getValue($params, 'status'),
+                        'value' => ArrayHelper::getValue($params, 'status', WorksystemTask::STATUS_DEFAULT),
                         'name' => 'status',
                         'data' => [WorksystemTask::STATUS_DEFAULT => '未完成', WorksystemTask::STATUS_COMPLETED => '已完成'], 'options' => ['placeholder' => '全部'],
                         'options' => [
@@ -281,14 +281,14 @@ use yii\widgets\ActiveForm;
         </div>
     </div>
     
-    <?= Html::hiddenInput('mark', true) ?>
+    <?= Html::hiddenInput('mark', 1) ?>
     
     <?php ActiveForm::end(); ?>
 
 </div>
 
 <?php
-$mark = ArrayHelper::getValue($params, 'mark');
+$mark = ArrayHelper::getValue($params, 'mark', 0);
 $js = 
 <<<JS
         

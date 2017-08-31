@@ -5,17 +5,19 @@ namespace frontend\modules\worksystem\controllers;
 use common\config\AppGlobalVariables;
 use common\models\demand\DemandTask;
 use common\models\team\TeamCategory;
+use common\models\team\TeamMember;
+use common\models\User;
 use common\models\worksystem\WorksystemAnnex;
 use common\models\worksystem\WorksystemTask;
+use common\models\worksystem\WorksystemTaskProducer;
 use common\models\worksystem\WorksystemTaskType;
 use common\wskeee\job\JobManager;
 use frontend\modules\worksystem\utils\WorksystemAction;
 use frontend\modules\worksystem\utils\WorksystemOperationHtml;
+use frontend\modules\worksystem\utils\WorksystemSearch;
 use frontend\modules\worksystem\utils\WorksystemTool;
 use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\ItemType;
-use wskeee\rbac\RbacManager;
-use wskeee\rbac\RbacName;
 use wskeee\team\TeamMemberTool;
 use Yii;
 use yii\data\ArrayDataProvider;
@@ -52,49 +54,34 @@ class TaskController extends Controller
      * @param integer $page                     页数
      * @return mixed
      */
-    public function actionIndex($page = null)
+    public function actionIndex()
     {
-        $page = $page == null ? 0 : $page-1; 
-        $params = Yii::$app->request->queryParams;
-        $_wsTool = WorksystemTool::getInstance();
-        $query = $_wsTool->getWorksystemTaskResult($params);
+        $searchResult = new WorksystemSearch();
+        $results = $searchResult->search(Yii::$app->request->queryParams);
         
-        $count = $query->count();
         $dataProvider = new ArrayDataProvider([
-            'allModels' => $query->addSelect([
-                'Worksystem_task.item_type_id', 'Worksystem_task.item_id', 'Worksystem_task.item_child_id', 'Worksystem_task.course_id',
-                'Worksystem_task.task_type_id', 'Worksystem_task.name', 
-                'Worksystem_task.level', 'Worksystem_task.is_brace', 'Worksystem_task.is_epiboly', 'Worksystem_task.plan_end_time', 
-                'Worksystem_task.external_team', 'Worksystem_task.create_team', 'Worksystem_task.status', 'Worksystem_task.progress',
-                'Worksystem_task.create_by', 'External_team.user_id AS external_team_u_id', 'Create_team.user_id AS create_team_u_id',
-                'Fw_item_type.name AS item_type_name','Fw_item.name AS item_name', 'Fw_item_child.name AS item_child_name',
-                'Fw_item_course.name AS course_name'
-            ])->limit(20)->offset($page*20)->all(),
+            'allModels' => $results['result'],
         ]);
         
-        $taskIds = ArrayHelper::getColumn($dataProvider->allModels, 'id');
-        $taskStatus = ArrayHelper::map($dataProvider->allModels, 'id', 'status');
-        $operation = $_wsTool->getIsBelongToOwnOperate($taskIds, $taskStatus);
-        $producer = ArrayHelper::getValue($_wsTool->getWorksystemTaskProducer($taskIds), 'nickname');
-                
+        $creatorProducer = $this->getCreatorProducer();
+        
         return $this->render('index', [
-            'params' => $params,
+            'param' => $results['param'],
             'dataProvider' => $dataProvider,
-            'count' => $count,
-            'operation' => $operation,
-            'producer' => $producer,
+            'totalCount' => $results['totalCount'],
+            'operation' => $results['isBelong'],
             //条件
             'itemTypes' => $this->getItemTypes(),
             'items' => $this->getCollegesForSelects(),
-            'itemChilds' => ArrayHelper::getValue($params, 'mark') ? 
-                            $this->getChildrens(ArrayHelper::getValue($params, 'item_id')) : [],
-            'courses' => ArrayHelper::getValue($params, 'mark')? 
-                            $this->getChildrens(ArrayHelper::getValue($params, 'item_child_id')) : [],
+            'itemChilds' => ArrayHelper::getValue($results['param'], 'mark') ? 
+                            $this->getChildrens(ArrayHelper::getValue($results['param'], 'item_id')) : [],
+            'courses' => ArrayHelper::getValue($results['param'], 'mark')? 
+                            $this->getChildrens(ArrayHelper::getValue($results['param'], 'item_child_id')) : [],
             'taskTypes' => $this->getWorksystemTaskTypes(),
             'createTeams' => $this->getWorksystemTeams(TeamCategory::TYPE_CCOA_DEV_TEAM),
             'externalTeams' => ArrayHelper::merge($this->getWorksystemTeams(TeamCategory::TYPE_WORKSYSTEM_TEAM), $this->getEpibolyTeams()),
-            'createBys' => $this->getCreateBys(),
-            'producers' => $this->getProducerList(),
+            'createBys' => $creatorProducer['createBy'],
+            'producers' => $creatorProducer['producer'],
         ]);
         
     }
@@ -115,7 +102,7 @@ class TaskController extends Controller
         $_wsOp = WorksystemOperationHtml::getInstance();
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
-        
+        $producers = WorksystemAction::getInstance()->getWorksystemTaskProducer($model->id);
         if($model->getIsStatusCompleted() || $model->getIsStatusCancel() ){
             //取消用户与任务通知的关联
             $jobManager->cancelNotification(AppGlobalVariables::getSystemId(), $model->id, Yii::$app->user->id); 
@@ -127,11 +114,11 @@ class TaskController extends Controller
         return $this->render('view', [
             'model' => $model,
             '_wsOp' => $_wsOp,
-            'producer' => implode(',', ArrayHelper::getValue($_wsTool->getWorksystemTaskProducer($model->id), 'nickname')),
+            'producer' => implode(',', ArrayHelper::getValue($producers, 'nickname')),
             'attributes' => $_wsTool->getWorksystemTaskAddAttributes($model->id),
             'annexs' => $this->getWorksystemAnnexs($model->id),
-            'is_assigns' => $_wsTool->getIsAssignPeople($model->create_team),
-            'is_producer' =>$_wsTool->getIsProducer($model->id),
+            'isHaveAssign' => $_wsTool->getIsHaveAssign($model->create_team),
+            'isHaveMake' =>$_wsTool->getIsHaveMake($model->id),
         ]);
     }
 
@@ -149,8 +136,8 @@ class TaskController extends Controller
         $model->loadDefaultValues();
         $model->scenario = WorksystemTask::SCENARIO_CREATE;
         $_wsAction = WorksystemAction::getInstance();
-        $post = Yii::$app->request->post();        
-               
+        $post = Yii::$app->request->post();   
+        
         if ($model->load($post)) {
             $_wsAction->CreateTask($model, $post);
             return $this->redirect(['view', 'id' => $model->id]);
@@ -269,7 +256,7 @@ class TaskController extends Controller
         
         if ($model->load($post)) {
             $_wsAction->SubmitCheckTask($model, $post);
-            return $this->redirect(['index', 'create_by' => Yii::$app->user->id, 'status' => WorksystemTask::STATUS_DEFAULT, 'mark' => false,]);
+            return $this->redirect(['index']);
         } else {
             return $this->renderAjax('_submit_check', [
                 'model' => $model,
@@ -289,8 +276,8 @@ class TaskController extends Controller
     {
         $model = $this->findModel($task_id);
         $_wsTool = WorksystemTool::getInstance();
-        $is_assigns = $_wsTool->getIsAssignPeople($model->create_team);
-        if($is_assigns){
+        $isHaveAssign = $_wsTool->getIsHaveAssign($model->create_team);
+        if($isHaveAssign){
             if(!($model->getIsStatusWaitCheck() || $model->getIsStatusChecking()))
                 throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
         }else{
@@ -349,8 +336,8 @@ class TaskController extends Controller
     {
         $model = $this->findModel($task_id);
         $_wsTool = WorksystemTool::getInstance();
-        $is_assigns = $_wsTool->getIsAssignPeople($model->create_team);
-        if($is_assigns && $model->getIsCancelBrace()){
+        $isHaveAssign = $_wsTool->getIsHaveAssign($model->create_team);
+        if($isHaveAssign && $model->getIsCancelBrace()){
             if(!($model->getIsStatusWaitCheck() || $model->getIsStatusChecking()))
                 throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
         }else{
@@ -381,8 +368,8 @@ class TaskController extends Controller
     {
         $model = $this->findModel($task_id);
         $_wsTool = WorksystemTool::getInstance();
-        $is_assigns = $_wsTool->getIsAssignPeople($model->create_team);
-        if($is_assigns && $model->getIsSeekBrace()){
+        $isHaveAssign = $_wsTool->getIsHaveAssign($model->create_team);
+        if($isHaveAssign && $model->getIsSeekBrace()){
             if(!($model->getIsStatusWaitAssign()))
                 throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
         }else{
@@ -413,8 +400,8 @@ class TaskController extends Controller
     {
         $model = $this->findModel($task_id);
         $_wsTool = WorksystemTool::getInstance();
-        $is_assigns = $_wsTool->getIsAssignPeople($model->create_team);
-        if($is_assigns && $model->getIsCancelEpiboly()){
+        $isHaveAssign = $_wsTool->getIsHaveAssign($model->create_team);
+        if($isHaveAssign && $model->getIsCancelEpiboly()){
             if(!($model->getIsStatusWaitCheck() || $model->getIsStatusChecking()))
                 throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
         }else{
@@ -448,8 +435,8 @@ class TaskController extends Controller
     {
         $model = $this->findModel($task_id);
         $_wsTool = WorksystemTool::getInstance();
-        $is_assigns = $_wsTool->getIsAssignPeople($model->create_team);
-        if($is_assigns && $model->getIsSeekEpiboly()){
+        $isHaveAssign = $_wsTool->getIsHaveAssign($model->create_team);
+        if($isHaveAssign && $model->getIsSeekEpiboly()){
             if(!($model->getIsStatusWaitUndertake()))
                 throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
         }else{
@@ -480,7 +467,7 @@ class TaskController extends Controller
     {
         $model = $this->findModel($task_id);
         $_wsTool = WorksystemTool::getInstance();
-        $is_producer = $_wsTool->getIsProducer($model->id);
+        $is_producer = $_wsTool->getIsHaveMake($model->id);
         if($is_producer){
             if(!($model->getIsStatusToStart()))
                 throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
@@ -539,7 +526,7 @@ class TaskController extends Controller
     {
         $model = $this->findModel($task_id);
         $_wsTool = WorksystemTool::getInstance();
-        $is_producer = $_wsTool->getIsProducer($model->id);
+        $is_producer = $_wsTool->getIsHaveMake($model->id);
         if($is_producer){
             if(!($model->getIsStatusToStart()))
                 throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
@@ -626,28 +613,31 @@ class TaskController extends Controller
     {
         Yii::$app->getResponse()->format = 'json';
         $message = '';          //消息
-        $type = 0;              //是否成功：0为否，1为是
+        $type = 1;              //是否成功：0为否，1为是
+        $isAdd = 0;             //是否添加：0为否，1为是
         $items = [];            //数据
         $errors = [];           //错误
         
-        $demandTasks = (new Query()) 
-            ->select(['item_type_id', 'team_id',])
-            ->from(DemandTask::tableName())
-            ->where(['and', ['course_id'=> $course_id], ['status' => DemandTask::STATUS_DEVELOPING]])
-            ->one();
-        $itemTeamId = ArrayHelper::getValue($demandTasks, 'team_id');
-        $teamIds = $this->getUserTeam(true);
+        $demandTask = DemandTask::find()
+                ->where(['and', ['course_id'=> $course_id], ['!=', 'status', DemandTask::STATUS_CANCEL]])
+                ->orderBy('id DESC')
+                ->one();
+        $teamIds = array_keys($this->getUserTeam());
         
         try
         {
-            if($demandTasks == null){
-                $type = 1;
-                $message = '该课程在需求任务里不存在';
-            }else if(!in_array($itemTeamId, $teamIds)){
-                $type = 1;
-                $message = '该课程不是你本团队承接的';
+            if($demandTask == null){
+                $type = 0;
+                $isAdd = 1;
+                $message = '该课程在需求任务里不存在。';
+            }else if($demandTask->status != DemandTask::STATUS_DEVELOPING){
+                $type = 0;
+                $message = '该课程不是在开发中。';
+            }else if(!in_array($demandTask->team_id, $teamIds)){
+                $type = 0;
+                $message = '该课程不是本团队承接。';
             }else{
-                $items = $demandTasks;
+                $items = ['item_type_id' => $demandTask->item_type_id, 'team_id' => $demandTask->team_id];
             }
             
         } catch (Exception $ex) {
@@ -655,6 +645,7 @@ class TaskController extends Controller
         }
         return [
             'type'=> $type,
+            'isAdd'=> $isAdd,
             'data' => $items,
             'message' => $message,
             'error' => $errors
@@ -751,16 +742,34 @@ class TaskController extends Controller
     }
     
     /**
-     * 获取所有创建者
-     * @param RbacManager $rbacManager
+     * 获取所有工作任务创建者和制作人
      * @return array
      */
-    public function getCreateBys()
+    public function getCreatorProducer()
     {
-        $rbacManager = Yii::$app->authManager;
-        $createBys = $rbacManager->getItemUsers(RbacName::ROLE_WORKSYSTEM_PUBLISHER);
+        $query = (new Query())
+                ->select(['WorksystemTask.id', "CONCAT(WorksystemTask.create_by, '_', User.nickname) AS create_by"])
+                ->from(['WorksystemTask' => WorksystemTask::tableName()])
+                ->leftJoin(['User' => User::tableName()], 'User.id = WorksystemTask.create_by');
+        $results = (new Query())
+                ->select(['CreateBy.create_by', "CONCAT(TeamMember.u_id, '_', User.nickname) AS producer"])
+                ->from(['CreateBy' => $query])
+                ->leftJoin(['Producer' => WorksystemTaskProducer::tableName()], 'Producer.worksystem_task_id = CreateBy.id')
+                ->leftJoin(['TeamMember' => TeamMember::tableName()], 'TeamMember.id = Producer.team_member_id')
+                ->leftJoin(['User' => User::tableName()], 'User.id = TeamMember.u_id')
+                ->all();
         
-        return ArrayHelper::map($createBys, 'id', 'nickname');
+        $createBys = [];
+        $producers = [];
+        foreach ($results as $item) {
+            $createBys[explode('_', $item['create_by'])[0]] = isset(explode('_', $item['create_by'])[1]) ? explode('_', $item['create_by'])[1] : '';
+            $producers[explode('_', $item['producer'])[0]] = isset(explode('_', $item['producer'])[1]) ? explode('_', $item['producer'])[1] : '';
+        }
+        
+        return [
+            'createBy' => array_filter($createBys),
+            'producer' => array_filter($producers)
+        ];
     }
     
     /**
@@ -778,35 +787,16 @@ class TaskController extends Controller
     }
     
     /**
-     * 获取所有制作人员
-     * @return array
-     */
-    public function getProducerList()
-    {
-        //$_tmTool = TeamMemberTool::getInstance();
-        //$producers = $_tmTool->getAppointPositionTeamMembers();
-        
-        $rbacManager = Yii::$app->authManager;
-        $producers = $rbacManager->getItemUsers(RbacName::ROLE_WORKSYSTEM_PRODUCER);
-        
-        return ArrayHelper::map($producers, 'id', 'nickname');
-    }
-    
-    /**
      * 获取用户所在团队
      * @param TeamMemberTool $_tmTool
-     * @param boolean $is_validate              是否验证：false为否，true为是
      * @return array
      */
-    public function getUserTeam($is_validate = false)
+    public function getUserTeam()
     {
         $_tmTool = TeamMemberTool::getInstance();
         $teams = $_tmTool->getUserTeam(Yii::$app->user->id, TeamCategory::TYPE_WORKSYSTEM_TEAM);
         
-        if(count($teams) == 1 || $is_validate)
-            return ArrayHelper::getColumn($teams, 'id');
-        else
-            return ArrayHelper::map($teams, 'id', 'name');
+        return ArrayHelper::map($teams, 'id', 'name');
     }
     
     /**
@@ -820,7 +810,7 @@ class TaskController extends Controller
         
         return $maps = [
            'id' => ArrayHelper::getColumn($teamMembers, 'id'),
-            'team_id' => ArrayHelper::getColumn($teamMembers, 'team_id')
+           'team_id' => ArrayHelper::getColumn($teamMembers, 'team_id')
         ];
                 
     }

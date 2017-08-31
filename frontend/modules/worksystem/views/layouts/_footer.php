@@ -42,14 +42,7 @@ use yii\helpers\Html;
                     [
                         'controllerId' => 'task',
                         'name' => '任务',
-                        'url' => [
-                            'task/index',
-                            'create_by' => Yii::$app->user->id, 
-                            'producer' => Yii::$app->user->id, 
-                            'assign_people' => Yii::$app->user->id,
-                            'status' => WorksystemTask::STATUS_DEFAULT,
-                            'mark' => false,
-                         ],
+                        'url' => ['task/index'],
                         'icon' => '/filedata/demand/image/list-check.png',
                         'options' => ['class' => 'footer-menu-item'],
                         'symbol' => '&nbsp;',
@@ -84,6 +77,7 @@ use yii\helpers\Html;
                     echo ResourceHelper::a(Html::img([$item['icon']]).Html::tag('span', $item['name'], ['class'=>'menu-name hidden-xs']), $item['url'], 
                             $item['options'], $item['conditions'], $item['adminOptions']);
                 }
+                
             ?>
         </div>
     </div>

@@ -61,14 +61,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'团员名称',
                 'value'=>function($model){
                     /* @var $model TeamMember */
-                    return $model->user->nickname;
+                    return !empty($model->u_id) && !empty($model->user)? $model->user->nickname : null;
                 }   
             ],
             [
                 'label'=>'团员职称',
                 'value'=>function($model){
                     /* @var $model TeamMember */
-                    return !empty($model->position_id) ? $model->position->name : '空';
+                    return !empty($model->position_id) ? $model->position->name : null;
                 }   
             ],
             [
@@ -82,7 +82,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'职位等级',
                 'value'=>function($model){
                     /* @var $model TeamMember */
-                    return $model->position->level;
+                    return !empty($model->position_id) ? $model->position->level : null;
                 }   
             ],
             [

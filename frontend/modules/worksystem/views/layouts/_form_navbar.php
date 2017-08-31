@@ -11,7 +11,7 @@ use yii\web\View;
 
 <div class="controlbar">
     <div class="container">
-        <?= Html::a(Yii::t('rcoa', 'Back'), isset($params) ? $params : null, ['class' => 'btn btn-default']) ?>
+        <?= Html::a(Yii::t('rcoa', 'Back'), isset($params) ? $params : null, ['class' => 'btn btn-default'])?>
         
         <?= Html::a(
                 $model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'),
@@ -24,17 +24,17 @@ use yii\web\View;
 <?php
 $js = 
 <<<JS
+    window.first = 0;
     $('#submit').click(function()
     {
-        var value = $('#task_type_id-worksystemtask-task_type_id').val();
-        //var value = $('input[name="WorksystemAddAttributes[value]"]').val();
-        //console.log(value);
-        if(value == ''){
-            $('.myModal').modal("show");
-            //$('.worksystem-add-attributes-form .help-block').html('不能为空');
+        if(window.first == 0){
+            var dataAdd =  $("#worksystemtask-course_id").attr("data-add");
+            $("#worksystemtask-task_type_id").attr("disabled", false);
+            if(dataAdd == "true"){
+                $('#worksystem-task-form').submit();
+            }
         }
-        else
-            $('#worksystem-task-form').submit();
+        window.first = 1;
     });
     
 JS;

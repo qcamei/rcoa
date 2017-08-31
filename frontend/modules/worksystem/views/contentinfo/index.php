@@ -44,10 +44,10 @@ use yii\web\View;
                     <td class="course-name"><?= $model->worksystemContent->type_name ?></td>
                     <?php if($model->is_new == WorksystemContent::MODE_NEWLYBUILD): ?>
                     <td>新建</td>
-                    <td class="hidden-xs"><?= $model->price ?><span class="reference">（<?= $model->worksystemContent->price_new ?>/<?= $model->worksystemContent->unit ?>）</span></td>
+                    <td class="hidden-xs"><?= $model->price ?><span class="reference">(<?= $model->worksystemContent->price_new ?>/<?= $model->worksystemContent->unit ?>)</span></td>
                     <?php else: ?>
                     <td>改造</td>
-                    <td class="hidden-xs"><?= $model->price ?><span class="reference">（<?= $model->worksystemContent->price_remould ?>/<?= $model->worksystemContent->unit ?>）</span></td>
+                    <td class="hidden-xs"><?= $model->price ?><span class="reference">(<?= $model->worksystemContent->price_remould ?>/<?= $model->worksystemContent->unit ?>)</span></td>
                     <?php endif; ?>
                     <td><?= $model->budget_number ?><span class="reference"><?= $model->worksystemContent->unit ?></span></td>
                     <td class="hidden-xs">￥<?= number_format($model->budget_cost, 2, '.', ',') ?></td>

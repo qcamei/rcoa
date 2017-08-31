@@ -1,6 +1,26 @@
 <?php
 namespace wskeee\rbac;
 class RbacName{
+	/** 需求管理 */
+	const PERMSSION_BACKEND_DEMAND_ADMIN = "p_backend_demand_admin";
+	/** 专家管理 */
+	const PERMSSION_BACKEND_EXPERT_ADMIN = "p_backend_expert_admin";
+	/** 题库管理 */
+	const PERMSSION_BACKEND_QUESTION_ADMIN = "p_backend_question_admin";
+	/** 拍摄管理 */
+	const PERMSSION_BACKEND_SHOOT_ADMIN = "p_backend_shoot_admin";
+	/** 模块管理 */
+	const PERMSSION_BACKEND_SYSTEM_ADMIN = "p_backend_system_admin";
+	/** 开发管理 */
+	const PERMSSION_BACKEND_TEAMWORK_ADMIN = "p_backend_teamwork_admin";
+	/** 团队管理 */
+	const PERMSSION_BACKEND_TEMMANAGE_ADMIN = "p_backend_temmanage_admin";
+	/** 单元测试 */
+	const PERMSSION_BACKEND_UNITTEST_ADMIN = "p_backend_unittest_admin";
+	/** 用户管理 */
+	const PERMSSION_BACKEND_USER_ADMIN = "p_backend_user_admin";
+	/** 任务管理 */
+	const PERMSSION_BACKEND_WORKSYSTEM_ADMIN = "p_backend_worksystem_admin";
 	/** 课程需求-基础数据-添操作 */
 	const PERMSSION_DEMAND_BASEDATA_CREATE = "p_demand_basedata_create";
 	/** 课程需求-基础数据-删操作 */
@@ -45,6 +65,40 @@ class RbacName{
 	const PERMSSION_DEMAND_TASK_UPDATE_ACCEPTANCE = "p_demand_task_update_acceptance";
 	/** 课程需求-任务更新审核 */
 	const PERMSSION_DEMAND_TASK_UPDATE_CHECK = "p_demand_task_update_check";
+	/** 取消支撑v2 */
+	const PERMSSION_FRONTEND_WORKSYSTEM_CANCEL_BRACE = "p_frontend_worksystem_cancel_brace";
+	/** 取消外包v2 */
+	const PERMSSION_FRONTEND_WORKSYSTEM_CANCEL_EPIBOLY = "p_frontend_worksystem_cancel_epiboly";
+	/** 取消任务v2 */
+	const PERMSSION_FRONTEND_WORKSYSTEM_CANCEL_TASK = "p_frontend_worksystem_cancel_task";
+	/** 取消承接v2 */
+	const PERMSSION_FRONTEND_WORKSYSTEM_CANCEL_UNDERTAKE = "p_frontend_worksystem_cancel_undertake";
+	/** 完成验收v2 */
+	const PERMSSION_FRONTEND_WORKSYSTEM_COMPLETE_ACCEPTANCE = "p_frontend_worksystem_complete_acceptance";
+	/** 提交验收v2 */
+	const PERMSSION_FRONTEND_WORKSYSTEM_CONTENTINFO_SUBMIT = "p_frontend_worksystem_contentinfo_submit";
+	/** 添加修改v2 */
+	const PERMSSION_FRONTEND_WORKSYSTEM_CREATE_ACCEPTANCE = "p_frontend_worksystem_create_acceptance";
+	/** 创建指派v2 */
+	const PERMSSION_FRONTEND_WORKSYSTEM_CREATE_ASSIGN = "p_frontend_worksystem_create_assign";
+	/** 寻求支撑v2 */
+	const PERMSSION_FRONTEND_WORKSYSTEM_CREATE_BRACE = "p_frontend_worksystem_create_brace";
+	/** 创建审核v2 */
+	const PERMSSION_FRONTEND_WORKSYSTEM_CREATE_CHECK = "p_frontend_worksystem_create_check";
+	/** 寻求外包v2 */
+	const PERMSSION_FRONTEND_WORKSYSTEM_CREATE_EPIBOLY = "p_frontend_worksystem_create_epiboly";
+	/** 创建任务v2 */
+	const PERMSSION_FRONTEND_WORKSYSTEM_CREATE_TASK = "p_frontend_worksystem_create_task";
+	/** 承接任务v2 */
+	const PERMSSION_FRONTEND_WORKSYSTEM_CREATE_UNDERTAKE = "p_frontend_worksystem_create_undertake";
+	/** 查看视图v2 */
+	const PERMSSION_FRONTEND_WORKSYSTEM_SEE_VIEW = "p_frontend_worksystem_see_view";
+	/** 开始制作v2 */
+	const PERMSSION_FRONTEND_WORKSYSTEM_START_MAKE = "p_frontend_worksystem_start_make";
+	/** 提交审核v2 */
+	const PERMSSION_FRONTEND_WORKSYSTEM_SUBMIT_CHECK = "p_frontend_worksystem_submit_check";
+	/** 更新任务v2 */
+	const PERMSSION_FRONTEND_WORKSYSTEM_UPDATE_TASK = "p_frontend_worksystem_update_task";
 	/** 多媒体-任务指派 */
 	const PERMSSION_MULTIMEDIA_TASK_ASSIGN = "p_multimedia_task_assign";
 	/** 多媒体-取消任务 */
@@ -103,39 +157,21 @@ class RbacName{
 	const PERMSSION_TEAMWORK_TASK_CREATE = "p_teamwork_task_create";
 	/** 课程开发-周报创建 */
 	const PERMSSION_TEAMWORK_WEEKLY_CREATE = "p_teamwork_weekly_create";
-	/** 课程开发-周报编辑 */
-	const PERMSSION_TEAMWORK_WEEKLY_UPDATE = "p_teamwork_weekly_update";
-	/** 工作系统-管理编辑 */
-	const PERMSSION_WORKSYSTEM_ADMIN_EDIT = "p_worksystem_admin_edit";
-	/** 工作系统-创建指派 */
-	const PERMSSION_WORKSYSTEM_CREATE_ASSIGN = "p_worksystem_create_assign";
-	/** 工作系统-添加审核 */
-	const PERMSSION_WORKSYSTEM_CREATE_CHECK = "p_worksystem_create_check";
-	/** 工作系统-提交验收 */
-	const PERMSSION_WORKSYSTEM_SUBMIT_ACCEPTANCE = "p_worksystem_submit_acceptance";
-	/** 工作系统-提交审核 */
-	const PERMSSION_WORKSYSTEM_SUBMIT_CHECK = "p_worksystem_submit_check";
-	/** 工作系统-任务验收 */
-	const PERMSSION_WORKSYSTEM_TASK_ACCEPTANCE = "p_worksystem_task_acceptance";
-	/** 工作系统-任务取消 */
-	const PERMSSION_WORKSYSTEM_TASK_CANCEL = "p_worksystem_task_cancel";
-	/** 工作系统-任务创建 */
-	const PERMSSION_WORKSYSTEM_TASK_CREATE = "p_worksystem_task_create";
-	/** 工作系统-任务承接 */
-	const PERMSSION_WORKSYSTEM_TASK_UNDERTAKE = "p_worksystem_task_undertake";
-	/** 工作系统-任务更新 */
-	const PERMSSION_WORKSYSTEM_TASK_UPDATE = "p_worksystem_task_update";
-	/** 管理员 */
+	/** 管理员v2 */
 	const ROLE_ADMIN = "r_admin";
 	/** 课程中心组 */
 	const ROLE_CC_USERS = "r_cc_users";
+	/** 课程开发经理v2 */
+	const ROLE_COMMON_COURSE_DEV_MANAGER = "r_common_course_dev_manager";
+	/** 外包v2 */
+	const ROLE_COMMON_EXTERNAL_WORKER = "r_common_external_worker";
 	/** 接洽人 */
 	const ROLE_CONTACT = "r_contact";
-	/** 课程需求审核人 */
+	/** 课程总监v2 */
 	const ROLE_DEMAND_AUDITOR = "r_demand_auditor";
 	/** 课程需求-基础数据管理人 */
 	const ROLE_DEMAND_BASEDATA_ADMIN = "r_demand_basedata_admin";
-	/** 课程需求发布者 */
+	/** 课程主任v2 */
 	const ROLE_DEMAND_PROMULGATOR = "r_demand_promulgator";
 	/** 课程需求-需求任务管理人 */
 	const ROLE_DEMAND_TASK_ADMIN = "r_demand_task_admin";
@@ -143,7 +179,7 @@ class RbacName{
 	const ROLE_DEMAND_UNDERTAKE_PERSON = "r_demand_undertake_person";
 	/** 游客 */
 	const ROLE_GUEST = "r_guest";
-	/** 多媒体制作师 */
+	/** 技术人员v2 */
 	const ROLE_MP = "r_mp";
 	/** 多媒体制作组长 */
 	const ROLE_MP_LEADER = "r_mp_leader";
@@ -155,13 +191,13 @@ class RbacName{
 	const ROLE_NEW_PUBLISHER = "r_new_publisher";
 	/** 项目管理员  */
 	const ROLE_PROJECT_MANAGER = "r_project_manager";
-	/** 摄影组长 */
+	/** 摄影组长v2 */
 	const ROLE_SHOOT_LEADER = "r_shoot_leader";
-	/** 摄影师 */
+	/** 摄影师v2 */
 	const ROLE_SHOOT_MAN = "r_shoot_man";
 	/** 预约拍摄系统管理员 */
 	const ROLE_SHOOT_MANAGER = "r_shoot_manager";
-	/** 老师 */
+	/** 老师v2 */
 	const ROLE_TEACHERS = "r_teachers";
 	/** 课程开发录入人 */
 	const ROLE_TEAMWORK_COURSE_INPUTPERSON = "r_teamwork_course_inputperson";
@@ -173,18 +209,8 @@ class RbacName{
 	const ROLE_TEAMWORK_WEEKLY_DEVELOPER = "r_teamwork_weekly_developer";
 	/** 所有用户 */
 	const ROLE_USERS = "r_users";
-	/** 编导 */
+	/** 教学编导v2 */
 	const ROLE_WD = "r_wd";
 	/** 编导组长 */
 	const ROLE_WD_LEADER = "r_wd_leader";
-	/** 工作系统-管理员 */
-	const ROLE_WORKSYSTEM_ADMIN = "r_worksystem_admin";
-	/** 工作系统-指派人 */
-	const ROLE_WORKSYSTEM_ASSIGNS = "r_worksystem_assigns";
-	/** 工作系统-制作人 */
-	const ROLE_WORKSYSTEM_PRODUCER = "r_worksystem_producer";
-	/** 工作系统-发布人 */
-	const ROLE_WORKSYSTEM_PUBLISHER = "r_worksystem_publisher";
-	/** 工作系统-承接人 */
-	const ROLE_WORKSYSTEM_UNDERTAKE = "r_worksystem_undertake";
 }

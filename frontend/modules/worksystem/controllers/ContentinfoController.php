@@ -93,15 +93,7 @@ class ContentinfoController extends Controller
      */
     public function actionCreate($task_type_id)
     {
-        
-        /* $model = new WorksystemContentinfo();
-         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            
-        }*/
         return $this->renderAjax('create', [
-            //'model' => $model,
             'typeNames' => $this->getWorksystemContentTypeNames($task_type_id),
         ]);
     }
@@ -152,8 +144,8 @@ class ContentinfoController extends Controller
     {
         $_wsTaskModel = $this->findWorksystemTask($task_id);
         $_wsTool = WorksystemTool::getInstance();
-        $is_producer = $_wsTool->getIsProducer($_wsTaskModel->id);
-        if($is_producer){
+        $isHaveMake = $_wsTool->getIsHaveMake($_wsTaskModel->id);
+        if($isHaveMake){
             if(!($_wsTaskModel->getIsStatusWorking() || $_wsTaskModel->getIsStatusUpdateing()))
                 throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
         }else{
