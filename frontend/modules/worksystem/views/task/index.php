@@ -99,8 +99,8 @@ $this->params['breadcrumbs'][] = $this->title;
                    'value'=> function($data){
                         if(!empty($data['external_team_name']) && $data['is_epiboly'] == WorksystemTask::SEEK_EPIBOLY_MARK)
                             return "<span class=\"team-span team-span-left\">{$data['create_team_name']}</span>".Html::img(['/filedata/worksystem/image/brace.png'], ['class' => 'brace'])."<span class=\"team-span team-span-left epiboly-team-span\">{$data['external_team_name']}</span>";
-                        else if(!empty($data['external_team_name']) && $data['is_epiboly'] == WorksystemTask::SEEK_BRACE_MARK)
-                            return "<span class=\"team-span team-span-left\">{$data['create_team_name']}</span>".Html::img(['/filedata/worksystem/image/brace.png'], ['class' => 'brace'])."<span class=\"team-span team-span-left epiboly-team-span\">{$data['external_team_name']}</span>";
+                        else if(!empty($data['external_team_name']) && $data['is_brace'] == WorksystemTask::SEEK_BRACE_MARK)
+                            return "<span class=\"team-span team-span-left\">{$data['create_team_name']}</span>".Html::img(['/filedata/worksystem/image/brace.png'], ['class' => 'brace'])."<span class=\"team-span team-span-left\">{$data['external_team_name']}</span>";
                         else 
                              return "<span class=\"team-span\">{$data['create_team_name']}</span>";
                     },
@@ -295,7 +295,11 @@ $this->params['breadcrumbs'][] = $this->title;
        ]); 
     ?>
     
-    <div class="summary">总共<b><?= $totalCount ?></b>条数据</div>
+    <?php
+        $page = !isset($param['page'])? 1 :$param['page'];
+        $pageCount = ceil($totalCount/20);
+        echo "<div class=\"summary\">第<b>".(($page*20-20)+1)."</b>-<b>".($page!=$pageCount?$page*20:$totalCount)."</b>条，总共<b>{$totalCount}</b>条数据.</div>";
+    ?>
         
     <?= LinkPager::widget([  
         'pagination' => new Pagination([

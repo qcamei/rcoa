@@ -121,7 +121,9 @@ class WorksystemSearch
             ['like', 'ItemChild.name', $keywords],
             ['like', 'ItemCourse.name', $keywords]
         ]);
-        $totalCount = clone $query;     //复制对象计算总数
+        //复制对象计算总数
+        $pageCopy = clone $query;     
+        $totalCount = count(array_flip (ArrayHelper::getColumn($pageCopy->all(), 'id')));
         //字段
         $query->addSelect([
             'Item.name AS item_name', 'ItemChild.name AS item_child_name', 'ItemCourse.name AS item_course_name',
@@ -155,7 +157,7 @@ class WorksystemSearch
         
         return [
             'param' => $params,
-            'totalCount' => count($totalCount->all()),
+            'totalCount' => $totalCount,
             'result' => $results,
             'isBelong' => $isBelong,
         ];
