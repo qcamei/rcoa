@@ -15,13 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <?= $this->render('/layouts/_title', [
-    'params' => ['index', 
-        'create_by' => Yii::$app->user->id, 
-        'producer' => Yii::$app->user->id, 
-        'assign_people' => Yii::$app->user->id,
-        'status' => WorksystemTask::STATUS_DEFAULT,
-        'mark' => false,
-    ],
+    'params' => ['index'],
     'title' => Yii::t('rcoa', 'Create'),
 ]) ?>
 
@@ -46,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?= $this->render('/layouts/_form_navbar', [
     'model' => $model,
-    'params' => ['index', 'create_by' => Yii::$app->user->id, 'status' => WorksystemTask::STATUS_DEFAULT, 'mark' => false],
+    'params' => ['index'],
 ]) ?>
 
 <?php

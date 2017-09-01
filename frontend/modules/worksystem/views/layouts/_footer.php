@@ -75,7 +75,7 @@ use yii\helpers\Html;
                     $selected = is_array($item['controllerId']) ? in_array($controllerId, $item['controllerId']) : $controllerId == $item['controllerId'];
                     $item['options']['class'] .= $selected ? $selectClass : null;
                     echo ResourceHelper::a(Html::img([$item['icon']]).Html::tag('span', $item['name'], ['class'=>'menu-name hidden-xs']), $item['url'], 
-                            $item['options'], $item['conditions'], $item['adminOptions']);
+                            $item['options'], $item['conditions']);
                 }
                 
             ?>

@@ -145,7 +145,7 @@ class WorksystemSearch
             ->from(['WorksystemTaskCopy' => $queryCopy])
             ->leftJoin(['Operation' => WorksystemOperation::tableName()], '(Operation.worksystem_task_id = WorksystemTaskCopy.id AND Operation.worksystem_task_status = WorksystemTaskCopy.`status`)')
             ->leftJoin(['OperationUser' => WorksystemOperationUser::tableName()], 'OperationUser.worksystem_operation_id = Operation.id')
-            ->groupBy('WorksystemTaskCopy.id')
+            ->groupBy(['CONCAT(OperationUser.worksystem_operation_id, \'_\', OperationUser.user_id)'])
             ->all();
         $isBelong = [];
         foreach ($belongResults as $item){

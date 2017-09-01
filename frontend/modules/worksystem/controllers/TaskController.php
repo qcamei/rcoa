@@ -226,7 +226,7 @@ class TaskController extends Controller
         
         if ($model->load($post)) {
             $_wsAction->CancelTask($model, $post);
-            return $this->redirect(['index', 'create_by' => Yii::$app->user->id, 'status' => WorksystemTask::STATUS_DEFAULT, 'mark' => false,]);
+            return $this->redirect(['index']);
         } else {
             return $this->renderAjax('_cancel', [
                 'model' => $model,
@@ -288,7 +288,7 @@ class TaskController extends Controller
         
         if ($model->load($post)) {
             $_wsAction->CreateCheckTask($model, $post);
-            return $this->redirect(['index', 'assign_people' => Yii::$app->user->id, 'status' => WorksystemTask::STATUS_DEFAULT, 'mark' => false,]);
+            return $this->redirect(['index']);
         } else {
             return $this->renderAjax('_create_check', [
                 'model' => $model,
@@ -314,7 +314,7 @@ class TaskController extends Controller
         
         if ($model->load($post)) {
             $_wsAction->CreateAssignTask($model, $post);
-            return $this->redirect(['index', 'assign_people' => Yii::$app->user->id, 'status' => WorksystemTask::STATUS_DEFAULT, 'mark' => false,]);
+            return $this->redirect(['index']);
         } else {
             return $this->renderAjax('_create_assign', [
                 'model' => $model,
@@ -348,7 +348,7 @@ class TaskController extends Controller
         
         if ($model->load($post)) {
             $_wsAction->CreateBraceTask($model, $post);
-            return $this->redirect(['index', 'assign_people' => Yii::$app->user->id, 'status' => WorksystemTask::STATUS_DEFAULT, 'mark' => false,]);
+            return $this->redirect(['index']);
         } else {
             return $this->renderAjax('_create_brace', [
                 'model' => $model,
@@ -415,7 +415,7 @@ class TaskController extends Controller
         
         if ($model->load($post)) {
             $_wsAction->CreateEpibolyTask($model, $post);
-            return $this->redirect(['index', 'assign_people' => Yii::$app->user->id, 'status' => WorksystemTask::STATUS_DEFAULT, 'mark' => false,]);
+            return $this->redirect(['index']);
         } else {
             return $this->renderAjax('_create_epiboly', [
                 'model' => $model,
@@ -501,6 +501,7 @@ class TaskController extends Controller
             throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
         $post = Yii::$app->request->post();
         $_wsAction = WorksystemAction::getInstance();
+        $teamMemberMap = $this->getUserTeamMembers();
         
         if ($model->load($post)) {
             $_wsAction->CreateUndertakeTask($model, $post);
@@ -508,8 +509,8 @@ class TaskController extends Controller
         } else {
             return $this->renderAjax('_create_undertake', [
                 'model' => $model,
-                'teams' => ArrayHelper::getValue($this->getUserTeamMembers(), 'team_id'),
-                'producer' => ArrayHelper::getValue($this->getUserTeamMembers(), 'id'),
+                'teams' => $teamMemberMap[Yii::$app->user->id]['team_id'],
+                'producer' => $teamMemberMap[Yii::$app->user->id]['id'],
             ]);
         }        
     }
@@ -538,7 +539,7 @@ class TaskController extends Controller
         
         if ($model->load($post)) {
             $_wsAction->CancelUndertakeTask($model, $post);
-            return $this->redirect(['index', 'producer' => Yii::$app->user->id, 'status' => WorksystemTask::STATUS_DEFAULT, 'mark' => false]);
+            return $this->redirect(['index']);
         } else {
             return $this->renderAjax('_cancel_undertake', [
                 'model' => $model,
@@ -567,7 +568,7 @@ class TaskController extends Controller
         
         if ($model->load($post)) {
             $_wsAction->CreateAcceptanceTask($model, $post);
-            return $this->redirect(['index', 'create_by' => Yii::$app->user->id, 'status' => WorksystemTask::STATUS_DEFAULT, 'mark' => false]);
+            return $this->redirect(['index']);
         } else {
             return $this->renderAjax('_create_acceptance', [
                 'model' => $model,
@@ -596,7 +597,7 @@ class TaskController extends Controller
         
         if ($model->load($post)) {
             $_wsAction->CompleteAcceptanceTask($model, $post);
-            return $this->redirect(['index', 'create_by' => Yii::$app->user->id, 'status' => WorksystemTask::STATUS_DEFAULT, 'mark' => false]);
+            return $this->redirect(['index']);
         } else {
             return $this->renderAjax('_complete_acceptance', [
                 'model' => $model,
@@ -807,12 +808,15 @@ class TaskController extends Controller
     {
         $_tmTool = TeamMemberTool::getInstance();
         $teamMembers = $_tmTool->getUserTeamMembers(Yii::$app->user->id, TeamCategory::TYPE_EPIBOLY_TEAM);
+        $teamMemberMap = [];
+        foreach($teamMembers as $item){
+            $teamMemberMap[Yii::$app->user->id] = [
+                'id' => $item['id'],
+                'team_id' => $item['team_id'],
+            ];
+        }
         
-        return $maps = [
-           'id' => ArrayHelper::getColumn($teamMembers, 'id'),
-           'team_id' => ArrayHelper::getColumn($teamMembers, 'team_id')
-        ];
-                
+        return $teamMemberMap;
     }
     
     /**

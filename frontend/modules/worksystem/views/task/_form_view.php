@@ -162,7 +162,7 @@ use yii\helpers\Html;
             
             
             foreach ($buttonHtml as $item) {
-                echo ResourceHelper::a($item['name'], $item['url'], $item['options'], $item['conditions'], $item['adminOptions']).($item['conditions'] ? $item['symbol'] : null);
+                echo ResourceHelper::a($item['name'], $item['url'], $item['options'], $item['conditions']).($item['conditions'] ? $item['symbol'] : null);
             }
             
         ?>

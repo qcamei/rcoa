@@ -15,13 +15,7 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa/worksystem', 'Update');
 ?>
 
 <?= $this->render('/layouts/_title', [
-    'params' => ['index', 
-        'create_by' => Yii::$app->user->id, 
-        'producer' => Yii::$app->user->id, 
-        'assign_people' => Yii::$app->user->id,
-        'status' => WorksystemTask::STATUS_DEFAULT,
-        'mark' => false,
-    ],
+    'params' => ['index'],
     'title' => Yii::t('rcoa', 'Update'),
 ]) ?>
 

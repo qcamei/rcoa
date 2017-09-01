@@ -45,8 +45,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 
                 <?= Html::encode('是否确定承接该制作任务？') ?>
                 
-                <?= Html::hiddenInput('WorksystemProducer[team_member_id]', $producer[0]) ?>
-                <?= Html::activeHiddenInput($model, 'external_team', ['value' => $teams[0]]); ?>
+                <?= Html::hiddenInput('WorksystemProducer[team_member_id]', $producer) ?>
+                <?= Html::activeHiddenInput($model, 'external_team', ['value' => $teams]); ?>
                 <?= Html::activeHiddenInput($model, 'status', ['value' => WorksystemTask::STATUS_TOSTART])?>
                 <?= Html::activeHiddenInput($model, 'progress', ['value' => WorksystemTask::$statusProgress[WorksystemTask::STATUS_TOSTART]])?>
                 
