@@ -30,7 +30,7 @@ use yii\helpers\Html;
                 [
                     'name' => Yii::t('rcoa', 'Back'),
                     'url' => ['back'],
-                    'options' => ['class' => 'btn btn-default', 'onclick'=> 'history.go(-1)'],
+                    'options' => ['class' => 'btn btn-default', 'onclick'=> 'history.go(-1);return false'],
                     'symbol' => '&nbsp;',
                     'conditions' => true,
                     'adminOptions' => true,
