@@ -60,6 +60,7 @@ use common\widgets\Menu;
                             ['label' => '权限列表', 'icon' => 'circle-o', 'url' => ['/rbac/permission'],],
                             ['label' => '路由列表', 'icon' => 'circle-o', 'url' => ['/rbac/route'],],
                             ['label' => '分组列表', 'icon' => 'circle-o', 'url' => ['/rbac/auth-group'],],
+                            ['label' => '清除缓存', 'icon' => 'circle-o', 'url' => ['/rbac/cache'],],
                         ],
                     ],
                     [
