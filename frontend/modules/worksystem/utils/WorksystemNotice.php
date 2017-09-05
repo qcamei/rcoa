@@ -6,23 +6,47 @@ use common\config\AppGlobalVariables;
 use common\models\worksystem\WorksystemTask;
 use common\wskeee\job\JobManager;
 use wskeee\ee\EeManager;
+use wskeee\notification\NotificationManager;
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
 
 class WorksystemNotice 
 {
     private static $instance = null;
     
+    private $subjectModule = "任务-";
+
     /**
-     * 给所在团队指派人 发送 ee通知 email
+     * 获取单例
+     * @return WorksystemNotice
+     */
+    public static function getInstance() {
+        if (self::$instance == null) {
+            self::$instance = new WorksystemNotice();
+        }
+        return self::$instance;
+    }
+    
+    /**
+     * 访问链接
+     * @return string
+     */
+    private function createAbsoluteUrl($model)
+    {
+        return Yii::$app->urlManager->createAbsoluteUrl(['/worksystem/task/view','id' => $model->id]);
+    }
+
+    /**
+     * 给所在团队指派人 发送通知
      * @param WorksystemTask $model
      * @param array $users                                  用户信息
-     * @param string $mode                                  标题模式
+     * @param string $title                                 标题
      * @param string $views                                 视图
      * @param string $des                                   备注
      */
-    public function sendAssignPeopleNotification($model, $users, $mode, $views, $des = null)
+    public function sendAssignPeopleNotification($model, $users, $title, $views, $des = null)
     {
         //传进view 模板参数
         $params = [
@@ -30,29 +54,29 @@ class WorksystemNotice
             'des' => $des != null ? $des : '无',
         ];
         //主题 
-        $subject = "工作系统-".$mode;
-        //团队指派人ee
-        $assignPerson_ee = array_filter(ArrayHelper::getValue($users, 'ee'));
+        $subject = $this->subjectModule.$title;
+        //团队指派人
+        $receivers = array_filter(ArrayHelper::getValue($users, 'guid'));
         //团队指派人邮箱地址
-        $assignPerson_email = array_filter(ArrayHelper::getValue($users, 'email'));
-        //发送ee消息 
-        EeManager::sendEeByView($views, $params, $assignPerson_ee, $subject);
+        $receivers_email = array_filter(ArrayHelper::getValue($users, 'email'));
+        //发送消息 
+        NotificationManager::sendByView($views, $params, $receivers, $subject, $this->createAbsoluteUrl($model));
         //发送邮件消息 
         /*Yii::$app->mailer->compose($views, $params)
-            ->setTo($receivers_mail)
+            ->setTo($receivers_email)
             ->setSubject($subject)
             ->send();*/
     }
     
     /**
-     * 给创建者 发送 ee通知 email
+     * 给创建者 发送通知
      * @param WorksystemTask $model
-     * @param string $mode                                  标题模式
+     * @param string $title                                 标题
      * @param string $views                                 视图
      * @param string $nickname                              昵称
      * @param string $des                                   备注
      */
-    public  function sendCreateByNotification($model, $mode, $views, $nickname = null, $des = null)
+    public  function sendCreateByNotification($model, $title, $views, $nickname = null, $des = null)
     {
         //传进view 模板参数
         $params = [
@@ -61,28 +85,29 @@ class WorksystemNotice
             'des' => $des != null ? $des : '无',
         ];
         //主题
-        $subject = "工作系统-".$mode;
-        //查找编导ee和mail 
-        $createBy_ee = $model->createBy->ee;
-        $createBy_mail = $model->createBy->email;
-         //发送ee消息
-        EeManager::sendEeByView($views, $params,$createBy_ee, $subject);
+        $subject = $this->subjectModule.$title;
+        //查找创建者
+        $receivers = $model->createBy->guid;
+        //查找创建者email
+        $receivers_email = $model->createBy->email;
+        //发送消息 
+        NotificationManager::sendByView($views, $params, $receivers, $subject, $this->createAbsoluteUrl($model));
         //发送邮件消息
         /*Yii::$app->mailer->compose($views, $params)
-            ->setTo($shootBooker_mail)
+            ->setTo($receivers_email)
             ->setSubject($subject)
             ->send();*/
     }
     
     /**
-     * 给制作人 发送 ee通知 email
+     * 给制作人 发送通知
      * @param WorksystemTask $model
-     * @param string $mode                                  标题模式
      * @param array $users                                  用户信息
+     * @param string $title                                 标题
      * @param string $views                                 视图
      * @param string $des                                   备注
      */
-    public  function sendProducerNotification($model, $users, $mode, $views, $des = null)
+    public  function sendProducerNotification($model, $users, $title, $views, $des = null)
     {
         //传进view 模板参数 
         $params = [
@@ -90,28 +115,29 @@ class WorksystemNotice
             'des' => $des != null ? $des : '无',
         ];
         //主题 
-        $subject = "工作系统-".$mode;
-        //查找接洽人ee和mail 
-        $producer_ee = array_filter(ArrayHelper::getValue($users, 'ee'));
-        $producer_mail = array_filter(ArrayHelper::getValue($users, 'email'));
-        //发送ee消息
-        EeManager::sendEeByView($views, $params,$producer_ee, $subject);
+        $subject = $this->subjectModule.$title;
+        //查找制作人
+        $receivers = array_filter(ArrayHelper::getValue($users, 'guid'));
+        //查找制作人email
+        $receivers_email = array_filter(ArrayHelper::getValue($users, 'email'));
+        //发送消息 
+        NotificationManager::sendByView($views, $params, $receivers, $subject, $this->createAbsoluteUrl($model));
         //发送邮件消息 
         /*Yii::$app->mailer->compose($views, $params)
-            ->setTo($shootContacter_mail)
+            ->setTo($receivers_email)
             ->setSubject($subject)
             ->send();*/
     }
     
     /**
-     * 给外包成员 发送 ee通知 email
+     * 给外包成员 发送通知
      * @param WorksystemTask $model
-     * @param string $mode                                  标题模式
      * @param array $users                                  用户信息
+     * @param string $mode                                  标题
      * @param string $views                                 视图
      * @param string $des                                   备注
      */
-    public  function sendEpibolyNotification($model, $users, $mode, $views, $des = null)
+    public  function sendEpibolyNotification($model, $users, $title, $views, $des = null)
     {
         //传进view 模板参数 
         $params = [
@@ -119,15 +145,16 @@ class WorksystemNotice
             'des' => $des != null ? $des : '无',
         ];
         //主题 
-        $subject = "工作系统-".$mode;
-        //查找接洽人ee和mail 
-        $producer_ee = array_filter(ArrayHelper::getValue($users, 'ee'));
-        $producer_mail = array_filter(ArrayHelper::getValue($users, 'email'));
-        //发送ee消息
-        EeManager::sendEeByView($views, $params,$producer_ee, $subject);
+        $subject = $this->subjectModule.$title;
+        //查找外包成员
+        $receivers = array_filter(ArrayHelper::getValue($users, 'guid'));
+        //查找外包成员emal
+        $receivers_email = array_filter(ArrayHelper::getValue($users, 'email'));
+        //发送消息
+        NotificationManager::sendByView($views, $params, $receivers, $subject, $this->createAbsoluteUrl($model));
         //发送邮件消息 
         /*Yii::$app->mailer->compose($views, $params)
-            ->setTo($shootContacter_mail)
+            ->setTo($receivers_email)
             ->setSubject($subject)
             ->send();*/
     }
@@ -182,14 +209,4 @@ class WorksystemNotice
         $jobManager->cancelNotification(AppGlobalVariables::getSystemId(), $model->id, $users);
     }
     
-    /**
-     * 获取单例
-     * @return WorksystemNotice
-     */
-    public static function getInstance() {
-        if (self::$instance == null) {
-            self::$instance = new WorksystemNotice();
-        }
-        return self::$instance;
-    }
 }

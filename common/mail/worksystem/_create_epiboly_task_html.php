@@ -20,27 +20,16 @@ use yii\helpers\Html;
  /* @var $model WorksystemTask */
 
 ?>
+<div class="gray">您好！有包外任务发布 ,请及时查看！ </div>
+    
+<div class="normal">课程名称：<?= Html::encode($model->course->name) ?></div>
 
-<div class="mail-new-demand-task">
-    
-    <p>您好！有包外任务发布 ,请及时查看！ </p>
-    
-    <p><b>课程名称</b>：<?= Html::encode($model->course->name) ?></p>
-    
-    <p><b>任务名称</b>：<?= Html::encode($model->name) ?></p>
-    
-    <p><b>团队</b>：<?= Html::encode($model->createTeam->name) ?></p>
-    
-    <p><b>创建人</b>：<?= Html::encode($model->createBy->nickname) ?></p>
-    
-    <p><b>要求完成时间</b>：<span style="color:red"><?= Html::encode($model->plan_end_time) ?></span></p>
-    
-    <p><b>备注</b>：<?= Html::encode($des) ?></p>
-    
-    <?= Html::a('马上查看', 
-            Yii::$app->urlManager->createAbsoluteUrl(['/worksystem/task/view','id' => $model->id]), 
-            [   
-                'class'=>'btn btn-default', 
-                'target'=>'_blank'
-            ]) ?>
-</div>
+<div class="normal">任务名称：<?= Html::encode($model->name) ?></div>
+
+<div class="normal">团队：<?= Html::encode($model->createTeam->name) ?></div>
+
+<div class="normal">创建人：<?= Html::encode($model->createBy->nickname) ?></div>
+
+<div class="highlight">要求完成时间：<?= Html::encode($model->plan_end_time) ?></div>
+
+<div class="normal">备注：<?= Html::encode($des) ?></div>

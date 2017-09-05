@@ -157,7 +157,7 @@ class WorksystemAction
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status' => $model->getStatusName()]);
                 if(!in_array($model->create_by, $teamUserId)){
                     $jobManager->addNotification(AppGlobalVariables::getSystemId(), $model->id, $teamUserId);
-                    //$_wsNotice->sendAssignPeopleNotification($model, $users, '审核申请', 'worksystem/_submit_check_task_html');
+                    $_wsNotice->sendAssignPeopleNotification($model, $users, '审核申请', 'worksystem/_submit_check_task_html');
                 }
             }else
                 throw new Exception($model->getErrors());
@@ -181,6 +181,8 @@ class WorksystemAction
     {
         $_wsNotice = WorksystemNotice::getInstance();
         $jobManager = Yii::$app->get('jobManager');
+        $users = $this->getTeamMembersUserLeaders($model->create_team);
+        $leaderNickname = ArrayHelper::getValue($users, 'nickname');
         $des = ArrayHelper::getValue($post, 'WorksystemOperation.des');
         
         /** 开启事务 */
@@ -191,7 +193,7 @@ class WorksystemAction
                 $this->saveWorksystemOperation($model->id, WorksystemTask::STATUS_ADJUSTMENTING, '审核', 0, $des);
                 $this->saveWorksystemOperationUser($model->id, $model->create_by);
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status' => $model->getStatusName()]);
-                //$_wsNotice->sendCreateByNotification($model, '审核申请结果', 'worksystem/_create_check_task_html', $teamNickname, $des);
+                $_wsNotice->sendCreateByNotification($model, '审核申请结果', 'worksystem/_create_check_task_html', $leaderNickname, $des);
             }else
                 throw new Exception($model->getErrors());
             
@@ -236,8 +238,8 @@ class WorksystemAction
                 $this->saveWorksystemOperation($model->id, WorksystemTask::STATUS_TOSTART, '分配', '选定制作人【'.implode(',', $producerName).'】');
                 $this->saveWorksystemOperationUser($model->id, $producerUserId);
                 $_wsNotice->setAssignNotification($model, $producerUserId);
-                //$_wsNotice->sendCreateByNotification($model, '任务-指派', 'worksystem/_create_assign_task_html', $producerName);
-                //$_wsNotice->sendProducerNotification($model, $users, '任务-指派', 'worksystem/_create_assign_task_html');
+                $_wsNotice->sendCreateByNotification($model, '分配人员', 'worksystem/_create_assign_task_html', $producerName);
+                $_wsNotice->sendProducerNotification($model, $users, '分配人员', 'worksystem/_create_assign_task_html');
             }else
                 throw new Exception($model->getErrors());
             
@@ -274,7 +276,7 @@ class WorksystemAction
                 $this->saveWorksystemOperationUser($model->id, $leadersUserId, WorksystemTask::SEEK_BRACE_MARK);
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status' => $model->getStatusName()]);
                 $jobManager->addNotification(AppGlobalVariables::getSystemId(), $model->id, $leadersUserId);
-                //$_wsNotice->sendAssignPeopleNotification($model, $users, '寻求支撑', 'worksystem/_create_brace_task_html', $des);
+                $_wsNotice->sendAssignPeopleNotification($model, $users, '寻求支撑', 'worksystem/_create_brace_task_html', $des);
             }else
                 throw new Exception($model->getErrors());
             
@@ -345,7 +347,7 @@ class WorksystemAction
                 $this->saveWorksystemOperationUser($model->id, $epibolyUserId, null, WorksystemTask::SEEK_EPIBOLY_MARK);
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status' => $model->getStatusName()]);
                 $jobManager->addNotification(AppGlobalVariables::getSystemId(), $model->id, $epibolyUserId);
-                //$_wsNotice->sendEpibolyNotification($model, $epibolyUsers, '外包', 'worksystem/_create_epiboly_task_html', $des);
+                $_wsNotice->sendEpibolyNotification($model, $epibolyUsers, '外包', 'worksystem/_create_epiboly_task_html', $des);
             }else
                 throw new Exception($model->getErrors());
             
@@ -454,7 +456,7 @@ class WorksystemAction
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status' => $model->getStatusName()]);
                 $jobManager->removeNotification(AppGlobalVariables::getSystemId(), $model->id, $epibolyUserId);
                 $jobManager->addNotification(AppGlobalVariables::getSystemId(), $model->id, $producerUserId);
-                //$_wsNotice->sendCreateByNotification($model, '承接', 'worksystem/_create_undertake_task_html', $producerName);
+                $_wsNotice->sendCreateByNotification($model, '承接', 'worksystem/_create_undertake_task_html', $producerName);
             }else
                 throw new Exception($model->getErrors());
             
@@ -531,7 +533,7 @@ class WorksystemAction
                     $this->saveWorksystemOperation($model->id, WorksystemTask::STATUS_ACCEPTANCEING, '验收', '提交验收', $des);
                 $this->saveWorksystemOperationUser($model->id, $model->create_by);
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status' => $model->getStatusName()]);   
-                //$_wsNotice->sendCreateByNotification($model, '验收申请', 'worksystem/_submit_acceptance_task_html', $producerName);
+                $_wsNotice->sendCreateByNotification($model, '验收申请', 'worksystem/_submit_acceptance_task_html', $producerName);
             }else
                 throw new Exception($model->getErrors());
             
@@ -569,7 +571,7 @@ class WorksystemAction
                 $this->saveWorksystemOperation($model->id, WorksystemTask::STATUS_UPDATEING, '验收', $content, $des);
                 $this->saveWorksystemOperationUser($model->id, $producerUserId);
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status' => $model->getStatusName()]);   
-                //$_wsNotice->sendProducerNotification($model, $producerUsers, '验收不通过', 'worksystem/_create_acceptance_task_html', $des);
+                $_wsNotice->sendProducerNotification($model, $producerUsers, '验收结果', 'worksystem/_create_acceptance_task_html', $des);
             }else
                 throw new Exception($model->getErrors());
             
@@ -604,7 +606,7 @@ class WorksystemAction
                 $this->saveWorksystemOperation($model->id, WorksystemTask::STATUS_COMPLETED, '验收', 1);
                 $this->saveWorksystemOperationUser($model->id, $model->create_by);
                 $jobManager->updateJob(AppGlobalVariables::getSystemId(), $model->id, ['progress'=> $model->progress, 'status' => $model->getStatusName()]);   
-                //$_wsNotice->sendProducerNotification($model, $producerUsers, '验收通过', 'worksystem/_complete_acceptance_task_html');
+                $_wsNotice->sendProducerNotification($model, $producerUsers, '验收通过', 'worksystem/_complete_acceptance_task_html');
             }else
                 throw new Exception($model->getErrors());
             
@@ -626,7 +628,6 @@ class WorksystemAction
     {
         $_tmTool = TeamMemberTool::getInstance();
         $leaders = $_tmTool->getTeamMembersUserLeaders(TeamCategory::TYPE_WORKSYSTEM_TEAM);
-        
         $leaderUser = [];
         if($teamId == null){
             foreach ($leaders as $item){
@@ -643,7 +644,7 @@ class WorksystemAction
         $users = [
             'user_id' => ArrayHelper::getColumn($leaderUser, 'u_id'),
             'nickname' => ArrayHelper::getColumn($leaderUser, 'nickname'),
-            'ee' => ArrayHelper::getColumn($leaderUser, 'ee'),
+            'guid' => ArrayHelper::getColumn($leaderUser, 'guid'),
             'email' => ArrayHelper::getColumn($leaderUser, 'email'),
         ];
         
@@ -673,7 +674,7 @@ class WorksystemAction
         $users = [
             'user_id' => ArrayHelper::getColumn($epibolyUsers, 'u_id'),
             'nickname' => ArrayHelper::getColumn($epibolyUsers, 'nickname'),
-            'ee' => ArrayHelper::getColumn($epibolyUsers, 'ee'),
+            'guid' => ArrayHelper::getColumn($epibolyUsers, 'guid'),
             'email' => ArrayHelper::getColumn($epibolyUsers, 'email'),
         ];
         
@@ -688,7 +689,7 @@ class WorksystemAction
     public function getWorksystemTaskProducer($taskId)
     {
         $producers = (new Query())
-                ->select(['Producer.worksystem_task_id', 'Team_member.u_id', 'User.nickname', 'User.ee', 'User.email'])
+                ->select(['Producer.worksystem_task_id', 'Team_member.u_id', 'User.nickname', 'User.guid', 'User.email'])
                 ->from(['Producer' => WorksystemTaskProducer::tableName()])
                 ->leftJoin(['Team_member' => TeamMember::tableName()], 'Team_member.id = Producer.team_member_id')
                 ->leftJoin(['User' => User::tableName()], 'User.id = Team_member.u_id')
@@ -698,7 +699,7 @@ class WorksystemAction
         $user = [
             'user_id' => ArrayHelper::map($producers, 'worksystem_task_id', 'u_id'),
             'nickname' => ArrayHelper::map($producers, 'worksystem_task_id', 'nickname'),
-            'ee' => ArrayHelper::map($producers, 'worksystem_task_id', 'ee'),
+            'guid' => ArrayHelper::map($producers, 'worksystem_task_id', 'guid'),
             'email' => ArrayHelper::map($producers, 'worksystem_task_id', 'email'),
         ];
         

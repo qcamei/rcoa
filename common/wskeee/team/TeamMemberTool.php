@@ -496,7 +496,7 @@ class TeamMemberTool extends Component {
                 ->select([
                     'TeamMember.id','TeamMember.team_id','TeamMember.u_id','TeamMember.is_leader','TeamMember.index','TeamMember.position_id','TeamMember.is_delete',
                     'Position.name AS position_name','Position.level AS position_level',
-                    'User.nickname','User.avatar', 'User.ee', 'User.email',
+                    'User.nickname','User.avatar', 'User.ee', 'User.guid', 'User.email',
                     'Team.name AS team_name'
                     ])
                 ->from(['TeamMember'=>TeamMember::tableName()])

@@ -20,24 +20,14 @@ use yii\helpers\Html;
 
 ?>
 
-<div class="mail-new-demand-task">
+<div class="gray">您好！审核申请结果是 不通过 ,请及时查看！ </div>
     
-    <p>您好！审核申请结果是 不通过 ,请及时查看！ </p>
-    
-    <p><b>课程名称</b>：<?= Html::encode($model->course->name) ?></p>
-    
-    <p><b>任务名称</b>：<?= Html::encode($model->name) ?></p>
-    
-    <p><b>审核人</b>：<?= Html::encode($nickname) ?></p>
-    
-    <p><b>要求完成时间</b>：<?= Html::encode($model->plan_end_time) ?></p>
-    
-    <p><b>备注</b>：<span style="color:red"><?= Html::encode($des) ?></span></p>
-    
-    <?= Html::a('马上查看', 
-            Yii::$app->urlManager->createAbsoluteUrl(['/worksystem/task/view','id' => $model->id]), 
-            [   
-                'class'=>'btn btn-default', 
-                'target'=>'_blank'
-            ]) ?>
-</div>
+<div class="normal">课程名称：<?= Html::encode($model->course->name) ?></div>
+
+<div class="normal">任务名称：<?= Html::encode($model->name) ?></div>
+
+<div class="normal">审核人：<?= Html::encode($nickname) ?></div>
+
+<div class="normal">要求完成时间：<?= Html::encode($model->plan_end_time) ?></div>
+
+<div class="highlight">备注：<?= Html::encode($des) ?></div>

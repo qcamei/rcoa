@@ -15,27 +15,32 @@ class NotificationManager {
 
     /** view默认位置 */
     public static $viewPath = '@common/mail/';
-    /** 定义应用$agent_id常量 = 1000007*/
+
+    /** 定义应用$agent_id常量 = 1000007 */
     public static $agent_id = 1000007;
 
     /**
      * send 发送信息的函数
      * @param string|array $receivers       接收者，以‘|’分隔，包含中文需使用URL编码
      * @param string $title                 消息标题
+     * @param string $url                   访问链接
      * @param string $content               消息内容
      */
-    public static function send($receivers, $title, $content) {
-
+    public static function send($receivers, $title, $url, $content) 
+    {
         if (is_array($receivers))
             $receivers = implode('|', $receivers);
 
         $msg = array(
             'touser' => $receivers,
             'toparty' => '',
-            'msgtype' => 'text',
+            'msgtype' => 'textcard',
             'agentid' => self::$agent_id,
-            'text' => array(
-                "content" => $content)
+            'textcard' => array(
+                "title" => $title,
+                "description" => preg_replace("/[\s]{2,}/","",trim($content)),
+                "url" => $url,
+            )
         );
 
         $api = new AppApi(self::$agent_id);
@@ -48,19 +53,22 @@ class NotificationManager {
      * @param string $params                转进视图模板参数
      * @param string $receivers             接收者，以‘|’分隔，包含中文需使用URL编码
      * @param string $title                 消息标题
+     * @param string $url                   访问链接
      * @return type
      */
-    public static function sendByView($view, $params, $receivers, $title = '') {
+    public static function sendByView($view, $params, $receivers, $title = '', $url = '') 
+    {
         /** 用于渲染模板 */
         $render = new View();
 
-        $url = self::$viewPath;
+        //$url = self::$viewPath;
         if (strpos($view, '@') == false)
             $view = self::$viewPath . $view;
 
         return self::send(
-                $receivers,
+                $receivers, 
                 $title,
+                $url,
                 $render->render($view, $params)
         );
     }
