@@ -100,6 +100,7 @@ class RbacManager extends DbManager{
     
     public function invalidateCache() {
         Helper::invalidate();
+        $this->cache->flush();      //清除全部缓存
         parent::invalidateCache();
     }
     
