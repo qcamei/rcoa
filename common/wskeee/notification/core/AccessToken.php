@@ -2,9 +2,6 @@
 
 namespace wskeee\notification\core;
 
-use wskeee\notification\core\Helper;
-use Yii;
-
 class AccessToken {
 
     private $corpId;
@@ -18,19 +15,19 @@ class AccessToken {
      */
     public function __construct($agentId) {
         $this->appConfigs = Helper::loadConfig();
-        $this->corpId = Yii::$app->params['wechat']['CorpId'];
+        $this->corpId = $this->appConfigs->CorpId;
 
         $this->secret = "";
         $this->agentId = $agentId;
 
         //由于通讯录是特殊的应用，需要单独处理
         if ($agentId == "txl") {
-            $this->secret = Yii::$app->params['wechat']['TxlSecret'];
+            $this->secret = $this->appConfigs->TxlSecret;
         } else {
             $config = Helper::getConfigByAgentId($agentId);
 
             if ($config) {
-                $this->secret = Yii::$app->params['wechat']['AppsConfig']['Secret'];
+                $this->secret = $config->Secret;
             }
         }
     }
@@ -49,6 +46,14 @@ class AccessToken {
             $res = json_decode(Helper::http_get($url)["content"]);
 
             $access_token = $res->access_token;
+
+            if ($access_token) {
+                $data->expire_time = time() + 7000;
+                $data->access_token = $access_token;
+                Helper::set_php_file($path, json_encode($data));
+        }
+        } else {
+            $access_token = $data->access_token;
         }
         return $access_token;
     }

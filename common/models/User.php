@@ -25,6 +25,7 @@ use yii\web\UploadedFile;
  * @property string $password_reset_token   重置密码令牌
  * @property string $email      邮箱
  * @property string $ee         ee号
+ * @property string $guid       企业微信userID
  * @property string $phone      手机
  * @property string $avatar     头像
  * @property int $status    状态0停用，1正常
@@ -69,9 +70,9 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             self::SCENARIO_CREATE => 
-                ['username','nickname','sex','email','password','password2','email','ee','phone','avatar'],
+                ['username','nickname','sex','email','password','password2','email','ee','guid','phone','avatar'],
             self::SCENARIO_UPDATE => 
-                ['username','nickname','sex','email','password','password2','email','ee','phone','avatar'],
+                ['username','nickname','sex','email','password','password2','email','ee','guid','phone','avatar'],
             self::SCENARIO_DEFAULT => ['username','nickname']
         ];
     }
@@ -126,6 +127,7 @@ class User extends ActiveRecord implements IdentityInterface
             'password_reset_token' => '密码重置令牌',
             'email' => '邮箱',
             'ee' => 'EE',
+            'guid' => '企业微信用户ID',
             'phone' => '手机',
             'status' => '状态',
             'stop'=>'停止',

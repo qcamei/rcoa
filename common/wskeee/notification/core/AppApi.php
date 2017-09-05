@@ -2,8 +2,6 @@
 
 namespace wskeee\notification\core;
 
-use wskeee\notification\core\Helper;
-
 class AppApi {
 
     private $access_token;

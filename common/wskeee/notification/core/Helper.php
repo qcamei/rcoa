@@ -3,7 +3,6 @@
 namespace wskeee\notification\core;
 
 use CURLFile;
-use Yii;
 
 class Helper {
 
@@ -141,22 +140,22 @@ class Helper {
 
     //写入本地文件
     public static function set_php_file($filename, $content) {
-        $fp = fopen($filename, "w");
+        $fp = fopen(\Yii::getAlias('@wskeee').'/notification'.$filename, "w");
         fwrite($fp, "<?php exit();?>" . $content);
         fclose($fp);
     }
 
     //加载本地的应用配置文件
     public static function loadConfig() {
-        return json_decode(self::get_php_file("../Config.php"));
+        return json_decode(self::get_php_file(\Yii::getAlias('@wskeee')."/notification/Config.php"));
     }
 
     //根据应用ID获取应用配置
     public static function getConfigByAgentId($id) {
-        $configs = Yii::$app->params['wechat']['AppsConfig'];
-        $value = Yii::$app->params['wechat']['AppsConfig']['AgentId'];
-        foreach ($configs as $value) {
-            if ($value == $id) {
+    $configs = self::loadConfig();
+
+    foreach ($configs->AppsConfig as $key => $value) {
+        if ($value->AgentId == $id) {
                 $config = $value;
                 break;
             }
