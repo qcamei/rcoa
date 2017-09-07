@@ -127,7 +127,7 @@ class User extends ActiveRecord implements IdentityInterface
             'password_reset_token' => '密码重置令牌',
             'email' => '邮箱',
             'ee' => 'EE',
-            'guid' => '企业微信用户ID',
+            'guid' => 'GUID',
             'phone' => '手机',
             'status' => '状态',
             'stop'=>'停止',

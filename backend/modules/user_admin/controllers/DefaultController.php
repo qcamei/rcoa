@@ -85,7 +85,7 @@ class DefaultController extends Controller {
             return $this->render('update', ['model' => $model]);
         }
     }
-    
+
     public function actionDelete($id) {
         /* @var $model User */
 
@@ -98,7 +98,7 @@ class DefaultController extends Controller {
         } else
             throw new Exception('找不到对应用户！');
     }
-    
+
     /**
      * 同步功能企业微信成员ID
      * @return type
@@ -112,15 +112,15 @@ class DefaultController extends Controller {
                 ->from(User::tableName())
                 ->all();
         $user_arr = ArrayHelper::map($users, 'username', 'username');
-        if(isset($arr_userInfo['userlist'])){
+        if (isset($arr_userInfo['userlist'])) {
             foreach ($arr_userInfo['userlist'] as $userItem) {
-                if(isset($user_arr[strtolower($userItem['userid'])])){
+                if (isset($user_arr[strtolower($userItem['userid'])])) {
                     $num = Yii::$app->db->createCommand()->update(User::tableName(), [
-                            'guid' => $userItem['userid']], ['username' => $user_arr[strtolower($userItem['userid'])]])->execute();
+                                'guid' => $userItem['userid']], ['username' => $user_arr[strtolower($userItem['userid'])]])->execute();
                 }
             }
         }
-        
+
         return $this->redirect(['index']);
     }
 
@@ -141,9 +141,6 @@ class DefaultController extends Controller {
     /**
      * 获取企业微信成员基本信息
      * @param TxlApi $instance
-     * queryUsersByDepartmentIdd的数据为： 1 [Number]  $depId    查询的部门ID
-     * queryUsersByDepartmentIdd的数据为： 1 [integer] $fetchChild 是否遍历子部门
-     * queryUsersByDepartmentIdd的数据为： 1 [boolean] $simple   是否只查询用户的基本信息
      * @return type
      */
     public static function getUserId($instance) {

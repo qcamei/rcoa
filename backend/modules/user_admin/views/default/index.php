@@ -11,7 +11,7 @@ $this->title = '管理用户';
 ?>
 <div class="user-index">
     <p>
-        <?= Html::a('同步企业微信用户ID',['tongbu'],['class'=>'btn btn-success']) ?>
+        <?= Html::a('同步GUID',['tongbu'],['class'=>'btn btn-success']) ?>
         <?= Html::a('新增',['create'],['class'=>'btn btn-success']) ?>
     </p>
     <?=
@@ -23,7 +23,6 @@ $this->title = '管理用户';
             'username',
             'nickname',
             'email',
-            'ee',
             'guid',
             [
                 'attribute' => 'created_at',
