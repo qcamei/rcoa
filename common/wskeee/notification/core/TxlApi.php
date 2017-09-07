@@ -59,7 +59,7 @@ class TxlApi {
      * @param  [integer] $fetchChild 是否遍历子部门
      * @param  [boolean] $simple   是否只查询用户的基本信息
      */
-    public function queryUsersByDepartmentId($depId, $fetchChild = 1, $simple = 1) {
+    public function queryUsersByDepartmentId($depId = 1, $fetchChild = 1, $simple = 1) {
         if ($depId > 0) {
             $interface = $simple == 1 ? "simplelist" : "list";
 

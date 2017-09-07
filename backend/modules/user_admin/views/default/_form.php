@@ -36,6 +36,8 @@ use yii\widgets\ActiveForm;
         
         <?php echo $form->field($model, 'ee')->textInput(['minlength'=>6,'maxlength'=>20]); ?>
         
+        <?php echo $form->field($model, 'guid')->textInput(['minlength'=>6,'maxlength'=>20]); ?>
+        
         <?php echo $form->field($model, 'phone')->textInput(['minlength'=>6,'maxlength'=>20]); ?>
         
         <?php echo $form->field($model, 'email')->textInput(['maxlength' => 200]) ?>
