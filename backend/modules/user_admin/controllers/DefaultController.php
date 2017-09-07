@@ -4,14 +4,15 @@ namespace backend\modules\user_admin\controllers;
 
 use common\models\searchs\UserSearch;
 use common\models\User;
+use wskeee\notification\core\TxlApi;
 use Yii;
 use yii\base\Exception;
+use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use wskeee\notification\UserManager;
-use wskeee\notification\core\TxlApi;
 
 class DefaultController extends Controller {
 
@@ -70,19 +71,6 @@ class DefaultController extends Controller {
         return $this->render('create', ['model' => $model]);
     }
 
-    public function actionDelete($id) {
-        /* @var $model User */
-
-        if (($model = $this->findModel($id)) !== null) {
-            if ($id !== Yii::$app->getUser()->getId()) {
-                $model->delete();
-                return $this->redirect(['index']);
-            } else
-                throw new Exception('自己不可以删除自己');
-        } else
-            throw new Exception('找不到对应用户！');
-    }
-
     public function actionUpdate($id) {
         $model = $this->findModel($id);
         $model->scenario = User::SCENARIO_UPDATE;
@@ -97,6 +85,44 @@ class DefaultController extends Controller {
             return $this->render('update', ['model' => $model]);
         }
     }
+    
+    public function actionDelete($id) {
+        /* @var $model User */
+
+        if (($model = $this->findModel($id)) !== null) {
+            if ($id !== Yii::$app->getUser()->getId()) {
+                $model->delete();
+                return $this->redirect(['index']);
+            } else
+                throw new Exception('自己不可以删除自己');
+        } else
+            throw new Exception('找不到对应用户！');
+    }
+    
+    /**
+     * 同步功能企业微信成员ID
+     * @return type
+     */
+    public function actionTongbu() {
+
+        $api = new TxlApi();
+        $arr_userInfo = json_decode($this->getUserId($api), true);
+        $users = (new Query())
+                ->select(['username', 'nickname'])
+                ->from(User::tableName())
+                ->all();
+        $user_arr = ArrayHelper::map($users, 'username', 'username');
+        if(isset($arr_userInfo['userlist'])){
+            foreach ($arr_userInfo['userlist'] as $userItem) {
+                if(isset($user_arr[strtolower($userItem['userid'])])){
+                    $num = Yii::$app->db->createCommand()->update(User::tableName(), [
+                            'guid' => $userItem['userid']], ['username' => $user_arr[strtolower($userItem['userid'])]])->execute();
+                }
+            }
+        }
+        
+        return $this->redirect(['index']);
+    }
 
     /**
      * 查找用户模型
@@ -110,27 +136,6 @@ class DefaultController extends Controller {
         } else {
             throw new NotFoundHttpException();
         }
-    }
-
-    /**
-     * 同步功能企业微信成员ID
-     * @return type
-     */
-    public function actionTongbu() {
-
-        $api = new TxlApi();
-        $userInfo = $this->getUserId($api);
-        $arr_userInfo = json_decode($userInfo, true);
-        print_r($arr_userInfo);exit;
-        if($arr_userInfo != NULL){
-            foreach ($arr_userInfo as $userid => $values) {
-                print_r($values['userlist']);
-            }
-        }
-        exit;
-        print_r($arr_userInfo);
-        exit;
-        return $this->render('tongbu');
     }
 
     /**
