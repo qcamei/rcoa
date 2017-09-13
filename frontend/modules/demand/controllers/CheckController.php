@@ -4,7 +4,9 @@ namespace frontend\modules\demand\controllers;
 
 use common\models\demand\DemandCheck;
 use common\models\demand\DemandCheckReply;
+use common\models\demand\DemandTask;
 use common\models\User;
+use frontend\modules\demand\utils\DemandAction;
 use frontend\modules\demand\utils\DemandTool;
 use wskeee\rbac\RbacName;
 use Yii;
@@ -32,16 +34,6 @@ class CheckController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
-            //access验证是否有登录
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ]
-                ],
-            ],
         ];
     }
 
@@ -49,11 +41,11 @@ class CheckController extends Controller
      * Lists all DemandCheck models.
      * @return mixed
      */
-    public function actionIndex($demand_task_id)
+    public function actionIndex($task_id)
     {
         return $this->renderAjax('index', [
-            'checks' => $this->getDemandCheck($demand_task_id),
-            'checkReplies' => $this->getDemandCheckReply($demand_task_id)
+            'checks' => $this->getDemandCheck($task_id),
+            'checkReplies' => $this->getDemandCheckReply($task_id)
         ]);
     }
 
@@ -74,23 +66,18 @@ class CheckController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($demand_task_id)
+    public function actionCreate($task_id)
     {
         $model = new DemandCheck();
-        /* @var $dtTool DemandTool */
-        $dtTool = DemandTool::getInstance();
         $model->loadDefaultValues();
-        $model->demand_task_id = $demand_task_id;
+        $model->demand_task_id = $task_id;
+        $model->create_by = \Yii::$app->user->id;
         
-        if(!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE) && $model->demandTask->create_by == \Yii::$app->user->id))
-            throw new NotAcceptableHttpException('无权限操作！');
-        if(!($model->demandTask->getIsStatusDefault()))
+        if(!($model->demandTask->create_by == \Yii::$app->user->id && ($model->demandTask->getIsStatusDefault() || $model->demandTask->getIsStatusAdjusimenting())))
             throw new NotAcceptableHttpException('该任务状态为'.$model->demandTask->getStatusName().'！');
         
-        $model->create_by = \Yii::$app->user->id;
-
         if ($model->load(Yii::$app->request->post())) {
-            $dtTool->CreateCheckTask($model);
+            DemandAction::getInstance()->DemandCreateCheck($model);
             return $this->redirect(['task/view', 'id' => $model->demand_task_id]);
         } else {
             return $this->renderAjax('create', [
@@ -98,36 +85,6 @@ class CheckController extends Controller
             ]);
         }
     }
-
-    /**
-     * Submit a new DemandCheck model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionSubmit($demand_task_id)
-    {
-        $model = new DemandCheck();
-        /* @var $dtTool DemandTool */
-        $dtTool = DemandTool::getInstance();
-        $model->loadDefaultValues();
-        $model->demand_task_id = $demand_task_id;
-        
-        if(!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE) && $model->demandTask->create_by == \Yii::$app->user->id))
-            throw new NotAcceptableHttpException('无权限操作！');
-        if(!($model->demandTask->getIsStatusAdjusimenting()))
-            throw new NotAcceptableHttpException('该任务状态为'.$model->demandTask->getStatusName().'！');
-        
-        $model->create_by = \Yii::$app->user->id;
-
-        if ($model->load(Yii::$app->request->post())) {
-            $dtTool->UpdateCheckTask($model);
-            return $this->redirect(['task/view', 'id' => $model->demand_task_id]);
-        } else {
-            return $this->renderAjax('create', [
-                'model' => $model,
-            ]);
-        }
-    } 
     
     /**
      * Updates an existing DemandCheck model.
@@ -176,7 +133,7 @@ class CheckController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-    
+        
     /**
      * 获取审核记录数据
      * @param integer $demand_task_id           需求任务ID

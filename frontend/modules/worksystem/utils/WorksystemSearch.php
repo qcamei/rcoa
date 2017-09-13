@@ -33,8 +33,6 @@ class WorksystemSearch
      */
     public function search($params)
     {
-        /* @var $rbacManager RbacManager */
-        $rbacManager = Yii::$app->authManager;
         $mark = ArrayHelper::getValue($params, 'mark', 0);                                                      //标记
         $page = ArrayHelper::getValue($params, 'page', 1);                                                      //分页
         $createBy = ArrayHelper::getValue($params, 'create_by', !$mark ? Yii::$app->user->id : null);           //创建者
@@ -63,7 +61,7 @@ class WorksystemSearch
               ->leftJoin(['ProducerUser' => User::tableName()], 'ProducerUser.id = TeamMember. u_id');
         //关联查询指派人
         $query->leftJoin(['AssignPeople' => TeamMember::tableName()], 
-            "(IF(WorksystemTask.is_brace=".WorksystemTask::SEEK_BRACE_MARK." AND WorksystemTask.external_team=0,AssignPeople.is_leader='".TeamMember::TEAMLEADER."',IF(WorksystemTask.`status`>=200 AND WorksystemTask.`status`<=350,AssignPeople.team_id=WorksystemTask.create_team AND AssignPeople.is_leader='".TeamMember::TEAMLEADER."',NUll)))"
+            "(IF(WorksystemTask.is_brace=".WorksystemTask::SEEK_BRACE_MARK." AND WorksystemTask.external_team=0,AssignPeople.is_leader='".TeamMember::TEAMLEADER."',IF(WorksystemTask.`status`>=".WorksystemTask::STATUS_WAITCHECK." AND WorksystemTask.`status`<=".WorksystemTask::STATUS_WAITUNDERTAKE.",AssignPeople.team_id=WorksystemTask.create_team AND AssignPeople.is_leader='".TeamMember::TEAMLEADER."',NUll)))"
         );
         //关联查询团队
         $query->leftJoin(['ExternalTeam' => Team::tableName()], 'ExternalTeam.id = WorksystemTask.external_team')      
@@ -83,6 +81,8 @@ class WorksystemSearch
             $query->orFilterWhere(['WorksystemTask.create_by' => $createBy]);
             $query->orFilterWhere(['TeamMember.u_id' => $producer]);
             $query->orFilterWhere(['AssignPeople.u_id' => $assignPeople]);
+            /* @var $rbacManager RbacManager */
+            $rbacManager = Yii::$app->authManager;
             if($rbacManager->isRole(RbacName::ROLE_COMMON_EXTERNAL_WORKER, Yii::$app->user->id))
                 $query->orFilterWhere(['WorksystemTask.is_epiboly' => WorksystemTask::SEEK_EPIBOLY_MARK]);
         }
@@ -141,7 +141,7 @@ class WorksystemSearch
         $queryCopy->addSelect(['WorksystemTask.`status`']);
         $belongResults = (new Query())
             ->select(['Operation.worksystem_task_id AS id', 
-                'IF(WorksystemTaskCopy.`status` = 900,900,IF(WorksystemTaskCopy.`status` = 500, 500, IF(WorksystemTaskCopy.`status` = Operation.worksystem_task_status, 1, 0))) AS `status`',
+                "IF(WorksystemTaskCopy.`status`=".WorksystemTask::STATUS_CANCEL.",".WorksystemTask::STATUS_CANCEL.",IF(WorksystemTaskCopy.`status`=".WorksystemTask::STATUS_COMPLETED.",".WorksystemTask::STATUS_COMPLETED.",IF(WorksystemTaskCopy.`status`=Operation.worksystem_task_status, 1, 0))) AS `status`",
                 'OperationUser.user_id'
             ])
             ->from(['WorksystemTaskCopy' => $queryCopy])

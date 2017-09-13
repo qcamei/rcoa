@@ -3,6 +3,7 @@
 use common\models\demand\DemandTask;
 use kartik\daterange\DateRangePicker;
 use kartik\widgets\Select2;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
@@ -17,7 +18,7 @@ use yii\widgets\ActiveForm;
 
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 search-box"> 
     <div class="search-text-input">
-        <?= Html::textInput('keyword', $keyword, [
+        <?= Html::textInput('keyword', ArrayHelper::getValue($params, 'keyword'), [
             'class' => 'form-control search-input',
             'placeholder' => '请输入关键字...'
         ]); ?>
@@ -40,9 +41,9 @@ use yii\widgets\ActiveForm;
             <div class="col-lg-9">
                 <?= Select2::widget([
                     'id' => 'select2-item_type_id',
-                    'value'=> $item_type_id,
+                    'value'=> ArrayHelper::getValue($params, 'task_type_id'),
                     'name' => 'item_type_id',
-                    'data' => $itemType,
+                    'data' => $itemTypes,
                     'options' => [
                         'placeholder' => '全部',
                     ],
@@ -59,7 +60,7 @@ use yii\widgets\ActiveForm;
             <div class="col-lg-9">
                 <?= Select2::widget([
                     'id' => 'select2-item_id',
-                    'value'=> $item_id,
+                    'value'=> ArrayHelper::getValue($params, 'item_id'),
                     'name' => 'item_id',
                     'data' => $items,
                     'options' => [
@@ -78,9 +79,9 @@ use yii\widgets\ActiveForm;
             <div class="col-lg-9">
                 <?= Select2::widget([
                     'id' => 'select2-item_child_id',
-                    'value'=> $item_child_id,
+                    'value'=> ArrayHelper::getValue($params, 'item_child_id'),
                     'name' => 'item_child_id',
-                    'data' => $itemChild,
+                    'data' => $itemChilds,
                     'options' => [
                         'placeholder' => '全部',
                     ],
@@ -97,9 +98,9 @@ use yii\widgets\ActiveForm;
             <div class="col-lg-9">
                 <?= Select2::widget([
                     'id' => 'select2-course_id',
-                    'value'=> $course_id,
+                    'value'=> ArrayHelper::getValue($params, 'course_id'),
                     'name' => 'course_id',
-                    'data' => $course,
+                    'data' => $courses,
                     'options' => [
                         'placeholder' => '全部',
                     ],
@@ -116,9 +117,9 @@ use yii\widgets\ActiveForm;
             <div class="col-lg-9">
                 <?= Select2::widget([
                     'id' => 'select2-create_by',
-                    'value'=> $create_by,
+                    'value'=> ArrayHelper::getValue($params, 'create_by', Yii::$app->user->id),
                     'name' => 'create_by',
-                    'data' => $createBy,
+                    'data' => $createBys,
                     'options' => [
                         'placeholder' => '全部',
                     ],
@@ -129,15 +130,15 @@ use yii\widgets\ActiveForm;
             </div>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding: 5px 0px;">
-            <label id="label-status" for="undertake_person" class="col-lg-3 control-label">
-                <?= Yii::t('rcoa/demand', 'Undertake Person'); ?>
+            <label id="label-status" for="undertaker" class="col-lg-3 control-label">
+                <?= Yii::t('rcoa/demand', 'Undertaker'); ?>
             </label>
             <div class="col-lg-9">
                 <?= Select2::widget([
-                    'id' => 'select2-producer',
-                    'value'=> $undertake_person,
-                    'name' => 'undertake_person',
-                    'data' => $undertakePerson,
+                    'id' => 'select2-undertaker',
+                    'value'=> ArrayHelper::getValue($params, 'undertaker', Yii::$app->user->id),
+                    'name' => 'undertaker',
+                    'data' => $undertakers,
                     'options' => [
                         'placeholder' => '全部',
                     ],
@@ -148,15 +149,15 @@ use yii\widgets\ActiveForm;
             </div>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding: 5px 0px;">
-            <label id="label-team_id" for="team_id" class="col-lg-3 control-label">
-                <?= Yii::t('rcoa/team', 'Team ID'); ?>
+            <label id="label-team_id" for="develop_Team" class="col-lg-3 control-label">
+                <?= Yii::t('rcoa/demand', 'Develop Team'); ?>
             </label>
             <div class="col-lg-9">
                 <?= Select2::widget([
-                    'id' => 'select2-team_id',
-                    'value'=> $team_id,
-                    'name' => 'team_id',
-                    'data' => $team,
+                    'id' => 'select2-develop_Team',
+                    'value'=> ArrayHelper::getValue($params, 'develop_Team'),
+                    'name' => 'develop_Team',
+                    'data' => $developTeams,
                     'options' => [
                         'placeholder' => '全部',
                     ],
@@ -173,7 +174,7 @@ use yii\widgets\ActiveForm;
             <div class="col-lg-9">
                 <?= Select2::widget([
                     'id' => 'select2-status',
-                    'value'=> $status,
+                    'value'=> ArrayHelper::getValue($params, 'status', DemandTask::STATUS_DEFAULT),
                     'name' => 'status',
                     'data' => [DemandTask::STATUS_DEFAULT => '未完成', DemandTask::STATUS_COMPLETED => '已完成'],
                     'options' => [
@@ -191,7 +192,7 @@ use yii\widgets\ActiveForm;
             </label>
             <div class="col-lg-9">
                 <?= DateRangePicker::widget([
-                    'value'=> $time,
+                    'value'=> ArrayHelper::getValue($params, 'time'),
                     'name' => 'time',
                     //'presetDropdown' => true,
                     'hideInput' => true,
@@ -214,9 +215,9 @@ use yii\widgets\ActiveForm;
         </div>
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="padding: 5px 15px;">
             <label for="time" class="col-lg-3 control-label hidden-lg hidden-xs">&nbsp;</label>
-            <div class="col-lg-9">
+            <!--<div class="col-lg-9">
                 <a id="export" role="button" class="btn btn-primary disabled">导出详细</a>
-            </div>
+            </div>-->
         </div>
     </div>
 </div>
@@ -226,12 +227,10 @@ use yii\widgets\ActiveForm;
 <?php ActiveForm::end(); ?>  
 
 <?php
-//$url = Yii::$app->urlManager->createUrl(['teamwork/course/search']);
-
+$mark = ArrayHelper::getValue($params, 'mark', 0);
 $js = 
 <<<JS
-    var mark = $mark;
-    if(mark == 1){
+    if($mark){
         $('#collapseExample').addClass('in');
         $('#down').addClass('down');
         $('#up').addClass('up');

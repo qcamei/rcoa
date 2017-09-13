@@ -72,7 +72,7 @@ class ProjectController extends BasedataController
      */
     public function actionCreate()
     {
-        parent::actionCreate();
+        //parent::actionCreate();
         
         $model = new Project();
 
@@ -99,7 +99,7 @@ class ProjectController extends BasedataController
      */
     public function actionUpdate($id)
     {
-        parent::actionUpdate($id);
+        //parent::actionUpdate($id);
         
         $model = $this->findModel($id);
 
@@ -125,7 +125,7 @@ class ProjectController extends BasedataController
      */
     public function actionDelete($id,$callback=null)
     {
-        parent::actionDelete($id);
+        //parent::actionDelete($id);
         
         $this->findModel($id)->delete();
         

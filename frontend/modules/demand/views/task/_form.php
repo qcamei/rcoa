@@ -53,7 +53,7 @@ use yii\widgets\ActiveForm;
     ]) ?>
     
     <?= $form->field($model, 'course_id')->widget(Select2::classname(), [
-        'data' => $courses, 'options' => ['placeholder' => '请选择...']
+        'data' => $courses, 'options' => ['data-add' => "true", 'placeholder' => '请选择...']
     ]) ?>
     
     <?= $form->field($model, 'teacher')->widget(Select2::classname(), [
@@ -99,43 +99,38 @@ use yii\widgets\ActiveForm;
         ],     
     ]) ?>
 
-    <?php if(is_array($team))
-            echo $form->field($model, 'create_team')->widget(Select2::classname(), ['id' => 'demandtask-create_team','data' => $team, 'options' => ['placeholder' => '请选择...']]);
-        else
-            echo Html::activeHiddenInput($model, 'create_team', ['value' => $team]);
-    ?> 
+    <?= $form->field($model, 'create_team', [
+        'labelOptions' => [
+            'style' => [
+                'padding-left' => '0',
+                'display' =>  count($teams) > 1 ? 'block' : 'none'
+             ]
+        ]
+    ])->dropDownList($teams, ['style ' => count($teams) > 1 ? 'display:block' : 'display:none']) ?>
     
-    <?php if(Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_EDIT))
-            echo $form->field($model, 'create_by')->widget(Select2::classname(), ['id' => 'demandtask-create_by', 'data' => $members, 'options' => ['placeholder' => '请选择...']]); 
-    ?>
+    <?= Html::activeHiddenInput($model, 'create_by', ['value' => Yii::$app->user->id]) ?>
     
-    <?php
-        echo Html::beginTag('div', ['class' => 'form-group field-demandtask-plan_check_harvest_time has-success']);
-            echo Html::beginTag('label', [
-                    'class' => 'col-lg-1 col-md-1 control-label', 
-                    'style' => 'color: #999999; font-weight: normal; padding-right:0;padding-left:10px;',
-                    'for' => 'demandtask-plan_check_harvest_time'
-                ]).Yii::t('rcoa/demand', 'Check Harvest Time').Html::endTag('label');
-            echo Html::beginTag('div', ['class' => 'col-sm-4']);
-                echo DateControl::widget([
-                    'name' => 'DemandTask[plan_check_harvest_time]',
-                    'value' => $model->isNewRecord ? date('Y-m-d H:i', strtotime('+1 days')) : $model->plan_check_harvest_time, 
-                    'type'=> DateControl::FORMAT_DATETIME,
-                    'displayFormat' => 'yyyy-MM-dd H:i',
-                    'saveFormat' => 'yyyy-MM-dd H:i',
-                    'ajaxConversion'=> true,
-                    'autoWidget' => true,
-                    'readonly' => true,
-                    'options' => [
-                        'pluginOptions' => [
-                            'autoclose' => true,
-                        ],
-                    ],
-                ]);
-                echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']).Html::beginTag('div', ['class' => 'help-block']).Html::endTag('div').Html::endTag('div');
-            echo Html::endTag('div');
-        echo Html::endTag('div');
-    ?>
+    <?= $form->field($model, 'plan_check_harvest_time', [
+        'template' => "{label}\n<div class=\"col-lg-4 col-md-4\">{input}</div>\n<div class=\"col-lg-4 col-md-4\">{error}</div>",
+        'labelOptions' => [
+                'class' => 'col-lg-1 col-md-1 control-label form-label',
+                'style'=>[
+                    'padding-left' => '0',
+                ]
+            ],
+    ])->widget(DateControl::classname(),[
+        'type'=> DateControl::FORMAT_DATETIME,
+        'displayFormat' => 'yyyy-MM-dd H:i',
+        'saveFormat' => 'yyyy-MM-dd H:i',
+        'ajaxConversion'=> true,
+        'autoWidget' => true,
+        'readonly' => true,
+        'options' => [
+            'pluginOptions' => [
+                'autoclose' => true,
+            ],
+        ],
+    ]) ?>
     
     <?= $form->field($model, 'bonus_proportion', [
         'template' => "{label}\n<div class=\"col-sm-2\">{input}</div>\n<div class=\"col-sm-2\">{error}</div>"
@@ -173,49 +168,42 @@ use yii\widgets\ActiveForm;
     
     <?= $form->field($model, 'des')->textarea(['value' => !$model->isNewRecord ? $model->des : '无', 'rows' => 4]) ?>
     
-    <?php
-        //附件上传按钮
-        echo Html::beginTag('div', ['class' => 'form-group field-demandtaskannex-annex', 'style' => 'margin-bottom:5px;']);
-            echo Html::beginTag('label', [
-                'class' => 'col-lg-1 col-md-1 control-label',
-                'style' => 'color: #999999; font-weight: normal; padding-right: 0;',
-                'for' => 'demandtaskannex-annex',
-            ]).Yii::t('rcoa/teamwork', 'Annex').Html::endTag('label');
-            echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']);
-                echo Html::textInput('', '文件上传', [
-                    'id'=> 'upload',
-                    'class' => 'form-group',
-                    'type' => 'button',
-                    'style' => 'margin-left: 5px;margin-top: 3px;margin-bottom:5px;',
-                    'onclick' => 'uploadFile()'
-                ]);
-            echo Html::endTag('div');
-        echo Html::endTag('div');
-        
-        //附件上传输入框
-        echo Html::beginTag('div', ['class' => 'form-group']);
-            echo Html::beginTag('label', [
-                'class' => 'col-lg-1 col-md-1 control-label',
-                'style' => 'color: #999999; font-weight: normal; padding-right: 0;',
-            ]).Html::endTag('label');
-            echo Html::beginTag('div', ['id' => 'demandtaskannex', 'class' => 'col-lg-10 col-md-10']);
-                if(!$model->isNewRecord){
-                    foreach ($annex as $value) {
-                        echo  Html::textInput('DemandTaskAnnex[name][]', $value->name, [
-                            'type' => 'text',
-                            'class' => 'form-control col-lg-12 col-md-11 col-sm-10 col-xs-9',
-                        ]).Html::img(['/filedata/teamwork/image/delete.png'], [
-                            'class' => 'form-img', 
-                            'onclick' => 'deleteAnnex($(this))',
-                        ]);
-                        echo Html::hiddenInput('DemandTaskAnnex[path][]', $value->path);
-                    }
-                }
-            echo Html::endTag('div');
-            echo Html::beginTag('div', ['class' => 'col-lg-10 col-md-10']).Html::beginTag('div', ['class' => 'help-block'])
-                .Html::endTag('div').Html::endTag('div');
-        echo Html::endTag('div');
-    ?>
+    <div class="form-group field-demandtaskannex-annex">
+        <label class="col-lg-1 col-md-1 control-label form-label" for="demandtaskannex-annex"><?= Yii::t('rcoa/teamwork', 'Annex') ?></label>
+        <div class="'col-lg-10 col-md-10">
+            <?= Html::textInput('', '文件上传', [
+                'id'=> 'upload',
+                'class' => 'form-group',
+                'type' => 'button',
+                'style' => 'margin-left: 5px;margin-top: 3px;margin-bottom:5px;',
+                'onclick' => 'uploadFile()'
+            ]); ?>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="col-lg-1 col-md-1 control-label form-label"></label>
+        <div id="demandtaskannex" class="col-lg-10 col-md-10">
+            
+            <?php if(!$model->isNewRecord): ?>
+            
+                <?php foreach($annexs as $item): ?>
+                
+                <div class="col-lg-12 col-md-12" style="margin-bottom:10px; padding:0px;">
+                    <div class="col-lg-12 col-md-12" style="padding:0px">
+                        <?= Html::textInput('DemandTaskAnnex[name][]', $item['name'], ['type' => 'text', 'class' => 'form-control']) ?>
+                        <?= Html::textInput('DemandTaskAnnex[path][]', $item['name'], ['type' => 'hidden']) ?>
+                    </div>
+                    <?= Html::img(['/filedata/teamwork/image/delete.png'], ['class' => 'form-img', 'onclick' => 'removeAnnex($(this))']) ?>
+                </div>
+            
+                <?php endforeach; ?>
+            
+            <?php endif;?>
+        </div>
+        <div id="annex-prompt" class="col-xs-10"></div>
+    </div>
+    
         
     <?php ActiveForm::end(); ?>
 </div>
@@ -229,6 +217,9 @@ $js =
             element = $('#demandtask-item_child_id');
         $("#demandtask-item_child_id").html("");
         $('#select2-demandtask-item_child_id-container').html('<span class="select2-selection__placeholder">请选择...</span>');
+        $('.field-demandtask-course_id').removeClass('has-error');
+        $(".field-demandtask-course_id .help-block").text('');
+        $("#demandtask-course_id").attr("data-add", "true");
         $("#demandtask-course_id").html("");
         $('#select2-demandtask-course_id-container').html('<span class="select2-selection__placeholder">请选择...</span>');
         wx(url, element, '请选择...');
@@ -237,25 +228,27 @@ $js =
     $('#demandtask-item_child_id').change(function(){
         var url = "/demand/task/search-select?id="+$(this).val(),
             element = $('#demandtask-course_id');
+        $('.field-demandtask-course_id').removeClass('has-error');
+        $(".field-demandtask-course_id .help-block").text('');
+        $("#demandtask-course_id").attr("data-add", "true");
         $("#demandtask-course_id").html("");
         $('#select2-demandtask-course_id-container').html('<span class="select2-selection__placeholder">请选择...</span>');
         wx(url, element, '请选择...');
     });
-    /** 下拉选择【发布者】 */
-    $('#demandtask-create_team').change(function(){
-        var url = "/demand/task/search-team-members?team_id="+$(this).val(),
-            element = $('#demandtask-create_by');
-        $("#demandtask-create_by").html("");
-        $('#select2-demandtask-create_by-container').html('<span class="select2-selection__placeholder">请选择...</span>');
-        $.post(url,function(data)
-        {
-            $('<option/>').val('').text(text).appendTo(element);
-            $.each(data['data'],function()
-            {
-                $('<option>').val(this['u_id']).text(this['nickname']).appendTo(element);
-            });
+    /** 检查【课程】是否唯一 */
+    $('#demandtask-course_id').change(function(){
+        $("#demandtask-course_id").attr("data-add", "true");
+        $('.field-demandtask-course_id').removeClass("has-error").addClass('has-success');
+        $(".field-demandtask-course_id .help-block").text("");
+        $.post("/demand/task/check-unique?id="+$(this).val(),function(data){
+            if(data['type'] == 1){
+                $("#demandtask-course_id").attr("data-add", "false");
+                $('.field-demandtask-course_id').removeClass("has-success").addClass('has-error');
+                $(".field-demandtask-course_id .help-block").text(data['message']);
+            }
         });
     });
+    $("#demandtask-plan_check_harvest_time-disp").attr('name', '');
         
 JS;
     $this->registerJs($js,  View::POS_READY);
@@ -265,7 +258,6 @@ JS;
 window['process'] = function(result){
         window['FILELIST'] = JSON.parse(result['data']);
 }
-
 function uploadFile(){
     //var testPath = 'http://eechat.tt.gzedu.com/';
     //var formalPath = 'http://eechat.gzedu.com/'; 
@@ -294,20 +286,21 @@ function uploadFile(){
                         fileName.push(fileList[i].CFileName);
                         NameMD5List.push(fileList[i].FileMD5);
                     }
-                    for(var i = 0; i < fileList.length; i++){
-                        var inputText = '<input type="text" name="DemandTaskAnnex[name][]"class="form-control col-lg-12 col-md-11 col-sm-10 col-xs-9">'+
-                            '<img class="form-img" src="/filedata/teamwork/image/delete.png" onclick="deleteAnnex($(this))">';
-                        var inputHidden = '<input type="hidden" name="DemandTaskAnnex[path][]">';
-                        if(i == 0){
-                            $(inputText).val(fileName.join('')).appendTo($("#demandtaskannex"));
-                            $("#demandtaskannex").append($(inputHidden).val(filelist.join('')));
+                    var is_return = true;
+                    $("#demandtaskannex .form-control").each(function(index, elem){
+                        if(fileName == $(this).val()){
+                            $('#annex-prompt').html('<span class="error-warn">请不要重复上传相同附件！</span>');
+                            is_return = false;
                         }
-                        else{
-                            $(inputText).val(fileName.join('')).after($("#demandtaskannex-path"));
-                            $(inputHidden).val(filelist.join('')).after($("#demandtaskannex-name"));
-                        }
-                        //$('#md5').val(NameMD5List.join(''));
-                    }
+                    });
+                    if(is_return == false)
+                        return;
+                    
+                    $('#annex-prompt').html('');
+                    var Html = '<div class="col-lg-12 col-md-12" style="margin-bottom:10px; padding:0px;"><div class="col-lg-12 col-md-12" style="padding:0px"><input type="text" class="form-control" name="DemandTaskAnnex[name][]" value="'+fileName.join('')+'"><input type="hidden" name="DemandTaskAnnex[path][]" value="'+filelist.join('')+'"></div><img class="form-img" src="/filedata/teamwork/image/delete.png" onclick="removeAnnex($(this))"></div>';
+                    $(Html).appendTo($("#demandtaskannex"));
+                    
+                    //$('#md5').val(NameMD5List.join(''));
                     window['FILELIST'] = [];
                 }
             },
@@ -315,11 +308,11 @@ function uploadFile(){
         }]
     });
 }
+
 /* 移除附件 */
-function deleteAnnex(object){
-    $(object).prev().remove();
-    $(object).next().remove();
-    $(object).remove();
+function removeAnnex(object)
+{
+    $(object).parent().remove();
 }
 </script>
 

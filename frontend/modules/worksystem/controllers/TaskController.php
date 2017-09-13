@@ -63,7 +63,7 @@ class TaskController extends Controller
             'allModels' => $results['result'],
         ]);
         
-        $creatorProducer = $this->getCreatorProducer();
+        $creatorProducer = $this->getTaskCreatorProducer();
         
         return $this->render('index', [
             'param' => $results['param'],
@@ -78,8 +78,8 @@ class TaskController extends Controller
             'courses' => ArrayHelper::getValue($results['param'], 'mark')? 
                             $this->getChildrens(ArrayHelper::getValue($results['param'], 'item_child_id')) : [],
             'taskTypes' => $this->getWorksystemTaskTypes(),
-            'createTeams' => $this->getWorksystemTeams(TeamCategory::TYPE_CCOA_DEV_TEAM),
-            'externalTeams' => ArrayHelper::merge($this->getWorksystemTeams(TeamCategory::TYPE_WORKSYSTEM_TEAM), $this->getEpibolyTeams()),
+            'createTeams' => $this->getWorksystemTeams(),
+            'externalTeams' => ArrayHelper::merge($this->getWorksystemTeams(), $this->getEpibolyTeams()),
             'createBys' => $creatorProducer['createBy'],
             'producers' => $creatorProducer['producer'],
         ]);
@@ -718,13 +718,13 @@ class TaskController extends Controller
     /**
      * 获取所有工作系统团队
      * @param type $categoryId
-     * @param TeamMemberTool $_tmTool
      * @return array
      */
-    public function getWorksystemTeams($categoryId)
+    public function getWorksystemTeams()
     {
         $_tmTool = TeamMemberTool::getInstance();
-        $teams = $_tmTool->getTeamsByCategoryId($categoryId);
+        $teams = $_tmTool->getTeamsByCategoryId(TeamCategory::TYPE_WORKSYSTEM_TEAM);
+        ArrayHelper::multisort($teams, 'index', SORT_ASC);  
         
         return ArrayHelper::map($teams, 'id', 'name');
     }
@@ -743,10 +743,10 @@ class TaskController extends Controller
     }
     
     /**
-     * 获取所有工作任务创建者和制作人
+     * 获取所有任务创建者和制作人
      * @return array
      */
-    public function getCreatorProducer()
+    public function getTaskCreatorProducer()
     {
         $query = (new Query())
                 ->select(['WorksystemTask.id', "CONCAT(WorksystemTask.create_by, '_', User.nickname) AS create_by"])

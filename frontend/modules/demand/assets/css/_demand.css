@@ -57,60 +57,6 @@
     background: url('/filedata/demand/image/already_write.png') no-repeat;
 }
 
-/** 
- *  footer 导航样式
- */
-.footer-demand-navbar{
-    height: 50px;
-    padding-top:0px !important;
-}
-/** 小屏不显示文字 */
-@media (max-width: 767px) {
-    .footer-demand-navbar .footer-demand-menu-item{
-        width: 50px;
-    }
-}
-/** 大屏显示文字 */
-@media (min-width: 768px) {
-    .footer-demand-navbar .footer-demand-menu-item{
-        width: 100px;
-    }
-}
-/** 导航菜单 */
-.footer-demand-navbar .footer-demand-menu-item{
-    display: inline-block;
-    height: 50px;
-    text-align: center;
-    line-height: 50px;
-    color: #000;
-    font-weight: bold;
-}
-/** 导航菜单下img */
-.footer-demand-navbar .footer-demand-menu-item img{
-    width: 24px;
-    height: 24px;
-    margin-top: -5px;
-}
-/** 导航菜单名称 */
-.footer-demand-navbar .footer-demand-menu-item .menu-name{
-    margin-left: 5px;
-}
-/** 导航菜单选中 */
-.footer-demand-navbar .footer-demand-menu-bg{
-    background-color: #fff;
-}
-/** 导航菜单子菜单--靠右菜单 */
-.footer-demand-navbar .submenu-right{
-    float: right;
-    font-weight: initial;
-    background-color: #2e6da4 !important;
-}
-/** 导航菜单a标签鼠标移上样式 */
-.footer-demand-navbar a:hover, a:focus {
-    background-color: rgba(255, 255, 255, 0.46);;
-    text-decoration: blink;
-}
-
 /**
  * 面包屑样式
  */
@@ -221,39 +167,10 @@
 /**
  * 课程表单页样式
  */
-.form-img {
-    margin: 10px 0px;
-    float: left;
-}
 .total-unit{
     font-size: 13px;
     color: #eee;
 }
-@media (min-width: 320px){
-    #demandtaskannex .col-xs-9 {
-        width: 94%;
-        float: left;
-    }
-}
-@media (min-width: 768px){
-    #demandtaskannex .col-sm-10 {
-        width: 96.33333333%;
-        float: left;
-    }
-}
-@media (min-width: 992px){
-    #demandtaskannex .col-md-11 {
-        width: 97.66666667%;
-        float: left;
-    }
-}
-@media (min-width: 1200px){
-    #demandtaskannex .col-lg-12 {
-        width: 98%;
-        float: left;
-    }
-}
-
 /**
  * 任务详细页样式 
  */
@@ -355,4 +272,25 @@
  */
 .demand-task-annex-view iframe {
     border: none;
+}
+.demand .error-warn {
+    color: #c55;;
+}
+.demand .reference {
+    font-size: 12px;
+    color: rgb(204, 204, 204);
+    font-weight: 400;
+}
+.demand .form-label{
+    color: #999999;
+    font-weight: normal;
+    padding-right: 0px;
+}
+.demand .form-img {
+    position: absolute;
+    top: 10px;
+    right: 5px;
+}
+.demand .form-img:hover{
+     cursor:pointer;
 }

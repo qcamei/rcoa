@@ -4,13 +4,9 @@ namespace frontend\modules\demand\controllers;
 
 use common\models\demand\DemandAppeal;
 use common\models\demand\searchs\DemandAppealSearch;
-use frontend\modules\demand\utils\DemandTool;
-use wskeee\rbac\RbacManager;
-use wskeee\rbac\RbacName;
+use frontend\modules\demand\utils\DemandAction;
 use Yii;
-use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
@@ -30,16 +26,6 @@ class AppealController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
-                ],
-            ],
-             //access验证是否有登录
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ]
                 ],
             ],
         ];
@@ -77,27 +63,16 @@ class AppealController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($demand_task_id)
+    public function actionCreate($task_id)
     {
         $model = new DemandAppeal();
-        $post = Yii::$app->request->post();
-        /* @var $rbacManager RbacManager */  
-        $rbacManager = \Yii::$app->authManager;
-        /* @var $dtTool DemandTool */
-        $dtTool = DemandTool::getInstance();
-        $model->demand_task_id = $demand_task_id;
+        $model->demand_task_id = $task_id;
         
-        if(!($rbacManager->isRole(RbacName::ROLE_DEMAND_UNDERTAKE_PERSON, \Yii::$app->user->id) 
-             && $model->demandTask->undertake_person == Yii::$app->user->id))
-            throw new NotAcceptableHttpException('无权限操作！');
-        if(!$model->demandTask->getIsStatusWaitConfirm())
+        if(!($model->demandTask->undertake_person == Yii::$app->user->id && $model->demandTask->getIsStatusWaitConfirm()))
             throw new NotAcceptableHttpException('该任务状态为'.$model->demandTask->getStatusName().'！');
-        
-        $model->reason = ArrayHelper::getValue($post, 'reason');
-        $model->create_by = \Yii::$app->user->id;
-        
-        if ($model->load($post)) {
-            $dtTool->CreateAppealTask($model);
+       
+        if ($model->load(Yii::$app->request->post())) {
+            DemandAction::getInstance()->DemandCreateAppeal($model);
             return $this->redirect(['task/view', 'id' => $model->demand_task_id]);
         } else {
             return $this->renderAjax('create', [

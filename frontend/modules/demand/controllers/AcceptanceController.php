@@ -12,12 +12,11 @@ use common\models\demand\DemandTask;
 use common\models\demand\DemandWorkitem;
 use common\models\demand\searchs\DemandAcceptanceSearch;
 use Detection\MobileDetect;
+use frontend\modules\demand\utils\DemandAction;
 use frontend\modules\demand\utils\DemandQuery;
 use frontend\modules\demand\utils\DemandTool;
-use wskeee\rbac\RbacName;
 use Yii;
 use yii\db\Query;
-use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -38,16 +37,6 @@ class AcceptanceController extends Controller {
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
-                ],
-            ],
-            //access验证是否有登录
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ]
                 ],
             ],
         ];
@@ -72,27 +61,25 @@ class AcceptanceController extends Controller {
     /**
      * Displays a single DemandAcceptance model.
      * @param integer $demand_task_id
-     * @param type $delivery_id
      * @return mixed
      */
-    public function actionView($demand_task_id, $delivery_id = null) {
+    public function actionView($task_id, $delivery_id = null) {
         $detect = new MobileDetect();
-        /* @var $dtTool DemandTool */
-        $dtTool = DemandTool::getInstance();
-        $delivery = $this->findDeliveryModel($demand_task_id);
+        $delivery = $this->findDeliveryModel($task_id);
         $delivery_id = empty($delivery_id) ? $delivery->id : $delivery_id;
-        $model = $this->findModel($demand_task_id, $delivery_id);
-        $model->demand_task_id = $demand_task_id;
+        $model = $this->findModel($task_id, $delivery_id);
+        $model->demand_task_id = $task_id;
+        
         return $this->renderAjax(!$detect->isMobile() ? 'view' : 'wap_view', [
             'model' => $model,
-            'demand_task_id' => $demand_task_id,
+            'demand_task_id' => $task_id,
             'delivery_id' => $delivery_id,
-            'dates' => $this->getDeliveryCreatedAt($demand_task_id),
-            'workitemType' => $dtTool->getDemandWorkitemTypeData($demand_task_id),
-            'workitem' => $dtTool->getDemandWorkitemData($demand_task_id),
-            'delivery' => $dtTool->getDemandDeliveryData($demand_task_id, $delivery_id),
-            'acceptance' => $dtTool->getDemandAcceptanceData($demand_task_id, $delivery_id),
-            'percentage' => $this->getWorkitemTypePercentage($demand_task_id, $delivery_id),
+            'dates' => $this->getDeliveryCreatedAt($task_id),
+            'workitemType' => DemandTool::getInstance()->getDemandWorkitemTypeData($task_id),
+            'workitem' => DemandTool::getInstance()->getDemandWorkitemData($task_id),
+            'delivery' => DemandTool::getInstance()->getDemandDeliveryData($task_id, $delivery_id),
+            'acceptance' => DemandTool::getInstance()->getDemandAcceptanceData($task_id, $delivery_id),
+            'percentage' => $this->getWorkitemTypePercentage($task_id, $delivery_id),
         ]);        
     }
     
@@ -101,42 +88,30 @@ class AcceptanceController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($demand_task_id, $pass = 0) {
+    public function actionCreate($task_id, $pass = 0) {
         $this->layout = '@app/views/layouts/main';
         $model = new DemandAcceptance();
-        $detect = new MobileDetect();
-        $deliveryModel = $this->findDeliveryModel($demand_task_id);
-        /* @var $dtTool DemandTool */
-        $dtTool = DemandTool::getInstance();
-        $post = Yii::$app->request->post();
+        $deliveryModel = $this->findDeliveryModel($task_id);
         $model->loadDefaultValues();
-        $model->demand_task_id = $demand_task_id;
+        $model->demand_task_id = $task_id;
         
-        if(!\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE_ACCEPTANCE) 
-           && $model->demandTask->create_by != \Yii::$app->user->id)
-            throw new NotAcceptableHttpException('无权限操作！');
-        if(!($model->demandTask->getIsStatusAcceptance() || $model->demandTask->getIsStatusAcceptanceing() 
-            || $model->demandTask->getIsStatusAppealing()))
+        if(!($model->demandTask->create_by == \Yii::$app->user->id && ($model->demandTask->getIsStatusAcceptance() || $model->demandTask->getIsStatusAcceptanceing() 
+            || $model->demandTask->getIsStatusAppealing())))
             throw new NotAcceptableHttpException('该任务状态为'.$model->demandTask->getStatusName().'！');
         
-        $model->demand_delivery_id = ArrayHelper::getValue($post, 'DemandAcceptance.demand_delivery_id');
-        $model->pass = ArrayHelper::getValue($post, 'DemandAcceptance.pass');
-        $model->des = ArrayHelper::getValue($post, 'DemandAcceptance.des');
-        $model->create_by = \Yii::$app->user->id;
-        
-        if (\Yii::$app->getRequest()->isPost && $model->save()) {
-            $this->saveDemandAcceptanceData($model, $post);
-            $dtTool->CreateAcceptanceTask($model);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $this->saveDemandAcceptanceData($model, Yii::$app->request->post());
+            DemandAction::getInstance()->DemandCreateAcceptance($model);
             return $this->redirect(['task/view', 'id' => $model->demand_task_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                 'pass' => $pass,
                 'deliveryModel' => $deliveryModel,
-                'detect' => $detect,
-                'pass' => $pass,
-                'workitemType' => $dtTool->getDemandWorkitemTypeData($model->demand_task_id),
-                'workitem' => $dtTool->getDemandWorkitemData($model->demand_task_id),
-                'delivery' => $dtTool->getDemandDeliveryData($model->demand_task_id, $deliveryModel->id),
+                'detect' => new MobileDetect(),
+                'workitemType' => DemandTool::getInstance()->getDemandWorkitemTypeData($model->demand_task_id),
+                'workitem' => DemandTool::getInstance()->getDemandWorkitemData($model->demand_task_id),
+                'delivery' => DemandTool::getInstance()->getDemandDeliveryData($model->demand_task_id, $deliveryModel->id),
                 'percentage' => $this->getWorkitemTypePercentage($model->demand_task_id, $deliveryModel->id),
             ]);
         }
@@ -148,13 +123,10 @@ class AcceptanceController extends Controller {
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($demand_task_id, $delivery_id){
+    public function actionUpdate($task_id, $delivery_id){
         $this->layout = '@app/views/layouts/main';
-        $detect = new MobileDetect();
-        $deliveryModel = $this->findDeliveryModel($demand_task_id);
-        $model = $this->findModel($demand_task_id, $delivery_id);
-        /* @var $dtTool DemandTool */
-        $dtTool = DemandTool::getInstance();
+        $deliveryModel = $this->findDeliveryModel($task_id);
+        $model = $this->findModel($task_id, $delivery_id);
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -162,10 +134,10 @@ class AcceptanceController extends Controller {
             return $this->render('update', [
                 'model' => $model,
                 'deliveryModel' => $deliveryModel,
-                'detect' => $detect,
-                'workitemType' => $dtTool->getDemandWorkitemTypeData($model->demand_task_id),
-                'workitem' => $dtTool->getDemandWorkitemData($model->demand_task_id),
-                'delivery' => $dtTool->getDemandDeliveryData($model->demand_task_id, $deliveryModel->id),
+                'detect' => new MobileDetect(),
+                'workitemType' => DemandTool::getInstance()->getDemandWorkitemTypeData($model->demand_task_id),
+                'workitem' => DemandTool::getInstance()->getDemandWorkitemData($model->demand_task_id),
+                'delivery' => DemandTool::getInstance()->getDemandDeliveryData($model->demand_task_id, $deliveryModel->id),
                 'percentage' => $this->getWorkitemTypePercentage($model->demand_task_id, $deliveryModel->id),
             ]);
         }
@@ -190,12 +162,10 @@ class AcceptanceController extends Controller {
      * @return DemandAcceptance the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($demand_task_id = null, $delivery_id = null) {
-        $model = DemandAcceptance::find()
-                ->filterWhere(['demand_task_id' => $demand_task_id])
-                ->andFilterWhere(['demand_delivery_id' => $delivery_id])
-                ->orderBy('id desc')
-                ->one();
+    protected function findModel($task_id = null, $delivery_id = null) {
+        $model = DemandAcceptance::find()->filterWhere(['demand_task_id' => $task_id])
+                ->andFilterWhere(['demand_delivery_id' => $delivery_id])->orderBy('id desc')->one();
+        
         if ($model !== null) {
             return $model;
         } else {
@@ -210,11 +180,10 @@ class AcceptanceController extends Controller {
      * @return DemandDelivery the loaded delivery
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findDeliveryModel($demand_task_id) {
-        $delivery = DemandDelivery::find()
-                ->where(['demand_task_id' => $demand_task_id])
-                ->orderBy('id desc')
-                ->one();
+    protected function findDeliveryModel($task_id) {
+        $delivery = DemandDelivery::find()->where(['demand_task_id' => $task_id])
+            ->orderBy('id desc')->one();
+        
         if ($delivery !== null) {
             return $delivery;
         } else {
@@ -229,11 +198,10 @@ class AcceptanceController extends Controller {
      * @return DemandDelivery the loaded delivery
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findAppealModel($demand_task_id) {
-        $appeal = DemandAppeal::find()
-                ->where(['demand_task_id' => $demand_task_id])
-                ->orderBy('id desc')
-                ->one();
+    protected function findAppealModel($task_id) {
+        $appeal = DemandAppeal::find()->where(['demand_task_id' => $task_id])
+            ->orderBy('id desc')->one();
+        
         if ($appeal !== null) {
             return $appeal;
         } else {
@@ -298,28 +266,29 @@ class AcceptanceController extends Controller {
     }
 
     /**
-     * 保存需求交付数据到表里
+     * 保存需求验收数据到表里
      * @param DemandAcceptance $model              
      * @param type $post              
      */
-    public function saveDemandAcceptanceData($model, $post){
-        $values = ArrayHelper::getValue($post, 'value');
+    public function saveDemandAcceptanceData($model, $post)
+    {
         $datas = [];
-        foreach ($values as $key => $value) {
-            $datas[] = [
-                'demand_acceptance_id' => $model->id,
-                'workitem_type_id' => $key,
-                'value' => $value,
-            ];
-        }
+        $values = ArrayHelper::getValue($post, 'value');
         
-        ArrayHelper::multisort($datas, 'workitem_type_id', SORT_ASC);
-       
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
         { 
-            if($model !== null && $datas != null){
+            if($model != null){
+                foreach ($values as $key => $value) {
+                    $datas[] = [
+                        'demand_acceptance_id' => $model->id,
+                        'workitem_type_id' => $key,
+                        'value' => $value,
+                    ];
+                }
+
+                ArrayHelper::multisort($datas, 'workitem_type_id', SORT_ASC);
                 /** 添加$values数组到表里 */
                 Yii::$app->db->createCommand()->batchInsert(DemandAcceptanceData::tableName(), 
                 ['demand_acceptance_id', 'workitem_type_id', 'value'], $datas)->execute();

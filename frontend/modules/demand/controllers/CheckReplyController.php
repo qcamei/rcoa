@@ -5,10 +5,9 @@ namespace frontend\modules\demand\controllers;
 use common\models\demand\DemandCheck;
 use common\models\demand\DemandCheckReply;
 use common\models\demand\searchs\DemandCheckReplySearch;
+use frontend\modules\demand\utils\DemandAction;
 use frontend\modules\demand\utils\DemandTool;
-use wskeee\rbac\RbacName;
 use Yii;
-use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotAcceptableHttpException;
@@ -29,16 +28,6 @@ class CheckReplyController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
-                ],
-            ],
-            //access验证是否有登录
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ]
                 ],
             ],
         ];
@@ -76,30 +65,28 @@ class CheckReplyController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($demand_task_id, $pass)
+    public function actionCreate($task_id, $pass)
     {
         $model = new DemandCheckReply();
         $model->loadDefaultValues();
-        $check = $this->findCheckModel($demand_task_id);
-        /* @var $dtTool DemandTool */
-        $dtTool = DemandTool::getInstance();
-        $model->demand_check_id = $check->id;
+        $checkMdoel = $this->findCheckModel($task_id);
+        $model->demand_check_id = $checkMdoel->id;
         $model->create_by = \Yii::$app->user->id;
+        $createTeam = $checkMdoel->demandTask->create_team;
+        //是否是审核人
+        $isAuditor = DemandAction::getInstance()->getIsAuditor($createTeam);
         
-        if(!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE_CHECK) 
-            && $dtTool->getIsAuditor($model->demandCheck->demandTask->create_team)))
-            throw new NotAcceptableHttpException('无权限操作！');
-        if(!($model->demandCheck->demandTask->getIsStatusCheck() || $model->demandCheck->demandTask->getIsStatusChecking()))
-            throw new NotAcceptableHttpException('该任务状态为'.$model->demandCheck->demandTask->getStatusName().'！');
+        if($isAuditor && !($model->demandCheck->demandTask->getIsStatusCheck() || $model->demandCheck->demandTask->getIsStatusChecking()))
+            throw new NotAcceptableHttpException('该任务状态为'.$checkMdoel->demandTask->getStatusName().'！');
         
         if ($model->load(Yii::$app->request->post())) {
             if($pass == true){
-                $dtTool->PassCheckReplyTask($model);
-                return $this->redirect(['task/index', 'auditor' => Yii::$app->user->id]);
+                DemandAction::getInstance()->DemandPassCheckReply($model);
+                return $this->redirect(['task/index']);
             }
             else{
-                $dtTool->CreateCheckReplyTask($model);
-                return $this->redirect(['task/view', 'id' => $demand_task_id]);
+                DemandAction::getInstance()->DemandNoPassCheckReply($model);
+                return $this->redirect(['task/view', 'id' => $task_id]);
             }
         } else {
             return $this->renderAjax('create', [
@@ -160,16 +147,14 @@ class CheckReplyController extends Controller
     /**
      * Finds the DemandCheck model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $demand_task_id
+     * @param integer $task_id
      * @return DemandCheckReply the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findCheckModel($demand_task_id)
+    protected function findCheckModel($task_id)
     {
-        $check = DemandCheck::find()
-                ->where(['demand_task_id' => $demand_task_id])
-                ->orderBy('id desc')
-                ->one();
+        $check = DemandCheck::find()->where(['demand_task_id' => $task_id])
+            ->orderBy('id desc')->one();
         
         if ($check !== null) {
             return $check;

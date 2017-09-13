@@ -1,10 +1,9 @@
 <?php
 
-use frontend\modules\demand\assets\BasedataAssets;
 use wskeee\framework\models\searchs\ItemTypeSearch;
+use wskeee\rbac\components\ResourceHelper;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
-use yii\helpers\Html;
 use yii\web\View;
 
 /* @var $this View */
@@ -16,12 +15,8 @@ $this->title = '基础数据';//Yii::t('rcoa/basedata', 'Item Types');
 <div class="container item-type-index">
 
     <p>
-        <?php
-        if ($rbac['create']) {
-            echo Html::a(
-                    Yii::t('rcoa/basedata', '{Create} {Item Type}', ['Create' => Yii::t('rcoa/basedata', 'Create'), 'Item Type' => Yii::t('rcoa/basedata', 'Item Type')]), ['create'], ['class' => 'btn btn-success']);
-        }
-        ?>
+        <?= ResourceHelper::a(Yii::t('rcoa/basedata', '{Create} {Item Type}', 
+                ['Create' => Yii::t('rcoa/basedata', 'Create'), 'Item Type' => Yii::t('rcoa/basedata', 'Item Type')]), ['create'], ['class' => 'btn btn-success']); ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,

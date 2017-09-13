@@ -8,7 +8,7 @@
 
 return[
     //需求任务-公共
-    'Demand Tasks' => '需求-课程',
+    'Demand Tasks' => '需求',
     'Demand View' => '任务详情',
     'Create Demand Task' => '创建-任务',
     'Update Demand Task' => '更新-任务',
@@ -55,8 +55,8 @@ return[
     'Credit' => '学分',
     'Lesson Time' => '学时',
     'Course Description' => '课程简介',
-    'Team' => '开发团队',
-    'Undertake Person' => '承接人',
+    'Develop Team' => '开发团队',
+    'Undertaker' => '承接人',
     'Develop Principals' => '开发负责人',
     'Plan Check Harvest Time' => '计划验收时间',
     'Reality Check Harvest Time' => '实际验收时间',

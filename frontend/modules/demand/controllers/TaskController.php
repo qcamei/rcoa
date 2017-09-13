@@ -7,10 +7,12 @@ use common\models\demand\DemandTask;
 use common\models\demand\DemandTaskAnnex;
 use common\models\expert\Expert;
 use common\models\team\TeamCategory;
+use common\models\User;
 use common\wskeee\job\JobManager;
+use frontend\modules\demand\utils\DemandAction;
 use frontend\modules\demand\utils\DemandQuery;
+use frontend\modules\demand\utils\DemandSearch;
 use frontend\modules\demand\utils\DemandTool;
-use frontend\modules\teamwork\utils\TeamworkTool;
 use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\Item;
 use wskeee\framework\models\ItemType;
@@ -20,12 +22,14 @@ use wskeee\team\TeamMemberTool;
 use Yii;
 use yii\data\ArrayDataProvider;
 use yii\db\ActiveQuery;
-use yii\filters\AccessControl;
+use yii\db\Exception;
+use yii\db\Query;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
+
 
 /**
  * TaskController implements the CRUD actions for DemandTask model.
@@ -44,16 +48,6 @@ class TaskController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
-             //access验证是否有登录
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ]
-                ],
-            ],
         ];
     }
 
@@ -61,54 +55,32 @@ class TaskController extends Controller
      * Lists all DemandTask models.
      * @return mixed
      */
-    public function actionIndex($status = DemandTask::STATUS_DEFAULT, $create_by = null, $undertake_person = null, $auditor = null,
-            $item_type_id = null, $item_id = null, $item_child_id = null, $course_id = null,
-            $team_id = null, $keyword = null, $time = null, $mark = null,$page = null)
+    public function actionIndex()
     {
-        $page = $page == null ? 0 : $page-1; 
-        /* @var $dtTool DemandTool */
-        $dtTool = DemandTool::getInstance();
-        /* @var $dtTool TeamworkTool */
-        $twTool = TeamworkTool::getInstance();
-        $query = $dtTool->getDemandTaskInfo($id = null, $status, $create_by, $undertake_person, $auditor, $item_type_id, $item_id, $item_child_id, $course_id, $team_id, $keyword, $time, $mark);
-        $count = $query->count();
+        $searchResult = new DemandSearch();
+        $results = $searchResult->search(Yii::$app->request->queryParams);
         
         $dataProvider = new ArrayDataProvider([
-            'allModels' => $query->addSelect([
-                'Demand_task.item_type_id', 'Demand_task.item_id', 'Demand_task.item_child_id', 'Demand_task.course_id',
-                'Demand_task.budget_cost', 'Demand_task.cost',  'Demand_task.external_budget_cost', 'Demand_task.external_reality_cost', 'Demand_task.bonus_proportion',
-                'Demand_task.team_id', 'Demand_task.undertake_person', 'Demand_task.create_by', 
-                'Demand_task.plan_check_harvest_time', 'Demand_task.reality_check_harvest_time', 'Demand_task.status', 'Demand_task.mode', 'Demand_task.progress'
-            ])->limit(20)->offset($page*20)->all(),
+            'allModels' => $results['result'],
         ]);
-        $taskIds = ArrayHelper::getColumn($dataProvider->allModels, 'id');
-        $taskStatus = ArrayHelper::map($dataProvider->allModels, 'id', 'status');
-       
+        
+        $creatorUndertaker = $this->getTaskCreatorUndertaker();
+        
         return $this->render('index', [
-            'twTool' => $twTool,
+            'param' => $results['param'],
             'dataProvider' => $dataProvider,
-            'operation' => $dtTool->getIsBelongToOwnOperate($taskIds, $taskStatus),
-            'count' => $count,
+            'totalCount' => $results['totalCount'],
+            'operation' => $results['isBelong'],
+            //条件
             'itemType' => $this->getItemType(),
             'items' => $this->getCollegesForSelect(),
-            'itemChild' => empty($mark) ? [] : $this->getChildren($item_id),
-            'course' => empty($mark) ? [] : $this->getChildren($item_child_id),
-            'team' => $this->getTeam(),
-            'createBys' => $this->getCreateBys(),
-            'undertakePersons' => $this->getUndertakePersons(),
-            //'productTotal' => $this->getProductTotal(),
-            //搜索默认字段值
-            'itemTypeId' => $item_type_id,
-            'itemId' => $item_id,
-            'itemChildId' => $item_child_id,
-            'courseId' => $course_id,
-            'keyword' => $keyword,
-            'status' => $status,
-            'createBy' => $create_by,
-            'undertakePerson' => $undertake_person,
-            'teamId' => $team_id,
-            'time' => !empty($time) ? $time : null,
-            'mark' => !empty($mark) ? $mark : 0,
+            'itemChild' => ArrayHelper::getValue($results['param'], 'mark') ? 
+                           $this->getChildren(ArrayHelper::getValue($results['param'], 'item_id')) : [],
+            'course' => ArrayHelper::getValue($results['param'], 'mark') ? 
+                        $this->getChildren(ArrayHelper::getValue($results['param'], 'item_child_id')) : [],
+            'developTeams' => $this->getDevelopTeams(),
+            'createBys' => $creatorUndertaker['createBy'],
+            'undertakers' => $creatorUndertaker['undertaker'],
         ]);
     }
 
@@ -122,32 +94,25 @@ class TaskController extends Controller
     {
         $this->layout = '@app/views/layouts/main';
         $model = $this->findModel($id);
-        /* @var $dtTool DemandTool */
-        $dtTool = DemandTool::getInstance();
-        /* @var $dtTool TeamworkTool */
-        $twTool = TeamworkTool::getInstance();
         /* @var $jobManager JobManager */
         $jobManager = Yii::$app->get('jobManager');
-        /* @var $rbacManager RbacManager */  
-        $rbacManager = \Yii::$app->authManager;
         
         if($model->getIsStatusCompleted() || $model->getIsStatusCancel() ){
             //取消用户与任务通知的关联
-            $jobManager->cancelNotification(AppGlobalVariables::getSystemId(), $model->id, \Yii::$app->user->id); 
+            $jobManager->cancelNotification(AppGlobalVariables::getSystemId(), $model->id, Yii::$app->user->id); 
         }else {
             //设置用户对通知已读
-            $jobManager->setNotificationHasReady(AppGlobalVariables::getSystemId(), \Yii::$app->user->id, $model->id);  
+            $jobManager->setNotificationHasReady(AppGlobalVariables::getSystemId(), Yii::$app->user->id, $model->id);  
         }
         
         return $this->render('view', [
             'model' => $model,
-            'dtTool' => $dtTool,
-            'twTool' => $twTool,
-            'rbacManager' => $rbacManager,
-            'annex' => $this->getAnnex($id),
             'develop' => $develop,
-            'workitmType' => $dtTool->getDemandWorkitemTypeData($model->id),
-            'workitem' => $dtTool->getDemandWorkitemData($model->id),
+            'demandAction' => DemandAction::getInstance(),
+            'rbacManager' => Yii::$app->authManager,
+            'annex' => $this->getDemandTaskAnnexs($model->id),
+            'workitmType' => DemandTool::getInstance()->getDemandWorkitemTypeData($model->id),
+            'workitem' => DemandTool::getInstance()->getDemandWorkitemData($model->id),
         ]);
     }
 
@@ -159,30 +124,23 @@ class TaskController extends Controller
     public function actionCreate($id = null)
     {
         $this->layout = '@app/views/layouts/main';
-        if(!\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_CREATE))
-            throw new NotAcceptableHttpException('无权限操作！');
         $model = new DemandTask();
         $model->loadDefaultValues();
-        /* @var $dtTool DemandTool */
-        $dtTool = DemandTool::getInstance();
-        $post = Yii::$app->request->post();
-        $model->create_by = \Yii::$app->user->id;
-       
-        if ($model->load($post)) {
-            $dtTool->CreateTask($model, $post);
+        
+        if ($model->load(Yii::$app->request->post())) {
+            DemandAction::getInstance()->DemandCreateTask($model, Yii::$app->request->post());
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
                 'itemTypes' => $this->getItemType(),
                 'items' => $this->getCollegesForSelect(),
-                'itemChilds' => [],
-                'courses' => [],
+                'itemChilds' => !empty($model->item_id) ? $this->getChildren($model->item_id) : [],
+                'courses' => !empty($model->item_child_id) ? $this->getChildren($model->item_child_id) : [],
                 'teachers' => $this->getExpert(),
-                'team' => $dtTool->getHotelTeam(),
-                'workitmType' => $dtTool->getDemandWorkitemTypeData(),
-                'workitem' => $dtTool->getDemandWorkitemData(),
-                'members' => [],
+                'teams' => $this->getUserTeam(TeamCategory::TYPE_PRODUCT_CENTER),
+                'workitmType' => DemandTool::getInstance()->getDemandWorkitemTypeData(),
+                'workitem' => DemandTool::getInstance()->getDemandWorkitemData(),
             ]);
         }
     }
@@ -197,22 +155,14 @@ class TaskController extends Controller
     {
         $this->layout = '@app/views/layouts/main';
         $model = $this->findModel($id);
+        if(!($model->create_by == Yii::$app->user->id && ($model->getIsStatusDefault() || $model->getIsStatusAdjusimenting())))
+            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+       
+        //获取过滤的课程
+        $courses = ArrayHelper::merge([$model->course_id => $model->course->name], ArrayHelper::map($this->getCourses($model->item_child_id), 'id', 'name'));
         
-        if(!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_EDIT))){
-            if(!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UPDATE) && $model->create_by == \Yii::$app->user->id))
-                throw new NotAcceptableHttpException('无权限操作！');
-            if(!($model->getIsStatusDefault() || $model->getIsStatusAdjusimenting()))
-                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
-        }
-        /* @var $dtTool DemandTool */
-        $dtTool = DemandTool::getInstance();
-        $post = Yii::$app->request->post();
-        $courses = $this->getCourses($model->item_child_id);
-        $members = $this->getTeamMembers($model->createTeam);
-        
-        
-        if ($model->load($post)) {
-            $dtTool->UpdateTask($model, $post);
+        if ($model->load(Yii::$app->request->post())) {
+             DemandAction::getInstance()->DemandUpdateTask($model, Yii::$app->request->post());
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -220,13 +170,12 @@ class TaskController extends Controller
                 'itemTypes' => $this->getItemType(),
                 'items' => $this->getCollegesForSelect(),
                 'itemChilds' => $this->getChildren($model->item_id),
-                'courses' => ArrayHelper::merge([$model->course_id => $model->course->name], $courses),
+                'courses' => $courses,
                 'teachers' => $this->getExpert(),
-                'team' => $dtTool->getHotelTeam(),
-                'annex' => $this->getAnnex($model->id),
-                'workitmType' => $dtTool->getDemandWorkitemTypeData($model->id),
-                'workitem' => $dtTool->getDemandWorkitemData($model->id),
-                'members'  => ArrayHelper::merge([$model->create_by => $model->createBy->nickname], $members),
+                'teams' => $this->getUserTeam(TeamCategory::TYPE_PRODUCT_CENTER),
+                'annexs' => $this->getDemandTaskAnnexs($model->id),
+                'workitmType' => DemandTool::getInstance()->getDemandWorkitemTypeData($model->id),
+                'workitem' => DemandTool::getInstance()->getDemandWorkitemData($model->id),
             ]);
         }
     }
@@ -241,25 +190,19 @@ class TaskController extends Controller
     {
         $model = $this->findModel($id);
         /* @var $rbacManager RbacManager */  
-        $rbacManager = \Yii::$app->authManager;
-        /* @var $dtTool DemandTool */
-        $dtTool = DemandTool::getInstance();
-        /* @var $dtTool TeamworkTool */
-        $twTool = TeamworkTool::getInstance();
-        if(!(\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_UNDERTAKE) 
-           && $rbacManager->isRole(RbacName::ROLE_DEMAND_UNDERTAKE_PERSON, \Yii::$app->user->id)))
-            throw new NotAcceptableHttpException('无权限操作！');
-        if(!$model->getIsStatusUndertake())
+        $rbacManager = Yii::$app->authManager;
+        $isUndertaker = $rbacManager->isRole(RbacName::ROLE_COMMON_COURSE_DEV_MANAGER, Yii::$app->user->id);
+        
+        if(!($isUndertaker && $model->getIsStatusUndertake()))
             throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
         
         if ($model->load(Yii::$app->request->post())) {
-            $dtTool->UndertakeTask($model);
+            DemandAction::getInstance()->DemandUndertakeTask($model);
             return $this->redirect(['view', 'id' => $model->id, 'develop' => 1]);
         } else {
-            return $this->renderAjax('undertake', [
+            return $this->renderAjax('_undertake', [
                 'model' => $model,
-                'team' => $twTool->getHotelTeam(),
-                'developPrincipals' => $dtTool->getHotelTeamMemberId(),
+                'teams' => $this->getUserTeam(TeamCategory::TYPE_CCOA_DEV_TEAM),
             ]);
         }
     }
@@ -273,22 +216,15 @@ class TaskController extends Controller
     public function actionWaitConfirm($id)
     {
         $model = $this->findModel($id);
-        /* @var $rbacManager RbacManager */  
-        $rbacManager = \Yii::$app->authManager;
-        /* @var $dtTool DemandTool */
-        $dtTool = DemandTool::getInstance();
-        
-        if(!($rbacManager->isRole(RbacName::ROLE_DEMAND_UNDERTAKE_PERSON, \Yii::$app->user->id) 
-             && $model->developPrincipals->u_id == Yii::$app->user->id))
-            throw new NotAcceptableHttpException('无权限操作！');
-        if(!$model->getIsStatusWaitConfirm())
+       
+        if(!($model->undertake_person == Yii::$app->user->id && $model->getIsStatusWaitConfirm()))
             throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
         
         if ($model->load(Yii::$app->request->post())) {
-            $dtTool->WaitConfirmTask($model);
-            return $this->redirect(['index', 'undertake_person' => Yii::$app->user->id,]);
+            DemandAction::getInstance()->DemandWaitConfirm($model);
+            return $this->redirect(['index']);
         } else {
-            return $this->renderAjax('wait_confirm', [
+            return $this->renderAjax('_wait_confirm', [
                 'model' => $model,
             ]);
         }
@@ -303,24 +239,17 @@ class TaskController extends Controller
     public function actionCancel($id)
     {
         $model = $this->findModel($id);
-        if(!\Yii::$app->user->can(RbacName::PERMSSION_MULTIMEDIA_TASK_CANCEL) && $model->create_by != \Yii::$app->user->id)
-            throw new NotAcceptableHttpException('无权限操作！');
-        if(!$model->getIsStatusDevelopingBefore())
+        if(!($model->create_by == Yii::$app->user->id && $model->getIsStatusDevelopingBefore()))
             throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
         $oldStatus = $model->status;
-        /* @var $dtTool DemandTool */
-        $dtTool = DemandTool::getInstance();
         $post = Yii::$app->request->post();
         $cancel = ArrayHelper::getValue($post, 'reason');
 
         if ($model->load($post)){
-            $dtTool->CancelTask($model, $oldStatus, $cancel);
-            return $this->redirect(['index','create_by' => Yii::$app->user->id, 
-                'undertake_person' => Yii::$app->user->id, 
-                'auditor' => Yii::$app->user->id,
-            ]);
+            DemandAction::getInstance()->DemandCancelTask($model, $oldStatus, $cancel);
+            return $this->redirect(['index']);
         } else {
-            return $this->renderPartial('cancel', [
+            return $this->renderPartial('_cancel', [
                 'model' => $model,
             ]);
         }
@@ -341,47 +270,18 @@ class TaskController extends Controller
     
     /**
      * 获取课程
-     * @param type $id              专业/工种ID
-     * @param type $mark            标识
+     * @param integer $id                       专业/工种ID
      * @return type JSON
      */
-    public function actionSearchSelect($id, $mark = null)
+    public function actionSearchSelect($id)
     {
-        Yii::$app->getResponse()->format = 'json';
-        $courseId = $mark == null ? DemandTask::find()  
-                        ->select('course_id')  
-                        ->where(['and', ['item_child_id'=> $id], ['!=', 'status', DemandTask::STATUS_CANCEL]]) : null;         
         $errors = [];
         $items = [];
+        
         try
         {
-            $items = Item::find()  
-                ->where(['parent_id'=> $id])
-                ->andFilterWhere(['NOT IN','id', $courseId])
-                ->all(); 
-        } catch (Exception $ex) {
-            $errors [] = $ex->getMessage();
-        }
-        return [
-            'type'=>'S',
-            'data' => $items,
-            'error' => $errors
-        ];
-    }
-    
-    /**
-     * 获取团队成员
-     * @param type $team_id              团队ID
-     * @return type JSON
-     */
-    public function actionSearchTeamMembers($team_id)
-    {
-        Yii::$app->getResponse()->format = 'json';
-        $errors = [];
-        $items = [];
-        try
-        {
-            $items = TeamMemberTool::getInstance()->getTeamMembersByTeamId($team_id);
+            Yii::$app->getResponse()->format = 'json';
+            $items = $this->getCourses($id); 
         } catch (Exception $ex) {
             $errors [] = $ex->getMessage();
         }
@@ -394,32 +294,31 @@ class TaskController extends Controller
     
     /**
      * 检测课程是否唯一
-     * @param type $id              任务ID
+     * @param integer $id                        
      * @return type JSON
      */
-    public function actionCheckUnique($id = null)
-    {
-        Yii::$app->getResponse()->format = 'json';
-        $courseId = ArrayHelper::getValue($post = Yii::$app->request->post(), 'DemandTask.course_id');
-        $result = DemandTask::find()->select(['id', 'course_id'])  
-                  ->where(['and', ['course_id'=> $courseId], ['!=', 'status', DemandTask::STATUS_CANCEL]])
-                  ->andFilterWhere(['!=', 'id', $id])->all();         
+    public function actionCheckUnique($id)
+    { 
+        $type = 1;
+        $message = '所选的课程已经被选择了。';
         $errors = [];
-        $message = '';
-        $type = '';
         try
         {
-            if(!empty($result)){
-                $type = 1;
-                $message = '所选的课程已经被选择了！';
-            }else{
+            Yii::$app->getResponse()->format = 'json';
+            $result = (new Query())->select(['course_id'])
+                ->from(DemandTask::tableName())
+                ->where(['and', ['course_id'=> $id], ['!=', 'status', DemandTask::STATUS_CANCEL]])
+                ->one();   
+            if($result == null){
                 $type = 0;
+                $message = '';
             }
         } catch (Exception $ex) {
             $errors [] = $ex->getMessage();
         }
+        
         return [
-            'types'=> $type,
+            'type'=> $type,
             'message' => $message,
             'error' => $errors
         ];
@@ -437,13 +336,13 @@ class TaskController extends Controller
         if (($model = DemandTask::findOne($id)) !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException(\Yii::t('rcoa', 'The requested page does not exist.'));
+            throw new NotFoundHttpException(Yii::t('rcoa', 'The requested page does not exist.'));
         }
     }    
 
     /**
      * 获取行业
-     * @return type
+     * @return array
      */
     public function getItemType()
     {
@@ -453,7 +352,7 @@ class TaskController extends Controller
     
     /**
      * 获取层次/类型
-     * @return type
+     * @return array
      */
     public function getCollegesForSelect()
     {
@@ -464,8 +363,8 @@ class TaskController extends Controller
     
     /**
      * 获取专业/工种
-     * @param type $itemId              层次/类型ID
-     * @return type
+     * @param integer $itemId              
+     * @return array
      */
     protected function getChildren($itemId)
     {
@@ -476,24 +375,22 @@ class TaskController extends Controller
     
     /**
      * 获取过滤的课程
-     * @param type $model
-     * @return type
+     * @param integer $itemChildId
+     * @return array
      */
     public function getCourses($itemChildId)
     {
-        $existedCourses = DemandTask::find()
-                ->where(['and', ['item_child_id' => $itemChildId], ['!=', 'status', DemandTask::STATUS_CANCEL]])->all();
-        $courses = Item::find()
-                ->where(['parent_id' => $itemChildId])
-                ->andFilterWhere(['NOT IN', 'id', ArrayHelper::getColumn($existedCourses, 'course_id')])
-                ->all();
-        
-        return ArrayHelper::map($courses, 'id', 'name');
+        $taskCourse = (new Query())->select('course_id')
+            ->from(DemandTask::tableName())
+            ->where(['and', ['item_child_id'=> $itemChildId], ['!=', 'status', DemandTask::STATUS_CANCEL]]);
+        return (new Query())->from(Item::tableName())
+            ->where(['and', ['parent_id'=> $itemChildId], ['NOT IN', 'id', $taskCourse]])
+            ->all(); 
     }
     
     /**
      * 获取专家库
-     * @return type
+     * @return array
      */
     public function getExpert(){
         $expert = Expert::find()->with('user')->all();
@@ -501,72 +398,72 @@ class TaskController extends Controller
     }
     
     /**
-     * 获取附件
-     * @param integer $taskId
-     * @return object
+     * 获取所有需求任务附件
+     * @param integer $taskId                       任务id
+     * @return array
      */
-    public function getAnnex($taskId)
+    public function getDemandTaskAnnexs($taskId)
     {
-        return DemandTaskAnnex::find()
-               ->where(['task_id' => $taskId])
-               ->with('task')
-               ->all();
+        return (new Query())
+            ->from(DemandTaskAnnex::tableName())
+            ->where(['task_id' => $taskId])
+            ->all();
     }
     
     /**
-     * 获取所有课程开发团队
-     * @param integer $teamId      团队ID
+     * 获取用户所在团队
+     * @param TeamMemberTool $_tmTool
+     * @param string $teamCategory              团队分类
      * @return array
      */
-    public function getTeam()
+    public function getUserTeam($teamCategory)
     {
-        /* @var $tmTool TeamMemberTool */
-        $tmTool = TeamMemberTool::getInstance();
-        $results = $tmTool->getTeamsByCategoryId(TeamCategory::TYPE_CCOA_DEV_TEAM);
-        $teams = [];
-        foreach ($results as $team) {
-            $teams[] = $team;
-        }
-        ArrayHelper::multisort($teams, 'index', SORT_ASC);    
+        $_tmTool = TeamMemberTool::getInstance();
+        $teams = $_tmTool->getUserTeam(Yii::$app->user->id, $teamCategory);
+        
         return ArrayHelper::map($teams, 'id', 'name');
     }
     
     /**
-     * 获取所有创建者
+     * 获取所有开发团队
      * @return array
      */
-    public function getCreateBys()
+    public function getDevelopTeams()
     {
-        /* @var $rbacManager RbacManager */
-        $rbacManager = Yii::$app->authManager;
-        $createBys = $rbacManager->getItemUsers(RbacName::ROLE_DEMAND_PROMULGATOR);
+        $_tmTool = TeamMemberTool::getInstance();
+        $teams = $_tmTool->getTeamsByCategoryId(TeamCategory::TYPE_CCOA_DEV_TEAM);
+        ArrayHelper::multisort($teams, 'index', SORT_ASC);  
         
-        return ArrayHelper::map($createBys, 'id', 'nickname');
+        return ArrayHelper::map($teams, 'id', 'name');
     }
     
     /**
-     * 获取团队成员  
-     * @param integer $team_id          团队id
+     * 获取所有任务创建者和承接人
      * @return array
      */
-    public function getTeamMembers($team_id)
+    public function getTaskCreatorUndertaker()
     {
-        $items = TeamMemberTool::getInstance()->getTeamMembersByTeamId($team_id);
+        $results = (new Query())
+                ->select([
+                    "CONCAT(DemandTask.create_by, '_', CreateBy.nickname) AS create_by",
+                    "CONCAT(DemandTask.undertake_person, '_', Undertaker.nickname) AS undertaker",
+                ])
+                ->from(['DemandTask' => DemandTask::tableName()])
+                ->leftJoin(['CreateBy' => User::tableName()], 'CreateBy.id = DemandTask.create_by')
+                ->leftJoin(['Undertaker' => User::tableName()], 'Undertaker.id = DemandTask.undertake_person')
+                ->all();
         
-        return ArrayHelper::map($items, 'id', 'nickname');
-    }
-
-    /**
-     * 获取所有承接人
-     * @return array
-     */
-    public function getUndertakePersons()
-    {
-        /* @var $rbacManager RbacManager */
-        $rbacManager = Yii::$app->authManager;
-        $undertakePersons = $rbacManager->getItemUsers(RbacName::ROLE_DEMAND_UNDERTAKE_PERSON);
+        $createBys = [];
+        $undertakers = [];
+        foreach ($results as $item) {
+            $createBys[explode('_', $item['create_by'])[0]] = isset(explode('_', $item['create_by'])[1]) ? explode('_', $item['create_by'])[1] : '';
+            $undertakers[explode('_', $item['undertaker'])[0]] = isset(explode('_', $item['undertaker'])[1]) ? explode('_', $item['undertaker'])[1] : '';
+        }
         
-        return ArrayHelper::map($undertakePersons, 'id', 'nickname');
+        return [
+            'createBy' => array_filter($createBys),
+            'undertaker' => array_filter($undertakers)
+        ];
     }
     
     /**

@@ -70,7 +70,7 @@ class CollegeController extends BasedataController
      */
     public function actionCreate()
     {
-        parent::actionCreate();
+        //parent::actionCreate();
         
         $model = new College();
 
@@ -94,7 +94,7 @@ class CollegeController extends BasedataController
      */
     public function actionUpdate($id)
     {
-        parent::actionUpdate($id);
+        //parent::actionUpdate($id);
         
         $model = $this->findModel($id);
 
@@ -118,7 +118,7 @@ class CollegeController extends BasedataController
      */
     public function actionDelete($id)
     {
-        parent::actionDelete($id);
+        //parent::actionDelete($id);
         
         $this->findModel($id)->delete();
         

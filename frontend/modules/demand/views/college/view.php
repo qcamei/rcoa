@@ -1,6 +1,7 @@
 <?php
 
 use wskeee\framework\models\College;
+use wskeee\rbac\components\ResourceHelper;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -16,20 +17,14 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="container college-view">
 
     <p>
-        <?php
-        if ($rbac['update']) {
-            echo Html::a(Yii::t('rcoa/basedata', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']).' ';
-        }
-        if ($rbac['delete']) {
-            echo Html::a(Yii::t('rcoa/basedata', 'Delete'), ['delete', 'id' => $model->id], [
-                'class' => 'btn btn-danger',
-                'data' => [
-                    'confirm' => Yii::t('demand', 'Are you sure you want to delete this item?'),
-                    'method' => 'post',
-                ],
-            ]);
-        }
-        ?>
+        <?= ResourceHelper::a(Yii::t('rcoa/basedata', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']); ?>
+        <?= ResourceHelper::a(Yii::t('rcoa/basedata', 'Delete'), ['delete', 'id' => $model->id], [
+            'class' => 'btn btn-danger',
+            'data' => [
+                'confirm' => Yii::t('rcoa/basedata', 'Are you sure you want to delete this item?'),
+                'method' => 'post',
+            ],
+        ]); ?>
     </p>
 
     <?= DetailView::widget([

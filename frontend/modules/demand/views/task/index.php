@@ -23,26 +23,16 @@ DemandTask::$operation = $operation;
 
 <div class="container demand-task-index demand-task">
    
-    <?=  $this->render('_search_detai',[
-        'itemType' => $itemType,
+    <?=  $this->render('_search',[
+        'params' => $param,
+        //条件
+        'itemTypes' => $itemType,
         'items' => $items,
-        'itemChild' => $itemChild,
-        'course' => $course,
-        'team' => $team,
-        'createBy' => $createBys,
-        'undertakePerson' => $undertakePersons,
-
-        'item_type_id' => $itemTypeId,
-        'item_id' => $itemId,
-        'item_child_id' => $itemChildId,
-        'course_id' => $courseId,
-        'team_id' => $teamId,
-        'create_by' => $createBy,
-        'undertake_person' => $undertakePerson,
-        'status' => $status,
-        'time' => $time,
-        'keyword' => $keyword,
-        'mark' => $mark,
+        'itemChilds' => $itemChild,
+        'courses' => $course,
+        'developTeams' => $developTeams,
+        'createBys' => $createBys,
+        'undertakers' => $undertakers,
     ]); ?>
 
     
@@ -67,9 +57,8 @@ DemandTask::$operation = $operation;
                 [
                     'label' => '',
                     'format' => 'raw',
-                    'value'=> function($model){
-                        /* @var $model DemandTask */
-                        return $model->mode == DemandTask::MODE_NEWBUILT ?
+                    'value'=> function($data){
+                        return $data['mode'] == DemandTask::MODE_NEWBUILT ?
                                 Html::img(['/filedata/demand/image/mode_newbuilt.png']) : 
                                 Html::img(['/filedata/demand/image/mode_reform.png']);
                     },
@@ -90,9 +79,8 @@ DemandTask::$operation = $operation;
                 ],
                 [
                     'label' => Yii::t('rcoa/demand', 'Item Type'),
-                    'value'=> function($model){
-                        /* @var $model DemandTask */
-                        return !empty($model->item_type_id) ? $model->itemType->name : null;
+                    'value'=> function($data){
+                        return !empty($data['item_type_name']) ? $data['item_type_name'] : null;
                     },
                     'headerOptions' => [
                         'class'=>[
@@ -109,9 +97,8 @@ DemandTask::$operation = $operation;
                 ],
                 [
                     'label' => Yii::t('rcoa/demand', 'Item'),
-                    'value'=> function($model){
-                        /* @var $model DemandTask */
-                        return !empty($model->item_id) ? $model->item->name : null;
+                    'value'=> function($data){
+                        return !empty($data['item_name']) ? $data['item_name'] : null;
                     },
                     'headerOptions' => [
                         'class'=>[
@@ -128,9 +115,8 @@ DemandTask::$operation = $operation;
                 ],
                 [
                     'label' => Yii::t('rcoa/demand', 'Item Child'),
-                    'value'=> function($model){
-                        /* @var $model DemandTask */
-                        return !empty($model->item_child_id) ? $model->itemChild->name : null;
+                    'value'=> function($data){
+                        return !empty($data['item_child_name']) ? $data['item_child_name'] : null;
                     },
                     'headerOptions' => [
                         'class'=>[
@@ -148,16 +134,15 @@ DemandTask::$operation = $operation;
                 [
                     'label' => Yii::t('rcoa/demand', 'Courses'),
                     'format' => 'raw',
-                    'value'=> function($model){
-                        /* @var $model DemandTask */
-                        return !empty($model->course_id) ? '<div class="course-name">'.($model->course->name).'</div>'.
+                    'value'=> function($data){
+                        return !empty($data['item_course_name']) ? '<div class="course-name">'.($data['item_course_name']).'</div>'.
                                 Html::beginTag('div', [
                                     'class' => 'progress table-list-progress',
                                     'style' => 'height:12px;margin:2px 0;border-radius:0px;'
                                 ]).Html::beginTag('div', [
                                         'class' => 'progress-bar', 
-                                        'style' => 'width:'.$model->progress.'%;line-height: 12px;font-size: 10px;',
-                                    ]).$model->progress.'%'.
+                                        'style' => "width:{$data['progress']}%;line-height: 12px;font-size: 10px;",
+                                    ])."{$data['progress']}%".
                                     Html::endTag('div').
                                 Html::endTag('div') : null;
                     },
@@ -177,9 +162,8 @@ DemandTask::$operation = $operation;
                 [
                     'label' => Yii::t('rcoa/demand', 'Check Harvest Time'),
                     'format' => 'raw',
-                    'value'=> function($model){
-                        /* @var $model DemandTask */
-                        return $model->plan_check_harvest_time;
+                    'value'=> function($data){
+                        return $data['plan_check_harvest_time'];
                     },
                     'headerOptions' => [
                         'class'=>[
@@ -200,9 +184,8 @@ DemandTask::$operation = $operation;
                 ],
                 [
                     'label' => Yii::t('rcoa/demand', 'Create By'),
-                    'value'=> function($model){
-                        /* @var $model DemandTask */
-                        return !empty($model->create_by) ? $model->createBy->nickname : null;
+                    'value'=> function($data){
+                        return !empty($data['create_by']) ? $data['create_by'] : null;
                     },
                     'headerOptions' => [
                         'class'=>[
@@ -218,10 +201,9 @@ DemandTask::$operation = $operation;
                     ],
                 ],
                 [
-                    'label' => Yii::t('rcoa/demand', 'Undertake Person'),
-                    'value'=> function($model){
-                        /* @var $model DemandTask */
-                        return !empty($model->undertake_person) ? $model->undertakePerson->nickname : null;
+                    'label' => Yii::t('rcoa/demand', 'Undertaker'),
+                    'value'=> function($data){
+                        return !empty($data['undertaker']) ? $data['undertaker'] : null;
                     },
                     'headerOptions' => [
                         'class'=>[
@@ -237,11 +219,10 @@ DemandTask::$operation = $operation;
                     ],
                 ],
                 [
-                    'label' => Yii::t('rcoa/demand', 'Team'),
+                    'label' => Yii::t('rcoa/demand', 'Develop Team'),
                     'format' => 'raw',
-                    'value'=> function($model){
-                        /* @var $model DemandTask */
-                        return !empty($model->team_id) ? '<span class="team-span">'.$model->team->name.'</span>' : null;
+                    'value'=> function($data){
+                        return !empty($data['develop_team_name']) ? "<span class=\"team-span\">{$data['develop_team_name']}</span>" : null;
                     },
                     'headerOptions' => [
                         'class'=>[
@@ -259,12 +240,11 @@ DemandTask::$operation = $operation;
                 [
                     'label' => '预算成本',
                     'format' => 'raw',
-                    'value'=> function($model){
-                        /* @var $model DemandTask */
-                        if(!empty($model->budget_cost)){
-                            $budgetCost = $model->budget_cost + $model->budget_cost * $model->bonus_proportion;
-                            $totalBudgetCost = $budgetCost + $model->external_budget_cost;
-                            return '<span class="total-price">￥'.number_format($totalBudgetCost / 10000, 2).'</span>万';
+                    'value'=> function($data){
+                        if(!empty($data['budget_cost'])){
+                            $budgetCost = $data['budget_cost'] + $data['budget_cost'] * $data['bonus_proportion'];
+                            $totalBudgetCost = number_format(($budgetCost + $data['external_budget_cost']) / 10000, 2);
+                            return "<span class=\"total-price\">￥{$totalBudgetCost}</span>万";
                         }else{
                             return null;
                         }
@@ -285,12 +265,11 @@ DemandTask::$operation = $operation;
                 [
                     'label' => '实际成本',
                     'format' => 'raw',
-                    'value'=> function($model){
-                        /* @var $model DemandTask */
-                        if(!empty($model->cost)){
-                            $realityCost = $model->cost + $model->cost * $model->bonus_proportion;
-                            $totalRealityCost = $realityCost + $model->external_reality_cost;
-                            return '<span class="total-price">￥'.number_format($totalRealityCost / 10000, 2).'</span>万';
+                    'value'=> function($data){
+                        if(!empty($data['cost'])){
+                            $realityCost = $data['cost'] + $data['cost'] * $data['bonus_proportion'];
+                            $totalRealityCost = number_format(($realityCost + $data['external_reality_cost']) / 10000, 2);
+                            return "<span class=\"total-price\">￥{$totalRealityCost}</span>万";
                         }else{
                             return null;
                         }
@@ -312,17 +291,19 @@ DemandTask::$operation = $operation;
                     'class' => 'yii\grid\ActionColumn',
                     'header' => Yii::t('rcoa', 'Operating'),
                     'buttons' => [
-                        'view' => function ($url, $model) {
-                            /* @var $model DemandTask */
+                        'view' => function ($url, $data) use($operation) {
                             $options = [
-                                'class' => $model->getIsStatusCompleted() ? 
-                                        'btn btn-success btn-sm' : ($model->getIsStatusDeveloping() ? 'btn btn-default btn-sm' : 
-                                            (!empty(DemandTask::$operation[$model->id]) ? 
-                                                'btn btn-primary btn-sm' : 'btn btn-default btn-sm')),
+                                'class' => isset($operation[Yii::$app->user->id][$data['id']]) ? 
+                                    ($operation[Yii::$app->user->id][$data['id']] == DemandTask::STATUS_COMPLETED ?  'btn btn-success btn-sm' : 
+                                    ($operation[Yii::$app->user->id][$data['id']] == DemandTask::STATUS_CANCEL ? 'btn btn-danger btn-sm' :
+                                    ($operation[Yii::$app->user->id][$data['id']] == DemandTask::STATUS_DEVELOPING ? 'btn btn-default btn-sm' :
+                                    ($operation[Yii::$app->user->id][$data['id']] ? 'btn btn-primary btn-sm' : 'btn btn-default btn-sm')))) : 
+                                    ($data['status'] == DemandTask::STATUS_CANCEL ? 'btn btn-danger btn-sm' : 
+                                    ($data['status'] == DemandTask::STATUS_COMPLETED ? 'btn btn-success btn-sm' : 'btn btn-default btn-sm')),
                                 'style' => 'width: 55px;'
                             ];
-                            return Html::a($model->getStatusName(), [
-                                'view', 'id' => $model->id], $options);
+                            return Html::a(DemandTask::$statusNmae[$data['status']], [
+                                'view', 'id' => $data['id']], $options);
                         },
                     ],
                     'headerOptions' => [
@@ -342,11 +323,16 @@ DemandTask::$operation = $operation;
             ],
         ]); ?>
         
-        <div class="summary">总共<b><?= $count ?></b>条数据</div>
-        
+        <?php
+            $page = !isset($param['page']) ? 1 :$param['page'];
+            $pageCount = ceil($totalCount/20);
+            if($pageCount > 0)
+                echo "<div class=\"summary\">第<b>".(($page*20-20)+1)."</b>-<b>".($page!=$pageCount?$page*20:$totalCount)."</b>条，总共<b>{$totalCount}</b>条数据.</div>";
+        ?>
+
         <?= LinkPager::widget([  
             'pagination' => new Pagination([
-                'totalCount' => $count,  
+                'totalCount' => $totalCount,  
             ]),  
         ]) ?> 
         

@@ -42,6 +42,7 @@ class BasedataExpert extends Model{
         '2' => '女',
     ];
     
+    public $id;
     public $u_id;
     public $username;
     public $nickname;
@@ -129,7 +130,7 @@ class BasedataExpert extends Model{
             $model = new BasedataExpert();
             
             if($user == null || $expert == null)return $model;
-            
+            $model->id = $user->id;
             $model->u_id = $user->id;
             $model->username = $user->username;
             $model->nickname = $user->nickname;

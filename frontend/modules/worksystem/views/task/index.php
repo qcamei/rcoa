@@ -271,7 +271,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                        ($operation[Yii::$app->user->id][$data['id']] == WorksystemTask::STATUS_CANCEL ? 'btn btn-danger btn-sm' : 
                                        ($operation[Yii::$app->user->id][$data['id']] == WorksystemTask::STATUS_COMPLETED ? 'btn btn-success btn-sm' : 
                                        ($operation[Yii::$app->user->id][$data['id']] ? 'btn btn-primary btn-sm' : 'btn btn-default btn-sm'))) : 
-                                       ($data['status'] == WorksystemTask::STATUS_CANCEL ? 'btn btn-danger btn-sm' : ($data['status'] == WorksystemTask::STATUS_COMPLETED ? 'btn btn-success btn-sm' : 'btn btn-default btn-sm')),
+                                       ($data['status'] == WorksystemTask::STATUS_CANCEL ? 'btn btn-danger btn-sm' : 
+                                       ($data['status'] == WorksystemTask::STATUS_COMPLETED ? 'btn btn-success btn-sm' : 'btn btn-default btn-sm')),
                             'style' => 'width: 55px;'
                         ];
                         return Html::a(WorksystemTask::$statusNmae[$data['status']], ['view', 'id' => $data['id']], $options);

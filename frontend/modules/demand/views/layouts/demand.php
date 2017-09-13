@@ -9,7 +9,7 @@ use yii\web\View;
 /* @var $this View */
 
 /* 添加尾部导航 */
-$content = $content.$this->render('../default/_footer');
+$content = $content.$this->render('_footer');
 
 echo $this->render('@app/views/layouts/main',['content'=>$content]);
 

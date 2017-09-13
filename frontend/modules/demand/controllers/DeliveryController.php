@@ -8,11 +8,11 @@ use common\models\demand\DemandDeliveryData;
 use common\models\demand\DemandTask;
 use common\models\demand\searchs\DemandDeliverySearch;
 use Detection\MobileDetect;
+use frontend\modules\demand\utils\DemandAction;
 use frontend\modules\demand\utils\DemandTool;
 use wskeee\rbac\RbacName;
 use Yii;
 use yii\db\Query;
-use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -33,16 +33,6 @@ class DeliveryController extends Controller {
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
-                ],
-            ],
-            //access验证是否有登录
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ]
                 ],
             ],
         ];
@@ -78,37 +68,26 @@ class DeliveryController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($demand_task_id) {
+    public function actionCreate($task_id) {
         $this->layout = '@app/views/layouts/main';
         $model = new DemandDelivery();
-        $detect = new MobileDetect();
-        /* @var $dtTool DemandTool */
-        $dtTool = DemandTool::getInstance();
         $model->loadDefaultValues();
-        $post = Yii::$app->request->post();
-        $model->demand_task_id = $demand_task_id;
-        
-        if (!\Yii::$app->user->can(RbacName::PERMSSION_DEMAND_TASK_SUBMIT_ACCEPTANCE) && $model->demandTask->developPrincipals->u_id != \Yii::$app->user->id)
-            throw new NotAcceptableHttpException('无权限操作！');
-        if (!($model->demandTask->getIsStatusDeveloping() || $model->demandTask->getIsStatusUpdateing()))
+        $model->demand_task_id = $task_id;
+        $is_empty = $this->IsAcceptancesEmpty($task_id);
+       
+        if (!($model->demandTask->undertake_person == Yii::$app->user->id && ($model->demandTask->getIsStatusDeveloping() || $model->demandTask->getIsStatusUpdateing())))
             throw new NotAcceptableHttpException('该任务状态为' . $model->demandTask->getStatusName() . '！');
-
-        $model->create_by = \Yii::$app->user->id;
-        $model->reality_cost = ArrayHelper::getValue($post, 'cost');
-        $model->external_reality_cost = ArrayHelper::getValue($post, 'external_reality_cost');
-        $model->des = ArrayHelper::getValue($post, 'des');
-        $is_empty = $this->findDemandAcceptances($model->demand_task_id);
         
-        if (\Yii::$app->getRequest()->isPost && $model->save()) {
-            $this->saveDemandDeliveryData($model, $post);
-            $dtTool->CreateDeliveryTask($model, $is_empty);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $this->saveDemandDeliveryData($model, Yii::$app->request->post());
+            DemandAction::getInstance()->DemandCreateDelivery($model, $is_empty);
             return $this->redirect(['task/view', 'id' => $model->demand_task_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'detect' => $detect,
-                'workitemType' => $dtTool->getDemandWorkitemTypeData($demand_task_id),
-                'workitem' => $dtTool->getDemandWorkitemData($demand_task_id),
+                'detect' => new MobileDetect(),
+                'workitemType' => DemandTool::getInstance()->getDemandWorkitemTypeData($task_id),
+                'workitem' => DemandTool::getInstance()->getDemandWorkitemData($task_id),
             ]);
         }
     }
@@ -162,12 +141,11 @@ class DeliveryController extends Controller {
      * 查询验收记录是否为空
      * @return boolean
      */
-    private function findDemandAcceptances($taskId) {
-        $is_empty = (new Query())
-                ->from(DemandAcceptance::tableName())
-                ->where(['demand_task_id' => $taskId])
-                ->all();
-        if(!empty($is_empty))
+    private function IsAcceptancesEmpty($taskId) 
+    {
+        $acceptances = (new Query())->from(DemandAcceptance::tableName())
+            ->where(['demand_task_id' => $taskId])->all();
+        if($acceptances !== null)
             return true;
         else
             return false;
@@ -178,25 +156,25 @@ class DeliveryController extends Controller {
      * @param DemandDelivery $model              
      * @param type $post              
      */
-    public function saveDemandDeliveryData($model, $post) {
-        $is_empty = $this->findDemandAcceptances($model->demand_task_id);
-        $values = ArrayHelper::getValue($post, 'value');
+    public function saveDemandDeliveryData($model, $post) 
+    {
         $datas = [];
-        foreach ($values as $key => $value) {
-            $datas[] = [
-                'demand_delivery_id' => $model->id,
-                'demand_workitem_id' => $key,
-                'value' => $value,
-            ];
-        }
-        
-        ArrayHelper::multisort($datas, 'demand_workitem_id', SORT_ASC);
+        $is_empty = $this->IsAcceptancesEmpty($model->demand_task_id);
+        $values = ArrayHelper::getValue($post, 'value');
         
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try {
-            if ($model !== null && $datas != null) {
-
+            if ($model != null) {
+                foreach ($values as $key => $value) {
+                    $datas[] = [
+                        'demand_delivery_id' => $model->id,
+                        'demand_workitem_id' => $key,
+                        'value' => $value,
+                    ];
+                }
+                ArrayHelper::multisort($datas, 'demand_workitem_id', SORT_ASC);
+                
                 /** 添加$values数组到表里 */
                 Yii::$app->db->createCommand()->batchInsert(DemandDeliveryData::tableName(), [
                     'demand_delivery_id', 'demand_workitem_id', 'value'], $datas)->execute();

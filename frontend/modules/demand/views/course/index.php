@@ -1,10 +1,9 @@
 <?php
 
-use frontend\modules\demand\assets\BasedataAssets;
 use wskeee\framework\models\searchs\ItemSearch;
+use wskeee\rbac\components\ResourceHelper;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
-use yii\helpers\Html;
 use yii\web\View;
 
 /* @var $this View */
@@ -16,12 +15,8 @@ $this->title = Yii::t('rcoa/basedata', 'Course');
 <div class="container course-index">
 
     <p>
-        <?php
-        if ($rbac['create']) {
-            echo Html::a(
-                    Yii::t('rcoa/basedata', '{Create} {Course}', ['Create' => Yii::t('rcoa/basedata', 'Create'), 'Course' => Yii::t('rcoa/basedata', 'Course')]), ['create'], ['class' => 'btn btn-success']);
-        }
-        ?>
+        <?= ResourceHelper::a(Yii::t('rcoa/basedata', '{Create} {Course}', 
+                ['Create' => Yii::t('rcoa/basedata', 'Create'), 'Course' => Yii::t('rcoa/basedata', 'Course')]), ['create'], ['class' => 'btn btn-success']); ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,

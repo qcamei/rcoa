@@ -1,7 +1,7 @@
 <?php
 
 use common\models\worksystem\WorksystemTask;
-use frontend\modules\worksystem\assets\WorksystemAssets;
+use frontend\modules\demand\assets\DemandAssets;
 use yii\helpers\Html;
 use yii\web\View;
     
@@ -28,10 +28,9 @@ $js =
     $('#submit').click(function()
     {
         if(window.first == 0){
-            var dataAdd =  $("#worksystemtask-course_id").attr("data-add");
-            $("#worksystemtask-task_type_id").attr("disabled", false);
+            var dataAdd =  $("#demandtask-course_id").attr("data-add");
             if(dataAdd == "true"){
-                $('#worksystem-task-form').submit();
+                $('#demand-task-form').submit();
                 window.first = 1;
             }
         }
@@ -42,5 +41,5 @@ JS;
 ?>
 
 <?php
-    WorksystemAssets::register($this);
+    DemandAssets::register($this);
 ?>

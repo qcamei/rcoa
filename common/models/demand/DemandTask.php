@@ -216,7 +216,7 @@ class DemandTask extends ActiveRecord
     public function rules()
     {
         return [
-            [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'teacher', 'course_description', 'lesson_time', 'credit'],'required'],
+            [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'teacher', 'course_description', 'lesson_time', 'credit', 'plan_check_harvest_time'],'required'],
             [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'mode', 'team_id', 'create_team', 'develop_principals', 'status', 'progress', 'created_at', 'updated_at', 'finished_at'], 'integer'],
             [['course_description', 'des'], 'string'],
             [['lesson_time', 'credit', 'budget_cost', 'cost', 'external_budget_cost', 'external_reality_cost', 'bonus_proportion', 'score'], 'number'],
@@ -251,8 +251,8 @@ class DemandTask extends ActiveRecord
             'bonus_proportion' => Yii::t('rcoa/demand', 'Bonus Proportion'),
             'score' => Yii::t('rcoa/demand', 'Score'),
             'mode' => Yii::t('rcoa/demand', 'Mode'),
-            'team_id' => Yii::t('rcoa/demand', 'Team'),
-            'undertake_person' => Yii::t('rcoa/demand', 'Undertake Person'),
+            'team_id' => Yii::t('rcoa/demand', 'Develop Team'),
+            'undertake_person' => Yii::t('rcoa/demand', 'Undertaker'),
             'develop_principals' => Yii::t('rcoa/demand', 'Develop Principals'),
             'plan_check_harvest_time' => Yii::t('rcoa/demand', 'Plan Check Harvest Time'),
             'reality_check_harvest_time' => Yii::t('rcoa/demand', 'Reality Check Harvest Time'),

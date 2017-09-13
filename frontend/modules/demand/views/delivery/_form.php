@@ -89,12 +89,20 @@ $is_show = reset($workitemType);   //获取数组的第一个值
             <tr class="tr">
                 <th class="text-center">外部成本</th>
                 <td><?= !empty($model->demandTask->external_budget_cost) ? '￥'.number_format($model->demandTask->external_budget_cost, 2) : '无' ?></td>
-                <td><?=  Html::textInput('external_reality_cost', '0.00', ['id' => 'external-reality-cost', 'class' => 'form-control', 'type' => 'number', 'onblur' => 'totalCost();']); ?></td>
+                <td>
+                    <?= $form->field($model, 'external_reality_cost',[
+                        'template' => "<div class=\"col-sm-12\">{input}</div>\n"
+                    ])->textInput(['id' => 'external-reality-cost', 'class' => 'form-control', 'type' => 'number', 'onblur' => 'totalCost();']) ?>
+                </td>
             </tr>
             <tr class="tr">
                 <th class="text-center">备注</th>
                 <td><?= !empty($model->demandTask->des) ? $model->demandTask->des : '无' ?></td>
-                <td><?=  Html::textarea('des', '无', ['class' => 'form-control', 'rows' => 4]); ?></td>
+                <td>
+                    <?= $form->field($model, 'des',[
+                        'template' => "<div class=\"col-sm-12\">{input}</div>\n"
+                    ])->textarea(['class' => 'form-control', 'value' => '无', 'rows' => 4]) ?>
+                </td>
             </tr>
         </tbody>
         
@@ -103,11 +111,11 @@ $is_show = reset($workitemType);   //获取数组的第一个值
     <div class="total-cost">
         <div class="total">
             <!--<?= Yii::t('rcoa/demand', 'Total Cost') ?>：￥<span id="total-cost">0.00</span>-->
-            <?= Html::hiddenInput('cost', '0.00', ['id' => 'total-cost-input']); ?>
+            <?= Html::activeHiddenInput($model, 'reality_cost', ['id' => 'total-cost-input']); ?>
         </div>
         <!--<span class="pattern">（人工实际成本 = 人工实际成本 + 奖金）</span>-->
     </div>
-        
+    <?= Html::activeHiddenInput($model, 'create_by', ['value' => Yii::$app->user->id]) ?>
     <?php ActiveForm::end(); ?>
     
 </div>

@@ -6,21 +6,16 @@ use common\models\demand\DemandAcceptanceData;
 use common\models\demand\DemandDelivery;
 use common\models\demand\DemandDeliveryData;
 use common\models\demand\DemandTask;
-use common\models\demand\DemandTaskAuditor;
 use common\models\demand\DemandTaskProduct;
-use common\models\demand\DemandWeight;
 use common\models\demand\DemandWeightTemplate;
 use common\models\demand\DemandWorkitem;
 use common\models\demand\DemandWorkitemTemplate;
 use common\models\product\Product;
-use common\models\team\Team;
 use common\models\workitem\Workitem;
 use common\models\workitem\WorkitemCost;
 use common\models\workitem\WorkitemType;
-use wskeee\framework\models\Item;
-use wskeee\framework\models\ItemType;
+use frontend\modules\demand\utils\DemandQuery;
 use yii\db\Query;
-
 
 
 class DemandQuery {
@@ -31,27 +26,7 @@ class DemandQuery {
         $this->findDemandWorkitemTemplateTable();
     }
    
-    /**
-     * 查询需求任务数据
-     * @return $query
-     */
-    public function findDemandTaskTable()
-    {
-        $query = DemandTask::find()
-            ->select(['Demand_task.id'])
-            ->from(['Demand_task' => DemandTask::tableName()])
-            ->leftJoin(['Team' => Team::tableName()], 'Team.id = Demand_task.team_id')
-            ->leftJoin(['Demand_task_auditor' => DemandTaskAuditor::tableName()], 'Demand_task_auditor.team_id = Demand_task.create_team')
-            ->leftJoin(['Fw_item_type' => ItemType::tableName()], 'Fw_item_type.id = Demand_task.item_type_id')
-            ->leftJoin(['Fw_item' => Item::tableName()], 'Fw_item.id = Demand_task.item_id')
-            ->leftJoin(['Fw_item_child' => Item::tableName()], 'Fw_item_child.id = Demand_task.item_child_id')
-            ->leftJoin(['Fw_item_course' => Item::tableName()], 'Fw_item_course.id = Demand_task.course_id')
-            ->groupBy(['Demand_task.id'])
-            ->with('course', 'item', 'itemChild', 'itemType', 'team', 'createBy');
-                 
-        return $query;
-    }
-   
+    
     /**
      * 查询课程产品额和总学时
      * @return $query

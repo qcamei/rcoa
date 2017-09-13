@@ -14,29 +14,10 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/demand', 'Demand Task 
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="title">
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'options' => ['class' => 'breadcrumb breadcrumb-title'],
-            'homeLink' => [
-                'label' => Yii::t('rcoa/demand', 'Demand Tasks'),
-                'url' => ['task/index'],
-                'template' => '<li class="course-name">{link}</li>',
-            ],
-            'links' => [
-                [
-                    'label' => Yii::t('rcoa/demand', 'Demand View'),
-                    'url' => ['task/view', 'id' => $model->task_id],
-                    'template' => '<li class="course-name">{link}</li>',
-                ],
-                [
-                    'label' => Yii::t('rcoa/demand', 'Demand Task Annexes').'：'.$model->name,
-                    'template' => '<li class="course-name active" style="width:50%">{link}</li>',
-                ],
-            ]
-        ]);?>
-    </div>
-</div>
+<?= $this->render('/layouts/_title', [
+    'params' => ['task/index'],
+    'title' => Yii::t('rcoa/demand', 'Demand View'),
+]) ?>
 
 <div class="container demand-task-annex-view has-title">
     <iframe class="col-lg-12 col-md-12 col-sm-12 col-xs-12" src="http://eezxyl.gzedu.com?furl=http://eefile.download.eenet.com<?= $model->path?>" style="height: 550px;padding: 0px;">

@@ -6,9 +6,8 @@ use common\models\demand\DemandAppeal;
 use common\models\demand\DemandAppealReply;
 use common\models\demand\DemandReply;
 use common\models\demand\searchs\DemandReplySearch;
-use frontend\modules\demand\utils\DemandTool;
+use frontend\modules\demand\utils\DemandAction;
 use Yii;
-use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotAcceptableHttpException;
@@ -29,16 +28,6 @@ class AppealReplyController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
-                ],
-            ],
-             //access验证是否有登录
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ]
                 ],
             ],
         ];
@@ -76,24 +65,19 @@ class AppealReplyController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($demand_task_id)
+    public function actionCreate($task_id)
     {
         $model = new DemandAppealReply();
+        $appeal = $this->findAppealModel($task_id);
         $model->loadDefaultValues();
-        $appeal = $this->findAppealModel($demand_task_id);
-        /* @var $dtTool DemandTool */
-        $dtTool = DemandTool::getInstance();
         $model->demand_appeal_id = $appeal->id;
-        $model->create_by = \Yii::$app->user->id;
         
-        if(!($model->demandAppeal->demandTask->create_by == \Yii::$app->user->id))
-            throw new NotAcceptableHttpException('无权限操作！');
-        if(!$model->demandAppeal->demandTask->getIsStatusAppealing())
-            throw new NotAcceptableHttpException('该任务状态为'.$model->demandTask->getStatusName().'！');
+        if(!($appeal->demandTask->create_by == \Yii::$app->user->id && $appeal->demandTask->getIsStatusAppealing()))
+            throw new NotAcceptableHttpException('该任务状态为'.$appeal->demandTask->getStatusName().'！');
         
         if ($model->load(Yii::$app->request->post())) {
-            $dtTool->CreateAppealReplyTask($model);
-            return $this->redirect(['task/view', 'id' => $model->demandAppeal->demand_task_id]);
+            DemandAction::getInstance()->DemandCreateAppealReply($model);
+            return $this->redirect(['task/view', 'id' => $appeal->demandTask->id]);
         } else {
             return $this->renderAjax('create', [
                 'model' => $model,
@@ -156,12 +140,10 @@ class AppealReplyController extends Controller
      * @return DemandReply the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findAppealModel($demand_task_id)
+    protected function findAppealModel($task_id)
     {
-        $appeal = DemandAppeal::find()
-                ->where(['demand_task_id' => $demand_task_id])
-                ->orderBy('id desc')
-                ->one();
+        $appeal = DemandAppeal::find()->where(['demand_task_id' => $task_id])
+             ->orderBy('id desc')->one();
         
         if ($appeal !== null) {
             return $appeal;

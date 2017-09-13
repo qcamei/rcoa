@@ -68,7 +68,7 @@ class CourseController extends BasedataController
      */
     public function actionCreate()
     {
-        parent::actionCreate();
+        //parent::actionCreate();
         
         $model = new Course();
 
@@ -97,7 +97,7 @@ class CourseController extends BasedataController
      */
     public function actionUpdate($id)
     {
-        parent::actionUpdate($id);
+        //parent::actionUpdate($id);
         
         $model = $this->findModel($id);
 
@@ -125,7 +125,7 @@ class CourseController extends BasedataController
      */
     public function actionDelete($id,$callback=null)
     {
-        parent::actionDelete($id);
+        //parent::actionDelete($id);
         
         $this->findModel($id)->delete();
         /* @var $fwManager FrameworkManager */

@@ -88,9 +88,7 @@ use yii\widgets\ActiveForm;
     ]) ?>
     
     <?= $form->field($model, 'create_team', [
-        //'template' => "{label}\n<div class=\"col-lg-10 col-md-10\">{input}</div>\n<div class=\"col-lg-4 col-md-4\">{error}</div>",
         'labelOptions' => [
-            //'class' => 'col-lg-1 col-md-1 control-label form-label',
             'style' => [
                 'padding-left' => '0',
                 'display' =>  count($teams) > 1 ? 'block' : 'none'
@@ -192,8 +190,6 @@ $js =
                 }
                 $('.field-worksystemtask-course_id').removeClass("has-success").addClass('has-error');
                 $(".field-worksystemtask-course_id .help-block").text(data['message']);
-                
-                
             }
         });
     });        

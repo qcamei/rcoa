@@ -29,7 +29,6 @@ $acceptancetime = ArrayHelper::getColumn($acceptance, 'acceptance_time');
 $acceptancepass = ArrayHelper::getColumn($acceptance, 'pass');
 $acceptancedes = ArrayHelper::getColumn($acceptance, 'des');
 
-
 $number = [];   //合并单元格数
 foreach ($workitem as $work){
     if(!isset($number[$work['workitem_type']]))
@@ -48,7 +47,7 @@ foreach ($workitem as $work){
         <?= Select2::widget([
             'id' => 'date',
             'name' => 'created_at',
-            'value' => $delivery_id,
+            'value' => $model->demand_delivery_id,
             'data' => $dates, 
             'options' => [
                 'placeholder' => '请选择...',
@@ -240,7 +239,7 @@ $js =
     });  
   
     $('#date').change(function(){
-        $("#demand-acceptance-view").load("/demand/acceptance/view?demand_task_id=$demand_task_id&delivery_id="+$(this).val());
+        $("#demand-acceptance-view").load("/demand/acceptance/view?task_id=$demand_task_id&delivery_id="+$(this).val());
     });    
     
 JS;

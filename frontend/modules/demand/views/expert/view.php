@@ -1,6 +1,7 @@
 <?php
 
 use frontend\modules\demand\models\BasedataExpert;
+use wskeee\rbac\components\ResourceHelper;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\DetailView;
@@ -14,20 +15,14 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="container expert-view">
 
     <p>
-        <?php
-        if ($rbac['update']) {
-            echo Html::a(Yii::t('rcoa/basedata', 'Update'), ['update', 'id' => $model->u_id], ['class' => 'btn btn-primary']).' ';
-        }
-        if ($rbac['delete']) {
-            echo Html::a(Yii::t('rcoa/basedata', 'Delete'), ['delete', 'id' => $model->u_id], [
-                'class' => 'btn btn-danger',
-                'data' => [
-                    'confirm' => Yii::t('rcoa/demand', 'Are you sure you want to delete this item?'),
-                    'method' => 'post',
-                ],
-            ]);
-        }
-        ?>
+        <?= ResourceHelper::a(Yii::t('rcoa/basedata', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']); ?>
+        <?= ResourceHelper::a(Yii::t('rcoa/basedata', 'Delete'), ['delete', 'id' => $model->id], [
+            'class' => 'btn btn-danger',
+            'data' => [
+                'confirm' => Yii::t('rcoa/basedata', 'Are you sure you want to delete this item?'),
+                'method' => 'post',
+            ],
+        ]); ?>
     </p>
 
     <?= DetailView::widget([

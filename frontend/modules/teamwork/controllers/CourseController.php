@@ -153,7 +153,7 @@ class CourseController extends Controller
     {
         /* @var $rbacManager RbacManager */  
         $rbacManager = \Yii::$app->authManager;
-        if(!$rbacManager->isRole(RbacName::ROLE_DEMAND_UNDERTAKE_PERSON, Yii::$app->user->id))
+        if(!$rbacManager->isRole(RbacName::ROLE_COMMON_COURSE_DEV_MANAGER, Yii::$app->user->id))
             throw new NotAcceptableHttpException('无权限操作！');
         
         /* @var $model CourseManage */

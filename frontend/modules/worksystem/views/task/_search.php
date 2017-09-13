@@ -236,7 +236,7 @@ use yii\widgets\ActiveForm;
                         'id' => 'worksystemtask-status',
                         'value' => ArrayHelper::getValue($params, 'status', WorksystemTask::STATUS_DEFAULT),
                         'name' => 'status',
-                        'data' => [WorksystemTask::STATUS_DEFAULT => '未完成', WorksystemTask::STATUS_COMPLETED => '已完成'], 'options' => ['placeholder' => '全部'],
+                        'data' => [WorksystemTask::STATUS_DEFAULT => '未完成', WorksystemTask::STATUS_COMPLETED => '已完成'],
                         'options' => [
                             'placeholder' => '全部',
                         ],

@@ -15,72 +15,40 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/demand', 'Demand Tasks
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="title">
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'options' => ['class' => 'breadcrumb breadcrumb-title'],
-            'homeLink' => [
-                'label' => Yii::t('rcoa/demand', 'Demand Tasks'),
-                'url' => ['index'],
-            ],
-            'links' => [
-                [
-                    'label' => Yii::t('rcoa', 'Create'),
-                ],
-            ]
-        ]);?>
-    </div>
-</div>
+<?= $this->render('/layouts/_title', [
+    'params' => ['index'],
+    'title' => Yii::t('rcoa', 'Create'),
+]) ?>
 
-<div class="container demand-task-create has-title">
+<div class="container demand demand-task-create has-title">
 
     <?= $this->render('_form', [
         'model' => $model,
-        'sign'  => 0,
         'itemTypes' => $itemTypes,
         'items' => $items,
         'itemChilds' => $itemChilds,
         'courses' => $courses,
         'teachers' => $teachers,
-        'team' => $team,
-        'members' => $members,
+        'teams' => $teams,
         'workitmType' => $workitmType,
         'workitem' => $workitem,
-        'mark' => 0,
     ]) ?>
 
 </div>
 
-<div class="controlbar">
-    <div class="container">
-        <?= Html::a(Yii::t('rcoa', 'Back'), ['index', 'create_by' => Yii::$app->user->id, 
-                        'undertake_person' => Yii::$app->user->id, 
-                        'auditor' => Yii::$app->user->id], ['class' => 'btn btn-default']) ?>
-        <?= Html::a(
-                $model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'),
-                'javascript:;', 
-                ['id'=>'submit', 'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
-</div>
+<?= $this->render('/layouts/_form_navbar', [
+    'model' => $model,
+    'params' => ['index'],
+]) ?>
+
 
 <?php
 $js = 
 <<<JS
-    $('#submit').click(function()
-    {
-        
-        $.post("/demand/task/check-unique", $('#demand-task-form').serialize(), function(data){
-            if(data['types'] == 1){
-                $(".field-demandtask-course_id").addClass("has-error").removeClass("has-success");
-                $(".field-demandtask-course_id .help-block").text(data['message']);
-            }else{
-               $('#demand-task-form').submit();
-            }
-        })
-    });
+    
     
 JS;
-    $this->registerJs($js,  View::POS_READY);
+    //$this->registerJs($js,  View::POS_READY);
 ?>
 
 <?php

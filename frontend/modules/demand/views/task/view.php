@@ -4,51 +4,29 @@ use common\models\demand\DemandTask;
 use common\widgets\cslider\CSliderAssets;
 use frontend\modules\demand\assets\ChartAsset;
 use frontend\modules\demand\assets\DemandAssets;
+use frontend\modules\demand\utils\DemandAction;
+use wskeee\rbac\RbacManager;
+use wskeee\rbac\RbacName;
 use yii\helpers\Html;
 use yii\web\View;
-use yii\widgets\Breadcrumbs;
 
 /* @var $this View */
 /* @var $model DemandTask */
+/* @var $rbacManager RbacManager */  
+/* @var $demandAction DemandAction */ 
 
 $this->title = Yii::t('rcoa/demand', 'Demand View').'：'.$model->course->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rcoa/demand', 'Demand Tasks'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-/** 判断是否提示审核 */
-if($model->getIsStatusDefault() && $model->create_by == Yii::$app->user->id)
-    $isCheck = 1;
-else 
-   $isCheck = 0; 
-
-/** 判断是否提示创建课程开发数据 */
-if($model->getIsStatusDeveloping() && $model->undertake_person == Yii::$app->user->id)
-   $isCreateDevelop = 1;
-else
-   $isCreateDevelop = 0;
-
 ?>
 
-<div class="title">
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'options' => ['class' => 'breadcrumb breadcrumb-title'],
-            'homeLink' => [
-                'label' => Yii::t('rcoa/demand', 'Demand Tasks'),
-                'url' => ['index'],
-                'template' => '<li class="course-name">{link}</li>',
-            ],
-            'links' => [
-                [
-                    'label' => Yii::t('rcoa/demand', 'Demand View').'：'.$model->course->name,
-                    'template' => '<li class="course-name active" style="width:50%">{link}</li>',
-                ],
-            ]
-        ]);?>
-    </div>
-</div>
+<?= $this->render('/layouts/_title', [
+    'params' => ['index'],
+    'title' => Yii::t('rcoa/demand', 'Demand View').'：'.$model->course->name,
+]) ?>
 
-<div class="container demand-task-view has-title demand-task">
+<div class="container demand demand-task-view has-title demand-task">
     
     <?= $this->render('_form_detai', [
         'model' => $model,
@@ -59,7 +37,7 @@ else
     <span><?= Yii::t('rcoa/demand', 'Demand Task Annexes').'：'; ?></span>
     <?php
         foreach ($annex as $value) {
-            echo Html::a($value->name, ['annex/view', 'id' => $value->id], ['style' => 'margin-right:10px;']);
+            echo Html::a($value['name'], ['annex/view', 'id' => $value['id']], ['style' => 'margin-right:10px;']);
         }
     ?>
     
@@ -73,8 +51,8 @@ else
 
 <?= $this->render('_form_view',[
     'model' => $model,
-    'dtTool' => $dtTool,
-    'rbacManager' => $rbacManager,
+    'isAuditor' => $demandAction->getIsAuditor($model->create_team),
+    'isUndertaker' => $rbacManager->isRole(RbacName::ROLE_COMMON_COURSE_DEV_MANAGER, Yii::$app->user->id)
 ]) ?>
 
 <div class="demand-task">
@@ -82,13 +60,18 @@ else
 </div>
 
 <?php
+/** 判断是否提示创建课程开发数据 */
+if($model->getIsStatusDeveloping() && $model->undertake_person == Yii::$app->user->id)
+   $isCreateDevelop = 1;
+else
+   $isCreateDevelop = 0;
 $js = 
 <<<JS
         
     //加载需求任务审核记录
-    $("#demand-check-index").load("/demand/check/index?demand_task_id=$model->id");    
+    $("#demand-check-index").load("/demand/check/index?task_id=$model->id");    
     //加载需求任务验收记录
-    $("#demand-acceptance-view").load("/demand/acceptance/view?demand_task_id=$model->id");    
+    $("#demand-acceptance-view").load("/demand/acceptance/view?task_id=$model->id");    
       
     /** 此事件在模态框被隐藏（并且同时在 CSS 过渡效果完成）之后被触发。 */
     $('.myModal').on('hidden.bs.modal', function(){
@@ -108,21 +91,21 @@ $js =
         $('.myModal').modal("show").load($(this).attr("href"));
         return false;
     });      
+    
+    /** 审核通过回复操作 弹出模态框 */
+    $('#checkReply-create-1').click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    });
         
     /** 审核不通过回复操作 弹出模态框 */
-    $('#check-reply-create').click(function(){
+    $('#checkReply-create-0').click(function(){
         $(".myModal").html("");
         $('.myModal').modal("show").load($(this).attr("href"));
         return false;
     });
-        
-    /** 审核通过回复操作 弹出模态框 */
-    $('#pass-check').click(function(){
-        $(".myModal").html("");
-        $('.myModal').modal("show").load($(this).attr("href"));
-        return false;
-    });
-            
+         
     /** 承接操作 弹出模态框 */
     $('#undertake').click(function(){
         $(".myModal").html("");
@@ -154,7 +137,7 @@ $js =
     });
         
     /** 申诉回复操作 弹出模态框 */
-    $('#appeal-reply-create').click(function(){
+    $('#appealReply-create').click(function(){
         $(".myModal").html("");
         $('.myModal').modal("show").load($(this).attr("href"));
         return false;

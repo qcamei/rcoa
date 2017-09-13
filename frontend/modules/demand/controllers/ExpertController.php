@@ -66,7 +66,7 @@ class ExpertController extends BasedataController
      */
     public function actionCreate()
     {
-        parent::actionCreate();
+        //parent::actionCreate();
         
         $post = Yii::$app->request->post();
         if(isset($post['BasedataExpert']) && isset($post['BasedataExpert']['username'])){
@@ -94,7 +94,7 @@ class ExpertController extends BasedataController
      */
     public function actionUpdate($id)
     {
-        parent::actionUpdate($id);
+        //parent::actionUpdate($id);
         
         $model = BasedataExpert::find($id);
 
@@ -115,7 +115,7 @@ class ExpertController extends BasedataController
      */
     public function actionDelete($id)
     {
-        parent::actionDelete($id);
+        //parent::actionDelete($id);
         
         $this->findModel($id)->delete();
 

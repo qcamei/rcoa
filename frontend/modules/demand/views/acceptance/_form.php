@@ -206,6 +206,7 @@ foreach ($workitem as $work){
     <span class="pattern" style="float: right; margin-top: -15px;">（最大奖金 = 人工成本 + 人工成本 × 绩效比值）</span>
     
     <?= Html::activeHiddenInput($model, 'demand_delivery_id', ['value' => $deliveryModel->id]); ?>
+    <?= Html::activeHiddenInput($model, 'create_by', ['value' => Yii::$app->user->id]) ?>
     
     <?php ActiveForm::end(); ?>
 
