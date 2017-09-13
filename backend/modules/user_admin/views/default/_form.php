@@ -34,7 +34,7 @@ use yii\widgets\ActiveForm;
         
         <?php echo $form->field($model, 'sex')->radioList([User::SEX_MALE => '男',  User::SEX_WOMAN => '女']); ?>
         
-        <?php echo $form->field($model, 'ee')->textInput(['minlength'=>6,'maxlength'=>20]); ?>
+        <?php //echo $form->field($model, 'ee')->textInput(['minlength'=>6,'maxlength'=>20]); ?>
         
         <?php echo $form->field($model, 'guid')->textInput(['minlength'=>6,'maxlength'=>20]); ?>
         
