@@ -29,7 +29,7 @@ $this->title = '工匠';
                     </div>
                 </a>
                 <div class="site-home-words">
-                    <span class="site-home-words-en">Task</span><br/><span class="site-home-words-ch">任务</span>
+                    <span class="site-home-words-en">Demand</span><br/><span class="site-home-words-ch">需求</span>
                     <i class="new-icon"></i>
                 </div>
             </div>
@@ -39,9 +39,29 @@ $this->title = '工匠';
                 <div class="line"></div>
             </div>  
         </div>
+        
         <div class="col-xs-12 site-home-circlebox">
             <div class="site-home-introduction">
-                <a data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                <a href="/teamwork/default">
+                    <div class="site-home-circle img-circle">
+                        <span class="ciricle-num" id="count-number"><span class="timer" data-to="<?= $teamwork; ?>" data-speed="550">0</span><span class="num-words">个</span></span>
+                        <span class="icon">+</span>
+                    </div>
+                </a>
+                <div class="site-home-words">
+                    <span class="site-home-words-en">Development</span><br/><span class="site-home-words-ch">开发</span>
+                </div>
+            </div>    
+        </div>
+        <div class="col-xs-12 site-home-circlebox line-box">  
+            <div class="site-home-introduction" style="height: auto;">  
+                <div class="line"></div>
+            </div>  
+        </div>
+        
+        <div class="col-xs-12 site-home-circlebox">
+            <div class="site-home-introduction">
+                <a href="/worksystem/default" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                     <div class="site-home-circle img-circle">
                         <?= Html::img(['/filedata/site/system/development.png'], ['width' => '50']) ?>
                         <!--<span class="ciricle-num"><span class="timer" data-to="0" data-speed="550">0</span><span class="num-words">条</span></span>
@@ -49,11 +69,11 @@ $this->title = '工匠';
                     </div>
                 </a>
                 <div class="site-home-words">
-                    <span class="site-home-words-en">Development</span><br/><span class="site-home-words-ch">开发</span>
+                    <span class="site-home-words-en">Task</span><br/><span class="site-home-words-ch">任务</span>
                 </div>
             </div>
         </div>
-        <div class="col-xs-12 site-home-circlebox collapse" id="collapseExample">
+<!--        <div class="col-xs-12 site-home-circlebox collapse" id="collapseExample">
             <div class="col-xs-12 site-home-circlebox line-box">  
                 <div class="site-home-introduction" style="height: auto;">  
                     <div class="line subset-line"></div>
@@ -84,33 +104,16 @@ $this->title = '工匠';
                     <div class="subset-circle img-circle">视频</div>
                 </a>
             </div>
-        </div>
+        </div>-->
         <div class="col-xs-12 site-home-circlebox line-box">  
             <div class="site-home-introduction" style="height: auto;">  
                 <div class="line"></div>
             </div>  
         </div>
+        
         <div class="col-xs-12 site-home-circlebox">
             <div class="site-home-introduction">
-                <a href="/expert/default">
-                    <div class="site-home-circle img-circle">
-                        <span class="ciricle-num" id="count-number"><span class="timer" data-to="<?= $expert; ?>" data-speed="550">0</span><span class="num-words">名</span></span>
-                        <span class="icon">+</span>
-                    </div>
-                </a>
-                <div class="site-home-words">
-                    <span class="site-home-words-en">Teachers</span><br/><span class="site-home-words-ch">师资</span>
-                </div>
-            </div>    
-        </div>
-        <div class="col-xs-12 site-home-circlebox line-box">  
-            <div class="site-home-introduction" style="height: auto;">  
-                <div class="line"></div>
-            </div>  
-        </div>
-        <div class="col-xs-12 site-home-circlebox">
-            <div class="site-home-introduction">
-                <a href="/sites/default">
+                <a href="/shoot/bookdetail">
                     <div class="site-home-circle img-circle">
                         <span class="ciricle-num" id="count-number"><span class="timer" data-to="3" data-speed="550">0</span><span class="num-words">场</span></span>
                         <span class="icon">+</span>
