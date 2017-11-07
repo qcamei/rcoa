@@ -265,7 +265,7 @@ class WorksystemAction
         $des = ArrayHelper::getValue($post, 'WorksystemOperation.des');
         $users = $this->getTeamMembersUserLeaders();
         $leadersUserId = ArrayHelper::getValue($users, 'user_id');
-        $leadersName = ArrayHelper::getValue($users, 'nickname');
+        $leadersName = array_unique(ArrayHelper::getValue($users, 'nickname'));
         
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
@@ -336,7 +336,7 @@ class WorksystemAction
         $des = ArrayHelper::getValue($post, 'WorksystemOperation.des');
         $epibolyUsers = $this->getEpibolyTeamMembers();
         $epibolyUserId = ArrayHelper::getValue($epibolyUsers, 'user_id');
-        $epibolyName = ArrayHelper::getValue($epibolyUsers, 'nickname');
+        $epibolyName = array_unique(ArrayHelper::getValue($epibolyUsers, 'nickname'));
         
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();

@@ -631,10 +631,10 @@ class TaskController extends Controller
                 $type = 0;
                 $isAdd = 1;
                 $message = '该课程在需求任务里不存在。';
-            }else if($demandTask->status != DemandTask::STATUS_DEVELOPING){
+            }/*else if($demandTask->status != DemandTask::STATUS_DEVELOPING){
                 $type = 0;
                 $message = '该课程不是在开发中。';
-            }else if(!in_array($demandTask->team_id, $teamIds)){
+            }*/else if(!in_array($demandTask->team_id, $teamIds)){
                 $type = 0;
                 $message = '该课程不是本团队承接。';
             }else{
