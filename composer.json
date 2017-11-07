@@ -30,7 +30,7 @@
         "twbs/bootstrap": "^3.3",
         "mobiledetect/mobiledetectlib": "^2.8",
         "almasaeed2010/adminlte": "^2.3",
-        "dmstr/yii2-adminlte-asset": "2.*"
+        "dmstr/yii2-adminlte-asset": ">=2.5"
         
     },
     "require-dev": {
