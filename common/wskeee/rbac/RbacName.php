@@ -21,50 +21,46 @@ class RbacName{
 	const PERMSSION_BACKEND_USER_ADMIN = "p_backend_user_admin";
 	/** 任务管理 */
 	const PERMSSION_BACKEND_WORKSYSTEM_ADMIN = "p_backend_worksystem_admin";
-	/** 课程需求-基础数据-添操作 */
-	const PERMSSION_DEMAND_BASEDATA_CREATE = "p_demand_basedata_create";
-	/** 课程需求-基础数据-删操作 */
-	const PERMSSION_DEMAND_BASEDATA_DELETE = "p_demand_basedata_delete";
-	/** 课程需求-基础数据-查操作 */
-	const PERMSSION_DEMAND_BASEDATA_READ = "p_demand_basedata_read";
-	/** 课程需求-基础数据-改操作 */
-	const PERMSSION_DEMAND_BASEDATA_UPDATE = "p_demand_basedata_update";
-	/** 课程需求-取消任务 */
-	const PERMSSION_DEMAND_TASK_CANCEL = "p_demand_task_cancel";
-	/** 课程需求-完成任务 */
-	const PERMSSION_DEMAND_TASK_COMPLETE = "p_demand_task_complete";
-	/** 课程需求-任务创建 */
-	const PERMSSION_DEMAND_TASK_CREATE = "p_demand_task_create";
-	/** 课程需求-任务添加验收 */
-	const PERMSSION_DEMAND_TASK_CREATE_ACCEPTANCE = "p_demand_task_create_acceptance";
-	/** 课程需求-任务添加审核 */
-	const PERMSSION_DEMAND_TASK_CREATE_CHECK = "p_demand_task_create_check";
-	/** 课程需求-任务创建课程产品 */
-	const PERMSSION_DEMAND_TASK_CREATE_PRODUCT = "p_demand_task_create_product";
-	/** 课程需求-任务删除验收 */
-	const PERMSSION_DEMAND_TASK_DELETE_ACCEPTANCE = "p_demand_task_delete_acceptance";
-	/** 课程需求-任务删除审核 */
-	const PERMSSION_DEMAND_TASK_DELETE_CHECK = "p_demand_task_delete_check";
-	/** 课程需求-任务删除课程产品 */
-	const PERMSSION_DEMAND_TASK_DELETE_PRODUCT = "p_demand_task_delete_product";
-	/** 课程需求-添加课程开发任务 */
-	const PERMSSION_DEMAND_TASK_DEVELOP = "p_demand_task_develop";
-	/** 课程需求-需求任务-编辑操作 */
-	const PERMSSION_DEMAND_TASK_EDIT = "p_demand_task_edit";
-	/** 课程需求-任务恢复 */
-	const PERMSSION_DEMAND_TASK_RESTORE = "p_demand_task_restore";
-	/** 课程需求-任务提交验收 */
-	const PERMSSION_DEMAND_TASK_SUBMIT_ACCEPTANCE = "p_demand_task_submit_acceptance";
-	/** 课程需求-任务提交审核 */
-	const PERMSSION_DEMAND_TASK_SUBMIT_CHECK = "p_demand_task_submit_check";
-	/** 课程需求-任务承接 */
-	const PERMSSION_DEMAND_TASK_UNDERTAKE = "p_demand_task_undertake";
-	/** 课程需求-任务更新 */
-	const PERMSSION_DEMAND_TASK_UPDATE = "p_demand_task_update";
-	/** 课程需求-任务更新验收 */
-	const PERMSSION_DEMAND_TASK_UPDATE_ACCEPTANCE = "p_demand_task_update_acceptance";
-	/** 课程需求-任务更新审核 */
-	const PERMSSION_DEMAND_TASK_UPDATE_CHECK = "p_demand_task_update_check";
+	/** 数据添加v2 */
+	const PERMSSION_FRONTEND_DEMAND_BASEDATA_CREATE = "p_frontend_demand_basedata_create";
+	/** 数据删除v2 */
+	const PERMSSION_FRONTEND_DEMAND_BASEDATA_DELETE = "p_frontend_demand_basedata_delete";
+	/** 数据查看v2 */
+	const PERMSSION_FRONTEND_DEMAND_BASEDATA_READ = "p_frontend_demand_basedata_read";
+	/** 数据更改v2 */
+	const PERMSSION_FRONTEND_DEMAND_BASEDATA_UPDATE = "p_frontend_demand_basedata_update";
+	/** 取消任务v2 */
+	const PERMSSION_FRONTEND_DEMAND_CANCEL_TASK = "p_frontend_demand_cancel_task";
+	/** 完成任务v2 */
+	const PERMSSION_FRONTEND_DEMAND_COMPLETE_TASK = "p_frontend_demand_complete_task";
+	/** 创建验收v2 */
+	const PERMSSION_FRONTEND_DEMAND_CREATE_ACCEPTANCE = "p_frontend_demand_create_acceptance";
+	/** 创建申诉v2 */
+	const PERMSSION_FRONTEND_DEMAND_CREATE_APPEAL = "p_frontend_demand_create_appeal";
+	/** 驳回申诉v2 */
+	const PERMSSION_FRONTEND_DEMAND_CREATE_APPEALREPLY = "p_frontend_demand_create_appealReply";
+	/** 创建审核v2 */
+	const PERMSSION_FRONTEND_DEMAND_CREATE_CHECK = "p_frontend_demand_create_check";
+	/** 创建开发v2 */
+	const PERMSSION_FRONTEND_DEMAND_CREATE_DEVELOP = "p_frontend_demand_create_develop";
+	/** 创建任务v2 */
+	const PERMSSION_FRONTEND_DEMAND_CREATE_TASK = "p_frontend_demand_create_task";
+	/** 恢复任务v2 */
+	const PERMSSION_FRONTEND_DEMAND_RESTORE_TASK = "p_frontend_demand_restore_task";
+	/** 查看视图v2 */
+	const PERMSSION_FRONTEND_DEMAND_SEE_VIEW = "p_frontend_demand_see_view";
+	/** 提交验收v2 */
+	const PERMSSION_FRONTEND_DEMAND_SUBMIT_ACCEPTANCE = "p_frontend_demand_submit_acceptance";
+	/** 提交审核v2 */
+	const PERMSSION_FRONTEND_DEMAND_SUBMIT_CHECK = "p_frontend_demand_submit_check";
+	/** 承接任务v2 */
+	const PERMSSION_FRONTEND_DEMAND_UNDERTAKE_TASK = "p_frontend_demand_undertake_task";
+	/** 更新验收v2 */
+	const PERMSSION_FRONTEND_DEMAND_UPDATE_ACCEPTANCE = "p_frontend_demand_update_acceptance";
+	/** 更新审核v2 */
+	const PERMSSION_FRONTEND_DEMAND_UPDATE_CHECK = "p_frontend_demand_update_check";
+	/** 更新任务v2 */
+	const PERMSSION_FRONTEND_DEMAND_UPDATE_TASK = "p_frontend_demand_update_task";
 	/** 取消支撑v2 */
 	const PERMSSION_FRONTEND_WORKSYSTEM_CANCEL_BRACE = "p_frontend_worksystem_cancel_brace";
 	/** 取消外包v2 */
@@ -169,14 +165,8 @@ class RbacName{
 	const ROLE_CONTACT = "r_contact";
 	/** 课程总监v2 */
 	const ROLE_DEMAND_AUDITOR = "r_demand_auditor";
-	/** 课程需求-基础数据管理人 */
-	const ROLE_DEMAND_BASEDATA_ADMIN = "r_demand_basedata_admin";
 	/** 课程主任v2 */
 	const ROLE_DEMAND_PROMULGATOR = "r_demand_promulgator";
-	/** 课程需求-需求任务管理人 */
-	const ROLE_DEMAND_TASK_ADMIN = "r_demand_task_admin";
-	/** 课程需求承接人 */
-	const ROLE_DEMAND_UNDERTAKE_PERSON = "r_demand_undertake_person";
 	/** 游客 */
 	const ROLE_GUEST = "r_guest";
 	/** 技术人员v2 */
