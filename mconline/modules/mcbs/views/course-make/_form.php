@@ -1,11 +1,14 @@
 <?php
 
+use common\models\mconline\McbsCourse;
+use mconline\modules\mcbs\assets\McbsAssets;
 use yii\helpers\Html;
+use yii\web\View;
 use yii\widgets\ActiveForm;
 
-/* @var $this yii\web\View */
-/* @var $model common\models\mconline\McbsCourse */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $this View */
+/* @var $model McbsCourse */
+/* @var $form ActiveForm */
 ?>
 
 <div class="mcbs-course-form">
@@ -45,3 +48,16 @@ use yii\widgets\ActiveForm;
     <?php ActiveForm::end(); ?>
 
 </div>
+
+<?php
+$js = 
+<<<JS
+        
+    
+JS;
+    $this->registerJs($js,  View::POS_READY);
+?>
+
+<?php
+    McbsAssets::register($this);
+?>

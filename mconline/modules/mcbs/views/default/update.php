@@ -25,6 +25,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 
 </div>
 
+
 <?php
 $js = 
 <<<JS

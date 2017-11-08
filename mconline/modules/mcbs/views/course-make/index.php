@@ -1,11 +1,15 @@
 <?php
 
-use yii\helpers\Html;
+use common\models\mconline\searchs\McbsCourseSearch;
+use mconline\modules\mcbs\assets\McbsAssets;
+use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
+use yii\helpers\Html;
+use yii\web\View;
 
-/* @var $this yii\web\View */
-/* @var $searchModel common\models\mconline\searchs\McbsCourseSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $this View */
+/* @var $searchModel McbsCourseSearch */
+/* @var $dataProvider ActiveDataProvider */
 
 $this->title = Yii::t('app', 'Mcbs Courses');
 $this->params['breadcrumbs'][] = $this->title;
@@ -42,3 +46,17 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); ?>
 </div>
+
+
+<?php
+$js = 
+<<<JS
+        
+    
+JS;
+    $this->registerJs($js,  View::POS_READY);
+?>
+
+<?php
+    McbsAssets::register($this);
+?>
