@@ -38,3 +38,5 @@ phpunit.phar
 /frontend/web/frontend/
 /web/assets/
 /common/wskeee/notification/cache/
+/mconline/runtime/
+/mconline/web/assets/

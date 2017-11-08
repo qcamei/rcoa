@@ -116,6 +116,7 @@ return [
             'demand/*',
             'teamwork/*',
             'shoot/*',
+            'mcbs/*',
             // The actions listed here will be allowed to everyone including guests.
             // So, 'admin/*' should not appear here in the production, of course.
             // But in the earlier stages of your development, you may probably want to
