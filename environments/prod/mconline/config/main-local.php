@@ -8,7 +8,9 @@ $config = [
         ],
     ],
     'modules' => [
-        
+        'mcbs' => [
+            'class' => 'mconline\modules\mcbs\Module',
+        ],
     ],
 ];
 
