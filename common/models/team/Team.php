@@ -57,6 +57,7 @@ class Team extends ActiveRecord
     public function rules()
     {
         return [
+            [['type'], 'required'],
             [['type', 'index'], 'integer'],
             [['name', 'team_logo',  'image', 'des'], 'string', 'max' => 255],
             [['is_delete'], 'string', 'max' => 4],
