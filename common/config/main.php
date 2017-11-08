@@ -29,6 +29,7 @@ return [
                         'rcoa/workitem' => 'workitem.php',
                         'rcoa/worksystem' => 'worksystem.php',
                         'rcoa/rbac' => 'rbac.php',
+                        'rcoa/mconline' => 'mconline.php',
                     ],
                 ],
                 'app*' => [
