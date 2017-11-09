@@ -11,8 +11,8 @@ $this->title = '管理用户';
 ?>
 <div class="user-index">
     <p>
-        <?= Html::a('同步GUID',['tongbu'],['class'=>'btn btn-success']) ?>
         <?= Html::a('新增',['create'],['class'=>'btn btn-success']) ?>
+        <?= Html::a('同步GUID',['tongbu'],['class'=>'btn btn-info']) ?>
     </p>
     <?=
     GridView::widget([
