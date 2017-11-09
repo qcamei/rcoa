@@ -3,8 +3,30 @@
 namespace wskeee\notification\core;
 
 use CURLFile;
+use yii\caching\FileCache;
+use yii\di\Instance;
 
 class Helper {
+    /* 配置名 */
+
+    public static $configKey = 'notification.qywx';
+
+    /**
+     * 缓存前缀
+     * @var string 
+     */
+    public static $cacheKeyPrefix = 'qxwx_cache_';
+
+    /**
+     * 缓存时间
+     * @var interger 
+     */
+    public static $cacheDuration = 0;
+
+    /**
+     * @var FileCache
+     */
+    public static $cache;
 
     /**
      * GET 请求
@@ -129,6 +151,44 @@ class Helper {
         return $str;
     }
 
+    /**
+     * 设置缓存
+     * @param string $key 缓存名
+     * @param array $content
+     */
+    public static function saveContent($key, $content) {
+        self::getCacheInstance();
+        self::$cache->set(self::$cacheKeyPrefix . $key, $content, self::$cacheDuration);
+    }
+
+    /**
+     * 获取缓存
+     * @param string $key
+     */
+    public static function getContent($key) {
+        self::getCacheInstance();
+        return self::$cache->get(self::$cacheKeyPrefix . $key);
+    }
+
+    /**
+     * 获取缓存实体
+     * @return Cache
+     */
+    public static function getCacheInstance() {
+        if (self::$cache == null) {
+            if (\Yii::$app->cache != null && \Yii::$app->cache instanceof FileCache) {
+                self::$cache = \Yii::$app->cache;
+                return \Yii::$app->cache;
+            } else {
+                $this->cache = Instance::ensure([
+                            'class' => 'yii\caching\FileCache',
+                            'cachePath' => FRONTEND_DIR . '/runtime/cache'
+                                ], Cache::className());
+            }
+        }
+        return self::$cache;
+    }
+
     //读取本地文件
     public static function get_php_file($filename) {
         if (file_exists($filename)) {
@@ -147,15 +207,15 @@ class Helper {
 
     //加载本地的应用配置文件
     public static function loadConfig() {
-        return json_decode(self::get_php_file(dirname(__DIR__)."/Config.php"));
+        return \Yii::$app->params[self::$configKey];
     }
 
     //根据应用ID获取应用配置
     public static function getConfigByAgentId($id) {
-    $configs = self::loadConfig();
+        $configs = self::loadConfig();
 
-    foreach ($configs->AppsConfig as $key => $value) {
-        if ($value->AgentId == $id) {
+        foreach ($configs['AppsConfig'] as $key => $value) {
+            if ($value['AgentId'] == $id) {
                 $config = $value;
                 break;
             }
