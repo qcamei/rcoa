@@ -37,8 +37,6 @@ class AccessToken {
         //TODO: access_token 应该全局存储与更新，以下代码以写入到文件中做示例      
         //NOTE: 由于实际使用过程中不同的应用会产生不同的token，所以示例按照agentId做为文件名进行存储
 
-        //$path = dirname(__DIR__)."/cache/$this->agentId.php";
-        //$data = json_decode(Helper::get_php_file($path));
         $data = Helper::getContent($this->agentId);
 
         if ($data == null || $data['expire_time'] < time()) {
@@ -51,7 +49,6 @@ class AccessToken {
             if ($access_token) {
                 $data['expire_time'] = time() + 7000;
                 $data['access_token'] = $access_token;
-                //Helper::set_php_file($path, json_encode($data));
                 Helper::saveContent($this->agentId, $data);
         }
         } else {
