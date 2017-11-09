@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t(null, '{Mcbs}{Courses}', [
                             ]), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="mcbs-course-view">
+<div class="mcbs-course-view mcbs">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

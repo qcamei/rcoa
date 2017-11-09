@@ -14,7 +14,7 @@ use yii\web\View;
 $this->title = Yii::t('app', 'Mcbs Courses');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="mcbs-course-index">
+<div class="mcbs-course-index mcbs">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
