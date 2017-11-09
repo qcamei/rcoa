@@ -140,14 +140,14 @@ class Helper {
 
     //写入本地文件
     public static function set_php_file($filename, $content) {
-        $fp = fopen(\Yii::getAlias('@wskeee').'/notification'.$filename, "w");
+        $fp = fopen($filename, "w");
         fwrite($fp, "<?php exit();?>" . $content);
         fclose($fp);
     }
 
     //加载本地的应用配置文件
     public static function loadConfig() {
-        return json_decode(self::get_php_file(\Yii::getAlias('@wskeee')."/notification/Config.php"));
+        return json_decode(self::get_php_file(dirname(__DIR__)."/Config.php"));
     }
 
     //根据应用ID获取应用配置
