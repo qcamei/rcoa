@@ -10,9 +10,9 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * DefaultController implements the CRUD actions for McbsCourse model.
+ * CourseMakeController implements the CRUD actions for McbsCourse model.
  */
-class DefaultController extends Controller
+class CourseMakeController extends Controller
 {
     /**
      * @inheritdoc
