@@ -177,21 +177,23 @@ $js =
     $('#worksystemtask-course_id').change(function(){
         $(this).attr("data-add", "true");
         var url = "/worksystem/task/check-exist?course_id="+$(this).val();
-        $.post(url,function(data)
-        {
-            if(data['type']){
-                $('#worksystemtask-item_type_id').find('option[value='+data['data']['item_type_id']+']').attr('selected', true);
-                $('#worksystemtask-item_type_id').parent().parent().removeClass("has-error").addClass("has-success");
-                $('#worksystemtask-item_type_id').parent().next().children().html("");
-                $('#worksystemtask-create_team').find('option[value='+data['data']['team_id']+']').attr('selected', true);
-            }else{
-                if(data['isAdd'] == 0){
-                    $("#worksystemtask-course_id").attr("data-add", "false");
+        setTimeout(function(){
+            $.post(url,function(data)
+            {
+                if(data['type']){
+                    $('#worksystemtask-item_type_id').find('option[value='+data['data']['item_type_id']+']').attr('selected', true);
+                    $('#worksystemtask-item_type_id').parent().parent().removeClass("has-error").addClass("has-success");
+                    $('#worksystemtask-item_type_id').parent().next().children().html("");
+                    $('#worksystemtask-create_team').find('option[value='+data['data']['team_id']+']').attr('selected', true);
+                }else{
+                    if(data['isAdd'] == 0){
+                        $("#worksystemtask-course_id").attr("data-add", "false");
+                    }
+                    $('.field-worksystemtask-course_id').removeClass("has-success").addClass('has-error');
+                    $(".field-worksystemtask-course_id .help-block").text(data['message']);
                 }
-                $('.field-worksystemtask-course_id').removeClass("has-success").addClass('has-error');
-                $(".field-worksystemtask-course_id .help-block").text(data['message']);
-            }
-        });
+            });
+        },100);
     });        
         
     $('#worksystemtask-plan_end_time-disp').attr('name', '');
