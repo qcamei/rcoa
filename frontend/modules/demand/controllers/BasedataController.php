@@ -2,21 +2,46 @@
 
 namespace frontend\modules\demand\controllers;
 
-use wskeee\rbac\RbacName;
-use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
-use yii\web\HttpException;
 
 class BasedataController extends Controller
 {
     /* 重构 layout */
     public $layout = 'basedata';
     
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+             //access验证是否有登录
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['create','update','delete'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ],
+        ];
+    }
+    
     public function actionIndex()
     {
         return $this->render('index');
     }
-    
+    /*
     public function actionCreate(){
         if(!$this->canCreate()){
             throw new HttpException(403,'无权操作');
@@ -44,30 +69,30 @@ class BasedataController extends Controller
                 'update' => $this->canUpdate(),
                 'delete' => $this->canDelete(),
             ];
-    }
+    }*/
     
     /**
      * 是否有 创建 基础数据权限
      * @return boolean
-     */
+     
     public function canCreate(){
-        return Yii::$app->user->can(RbacName::PERMSSION_DEMAND_BASEDATA_CREATE);
-    }
+        return Yii::$app->user->can(RbacName::PERMSSION_FRONTEND_DEMAND_BASEDATA_CREATE);
+    }*/
     
     /**
      * 是否有 更新 基础数据权限
      * @return boolean
-     */
+     
     public function canUpdate(){
-        return Yii::$app->user->can(RbacName::PERMSSION_DEMAND_BASEDATA_UPDATE);
-    }
+        return Yii::$app->user->can(RbacName::PERMSSION_FRONTEND_DEMAND_BASEDATA_UPDATE);
+    }*/
     
     /**
      * 是否有 删除 基础数据权限
      * @return boolean
-     */
+     
     public function canDelete(){
-        return Yii::$app->user->can(RbacName::PERMSSION_DEMAND_BASEDATA_DELETE);
-    }
+        return Yii::$app->user->can(RbacName::PERMSSION_FRONTEND_DEMAND_BASEDATA_DELETE);
+    }*/
 
 }

@@ -33,13 +33,8 @@ $this->title = '基础数据';//Yii::t('rcoa/basedata', 'Item Types');
                 'url'=>'/demand/business/view'
             ],
             [
-                'class' => 'yii\grid\ActionColumn',
+                'class' => 'common\components\RbacActionColumn',
                 'options' => ['style'=>['width' => '70px']],
-                'visibleButtons' => [
-                    'create' => $rbac['create'],
-                    'update' => $rbac['update'],
-                    'delete' => $rbac['delete'],
-                ],
             ],
         ],
     ]); ?>
