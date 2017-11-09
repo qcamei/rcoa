@@ -75,9 +75,12 @@ class CheckReplyController extends Controller
         $createTeam = $checkMdoel->demandTask->create_team;
         //是否是审核人
         $isAuditor = DemandAction::getInstance()->getIsAuditor($createTeam);
-        
-        if($isAuditor && !($model->demandCheck->demandTask->getIsStatusCheck() || $model->demandCheck->demandTask->getIsStatusChecking()))
-            throw new NotAcceptableHttpException('该任务状态为'.$checkMdoel->demandTask->getStatusName().'！');
+        if($isAuditor){
+            if(!($model->demandCheck->demandTask->getIsStatusCheck() || $model->demandCheck->demandTask->getIsStatusChecking()))
+                throw new NotAcceptableHttpException('该任务状态为'.$checkMdoel->demandTask->getStatusName().'！');
+        }else{
+            throw new NotAcceptableHttpException('无权限操作！');
+        }
         
         if ($model->load(Yii::$app->request->post())) {
             if($pass == true){
