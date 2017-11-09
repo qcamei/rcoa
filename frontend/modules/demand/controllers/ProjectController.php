@@ -18,21 +18,6 @@ use yii\web\NotFoundHttpException;
 class ProjectController extends BasedataController
 {
     /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
-    /**
      * Lists all Project models.
      * @return mixed
      */
@@ -44,7 +29,6 @@ class ProjectController extends BasedataController
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'rbac' => $this->getRbac(),
         ]);
     }
 
@@ -61,7 +45,6 @@ class ProjectController extends BasedataController
         return $this->render('view', [
             'model' => $this->findModel($id),
             'dataProvider' => $childs,
-            'rbac' => $this->getRbac(),
         ]); 
     }
 

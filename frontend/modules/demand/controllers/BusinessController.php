@@ -14,21 +14,6 @@ use yii\web\NotFoundHttpException;
 class BusinessController extends BasedataController
 {
     /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
-    /**
      * Lists all ItemType models.
      * @return mixed
      */
@@ -40,7 +25,6 @@ class BusinessController extends BasedataController
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'rbac' => $this->getRbac(),
         ]);
     }
 
@@ -53,7 +37,6 @@ class BusinessController extends BasedataController
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'rbac' => $this->getRbac(),
         ]);
     }
 

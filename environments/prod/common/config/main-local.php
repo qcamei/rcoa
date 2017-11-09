@@ -110,7 +110,6 @@ return [
             'job/*',
             'expert/*',
             'user/*',
-            'demand/*',
             'teamwork/*',
             'shoot/*',
             // The actions listed here will be allowed to everyone including guests.

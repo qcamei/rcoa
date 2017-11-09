@@ -71,9 +71,12 @@ class AppealReplyController extends Controller
         $appeal = $this->findAppealModel($task_id);
         $model->loadDefaultValues();
         $model->demand_appeal_id = $appeal->id;
-        
-        if(!($appeal->demandTask->create_by == \Yii::$app->user->id && $appeal->demandTask->getIsStatusAppealing()))
-            throw new NotAcceptableHttpException('该任务状态为'.$appeal->demandTask->getStatusName().'！');
+        if($appeal->demandTask->create_by == \Yii::$app->user->id){
+            if(!$appeal->demandTask->getIsStatusAppealing())
+                throw new NotAcceptableHttpException('该任务状态为'.$appeal->demandTask->getStatusName().'！');
+        }else {
+            throw new NotAcceptableHttpException('无权限操作！');
+        }
         
         if ($model->load(Yii::$app->request->post())) {
             DemandAction::getInstance()->DemandCreateAppealReply($model);

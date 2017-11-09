@@ -7,7 +7,6 @@ use common\models\expert\searchs\BasedataExperSearch;
 use common\models\User;
 use frontend\modules\demand\models\BasedataExpert;
 use Yii;
-use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -15,21 +14,6 @@ use yii\web\NotFoundHttpException;
  */
 class ExpertController extends BasedataController
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * Lists all Expert models.
      * @return mixed
@@ -42,7 +26,6 @@ class ExpertController extends BasedataController
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'rbac' => $this->getRbac(),
         ]);
     }
 
@@ -55,7 +38,6 @@ class ExpertController extends BasedataController
     {
         return $this->render('view', [
             'model' => BasedataExpert::find($id),
-            'rbac' => $this->getRbac(),
         ]);
     }
 
@@ -66,8 +48,6 @@ class ExpertController extends BasedataController
      */
     public function actionCreate()
     {
-        //parent::actionCreate();
-        
         $post = Yii::$app->request->post();
         if(isset($post['BasedataExpert']) && isset($post['BasedataExpert']['username'])){
             $user = User::findOne(['username' => $post['BasedataExpert']['username']]);
@@ -94,8 +74,6 @@ class ExpertController extends BasedataController
      */
     public function actionUpdate($id)
     {
-        //parent::actionUpdate($id);
-        
         $model = BasedataExpert::find($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -115,8 +93,6 @@ class ExpertController extends BasedataController
      */
     public function actionDelete($id)
     {
-        //parent::actionDelete($id);
-        
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

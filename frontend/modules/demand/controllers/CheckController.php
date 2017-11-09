@@ -72,10 +72,13 @@ class CheckController extends Controller
         $model->loadDefaultValues();
         $model->demand_task_id = $task_id;
         $model->create_by = \Yii::$app->user->id;
-        
-        if(!($model->demandTask->create_by == \Yii::$app->user->id && ($model->demandTask->getIsStatusDefault() || $model->demandTask->getIsStatusAdjusimenting())))
-            throw new NotAcceptableHttpException('该任务状态为'.$model->demandTask->getStatusName().'！');
-        
+        if($model->demandTask->create_by == \Yii::$app->user->id){
+            if(!($model->demandTask->getIsStatusDefault() || $model->demandTask->getIsStatusAdjusimenting()))
+                throw new NotAcceptableHttpException('该任务状态为'.$model->demandTask->getStatusName().'！');
+        }else {
+            throw new NotAcceptableHttpException('无权限操作！');
+        }
+      
         if ($model->load(Yii::$app->request->post())) {
             DemandAction::getInstance()->DemandCreateCheck($model);
             return $this->redirect(['task/view', 'id' => $model->demand_task_id]);

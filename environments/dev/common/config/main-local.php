@@ -113,7 +113,6 @@ return [
             'job/*',
             'expert/*',
             'user/*',
-            'demand/*',
             'teamwork/*',
             'shoot/*',
             'mcbs/*',

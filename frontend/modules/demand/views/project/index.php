@@ -39,13 +39,8 @@ $this->title = Yii::t('demand', 'Projects');
                 'url'=>'/demand/project/view'
             ],
             [
-                'class' => 'yii\grid\ActionColumn',
-                'options'=>['style'=>'width:70px'],
-                'visibleButtons' => [
-                    'create' => $rbac['create'],
-                    'update' => $rbac['update'],
-                    'delete' => $rbac['delete'],
-                ],
+                'class' => 'common\components\RbacActionColumn',
+                'options' => ['style'=>['width' => '70px']],
             ],
         ],
     ]); ?>

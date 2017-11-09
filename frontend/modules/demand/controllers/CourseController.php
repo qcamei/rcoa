@@ -17,20 +17,6 @@ use yii\web\NotFoundHttpException;
  */
 class CourseController extends BasedataController
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
 
     /**
      * Lists all Course models.
@@ -44,7 +30,6 @@ class CourseController extends BasedataController
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'rbac' => $this->getRbac(),
         ]);
     }
 
@@ -57,7 +42,6 @@ class CourseController extends BasedataController
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'rbac' => $this->getRbac(),
         ]);
     }
 

@@ -39,12 +39,8 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
     <h4><b><?= Yii::t('rcoa/basedata', 'Project') ?></b></h4>
     <p>
-        <?php
-        if ($rbac['create']) {
-            echo Html::a(Yii::t('rcoa/basedata', '{Create} {Project}', ['Create' => Yii::t('rcoa/basedata', 'Create'), 'Project' => Yii::t('rcoa/basedata', 'Project')]), 
-                ['project/create', 'parent_id' => $model->id], ['class' => 'btn btn-success']);
-        }
-        ?>
+         <?= ResourceHelper::a(Yii::t('rcoa/basedata', '{Create} {Project}', ['Create' => Yii::t('rcoa/basedata', 'Create'), 'Project' => Yii::t('rcoa/basedata', 'Project')]), 
+                ['project/create', 'parent_id' => $model->id], ['class' => 'btn btn-success']); ?>
     </p>
 
     <?=GridView::widget([
@@ -61,40 +57,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'url'=>'/demand/project/view'
             ],
             [
-                'class' => ActionColumn::className(),
-                'template' => '{view} {update} {delete}',
-                'options'=>['style'=>'width:70px'],
-                'visibleButtons' => [
-                    'create' => $rbac['create'],
-                    'update' => $rbac['update'],
-                    'delete' => $rbac['delete'],
-                ],
-                'buttons' => [
-                    'view' => function ($url, $model, $key) {
-                        $options = [
-                            'title' => Yii::t('yii', 'View'),
-                            'aria-label' => Yii::t('yii', 'View'),
-                            'data-pjax' => '0',
-                        ];
-                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['project/view', 'id' => $key], $options);
-                    },
-                    'update' => function ($url, $model, $key) {
-                        $options = [
-                            'title' => Yii::t('yii', 'Update'),
-                            'aria-label' => Yii::t('yii', 'Update'),
-                            'data-pjax' => '0',
-                        ];
-                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['project/update', 'id' => $key], $options);
-                    },
-                    'delete' => function ($url, $model, $key)use($model) {
-                        $options = [
-                            'title' => Yii::t('yii', 'Delete'),
-                            'aria-label' => Yii::t('yii', 'Delete'),
-                            'data-pjax' => '0',
-                            'data-method' => 'post'
-                        ];
-                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['project/delete', 'id' => $key,'callback'=>"/demand/college/view?id=$model->id"], $options);
-                    }
+                'class' => 'common\components\RbacActionColumn',
+                'options' => ['style'=>['width' => '70px']],
+                'customController' => 'project',
+                'buttonUrlParams' => [
+                    'delete' => ['callback'=> "/demand/college/view?id=$model->id"]
                 ]
             ],
         ],

@@ -44,13 +44,8 @@ $this->title = Yii::t('rcoa/basedata', 'Expert');
             'employer',
             'job_title',
             [
-                'class' => 'yii\grid\ActionColumn',
-                'options'=>['style'=>'width:50px'],
-                'visibleButtons' => [
-                    'create' => $rbac['create'],
-                    'update' => $rbac['update'],
-                    'delete' => $rbac['delete'],
-                ],
+                'class' => 'common\components\RbacActionColumn',
+                'options' => ['style'=>['width' => '70px']],
             ],
         ],
     ]); ?>
