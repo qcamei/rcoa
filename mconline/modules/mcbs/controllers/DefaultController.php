@@ -2,12 +2,15 @@
 
 namespace mconline\modules\mcbs\controllers;
 
-use Yii;
 use common\models\mconline\McbsCourse;
 use common\models\mconline\searchs\McbsCourseSearch;
+use wskeee\framework\FrameworkManager;
+use wskeee\framework\models\ItemType;
+use Yii;
+use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * DefaultController implements the CRUD actions for McbsCourse model.
@@ -70,6 +73,10 @@ class DefaultController extends Controller
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'itemTypes' => $this->getItemTypes(),
+                'items' => $this->getCollegesForSelects(),
+                'itemChilds' => !empty($model->item_id) ? $this->getChildrens($model->item_id) : [],
+                'courses' => !empty($model->item_child_id) ? $this->getChildrens($model->item_child_id) : [],
             ]);
         }
     }
@@ -120,5 +127,38 @@ class DefaultController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    
+    /**
+     * 获取所有行业
+     * @return type
+     */
+    public function getItemTypes()
+    {
+        $itemType = ItemType::find()->with('itemManages')->all();
+        return ArrayHelper::map($itemType, 'id', 'name');
+    }
+    
+    /**
+     * 获取所有层次/类型
+     * @return type
+     */
+    public function getCollegesForSelects()
+    {
+        /* @var $fwManager FrameworkManager */
+        $fwManager = Yii::$app->get('fwManager');
+        return ArrayHelper::map($fwManager->getColleges(), 'id', 'name');
+    }
+    
+    /**
+     * 获取所有专业/工种 or 课程
+     * @param type $itemId              层次/类型ID
+     * @return type
+     */
+    protected function getChildrens($itemId)
+    {
+        /* @var $fwManager FrameworkManager */
+        $fwManager = Yii::$app->get('fwManager');
+        return ArrayHelper::map($fwManager->getChildren($itemId), 'id', 'name');
     }
 }

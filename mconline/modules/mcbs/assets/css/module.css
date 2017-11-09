@@ -4,3 +4,16 @@
             样式...
         }
 */
+
+/**default->form.php**/
+@media (max-width: 480px) {
+    .wrap .mcbs {
+        padding-left: 0px;
+        padding-right: 0px;
+
+    }
+}
+.mcbs  .mcbs-form{
+    padding-left: 15px;
+    padding-right: 15px; 
+}

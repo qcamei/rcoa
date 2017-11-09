@@ -89,3 +89,33 @@ a.desc:after {
     padding: 10px 20px;
     margin: 0 0 15px 0;
 }
+
+.mcbs {
+    display: flex;
+    text-align: center;
+    margin: 25% auto;
+    width: 356px;
+    height: 205px;
+    border-radius: 10px;
+    background-color: #f2f2f2;
+}
+
+.mcqj {
+    display: flex;
+    text-align: center;
+    margin: 25% auto;
+    width: 356px;
+    height: 205px;
+    border-radius: 10px;
+    background-color: #f2f2f2;
+}
+
+.mcbs p, .mcqj p{
+    margin: auto;
+    font-size: 16px;
+}
+
+a, a:hover{
+    color: #000;
+    text-decoration: none;
+}

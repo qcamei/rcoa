@@ -51,19 +51,19 @@ class McbsCourse extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('rcoa', 'ID'),
-            'item_type_id' => Yii::t('rcoa', 'Item Type ID'),
-            'item_id' => Yii::t('rcoa', 'Item ID'),
-            'item_child_id' => Yii::t('rcoa', 'Item Child ID'),
-            'course_id' => Yii::t('rcoa', 'Course ID'),
-            'create_by' => Yii::t('rcoa', 'Create By'),
-            'status' => Yii::t('rcoa', 'Status'),
-            'is_publish' => Yii::t('rcoa', 'Is Publish'),
-            'publish_time' => Yii::t('rcoa', 'Publish Time'),
-            'close_time' => Yii::t('rcoa', 'Close Time'),
-            'des' => Yii::t('rcoa', 'Des'),
-            'created_at' => Yii::t('rcoa', 'Created At'),
-            'updated_at' => Yii::t('rcoa', 'Updated At'),
+            'id' => Yii::t('app', 'ID'),
+            'item_type_id' => Yii::t('app', 'Item Type ID'),
+            'item_id' => Yii::t('app', 'Item ID'),
+            'item_child_id' => Yii::t('app', 'Item Child ID'),
+            'course_id' => Yii::t('app', 'Course ID'),
+            'create_by' => Yii::t('app', 'Create By'),
+            'status' => Yii::t('app', 'Status'),
+            'is_publish' => Yii::t('app', 'Is Publish'),
+            'publish_time' => Yii::t('app', 'Publish Time'),
+            'close_time' => Yii::t('app', 'Close Time'),
+            'des' => Yii::t('app', 'Des'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
 }
