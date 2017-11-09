@@ -27,10 +27,12 @@ use yii\widgets\ActiveForm;
         ], 
     ]); ?>
 
-    <h5><b>创建课程</b></h5>
+    <h5><b></b></h5>
     
-    <?= $form->field($model, 'item_type_id')->dropDownList($itemTypes, ['prompt' => '请选择...']) ?>
-
+    <?= $form->field($model, 'item_type_id')->widget(Select2::classname(), [
+        'data' => $itemTypes, 'options' => ['placeholder' => '请选择...',]
+    ]) ?>
+    
     <?= $form->field($model, 'item_id')->widget(Select2::classname(), [
         'data' => $items, 'options' => ['placeholder' => '请选择...',]
     ]) ?>

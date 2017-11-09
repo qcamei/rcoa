@@ -1,19 +1,14 @@
 /* 
-    模块的样式 （对应的样式层级，顶级前面统一加【模块名】）
-    例如：.mcbs .default {
+    模块的样式
+    例如：.default-index .样式名 {
             样式...
         }
 */
 
-/**default->form.php**/
-@media (max-width: 480px) {
-    .wrap .mcbs {
-        padding-left: 0px;
-        padding-right: 0px;
 
-    }
+/********* default-index样式 ***********/
+.default-index {
+    
 }
-.mcbs  .mcbs-form{
-    padding-left: 15px;
-    padding-right: 15px; 
-}
+
+/********* default-view样式 ***********/

@@ -20,7 +20,8 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t(null, '{Mcbs}{Courses}', [
             ]), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="container mcbs-course-create">
+
+<div class="container mcbs-course-create mcbs">
 
     <?= $this->render('_form', [
         'model' => $model,
