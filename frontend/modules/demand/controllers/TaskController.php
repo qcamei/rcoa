@@ -155,8 +155,12 @@ class TaskController extends Controller
     {
         $this->layout = '@app/views/layouts/main';
         $model = $this->findModel($id);
-        if(!($model->create_by == Yii::$app->user->id && ($model->getIsStatusDefault() || $model->getIsStatusAdjusimenting())))
-            throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        if($model->create_by == \Yii::$app->user->id){
+            if(!($model->getIsStatusDefault() || $model->getIsStatusAdjusimenting()))
+                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName().'！');
+        }else {
+            throw new NotAcceptableHttpException('无权限操作！');
+        }
        
         //获取过滤的课程
         $courses = ArrayHelper::merge([$model->course_id => $model->course->name], ArrayHelper::map($this->getCourses($model->item_child_id), 'id', 'name'));
