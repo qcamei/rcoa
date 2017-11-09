@@ -5,3 +5,22 @@
         }
 */
 
+/**
+ * 小屏幕时去掉左右padding边距
+ */
+@media (max-width: 480px) {
+    .wrap .mcbs {
+        padding-left: 0px;
+        padding-right: 0px;
+
+    }
+}
+
+/**
+ * 设置表单label样式
+ */
+.mcbs .form-label {
+    color: #999999;
+    font-weight: normal;
+    padding-right: 0px;
+}

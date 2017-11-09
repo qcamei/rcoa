@@ -10,10 +10,13 @@ use yii\widgets\DetailView;
 /* @var $model McbsCourse */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Mcbs Courses'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t(null, '{Mcbs}{Courses}', [
+                                'Mcbs' => Yii::t('app', 'Mcbs'),
+                                'Courses' => Yii::t('app', 'Courses'),
+                            ]), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="mcbs-course-view">
+<div class="mcbs-course-view mcbs">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

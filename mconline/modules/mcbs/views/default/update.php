@@ -15,8 +15,9 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Mcbs Courses'), 'url
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
-<div class="mcbs-course-update">
 
+<div class="mcbs-course-update mcbs">
+    
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [

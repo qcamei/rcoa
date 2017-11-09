@@ -94,10 +94,12 @@ class AcceptanceController extends Controller {
         $deliveryModel = $this->findDeliveryModel($task_id);
         $model->loadDefaultValues();
         $model->demand_task_id = $task_id;
-        
-        if(!($model->demandTask->create_by == \Yii::$app->user->id && ($model->demandTask->getIsStatusAcceptance() || $model->demandTask->getIsStatusAcceptanceing() 
-            || $model->demandTask->getIsStatusAppealing())))
-            throw new NotAcceptableHttpException('该任务状态为'.$model->demandTask->getStatusName().'！');
+        if($model->demandTask->create_by == \Yii::$app->user->id){
+            if(!($model->demandTask->getIsStatusAcceptance() || $model->demandTask->getIsStatusAcceptanceing() || $model->demandTask->getIsStatusAppealing()))
+                throw new NotAcceptableHttpException('该任务状态为'.$model->demandTask->getStatusName().'！');
+        }else {
+            throw new NotAcceptableHttpException('无权限操作！');
+        }    
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $this->saveDemandAcceptanceData($model, Yii::$app->request->post());

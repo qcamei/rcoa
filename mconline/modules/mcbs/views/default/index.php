@@ -11,16 +11,22 @@ use yii\web\View;
 /* @var $searchModel McbsCourseSearch */
 /* @var $dataProvider ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Mcbs Courses');
+$this->title = Yii::t(null, '{Mcbs}{Courses}', [
+                'Mcbs' => Yii::t('app', 'Mcbs'),
+                'Courses' => Yii::t('app', 'Courses'),
+            ]);
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="mcbs-course-index">
+<div class="mcbs-course-index mcbs default-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Create Mcbs Course'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t(null, '{Mcbs}{Courses}', [
+                        'Mcbs' => Yii::t('app', 'Mcbs'),
+                        'Courses' => Yii::t('app', 'Courses'),
+                    ]), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,

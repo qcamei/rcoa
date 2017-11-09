@@ -9,16 +9,26 @@ use yii\web\View;
 /* @var $this View */
 /* @var $model McbsCourse */
 
-$this->title = Yii::t('app', 'Create Mcbs Course');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Mcbs Courses'), 'url' => ['index']];
+$this->title = Yii::t(null, '{Create}{Mcbs}{Courses}', [
+                'Create' => Yii::t('app', 'Create'),
+                'Mcbs' => Yii::t('app', 'Mcbs'),
+                'Courses' => Yii::t('app', 'Courses'),
+            ]);
+$this->params['breadcrumbs'][] = ['label' => Yii::t(null, '{Mcbs}{Courses}', [
+                'Mcbs' => Yii::t('app', 'Mcbs'),
+                'Courses' => Yii::t('app', 'Courses'),
+            ]), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="mcbs-course-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<div class="container mcbs-course-create mcbs">
 
     <?= $this->render('_form', [
         'model' => $model,
+        'itemTypes' => $itemTypes,
+        'items' => $items,
+        'itemChilds' => $itemChilds,
+        'courses' => $courses,
     ]) ?>
 
 </div>

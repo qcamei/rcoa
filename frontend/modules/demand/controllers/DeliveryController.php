@@ -74,9 +74,12 @@ class DeliveryController extends Controller {
         $model->loadDefaultValues();
         $model->demand_task_id = $task_id;
         $is_empty = $this->IsAcceptancesEmpty($task_id);
-       
-        if (!($model->demandTask->undertake_person == Yii::$app->user->id && ($model->demandTask->getIsStatusDeveloping() || $model->demandTask->getIsStatusUpdateing())))
-            throw new NotAcceptableHttpException('该任务状态为' . $model->demandTask->getStatusName() . '！');
+        if($model->demandTask->undertake_person == Yii::$app->user->id){
+            if(!($model->demandTask->getIsStatusDeveloping() || $model->demandTask->getIsStatusUpdateing()))
+                throw new NotAcceptableHttpException('该任务状态为' . $model->demandTask->getStatusName() . '！');
+        }else {
+            throw new NotAcceptableHttpException('无权限操作！');
+        }    
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $this->saveDemandDeliveryData($model, Yii::$app->request->post());
