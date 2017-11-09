@@ -66,8 +66,9 @@ class DefaultController extends Controller
      */
     public function actionCreate()
     {
-        $model = new McbsCourse();
-
+        $model = new McbsCourse(['id' => md5(rand(1,10000) + time())]);
+        $model->loadDefaultValues();
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -96,6 +97,10 @@ class DefaultController extends Controller
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'itemTypes' => $this->getItemTypes(),
+                'items' => $this->getCollegesForSelects(),
+                'itemChilds' => $this->getChildrens($model->item_id),
+                'courses' => $this->getChildrens($model->item_child_id),
             ]);
         }
     }

@@ -45,8 +45,10 @@ use yii\widgets\ActiveForm;
         'data' => $courses, 'options' => ['data-add' => 'true', 'placeholder' => '请选择...']
     ]) ?>
     
-    <?= $form->field($model, 'des')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'des')->textarea(['rows' => 6, 'value' => $model->isNewRecord ? '无' : $model->des]) ?>
 
+    <?= Html::activeHiddenInput($model, 'id') ?>
+    
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
