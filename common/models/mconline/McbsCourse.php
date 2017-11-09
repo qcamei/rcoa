@@ -3,6 +3,8 @@
 namespace common\models\mconline;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%mconline_course}}".
@@ -21,7 +23,7 @@ use Yii;
  * @property string $created_at
  * @property string $updated_at
  */
-class McbsCourse extends \yii\db\ActiveRecord
+class McbsCourse extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -29,6 +31,16 @@ class McbsCourse extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return '{{%mcbs_course}}';
+    }
+    
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() 
+    {
+        return [
+            TimestampBehavior::className()
+        ];
     }
 
     /**
@@ -65,5 +77,23 @@ class McbsCourse extends \yii\db\ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+    
+    /**
+     * 
+     * @param type $insert 
+     */
+    public function beforeSave($insert) 
+    {
+        if(parent::beforeSave($insert))
+        {
+            if($this->isNewRecord){
+                //$this->id = md5(rand(1,10000) + time());    //自动生成用户ID
+                $this->create_by = Yii::$app->user->id;    //创建者
+            }
+            
+            return true;
+        }else
+            return false;
     }
 }

@@ -9,7 +9,7 @@
  * 小屏幕时去掉左右padding边距
  */
 @media (max-width: 480px) {
-    .wrap .mcbs {
+    .mcbs {
         padding-left: 0px;
         padding-right: 0px;
 

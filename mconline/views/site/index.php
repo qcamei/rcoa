@@ -1,6 +1,7 @@
 <?php
 
 use mconline\assets\AppAsset;
+use mconline\assets\SiteAssets;
 use yii\web\View;
 
 /* @var $this View */
@@ -31,5 +32,7 @@ $this->title = '在线制作课程平台';
     </div>
 </div>
 
-<?php 
+<?php
     AppAsset::register($this);
+    SiteAssets::register($this);
+?>
