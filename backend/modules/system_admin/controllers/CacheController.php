@@ -3,20 +3,22 @@
 namespace backend\modules\system_admin\controllers;
 
 use Yii;
-use yii\db\Query;
+use yii\caching\Cache;
+use yii\di\Instance;
 use yii\web\Controller;
 
 class CacheController extends Controller {
 
     public function actionIndex() {
+
         $dirs = [
             Yii::getAlias('@backend') . '/runtime/cache',
             Yii::getAlias('@backend') . '/web/assets',
             Yii::getAlias('@frontend') . '/runtime/cache',
             Yii::getAlias('@frontend') . '/web/assets',
         ];
-        foreach($dirs as $path){
-            $this->do_rmdir($path,false);
+        foreach ($dirs as $path) {
+            $this->do_rmdir($path, false);
         }
         return $this->render('index');
     }
@@ -26,6 +28,7 @@ class CacheController extends Controller {
      * @param bool $self 是否删除当前文件夹
      * @return bool
      */
+
     private function do_rmdir($dirname, $self = true) {
         if (!file_exists($dirname)) {
             return false;
