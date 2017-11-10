@@ -62,9 +62,7 @@ class TaskController extends Controller
         $dataProvider = new ArrayDataProvider([
             'allModels' => $results['result'],
         ]);
-        
-        $creatorProducer = $this->getTaskCreatorProducer();
-        
+                
         return $this->render('index', [
             'param' => $results['param'],
             'dataProvider' => $dataProvider,
@@ -80,8 +78,8 @@ class TaskController extends Controller
             'taskTypes' => $this->getWorksystemTaskTypes(),
             'createTeams' => $this->getWorksystemTeams(),
             'externalTeams' => ArrayHelper::merge($this->getWorksystemTeams(), $this->getEpibolyTeams()),
-            'createBys' => $creatorProducer['createBy'],
-            'producers' => $creatorProducer['producer'],
+            'createBys' => ArrayHelper::getValue($this->getTaskCreatorProducer(), 'createBy'),
+            'producers' => ArrayHelper::getValue($this->getTaskCreatorProducer(), 'producer'),
         ]);
         
     }

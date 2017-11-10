@@ -14,6 +14,7 @@ use wskeee\framework\models\Item;
 use wskeee\framework\models\ItemType;
 use wskeee\rbac\RbacManager;
 use wskeee\rbac\RbacName;
+use wskeee\team\TeamMemberTool;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
@@ -48,6 +49,7 @@ class WorksystemSearch
         $externalTeam = ArrayHelper::getValue($params, 'external_team');                                        //外部团队
         $time = ArrayHelper::getValue($params, 'time');                                                         //时间段
         $keywords = ArrayHelper::getValue($params, 'keyword');                                                  //关键字
+        
         //查询WorksystemTask
         $query = (new Query())
             ->select(['WorksystemTask.id'])
@@ -77,6 +79,8 @@ class WorksystemSearch
         if($mark){
             $query->andFilterWhere(['WorksystemTask.create_by' => $createBy]);
             $query->andFilterWhere(['TeamMember.u_id' => $producer]);
+            $query->andFilterWhere(['WorksystemTask.create_team' => $createTeam]);
+            $query->andFilterWhere(['WorksystemTask.external_team' => $externalTeam]);
         }else{
             $query->orFilterWhere(['WorksystemTask.create_by' => $createBy]);
             $query->orFilterWhere(['TeamMember.u_id' => $producer]);
@@ -85,6 +89,22 @@ class WorksystemSearch
             $rbacManager = Yii::$app->authManager;
             if($rbacManager->isRole(RbacName::ROLE_COMMON_EXTERNAL_WORKER, Yii::$app->user->id))
                 $query->orFilterWhere(['WorksystemTask.is_epiboly' => WorksystemTask::SEEK_EPIBOLY_MARK]);
+            //获取和自己相关的团队id
+            $myTeams = TeamMemberTool::getInstance()->getUserTeamMembers(Yii::$app->user->id);
+            //获取所属团队id
+            $isLeader = false;
+            $teamIds = [];
+            foreach ($myTeams as  $member) {
+                if($member['is_leader'] == TeamMember::TEAMLEADER) {
+                    $isLeader = true;
+                    $teamIds[] = $member['team_id'];
+                }
+            }
+            //在默认搜索情况下如果是队长才加团队条件
+            if($isLeader){
+               $query->orFilterWhere(['WorksystemTask.create_team' => $teamIds]);
+               $query->orFilterWhere(['WorksystemTask.external_team' => $teamIds]);
+            }
         }
         //按状态搜索
         $query->andFilterWhere(['WorksystemTask.status' => $status == WorksystemTask::STATUS_DEFAULT ? WorksystemTask::$defaultStatus : $status]);
@@ -95,8 +115,6 @@ class WorksystemSearch
             'WorksystemTask.item_child_id' => $itemChildId,
             'WorksystemTask.course_id' => $courseId,
             'WorksystemTask.task_type_id' => $taskTypeId,
-            'WorksystemTask.create_team' => $createTeam,
-            'WorksystemTask.external_team' => $externalTeam,
         ]);
         //按时间段搜索
         if($time != null){
