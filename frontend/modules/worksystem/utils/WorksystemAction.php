@@ -220,7 +220,10 @@ class WorksystemAction
         $teamUsers = $this->getTeamMembersUserLeaders();
         $allUserIds = ArrayHelper::merge([Yii::$app->user->id], ArrayHelper::getValue($teamUsers, 'user_id'));
         $producers = ArrayHelper::getValue($post, 'WorksystemProducer.team_member_id');
-       
+        $external_team = ArrayHelper::getValue($post, 'WorksystemTask.external_team');
+        if($model->create_team != $external_team)
+            $model->is_brace = WorksystemTask::SEEK_BRACE_MARK;
+        
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try

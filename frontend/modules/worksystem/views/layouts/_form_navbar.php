@@ -29,8 +29,13 @@ $js =
     {
         if(window.first == 0){
             var dataAdd =  $("#worksystemtask-course_id").attr("data-add");
+            var tablelen = $('.table tbody tr').length;
             $("#worksystemtask-task_type_id").attr("disabled", false);
-            if(dataAdd == "true"){
+            //判断内容信息是否为空
+            if(tablelen <= 0)
+                $('#prompt').html('<span class="error-warn">内容信息不能为空！</span>');
+        
+            if(dataAdd == "true" && tablelen > 0){
                 $('#worksystem-task-form').submit();
                 window.first = 1;
             }

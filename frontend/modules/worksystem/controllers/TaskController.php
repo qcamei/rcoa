@@ -316,7 +316,7 @@ class TaskController extends Controller
         } else {
             return $this->renderAjax('_create_assign', [
                 'model' => $model,
-                'teams' => $this->getUserTeam(true),
+                'teams' => $this->getUserTeam(),
                 'producerList' => $this->getAssignProducerList()
             ]);
         }        
@@ -782,7 +782,7 @@ class TaskController extends Controller
         
         $producers = $_tmTool->getAppointUserPositionTeamMembers(Yii::$app->user->id, TeamCategory::TYPE_WORKSYSTEM_TEAM);
         
-        return ArrayHelper::map($producers, 'id', 'nickname');
+        return $producers;
     }
     
     /**

@@ -12,6 +12,7 @@ use yii\widgets\ActiveForm;
 
 $this->title = Yii::t('rcoa/worksystem', 'Worksystem Tasks');
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 
 <div class="worksystem worksystem-task-create_assign">
@@ -31,6 +32,17 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ]);?>
 
+                <?= $form->field($model, 'external_team', [
+                    'template' => "{label}\n<div class=\"col-lg-10 col-md-10\">{input}</div>\n<div class=\"col-lg-4 col-md-4\">{error}</div>",
+                    'labelOptions' => [
+                        'class' => 'col-lg-2 col-md-2 control-label form-label',
+                        'style' => [
+                            'padding-left' => '0',
+                            'display' =>  count($teams) > 1 ? 'block' : 'none'
+                         ]
+                    ]
+                ])->dropDownList($teams, ['prompt' => '请选择制作团队...','style ' => count($teams) > 1 ? 'display:block' : 'display:none']) ?>
+                
                 <div class="form-group field-worksystemoperation-des">
                     <label class="col-lg-2 col-md-2 control-label" style="color: #999999; font-weight: normal; padding-right: 0;" for="worksystemproducer-team_member_id">
                         <?= Yii::t('rcoa/worksystem', 'Producer') ?>
@@ -41,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'id' => 'worksystemproducer-team_member_id',
                                 'name' => 'WorksystemProducer[team_member_id][]',
                                 'value' => '',
-                                'data' => $producerList,
+                                'data' => [],
                                 'options' => [
                                     'placeholder' => '请选择制作人...',
                                 //'multiple' => true
@@ -63,16 +75,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="col-lg-10 col-md-10"><div class="help-block"></div></div>
                 </div>
 
-                <?= $form->field($model, 'external_team', [
-                    'template' => "{label}\n<div class=\"col-lg-10 col-md-10\">{input}</div>\n<div class=\"col-lg-4 col-md-4\">{error}</div>",
-                    'labelOptions' => [
-                        'class' => 'col-lg-2 col-md-2 control-label form-label',
-                        'style' => [
-                            'padding-left' => '0',
-                            'display' =>  count($teams) > 1 ? 'block' : 'none'
-                         ]
-                    ]
-                ])->dropDownList($teams, ['style ' => count($teams) > 1 ? 'display:block' : 'display:none']) ?>
                 <?= Html::activeHiddenInput($model, 'status', ['value' => WorksystemTask::STATUS_TOSTART]) ?>
                 <?= Html::activeHiddenInput($model, 'progress', ['value' => WorksystemTask::$statusProgress[WorksystemTask::STATUS_TOSTART]]) ?>
 
@@ -88,8 +90,28 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php
+$teamMember = json_encode($producerList);
+$teamId = array_keys($teams)[0];
 $js = <<<JS
+    var teamMember = $teamMember;
+    $("#worksystemtask-external_team").val($teamId);
+    producerList($("#worksystemtask-external_team"));
+    $("#worksystemtask-external_team").change(function(){
+        producerList($(this));
+    });    
+    //下拉选择制作人
+    function producerList (dom){
+        $("#worksystemproducer-team_member_id").html("");
+        var timeId = dom.val();
+        $('<option/>').val('').text("请选择...").appendTo($("#worksystemproducer-team_member_id"));
+        $.each(teamMember,function(){
+            if(this['team_id'] == timeId){
+                $('<option>').val(this['id']).text(this['nickname']).appendTo($("#worksystemproducer-team_member_id"));
+            }
+        });
+    }
         
+    //提交表单 
     $('#submit-save').click(function()
     {
         $('#worksystem-task-form').submit();
