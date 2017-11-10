@@ -29,7 +29,7 @@ class Route extends Role
         
         $this->cache = Instance::ensure([
                 'class' => 'yii\caching\FileCache',
-                'cachePath' => FRONTEND_DIR.'/runtime/cache'
+                'cachePath' => Yii::getAlias('@frontend').'/runtime/cache'
             ], Cache::className());
     }
     /**

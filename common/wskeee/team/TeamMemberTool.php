@@ -13,7 +13,6 @@ use yii\caching\Cache;
 use yii\db\Query;
 use yii\di\Instance;
 use yii\helpers\ArrayHelper;
-use const FRONTEND_DIR;
 
 
 /**
@@ -101,7 +100,7 @@ class TeamMemberTool extends Component {
         parent::init();
         $this->cache = Instance::ensure([
                 'class' => 'yii\caching\FileCache',
-                'cachePath' => FRONTEND_DIR.'/runtime/cache'
+                'cachePath' => Yii::getAlias('@frontend').'/runtime/cache'
             ], Cache::className());
         $this->loadFromCache();
     }

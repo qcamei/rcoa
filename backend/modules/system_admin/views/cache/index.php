@@ -15,5 +15,5 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="cache-index">
-    <h1>清除缓存成功。</h1>
+    <h1><i class="fa fa-check-circle" style="font-size: 40px;color: #48b685" aria-hidden="true"></i> 清除缓存成功。</h1>
 </div>

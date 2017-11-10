@@ -3,6 +3,7 @@
 namespace wskeee\notification\core;
 
 use CURLFile;
+use Yii;
 use yii\caching\FileCache;
 use yii\di\Instance;
 
@@ -176,13 +177,13 @@ class Helper {
      */
     public static function getCacheInstance() {
         if (self::$cache == null) {
-            if (\Yii::$app->cache != null && \Yii::$app->cache instanceof FileCache) {
-                self::$cache = \Yii::$app->cache;
-                return \Yii::$app->cache;
+            if (Yii::$app->cache != null && Yii::$app->cache instanceof FileCache) {
+                self::$cache = Yii::$app->cache;
+                return Yii::$app->cache;
             } else {
                 $this->cache = Instance::ensure([
                             'class' => 'yii\caching\FileCache',
-                            'cachePath' => FRONTEND_DIR . '/runtime/cache'
+                            'cachePath' => Yii::getAlias('@frontend') . '/runtime/cache'
                                 ], Cache::className());
             }
         }
@@ -207,7 +208,7 @@ class Helper {
 
     //加载本地的应用配置文件
     public static function loadConfig() {
-        return \Yii::$app->params[self::$configKey];
+        return Yii::$app->params[self::$configKey];
     }
 
     //根据应用ID获取应用配置
