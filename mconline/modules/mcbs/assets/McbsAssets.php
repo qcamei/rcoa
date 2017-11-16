@@ -20,7 +20,8 @@ class McbsAssets extends AssetBundle{
     //put your code here
     public $sourcePath = '@mconline/modules/mcbs/assets';
     public $depends = [
-        'yii\web\YiiAsset'
+        'yii\web\YiiAsset',
+        'rmrevin\yii\fontawesome\AssetBundle',
     ];
     public $publishOptions = [
         'forceCopy' => YII_DEBUG,
