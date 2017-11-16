@@ -4,9 +4,13 @@ namespace mconline\modules\mcbs\controllers;
 
 use common\models\mconline\McbsCourse;
 use common\models\mconline\searchs\McbsCourseSearch;
+use common\models\User;
 use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\ItemType;
 use Yii;
+use yii\data\ArrayDataProvider;
+use yii\db\Query;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -23,6 +27,16 @@ class DefaultController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index','attention','lookup','create','view','update'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -34,16 +48,22 @@ class DefaultController extends Controller
 
     /**
      * Lists all McbsCourse models.
+     * @param integer $page                     页数
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new McbsCourseSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $searchResult = new McbsCourseSearch();
+        $results = $searchResult->searchMyCourse(Yii::$app->request->queryParams);
+        
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $results['result'],
+        ]);  
+        
         return $this->render('index', [
-            'searchModel' => $searchModel,
+            'param' => $results['param'],
             'dataProvider' => $dataProvider,
+            'totalCount' => $results['totalCount'],
         ]);
     }
 
@@ -119,6 +139,51 @@ class DefaultController extends Controller
     }
 
     /**
+     * 跳转到我的关注
+     * @return array
+     */
+    public function actionAttention()
+    {
+        $searchResult = new McbsCourseSearch();
+        $results = $searchResult->searchMyAttention(Yii::$app->request->queryParams);
+        
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $results['result'],
+        ]);  
+        
+        return $this->render('attention', [
+            'param' => $results['param'],
+            'dataProvider' => $dataProvider,
+            'totalCount' => $results['totalCount'],
+        ]);
+    }
+    
+    /**
+     * 跳转到查找课程
+     * @return array
+     */
+    public function actionLookup()
+    {
+        $searchResult = new McbsCourseSearch();
+        $results = $searchResult->searchCourseInfo(Yii::$app->request->queryParams);
+        
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $results['result'],
+        ]);  
+        
+        return $this->render('lookup', [
+            'param' => $results['param'],
+            'dataProvider' => $dataProvider,
+            'totalCount' => $results['totalCount'],
+            //条件
+            'itemTypes' => $this->getItemTypes(),
+            'items' => $this->getCollegesForSelects(),
+            'itemChilds' => $this->getChildrens(ArrayHelper::getValue($results['param'], 'item_id')),
+            'createBys' => ArrayHelper::getValue($this->getCourseCreateBy(), 'createBy'),
+        ]);
+    }
+    
+    /**
      * Finds the McbsCourse model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
@@ -165,5 +230,31 @@ class DefaultController extends Controller
         /* @var $fwManager FrameworkManager */
         $fwManager = Yii::$app->get('fwManager');
         return ArrayHelper::map($fwManager->getChildren($itemId), 'id', 'name');
+    }
+    
+    /**
+     * 获取所有课程的创建者
+     * @return array
+     */
+    public function getCourseCreateBy()
+    {
+        $query = (new Query())
+                ->select(['McbsCourse.id', "CONCAT(McbsCourse.create_by, '_', User.nickname) AS create_by"])
+                ->from(['McbsCourse' => McbsCourse::tableName()])
+                ->leftJoin(['User' => User::tableName()], 'User.id = McbsCourse.create_by');
+        
+        $results = (new Query())
+                ->select(['CreateBy.create_by'])
+                ->from(['CreateBy' => $query])
+                ->all();
+        
+        $createBys = [];
+        foreach ($results as $item) {
+            $createBys[explode('_', $item['create_by'])[0]] = isset(explode('_', $item['create_by'])[1]) ? explode('_', $item['create_by'])[1] : '';
+        }
+        
+        return [
+            'createBy' => array_filter($createBys),
+        ];
     }
 }

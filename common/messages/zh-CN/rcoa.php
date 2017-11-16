@@ -138,6 +138,8 @@ return [
     //在线制作课程平台字段属性名称(前台)
     'Mcbs' => '板书',
     'Courses' => '课程',
+    'Attention' => '关注',
+    'Lookup' => '查找',
     
     //创建课程
     'Item Type ID' => '行业',

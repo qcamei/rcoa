@@ -10,16 +10,16 @@ use yii\db\ActiveRecord;
  * This is the model class for table "{{%mconline_course}}".
  *
  * @property string $id
- * @property string $item_type_id
- * @property string $item_id
- * @property string $item_child_id
- * @property string $course_id
- * @property string $create_by
- * @property integer $status
- * @property integer $is_publish
- * @property string $publish_time
- * @property string $close_time
- * @property string $des
+ * @property string $item_type_id       基础数据_行业ID
+ * @property string $item_id            基础数据_层次/类型ID
+ * @property string $item_child_id      基础数据_专业/工种ID
+ * @property string $course_id          基础数据_课程ID
+ * @property string $create_by          创建人
+ * @property integer $status            状态：1正常、10关闭
+ * @property integer $is_publish        是否已发布：0未发布、1已发布
+ * @property string $publish_time       发布时间
+ * @property string $close_time         关闭时间
+ * @property string $des                课程简介
  * @property string $created_at
  * @property string $updated_at
  */

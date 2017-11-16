@@ -24,3 +24,10 @@
     font-weight: normal;
     padding-right: 0px;
 }
+
+/**
+ * 设置表格内容中部对齐
+ */
+.wrap .table > tbody > tr > td{
+    vertical-align: middle;
+}
