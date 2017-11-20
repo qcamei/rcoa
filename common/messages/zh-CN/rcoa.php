@@ -59,7 +59,6 @@ return [
     'Y' => '是',
     'N' => '否',
     'Is Deleted' => '是否已删除',
-    'All' => '全部',
     
     
     //拍摄预约-公共部分
@@ -139,23 +138,10 @@ return [
     //在线制作课程平台字段属性名称(前台)
     'Mcbs' => '板书',
     'Courses' => '课程',
-    'Attention' => '关注',
-    'Lookup' => '查找',
     
     //创建课程
     'Item Type ID' => '行业',
     'Item ID' => '层次/类型',
     'Item Child ID' => '专业/工种',
     'Course ID' => '课程名称',
-    
-    //在线制作课程平台后台
-    'File' => '文件',
-    'List' => '列表',
-    'Activity' => '活动',
-    'Expire' => '到期',
-    'Time' => '时间',
-    'Upload By' => '上传者',
-    'Is' => '是否',
-    'Mark' => '标记',
-    
 ];
