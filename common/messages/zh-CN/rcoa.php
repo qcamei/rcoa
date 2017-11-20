@@ -151,6 +151,8 @@ return [
     //在线制作课程平台mcbs字段属性名称(前台)
     'Mcbs' => '板书',
     'Courses' => '课程',
+    'Attention' => '关注',
+    'Lookup' => '查看',
     'Close Time' => '关闭时间',
     'Course Info' => '课程信息',
     'Help Man' => '协作人员',
