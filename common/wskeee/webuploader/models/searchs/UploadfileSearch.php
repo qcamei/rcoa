@@ -1,9 +1,9 @@
 <?php
 
-namespace common\models\searchs;
+namespace wskeee\webuploader\models\searchs;
 
-use common\models\Uploadfile;
 use common\models\User;
+use wskeee\webuploader\models\Uploadfile;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
@@ -69,8 +69,6 @@ class UploadfileSearch extends Uploadfile {
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'size' => $this->size,
-            'name' => $this->name,
-            'created_by' => $this->created_by,
         ]);
 
         $query->andFilterWhere(['like', 'id', $this->id])
