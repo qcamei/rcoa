@@ -135,6 +135,15 @@ use common\widgets\Menu;
                             ['label' => '附加属性模版','icon' => 'circle-o', 'url' => ['/worksystem_admin/attributes-template']],
                         ],
                     ],
+                    [
+                        'label' => '在线制作课程平台',
+                        'icon' => 'bars',
+                        'url' => '#',
+                        'items' => [
+                            ['label' => '信息统计','icon' => 'circle-o', 'url' => ['/mconline_admin/default']],
+                            ['label' => '文件列表','icon' => 'circle-o', 'url' => ['/mconline_admin/uploadfile']],
+                        ],
+                    ],
                 ],
             ]
         ) ?>

@@ -61,6 +61,9 @@ $config = [
         'worksystem_admin' => [
             'class' => 'backend\modules\worksystem_admin\Module',
         ],
+        'mconline_admin' => [
+            'class' => 'backend\modules\mconline_admin\Module',
+        ],
     ],
 ];
 
