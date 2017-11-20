@@ -3,19 +3,24 @@
 namespace common\models\mconline;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%mcbs_course_section}}".
  *
  * @property string $id
- * @property string $chapter_id
- * @property string $name
- * @property string $des
- * @property integer $sort_order
+ * @property string $chapter_id                             章id
+ * @property string $name                                   名称
+ * @property string $des                                    描述
+ * @property integer $sort_order                            排序
  * @property string $created_at
  * @property string $updated_at
+ * 
+ * @property McbsCourseChapter $chapter                     课程框架章
  */
-class McbsCourseSection extends \yii\db\ActiveRecord
+class McbsCourseSection extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -25,6 +30,16 @@ class McbsCourseSection extends \yii\db\ActiveRecord
         return '{{%mcbs_course_section}}';
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() 
+    {
+        return [
+            TimestampBehavior::className()
+        ];
+    }
+    
     /**
      * @inheritdoc
      */
@@ -53,5 +68,37 @@ class McbsCourseSection extends \yii\db\ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+    
+    /**
+     * 
+     * @param type $insert 
+     */
+    public function beforeSave($insert) 
+    {
+        if(parent::beforeSave($insert))
+        {
+            if($this->isNewRecord){
+                /* @var $model McbsCourseSection */
+                $model = $this->find()->select(['sort_order'])
+                        ->where(['chapter_id' => $this->chapter_id])
+                        ->orderBy('sort_order')->one();
+        
+                if($model != null)
+                    $this->sort_order = $model->sort_order + 1;
+            }
+            
+            return true;
+        }else
+            return false;
+    }
+    
+    /**
+     * 获取课程框架章
+     * @return ActiveQuery
+     */
+    public function getChapter()
+    {
+        return $this->hasOne(McbsCourseChapter::className(), ['id' => 'chapter_id']);
     }
 }

@@ -292,9 +292,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'template' => '{view}',
             ],
-           ],
-       ]); 
-    ?>
+        ],
+    ]); ?>
     
     <?php
         $page = !isset($param['page']) ? 1 :$param['page'];

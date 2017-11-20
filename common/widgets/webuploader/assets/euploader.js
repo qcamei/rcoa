@@ -314,8 +314,9 @@
             $('#' + file.id).find('td.euploader-item-state').html(StringUtil.createDOM(STATE_DOM, {text: '已上传'}));
         });
         uploader.on('uploadError', function (file, reason) {
-            $('#' + file.id).attr('class', 'euploader-item-fail');
-            $('#' + file.id).find('td.euploader-item-status').html(STATUS_FAIL_ICON);
+            var isExist = reason == '已存在!';
+            $('#' + file.id).attr('class', isExist ? 'euploader-item-exist' : 'euploader-item-fail');
+            $('#' + file.id).find('td.euploader-item-status').html(isExist ? STATUS_SUCCEE_ICON :  STATUS_FAIL_ICON);
             $('#' + file.id).find('td.euploader-item-state').html(StringUtil.createDOM(STATE_DOM, {text: reason ? reason : '上传出错'}));
         });
         uploader.on('uploadComplete', function (file) {

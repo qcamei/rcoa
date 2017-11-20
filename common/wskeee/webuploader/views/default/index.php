@@ -1,19 +1,33 @@
+<?php
+
+use common\widgets\webuploader\WebUploaderAsset;
+use wskeee\webuploader\models\Uploadfile;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+?>
 <div class="webuploader-default-index">
-    <h1>上传组件Demo</h1>
+    <div id="uploader" class="container">
+        <?php ActiveForm::begin() ?>
+        <div class="col-xs-12 col-sm-2" style="text-align: right;">文件上传：</div>
+        <div id="uploader-container" class="col-xs-12 col-sm-10">
+        </div>
+        <?= Html::submitButton('提交',['class' => 'btn btn-default']) ?>
+        <?php ActiveForm::end() ?>
+    </div>
     <?php
     $swfpath = $this->assetManager->getPublishedUrl(WebUploaderAsset::register($this)->sourcePath);
-    $files = json_encode(UploadFile::find()->asArray()->all());
+    $files = json_encode(Uploadfile::find()->asArray()->all());
     ?>
     <script type='text/javascript'>
         var uploader;
         window.onload = function () {
             uploader = new Wskeee.Uploader({
                 // 文件接收服务端。
-                server: '/site/upload',
+                server: '/webuploader/default/upload',
                 //检查文件是否存在
-                checkFile: '/site/check-file',
+                checkFile: '/webuploader/default/check-file',
                 //分片合并
-                mergeChunks: '/site/merge-chunks',
+                mergeChunks: '/webuploader/default/merge-chunks',
                 //flash上传组件
                 swf: '<?= $swfpath ?>' + '/Uploader.swf',
                 // 上传容器

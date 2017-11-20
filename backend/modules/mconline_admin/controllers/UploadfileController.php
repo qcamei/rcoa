@@ -49,7 +49,6 @@ class UploadfileController extends BaseController {
     public function actionIndex() {
         $searchModel = new UploadfileSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        
         return $this->render('index', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,

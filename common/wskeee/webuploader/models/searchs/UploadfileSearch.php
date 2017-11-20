@@ -40,7 +40,7 @@ class UploadfileSearch extends Uploadfile {
      */
     public function search($params) {
         $query = $query = (new Query())
-                ->select(['Uploadfile.id', 'Uploadfile.name AS filename', 'Uploadfile.del_mark AS delmark', 'Uploadfile.is_del AS isdel',
+                ->select(['Uploadfile.id', 'Uploadfile.name AS filename', 'Uploadfile.del_mark', 'Uploadfile.is_del',
                     'CreateBy.nickname AS created_by'])
                 ->from(['Uploadfile' => Uploadfile::tableName()]);
 
@@ -48,6 +48,7 @@ class UploadfileSearch extends Uploadfile {
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'key' => 'id',
         ]);
 
         $this->load($params);
