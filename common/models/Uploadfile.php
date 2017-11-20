@@ -3,24 +3,38 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%uploadfile}}".
  *
- * @property string $id
- * @property string $name
- * @property string $path
- * @property string $thumb_path
- * @property string $download_count
- * @property integer $del_mark
- * @property integer $is_del
- * @property integer $is_fixed
- * @property string $created_by
- * @property string $created_at
- * @property string $updated_at
+ * @property string $id                 文件ID
+ * @property string $name   `           文件名
+ * @property string $path               文件路径
+ * @property string $thumb_path         缩略图路径
+ * @property string $download_count     下载次数
+ * @property integer $del_mark          即将删除标记：0未标记，1已标记
+ * @property integer $is_del            是否已经删除标记：0未删除，1已删除
+ * @property integer $is_fixed          是否为永久保存：0否，1是，设置后不会自动删除文件
+ * @property string $created_by         上传人
+ * @property string $created_at         创建时间
+ * @property string $updated_at         更新时间
+ * @property string $size               大小KB
  */
-class Uploadfile extends \yii\db\ActiveRecord
+class Uploadfile extends ActiveRecord
 {
+    /** 否 */
+    const TYPE_NO_CHOICE = 0;
+    /** 是 */
+    const TYPE_YES_CHOICE = 1;
+    
+    /** 类型 */
+    public static $TYPES = [
+        self::TYPE_NO_CHOICE => '否',
+        self::TYPE_YES_CHOICE => '是',
+    ];
+
     /**
      * @inheritdoc
      */
@@ -32,11 +46,21 @@ class Uploadfile extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public function behaviors() 
+    {
+        return [
+            TimestampBehavior::className()
+        ];
+    }
+    
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         return [
             [['id'], 'required'],
-            [['download_count', 'del_mark', 'is_del', 'is_fixed', 'created_at', 'updated_at'], 'integer'],
+            [['download_count', 'del_mark', 'is_del', 'is_fixed', 'created_at', 'updated_at', 'size'], 'integer'],
             [['id'], 'string', 'max' => 32],
             [['name', 'path', 'thumb_path'], 'string', 'max' => 255],
             [['created_by'], 'string', 'max' => 36],
@@ -60,6 +84,7 @@ class Uploadfile extends \yii\db\ActiveRecord
             'created_by' => Yii::t('app', 'Created By'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
+            'size' => Yii::t('app', 'Size'),
         ];
     }
 }
