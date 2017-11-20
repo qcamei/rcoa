@@ -2,22 +2,27 @@
 
 namespace wskeee\webuploader\controllers;
 
+use wskeee\webuploader\models\Uploadfile;
+use wskeee\webuploader\models\UploadfileChunk;
+use Yii;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 
 /**
  * Default controller for the `webuploader` module
  */
-class DefaultController extends Controller
-{
+class DefaultController extends Controller {
+
+    public $enableCsrfValidation = false;
     /**
      * Renders the index view for the module
      * @return string
      */
-    public function actionIndex()
-    {
+    public function actionIndex() {
+        var_dump(Yii::$app->request->post());
         return $this->render('index');
     }
-    
+
     /**
      * 上传文件
      */
@@ -64,13 +69,8 @@ class DefaultController extends Controller
         $cleanupTargetDir = true; // Remove old files
         $maxFileAge = 5 * 3600; // Temp file age in seconds
         // Create target dir
-        if (!file_exists($targetDir)) {
-            @mkdir($targetDir);
-        }
-        // Create target dir
-        if (!file_exists($uploadDir)) {
-            @mkdir($uploadDir);
-        }
+        $this->mkdir($targetDir);
+        $this->mkdir($uploadDir);
         // Get a file name
         if (isset($_REQUEST["name"])) {
             $fileName = $_REQUEST["name"];
@@ -86,7 +86,7 @@ class DefaultController extends Controller
         //分片md5和文件md5
         $chunkMd5 = isset($_REQUEST["chunkMd5"]) ? $_REQUEST["chunkMd5"] : '';
         $fileMd5 = isset($_REQUEST["fileMd5"]) ? $_REQUEST["fileMd5"] : '';
-        
+
         $filePath = $targetDir . DIRECTORY_SEPARATOR . $fileMd5;
         $uploadPath = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
         /* @var $fileChunk UploadfileChunk 分片模型 */
@@ -288,13 +288,8 @@ class DefaultController extends Controller
         $cleanupTargetDir = true; // Remove old files
         $maxFileAge = 5 * 3600; // Temp file age in seconds
         // Create target dir
-        if (!file_exists($targetDir)) {
-            @mkdir($targetDir);
-        }
-        // Create target dir
-        if (!file_exists($uploadDir)) {
-            @mkdir($uploadDir);
-        }
+        $this->mkdir($targetDir);
+        $this->mkdir($uploadDir);
         // Get a file name
         if (isset($_REQUEST["name"])) {
             $fileName = $_REQUEST["name"];
@@ -309,7 +304,7 @@ class DefaultController extends Controller
         //文件md5
         $fileMd5 = isset($_REQUEST["fileMd5"]) ? $_REQUEST["fileMd5"] : '';
         //文件大小
-        $fileSize = isset($_REQUEST["size"]) ? (integer)$_REQUEST["size"] : 0;
+        $fileSize = isset($_REQUEST["size"]) ? (integer) $_REQUEST["size"] : 0;
         //文件路径
         $uploadPath = $uploadDir . DIRECTORY_SEPARATOR . $fileMd5 . strrchr($fileName, '.');
 
@@ -319,7 +314,7 @@ class DefaultController extends Controller
             //查出所有分片记录
             $fileChunks = UploadfileChunk::find()->where(['file_id' => $fileMd5])->orderBy('chunk_index')->all();
             if ($fileChunks == null) {
-                die('{"jsonrpc" : "2.0", "error" : {"code": 201, "message": "'."找不到对应分片！fileMd5=$fileMd5".'"}, "id" : "id"}');
+                die('{"jsonrpc" : "2.0", "error" : {"code": 201, "message": "' . "找不到对应分片！fileMd5=$fileMd5" . '"}, "id" : "id"}');
             } else {
                 /* @var $fileChunk UploadfileChunk  */
                 foreach ($fileChunks as $fileChunk) {
@@ -353,10 +348,10 @@ class DefaultController extends Controller
                 $dbFile->path = $uploadPath;
                 $dbFile->del_mark = 0;          //重置删除标志
                 $dbFile->is_fixed = isset($_REQUEST['is_fixed']) ? $_REQUEST['is_fixed'] : 1;          //设置永久标志
-                $dbFile->created_by = \Yii::$app->user->id;
+                $dbFile->created_by = Yii::$app->user->id;
                 $dbFile->thumb_path = '';
                 $dbFile->size = $fileSize;
-                if($dbFile->save()){
+                if ($dbFile->save()) {
                     //删除临时文件
                     foreach ($fileChunks as $fileChunk) {
                         @unlink($fileChunk->chunk_path);
@@ -364,13 +359,29 @@ class DefaultController extends Controller
                     //删除数据库分片数据记录
                     //Yii::$app->db->createCommand()->delete(UploadfileChunk::tableName(), ['file_id' => $fileMd5])->execute();
                     // Return Success JSON-RPC response
-                    die('{"jsonrpc" : "2.0", "result" : '.  json_encode($dbFile->toArray()).', "id" : "id"}');
-                }else{
+                    die('{"jsonrpc" : "2.0", "result" : ' . json_encode($dbFile->toArray()) . ', "id" : "id"}');
+                } else {
                     die('{"jsonrpc" : "2.0", "error" : {"code": 204, "message": "保存文件失败！' . json_encode($dbFile->errors) . '"}, "id" : "id"}');
                 }
             }
         }
         die('{"jsonrpc" : "2.0", "error" : {"code": 209, "message": "未知错误"}, "id" : "id"}');
+    }
+
+    /**
+     * 创建目录
+     * @param string $path
+     */
+    private function mkdir($path) {
+        $dirs = explode('/',$path);
+        $parent = '';
+        foreach ($dirs as $dir) {
+            $dir = $parent == '' ? $dir : $parent . DIRECTORY_SEPARATOR .$dir;
+            if (!file_exists($dir)) {
+                @mkdir($dir);
+            }
+            $parent = $dir;
+        }
     }
 
     /**
@@ -402,4 +413,5 @@ class DefaultController extends Controller
         fclose($rh);
         return md5($part1 . $part2);
     }
+
 }
