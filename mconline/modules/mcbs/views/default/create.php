@@ -22,10 +22,9 @@ $this->title = Yii::t(null, '{Create}{Mcbs}{Courses}', [
     ]) 
 ?>
 
-<div class="container mcbs-course-create mcbs has-title">
+<div class="container mcbs-course-create mcbs">
 
-    <?= 
-        $this->render('_form', [
+    <?= $this->render('_form', [
             'model' => $model,
             'itemTypes' => $itemTypes,
             'items' => $items,
