@@ -41,13 +41,13 @@ class GridViewChangeSelfColumn extends DataColumn {
         if ($this->plugOptions['type'] == 'checkbox') {
             return Html::tag('span', $value == 1 ? "<i class='fa fa-check-circle'></i>" . $labels[1] : "<i class='fa fa-ban'></i>" . $labels[0], [
                         'class' => $value == 1 ? 'yes' : 'no',
-                        'onclick' => "GridViewChangeSelfColumn_ChangeVal($key,'$this->attribute',this)",
+                        'onclick' => "GridViewChangeSelfColumn_ChangeVal('$key','$this->attribute',this)",
             ]);
         } else if($this->plugOptions['type'] == 'input'){
             return Html::tag('input', '', [
                         'class' => 'form-control',
                         'value' => $value,
-                        'onchange' => "GridViewChangeSelfColumn_ChangeVal($key,'$this->attribute',this)",
+                        'onchange' => "GridViewChangeSelfColumn_ChangeVal('$key','$this->attribute',this)",
             ]);
         }
     }
