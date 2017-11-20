@@ -71,6 +71,7 @@ return [
     'Action' => '动作',
     'Time' => '时间',
     'Is Deleted' => '是否删除',
+    'All' => '全部',
     
     
     //拍摄预约-公共部分
@@ -167,4 +168,14 @@ return [
     //操作记录
     'Action Log' => '操作记录',
     'Relative ID' => '相关id',
+    
+    //在线制作课程平台后台
+    'File' => '文件',
+    'List' => '列表',
+    'Activity' => '活动',
+    'Expire' => '到期',
+    'Time' => '时间',
+    'Upload By' => '上传者',
+    'Is' => '是否',
+    'Mark' => '标记',
 ];

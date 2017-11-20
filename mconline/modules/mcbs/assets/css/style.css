@@ -70,3 +70,14 @@
     display:table-cell;
     vertical-align:middle; 
 }
+
+/**
+ * 设置表格内容中部对齐
+ */
+.mcbs .table > tbody > tr > td{
+    vertical-align: middle;
+}
+
+.mcbs .has-title {
+    padding-top: 50px;
+}
