@@ -3,19 +3,24 @@
 namespace common\models\mconline;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%mcbs_course_block}}".
  *
  * @property string $id
- * @property string $phase_id
- * @property string $name
- * @property string $des
- * @property integer $sort_order
+ * @property string $phase_id                               阶段id
+ * @property string $name                                   名称
+ * @property string $des                                    描述
+ * @property integer $sort_order                            排序
  * @property string $created_at
  * @property string $updated_at
+ * 
+ * @property McbsCoursePhase $phase                         课程框架阶段
  */
-class McbsCourseBlock extends \yii\db\ActiveRecord
+class McbsCourseBlock extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -25,6 +30,16 @@ class McbsCourseBlock extends \yii\db\ActiveRecord
         return '{{%mcbs_course_block}}';
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() 
+    {
+        return [
+            TimestampBehavior::className()
+        ];
+    }
+    
     /**
      * @inheritdoc
      */
@@ -53,5 +68,37 @@ class McbsCourseBlock extends \yii\db\ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+    
+    /**
+     * 
+     * @param type $insert 
+     */
+    public function beforeSave($insert) 
+    {
+        if(parent::beforeSave($insert))
+        {
+            if($this->isNewRecord){
+                /* @var $model McbsCourseBlock */
+                $model = $this->find()->select(['sort_order'])
+                        ->where(['phase_id' => $this->phase_id])
+                        ->orderBy('sort_order')->one();
+        
+                if($model != null)
+                    $this->sort_order = $model->sort_order + 1;
+            }
+            
+            return true;
+        }else
+            return false;
+    }
+    
+    /**
+     * 获取课程框架阶段
+     * @return ActiveQuery
+     */
+    public function getPhase()
+    {
+        return $this->hasOne(McbsCoursePhase::className(), ['id' => 'phase_id']);
     }
 }

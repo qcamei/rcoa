@@ -6,9 +6,184 @@
 */
 
 
-/********* default-index样式 ***********/
-.default-index {
-    
+/********* default-view样式 ***********/
+
+.default-view .frame {
+    padding-left: 0;
+    padding-right: 0;
+    display: inline-block
 }
 
-/********* default-view样式 ***********/
+.default-view
+.frame-left {
+    float: left;
+    padding-left: 0;
+    padding-right: 15px;
+}
+
+.default-view
+.frame-right {
+    float: right;
+    padding-right: 0;
+    padding-left: 15px;
+}
+
+.default-view
+.frame-title {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    color: #ffffff;
+    line-height: 20px;
+    background-color: rgba(153, 153, 153, 1);
+}
+
+.default-view
+.frame-title>span {
+    display: block;
+    float: left;
+}
+
+.default-view
+.frame-title>.framebtn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+}
+
+.default-view
+.frame-table {
+    margin-bottom: 20px;
+    padding-right: 0;
+    padding-left: 0;
+    border: 1px #ddd solid;
+}
+
+.default-view
+.frame-right-table {
+    height: 341px;
+    border: 1px #ddd solid;
+    overflow-y: auto;
+}
+
+/**
+ * 小屏幕时去掉左右padding边距
+ */
+@media (max-width: 480px) {
+    .default-view .frame-left,
+    .default-view .frame-right {
+        padding-left:  0px;
+        padding-right: 0px;
+    }
+}
+
+/********* course-make-couphase样式 ***********/
+.course-make-couframe
+.sortable {
+    padding:0;
+    margin: 0;
+}
+
+.course-make-couframe
+.sortable a {
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.course-make-couframe
+.sortable a>i {
+    font-size: 16px;
+    margin-right: 5px;
+}
+
+.course-make-couframe
+.sortable .cou-icon {
+    float: right;
+}
+
+.course-make-couframe
+.sortable .cou-icon a>i {
+    font-size: 12px;
+    margin-right: 3px;
+}
+
+.course-make-couframe
+.sortable li {
+    list-style: none outside none;
+    cursor: normal;
+}
+
+.course-make-couframe
+.sortable .handle:hover{
+    cursor: move;
+}
+
+.course-make-couframe
+.sortable li.disabled:hover {
+    cursor: default;
+}
+
+.course-make-couframe
+.sortable .cou-default {
+    padding: 8px;
+    margin: 0 3px;
+}
+
+.course-make-couframe
+.sortable .cou-phase {
+    margin-top: 5px; 
+    padding-top: 15px; 
+    padding-bottom: 15px;
+    background-color: #428bca;
+}
+
+.course-make-couframe
+.sortable .cou-block {
+    background-color: #006699;
+}
+
+.course-make-couframe
+.sortable .cou-chapter {
+    background-color: #66bbfc;
+}
+
+.course-make-couframe
+.sortable .chapter-des {
+    padding-right: 20px;
+    padding-left: 20px; 
+    border: 1px #cccccc solid;
+}
+
+.course-make-couframe
+.sortable .cou-section {
+    background-color: #cccccc;
+}
+
+.course-make-couframe
+.sortable .cou-section a {
+    color: #333333;
+}
+
+.course-make-couframe
+.sortable .cou-activity,
+.course-make-couframe
+.sortable .cou-activity li {
+    border: 1px #cccccc solid;
+}
+
+.course-make-couframe
+.sortable .act-content {
+    margin-bottom: -8px;
+    padding: 8px 15px; 
+}
+
+.course-make-couframe
+.sortable .act-content a {
+    color: #333333;
+}
+
+.course-make-actlog .actlog{
+    max-height: 555px;
+    overflow-y: auto;
+    padding-bottom: 15px;
+}

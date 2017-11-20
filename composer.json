@@ -30,7 +30,9 @@
         "twbs/bootstrap": "^3.3",
         "mobiledetect/mobiledetectlib": "^2.8",
         "almasaeed2010/adminlte": "^2.3",
-        "dmstr/yii2-adminlte-asset": ">=2.5"
+        "dmstr/yii2-adminlte-asset": ">=2.5",
+        "kartik-v/yii2-sortable": "*",
+        "kartik-v/yii2-sortable-input": "*"
         
     },
     "require-dev": {

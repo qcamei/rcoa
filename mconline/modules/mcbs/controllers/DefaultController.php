@@ -66,7 +66,7 @@ class DefaultController extends Controller
      */
     public function actionCreate()
     {
-        $model = new McbsCourse(['id' => md5(rand(1,10000) + time())]);
+        $model = new McbsCourse(['id' => md5(rand(1,10000) + time()), 'create_by' => Yii::$app->user->id]);
         $model->loadDefaultValues();
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

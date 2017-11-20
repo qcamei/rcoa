@@ -8,10 +8,18 @@
 return [
     //公共部分
     'ID' => "ID",
+    'Parent ID' => '上一级',
+    'Item Type ID' => '行业',
+    'Item ID' => '层次/类型',
+    'Item Child ID' => '专业/工种',
+    'Course ID' => '课程名称',
+    'Y' => '是',
+    'N' => '否',
     'Type' => '类型',
     'Title' => '标题',
     'Username' => "用户名",
     'Nickname' => "昵称",
+    'People' => '人员',
     'Name' => "名称",
     'Phone' => "电话",
     'Email' => "邮箱",
@@ -31,10 +39,9 @@ return [
     'Link' => '链接',
     'Progress' => '进度',
     'Status' => '状态',
-    'Parent ID' => '上一级',
     'Create By' => '创建者',
-    'Created At' => '创建于',
-    'Updated At' => '更新于',
+    'Created At' => '创建时间',
+    'Updated At' => '更新时间',
     'Start Time' => '开始时间',
     'End Time' => '结束时间',
     'Week Mon' => '周一',
@@ -46,6 +53,10 @@ return [
     'Week Sun' => '周日',
     'Login' => '登录',
     'Login Out' => '登出',
+    'Add' => '添加',
+    'Edit' => '编辑',
+    'Set' => '设置',
+    'Make' => '制作',
     'Create' => '创建',
     'Update' => '更新',
     'Delete' => '删除',
@@ -54,11 +65,12 @@ return [
     'View' => '查看',
     'Detail' => '详情',
     'Deploy' => '配置',
+    'Close' => '关闭',
+    'Confirm' => '确定',
     'Operating' => '操作',
-    'Add' => '添加',
-    'Y' => '是',
-    'N' => '否',
-    'Is Deleted' => '是否已删除',
+    'Action' => '动作',
+    'Time' => '时间',
+    'Is Deleted' => '是否删除',
     
     
     //拍摄预约-公共部分
@@ -135,13 +147,24 @@ return [
     'The requested page does not exist.' => '所请求的页面不存在。',
     'Select Placeholder' => '请选择...',
     
-    //在线制作课程平台字段属性名称(前台)
+    //在线制作课程平台mcbs字段属性名称(前台)
     'Mcbs' => '板书',
     'Courses' => '课程',
-    
-    //创建课程
-    'Item Type ID' => '行业',
-    'Item ID' => '层次/类型',
-    'Item Child ID' => '专业/工种',
-    'Course ID' => '课程名称',
+    'Close Time' => '关闭时间',
+    'Course Info' => '课程信息',
+    'Help Man' => '协作人员',
+    'Course Des' => '课程简介',
+    //协作人员
+    'Fullname' => '姓名',
+    'Privilege' => '权限',
+    //课程阶段
+    'Course Frame' => '课程框架',
+    'Phase' => '阶段',
+    'Block' => '区块',
+    'Chapter' => '章',
+    'Section' => '节',
+    'Value Percent' => '占课程总分比例',
+    //操作记录
+    'Action Log' => '操作记录',
+    'Relative ID' => '相关id',
 ];

@@ -1,32 +1,34 @@
 <?php
 
-use common\models\mconline\McbsCourse;
 use mconline\modules\mcbs\assets\McbsAssets;
 use yii\helpers\Html;
 use yii\web\View;
 
-
 /* @var $this View */
-/* @var $model McbsCourse */
 
-$this->title = Yii::t('app', 'Create Mcbs Course');
+$this->title = Yii::t(null, "{add}{$title}",[
+    'add' => Yii::t('app', 'Add'),
+]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Mcbs Courses'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="mcbs-course-create mcbs">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <?= $this->render('_form', [
+<div class="mcbs-create-activity mcbs">
+    
+    <?= $this->render('activity_form',[
         'model' => $model,
     ]) ?>
-
+    
 </div>
 
 <?php
 $js = 
 <<<JS
         
+    /** 提交表单 
+    $("#submitsave").click(function(){
+        $("#form-activity").submit();
+    });  */ 
     
 JS;
     $this->registerJs($js,  View::POS_READY);

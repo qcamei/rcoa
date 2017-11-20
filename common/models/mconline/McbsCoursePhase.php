@@ -3,20 +3,25 @@
 namespace common\models\mconline;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%mcbs_course_phase}}".
- *
- * @property string $id
- * @property string $course_id
- * @property string $name
- * @property double $value_percent
- * @property string $des
- * @property integer $sort_order
+ *  
+ * @property string $id                     
+ * @property string $course_id                              板书课程id
+ * @property string $name                                   阶段名称
+ * @property double $value_percent                          阶段占比值
+ * @property string $des                                    描述
+ * @property integer $sort_order                            排序
  * @property string $created_at
  * @property string $updated_at
+ * 
+ * @property McbsCourse $course                             板书课程
  */
-class McbsCoursePhase extends \yii\db\ActiveRecord
+class McbsCoursePhase extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -26,6 +31,16 @@ class McbsCoursePhase extends \yii\db\ActiveRecord
         return '{{%mcbs_course_phase}}';
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() 
+    {
+        return [
+            TimestampBehavior::className()
+        ];
+    }
+    
     /**
      * @inheritdoc
      */
@@ -56,5 +71,37 @@ class McbsCoursePhase extends \yii\db\ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+    
+    /**
+     * 
+     * @param type $insert 
+     */
+    public function beforeSave($insert) 
+    {
+        if(parent::beforeSave($insert))
+        {
+            if($this->isNewRecord){
+                /* @var $model McbsCoursePhase */
+                $model = $this->find()->select(['sort_order'])
+                        ->where(['course_id' => $this->course_id])
+                        ->orderBy('sort_order')->one();
+        
+                if($model != null)
+                    $this->sort_order = $model->sort_order + 1;
+            }
+            
+            return true;
+        }else
+            return false;
+    }
+    
+    /**
+     * 获取板书课程
+     * @return ActiveQuery
+     */
+    public function getCourse()
+    {
+        return $this->hasOne(McbsCourse::className(), ['id' => 'course_id']);
     }
 }
