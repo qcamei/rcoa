@@ -19,7 +19,6 @@ class DefaultController extends Controller {
      * @return string
      */
     public function actionIndex() {
-        var_dump(Yii::$app->request->post());
         return $this->render('index');
     }
 
@@ -357,7 +356,7 @@ class DefaultController extends Controller {
                         @unlink($fileChunk->chunk_path);
                     }
                     //删除数据库分片数据记录
-                    //Yii::$app->db->createCommand()->delete(UploadfileChunk::tableName(), ['file_id' => $fileMd5])->execute();
+                    Yii::$app->db->createCommand()->delete(UploadfileChunk::tableName(), ['file_id' => $fileMd5])->execute();
                     // Return Success JSON-RPC response
                     die('{"jsonrpc" : "2.0", "result" : ' . json_encode($dbFile->toArray()) . ', "id" : "id"}');
                 } else {

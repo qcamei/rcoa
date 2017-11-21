@@ -68,8 +68,8 @@
 
 /* 已存状态 */
 .euploader-item-exist {}
-.euploader-item-fail .euploader-item-status {color: #2196f3}
-.euploader-item-fail .euploader-item-state {color: #2196f3}
+.euploader-item-exist .euploader-item-status {color: #2196f3}
+.euploader-item-exist .euploader-item-state {color: #2196f3}
 
 
 
