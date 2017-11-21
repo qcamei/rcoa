@@ -2,26 +2,36 @@
 
 namespace common\models\mconline;
 
+use common\models\User;
+use wskeee\framework\models\Item;
+use wskeee\framework\models\ItemType;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%mconline_course}}".
  *
  * @property string $id
- * @property string $item_type_id       基础数据_行业ID
- * @property string $item_id            基础数据_层次/类型ID
- * @property string $item_child_id      基础数据_专业/工种ID
- * @property string $course_id          基础数据_课程ID
- * @property string $create_by          创建人
- * @property integer $status            状态：1正常、10关闭
- * @property integer $is_publish        是否已发布：0未发布、1已发布
- * @property string $publish_time       发布时间
- * @property string $close_time         关闭时间
- * @property string $des                课程简介
- * @property string $created_at
- * @property string $updated_at
+ * @property integer $item_type_id                      行业ID
+ * @property integer $item_id                           层次/类型ID
+ * @property integer $item_child_id                     专业/工种ID
+ * @property integer $course_id                         课程ID
+ * @property string $create_by                          创建者
+ * @property integer $status                            状态：1正常、10关闭
+ * @property integer $is_publish                        是否已发布：0未发布、1已发布
+ * @property string $publish_time                       发布时间
+ * @property string $close_time                         关闭时间
+ * @property string $des                                课程简介
+ * @property integer $created_at                        
+ * @property integer $updated_at                        
+ * 
+ * @property ItemType $itemType                         获取行业
+ * @property Item $item                                 获取层次/类型
+ * @property Item $itemChild                            获取专业/工种
+ * @property Item $course                               获取课程
+ * @property User $createBy                             获取创建者
  */
 class McbsCourse extends ActiveRecord
 {
@@ -88,12 +98,63 @@ class McbsCourse extends ActiveRecord
         if(parent::beforeSave($insert))
         {
             if($this->isNewRecord){
-                //$this->id = md5(rand(1,10000) + time());    //自动生成用户ID
-                $this->create_by = Yii::$app->user->id;    //创建者
+                //$this->id = md5(rand(1,10000) + time());      //自动生成用户ID
+                //$this->create_by = Yii::$app->user->id;       //创建者
+                $courUser = new McbsCourseUser([
+                    'course_id'=> $this->id,'user_id'=>$this->create_by,
+                    'privilege'=> McbsCourseUser::OWNERSHIP
+                ]);
+                $courUser->save();
             }
             
             return true;
         }else
             return false;
+    }
+    
+    
+    /**
+     * 获取行业
+     * @return ActiveQuery
+     */
+    public function getItemType()
+    {
+        return $this->hasOne(ItemType::className(), ['id' => 'item_type_id']);
+    }
+    
+    /**
+     * 获取层次/类型
+     * @return ActiveQuery
+     */
+    public function getItem()
+    {
+        return $this->hasOne(Item::className(), ['id' => 'item_id']);
+    }
+    
+    /**
+     * 获取专业/工种
+     * @return ActiveQuery
+     */
+    public function getItemChild()
+    {
+        return $this->hasOne(Item::className(), ['id' => 'item_child_id']);
+    }
+    
+    /**
+     * 获取课程
+     * @return ActiveQuery
+     */
+    public function getCourse()
+    {
+        return $this->hasOne(Item::className(), ['id' => 'course_id']);
+    }
+    
+    /**
+     * 获取创建者
+     * @return ActiveQuery
+     */
+    public function getCreateBy()
+    {
+        return $this->hasOne(User::className(), ['id' => 'create_by']);
     }
 }

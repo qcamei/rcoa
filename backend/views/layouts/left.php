@@ -142,6 +142,7 @@ use common\widgets\Menu;
                         'items' => [
                             ['label' => '信息统计','icon' => 'circle-o', 'url' => ['/mconline_admin/default']],
                             ['label' => '文件列表','icon' => 'circle-o', 'url' => ['/mconline_admin/uploadfile']],
+                            ['label' => '活动类型列表','icon' => 'circle-o', 'url' => ['/mconline_admin/activity-type']],
                         ],
                     ],
                 ],

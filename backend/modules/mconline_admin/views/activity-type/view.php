@@ -1,19 +1,16 @@
 <?php
 
-use common\models\mconline\McbsCourse;
-use mconline\modules\mcbs\assets\McbsAssets;
 use yii\helpers\Html;
-use yii\web\View;
 use yii\widgets\DetailView;
 
-/* @var $this View */
-/* @var $model McbsCourse */
+/* @var $this yii\web\View */
+/* @var $model common\models\mconline\McbsActivityType */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Mcbs Courses'), 'url' => ['index']];
+$this->title = $model->name;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Mcbs Activity Types'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="mcbs-course-view mcbs">
+<div class="mcbs-activity-type-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -32,32 +29,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'item_type_id',
-            'item_id',
-            'item_child_id',
-            'course_id',
-            'create_by',
-            'status',
-            'is_publish',
-            'publish_time',
-            'close_time',
-            'des:ntext',
+            'name',
+            'des',
+            'icon_path',
             'created_at',
             'updated_at',
         ],
     ]) ?>
 
 </div>
-
-<?php
-$js = 
-<<<JS
-        
-    
-JS;
-    $this->registerJs($js,  View::POS_READY);
-?>
-
-<?php
-    McbsAssets::register($this);
-?>

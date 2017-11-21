@@ -1,14 +1,15 @@
 <?php
 
-/* @var $this \yii\web\View */
+/* @var $this View */
 /* @var $content string */
 
 use backend\assets\AppAsset;
-use yii\helpers\Html;
+use kartik\widgets\AlertBlock;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
+use yii\helpers\Html;
+use yii\web\View;
 use yii\widgets\Breadcrumbs;
-use common\widgets\Alert;
 
 AppAsset::register($this);
 ?>
@@ -57,7 +58,14 @@ AppAsset::register($this);
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
-        <?= Alert::widget() ?>
+        <?php  //Alert::widget() ?>
+        <?php
+            echo AlertBlock::widget([
+                'useSessionFlash' => TRUE,
+                'type' => AlertBlock::TYPE_GROWL,
+                'delay' => 0
+            ]);
+        ?>
         <?= $content ?>
     </div>
 </div>

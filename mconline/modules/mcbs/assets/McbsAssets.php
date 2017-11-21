@@ -32,6 +32,6 @@ class McbsAssets extends AssetBundle{
         'css/module.css',
     ];
     public $js = [
-        
+        'js/html.sortable.min.js'
     ];
 }
