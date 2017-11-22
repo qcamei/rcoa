@@ -44,7 +44,7 @@ class NotificationManager {
         );
 
         $api = new AppApi(self::$agent_id);
-        $api->sendMsgToUser($msg);
+        return $api->sendMsgToUser($msg);
     }
 
     /**
