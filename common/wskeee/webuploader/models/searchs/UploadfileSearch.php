@@ -41,7 +41,7 @@ class UploadfileSearch extends Uploadfile {
     public function search($params) {
         $query = $query = (new Query())
                 ->select(['Uploadfile.id', 'Uploadfile.name AS filename', 'Uploadfile.del_mark', 'Uploadfile.is_del',
-                    'CreateBy.nickname AS created_by'])
+                    'CreateBy.nickname AS created_by', 'Uploadfile.path'])
                 ->from(['Uploadfile' => Uploadfile::tableName()]);
 
         // add conditions that should always apply here
@@ -80,5 +80,5 @@ class UploadfileSearch extends Uploadfile {
 
         return $dataProvider;
     }
-
+    
 }

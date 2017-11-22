@@ -3,18 +3,20 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%config}}".
  *
  * @property string $id
- * @property string $config_name            配置名
- * @property string $config_value           配置值
- * @property string $des                    描述
- * @property string $created_at
- * @property string $updated_at
+ * @property string $config_name        配置名
+ * @property string $config_value       配置值
+ * @property string $des                描述
+ * @property string $created_at         创建时间
+ * @property string $updated_at         更新时间
  */
-class Config extends \yii\db\ActiveRecord
+class Config extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -30,6 +32,7 @@ class Config extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['config_name', 'config_value'], 'required'],
             [['config_value', 'des'], 'string'],
             [['created_at', 'updated_at'], 'integer'],
             [['config_name'], 'string', 'max' => 255],
@@ -37,6 +40,16 @@ class Config extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() 
+    {
+        return [
+            TimestampBehavior::className()
+        ];
+    }
+    
     /**
      * @inheritdoc
      */

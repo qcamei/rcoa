@@ -1,22 +1,18 @@
 <?php
 
-namespace backend\modules\mconline_admin\controllers;
+namespace mconline\modules\mcbs\controllers;
 
-use backend\components\BaseController;
-use common\models\User;
-use wskeee\webuploader\models\searchs\UploadfileSearch;
-use wskeee\webuploader\models\Uploadfile;
+use common\models\mconline\McbsActivityFile;
+use common\models\mconline\searchs\McbsActivityFileSearch;
 use Yii;
-use yii\db\Query;
-use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
+use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
 /**
- * UploadfileController implements the CRUD actions for Uploadfile model.
+ * ActivityFileController  implements the CRUD actions for McbsActivityFile model.
  */
-class UploadfileController extends BaseController {
+class ActivityFileController extends Controller {
 
     /**
      * @inheritdoc
@@ -29,35 +25,25 @@ class UploadfileController extends BaseController {
                     'delete' => ['POST'],
                 ],
             ],
-            //access验证是否有登录
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ]
-                ],
-            ],
         ];
     }
 
     /**
-     * Lists all Uploadfile models.
+     * Lists all McbsActivityFile models.
      * @return mixed
      */
     public function actionIndex() {
-        $searchModel = new UploadfileSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $searchModel = new McbsActivityFileSearch();
+        $dataProvider = $searchModel->searchFileList(Yii::$app->request->queryParams);
+        
         return $this->render('index', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
-                    'uploadBy' => $this->getUploadBy(),
         ]);
     }
 
     /**
-     * Displays a single Uploadfile model.
+     * Displays a single McbsActivityFile model.
      * @param string $id
      * @return mixed
      */
@@ -68,12 +54,12 @@ class UploadfileController extends BaseController {
     }
 
     /**
-     * Creates a new Uploadfile model.
+     * Creates a new McbsActivityFile model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate() {
-        $model = new Uploadfile();
+        $model = new McbsActivityFile();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -85,7 +71,7 @@ class UploadfileController extends BaseController {
     }
 
     /**
-     * Updates an existing Uploadfile model.
+     * Updates an existing McbsActivityFile model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
      * @return mixed
@@ -103,58 +89,57 @@ class UploadfileController extends BaseController {
     }
 
     /**
-     * Deletes an existing Uploadfile model.
+     * Deletes an existing McbsActivityFile model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id
      * @return mixed
      */
     public function actionDelete($id) {
-
-        $model = $this->findModel($id);
-        
-        $path = Yii::getAlias('@mconline') . '/web/' . $model->path;
-        if (file_exists($path)) {
-            if (unlink($path)) {
-                $model->is_del = 1;
-                $model->update();
-            }
-        } else {
-            Yii::$app->getSession()->setFlash('error', '该文件不存在！');
-        }
+        $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the Uploadfile model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
-     * @return Uploadfile the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
+    /*
+     * 下载 
+     * 如果不需要查数据库的话直接做参数传递  
+     * yii::app ()->request->sendFile (文件名,  file_get_contents (文件路径));  
      */
-    protected function findModel($id) {
-        if (($model = Uploadfile::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+    public function actionDownload($id) {
+        if (isset($_GET['id'])) {
+            $model = new McbsActivityFileSearch(); //你的model  
+            $result = $model->find(array(
+                'select' => array('Uploadfile.path', 'Uploadfile.name'),
+                'condition' => 'id=:id', //条件  
+                'params' => array(':id' => $id)
+            ));
+            if (!$result) {
+                throw new CHttpException(404, '文件不存在！');
+            } else {
+                // 服务器端文件的路径   
+                $fontArr = explode('/', $result->url);
+                $fileName = end($fontArr); //得到文件名字  
+                if (file_exists($result->url)) {
+                    //发送两个参数一个是名称上面已经处理好，也可以改成你要的，后面是文件路径  
+                    yii::app()->request->sendFile($fileName, file_get_contents($result->url));
+                }
+            }
         }
     }
 
     /**
-     * 查询上传者
-     * @return array
+     * Finds the McbsActivityFile model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return McbsActivityFile the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
      */
-    public function getUploadBy() {
-        $uploadBy = (new Query())
-                ->select(['Uploadfile.id', 'Uploadfile.created_by'])
-                ->from(['Uploadfile' => Uploadfile::tableName()])
-                //关联查询上传者
-                ->leftJoin(['CreateBy' => User::tableName()], 'CreateBy.id = Uploadfile.created_by')
-                ->addSelect(['CreateBy.nickname AS username'])
-                ->groupBy('created_by')
-                ->all();
-
-        return ArrayHelper::map($uploadBy, 'created_by', 'username');
+    protected function findModel($id) {
+        if (($model = McbsActivityFile::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 
 }
