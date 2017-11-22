@@ -349,8 +349,10 @@
         });
         uploader.on('uploadError', function (file, reason) {
             var isExist = reason == '已存在!';
-            if(!_self.hasError && !isExist){
+            if(!isExist){
                 _self.errorFiles[file.id] = true;
+            }else{
+                $('#' + file.id).find('td.euploader-item-input input').removeAttr('disabled');
             }
             $('#' + file.id).attr('class', isExist ? 'euploader-item-exist' : 'euploader-item-fail');
             $('#' + file.id).find('td.euploader-item-status').html(isExist ? STATUS_SUCCEE_ICON :  STATUS_FAIL_ICON);
