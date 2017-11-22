@@ -41,7 +41,7 @@ use yii\widgets\ActiveForm;
                     _csrf: "<?= Yii::$app->request->csrfToken ?>",
                     //指定文件上传到的应用
                     app_path: 'mcoline',
-                    debug: 1,
+                    //debug: 1,
                 }
             });
             uploader.addCompleteFiles(<?= $files ?>);
