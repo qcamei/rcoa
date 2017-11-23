@@ -25,15 +25,12 @@ use yii\widgets\ActiveForm;
     ]);?>
     <div class="col-lg-7 col-md-7">
         
-        <?php //$form->field($model, 'id')->textInput(['maxlength' => true]) ?>
-
         <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
         <?= $form->field($model, 'des')->textInput(['maxlength' => true]) ?>
+        
+        <?= $form->field($model, 'des')->textarea(['rows'=>6,'value'=>$model->isNewRecord?'无':$model->des]) ?>
 
-        <?= $form->field($model, 'created_at')->textInput(['maxlength' => true]) ?>
-
-        <?= $form->field($model, 'updated_at')->textInput(['maxlength' => true]) ?>
     </div>
 
     <div class="col-lg-5 col-md-5">

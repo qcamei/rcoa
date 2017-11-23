@@ -55,8 +55,9 @@
                         + '<td class="euploader-item-status"><span>{%statusIcon%}</span></td>'
                         + '<td class="euploader-item-filename"><span>{%name%}</span></td>'
                         + '<td class="euploader-item-state">{%state%}</td>'
+                        + '<td class="euploader-item-size">{%size%}</td>'
                         + '<td class="euploader-item-btns"><a class="btn btn-sm btn-danger euploader-del-btn" data-file="{%id%}"><i class="glyphicon glyphicon-trash"></i></a></td>'
-                    + '/<tr>';
+                    + '</tr>';
             
     /* 状态提示信息DOM模板 */
     var STATE_DOM = '<span>【{%text%}】</span>';
@@ -80,6 +81,7 @@
         log:function(){},
         error:function(){}
     };
+    
     /**
      * @param {Object} config
      *      【必须】config.swf              上传flash组件路径
@@ -134,7 +136,7 @@
         this.isFinish = true;
         this.hasError = false;
         //上传错误的文件
-        this.errorFiles = [];
+        this.errorFiles = {};
 
         /* 根目录 */
         var $container = $(this.config['container']);
@@ -163,38 +165,47 @@
                 //1、计算文件的唯一标记fileMd5，用于断点续传  如果.md5File(file)方法里只写一个file参数则计算MD5值会很慢 所以加了后面的参数：10*1024*1024  
                 var thenFun = function(val){
                     $('#' + file.id).find('td.euploader-item-input input').attr('value',val);
-                        $('#' + file.id).find('td.euploader-item-state').html(StringUtil.createDOM(STATE_DOM, {text:'成功获取文件信息...'}));
-                        fileMd5 = val;
-                        file.fileMd5 = fileMd5;
-                        //获取文件信息后进入下一步
-                        $.ajax({
-                            type: "POST",
-                            url: _self.config['checkFile'], //ajax验证每一个分片  
-                            data: {
-                                fileMd5: fileMd5, //文件唯一标记    
-                                _csrf:_self.config['formData._csrf'],
-                            },
-                            cache: false,
-                            async: false, // 与js同步  
-                            timeout: 1000, //todo 超时的话，只能认为该分片未上传过  
-                            dataType: "json",
-                            success: function (response) {
-                                if (response.exist) {
-                                    //分块存在，跳过   
-                                    file.dbFile = response.result;
-                                    deferred.reject('已存在!');
-                                } else {
-                                    //分块不存在或不完整，重新发送该分块内容    
-                                    file.chunkMd5s = response.result;
-                                    owner.options.formData.fileMd5 = fileMd5;
-                                    deferred.resolve();
-                                }
-                            }});
-                        deferred.resolve();
+                    $('#' + file.id).find('td.euploader-item-state').html(StringUtil.createDOM(STATE_DOM, {text:'成功获取文件信息...'}));
+                    if(!file.fileMd5){
+                        file.fileMd5 = val;
+                    }
+                    //获取文件信息后进入下一步
+                    $.ajax({
+                        type: "POST",
+                        url: _self.config['checkFile'], //ajax验证每一个分片  
+                        data: {
+                            fileMd5: val, //文件唯一标记    
+                            _csrf:_self.config['formData._csrf'],
+                        },
+                        cache: false,
+                        async: false, // 与js同步  
+                        timeout: 1000, //todo 超时的话，只能认为该分片未上传过  
+                        dataType: "json",
+                        success: function (response) {
+                            if (response.exist) {
+                                //分块存在，跳过   
+                                file.dbFile = response.result;
+                                deferred.reject('已存在!');
+                            } else {
+                                //分块不存在或不完整，重新发送该分块内容   
+                                file.chunkMd5s = response.result;
+                                deferred.resolve();
+                            }
+                        },
+                        fail: function (data) {
+                            deferred.reject();
+                        },
+                        error: function (data) {
+                            deferred.reject();
+                        }
+                    });
+                    //deferred.resolve();
                 }
                 //如果已经计算过md5就跳过计算，直接验证
                 if(file.fileMd5 != null){
-                    thenFun(file.fileMd5);
+                    setTimeout(function(){
+                        thenFun(file.fileMd5);
+                    },50);
                 }else{
                     owner.md5File(file).progress(function (percentage) {
                         $('#' + file.id).find('td.euploader-item-state').html(StringUtil.createDOM(STATE_DOM, {text: '正在读取文件信息...' + Math.floor(percentage * 100) + '%'}));
@@ -221,9 +232,13 @@
                                 //分片MD5计算可以不知道计算进度
                             })
                             .then(function (chunkMd5) {
-                                owner.options.formData.chunkMd5 = chunkMd5;
-                                owner.options.formData.chunk = chunk;
-                                owner.options.formData.chunks = chunks;
+                                //设定自定义参数
+                                block.formData = {
+                                    fileMd5 : file.fileMd5,
+                                    chunkMd5 : chunkMd5,
+                                    chunk: chunk,
+                                    chunks: chunks
+                                };
                                 var chunkMd5s = file.chunkMd5s;
                                 var exists = false;
                                 if (chunkMd5s == null) {
@@ -239,11 +254,10 @@
                                 }
                             });
                 } else {//未分片文件上传
-                    owner.options.formData.chunkMd5 = file.fileMd5;
+                    //设定自定义参数
+                    block.formData = {fileMd5:file.fileMd5,chunkMd5:file.fileMd5};
                     deferred.resolve();
                 }
-
-                owner.options.formData.fileMd5 = file.fileMd5;
                 return deferred.promise();
             },
             //时间点3：所有分块上传成功后调用此函数    
@@ -254,7 +268,7 @@
                 $.ajax({
                     type: "POST",
                     url: _self.config['mergeChunks'], //ajax将所有片段合并成整体 
-                    data: $.extend(owner.options.formData, {name: file.name, size: file.size, fileMd5: file.fileMd5}),
+                    data: $.extend(owner.options.formData,{name: file.name, size: file.size, fileMd5: file.fileMd5}),
                     cache: false,
                     async: false, // 与js同步  
                     timeout: 1000, //todo 超时的话，只能认为该分片未上传过  
@@ -295,7 +309,8 @@
                 statusIcon: STATUS_WAITING_ICON,
                 state: StringUtil.createDOM(STATE_DOM, {text: '等待上传'}),
                 disabled:'disabled',
-                value:''
+                value:'',
+                size:WebUploader.Base.formatSize(file.size)
             }));
             // 删除文件
             $('#'+file.id).find('.euploader-del-btn').on('click', function () {
@@ -306,16 +321,16 @@
         // 当有文件被除出队列
         uploader.on('fileDequeued', function (file) {
             $('#'+file.id).remove();
-            for(var i=0,len=_self.errorFiles.length;i<len;i++){
-                if(_self.errorFiles[i] == file){
-                    _self.errorFiles.splice(i,1);
-                }
-            }
+            delete _self.errorFiles[file.id];
+        });
+        // 当某个文件的分块在发送前触发，主要用来询问是否要添加附带参数，大文件在开起分片上传的前提下此事件可能会触发多次。
+        uploader.on('uploadBeforeSend', function (obj,data) {
+            data = $.extend(data,obj.formData);
         });
         // 文件上传过程中创建进度条实时显示。
         uploader.on('uploadProgress', function (file, percentage) {
             var $li = $('#' + file.id),
-                    $percent = $li.find('.progress .progress-bar');
+                $percent = $li.find('.progress .progress-bar');
             // 避免重复创建
             if (!$percent.length) {
                 $percent = $li.find('td.euploader-item-state').html($(StringUtil.createDOM(PROGRESS_BAR_DOM, {value: 0}))).find('.progress-bar');
@@ -335,7 +350,7 @@
         uploader.on('uploadError', function (file, reason) {
             var isExist = reason == '已存在!';
             if(!_self.hasError && !isExist){
-                _self.errorFiles.push(file);
+                _self.errorFiles[file.id] = true;
             }
             $('#' + file.id).attr('class', isExist ? 'euploader-item-exist' : 'euploader-item-fail');
             $('#' + file.id).find('td.euploader-item-status').html(isExist ? STATUS_SUCCEE_ICON :  STATUS_FAIL_ICON);
@@ -348,7 +363,10 @@
             //console.log('uploadComplete');
             $ctlBtn.html('开始上传');
             _self.isFinish = true;
-            _self.hasError = _self.errorFiles.length !=0;
+            _self.hasError = false;
+            $.each(_self.errorFiles,function(i, item){ 
+               _self.hasError = true;
+            });
             if(_self.hasError){
                 $ctlBtn.html('重新上传')
             }
@@ -393,7 +411,8 @@
                     statusIcon: STATUS_SUCCEE_ICON,
                     state: StringUtil.createDOM(STATE_DOM, {text: '已上传'}),
                     disabled: '',
-                    value: file.id
+                    value: file.id,
+                    size:WebUploader.Base.formatSize(file.size)
                 }));
                 // 删除文件
                 $('#'+file.id).find('.euploader-del-btn').on('click', function () {

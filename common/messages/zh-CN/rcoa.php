@@ -72,6 +72,9 @@ return [
     'Time' => '时间',
     'Is Deleted' => '是否删除',
     'All' => '全部',
+    'Info' => '信息',
+    'Download' => '下载',
+    'Message' => '留言',
     
     
     //拍摄预约-公共部分
@@ -193,4 +196,5 @@ return [
     'Information' => '信息',
     'Statistics' => '统计',
     'Space' => '空间',
+    'Icon Path' => '图标路径',
 ];
