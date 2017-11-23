@@ -19,6 +19,7 @@ use yii\db\ActiveRecord;
  * @property string $created_at
  * @property string $updated_at
  * 
+ * @property McbsActivityType $type                         获取活动类型
  * @property McbsCourseSection $section                     获取框架节
  */
 class McbsCourseActivity extends ActiveRecord
@@ -93,6 +94,15 @@ class McbsCourseActivity extends ActiveRecord
             return true;
         }else
             return false;
+    }
+    
+    /**
+     * 获取活动类型
+     * @return ActiveQuery
+     */
+    public function getType()
+    {
+        return $this->hasOne(McbsActivityType::className(), ['id' => 'type_id']);
     }
     
     /**

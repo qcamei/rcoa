@@ -251,7 +251,6 @@
 
 .course-make-couframe
 .sortable .act-content {
-    margin-bottom: -8px;
     padding: 8px 15px; 
 }
 
@@ -260,8 +259,80 @@
     color: #333333;
 }
 
-.course-make-actlog .actlog{
+.course-make-actlog .actlog {
     max-height: 555px;
     overflow-y: auto;
     padding-bottom: 15px;
 }
+
+/********************课程框架-创建活动***************************/
+.mcbs-activity .actitype {
+    width:60px;
+    height:60px;
+    display: inline-block; 
+    text-align: center;
+    border: 1px #ccc solid;
+    background-color:#fff;
+}
+
+.mcbs-activity
+.actitype:hover {
+    cursor:pointer;
+}
+
+.mcbs-activity
+.actitype.active {
+    border-color: #666;
+    background-color:#ddd;
+}
+
+.mcbs-activity .acticon {
+    width: 30px;
+    height:30px;
+    margin: 5px auto;
+}
+
+.mcbs-activity .actname {
+    font-size: 12px;
+}
+
+.mcbs-activity .message {
+    height: 470px;
+    border: 1px #cccccc solid;
+}
+
+.mcbs-activity .meslist {
+    height: 388px;
+    overflow-y: auto;
+}
+
+.mcbs-activity .mesform {
+    height: 80px;
+    padding: 10px;
+    position: relative;
+    background-color: #ddd;
+}
+
+.mcbs-activity .mesinput {
+   padding: 0;
+}
+
+.mcbs-activity
+.mesinput textarea {
+   width: 100%;
+   height: 60px;
+   padding: 10px;
+}
+
+.mcbs-activity .mesbtn {
+   padding-right: 0;
+   padding-left: 10px;
+}
+
+.mcbs-activity .mesbtn>a {
+   width: 100%;
+   height: 60px;
+   padding-top: 20px;
+   padding-bottom: 20px;
+}
+

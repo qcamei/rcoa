@@ -3,18 +3,20 @@
 namespace common\models\mconline;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%mcbs_activity_type}}".
  *
  * @property string $id
- * @property string $name
- * @property string $des
- * @property string $icon_path
+ * @property string $name                               名称
+ * @property string $des                                描述
+ * @property string $icon_path                          图标路径
  * @property string $created_at
  * @property string $updated_at
  */
-class McbsActivityType extends \yii\db\ActiveRecord
+class McbsActivityType extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -27,11 +29,20 @@ class McbsActivityType extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public function behaviors() 
+    {
+        return [
+            TimestampBehavior::className()
+        ];
+    }
+    
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         return [
-            [['id'], 'required'],
-            [['id', 'created_at', 'updated_at'], 'integer'],
+            [['created_at', 'updated_at'], 'integer'],
             [['name'], 'string', 'max' => 50],
             [['des', 'icon_path'], 'string', 'max' => 255],
         ];
