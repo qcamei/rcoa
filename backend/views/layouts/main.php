@@ -2,6 +2,8 @@
 
 use backend\assets\AppAsset;
 use common\models\User;
+use dmstr\web\AdminLteAsset;
+use kartik\widgets\AlertBlock;
 use yii\helpers\Html;
 use yii\web\View;
 
@@ -26,7 +28,7 @@ if (Yii::$app->controller->action->id === 'login') {
         app\assets\AppAsset::register($this);
     }
 
-    dmstr\web\AdminLteAsset::register($this);
+    AdminLteAsset::register($this);
 
     $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
     /* @var $user User */
@@ -45,7 +47,15 @@ if (Yii::$app->controller->action->id === 'login') {
     <body class="hold-transition skin-blue sidebar-mini">
     <?php $this->beginBody() ?>
     <div class="wrapper">
-
+        
+         <?php
+            echo AlertBlock::widget([
+                'useSessionFlash' => TRUE,
+                'type' => AlertBlock::TYPE_GROWL,
+                'delay' => 0
+            ]);
+        ?>
+        
         <?= $this->render(
             'header.php',
             ['directoryAsset' => $directoryAsset,'user' => $user]

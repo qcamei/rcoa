@@ -123,7 +123,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'is_del',
-                'label' => Yii::t('app', 'Is Deleted'),
+                'label' => Yii::t('null', '{Already}{Delete}',[
+                    'Already' => Yii::t('app', 'Already'),
+                    'Delete' => Yii::t('app', 'Delete'),
+                ]),
                 'format' => 'raw',
                 'filter' => Select2::widget([
                     'model' => $searchModel,
@@ -142,7 +145,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         'padding' => '8px'
                     ],
                 ],
-                'class' => GridViewChangeSelfColumn::className(),
+               'value' => function($data) {
+                    return $data['is_del'] ? '<span style="color:red">是</span>' : '否';
+                },
                 'contentOptions' => [
                     'class' => 'activity-name list-td',
                     'style' => [
@@ -161,7 +166,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value' => function( $data) {
                     return Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $data['id']], [
-                           'class' => 'btn btn-danger btn-sm','data' => ['method' => 'post'],
+                           'class' => 'btn btn-danger btn-sm',
+                            'data' => [
+                               'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+                               'method' => 'post'
+                            ],
                     ]);
                 },
                 'contentOptions' => [

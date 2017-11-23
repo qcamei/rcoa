@@ -109,7 +109,18 @@ class UploadfileController extends BaseController {
      * @return mixed
      */
     public function actionDelete($id) {
-        $this->findModel($id)->update();
+
+        $model = $this->findModel($id);
+        
+        $path = Yii::getAlias('@mconline') . '/web/' . $model->path;
+        if (file_exists($path)) {
+            if (unlink($path)) {
+                $model->is_del = 1;
+                $model->update();
+            }
+        } else {
+            Yii::$app->getSession()->setFlash('error', '该文件不存在！');
+        }
 
         return $this->redirect(['index']);
     }
@@ -135,7 +146,7 @@ class UploadfileController extends BaseController {
      */
     public function getUploadBy() {
         $uploadBy = (new Query())
-                ->select(['Uploadfile.id','Uploadfile.created_by'])
+                ->select(['Uploadfile.id', 'Uploadfile.created_by'])
                 ->from(['Uploadfile' => Uploadfile::tableName()])
                 //关联查询上传者
                 ->leftJoin(['CreateBy' => User::tableName()], 'CreateBy.id = Uploadfile.created_by')

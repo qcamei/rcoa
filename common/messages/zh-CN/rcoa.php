@@ -148,6 +148,11 @@ return [
     'The requested page does not exist.' => '所请求的页面不存在。',
     'Select Placeholder' => '请选择...',
     
+    //后台
+    'Config' => '配置',
+    'Config Name' => '配置名称',
+    'Config Value' => '配置值',
+    
     //在线制作课程平台mcbs字段属性名称(前台)
     'Mcbs' => '板书',
     'Courses' => '课程',
@@ -167,6 +172,8 @@ return [
     'Chapter' => '章',
     'Section' => '节',
     'Value Percent' => '占课程总分比例',
+    'Belong' => '所属',
+    'Upload' => '上传',
     //操作记录
     'Action Log' => '操作记录',
     'Relative ID' => '相关id',
@@ -180,4 +187,10 @@ return [
     'Upload By' => '上传者',
     'Is' => '是否',
     'Mark' => '标记',
+    'Administration' => '管理',
+    'Already' => '已',
+    'Icon Path' => '图标',
+    'Information' => '信息',
+    'Statistics' => '统计',
+    'Space' => '空间',
 ];
