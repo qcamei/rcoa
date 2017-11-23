@@ -77,30 +77,22 @@ $this->params['breadcrumbs'][] = $this->title;
                                                 </div>
                                                 <div id="data-activity-<?= $section ?>">
                                                     <ul class="sortable  list cursor-move data-cou-activity cou-default cou-activity">
+                                                        <?php foreach($dataCouactivity as $activity=>$couactivity): ?>
+                                                        <?php if($couactivity['section_id'] == $cousection['id']): ?>
                                                         <li>
                                                             <div class="act-content">
-                                                                <i class="acttype"></i>
-                                                                <span class="actname">【课程导学】：怎样学好</span>
+                                                                <i class="<?= $couactivity['iocn_type'] ?>"></i>
+                                                                <span class="actname"><?= "【{$couactivity['sect_name']}】：{$couactivity['name']}" ?></span>
                                                                 <div class="cou-icon">
-                                                                    <?= Html::a('<i class="fa fa-eye"></i>') ?>
-                                                                    <?= Html::a('<i class="fa fa-pencil"></i>') ?>
-                                                                    <?= Html::a('<i class="fa fa-times"></i>') ?>
+                                                                    <?= Html::a('<i class="fa fa-eye"></i>',['course-make/couactivity-view','id'=>$couactivity['id']]) ?>
+                                                                    <?= Html::a('<i class="fa fa-pencil"></i>',['course-make/update-couactivity','id'=>$couactivity['id']]) ?>
+                                                                    <?= Html::a('<i class="fa fa-times"></i>',['course-make/delete-couactivity','id'=>$couactivity['id']],['onclick'=>'couFrame($(this));return false;']) ?>
                                                                     <?= Html::a('<i class="fa fa-arrows"></i>', 'javascript',['class'=>'handle']) ?>
                                                                 </div>
                                                             </div>
                                                         </li>
-                                                        <li>
-                                                            <div class="act-content">
-                                                                <i class="acttype"></i>
-                                                                <span class="actname">【模拟测验】：怎样学好</span>
-                                                                <div class="cou-icon">
-                                                                    <?= Html::a('<i class="fa fa-eye"></i>') ?>
-                                                                    <?= Html::a('<i class="fa fa-pencil"></i>') ?>
-                                                                    <?= Html::a('<i class="fa fa-times"></i>') ?>
-                                                                    <?= Html::a('<i class="fa fa-arrows"></i>', 'javascript',['class'=>'handle']) ?>
-                                                                </div>
-                                                            </div>
-                                                        </li>
+                                                        <?php endif; ?>
+                                                        <?php endforeach; ?>
                                                     </ul>
                                                 </div>
                                             </li>

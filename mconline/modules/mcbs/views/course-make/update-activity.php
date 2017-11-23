@@ -6,32 +6,32 @@ use yii\web\View;
 
 /* @var $this View */
 
-$this->title = Yii::t(null, "{add}{$title}",[
-    'add' => Yii::t('app', 'Add'),
+$this->title = Yii::t(null, "{edit}{$title}：{$model->name}}", [
+    'edit' => Yii::t('app', 'Edit'),
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Mcbs Courses'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
+<div class="mcbs-update-activity mcbs mcbs-activity">
 
-<div class="mcbs-create-activity mcbs mcbs-activity">
-    
     <?= $this->render('activity_form',[
         'model' => $model,
         'actiType' => $actiType,
         'files' => $file,
     ]) ?>
-    
+
 </div>
 
 <?php
 $js = 
 <<<JS
         
-    /** 提交表单 
+    /** 提交表单 */
     $("#submitsave").click(function(){
-        $("#form-activity").submit();
-    });  */ 
-    
+        $("#form-couframe").submit();
+    });  
+        
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>

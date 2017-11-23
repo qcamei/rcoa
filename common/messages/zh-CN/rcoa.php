@@ -72,6 +72,9 @@ return [
     'Time' => '时间',
     'Is Deleted' => '是否删除',
     'All' => '全部',
+    'Info' => '信息',
+    'Download' => '下载',
+    'Message' => '留言',
     
     
     //拍摄预约-公共部分
@@ -166,6 +169,7 @@ return [
     'Block' => '区块',
     'Chapter' => '章',
     'Section' => '节',
+    'Activity' => '活动',
     'Value Percent' => '占课程总分比例',
     //操作记录
     'Action Log' => '操作记录',
@@ -180,4 +184,5 @@ return [
     'Upload By' => '上传者',
     'Is' => '是否',
     'Mark' => '标记',
+    'Icon Path' => '图标路径',
 ];

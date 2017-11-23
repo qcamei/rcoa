@@ -3,6 +3,8 @@
 namespace mconline\modules\mcbs\controllers;
 
 use common\models\mconline\McbsActionLog;
+use common\models\mconline\McbsActivityFile;
+use common\models\mconline\McbsActivityType;
 use common\models\mconline\McbsCourse;
 use common\models\mconline\McbsCourseActivity;
 use common\models\mconline\McbsCourseBlock;
@@ -11,6 +13,7 @@ use common\models\mconline\McbsCoursePhase;
 use common\models\mconline\McbsCourseSection;
 use common\models\mconline\McbsCourseUser;
 use common\models\mconline\searchs\McbsActionLogSearch;
+use common\models\mconline\searchs\McbsCourseActivitySearch;
 use common\models\mconline\searchs\McbsCourseBlockSearch;
 use common\models\mconline\searchs\McbsCourseChapterSearch;
 use common\models\mconline\searchs\McbsCoursePhaseSearch;
@@ -18,7 +21,9 @@ use common\models\mconline\searchs\McbsCourseSectionSearch;
 use common\models\mconline\searchs\McbsCourseUserSearch;
 use common\models\User;
 use mconline\modules\mcbs\utils\McbsAction;
+use wskeee\webuploader\models\Uploadfile;
 use Yii;
+use yii\data\ArrayDataProvider;
 use yii\db\Query;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -129,6 +134,7 @@ class CourseMakeController extends Controller
         $blockSearch = new McbsCourseBlockSearch();
         $chapterSearch = new McbsCourseChapterSearch();
         $sectionSearch = new McbsCourseSectionSearch();
+        $activitySearch = new McbsCourseActivitySearch();
         
         return $this->renderAjax('couframe-index', [
             'course_id' => $course_id,
@@ -136,6 +142,7 @@ class CourseMakeController extends Controller
             'dataCoublock' => $blockSearch->search(['course_id'=>$course_id]),
             'dataCouchapter' => $chapterSearch->search(['course_id'=>$course_id]),
             'dataCousection' => $sectionSearch->search(['course_id'=>$course_id]),
+            'dataCouactivity' => $activitySearch->search(['course_id'=>$course_id]),
         ]);
     }
     
@@ -398,8 +405,13 @@ class CourseMakeController extends Controller
      */
     public function actionCouactivityView($id)
     {
-        return $this->renderAjax('activity-view', [
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $this->getUploadedActivityFile($id),
+        ]);
+        
+        return $this->render('activity-view', [
             'model' => McbsCourseActivity::findOne($id),
+            'dataProvider' => $dataProvider,
         ]);
     }
     
@@ -414,11 +426,13 @@ class CourseMakeController extends Controller
         $model->loadDefaultValues();
         
         if ($model->load(Yii::$app->request->post())) {
-            McbsAction::getInstance()->CreateCouFrame($model,Yii::t('app', 'Activity'),$model->chapter->block->phase->course_id);
-            return $this->redirect(['default/view', 'id' => $model->chapter->block->phase->course_id]);
+            McbsAction::getInstance()->CreateCouactivity($model,Yii::$app->request->post());
+            return $this->redirect(['default/view', 'id' => $model->section->chapter->block->phase->course_id]);
         } else {
             return $this->render('create-activity', [
                 'model' => $model,
+                'actiType'=>$this->getActivityType(),
+                'file' => $this->getUploadedActivityFile($model->id),
                 'title' => Yii::t('app', 'Activity')
             ]);
         }
@@ -432,15 +446,17 @@ class CourseMakeController extends Controller
      */
     public function actionUpdateCouactivity($id)
     {
-        $model = McbsCourseSection::findOne($id);
-
+        $model = McbsCourseActivity::findOne($id);
+        
         if ($model->load(Yii::$app->request->post())) {
-            McbsAction::getInstance()->UpdateCouFrame($model,Yii::t('app', 'Section'),$model->chapter->block->phase->course_id);
-            return $this->redirect(['default/view', 'id' => $model->chapter->block->phase->course_id]);
+            McbsAction::getInstance()->UpdateCouactivity($model,Yii::$app->request->post());
+            return $this->redirect(['default/view', 'id' => $model->section->chapter->block->phase->course_id]);
         } else {
-            return $this->renderAjax('update-couframe', [
+            return $this->render('update-activity', [
                 'model' => $model,
-                'title' => Yii::t('app', 'Section')
+                'actiType'=>$this->getActivityType(),
+                'file' => $this->getUploadedActivityFile($model->id),
+                'title' => Yii::t('app', 'Activity')
             ]);
         }
     }
@@ -456,7 +472,7 @@ class CourseMakeController extends Controller
         $model = McbsCourseSection::findOne($id);
         
         if ($model->load(Yii::$app->request->post())) {
-            McbsAction::getInstance()->DeleteCouFrame($model,Yii::t('app', 'Section'),$model->chapter->block->phase->course_id);
+            McbsAction::getInstance()->DeleteCouactivity($model,Yii::t('app', 'Section'),$model->chapter->block->phase->course_id);
             return $this->redirect(['default/view', 'id' => $model->chapter->block->phase->course_id]);
         } else {
             return $this->renderAjax('delete-couframe',[
@@ -531,5 +547,28 @@ class CourseMakeController extends Controller
                 ->all();
         
         return ArrayHelper::map($users, 'id', 'nickname');
+    }
+    
+    /**
+     * 获取活动类型
+     * @return array
+     */
+    public function getActivityType()
+    {
+        return (new Query())->from([McbsActivityType::tableName()])->all();
+    }
+    
+    /**
+     * 获取已上传的活动文件
+     * @param string $activity_id               活动id
+     * @return array
+     */
+    public function getUploadedActivityFile($activity_id)
+    {
+        return (new Query())->select(['ActivityFile.file_id AS id','Uploadfile.name','Uploadfile.is_del'])
+                ->from(['ActivityFile'=>McbsActivityFile::tableName()])
+                ->leftJoin(['Uploadfile'=> Uploadfile::tableName()], 'Uploadfile.id = ActivityFile.file_id')
+                ->where(['activity_id'=>$activity_id])
+                ->all();
     }
 }
