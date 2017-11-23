@@ -141,7 +141,12 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <div class="col-xs-12 frame-table message">
             <div class="meslist">
-                
+                <ul class="time-vertical">
+                    <li><b></b><div class="img-circle"></div><a href="javascript:void(0)">keso</a></li>
+                    <li><b></b><div class="img-circle"></div><a href="javascript:void(0)">FlyElephant</a></li>
+                    <li><b></b><div class="img-circle"></div><a href="javascript:void(0)">博客园</a></li>
+                    <li><b></b><div class="img-circle"></div><a href="javascript:void(0)">创业</a></li>
+                </ul>
             </div>
             <div class="mesform">
                 <div class="col-xs-11 mesinput">
