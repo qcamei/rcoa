@@ -106,7 +106,7 @@ $this->title = Yii::t(null, '{Courses}-{Lookup}', [
                     'label' => Yii::t('app', 'Create By'),
                     'format' => 'raw',
                     'value' => function($data) {
-                        return !empty($data['create_by']) ? $data['create_by'] : null;
+                        return !empty($data['created_by']) ? $data['created_by'] : null;
                     },
                     'headerOptions' => [
                         'class' => [

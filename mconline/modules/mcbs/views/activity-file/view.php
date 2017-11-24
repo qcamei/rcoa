@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'activity_id',
             'file_id',
             'course_id',
-            'create_by',
+            'created_by',
             'expire_time',
             'created_at',
             'updated_at',

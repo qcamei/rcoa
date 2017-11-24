@@ -88,7 +88,7 @@ class CourseMakeController extends Controller
             return $this->renderAjax('create-helpman', [
                 'model' => $model,
                 'contacts' => $this->getRecentContacts(),
-                'helpmans' => $this->getHelpManList($course_id,$model->course->create_by),
+                'helpmans' => $this->getHelpManList($course_id,$model->course->created_by),
             ]);
         }
     }

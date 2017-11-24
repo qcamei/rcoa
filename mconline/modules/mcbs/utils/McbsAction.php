@@ -462,14 +462,14 @@ class McbsAction
         $action = ArrayHelper::getValue($params, 'action');                                 //动作
         $title = ArrayHelper::getValue($params, 'title');                                   //标题  
         $content = ArrayHelper::getValue($params, 'content');                               //内容
-        $create_by = ArrayHelper::getValue($params, 'create_by', Yii::$app->user->id);    //创建者
+        $created_by = ArrayHelper::getValue($params, 'created_by', Yii::$app->user->id);    //创建者
         $course_id = ArrayHelper::getValue($params, 'course_id');                           //课程id
         $relative_id = ArrayHelper::getValue($params, 'relative_id');                       //相关id
         
         //values数组
         $values = [
             'action' => $action,'title' => $title,'content' => $content,
-            'create_by' => $create_by,'course_id' => $course_id,'relative_id' => $relative_id,
+            'created_by' => $created_by,'course_id' => $course_id,'relative_id' => $relative_id,
             'created_at' => time(),'updated_at' => time(),
         ];
        
@@ -495,7 +495,7 @@ class McbsAction
         $activityId = ArrayHelper::getValue($params, 'activity_id');                            //活动id
         $fileIds = ArrayHelper::getValue($params, 'file_id');                                   //文件id  
         $courseId = ArrayHelper::getValue($params, 'course_id');                                //课程id
-        $createBy = ArrayHelper::getValue($params, 'create_by', Yii::$app->user->id);           //创建者
+        $createBy = ArrayHelper::getValue($params, 'created_by', Yii::$app->user->id);           //创建者
         $expireTime = ArrayHelper::getValue($params, 'expire_time', $month);      //到期时间
         //获取已经存在的活动文件
         $files = (new Query())->select(['ActivityFile.file_id','Uploadfile.name'])
@@ -512,7 +512,7 @@ class McbsAction
                     'activity_id' => $activityId,
                     'file_id' => $fileId,
                     'course_id' => $courseId,
-                    'create_by' => $createBy,
+                    'created_by' => $createBy,
                     'expire_time' => $expireTime,
                     'created_at' => time(),
                     'updated_at' => time(),
@@ -522,7 +522,7 @@ class McbsAction
         
         /** 添加$values数组到表里 */
         Yii::$app->db->createCommand()->batchInsert(McbsActivityFile::tableName(),[
-            'activity_id','file_id','course_id','create_by','expire_time',
+            'activity_id','file_id','course_id','created_by','expire_time',
             'created_at','updated_at'
         ],$values)->execute();
     }

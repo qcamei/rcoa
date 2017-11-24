@@ -168,13 +168,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 
             ],
             [
-                'attribute' => 'create_by',
+                'attribute' => 'created_by',
                 'label' => Yii::t('app', 'Upload By'),
                 'format' => 'raw',
                 'filter' => Select2::widget([
                     'model' => $searchModel,
-                    'name' => 'create_by',
-                    'value' => ArrayHelper::getValue($dataProvider['filter'], 'create_by'),
+                    'name' => 'created_by',
+                    'value' => ArrayHelper::getValue($dataProvider['filter'], 'created_by'),
                     'data' => $uploadBy,
                     'hideSearch' => true,
                     'options' => ['placeholder' => Yii::t('app', 'All')],
@@ -195,7 +195,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
                 'value' => function($data) {
-                    return !empty($data['create_by']) ? $data['create_by'] : NULL;
+                    return !empty($data['created_by']) ? $data['created_by'] : NULL;
                 },
                 'contentOptions' => [
                     'class' => 'activity-name list-td hidden-xs hidden-sm',

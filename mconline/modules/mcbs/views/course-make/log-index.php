@@ -102,7 +102,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value'=> function($model){
                     /* @var $model McbsActionLog */
-                    return !empty($model->create_by) ? $model->createBy->nickname : null;
+                    return !empty($model->created_by) ? $model->createBy->nickname : null;
                 },
                 'headerOptions' => [
                     'style' => [

@@ -71,9 +71,9 @@ use yii\widgets\ActiveForm;
             <div class="col-lg-4 col-xs-12 control">
                 <div class="col-sm-9 control-widget">
                     <?= Select2::widget([
-                        'id' => 'mcbs-create_by',
-                        'value' => ArrayHelper::getValue($params, 'create_by', '创建者'),
-                        'name' => 'create_by',
+                        'id' => 'mcbs-created_by',
+                        'value' => ArrayHelper::getValue($params, 'created_by', '创建者'),
+                        'name' => 'created_by',
                         'data' => $createBys,
                         'options' => [
                             'placeholder' => '创建者',

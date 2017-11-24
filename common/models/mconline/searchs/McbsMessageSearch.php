@@ -20,7 +20,7 @@ class McbsMessageSearch extends McbsMessage
     {
         return [
             [['id', 'reply_id', 'created_at', 'updated_at'], 'integer'],
-            [['title', 'content', 'create_by', 'course_id', 'activity_id'], 'safe'],
+            [['title', 'content', 'created_by', 'course_id', 'activity_id'], 'safe'],
         ];
     }
 
@@ -45,7 +45,7 @@ class McbsMessageSearch extends McbsMessage
         
         $this->course_id = ArrayHelper::getValue($params, 'course_id');             //课程id
         $this->activity_id = ArrayHelper::getValue($params, 'activity_id');         //活动id
-        $this->create_by = ArrayHelper::getValue($params, 'create_by');             //创建者
+        $this->created_by = ArrayHelper::getValue($params, 'created_by');             //创建者
         $this->reply_id = ArrayHelper::getValue($params, 'reply_id');               //回复id
         
         $query = McbsMessage::find()->select(['McbsMessage.*','User.nickname','User.avatar'])
@@ -65,14 +65,14 @@ class McbsMessageSearch extends McbsMessage
             return $dataProvider;
         }*/
         
-        $query->leftJoin(['User'=> User::tableName()],'User.id = create_by');
+        $query->leftJoin(['User'=> User::tableName()],'User.id = created_by');
 
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
             'course_id' => $this->course_id,
             'activity_id' => $this->activity_id,
-            'create_by' => $this->create_by,
+            'created_by' => $this->created_by,
             'reply_id' => $this->reply_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

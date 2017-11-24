@@ -96,7 +96,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         /* @var $model McbsCourseUser */
                          $options = [
                             'class' => 'btn btn-sm btn-primary',
-                            'style' => $model->user_id == $model->course->create_by ? 'display: none' : '',
+                            'style' => $model->user_id == $model->course->created_by ? 'display: none' : '',
                             'title' => Yii::t('yii', 'Update'),
                             'aria-label' => Yii::t('yii', 'Update'),
                             'data-pjax' => '0',
@@ -107,7 +107,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'url' => ['update-helpman', 'id' => $model->id],
                             'options' => $options,
                             'symbol' => '&nbsp;',
-                            'conditions' => $model->course->create_by == Yii::$app->user->id,
+                            'conditions' => $model->course->created_by == Yii::$app->user->id,
                             'adminOptions' => true,
                         ];
                         return Html::a($buttonHtml['name'],$buttonHtml['url'],$buttonHtml['options']);
@@ -116,7 +116,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'delete' => function ($url, $model, $key) {
                         $options = [
                             'class' => 'btn btn-sm btn-danger',
-                            'style' => $model->user_id == $model->course->create_by ? 'display: none' : '',
+                            'style' => $model->user_id == $model->course->created_by ? 'display: none' : '',
                             'title' => Yii::t('yii', 'Delete'),
                             'aria-label' => Yii::t('yii', 'Delete'),
                             'data-pjax' => '0',
@@ -128,7 +128,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'url' => ['delete-helpman', 'id' => $model->id],
                             'options' => $options,
                             'symbol' => '&nbsp;',
-                            'conditions' => $model->course->create_by == Yii::$app->user->id,
+                            'conditions' => $model->course->created_by == Yii::$app->user->id,
                             'adminOptions' => true,
                         ];
                         return Html::a($buttonHtml['name'],$buttonHtml['url'],$buttonHtml['options']);

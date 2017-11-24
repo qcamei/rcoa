@@ -38,8 +38,8 @@ $this->params['breadcrumbs'][] = $this->title;
                             'value' => implode("<br/>",explode("\n\r", $model->content)),
                         ],
                         [
-                            'attribute' => 'create_by',
-                            'value' => !empty($model->create_by) ? $model->createBy->nickname : null,
+                            'attribute' => 'created_by',
+                            'value' => !empty($model->created_by) ? $model->createBy->nickname : null,
                         ],
                         [
                             'attribute' => 'course_id',

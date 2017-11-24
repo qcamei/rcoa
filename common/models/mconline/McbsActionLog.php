@@ -14,7 +14,7 @@ use yii\db\ActiveRecord;
  * @property string $action                             动作
  * @property string $title                              标题
  * @property string $content                            内容
- * @property string $create_by                          创建者
+ * @property string $created_by                          创建者
  * @property string $course_id                          课程id  
  * @property string $relative_id                        相关id
  * @property string $created_at
@@ -43,7 +43,7 @@ class McbsActionLog extends ActiveRecord
             [['id', 'created_at', 'updated_at'], 'integer'],
             [['content'], 'string'],
             [['action', 'title'], 'string', 'max' => 50],
-            [['create_by'], 'string', 'max' => 36],
+            [['created_by'], 'string', 'max' => 36],
             [['course_id', 'relative_id'], 'string', 'max' => 32],
         ];
     }
@@ -58,7 +58,7 @@ class McbsActionLog extends ActiveRecord
             'action' => Yii::t('app', 'Action'),
             'title' => Yii::t('app', 'Title'),
             'content' => Yii::t('app', 'Content'),
-            'create_by' => Yii::t('app', 'Create By'),
+            'created_by' => Yii::t('app', 'Create By'),
             'course_id' => Yii::t('app', 'Course ID'),
             'relative_id' => Yii::t('app', 'Relative ID'),
             'created_at' => Yii::t('app', 'Created At'),
@@ -81,6 +81,6 @@ class McbsActionLog extends ActiveRecord
      */
     public function getCreateBy()
     {
-        return $this->hasOne(User::className(), ['id' => 'create_by']);
+        return $this->hasOne(User::className(), ['id' => 'created_by']);
     }
 }

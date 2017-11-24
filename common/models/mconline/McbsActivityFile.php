@@ -13,7 +13,7 @@ use yii\db\ActiveRecord;
  * @property string $activity_id                         活动id
  * @property string $file_id                             文件id
  * @property string $course_id                           课程id
- * @property string $create_by                           创建者
+ * @property string $created_by                           创建者
  * @property string $expire_time                         到期时间
  * @property string $created_at                 
  * @property string $updated_at                         
@@ -44,7 +44,7 @@ class McbsActivityFile extends ActiveRecord
     public function rules()
     {
         return [
-            [['activity_id', 'file_id', 'course_id', 'create_by'], 'required'],
+            [['activity_id', 'file_id', 'course_id', 'created_by'], 'required'],
             [['expire_time', 'created_at', 'updated_at'], 'integer'],
             [['activity_id', 'file_id', 'course_id', 'created_by'], 'string', 'max' => 32],
         ];

@@ -78,7 +78,7 @@ class McbsActivityFileSearch extends McbsActivityFile
         $query->andFilterWhere(['like', 'activity_id', $this->activity_id])
             ->andFilterWhere(['like', 'file_id', $this->file_id])
             ->andFilterWhere(['like', 'course_id', $this->course_id])
-            ->andFilterWhere(['like', 'create_by', $this->create_by]);
+            ->andFilterWhere(['like', 'created_by', $this->created_by]);
 
         return $dataProvider;
     }
@@ -89,13 +89,13 @@ class McbsActivityFileSearch extends McbsActivityFile
         $chapter_id = ArrayHelper::getValue($params, 'chapter_id');                     //章ID
         $section_id = ArrayHelper::getValue($params, 'section_id');                     //节ID
         $activity_id = ArrayHelper::getValue($params, 'activity_id');                   //活动ID
-        $createBy = ArrayHelper::getValue($params, 'create_by');                        //创建者ID
+        $createBy = ArrayHelper::getValue($params, 'created_by');                        //创建者ID
         $keyword = ArrayHelper::getValue($params, 'McbsActivityFileSearch.file_id');    //查询文件名的关键字
         $query = (new Query())
                 ->select(['McbsCourse.id','CourseChapter.id AS chapter_id','CourseSection.id AS section_id',
                     'ActivityFile.activity_id','ActivityFile.created_at','ActivityFile.expire_time',
                     'CourseChapter.name AS chapter_name','CourseSection.name AS section_name',
-                    'CourseActivity.name AS activity_name','CreateBy.nickname AS create_by',
+                    'CourseActivity.name AS activity_name','CreateBy.nickname AS created_by',
                     'Uploadfile.name AS filename','Uploadfile.path', 'ItemCourse.name AS course_name'])
                 ->from(['McbsCourse' => McbsCourse::tableName()]);
         
@@ -132,7 +132,7 @@ class McbsActivityFileSearch extends McbsActivityFile
         //关联查询文件名
         $query->leftJoin(['Uploadfile' => Uploadfile::tableName()], 'Uploadfile.id = ActivityFile.file_id');
         //关联查询创建者
-        $query->leftJoin(['CreateBy' => User::tableName()], 'CreateBy.id = ActivityFile.create_by');
+        $query->leftJoin(['CreateBy' => User::tableName()], 'CreateBy.id = ActivityFile.created_by');
         //查询课程名称
         $query->leftJoin(['ItemCourse' => Item::tableName()], 'ItemCourse.id = McbsCourse.course_id');
         
@@ -141,7 +141,7 @@ class McbsActivityFileSearch extends McbsActivityFile
             'CourseChapter.id' => $chapter_id,
             'CourseSection.id' => $section_id,
             'CourseActivity.id' => $activity_id,
-            'ActivityFile.create_by' => $createBy,
+            'ActivityFile.created_by' => $createBy,
         ]);
        //按关键字模糊搜索
         $query->andFilterWhere(['or',

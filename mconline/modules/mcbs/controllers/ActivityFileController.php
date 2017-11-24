@@ -231,15 +231,15 @@ class ActivityFileController extends Controller {
     public function getUploadBy() {
         $course_id = Yii::$app->request->queryParams['course_id'];
         $uploadBy = (new Query())
-                ->select(['ActivityFile.id', 'ActivityFile.create_by'])
+                ->select(['ActivityFile.id', 'ActivityFile.created_by'])
                 ->from(['ActivityFile' => McbsActivityFile::tableName()])
                 //关联查询上传者
-                ->leftJoin(['CreateBy' => User::tableName()], 'CreateBy.id = ActivityFile.create_by')
+                ->leftJoin(['CreateBy' => User::tableName()], 'CreateBy.id = ActivityFile.created_by')
                 ->addSelect(['CreateBy.nickname AS username'])
                 ->where(['ActivityFile.course_id' => $course_id,])
                 ->all();
 
-        return ArrayHelper::map($uploadBy, 'create_by', 'username');
+        return ArrayHelper::map($uploadBy, 'created_by', 'username');
     }
 
 }

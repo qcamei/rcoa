@@ -32,7 +32,8 @@
         "almasaeed2010/adminlte": "^2.3",
         "dmstr/yii2-adminlte-asset": ">=2.5",
         "kartik-v/yii2-sortable": "*",
-        "kartik-v/yii2-sortable-input": "*"
+        "kartik-v/yii2-sortable-input": "*",
+        "spanjeta/yii2-backup": "*"
         
     },
     "require-dev": {

@@ -85,7 +85,7 @@ class DefaultController extends Controller
      */
     public function actionCreate()
     {
-        $model = new McbsCourse(['id' => md5(rand(1,10000) + time()), 'create_by' => Yii::$app->user->id]);
+        $model = new McbsCourse(['id' => md5(rand(1,10000) + time()), 'created_by' => Yii::$app->user->id]);
         $model->loadDefaultValues();
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -238,18 +238,18 @@ class DefaultController extends Controller
     public function getCourseCreateBy()
     {
         $query = (new Query())
-                ->select(['McbsCourse.id', "CONCAT(McbsCourse.create_by, '_', User.nickname) AS create_by"])
+                ->select(['McbsCourse.id', "CONCAT(McbsCourse.created_by, '_', User.nickname) AS created_by"])
                 ->from(['McbsCourse' => McbsCourse::tableName()])
-                ->leftJoin(['User' => User::tableName()], 'User.id = McbsCourse.create_by');
+                ->leftJoin(['User' => User::tableName()], 'User.id = McbsCourse.created_by');
         
         $results = (new Query())
-                ->select(['CreateBy.create_by'])
+                ->select(['CreateBy.created_by'])
                 ->from(['CreateBy' => $query])
                 ->all();
         
         $createBys = [];
         foreach ($results as $item) {
-            $createBys[explode('_', $item['create_by'])[0]] = isset(explode('_', $item['create_by'])[1]) ? explode('_', $item['create_by'])[1] : '';
+            $createBys[explode('_', $item['created_by'])[0]] = isset(explode('_', $item['created_by'])[1]) ? explode('_', $item['created_by'])[1] : '';
         }
         
         return [

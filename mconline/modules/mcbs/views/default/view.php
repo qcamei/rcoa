@@ -62,8 +62,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     'value' => !empty($model->course_id) ? $model->course->name : null,
                 ],
                 [
-                    'attribute' => 'create_by',
-                    'value' => !empty($model->create_by) ? $model->createBy->nickname : null,
+                    'attribute' => 'created_by',
+                    'value' => !empty($model->created_by) ? $model->createBy->nickname : null,
                 ],
                 [
                     'attribute' => 'created_at',

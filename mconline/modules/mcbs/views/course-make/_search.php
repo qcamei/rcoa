@@ -28,7 +28,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'course_id') ?>
 
-    <?php // echo $form->field($model, 'create_by') ?>
+    <?php // echo $form->field($model, 'created_by') ?>
 
     <?php // echo $form->field($model, 'status') ?>
 

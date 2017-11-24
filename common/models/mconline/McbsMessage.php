@@ -13,7 +13,7 @@ use yii\db\ActiveRecord;
  * @property string $id
  * @property string $title                              标题
  * @property string $content                            内容
- * @property string $create_by                          创建者
+ * @property string $created_by                          创建者
  * @property string $course_id                          课程id
  * @property string $activity_id                        活动id
  * @property string $reply_id                           回复的留言ID
@@ -52,7 +52,7 @@ class McbsMessage extends ActiveRecord
             [['content'], 'string'],
             [['reply_id', 'created_at', 'updated_at'], 'integer'],
             [['title'], 'string', 'max' => 50],
-            [['create_by'], 'string', 'max' => 36],
+            [['created_by'], 'string', 'max' => 36],
             [['course_id', 'activity_id'], 'string', 'max' => 32],
         ];
     }
@@ -84,7 +84,7 @@ class McbsMessage extends ActiveRecord
         if(parent::beforeSave($insert))
         {
             if($this->isNewRecord){
-                $this->create_by = Yii::$app->user->id;
+                $this->created_by = Yii::$app->user->id;
             }
             
             return true;

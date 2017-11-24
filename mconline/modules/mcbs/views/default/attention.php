@@ -82,7 +82,7 @@ $this->title = Yii::t(null, '{Courses}-{Attention}', [
                     'label' => Yii::t('rcoa', 'Create By'),
                     'format' => 'raw',
                     'value' => function($data) {
-                        return !empty($data['create_by']) ? $data['create_by'] : null;
+                        return !empty($data['created_by']) ? $data['created_by'] : null;
                     },
                     'headerOptions' => [
                         'class' => [

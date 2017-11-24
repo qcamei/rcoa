@@ -23,7 +23,7 @@ class McbsCourseSearch extends McbsCourse {
      */
     public function rules() {
         return [
-            [['id', 'create_by', 'des'], 'safe'],
+            [['id', 'created_by', 'des'], 'safe'],
             [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'status', 'is_publish', 'publish_time', 'close_time', 'created_at', 'updated_at'], 'integer'],
         ];
     }
@@ -75,7 +75,7 @@ class McbsCourseSearch extends McbsCourse {
         ]);
 
         $query->andFilterWhere(['like', 'id', $this->id])
-                ->andFilterWhere(['like', 'create_by', $this->create_by])
+                ->andFilterWhere(['like', 'created_by', $this->created_by])
                 ->andFilterWhere(['like', 'des', $this->des]);
 
         return $dataProvider;
@@ -92,7 +92,7 @@ class McbsCourseSearch extends McbsCourse {
                 ->select(['McbsCourse.id'])
                 ->from(['McbsCourse' => McbsCourse::tableName()]);
         //关联查询创建者
-        $query->leftJoin(['CreateBy' => User::tableName()], 'CreateBy.id = McbsCourse.create_by');
+        $query->leftJoin(['CreateBy' => User::tableName()], 'CreateBy.id = McbsCourse.created_by');
         //关联查询基础课程
         $query->leftJoin(['ItemType' => ItemType::tableName()], 'ItemType.id = McbsCourse.item_type_id')
                 ->leftJoin(['Item' => Item::tableName()], 'Item.id = McbsCourse.item_id')
@@ -112,7 +112,7 @@ class McbsCourseSearch extends McbsCourse {
         $keywords = ArrayHelper::getValue($params, 'keyword');                  //关键字
         $query = $this->searchIdentity($params);                                //获取查询相同的内容                                   
         //查询条件
-        $query->where(['create_by' => Yii::$app->user->id]);
+        $query->where(['created_by' => Yii::$app->user->id]);
         //按关键字模糊搜索
         $query->andFilterWhere(['or',
             ['like', 'ItemChild.name', $keywords],
@@ -124,7 +124,7 @@ class McbsCourseSearch extends McbsCourse {
         //字段
         $query->addSelect([
             'Item.name AS item_name', 'ItemChild.name AS item_child_name', 'ItemCourse.name AS item_course_name',
-            'ItemType.name AS itemtype_name', 'CreateBy.nickname AS create_by', 'McbsCourse.updated_at AS updated_at'
+            'ItemType.name AS itemtype_name', 'CreateBy.nickname AS created_by', 'McbsCourse.updated_at AS updated_at'
         ]);
         //分组、排序、截取
         $query->groupBy(['McbsCourse.id'])
@@ -164,7 +164,7 @@ class McbsCourseSearch extends McbsCourse {
         //字段
         $query->addSelect([
             'Item.name AS item_name', 'ItemChild.name AS item_child_name', 'ItemCourse.name AS item_course_name',
-            'ItemType.name AS itemtype_name', 'CreateBy.nickname AS create_by', 'McbsAttention.updated_at AS updated_at'
+            'ItemType.name AS itemtype_name', 'CreateBy.nickname AS created_by', 'McbsAttention.updated_at AS updated_at'
         ]);
         //分组、排序、截取
         $query->groupBy(['McbsAttention.id'])
@@ -189,14 +189,14 @@ class McbsCourseSearch extends McbsCourse {
         $page = ArrayHelper::getValue($params, 'page', 1);                      //分页
         $itemId = ArrayHelper::getValue($params, 'item_id');                    //层次/类型
         $itemChildId = ArrayHelper::getValue($params, 'item_child_id');         //专业/工种
-        $createBy = ArrayHelper::getValue($params, 'create_by');                //创建者
+        $createBy = ArrayHelper::getValue($params, 'created_by');                //创建者
         $keywords = ArrayHelper::getValue($params, 'keyword');                  //关键字
         $query = $this->searchIdentity($params);                                //获取查询相同的内容
         //按字段id搜索
         $query->andFilterWhere([
             'McbsCourse.item_id' => $itemId,
             'McbsCourse.item_child_id' => $itemChildId,
-            'McbsCourse.create_by' => $createBy,
+            'McbsCourse.created_by' => $createBy,
         ]);
         //按关键字模糊搜索
         $query->andFilterWhere(['or',
@@ -211,7 +211,7 @@ class McbsCourseSearch extends McbsCourse {
         //字段
         $query->addSelect([
             'Item.name AS item_name', 'ItemChild.name AS item_child_name', 'ItemCourse.name AS item_course_name',
-            'ItemType.name AS itemtype_name', 'CreateBy.nickname AS create_by', 'McbsCourse.updated_at AS updated_at'
+            'ItemType.name AS itemtype_name', 'CreateBy.nickname AS created_by', 'McbsCourse.updated_at AS updated_at'
         ]);
         //分组、排序、截取
         $query->groupBy(['McbsCourse.id'])

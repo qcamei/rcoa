@@ -45,7 +45,7 @@ class McbsActionLogSearch extends McbsActionLog
         
         $this->course_id = ArrayHelper::getValue($params, 'course_id');
         $this->relative_id = ArrayHelper::getValue($params, 'relative_id');
-        $this->create_by = ArrayHelper::getValue($params, 'create_by');
+        $this->created_by = ArrayHelper::getValue($params, 'created_by');
         $pageSize = ArrayHelper::getValue($params, 'page');
        
         $query = McbsActionLog::find();
@@ -69,7 +69,7 @@ class McbsActionLogSearch extends McbsActionLog
             'id' => $this->id,
             'course_id' => $this->course_id,
             'relative_id' => $this->relative_id,
-            'create_by' => $this->create_by,
+            'created_by' => $this->created_by,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);

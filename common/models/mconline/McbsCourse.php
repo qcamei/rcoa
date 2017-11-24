@@ -18,7 +18,7 @@ use yii\db\ActiveRecord;
  * @property integer $item_id                           层次/类型ID
  * @property integer $item_child_id                     专业/工种ID
  * @property integer $course_id                         课程ID
- * @property string $create_by                          创建者
+ * @property string $created_by                          创建者
  * @property integer $status                            状态：1正常、10关闭
  * @property integer $is_publish                        是否已发布：0未发布、1已发布
  * @property string $publish_time                       发布时间
@@ -63,7 +63,7 @@ class McbsCourse extends ActiveRecord
             [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'status', 'is_publish', 'publish_time', 'close_time', 'created_at', 'updated_at'], 'integer'],
             [['des'], 'string'],
             [['id'], 'string', 'max' => 32],
-            [['create_by'], 'string', 'max' => 36],
+            [['created_by'], 'string', 'max' => 36],
         ];
     }
 
@@ -78,7 +78,7 @@ class McbsCourse extends ActiveRecord
             'item_id' => Yii::t('app', 'Item ID'),
             'item_child_id' => Yii::t('app', 'Item Child ID'),
             'course_id' => Yii::t('app', 'Course ID'),
-            'create_by' => Yii::t('app', 'Create By'),
+            'created_by' => Yii::t('app', 'Create By'),
             'status' => Yii::t('app', 'Status'),
             'is_publish' => Yii::t('app', 'Is Publish'),
             'publish_time' => Yii::t('app', 'Publish Time'),
@@ -100,9 +100,9 @@ class McbsCourse extends ActiveRecord
             if (parent::beforeSave($insert)) {
                 if ($this->isNewRecord) {
                     //$this->id = md5(rand(1,10000) + time());      //自动生成用户ID
-                    //$this->create_by = Yii::$app->user->id;       //创建者
+                    //$this->created_by = Yii::$app->user->id;       //创建者
                     $courUser = new McbsCourseUser([
-                        'course_id' => $this->id, 'user_id' => $this->create_by,
+                        'course_id' => $this->id, 'user_id' => $this->created_by,
                         'privilege' => McbsCourseUser::OWNERSHIP
                     ]);
                     $courUser->save();
@@ -157,6 +157,6 @@ class McbsCourse extends ActiveRecord
      */
     public function getCreateBy()
     {
-        return $this->hasOne(User::className(), ['id' => 'create_by']);
+        return $this->hasOne(User::className(), ['id' => 'created_by']);
     }
 }
