@@ -12,7 +12,7 @@ use yii\widgets\ActiveForm;
 /* @var $form ActiveForm */
 ?>
 
-<div class="mcbs-couframe-form">
+<div class="mcbs-activity-form">
 
     <?php $form = ActiveForm::begin([
         'options'=>[
@@ -27,22 +27,23 @@ use yii\widgets\ActiveForm;
         ], 
     ]); ?>
 
-    <div class="form-group field-mcbscourseactivity-type_id ">
+    <div class="form-group field-mcbscourseactivity-type_id">
         <label class="col-lg-1 col-md-1 form-label" for="mcbscourseactivity-type_id">
             <?= Yii::t('app', 'Type') ?>
         </label>
         <div class="col-lg-11 col-md-11">
             <?php foreach($actiType as $item): ?>
             <div class="actitype <?= (!$model->isNewRecord && $model->type_id == $item['id'] ? 'active': null) ?>">
-                <div class="acticon"></div>
+                <?= Html::img([$item['icon_path']],['class'=>'acticon']) ?>
                 <p class="actname" data-key="<?= $item['id'] ?>"><?= $item['name']; ?></p>
             </div>
             <?php endforeach; ?>
             <?= Html::activeHiddenInput($model, 'type_id'); ?>
         </div>
+        <div class="col-lg-11 col-md-11"><div class="help-block"></div></div>
     </div>
         
-    <?= $form->field($model, 'name')->textInput() ?>
+    <?= $form->field($model, 'name')->textInput(['placeholder'=>'请输入...']) ?>
 
     <?= $form->field($model, 'des')->textarea(['rows'=>6,'value'=>$model->isNewRecord?'无':$model->des]) ?>
     
@@ -52,7 +53,7 @@ use yii\widgets\ActiveForm;
     </div>
     
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::a($model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'), 'javascript:;' ,['id'=>'submitsave', 'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
@@ -112,6 +113,8 @@ $js =
     $(".actitype").click(function(){
         $(".actitype").removeClass("active");
         $(this).addClass("active");
+        $(".field-mcbscourseactivity-type_id").removeClass("has-error");
+        $(".field-mcbscourseactivity-type_id .help-block").html("");
         $("#mcbscourseactivity-type_id").val($(this).children("p").attr("data-key"));
     });
         

@@ -287,9 +287,8 @@
 }
 
 .mcbs-activity .acticon {
-    width: 30px;
-    height:30px;
-    margin: 5px auto;
+    width: 40px;
+    height: 37px;
 }
 
 .mcbs-activity .actname {
@@ -305,6 +304,7 @@
     width: 100%;
     height: 388px;
     padding-left: 75px;
+    padding-right: 15px;
     position: relative;
     overflow-y: auto;
 }
@@ -325,15 +325,6 @@
 }
 
 .mcbs-activity
-.time-vertical li a {
-    display: inline-block;
-    margin-left: 20px;
-    margin-top: 15px;
-    text-decoration: none;
-    color: #000;
-}
-
-.mcbs-activity
 .time-vertical li b:before {
     content: '';
     position: absolute;
@@ -351,9 +342,29 @@
     width: 45px;
     height: 45px;
     position: absolute;
-    top: 0;
+    top: 5px;
     left: -65px;
     background-color: #ccc;
+}
+
+.mcbs-activity
+.time-vertical li .mes-frame {
+    display: inline-block;
+    margin-left: 20px;
+    padding: 10px;
+    color: #666666;
+    border-radius: 6px;
+    background-color: #ededed;
+}
+
+.mcbs-activity
+.time-vertical li .username {
+    color: #cccccc;
+}
+
+.mcbs-activity
+.time-vertical li .time {
+    color: #999999;
 }
 
 .mcbs-activity .mesform {
