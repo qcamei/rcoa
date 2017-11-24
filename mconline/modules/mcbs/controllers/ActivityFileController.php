@@ -3,9 +3,18 @@
 namespace mconline\modules\mcbs\controllers;
 
 use common\models\mconline\McbsActivityFile;
+use common\models\mconline\McbsCourse;
+use common\models\mconline\McbsCourseActivity;
+use common\models\mconline\McbsCourseBlock;
+use common\models\mconline\McbsCourseChapter;
+use common\models\mconline\McbsCoursePhase;
+use common\models\mconline\McbsCourseSection;
 use common\models\mconline\searchs\McbsActivityFileSearch;
+use common\models\User;
 use Yii;
+use yii\db\Query;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -35,10 +44,14 @@ class ActivityFileController extends Controller {
     public function actionIndex() {
         $searchModel = new McbsActivityFileSearch();
         $dataProvider = $searchModel->searchFileList(Yii::$app->request->queryParams);
-        
+
         return $this->render('index', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
+                    'belongChapter' => $this->getBelongChapter(),
+                    'belongSection' => $this->getBelongSection(),
+                    'belongActivity' => $this->getBelongActivity(),
+                    'uploadBy' => $this->getUploadBy(),
         ]);
     }
 
@@ -100,7 +113,7 @@ class ActivityFileController extends Controller {
         return $this->redirect(['index']);
     }
 
-    /*
+    /**
      * 下载 
      * 如果不需要查数据库的话直接做参数传递  
      * yii::app ()->request->sendFile (文件名,  file_get_contents (文件路径));  
@@ -140,6 +153,93 @@ class ActivityFileController extends Controller {
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    /**
+     * 查询章
+     * @return array
+     */
+    public function getBelongChapter() {
+        $course_id = Yii::$app->request->queryParams['course_id'];
+        $query = (new Query())
+                ->select(['McbsCourse.id AS course_id', 'CourseChapter.id AS chapter_id','CourseChapter.name'])
+                ->from(['McbsCourse' => McbsCourse::tableName()])
+                //关联查询阶段
+                ->leftJoin(['CoursePhase' => McbsCoursePhase::tableName()], 'CoursePhase.course_id = McbsCourse.id')
+                //关联查询区块
+                ->leftJoin(['CourseBlock' => McbsCourseBlock::tableName()], 'CourseBlock.phase_id = CoursePhase.id')
+                //关联查询章
+                ->leftJoin(['CourseChapter' => McbsCourseChapter::tableName()], 'CourseChapter.block_id = CourseBlock.id')
+                ->where(['McbsCourse.id' => $course_id,]);
+        $chapter = $query->all();
+
+        return ArrayHelper::map($chapter, 'chapter_id', 'name');
+    }
+
+    /**
+     * 查询节
+     * @return array
+     */
+    public function getBelongSection() {
+        $course_id = Yii::$app->request->queryParams['course_id'];
+        $query = (new Query())
+                ->select(['McbsCourse.id', 'CourseSection.id AS section_id', 'CourseSection.name'])
+                ->from(['McbsCourse' => McbsCourse::tableName()])
+                //关联查询阶段
+                ->leftJoin(['CoursePhase' => McbsCoursePhase::tableName()], 'CoursePhase.course_id = McbsCourse.id')
+                //关联查询区块
+                ->leftJoin(['CourseBlock' => McbsCourseBlock::tableName()], 'CourseBlock.phase_id = CoursePhase.id')
+                //关联查询章
+                ->leftJoin(['CourseChapter' => McbsCourseChapter::tableName()], 'CourseChapter.block_id = CourseBlock.id')
+                //关联查询节
+                ->leftJoin(['CourseSection' => McbsCourseSection::tableName()], 'CourseSection.chapter_id = CourseChapter.id')
+                ->where(['McbsCourse.id' => $course_id,]);
+        $section = $query->all();
+
+        return ArrayHelper::map($section, 'section_id', 'name');
+    }
+
+    /**
+     * 查询活动
+     * @return array
+     */
+    public function getBelongActivity() {
+        $course_id = Yii::$app->request->queryParams['course_id'];
+        $query = (new Query())
+                ->select(['McbsCourse.id', 'CourseActivity.name AS activity_name','CourseActivity.id AS activity_id'])
+                ->from(['McbsCourse' => McbsCourse::tableName()])
+                //关联查询阶段
+                ->leftJoin(['CoursePhase' => McbsCoursePhase::tableName()], 'CoursePhase.course_id = McbsCourse.id')
+                //关联查询区块
+                ->leftJoin(['CourseBlock' => McbsCourseBlock::tableName()], 'CourseBlock.phase_id = CoursePhase.id')
+                //关联查询章
+                ->leftJoin(['CourseChapter' => McbsCourseChapter::tableName()], 'CourseChapter.block_id = CourseBlock.id')
+                //关联查询节
+                ->leftJoin(['CourseSection' => McbsCourseSection::tableName()], 'CourseSection.chapter_id = CourseChapter.id')
+                //关联查询活动表
+                ->leftJoin(['CourseActivity' => McbsCourseActivity::tableName()], 'CourseActivity.section_id = CourseSection.id')
+                ->where(['McbsCourse.id' => $course_id,]);
+        $activity = $query->all();
+
+        return ArrayHelper::map($activity, 'activity_id', 'activity_name');
+    }
+
+    /**
+     * 查询上传者
+     * @return array
+     */
+    public function getUploadBy() {
+        $course_id = Yii::$app->request->queryParams['course_id'];
+        $uploadBy = (new Query())
+                ->select(['ActivityFile.id', 'ActivityFile.create_by'])
+                ->from(['ActivityFile' => McbsActivityFile::tableName()])
+                //关联查询上传者
+                ->leftJoin(['CreateBy' => User::tableName()], 'CreateBy.id = ActivityFile.create_by')
+                ->addSelect(['CreateBy.nickname AS username'])
+                ->where(['ActivityFile.course_id' => $course_id,])
+                ->all();
+
+        return ArrayHelper::map($uploadBy, 'create_by', 'username');
     }
 
 }

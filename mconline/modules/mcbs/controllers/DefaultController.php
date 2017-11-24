@@ -48,7 +48,6 @@ class DefaultController extends Controller
 
     /**
      * Lists all McbsCourse models.
-     * @param integer $page                     页数
      * @return mixed
      */
     public function actionIndex()

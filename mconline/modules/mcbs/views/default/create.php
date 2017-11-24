@@ -13,34 +13,24 @@ $this->title = Yii::t(null, '{Create}{Mcbs}{Courses}', [
             'Mcbs' => Yii::t('app', 'Mcbs'),
             'Courses' => Yii::t('app', 'Courses'),
         ]);
-?>
-
-<?= 
-    $this->render('/layouts/title', [
-        'params' => ['index'],
-        'title' => Yii::t('rcoa', 'Create'),
-    ]) 
+$this->params['breadcrumbs'][] = ['label' => Yii::t(null, '{Mcbs}{Courses}', [
+            'Mcbs' => Yii::t('app', 'Mcbs'),
+            'Courses' => Yii::t('app', 'Courses'),
+        ]), 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="container mcbs-course-create mcbs">
 
     <?= $this->render('_form', [
-            'model' => $model,
-            'itemTypes' => $itemTypes,
-            'items' => $items,
-            'itemChilds' => $itemChilds,
-            'courses' => $courses,
-        ])
-    ?>
+        'model' => $model,
+        'itemTypes' => $itemTypes,
+        'items' => $items,
+        'itemChilds' => $itemChilds,
+        'courses' => $courses,
+    ]) ?>
 
 </div>
-
-<?=
-    $this->render('/layouts/footer', [
-        'model' => $model,
-        'params' => ['index'],
-    ])
-?>
 
 <?php
 $js = <<<JS
@@ -54,7 +44,7 @@ $js = <<<JS
     $('#contentinfo').load("/worksystem/contentinfo/index");   
     
 JS;
-    $this->registerJs($js, View::POS_READY);
+$this->registerJs($js, View::POS_READY);
 ?>
 
 <?php

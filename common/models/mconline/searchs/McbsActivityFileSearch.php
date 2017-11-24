@@ -10,10 +10,12 @@ use common\models\mconline\McbsCourseChapter;
 use common\models\mconline\McbsCoursePhase;
 use common\models\mconline\McbsCourseSection;
 use common\models\User;
+use wskeee\framework\models\Item;
 use wskeee\webuploader\models\Uploadfile;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 
 /**
  * McbsActivityFileSearch represents the model behind the search form about `common\models\mconline\McbsActivityFile`.
@@ -83,16 +85,26 @@ class McbsActivityFileSearch extends McbsActivityFile
     
     public function searchFileList($params)
     {
+        $course_id = ArrayHelper::getValue($params, 'course_id', null);
+        $chapter_id = ArrayHelper::getValue($params, 'chapter_id');                     //章ID
+        $section_id = ArrayHelper::getValue($params, 'section_id');                     //节ID
+        $activity_id = ArrayHelper::getValue($params, 'activity_id');                   //活动ID
+        $createBy = ArrayHelper::getValue($params, 'create_by');                        //创建者ID
+        $keyword = ArrayHelper::getValue($params, 'McbsActivityFileSearch.file_id');    //查询文件名的关键字
         $query = (new Query())
-                ->select(['McbsCourse.id','CoursePhase.id','CourseBlock.id','CourseChapter.id','CourseSection.id',
-                    'ActivityFile.activity_id','ActivityFile.file_id','ActivityFile.course_id',
-                    'ActivityFile.expire_time','ActivityFile.updated_at',
-                    'CourseActivity.name AS acitivity_name','CourseSection.name AS section_name','CourseChapter.name AS chapter_name',
-                    'CreateBy.nickname AS create_by','Uploadfile.name AS filename','Uploadfile.path'])
+                ->select(['McbsCourse.id','CourseChapter.id AS chapter_id','CourseSection.id AS section_id',
+                    'ActivityFile.activity_id','ActivityFile.created_at','ActivityFile.expire_time',
+                    'CourseChapter.name AS chapter_name','CourseSection.name AS section_name',
+                    'CourseActivity.name AS activity_name','CreateBy.nickname AS create_by',
+                    'Uploadfile.name AS filename','Uploadfile.path', 'ItemCourse.name AS course_name'])
                 ->from(['McbsCourse' => McbsCourse::tableName()]);
         
         // add conditions that should always apply here
-
+        //根据课程查询显示内容
+        $query->where([
+            'McbsCourse.id' => $course_id,
+        ]);
+        
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -116,27 +128,29 @@ class McbsActivityFileSearch extends McbsActivityFile
         //关联查询活动表
         $query->leftJoin(['CourseActivity' => McbsCourseActivity::tableName()], 'CourseActivity.section_id = CourseSection.id');
         //关联查询活动文件表
-        $query->rightJoin(['ActivityFile' => McbsActivityFile::tableName()], 'ActivityFile.activity_id = CourseActivity.id');
+        $query->leftJoin(['ActivityFile' => McbsActivityFile::tableName()], 'ActivityFile.activity_id = CourseActivity.id');
         //关联查询文件名
         $query->leftJoin(['Uploadfile' => Uploadfile::tableName()], 'Uploadfile.id = ActivityFile.file_id');
         //关联查询创建者
         $query->leftJoin(['CreateBy' => User::tableName()], 'CreateBy.id = ActivityFile.create_by');
-        //根据课程分组
-//        $query->where('McbsCourse.id');
+        //查询课程名称
+        $query->leftJoin(['ItemCourse' => Item::tableName()], 'ItemCourse.id = McbsCourse.course_id');
+        
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
-            'expire_time' => $this->expire_time,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'CourseChapter.id' => $chapter_id,
+            'CourseSection.id' => $section_id,
+            'CourseActivity.id' => $activity_id,
+            'ActivityFile.create_by' => $createBy,
         ]);
-
-        $query->andFilterWhere(['like', 'activity_id', $this->activity_id])
-            ->andFilterWhere(['like', 'file_id', $this->file_id])
-            ->andFilterWhere(['like', 'course_id', $this->course_id])
-            ->andFilterWhere(['like', 'create_by', $this->create_by]);
-    
-        return $dataProvider;
+       //按关键字模糊搜索
+        $query->andFilterWhere(['or',
+            ['like', 'Uploadfile.name', $keyword],
+        ]);
+        return [
+            'filter' => $params,
+            'dataProvider' => $dataProvider
+        ];
     }
     
 }

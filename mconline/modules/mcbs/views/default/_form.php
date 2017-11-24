@@ -50,7 +50,8 @@ use yii\widgets\ActiveForm;
     <?= Html::activeHiddenInput($model, 'id') ?>
     
     <div class="form-group">
-        
+        <?= Html::a(Yii::t('app', 'Back'), Yii::$app->request->getReferrer(), ['class' => 'btn btn-default']) ?>
+        <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

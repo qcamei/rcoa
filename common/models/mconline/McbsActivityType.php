@@ -63,7 +63,7 @@ class McbsActivityType extends ActiveRecord {
 
     /**
      * 
-     * @param type $inset
+     * @param type $insert
      * @return boolean
      */
     public function beforeSave($insert) {
