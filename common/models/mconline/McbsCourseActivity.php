@@ -48,7 +48,7 @@ class McbsCourseActivity extends ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'section_id'], 'required'],
+            [['id', 'section_id', 'name'], 'required'],
             [['type_id', 'sort_order', 'created_at', 'updated_at'], 'integer'],
             [['id', 'section_id'], 'string', 'max' => 32],
             [['name'], 'string', 'max' => 100],

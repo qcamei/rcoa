@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <?php if($couchapter['block_id'] == $coublock['id']): ?>
                                 <li>
                                     <div class="cou-default cou-chapter">
-                                        <?= Html::a("<i class=\"fa fa-minus-square-o\"></i>{$couchapter['name']}", "#data-chapter-{$chapter}",['data-toggle'=>'collapse']) ?>
+                                        <?= Html::a("<i class=\"fa fa-minus-square-o\"></i>{$couchapter['name']}", "#data-chapter-{$chapter}",['class'=>'collapsed','data-toggle'=>'collapse','aria-expanded'=>'false']) ?>
                                         <div class="cou-icon">
                                             <?= Html::a('<i class="fa fa-plus"></i>',['course-make/create-cousection','chapter_id'=>$couchapter['id']],['onclick'=>'couFrame($(this));return false;']) ?>
                                             <?= Html::a('<i class="fa fa-pencil"></i>',['course-make/update-couchapter','id'=>$couchapter['id']],['onclick'=>'couFrame($(this));return false;']) ?>
@@ -57,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                             <?= Html::a('<i class="fa fa-arrows"></i>', 'javascript',['class'=>'handle']) ?>
                                         </div>
                                     </div>
-                                    <div id="data-chapter-<?= $chapter ?>">
+                                    <div id="data-chapter-<?= $chapter ?>" class="collapse" aria-expanded="false" style="height:0px;">
                                         <div class="cou-default chapter-des">
                                             <p><b>本章信息</b></p>
                                             <p><?= $couchapter['des'] ?></p>

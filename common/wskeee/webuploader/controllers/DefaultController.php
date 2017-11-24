@@ -7,6 +7,7 @@ use wskeee\webuploader\models\UploadfileChunk;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 /**
  * Default controller for the `webuploader` module
@@ -14,6 +15,7 @@ use yii\web\Controller;
 class DefaultController extends Controller {
 
     public $enableCsrfValidation = false;
+
     /**
      * Renders the index view for the module
      * @return string
@@ -368,14 +370,112 @@ class DefaultController extends Controller {
     }
 
     /**
+     * 下载文件
+     * @param type $file_id
+     */
+    public function actionDownload($file_id) {
+        /* @var $file Uploadfile */
+        $file = Uploadfile::findOne(['id' => $file_id, 'is_del' => 0]);
+        if ($file) {
+            $file->download_count ++;
+            //保存
+            $file->save();
+            try {
+                $this->download($file->path, $file->name,true);
+            } catch (\Exception $ex) {
+                throw new NotFoundHttpException($ex->getMessage());
+            }
+        } else {
+            throw new NotFoundHttpException('文件不存在！');
+        }
+    }
+
+    /** 下载 
+     * @param String  $file   要下载的文件路径 
+     * @param String  $name   文件名称,为空则与下载的文件名称一样 
+     * @param boolean $reload 是否开启断点续传 
+     */
+    public function download($file, $name = '', $reload = false) {
+        $_speed = 512;
+        if (file_exists($file)) {
+            if ($name == '') {
+                $name = basename($file);
+            }
+
+            $fp = fopen($file, 'rb');
+            $file_size = filesize($file);
+            $ranges = $this->getRange($file_size);
+
+            header('cache-control:public');
+            header('content-type:application/octet-stream');
+            header('content-disposition:attachment; filename=' . $name);
+
+            if ($reload && $ranges != null) { // 使用续传  
+                header('HTTP/1.1 206 Partial Content');
+                header('Accept-Ranges:bytes');
+
+                // 剩余长度  
+                header(sprintf('content-length:%u', $ranges['end'] - $ranges['start']));
+
+                // range信息  
+                header(sprintf('content-range:bytes %s-%s/%s', $ranges['start'], $ranges['end'], $file_size));
+
+                // fp指针跳到断点位置  
+                fseek($fp, sprintf('%u', $ranges['start']));
+            } else {
+                header('HTTP/1.1 200 OK');
+                header('content-length:' . $file_size);
+            }
+
+            while (!feof($fp)) {
+                echo fread($fp, round($_speed * 1024, 0));
+                ob_flush();
+                //sleep(1); // 用于测试,减慢下载速度  
+            }
+
+            ($fp != null) && fclose($fp);
+        } else {
+            return '';
+        }
+    }
+
+    /** 获取header range信息 
+     * 
+     * 1、bytes=100-200     第100到第200字节
+     * 2、bytes=-1000       最后的1000个字节
+     * 3、bytes=500-        第500字节到文件末尾
+     * @param  int   $file_size 文件大小 
+     * @return Array 
+     */
+    private function getRange($file_size) {
+        if (isset($_SERVER['HTTP_RANGE']) && !empty($_SERVER['HTTP_RANGE'])) {
+            $range = $_SERVER['HTTP_RANGE'];
+            $range = preg_replace('/[\s|,].*/', '', $range);
+            $range = explode('-', substr($range, 6));
+            if (count($range) < 2) {
+                $range[1] = $file_size;
+            }
+            $range = array_combine(array('start', 'end'), $range);
+            if (empty($range['start'])) {
+                $range['start'] = 0;
+            }
+            if (empty($range['end'])) {
+                $range['end'] = $file_size;
+            }
+            return $range;
+        }
+        return null;//['start' => 0,'end' => $file_size];
+    }
+
+    /**
      * 创建目录
      * @param string $path
      */
     private function mkdir($path) {
-        $dirs = explode('/',$path);
+        $dirs = explode('/', $path);
         $parent = '';
         foreach ($dirs as $dir) {
-            $dir = $parent == '' ? $dir : $parent . DIRECTORY_SEPARATOR .$dir;
+            $dir = $parent == '' ? $dir : $parent . DIRECTORY_SEPARATOR . $dir;
             if (!file_exists($dir)) {
                 @mkdir($dir);
             }

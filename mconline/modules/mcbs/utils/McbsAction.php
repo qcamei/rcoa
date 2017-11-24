@@ -6,12 +6,14 @@ use common\models\mconline\McbsActionLog;
 use common\models\mconline\McbsActivityFile;
 use common\models\mconline\McbsActivityType;
 use common\models\mconline\McbsCourseUser;
-use mconline\modules\mcbs\utils\McbsAction;
+use common\models\User;
 use wskeee\webuploader\models\Uploadfile;
 use Yii;
 use yii\db\Exception;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
+
+
 
 class McbsAction 
 {
@@ -295,9 +297,9 @@ class McbsAction
      * 删除课程活动架操作
      * @throws Exception
      */
-    public function DeleteCouactivity($model,$title,$course_id,$relative_id=null)
+    public function DeleteCouactivity($model)
     {
-        $is_add = !empty($model->value_percent) ? "（{$model->value_percent}分）" : null;
+        $title = Yii::t('app', 'Activity');
         
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
@@ -306,9 +308,10 @@ class McbsAction
             if($model->delete()){
                 $this->saveMcbsActionLog([
                     'action'=>'删除','title'=>"{$title}管理",
-                    'content'=>"{$model->name}{$is_add}",
-                    'course_id'=>$course_id,
-                    'relative_id'=>$relative_id]);
+                    'content'=>"{$model->name}",
+                    'course_id'=>$model->section->chapter->block->phase->course_id,
+                    'relative_id'=>$model->id
+                ]);
             }else
                 throw new Exception($model->getErrors());
             
@@ -317,6 +320,74 @@ class McbsAction
         }catch (Exception $ex) {
             $trans ->rollBack(); //回滚事务
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
+        }
+    }
+    
+    /**
+     * 添加留言操作
+     * @throws Exception
+     */
+    public function CreateMessage($model,$post)
+    {
+        $model->title = $model->activity->name;
+        $model->content = ArrayHelper::getValue($post, 'content');
+        $model->course_id = $model->activity->section->chapter->block->phase->course_id;
+        
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {  
+            if($model->save()){
+                
+            }else
+                throw new Exception($model->getErrors());
+            
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        }catch (Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
+        }
+    }
+    
+    /**
+     * 保存协作人员
+     * @param type $post
+     * @return array
+     */
+    public function saveMcbsCourseUser($post)
+    {
+        $course_id = ArrayHelper::getValue($post, 'McbsCourseUser.course_id');      //课程id
+        $user_ids = ArrayHelper::getValue($post, 'McbsCourseUser.user_id');         //用户id
+        $privilege = ArrayHelper::getValue($post, 'McbsCourseUser.privilege');      //权限
+        
+        $values = [];
+        foreach ($user_ids as $user_id) {
+            $values[] = [
+                'course_id' => $course_id,
+                'user_id' => $user_id,
+                'privilege' => $privilege,
+                'created_at' => time(),
+                'updated_at' => time(),
+            ];
+        }
+        
+        /** 添加$values数组到表里 */
+        $num = Yii::$app->db->createCommand()->batchInsert(McbsCourseUser::tableName(), [
+            'course_id','user_id','privilege','created_at','updated_at'
+        ],$values)->execute();
+        
+        if($num > 0){
+            $users = (new Query())->select(['nickname','guid'])
+                 ->from(User::tableName())->where(['id'=>$user_ids])->all();
+            
+            return  [
+                'course_id' => $course_id,
+                'guid' => ArrayHelper::getColumn($users, 'guid'),
+                'nickname' => ArrayHelper::getColumn($users, 'nickname')
+            ];
+        } else {
+            return [];
         }
     }
     
