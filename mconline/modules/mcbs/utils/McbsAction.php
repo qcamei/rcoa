@@ -6,6 +6,7 @@ use common\models\mconline\McbsActionLog;
 use common\models\mconline\McbsActivityFile;
 use common\models\mconline\McbsActivityType;
 use common\models\mconline\McbsCourseUser;
+use common\models\mconline\McbsRecentContacts;
 use common\models\User;
 use wskeee\webuploader\models\Uploadfile;
 use Yii;
@@ -38,7 +39,8 @@ class McbsAction
     /**
      * 添加协作人员操作
      * @param McbsCourseUser $model
-     * @param post $post
+     * @param type $post
+     * @return array
      * @throws Exception
      */
     public function CreateHelpman($model, $post)
@@ -49,17 +51,21 @@ class McbsAction
         {  
             $results = $this->saveMcbsCourseUser($post);
             if($results != null){
+                $this->saveMcbsRecentContacts($post);
                 $this->saveMcbsActionLog([
                     'action'=>'增加','title'=>'协作人员',
                     'content'=>implode('、',$results['nickname']),
-                    'course_id'=>$results['course_id']]);
+                    'course_id'=>$results['course_id']
+                ]);
             }else
                 throw new Exception($model->getErrors());
             
             $trans->commit();  //提交事务
+            return true;
             Yii::$app->getSession()->setFlash('success','操作成功！');
         }catch (Exception $ex) {
             $trans ->rollBack(); //回滚事务
+            return false;
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
     }
@@ -80,16 +86,20 @@ class McbsAction
             if($model->save()){
                 $this->saveMcbsActionLog([
                     'action'=>'修改','title'=>'协作人员',
-                    'content'=>'调整【'.$model->user->nickname.'】以下属性｛权限：【旧】'.McbsCourseUser::$privilegeName[$oldPrivilege].
-                               ' >> 【新】'.McbsCourseUser::$privilegeName[$model->privilege].'｝',
-                    'course_id'=>$model->course_id]);
+                    'content'=>"调整【".$model->user->nickname."】以下属性：\n\r". 
+                              "权限：【旧】".McbsCourseUser::$privilegeName[$oldPrivilege].
+                               " >>【新】".McbsCourseUser::$privilegeName[$model->privilege],
+                    'course_id'=>$model->course_id
+                ]);
             }else
                 throw new Exception($model->getErrors());
             
             $trans->commit();  //提交事务
+            return true;
             Yii::$app->getSession()->setFlash('success','操作成功！');
         }catch (Exception $ex) {
             $trans ->rollBack(); //回滚事务
+            return false;
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
     }  
@@ -114,9 +124,11 @@ class McbsAction
                 throw new Exception($model->getErrors());
             
             $trans->commit();  //提交事务
+            return true;
             Yii::$app->getSession()->setFlash('success','操作成功！');
         }catch (Exception $ex) {
             $trans ->rollBack(); //回滚事务
+            return false;
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
     }   
@@ -138,7 +150,8 @@ class McbsAction
                     'action'=>'增加','title'=>"{$title}管理",
                     'content'=>"{$model->name}{$is_add}",
                     'course_id'=>$course_id,
-                    'relative_id'=>$relative_id]);
+                    'relative_id'=>$relative_id
+                ]);
             }else
                 throw new Exception($model->getErrors());
             
@@ -360,16 +373,24 @@ class McbsAction
         $course_id = ArrayHelper::getValue($post, 'McbsCourseUser.course_id');      //课程id
         $user_ids = ArrayHelper::getValue($post, 'McbsCourseUser.user_id');         //用户id
         $privilege = ArrayHelper::getValue($post, 'McbsCourseUser.privilege');      //权限
+        //过滤已经添加的协作人
+        $courseUsers = (new Query())->select(['user_id'])
+                ->from(McbsCourseUser::tableName())
+                ->where(['course_id'=>$course_id])
+                ->all();
+        $userIds = ArrayHelper::getColumn($courseUsers, 'user_id');
         
         $values = [];
         foreach ($user_ids as $user_id) {
-            $values[] = [
-                'course_id' => $course_id,
-                'user_id' => $user_id,
-                'privilege' => $privilege,
-                'created_at' => time(),
-                'updated_at' => time(),
-            ];
+            if(!in_array($user_id, $userIds)){
+                $values[] = [
+                    'course_id' => $course_id,
+                    'user_id' => $user_id,
+                    'privilege' => $privilege,
+                    'created_at' => time(),
+                    'updated_at' => time(),
+                ];
+            }
         }
         
         /** 添加$values数组到表里 */
@@ -389,6 +410,39 @@ class McbsAction
         } else {
             return [];
         }
+    }
+    
+    /**
+     * 保存最近联系人
+     * @param type $post
+     * @return array
+     */
+    public function saveMcbsRecentContacts($post)
+    {
+        $user_ids = ArrayHelper::getValue($post, 'McbsCourseUser.user_id');         //用户id
+        //查询过滤已经和自己相关的人
+        $contacts = (new Query())->select(['contacts_id'])
+                ->from(McbsRecentContacts::tableName())
+                ->where(['user_id'=>Yii::$app->user->id])->all();
+        $contactsIds = ArrayHelper::getColumn($contacts, 'contacts_id');
+        $update = array_diff($user_ids,$contactsIds);
+        var_dump($update);exit;
+        $values = [];
+        foreach ($user_ids as $user_id) {
+            if(!in_array($user_id, $contactsIds)){
+                $values[] = [
+                    'user_id' => Yii::$app->user->id,
+                    'contacts_id' => $user_id,
+                    'created_at' => time(),
+                    'updated_at' => time(),
+                ];
+            }
+        }
+        
+        /** 添加$values数组到表里 */
+        $num = Yii::$app->db->createCommand()->batchInsert(McbsRecentContacts::tableName(), [
+            'user_id','contacts_id','created_at','updated_at'
+        ],$values)->execute();
     }
     
     /**

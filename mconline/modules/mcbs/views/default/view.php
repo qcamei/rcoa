@@ -145,8 +145,7 @@ $js =
         $('.myModal').modal("show").load($(this).attr("href"));
         return false;
     });
-        
-    
+            
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>

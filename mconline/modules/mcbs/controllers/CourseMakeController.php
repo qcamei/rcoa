@@ -13,6 +13,7 @@ use common\models\mconline\McbsCoursePhase;
 use common\models\mconline\McbsCourseSection;
 use common\models\mconline\McbsCourseUser;
 use common\models\mconline\McbsMessage;
+use common\models\mconline\McbsRecentContacts;
 use common\models\mconline\searchs\McbsActionLogSearch;
 use common\models\mconline\searchs\McbsCourseActivitySearch;
 use common\models\mconline\searchs\McbsCourseBlockSearch;
@@ -76,11 +77,17 @@ class CourseMakeController extends Controller
         $model->loadDefaultValues();
         
         if ($model->load(Yii::$app->request->post())) {
-            McbsAction::getInstance()->CreateHelpman($model, Yii::$app->request->post());
-            return $this->redirect(['default/view', 'id' => $course_id]);
+            //Yii::$app->getResponse()->format = 'json';
+            $result = McbsAction::getInstance()->CreateHelpman($model, Yii::$app->request->post());
+            /*return [
+                'code'=> $result ? 200 : 404,
+                'message' => ''
+            ];*/
+            //return $this->redirect(['default/view', 'id' => $course_id]);
         } else {
             return $this->renderAjax('create-helpman', [
                 'model' => $model,
+                'contacts' => $this->getRecentContacts(),
                 'helpmans' => $this->getHelpManList($course_id,$model->course->create_by),
             ]);
         }
@@ -97,8 +104,13 @@ class CourseMakeController extends Controller
         $model = McbsCourseUser::findOne($id);
 
         if ($model->load(Yii::$app->request->post())) {
-            McbsAction::getInstance()->UpdateHelpman($model);
-            return $this->redirect(['default/view', 'id' => $model->course_id]);
+            Yii::$app->getResponse()->format = 'json';
+            $result = McbsAction::getInstance()->UpdateHelpman($model);
+            return [
+                'code'=> $result ? 200 : 404,
+                'message' => ''
+            ];
+            //return $this->redirect(['default/view', 'id' => $model->course_id]);
         } else {
             return $this->renderAjax('update-helpman', [
                 'model' => $model,
@@ -117,8 +129,13 @@ class CourseMakeController extends Controller
         $model = McbsCourseUser::findOne($id);
         
         if ($model->load(Yii::$app->request->post())) {
-            McbsAction::getInstance()->DeleteHelpman($model);
-            return $this->redirect(['default/view', 'id' => $model->course_id]);
+            Yii::$app->getResponse()->format = 'json';
+            $result = McbsAction::getInstance()->DeleteHelpman($model);
+            return [
+                'code'=> $result ? 200 : 404,
+                'message' => ''
+            ];
+            //return $this->redirect(['default/view', 'id' => $model->course_id]);
         } else {
             return $this->renderAjax('delete-helpman',[
                 'model' => $model
@@ -559,11 +576,25 @@ class CourseMakeController extends Controller
     }
     
     /**
+     * 获取和自己关联的最近联系人
+     * @return array
+     */
+    public function getRecentContacts()
+    {
+        return (new Query())->select(['User.id','User.nickname','User.avatar'])
+                ->from(['RecentContacts'=>McbsRecentContacts::tableName()])
+                ->leftJoin(['User'=> User::tableName()],'User.id = RecentContacts.contacts_id')
+                ->where(['user_id'=> Yii::$app->user->id])
+                ->limit(8)->all();        
+    }
+
+
+    /**
      * 获取所有协助人员
      * @param string $user_id                           用户id
      * @return array
      */
-    public  function getHelpManList($course_id, $user_id)
+    public function getHelpManList($course_id, $user_id)
     {
         //查找已添加的协作人员
         $courUsers = (new Query())->select(['user_id'])

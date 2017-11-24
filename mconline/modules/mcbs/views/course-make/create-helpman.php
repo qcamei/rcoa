@@ -4,6 +4,7 @@ use common\models\mconline\McbsCourseUser;
 use kartik\widgets\Select2;
 use mconline\modules\mcbs\assets\McbsAssets;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\View;
 use yii\widgets\ActiveForm;
 
@@ -29,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </button>
                 <h4 class="modal-title" id="myModalLabel"><?= Html::encode($this->title) ?></h4>
             </div>
-            <div class="modal-body">
+            <div class="modal-body mcbs-activity">
                 <?php $form = ActiveForm::begin([
                     'options'=>[
                         'id' => 'form-helpman',
@@ -43,8 +44,20 @@ $this->params['breadcrumbs'][] = $this->title;
                     ], 
                 ]); ?>
 
+                <div class="form-group field-mcbsrecentcontacts-contacts_id">
+                    <label class="col-lg-12 col-md-12" for="mcbsrecentcontacts-contacts_id">最近联系：</label>
+                    <div class="col-lg-12 col-md-12">
+                        <?php foreach ($contacts as $item): ?>
+                        <div class="actitype">
+                            <?= Html::img(WEB_ROOT.$item['avatar'],['class'=>'acticon']) ?>
+                            <p class="actname" data-key="<?= $item['id'] ?>"><?= $item['nickname']; ?></p>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                
                 <?= Html::activeHiddenInput($model, 'course_id') ?>
-
+                
                 <?= $form->field($model, 'user_id')->widget(Select2::classname(), [
                     'data' => $helpmans, 
                     'hideSearch' => true,
@@ -91,12 +104,38 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php
+
+$helpman = Url::to(['course-make/helpman-index', 'course_id' => $model->course_id]);
+$helpmanUrl = Url::to(['course-make/create-helpman', 'course_id' => $model->course_id]);
+$actlog = Url::to(['course-make/log-index', 'course_id' => $model->course_id]);
+
 $js = 
 <<<JS
+        
+    //选择最近联系人
+     var temp = [];
+    $(".actitype").click(function(){
+        var dataKey = $(this).children("p").attr("data-key");
+        if($.inArray(dataKey, temp)) {
+            temp.push(dataKey);
+        } else {
+            temp = $.grep(temp, function(n,i){
+                return n != dataKey;
+            });
+        }
+        $("#mcbscourseuser-user_id").val(temp);
+        $("#mcbscourseuser-user_id").trigger("change"); 
+    });    
         
     /** 提交表单 */
     $("#submitsave").click(function(){
         $("#form-helpman").submit();
+        /*$.post("$helpmanUrl",$('#form-helpman').serialize(),function(data){
+            if(data['code'] == '200'){
+                $("#help-man").load("$helpman");
+                $("#action-log").load("$actlog");
+            }
+        });*/
     });   
     
 JS;

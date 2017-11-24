@@ -1,9 +1,9 @@
 <?php
 
 use common\models\mconline\McbsCourseUser;
-use kartik\widgets\Select2;
 use mconline\modules\mcbs\assets\McbsAssets;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\View;
 use yii\widgets\ActiveForm;
 
@@ -60,13 +60,23 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 </div>
 
 <?php
+
+$helpman = Url::to(['course-make/helpman-index', 'course_id' => $model->course_id]);
+$helpmanUrl = Url::to(['course-make/delete-helpman', 'id' => $model->id]);
+$actlog = Url::to(['course-make/log-index', 'course_id' => $model->course_id]);
+
 $js = 
 <<<JS
         
     /** 提交表单 */
     $("#submitsave").click(function(){
-        $("#form-helpman").submit();
-    });  
+        $.post("$helpmanUrl",$('#form-helpman').serialize(),function(data){
+            if(data['code'] == '200'){
+                $("#help-man").load("$helpman");
+                $("#action-log").load("$actlog");
+            }
+        });
+    });
         
 JS;
     $this->registerJs($js,  View::POS_READY);

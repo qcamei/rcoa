@@ -107,7 +107,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ];
                                 $buttonHtml = [
                                     'name' => !$data['is_del'] ? '<span class="fa fa-download"></span>'.Yii::t('app', 'Download') : '已删除',
-                                    'url' => ['webuploader/default', 'id'=>$data['id']],
+                                    'url' => ['/webuploader/default/download', 'file_id'=>$data['id']],
                                     'options' => $options,
                                     'symbol' => '&nbsp;',
                                     'conditions' => true,
