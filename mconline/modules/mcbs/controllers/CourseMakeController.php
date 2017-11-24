@@ -12,6 +12,7 @@ use common\models\mconline\McbsCourseChapter;
 use common\models\mconline\McbsCoursePhase;
 use common\models\mconline\McbsCourseSection;
 use common\models\mconline\McbsCourseUser;
+use common\models\mconline\McbsMessage;
 use common\models\mconline\searchs\McbsActionLogSearch;
 use common\models\mconline\searchs\McbsCourseActivitySearch;
 use common\models\mconline\searchs\McbsCourseBlockSearch;
@@ -19,6 +20,7 @@ use common\models\mconline\searchs\McbsCourseChapterSearch;
 use common\models\mconline\searchs\McbsCoursePhaseSearch;
 use common\models\mconline\searchs\McbsCourseSectionSearch;
 use common\models\mconline\searchs\McbsCourseUserSearch;
+use common\models\mconline\searchs\McbsMessageSearch;
 use common\models\User;
 use mconline\modules\mcbs\utils\McbsAction;
 use wskeee\webuploader\models\Uploadfile;
@@ -469,19 +471,49 @@ class CourseMakeController extends Controller
      */
     public function actionDeleteCouactivity($id)
     {
-        $model = McbsCourseSection::findOne($id);
+        $model = McbsCourseActivity::findOne($id);
         
         if ($model->load(Yii::$app->request->post())) {
-            McbsAction::getInstance()->DeleteCouactivity($model,Yii::t('app', 'Section'),$model->chapter->block->phase->course_id);
-            return $this->redirect(['default/view', 'id' => $model->chapter->block->phase->course_id]);
+            McbsAction::getInstance()->DeleteCouactivity($model);
+            return $this->redirect(['default/view', 'id' => $model->section->chapter->block->phase->course_id]);
         } else {
-            return $this->renderAjax('delete-couframe',[
+            return $this->renderAjax('delete-activity',[
                 'model' => $model,
-                'title' => Yii::t('app', 'Section')
+                'title' => Yii::t('app', 'Activity')
             ]);
         }
     }
 
+    /**
+     * Lists all McbsMessage models.
+     * @return mixed
+     */
+    public function actionMesIndex($course_id,$activity_id)
+    {
+        $searchModel = new McbsMessageSearch();
+        
+        return $this->renderAjax('mes-index', [
+            'dataProvider' => $searchModel->search(['course_id'=>$course_id,'activity_id'=>$activity_id])
+        ]);
+    }
+    
+    /**
+     * Creates a new McbsMessage model.
+     * @return mixed
+     */
+    public function actionCreateMessage($activity_id)
+    {
+        $model = new McbsMessage(['activity_id'=>$activity_id]);
+        $model->loadDefaultValues();
+        
+        if(Yii::$app->request->isPost){
+            McbsAction::getInstance()->CreateMessage($model,Yii::$app->request->post());
+            return $this->redirect(['couactivity-view', 'id' => $model->activity_id]);
+        } else {
+            return $this->goBack(['couactivity-view', 'id' => $activity_id]);
+        }
+    }
+   
     /**
      * Lists all McbsActionLog models.
      * @return mixed

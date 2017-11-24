@@ -88,7 +88,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="framebtn">
                 <?= Html::a(Yii::t('app', 'Add'), [
                   'course-make/create-helpman', 
-                  'cour_id' => $model->id
+                  'course_id' => $model->id
                 ], [
                     'id' => 'add-helpman', 
                     'class' => 'btn btn-sm btn-success'

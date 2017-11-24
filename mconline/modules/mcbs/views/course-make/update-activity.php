@@ -29,8 +29,14 @@ $js =
         
     /** 提交表单 */
     $("#submitsave").click(function(){
-        $("#form-couframe").submit();
-    });  
+        var value =  $("#mcbscourseactivity-type_id").val();
+        if(value > 0){
+            $("#form-activity").submit();
+        }else{
+            $(".field-mcbscourseactivity-type_id").addClass("has-error");
+            $(".field-mcbscourseactivity-type_id .help-block").html("类型不能为空");
+        }
+    }); 
         
 JS;
     $this->registerJs($js,  View::POS_READY);

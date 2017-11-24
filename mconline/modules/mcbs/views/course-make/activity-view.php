@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 
-<div class="mcbs-actlog-view mcbs mcbs-activity default-view">
+<div class="mcbs-activity-view mcbs mcbs-activity default-view">
 
     <div class="col-xs-12 frame">
         <div class="col-xs-12 frame-title">
@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 [
                     'label' => Yii::t('app', 'Type'),
                     'format' => 'raw',
-                    'value' => !empty($model->type_id) ? "<div class=\"actitype active\"><div class=\"acticon\"></div><div class=\"actname\">{$model->type->name}</div></div>" : null,
+                    'value' => !empty($model->type_id) ? "<div class=\"actitype active\">".Html::img([$model->type->icon_path],['class'=>'acticon'])."<div class=\"actname\">{$model->type->name}</div></div>" : null,
                 ],
                 [
                     'attribute' => 'name',
@@ -140,24 +140,27 @@ $this->params['breadcrumbs'][] = $this->title;
             <span><?= Yii::t('app', 'Message') ?></span>
         </div>
         <div class="col-xs-12 frame-table message">
-            <div class="meslist">
-                
+            <div id="mes-list" class="meslist">
+   
             </div>
             <div class="mesform">
                 <div class="col-xs-11 mesinput">
+                    
                     <?php $form = ActiveForm::begin([
                         'options'=>[
                             'id' => 'form-message',
                             'class'=>'form-horizontal',
                         ],
+                        'action'=>['create-message', 'activity_id'=>$model->id]
                     ]); ?>
                     
-                    <?= Html::textarea('content') ?>
+                    <?= Html::textarea('content');  ?>
                     
                     <?php ActiveForm::end(); ?>
+                    
                 </div>
                 <div class="col-xs-1 mesbtn">
-                    <?= Html::a(Yii::t('app', 'Message'), 'javascript:;', ['class'=>'btn btn-primary']) ?>
+                    <?= Html::a(Yii::t('app', 'Message'), 'javascript:;', ['id'=>'submitsave', 'class'=>'btn btn-primary']) ?>
                 </div>
             </div>
         </div>
@@ -177,14 +180,21 @@ $this->params['breadcrumbs'][] = $this->title;
 <?= $this->render('/layouts/model') ?>
 
 <?php
+$meslist = Url::to(['course-make/mes-index','course_id'=>$model->section->chapter->block->phase->course_id,
+    'activity_id'=>$model->id]);
 $actlog = Url::to(['course-make/log-index','course_id'=>$model->section->chapter->block->phase->course_id,
     'relative_id'=>$model->id]);
 $js = 
 <<<JS
         
+    //加载留言列表
+    $("#mes-list").load("$meslist"); 
     //加载操作记录列表
     $("#action-log").load("$actlog"); 
-    
+    //提交表单
+    $("#submitsave").click(function(){
+        $("#form-message").submit()
+    });
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>
