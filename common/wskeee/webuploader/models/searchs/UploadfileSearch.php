@@ -70,13 +70,13 @@ class UploadfileSearch extends Uploadfile {
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'size' => $this->size,
+            'created_by' => $this->created_by,
         ]);
 
         $query->andFilterWhere(['like', 'id', $this->id])
                 ->andFilterWhere(['like', 'name', $this->name])
                 ->andFilterWhere(['like', 'path', $this->path])
-                ->andFilterWhere(['like', 'thumb_path', $this->thumb_path])
-                ->andFilterWhere(['like', 'created_by', $this->created_by]);
+                ->andFilterWhere(['like', 'thumb_path', $this->thumb_path]);
 
         return $dataProvider;
     }

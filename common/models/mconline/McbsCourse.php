@@ -94,22 +94,24 @@ class McbsCourse extends ActiveRecord
      * @param type $insert 
      */
     public function beforeSave($insert) 
-    {
-        if(parent::beforeSave($insert))
-        {
-            if($this->isNewRecord){
-                //$this->id = md5(rand(1,10000) + time());      //自动生成用户ID
-                //$this->create_by = Yii::$app->user->id;       //创建者
-                $courUser = new McbsCourseUser([
-                    'course_id'=> $this->id,'user_id'=>$this->create_by,
-                    'privilege'=> McbsCourseUser::OWNERSHIP
-                ]);
-                $courUser->save();
+    {        
+        $course = $this->findOne(['course_id'=> $this->course_id]);
+        if($course == null){
+            if (parent::beforeSave($insert)) {
+                if ($this->isNewRecord) {
+                    //$this->id = md5(rand(1,10000) + time());      //自动生成用户ID
+                    //$this->create_by = Yii::$app->user->id;       //创建者
+                    $courUser = new McbsCourseUser([
+                        'course_id' => $this->id, 'user_id' => $this->create_by,
+                        'privilege' => McbsCourseUser::OWNERSHIP
+                    ]);
+                    $courUser->save();
+                }
+                return true;
             }
-            
-            return true;
-        }else
-            return false;
+        }
+        Yii::$app->getSession()->setFlash('error', '该课程已存在！');
+        return false;
     }
     
     
