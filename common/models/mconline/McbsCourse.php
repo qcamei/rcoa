@@ -61,6 +61,7 @@ class McbsCourse extends ActiveRecord
         return [
             [['id', 'item_type_id', 'item_id', 'item_child_id', 'course_id'], 'required'],
             [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'status', 'is_publish', 'publish_time', 'close_time', 'created_at', 'updated_at'], 'integer'],
+            [['course_id'], 'checkCourseExist'],
             [['des'], 'string'],
             [['id'], 'string', 'max' => 32],
             [['created_by'], 'string', 'max' => 36],
@@ -90,27 +91,40 @@ class McbsCourse extends ActiveRecord
     }
     
     /**
+     * 检查课程是否存在
+     * @param type $attribute
+     * @param type $pramas
+     * @return boolean
+     */
+    public function checkCourseExist($attribute, $pramas)
+    {
+        $format = $this->getAttribute($attribute);  
+        $course = $this->findOne(['course_id'=> $this->course_id])['course_id'];
+        if($format == $course){
+            $this->addError($attribute, "该课程已存在！"); 
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * 
      * @param type $insert 
      */
     public function beforeSave($insert) 
     {        
-        $course = $this->findOne(['course_id'=> $this->course_id]);
-        if($course == null){
-            if (parent::beforeSave($insert)) {
-                if ($this->isNewRecord) {
-                    //$this->id = md5(rand(1,10000) + time());      //自动生成用户ID
-                    //$this->created_by = Yii::$app->user->id;       //创建者
-                    $courUser = new McbsCourseUser([
-                        'course_id' => $this->id, 'user_id' => $this->created_by,
-                        'privilege' => McbsCourseUser::OWNERSHIP
-                    ]);
-                    $courUser->save();
-                }
-                return true;
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                //$this->id = md5(rand(1,10000) + time());      //自动生成用户ID
+                //$this->created_by = Yii::$app->user->id;       //创建者
+                $courUser = new McbsCourseUser([
+                    'course_id' => $this->id, 'user_id' => $this->created_by,
+                    'privilege' => McbsCourseUser::OWNERSHIP
+                ]);
+                $courUser->save();
             }
+            return true;
         }
-        Yii::$app->getSession()->setFlash('error', '该课程已存在！');
         return false;
     }
     

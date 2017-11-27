@@ -96,7 +96,7 @@ class McbsActivityFileSearch extends McbsActivityFile
                     'ActivityFile.activity_id','ActivityFile.created_at','ActivityFile.expire_time',
                     'CourseChapter.name AS chapter_name','CourseSection.name AS section_name',
                     'CourseActivity.name AS activity_name','CreateBy.nickname AS created_by',
-                    'Uploadfile.name AS filename','Uploadfile.path', 'ItemCourse.name AS course_name'])
+                    'Uploadfile.name AS filename','ActivityFile.file_id', 'ItemCourse.name AS course_name'])
                 ->from(['McbsCourse' => McbsCourse::tableName()]);
         
         // add conditions that should always apply here
