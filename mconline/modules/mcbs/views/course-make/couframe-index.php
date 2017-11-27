@@ -17,25 +17,25 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="mcbs-couphase-index course-make-couframe">
 
     <ul class="sortable list cursor-move data-cou-phase">
-        <?php foreach ($dataCouphase as $phase=>$couphase): ?>
+        <?php foreach ($dataCouphase as $couphase): ?>
         <li>
             <div class="cou-default cou-phase">
 <!--                <i class="fa fa-plus-square-o"></i>-->
-                <?= Html::a("<i class=\"fa fa-minus-square-o\"></i>{$couphase['name']}（{$couphase['value_percent']}分）","#data-phase-{$phase}",['data-toggle'=>'collapse']) ?>
+                <?= Html::a("<i class=\"fa fa-minus-square-o\"></i>{$couphase['name']}（{$couphase['value_percent']}分）","#data-phase-{$couphase['id']}",['data-toggle'=>'collapse']) ?>
                 <div class="cou-icon">
                     <?= Html::a('<i class="fa fa-plus"></i>',['course-make/create-coublock','phase_id'=>$couphase['id']],['onclick'=>'couFrame($(this));return false;']) ?>
                     <?= Html::a('<i class="fa fa-pencil"></i>',['course-make/update-couphase','id'=>$couphase['id']],['onclick'=>'couFrame($(this));return false;']) ?>
                     <?= Html::a('<i class="fa fa-times"></i>',['course-make/delete-couphase','id'=>$couphase['id']],['onclick'=>'couFrame($(this));return false;']) ?>
-                    <?= Html::a('<i class="fa fa-arrows"></i>', 'javascript',['class'=>'handle']) ?>
+                    <?= Html::a('<i class="fa fa-arrows"></i>', 'javascript:;',['class'=>'handle']) ?>
                 </div>
             </div>
-            <div id="data-phase-<?= $phase ?>">
+            <div id="data-phase-<?= $couphase['id'] ?>">
                 <ul class="sortable list cursor-move data-cou-block">
-                    <?php foreach($dataCoublock as $block=>$coublock): ?>
+                    <?php foreach($dataCoublock as $coublock): ?>
                     <?php if($coublock['phase_id'] == $couphase['id']): ?>
                     <li>
                         <div class="cou-default cou-block">
-                            <?= Html::a("<i class=\"fa fa-minus-square-o\"></i>{$coublock['name']}", "#data-block-{$block}",['data-toggle'=>'collapse']) ?>
+                            <?= Html::a("<i class=\"fa fa-minus-square-o\"></i>{$coublock['name']}", "#data-block-{$coublock['id']}",['data-toggle'=>'collapse']) ?>
                             <div class="cou-icon">
                                 <?= Html::a('<i class="fa fa-plus"></i>',['course-make/create-couchapter','block_id'=>$coublock['id']],['onclick'=>'couFrame($(this));return false;']) ?>
                                 <?= Html::a('<i class="fa fa-pencil"></i>',['course-make/update-coublock','id'=>$coublock['id']],['onclick'=>'couFrame($(this));return false;']) ?>
@@ -43,13 +43,13 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <?= Html::a('<i class="fa fa-arrows"></i>', 'javascript',['class'=>'handle']) ?>
                             </div>
                         </div>
-                        <div id="data-block-<?= $block ?>">
+                        <div id="data-block-<?= $coublock['id'] ?>">
                             <ul class="sortable  list cursor-move data-cou-chapter">
-                                <?php foreach($dataCouchapter as $chapter=>$couchapter): ?>
+                                <?php foreach($dataCouchapter as $couchapter): ?>
                                 <?php if($couchapter['block_id'] == $coublock['id']): ?>
                                 <li>
                                     <div class="cou-default cou-chapter">
-                                        <?= Html::a("<i class=\"fa fa-minus-square-o\"></i>{$couchapter['name']}", "#data-chapter-{$chapter}",['class'=>'collapsed','data-toggle'=>'collapse','aria-expanded'=>'false']) ?>
+                                        <?= Html::a("<i class=\"fa fa-minus-square-o\"></i>{$couchapter['name']}", "#data-chapter-{$couchapter['id']}",['class'=>'collapsed','data-toggle'=>'collapse','aria-expanded'=>'false']) ?>
                                         <div class="cou-icon">
                                             <?= Html::a('<i class="fa fa-plus"></i>',['course-make/create-cousection','chapter_id'=>$couchapter['id']],['onclick'=>'couFrame($(this));return false;']) ?>
                                             <?= Html::a('<i class="fa fa-pencil"></i>',['course-make/update-couchapter','id'=>$couchapter['id']],['onclick'=>'couFrame($(this));return false;']) ?>
@@ -57,17 +57,17 @@ $this->params['breadcrumbs'][] = $this->title;
                                             <?= Html::a('<i class="fa fa-arrows"></i>', 'javascript',['class'=>'handle']) ?>
                                         </div>
                                     </div>
-                                    <div id="data-chapter-<?= $chapter ?>" class="collapse" aria-expanded="false" style="height:0px;">
+                                    <div id="data-chapter-<?= $couchapter['id'] ?>" class="collapse" aria-expanded="false" style="height:0px;">
                                         <div class="cou-default chapter-des">
                                             <p><b>本章信息</b></p>
                                             <p><?= $couchapter['des'] ?></p>
                                         </div>
                                         <ul class="sortable  list cursor-move data-cou-section">
-                                            <?php foreach($dataCousection as $section=>$cousection): ?>
+                                            <?php foreach($dataCousection as $cousection): ?>
                                             <?php if($cousection['chapter_id'] == $couchapter['id']): ?>
                                             <li>
                                                 <div class="cou-default cou-section">
-                                                    <?= Html::a("<i class=\"fa fa-minus-square-o\"></i>{$cousection['name']}", "#data-activity-{$section}",['data-toggle'=>'collapse']) ?>
+                                                    <?= Html::a("<i class=\"fa fa-minus-square-o\"></i>{$cousection['name']}", "#data-activity-{$cousection['id']}",['data-toggle'=>'collapse']) ?>
                                                     <div class="cou-icon">
                                                         <?= Html::a('<i class="fa fa-plus"></i>',['course-make/create-couactivity','section_id'=>$cousection['id']]) ?>
                                                         <?= Html::a('<i class="fa fa-pencil"></i>',['course-make/update-cousection','id'=>$cousection['id']],['onclick'=>'couFrame($(this));return false;']) ?>
@@ -75,7 +75,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                                         <?= Html::a('<i class="fa fa-arrows"></i>', 'javascript',['class'=>'handle']) ?>
                                                     </div>
                                                 </div>
-                                                <div id="data-activity-<?= $section ?>">
+                                                <div id="data-activity-<?= $cousection['id'] ?>">
                                                     <ul class="sortable  list cursor-move data-cou-activity cou-default cou-activity">
                                                         <?php foreach($dataCouactivity as $activity=>$couactivity): ?>
                                                         <?php if($couactivity['section_id'] == $cousection['id']): ?>
@@ -112,7 +112,9 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </li>
         <?php endforeach; ?>
-        <li class="disabled">
+    </ul>
+    <ul class="sortable list cursor-move">
+        <li>
             <div class="cou-default cou-phase">
                 <center>
                     <?= Html::a('<i class="fa fa-plus-square"></i>&nbsp;&nbsp;'.Yii::t(null, '{add}{phase}',[
@@ -121,9 +123,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]),['course-make/create-couphase', 'course_id'=>$course_id],['onclick'=>'couFrame($(this));return false;']) ?>
                 </center>
             </div>
-        </li>  
+        </li>
     </ul>
-       
 </div>
 
 <?php
