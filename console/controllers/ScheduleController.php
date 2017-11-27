@@ -208,6 +208,8 @@ class ScheduleController extends Controller {
                 $admins = $rbacManager->getItemUsers('r_admin');
                 //拿到 GUID 发送企业微信
                 $admins = array_unique(ArrayHelper::getColumn($admins, 'guid'));
+
+                $feedback['des'] = '请注意！文件空间已经超出警戒线，请及时处理！';
                 //发送通知
                 $result = json_decode(NotificationManager::sendByView('schedule/_max_filesize_warning_html', $feedback, $admins, '空间占用超出警戒线', MCONLINE_WEB_ROOT), true);
                 //发送错误时记录出错信息

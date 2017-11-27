@@ -1,5 +1,6 @@
 <?php
 
+use common\models\mconline\McbsCourse;
 use common\models\mconline\searchs\McbsActivityFileSearch;
 use kartik\widgets\Select2;
 use mconline\modules\mcbs\assets\McbsAssets;
@@ -12,8 +13,8 @@ use yii\web\View;
 /* @var $this View */
 /* @var $searchModel McbsActivityFileSearch */
 /* @var $dataProvider ActiveDataProvider */
-$course_name = $dataProvider['dataProvider']->models['0']['course_name'];
-$course_id = Yii::$app->request->queryParams['course_id'];
+/* @var $couModel McbsCourse */
+
 $this->title = Yii::t('null', '{File}{List}', [
             'File' => Yii::t('app', 'File'),
             'List' => Yii::t('app', 'List'),
@@ -22,13 +23,13 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t(null, '{Mcbs}{Courses}', [
         'Mcbs' => Yii::t('app', 'Mcbs'),
         'Courses' => Yii::t('app', 'Courses'),
     ]), 'url' => ['default/']];
-$this->params['breadcrumbs'][] = ['label' => $course_name, 'url' => ['default/view', 'id' => $course_id]];
+$this->params['breadcrumbs'][] = ['label' => $couModel->course->name, 'url' => ['default/view', 'id' => $couModel->id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="mcbs-activity-file-index">
 
     <p>
-        <?= Html::a(Yii::t('app', 'Back'), ['default/view' . '?id=' . $course_id], ['class' => 'btn btn-default']) ?>
+        <?= Html::a(Yii::t('app', 'Back'), ['default/view' . '?id=' . $couModel->id], ['class' => 'btn btn-default']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider['dataProvider'],
@@ -258,8 +259,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'format' => 'raw',
                 'value' => function($data) {
-                    return Html::a('<span class="fa fa-download">下载</span>', ['download', 'id' => $data['path']], [
-                                'class' => 'btn btn-success btn-sm',
+                    return Html::a('<span class="fa fa-download">下载</span>', ['/webuploader/default/download', 'file_id' => $data['file_id']], [
+                                'class' => 'btn btn-success btn-sm', 'target' => '_blank',
                     ]);
                 },
                 'contentOptions' => [

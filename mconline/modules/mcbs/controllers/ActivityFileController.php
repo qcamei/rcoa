@@ -44,8 +44,11 @@ class ActivityFileController extends Controller {
     public function actionIndex() {
         $searchModel = new McbsActivityFileSearch();
         $dataProvider = $searchModel->searchFileList(Yii::$app->request->queryParams);
-
+        $course_id = ArrayHelper::getValue(Yii::$app->request->queryParams, 'course_id');
+        $couModel = McbsCourse::findOne($course_id);
+        
         return $this->render('index', [
+                    'couModel' => $couModel,
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
                     'belongChapter' => $this->getBelongChapter(),
@@ -111,33 +114,6 @@ class ActivityFileController extends Controller {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
-    }
-
-    /**
-     * 下载 
-     * 如果不需要查数据库的话直接做参数传递  
-     * yii::app ()->request->sendFile (文件名,  file_get_contents (文件路径));  
-     */
-    public function actionDownload($id) {
-        if (isset($_GET['id'])) {
-            $model = new McbsActivityFileSearch(); //你的model  
-            $result = $model->find(array(
-                'select' => array('Uploadfile.path', 'Uploadfile.name'),
-                'condition' => 'id=:id', //条件  
-                'params' => array(':id' => $id)
-            ));
-            if (!$result) {
-                throw new CHttpException(404, '文件不存在！');
-            } else {
-                // 服务器端文件的路径   
-                $fontArr = explode('/', $result->url);
-                $fileName = end($fontArr); //得到文件名字  
-                if (file_exists($result->url)) {
-                    //发送两个参数一个是名称上面已经处理好，也可以改成你要的，后面是文件路径  
-                    yii::app()->request->sendFile($fileName, file_get_contents($result->url));
-                }
-            }
-        }
     }
 
     /**
