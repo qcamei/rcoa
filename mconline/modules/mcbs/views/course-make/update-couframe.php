@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 <?php
 
 $action = Url::to(['course-make/'.Yii::$app->controller->action->id, 'id' => $model->id]);
-$actlog = Url::to(['course-make/log-index', 'course_id' => $model->course_id]);
+$actlog = Url::to(['course-make/log-index', 'course_id' => $course_id]);
 
 $js = 
 <<<JS
@@ -57,16 +57,18 @@ $js =
     $("#submitsave").click(function(){
         $.post("$action",$('#form-couframe').serialize(),function(data){
             if(data['code'] == '200'){
-                sortable(".data-cou-"+data['data']['frame'], {
-                        forcePlaceholderSize: true,
-                        items: 'li',
-                        handle: '.fa-arrows'
-                });
+                update(data['data'])
                 $("#action-log").load("$actlog");
             }
         });
     });  
         
+    function update(elem){
+        $.each(elem,function(key,value){
+            $("#$model->id").find('> div.head span.'+key).html(value);
+        })
+    }    
+    
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>

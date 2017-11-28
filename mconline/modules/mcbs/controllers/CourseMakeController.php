@@ -181,12 +181,11 @@ class CourseMakeController extends Controller
             return [
                 'code'=> $result ? 200 : 404,
                 'data' =>$result ? [
-                    'frame'=>'phase',
+                    'frame_name'=>'phase',
+                    'sub_frame'=>'block',
                     'id'=>$model->id,
                     'name'=>$model->name,
-                    'is_null'=>"（{$model->value_percent}分）",
-                    'subframe'=>'block',
-                    'action'=>'couphase'
+                    'value_percent'=>'（'. number_format($model->value_percent,2).'分）',
                 ] : [],
                 'message' => ''
             ];
@@ -194,6 +193,7 @@ class CourseMakeController extends Controller
         } else {
             return $this->renderAjax('create-couframe', [
                 'model' => $model,
+                'course_id'=>$model->course_id,
                 'title' => Yii::t('app', 'Phase')
             ]);
         }
@@ -208,19 +208,24 @@ class CourseMakeController extends Controller
     public function actionUpdateCouphase($id)
     {
         $model = McbsCoursePhase::findOne($id);
-
+        
         if ($model->load(Yii::$app->request->post())) {
             Yii::$app->getResponse()->format = 'json';
             $result = McbsAction::getInstance()->UpdateCouFrame($model,Yii::t('app', 'Phase'),$model->course_id);
             return [
                 'code'=> $result ? 200 : 404,
-                'data'=> $result ? ['frame'=>'phase'] : [],
+                'data'=> $result ? [
+                    'id'=>$model->id,
+                    'name'=>$model->name,
+                    'value_percent'=>'（'. number_format($model->value_percent,2).'分）',
+                ] : [],
                 'message' => ''
             ];
             //return $this->redirect(['default/view', 'id' => $model->course_id]);
         } else {
             return $this->renderAjax('update-couframe', [
                 'model' => $model,
+                'course_id' => $model->course_id,
                 'title' => Yii::t('app', 'Phase')
             ]);
         }
@@ -237,11 +242,17 @@ class CourseMakeController extends Controller
         $model = McbsCoursePhase::findOne($id);
         
         if ($model->load(Yii::$app->request->post())) {
-            McbsAction::getInstance()->DeleteCouFrame($model,Yii::t('app', 'Phase'),$model->course_id);
-            return $this->redirect(['default/view', 'id' => $model->course_id]);
+            Yii::$app->getResponse()->format = 'json';
+            $result = McbsAction::getInstance()->DeleteCouFrame($model,Yii::t('app', 'Phase'),$model->course_id);
+            return [
+                'code'=> $result ? 200 : 404,
+                'message' => ''
+            ];
+            //return $this->redirect(['default/view', 'id' => $model->course_id]);
         } else {
             return $this->renderAjax('delete-couframe',[
                 'model' => $model,
+                'course_id' => $model->course_id,
                 'title' => Yii::t('app', 'Phase')
             ]);
         }
@@ -258,11 +269,24 @@ class CourseMakeController extends Controller
         $model->loadDefaultValues();
         
         if ($model->load(Yii::$app->request->post())) {
-            McbsAction::getInstance()->CreateCouFrame($model,Yii::t('app', 'Block'),$model->phase->course_id);
-            return $this->redirect(['default/view', 'id' => $model->phase->course_id]);
+            Yii::$app->getResponse()->format = 'json';
+            $result = McbsAction::getInstance()->CreateCouFrame($model,Yii::t('app', 'Block'),$model->phase->course_id);
+            return [
+                'code'=> $result ? 200 : 404,
+                'data'=> $result ? [
+                    'frame_name'=>'block',
+                    'sub_frame'=>'chapter',
+                    'id'=>$model->id,
+                    'phase_id'=>$model->phase_id,
+                    'name'=>$model->name,
+                ] : [],
+                'message' => ''
+            ];
+            //return $this->redirect(['default/view', 'id' => $model->phase->course_id]);
         } else {
             return $this->renderAjax('create-couframe', [
                 'model' => $model,
+                'course_id' => $model->phase->course_id,
                 'title' => Yii::t('app', 'Block')
             ]);
         }

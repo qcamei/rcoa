@@ -225,9 +225,11 @@ class McbsAction
                 throw new Exception($model->getErrors());
             
             $trans->commit();  //提交事务
+            return true;
             Yii::$app->getSession()->setFlash('success','操作成功！');
         }catch (Exception $ex) {
             $trans ->rollBack(); //回滚事务
+            return false;
             Yii::$app->getSession()->setFlash('error','操作失败::'.$ex->getMessage());
         }
     }

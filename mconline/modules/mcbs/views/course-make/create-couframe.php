@@ -47,37 +47,39 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php
 
-$action = Url::to(['course-make/'.Yii::$app->controller->action->id, 'course_id' => $model->course_id]);
-$actlog = Url::to(['course-make/log-index', 'course_id' => $model->course_id]);
+$action = Url::to(Yii::$app->request->url);
+$actlog = Url::to(['course-make/log-index', 'course_id' => $course_id]);
 $item = json_encode(str_replace(array("\r\n", "\r", "\n"),"",$this->renderFile('@mconline/modules/mcbs/views/course-make/couframe_view.php')));
 
 $js = 
 <<<JS
+            
     /** 提交表单 */
     $("#submitsave").click(function(){
         var item = $item;    
         $.post("$action",$('#form-couframe').serialize(),function(data){
             if(data['code'] == '200'){
                 var dome = renderDom(item,{
-                    frame: data['data']['frame'],
+                    frame_name: data['data']['frame_name'],
+                    sub_frame: data['data']['sub_frame'],
                     id: data['data']['id'],
                     name: data['data']['name'],
-                    is_null: data['data']['is_null'] != '' ? data['data']['is_null'] : '',
-                    subframe: data['data']['subframe'],
-                    action: data['data']['action'],
+                    value_percent: data['data']['value_percent'],
                 });
+                console.log(dome);
                 doc = new DOMParser().parseFromString(dome, "text/html").body.firstChild;
-                document.querySelector(".data-cou-"+data['data']['frame']).appendChild(doc);
-                sortable(".data-cou-"+data['data']['frame'], {
-                        forcePlaceholderSize: true,
-                        items: 'li',
-                        handle: '.fa-arrows'
+                console.log($("#"+data['data']['phase_id']+" div>.list"));
+                $("#"+data['data']['phase_id']+">.list").append(doc);
+                sortable(".data-cou-"+data['data']['frame_name'],{
+                    forcePlaceholderSize: true,
+                    items: 'li',
+                    handle: '.fa-arrows'
                 });
                 $("#action-log").load("$actlog");
             }
         });
     });   
-    
+        
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>
