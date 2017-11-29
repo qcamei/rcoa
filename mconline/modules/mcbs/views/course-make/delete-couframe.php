@@ -44,6 +44,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
                 ]); ?>
                 
                 <?= Html::activeHiddenInput($model, 'id') ?>
+                <?= Html::activeHiddenInput($model, 'is_del',['value'=>1]) ?>
 
                 <?= Html::encode("确定要删除该课程{$title}？") ?>
 

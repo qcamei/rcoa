@@ -105,7 +105,10 @@ $this->params['breadcrumbs'][] = $this->title;
             <span><?= Yii::t('app', 'Course Frame') ?></span>
             <div class="framebtn">
                 <?= Html::a(Yii::t('app', '导入'),'javascript:;', [
-                    'class' => 'btn btn-sm btn-success'
+                    'class' => 'btn btn-sm btn-info disabled'
+                ]) ?>
+                <?= Html::a(Yii::t('app', '导出'),'javascript:;', [
+                    'class' => 'btn btn-sm btn-info disabled'
                 ]) ?>
             </div>
         </div>

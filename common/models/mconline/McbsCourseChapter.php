@@ -10,15 +10,16 @@ use yii\db\ActiveRecord;
 /**
  * This is the model class for table "{{%mcbs_course_chapter}}".
  *
- * @property string $id                                 id
- * @property string $block_id                           区块id
- * @property string $name                               名称
- * @property string $des                                描述
- * @property integer $sort_order                        排序
+ * @property string $id                                     
+ * @property string $block_id                               区块id
+ * @property string $name                                   名称
+ * @property string $des                                    描述
+ * @property integer $sort_order                            排序
+ * @property integer $is_del                                是否已经删除标记：0未删除，1已删除
  * @property string $created_at
  * @property string $updated_at
  * 
- * @property McbsCourseBlock $block                     课程框架区块
+ * @property McbsCourseBlock $block                         课程框架区块
  */
 class McbsCourseChapter extends ActiveRecord
 {
@@ -47,7 +48,7 @@ class McbsCourseChapter extends ActiveRecord
     {
         return [
             [['id', 'block_id'], 'required'],
-            [['sort_order', 'created_at', 'updated_at'], 'integer'],
+            [['sort_order', 'is_del', 'created_at', 'updated_at'], 'integer'],
             [['id', 'block_id'], 'string', 'max' => 32],
             [['name'], 'string', 'max' => 100],
             [['des'], 'string', 'max' => 255],
@@ -65,6 +66,7 @@ class McbsCourseChapter extends ActiveRecord
             'name' => Yii::t('app', 'Name'),
             'des' => Yii::t('app', 'Des'),
             'sort_order' => Yii::t('app', 'Sort Order'),
+            'is_del' => Yii::t('app', 'Is Del'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
@@ -82,7 +84,7 @@ class McbsCourseChapter extends ActiveRecord
                 /* @var $model McbsCourseChapter */
                 $model = $this->find()->select(['sort_order'])
                         ->where(['block_id' => $this->block_id])
-                        ->orderBy('sort_order')->one();
+                        ->orderBy(['sort_order'=>SORT_DESC])->one();
         
                 if($model != null)
                     $this->sort_order = $model->sort_order + 1;

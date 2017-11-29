@@ -16,6 +16,7 @@ use yii\db\ActiveRecord;
  * @property string $name                                   名称
  * @property string $des                                    描述
  * @property integer $sort_order                            排序
+ * @property integer $is_del                                是否已经删除标记：0未删除，1已删除
  * @property string $created_at
  * @property string $updated_at
  * 
@@ -49,7 +50,7 @@ class McbsCourseActivity extends ActiveRecord
     {
         return [
             [['id', 'section_id', 'name'], 'required'],
-            [['type_id', 'sort_order', 'created_at', 'updated_at'], 'integer'],
+            [['type_id', 'is_del', 'sort_order', 'created_at', 'updated_at'], 'integer'],
             [['id', 'section_id'], 'string', 'max' => 32],
             [['name'], 'string', 'max' => 100],
             [['des'], 'string', 'max' => 255],
@@ -68,6 +69,7 @@ class McbsCourseActivity extends ActiveRecord
             'name' => Yii::t('app', 'Name'),
             'des' => Yii::t('app', 'Des'),
             'sort_order' => Yii::t('app', 'Sort Order'),
+            'is_del' => Yii::t('app', 'Is Del'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
@@ -85,7 +87,7 @@ class McbsCourseActivity extends ActiveRecord
                 /* @var $model McbsCourseActivity */
                 $model = $this->find()->select(['sort_order'])
                         ->where(['section_id' => $this->section_id])
-                        ->orderBy('sort_order')->one();
+                        ->orderBy(['sort_order'=>SORT_DESC])->one();
         
                 if($model != null)
                     $this->sort_order = $model->sort_order + 1;

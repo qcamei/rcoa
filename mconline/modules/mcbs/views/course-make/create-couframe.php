@@ -56,20 +56,16 @@ $js =
             
     /** 提交表单 */
     $("#submitsave").click(function(){
+        //$('#form-couframe').submit(); return;
         var item = $item;    
         $.post("$action",$('#form-couframe').serialize(),function(data){
             if(data['code'] == '200'){
-                var dome = renderDom(item,{
-                    frame_name: data['data']['frame_name'],
-                    sub_frame: data['data']['sub_frame'],
-                    id: data['data']['id'],
-                    name: data['data']['name'],
-                    value_percent: data['data']['value_percent'],
-                });
-                console.log(dome);
-                doc = new DOMParser().parseFromString(dome, "text/html").body.firstChild;
-                console.log($("#"+data['data']['phase_id']+" div>.list"));
-                $("#"+data['data']['phase_id']+">.list").append(doc);
+                var dome = renderDom(item,data['data']);
+                if(data['data']['parent_id'] == ''){
+                    $(".data-cou-"+data['data']['frame_name']).append(dome);
+                }else{
+                    $("#"+data['data']['parent_id']+">div >.list").append(dome);
+                }
                 sortable(".data-cou-"+data['data']['frame_name'],{
                     forcePlaceholderSize: true,
                     items: 'li',

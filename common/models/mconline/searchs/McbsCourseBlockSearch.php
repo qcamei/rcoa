@@ -51,7 +51,7 @@ class McbsCourseBlockSearch extends McbsCourseBlock
     {
         $this->course_id = ArrayHelper::getValue($params, 'course_id');
         
-        $query = McbsCourseBlock::find();
+        $query = McbsCourseBlock::find()->from(['CourseBlock'=> McbsCourseBlock::tableName()]);
 
         // add conditions that should always apply here
 
@@ -67,9 +67,10 @@ class McbsCourseBlockSearch extends McbsCourseBlock
             return $dataProvider;
         }*/
         
-        $query->leftJoin(['CoursePhase'=>McbsCoursePhase::tableName()], 'CoursePhase.id = phase_id');
+        $query->leftJoin(['CoursePhase'=>McbsCoursePhase::tableName()], '(CoursePhase.id = phase_id AND CoursePhase.is_del = 0)');
         
         // grid filtering conditions
+        $query->where(['CourseBlock.is_del' => 0]);
         $query->andFilterWhere([
             'id' => $this->id,
             'course_id' => $this->course_id,
@@ -82,7 +83,7 @@ class McbsCourseBlockSearch extends McbsCourseBlock
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'des', $this->des]);
   
-        $query->orderBy('sort_order');
+        $query->orderBy(['sort_order'=>SORT_ASC]);
         
         return $query->asArray()->all();
     }
