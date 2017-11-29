@@ -2,6 +2,7 @@
 
 use mconline\modules\mcbs\assets\McbsAssets;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\View;
 use yii\widgets\ActiveForm;
 
@@ -43,6 +44,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
                 ]); ?>
                 
                 <?= Html::activeHiddenInput($model, 'id') ?>
+                <?= Html::activeHiddenInput($model, 'is_del',['value'=>1]) ?>
 
                 <?= Html::encode("确定要删除该课程{$title}？") ?>
 
@@ -60,12 +62,21 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 </div>
 
 <?php
+
+$action = Url::to(['course-make/'.Yii::$app->controller->action->id, 'id' => $model->id]);
+$actlog = Url::to(['course-make/log-index', 'course_id' => $course_id]);
+
 $js = 
 <<<JS
         
     /** 提交表单 */
     $("#submitsave").click(function(){
-        $("#form-couframe").submit();
+        $.post("$action",$('#form-couframe').serialize(),function(data){
+            if(data['code'] == '200'){
+                $("#$model->id").remove();
+                $("#action-log").load("$actlog");
+            }
+        });
     });  
         
 JS;

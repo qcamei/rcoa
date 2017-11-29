@@ -61,6 +61,7 @@ class McbsCoursePhaseSearch extends McbsCoursePhase
         }*/
 
         // grid filtering conditions
+        $query->where(['is_del' => 0]);
         $query->andFilterWhere([
             'id' => $this->id,
             'course_id' => $this->course_id,
@@ -73,7 +74,7 @@ class McbsCoursePhaseSearch extends McbsCoursePhase
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'des', $this->des]);
         
-        $query->orderBy('sort_order');
+        $query->orderBy(['sort_order'=>SORT_ASC]);
 
         return $query->asArray()->all();
     }

@@ -53,7 +53,7 @@ class McbsCourseSectionSearch extends McbsCourseSection
     {
         $this->course_id = ArrayHelper::getValue($params, 'course_id');
         
-        $query = McbsCourseSection::find();
+        $query = McbsCourseSection::find()->from(['CourseSection'=> McbsCourseSection::tableName()]);
 
         // add conditions that should always apply here
 
@@ -69,11 +69,12 @@ class McbsCourseSectionSearch extends McbsCourseSection
             return $dataProvider;
         }*/
 
-        $query->leftJoin(['CourseChapter'=>McbsCourseChapter::tableName()], 'CourseChapter.id = chapter_id');
-        $query->leftJoin(['CourseBlock'=>McbsCourseBlock::tableName()], 'CourseBlock.id = block_id');
-        $query->leftJoin(['CoursePhase'=>McbsCoursePhase::tableName()], 'CoursePhase.id = phase_id');
+        $query->leftJoin(['CourseChapter'=>McbsCourseChapter::tableName()], '(CourseChapter.id = chapter_id AND CourseChapter.is_del = 0)');
+        $query->leftJoin(['CourseBlock'=>McbsCourseBlock::tableName()], '(CourseBlock.id = block_id AND CourseBlock.is_del = 0)');
+        $query->leftJoin(['CoursePhase'=>McbsCoursePhase::tableName()], '(CoursePhase.id = phase_id AND CoursePhase.is_del = 0)');
         
         // grid filtering conditions
+        $query->where(['CourseSection.is_del' => 0]);
         $query->andFilterWhere([
             'id' => $this->id,
             'course_id' => $this->course_id,
@@ -86,7 +87,7 @@ class McbsCourseSectionSearch extends McbsCourseSection
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'des', $this->des]);
 
-        $query->orderBy('sort_order');
+        $query->orderBy(['sort_order'=>SORT_ASC]);
         
         return $query->asArray()->all();
     }

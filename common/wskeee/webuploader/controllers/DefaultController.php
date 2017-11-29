@@ -381,7 +381,8 @@ class DefaultController extends Controller {
             //保存
             $file->save();
             try {
-                $this->download($file->path, $file->name,true);
+                //$this->download($file->path, $file->name,true);
+                Yii::$app->getResponse()->sendFile($file->path, $file->name);
             } catch (\Exception $ex) {
                 throw new NotFoundHttpException($ex->getMessage());
             }

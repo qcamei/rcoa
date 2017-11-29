@@ -129,13 +129,12 @@ $js =
         
     /** 提交表单 */
     $("#submitsave").click(function(){
-        $("#form-helpman").submit();
-        /*$.post("$helpmanUrl",$('#form-helpman').serialize(),function(data){
+        $.post("$helpmanUrl",$('#form-helpman').serialize(),function(data){
             if(data['code'] == '200'){
                 $("#help-man").load("$helpman");
                 $("#action-log").load("$actlog");
             }
-        });*/
+        });
     });   
     
 JS;

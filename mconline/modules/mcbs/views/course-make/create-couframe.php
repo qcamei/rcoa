@@ -2,6 +2,7 @@
 
 use mconline\modules\mcbs\assets\McbsAssets;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\View;
 
 
@@ -42,18 +43,39 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
        </div>
     </div>
-    
 </div>
 
 <?php
+
+$action = Url::to(Yii::$app->request->url);
+$actlog = Url::to(['course-make/log-index', 'course_id' => $course_id]);
+$item = json_encode(str_replace(array("\r\n", "\r", "\n"),"",$this->renderFile('@mconline/modules/mcbs/views/course-make/couframe_view.php')));
+
 $js = 
 <<<JS
-        
+            
     /** 提交表单 */
     $("#submitsave").click(function(){
-        $("#form-couframe").submit();
+        //$('#form-couframe').submit(); return;
+        var item = $item;    
+        $.post("$action",$('#form-couframe').serialize(),function(data){
+            if(data['code'] == '200'){
+                var dome = renderDom(item,data['data']);
+                if(data['data']['parent_id'] == ''){
+                    $(".data-cou-"+data['data']['frame_name']).append(dome);
+                }else{
+                    $("#"+data['data']['parent_id']+">div >.list").append(dome);
+                }
+                sortable(".data-cou-"+data['data']['frame_name'],{
+                    forcePlaceholderSize: true,
+                    items: 'li',
+                    handle: '.fa-arrows'
+                });
+                $("#action-log").load("$actlog");
+            }
+        });
     });   
-    
+        
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>

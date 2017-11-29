@@ -2,6 +2,7 @@
 
 use mconline\modules\mcbs\assets\McbsAssets;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\View;
 
 /* @var $this View */
@@ -45,14 +46,29 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 </div>
 
 <?php
+
+$action = Url::to(['course-make/'.Yii::$app->controller->action->id, 'id' => $model->id]);
+$actlog = Url::to(['course-make/log-index', 'course_id' => $course_id]);
+
 $js = 
 <<<JS
         
     /** 提交表单 */
     $("#submitsave").click(function(){
-        $("#form-couframe").submit();
+        $.post("$action",$('#form-couframe').serialize(),function(data){
+            if(data['code'] == '200'){
+                update(data['data'])
+                $("#action-log").load("$actlog");
+            }
+        });
     });  
         
+    function update(elem){
+        $.each(elem,function(key,value){
+            $("#$model->id").find('> div.head span.'+key).html(value);
+        })
+    }    
+    
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>
