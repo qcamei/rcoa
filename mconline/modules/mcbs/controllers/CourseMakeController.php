@@ -562,11 +562,25 @@ class CourseMakeController extends Controller
         $model->loadDefaultValues();
         
         if ($model->load(Yii::$app->request->post())) {
-            McbsAction::getInstance()->CreateCouactivity($model,Yii::$app->request->post());
-            return $this->redirect(['default/view', 'id' => $model->section->chapter->block->phase->course_id]);
+            Yii::$app->getResponse()->format = 'json';
+            $result = McbsAction::getInstance()->CreateCouactivity($model,Yii::$app->request->post());
+            return [
+                'code'=> $result ? 200 : 404,
+                'data'=> $result ? [
+                    'frame_name'=>'activity',
+                    'id'=>$model->id,
+                    'parent_id'=>$model->section_id,
+                    'icon_path'=>$model->type->icon_path,
+                    'type_name'=>$model->type->name,
+                    'name'=>$model->name,
+                ] : [],
+                'message' => ''
+            ];
+            //return $this->redirect(['couactivity-view', 'id' => $model->id]);
         } else {
-            return $this->render('create-activity', [
+            return $this->renderAjax('create-activity', [
                 'model' => $model,
+                'course_id'=>$model->section->chapter->block->phase->course_id,
                 'actiType'=>$this->getActivityType(),
                 'file' => $this->getUploadedActivityFile($model->id),
                 'title' => Yii::t('app', 'Activity')
@@ -585,11 +599,23 @@ class CourseMakeController extends Controller
         $model = McbsCourseActivity::findOne($id);
         
         if ($model->load(Yii::$app->request->post())) {
-            McbsAction::getInstance()->UpdateCouactivity($model,Yii::$app->request->post());
-            return $this->redirect(['default/view', 'id' => $model->section->chapter->block->phase->course_id]);
+            Yii::$app->getResponse()->format = 'json';
+            $result = McbsAction::getInstance()->UpdateCouactivity($model,Yii::$app->request->post());
+            return [
+                'code'=> $result ? 200 : 404,
+                'data'=> $result ? [
+                    'id'=>$model->id,
+                    'icon_path'=>$model->type->icon_path,
+                    'type_name'=>"【{$model->type->name}】：",
+                    'name'=>$model->name,
+                ] : [],
+                'message' => ''
+            ];
+            //return $this->redirect(['couactivity-view', 'id' => $model->id]);
         } else {
-            return $this->render('update-activity', [
+            return $this->renderAjax('update-activity', [
                 'model' => $model,
+                'course_id'=>$model->section->chapter->block->phase->course_id,
                 'actiType'=>$this->getActivityType(),
                 'file' => $this->getUploadedActivityFile($model->id),
                 'title' => Yii::t('app', 'Activity')
@@ -647,8 +673,13 @@ class CourseMakeController extends Controller
         $model->loadDefaultValues();
         
         if(Yii::$app->request->isPost){
-            McbsAction::getInstance()->CreateMessage($model,Yii::$app->request->post());
-            return $this->redirect(['couactivity-view', 'id' => $model->activity_id]);
+            Yii::$app->getResponse()->format = 'json';
+            $result = McbsAction::getInstance()->CreateMessage($model,Yii::$app->request->post());
+            return [
+                'code'=> $result ? 200 : 404,
+                'message' => ''
+            ];
+            //return $this->redirect(['couactivity-view', 'id' => $model->activity_id]);
         } else {
             return $this->goBack(['couactivity-view', 'id' => $activity_id]);
         }

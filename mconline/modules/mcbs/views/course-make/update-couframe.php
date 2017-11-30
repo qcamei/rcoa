@@ -55,19 +55,17 @@ $js =
         
     /** 提交表单 */
     $("#submitsave").click(function(){
+        //$("#form-couframe").submit();return;
         $.post("$action",$('#form-couframe').serialize(),function(data){
             if(data['code'] == '200'){
-                update(data['data'])
+                $.each(data['data'],function(key,value){
+                    $("#$model->id").find('> div.head span.'+key).html(value);
+                });
                 $("#action-log").load("$actlog");
             }
         });
     });  
-        
-    function update(elem){
-        $.each(elem,function(key,value){
-            $("#$model->id").find('> div.head span.'+key).html(value);
-        })
-    }    
+ 
     
 JS;
     $this->registerJs($js,  View::POS_READY);

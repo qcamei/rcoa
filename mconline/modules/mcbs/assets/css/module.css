@@ -243,19 +243,16 @@
 }
 
 .course-make-couframe
-.sortable .cou-activity,
-.course-make-couframe
-.sortable .cou-activity li {
+.sortable .cou-activity {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 8px 15px; 
+    color: #333333;
     border: 1px #cccccc solid;
 }
 
 .course-make-couframe
-.sortable .act-content {
-    padding: 8px 15px; 
-}
-
-.course-make-couframe
-.sortable .act-content a {
+.sortable .cou-activity a {
     color: #333333;
 }
 
@@ -269,6 +266,7 @@
 .mcbs-activity .actitype {
     width:60px;
     height:60px;
+    margin: 0 0 5px;
     display: inline-block; 
     text-align: center;
     border: 1px #ccc solid;

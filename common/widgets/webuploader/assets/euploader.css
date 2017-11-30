@@ -7,6 +7,7 @@
 .euploader-root {}
 /* 按钮容器 */
 .euploader-btns {
+    padding-bottom: 5px;    /*自定义样式*/
     text-align: right;
 }
 /* 控制按钮 */
@@ -89,6 +90,7 @@
     display: inline-block;
 }
 .webuploader-element-invisible {
+    width:100%;     /*自定义样式*/
     position: absolute !important;
     clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
     clip: rect(1px,1px,1px,1px);
