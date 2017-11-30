@@ -9,11 +9,11 @@ use yii\widgets\ActiveForm;
 /* @var $this View */
 /* @var $model common\models\Uploadfile */
 
-$this->title = Yii::t('null', '{Upload}{File}', [
+$this->title = Yii::t('app', '{Upload}{File}', [
                     'Upload' => Yii::t('app', 'Upload'),
                     'File' => Yii::t('app', 'File'),
                 ]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t(null, '{File}{List}{Administration}', [
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', '{File}{List}{Administration}', [
             'File' => Yii::t('app', 'File'),
             'List' => Yii::t('app', 'List'),
             'Administration' => Yii::t('app', 'Administration'),
@@ -55,7 +55,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 formData: {
                     _csrf: "<?= Yii::$app->request->csrfToken ?>",
                     //指定文件上传到的应用
-                    app_path: 'admin',
+                    dir_path: 'admin',
+                    app_id: '<?= Yii::$app->id ?>',
                     //debug: 1,
                 }
             });
