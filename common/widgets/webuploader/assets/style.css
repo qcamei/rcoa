@@ -5,12 +5,12 @@ small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, l
 fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td,
 article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary,
 time, mark, audio, video, input  {
-    margin: 0;
+    /*margin: 0;*/
     padding: 0;
     border: none;
     outline: 0;
-    font-size: 100%;
-    font: inherit;
+    /*font-size: 100%;*/
+    /*font: inherit;*/
     vertical-align: baseline;
 }
 

@@ -1,28 +1,35 @@
 <?php
 
-use common\components\GridViewChangeSelfColumn;
+use kartik\daterange\DateRangePicker;
 use kartik\widgets\Select2;
 use wskeee\webuploader\models\searchs\UploadfileSearch;
 use wskeee\webuploader\models\Uploadfile;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\web\View;
 
 /* @var $this View */
 /* @var $searchModel UploadfileSearch */
 /* @var $dataProvider ActiveDataProvider */
 
-$this->title = Yii::t(null, '{File}{List}', [
+$this->title = Yii::t(null, '{File}{List}{Administration}', [
             'File' => Yii::t('app', 'File'),
-            'List' => Yii::t('app', 'List')
+            'List' => Yii::t('app', 'List'),
+            'Administration' => Yii::t('app', 'Administration'),
         ]);
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="uploadfile-index">
 
-    <h1><?php //var_dump($dataProvider);exit;?></h1>
+    <p>
+        <?= Html::a(Yii::t('null', '{Upload}{File}', [
+                    'Upload' => Yii::t('app', 'Upload'),
+                    'File' => Yii::t('app', 'File'),
+                ]), ['create'], ['class' => 'btn btn-success'])
+        ?>
+    </p>
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
@@ -39,6 +46,30 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ],
             [
+                'attribute' => 'id',
+                'label' => Yii::t(null, '{File}{ID}', [
+                    'File' => Yii::t('app', 'File'),
+                    'ID' => Yii::t('app', 'ID')
+                ]),
+                'format' => 'raw',
+                'headerOptions' => [
+                    'style' => [
+                        'min-width' => '150px',
+                        'text-align' => 'center',
+                    ],
+                ],
+                'value' => function($data) {
+                    return !empty($data['id']) ? $data['id'] : NULL;
+                },
+                'contentOptions' => [
+                    'class' => 'list-td',
+                    'style' => [
+                        'text-align' => 'center',
+                        'word-break'=> 'break-word'
+                    ],
+                ],
+            ],
+            [
                 'attribute' => 'name',
                 'label' => Yii::t(null, '{File}{Name}', [
                     'File' => Yii::t('app', 'File'),
@@ -47,15 +78,43 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'headerOptions' => [
                     'style' => [
+                        'min-width' => '150px',
                         'text-align' => 'center',
-                        'padding' => '8px'
                     ],
                 ],
                 'value' => function($data) {
                     return !empty($data['filename']) ? $data['filename'] : NULL;
                 },
                 'contentOptions' => [
-                    'class' => 'activity-name list-td',
+                    'class' => 'list-td',
+                    'style' => [
+                        'word-break'=> 'break-word',
+                        'text-align' => 'center',
+                    ]
+                ],
+            ],
+            [
+                'attribute' => 'path',
+                'label' => Yii::t(null, '{File}{Path}', [
+                    'File' => Yii::t('app', 'File'),
+                    'Path' => Yii::t('app', 'Path')
+                ]),
+                'format' => 'raw',
+                'headerOptions' => [
+                    'style' => [
+                        'min-width'=> '280px',
+                        'text-align' => 'center',
+                    ],
+                ],
+                'value' => function($data) {
+                    return !empty($data['path']) ? $data['path'] : NULL;
+                },
+                'contentOptions' => [
+                    'class' => 'list-td',
+                    'style' => [
+                        'word-break'=> 'break-word',
+                        'text-align' => 'center',
+                    ]
                 ],
             ],
             [
@@ -74,53 +133,84 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]),
                 'headerOptions' => [
                     'style' => [
-                        'width' => '200px',
                         'text-align' => 'center',
-                        'padding' => '8px'
                     ],
                 ],
                 'value' => function($data) {
                     return !empty($data['created_by']) ? $data['created_by'] : NULL;
                 },
                 'contentOptions' => [
-                    'class' => 'activity-name list-td',
+                    'class' => 'list-td',
                     'style' => [
                         'text-align' => 'center',
                     ],
                 ],
             ],
             [
-                'attribute' => 'del_mark',
-                'label' => Yii::t(null, '{Is}{Mark}', [
-                    'Is' => Yii::t('app', 'Is'),
-                    'Mark' => Yii::t('app', 'Mark'),
+                'attribute' => 'created_at',
+                'label' => Yii::t(null, '{Upload}{Time}', [
+                    'Upload' => Yii::t('app', 'Upload'),
+                    'Time' => Yii::t('app', 'Time')
                 ]),
                 'format' => 'raw',
-                'filter' => Select2::widget([
+                'filter' => DateRangePicker::widget([    // 日期组件
                     'model' => $searchModel,
-                    'attribute' => 'del_mark',
-                    'data' => Uploadfile::$TYPES,
-                    'hideSearch' => true,
-                    'options' => ['placeholder' => Yii::t('app', 'All')],
+                    'name' => 'time',
+                    'value' => ArrayHelper::getValue($params, 'time'),
+                    'hideInput' => true,
+                    'convertFormat'=>true,
                     'pluginOptions' => [
+                        'locale'=>['format' => 'Y-m-d'],
                         'allowClear' => true,
                     ],
                 ]),
                 'headerOptions' => [
                     'style' => [
-                        'width' => '200px',
+                        'min-width' => '240px',
                         'text-align' => 'center',
-                        'padding' => '8px'
                     ],
                 ],
-                'class' => GridViewChangeSelfColumn::className(),
+                'value' => function($data) {
+                    return !empty(date('Y-m-d H:i', $data['created_at'])) ? date('Y-m-d H:i', $data['created_at']) : NULL;
+                },
                 'contentOptions' => [
-                    'class' => 'activity-name list-td',
+                    'class' => 'list-td',
                     'style' => [
                         'text-align' => 'center',
                     ],
                 ],
             ],
+//            [
+//                'attribute' => 'del_mark',
+//                'label' => Yii::t(null, '{Is}{Mark}', [
+//                    'Is' => Yii::t('app', 'Is'),
+//                    'Mark' => Yii::t('app', 'Mark'),
+//                ]),
+//                'format' => 'raw',
+//                'filter' => Select2::widget([
+//                    'model' => $searchModel,
+//                    'attribute' => 'del_mark',
+//                    'data' => Uploadfile::$TYPES,
+//                    'hideSearch' => true,
+//                    'options' => ['placeholder' => Yii::t('app', 'All')],
+//                    'pluginOptions' => [
+//                        'allowClear' => true,
+//                    ],
+//                ]),
+//                'headerOptions' => [
+//                    'style' => [
+//                        'width' => '200px',
+//                        'text-align' => 'center',
+//                    ],
+//                ],
+//                'class' => GridViewChangeSelfColumn::className(),
+//                'contentOptions' => [
+//                    'class' => 'list-td',
+//                    'style' => [
+//                        'text-align' => 'center',
+//                    ],
+//                ],
+//            ],
             [
                 'attribute' => 'is_del',
                 'label' => Yii::t('null', '{Already}{Delete}',[
@@ -140,16 +230,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]),
                 'headerOptions' => [
                     'style' => [
-                        'width' => '200px',
                         'text-align' => 'center',
-                        'padding' => '8px'
                     ],
                 ],
                'value' => function($data) {
                     return $data['is_del'] ? '<span style="color:red">是</span>' : '否';
                 },
                 'contentOptions' => [
-                    'class' => 'activity-name list-td',
+                    'class' => 'list-td',
                     'style' => [
                         'text-align' => 'center',
                     ],
@@ -159,7 +247,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'header' => Yii::t('app', 'Operating'),
                 'headerOptions' => [
                     'style' => [
-                        'width' => '80px',
                         'text-align' => 'center',
                     ],
                 ],

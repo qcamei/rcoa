@@ -7,6 +7,7 @@ use wskeee\webuploader\models\Uploadfile;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 
 /**
  * UploadfileSearch represents the model behind the search form about `common\models\Uploadfile`.
@@ -39,9 +40,10 @@ class UploadfileSearch extends Uploadfile {
      * @return ActiveDataProvider
      */
     public function search($params) {
+        $time = ArrayHelper::getValue($params, 'time');                                                         //时间段
         $query = $query = (new Query())
                 ->select(['Uploadfile.id', 'Uploadfile.name AS filename', 'Uploadfile.del_mark', 'Uploadfile.is_del',
-                    'CreateBy.nickname AS created_by', 'Uploadfile.path'])
+                    'CreateBy.nickname AS created_by', 'Uploadfile.path', 'Uploadfile.created_at'])
                 ->from(['Uploadfile' => Uploadfile::tableName()]);
 
         // add conditions that should always apply here
@@ -61,19 +63,22 @@ class UploadfileSearch extends Uploadfile {
         //关联查询创建者
         $query->leftJoin(['CreateBy' => User::tableName()], 'CreateBy.id = Uploadfile.created_by');
         
+        //按时间段搜索
+        if($time != null){
+            $times = explode(" - ", $time);
+            $query->andFilterWhere(['between', 'Uploadfile.created_at', strtotime($times[0]), strtotime($times[1])]);
+        }
         // grid filtering conditions
         $query->andFilterWhere([
             'download_count' => $this->download_count,
             'del_mark' => $this->del_mark,
             'is_del' => $this->is_del,
             'is_fixed' => $this->is_fixed,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
             'size' => $this->size,
             'created_by' => $this->created_by,
         ]);
 
-        $query->andFilterWhere(['like', 'id', $this->id])
+        $query->andFilterWhere(['like', 'Uploadfile.id', $this->id])
                 ->andFilterWhere(['like', 'name', $this->name])
                 ->andFilterWhere(['like', 'path', $this->path])
                 ->andFilterWhere(['like', 'thumb_path', $this->thumb_path]);

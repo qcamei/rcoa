@@ -30,13 +30,22 @@ class ScheduledTaskLog extends ActiveRecord
      */
     const TYPE_CHECK_MAX_FILE_LIMIT = 2;
     
+    /** 失败 */
+    const TYPE_NO_SUCCESS = 0;
+    /** 成功 */
+    const TYPE_YES_SUCCESS = 1;
+
     public static $type = [
         self::TYPE_MCONLINE_CHECK_EXPIRE_FILE => '检查过期文件',
         self::TYPE_CHECK_MAX_FILE_LIMIT => '检查文件大小上限',
     ];
     
-    
-    /**
+    public static $IsSuccess = [
+        self::TYPE_NO_SUCCESS => '失败',
+        self::TYPE_YES_SUCCESS => '成功',  
+    ];
+
+        /**
      * @inheritdoc
      */
     public static function tableName()
