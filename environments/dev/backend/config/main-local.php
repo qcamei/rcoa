@@ -64,6 +64,9 @@ $config = [
         'mconline_admin' => [
             'class' => 'backend\modules\mconline_admin\Module',
         ],
+        'webuploader' => [
+            'class' => 'wskeee\webuploader\Module',
+        ],
     ],
     'as access' => [
         'class' => 'wskeee\rbac\components\AccessControl',
