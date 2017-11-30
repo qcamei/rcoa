@@ -285,7 +285,7 @@ class DefaultController extends Controller {
             }
         }
         //应用
-        $app_id = isset($_REQUEST["app_id"]) ? $_REQUEST["app_id"].'/' : '';
+        $app_id = isset($_REQUEST["app_id"]) ? $_REQUEST["app_id"] : '';
         //应用web路径，默认会放本应用的web下，通过设置root_path可改变目标路径
         $root_path = isset($_REQUEST["root_path"]) ? $_REQUEST["root_path"].'/' : '';
         $dir_path = isset($_REQUEST["dir_path"]) ? '/' . $_REQUEST["dir_path"] : '';
