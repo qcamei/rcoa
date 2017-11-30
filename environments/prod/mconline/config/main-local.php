@@ -11,9 +11,6 @@ $config = [
         'mcbs' => [
             'class' => 'mconline\modules\mcbs\Module',
         ],
-        'webuploader' => [
-            'class' => 'wskeee\webuploader\Module',
-        ],
     ],
 ];
 

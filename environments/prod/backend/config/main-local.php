@@ -64,21 +64,9 @@ $config = [
         'mconline_admin' => [
             'class' => 'backend\modules\mconline_admin\Module',
         ],
-        'webuploader' => [
-            'class' => 'wskeee\webuploader\Module',
-        ],
     ],
     'as access' => [
-        'class' => 'wskeee\rbac\components\AccessControl',
         'allowActions' => [
-            'site/*',
-            'gii/*',
-            'debug/*',
-            'datecontrol/*',
-            'rbac/*',
-            'job/*',
-            'user/*',
-            'webuploader/*',
             // The actions listed here will be allowed to everyone including guests.
             // So, 'admin/*' should not appear here in the production, of course.
             // But in the earlier stages of your development, you may probably want to
