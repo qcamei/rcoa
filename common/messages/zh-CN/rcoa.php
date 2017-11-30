@@ -66,6 +66,7 @@ return [
     'Detail' => '详情',
     'Deploy' => '配置',
     'Close' => '关闭',
+    'Open' => '开启',
     'Confirm' => '确定',
     'Operating' => '操作',
     'Action' => '动作',
@@ -165,6 +166,7 @@ return [
     'Course Info' => '课程信息',
     'Help Man' => '协作人员',
     'Course Des' => '课程简介',
+    'Publish' => '发布',
     //协作人员
     'Fullname' => '姓名',
     'Privilege' => '权限',

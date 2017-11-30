@@ -66,6 +66,8 @@ $swfpath = $this->assetManager->getPublishedUrl(WebUploaderAsset::register($this
 //获取已上传文件
 $files = json_encode($files);
 $csrfToken = Yii::$app->request->csrfToken;
+$app_id = Yii::$app->id ;
+
 
 $js = 
 <<<JS
@@ -97,7 +99,8 @@ $js =
         formData: {
             _csrf: "$csrfToken",
             //指定文件上传到的应用
-            app_path: 'mcoline',
+            dir_path: 'mcoline',
+            app_id: "$app_id",
             //debug: 1,
         }
     });

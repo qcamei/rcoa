@@ -1,6 +1,6 @@
 <?php
 
-use common\models\mconline\McbsCourseUser;
+use common\models\mconline\McbsCourse;
 use mconline\modules\mcbs\assets\McbsAssets;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -8,17 +8,17 @@ use yii\web\View;
 use yii\widgets\ActiveForm;
 
 /* @var $this View */
-/* @var $model McbsCourseUser */
+/* @var $model McbsCourse */
 
-$this->title = Yii::t(null, "{delete}{helpman}：{$model->user->nickname}", [
-    'delete' => Yii::t('app', 'Delete'),
-    'helpman' => Yii::t('app', 'Help Man')
+$this->title = Yii::t(null, "{publish}{courses}：{$model->course->name}", [
+    'publish' => Yii::t('app', 'Publish'),
+    'courses' => Yii::t('app', 'Courses')
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Mcbs Courses'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
-<div class="mcbs-delete-helpman mcbs">
+<div class="mcbs-course-close mcbs">
 
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
             <div class="modal-body">
                 <?php $form = ActiveForm::begin([
                     'options'=>[
-                        'id' => 'form-helpman',
+                        'id' => 'mcbs-form',
                         'class'=>'form-horizontal',
                     ],
                     'fieldConfig' => [  
@@ -42,9 +42,11 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
                     ], 
                 ]); ?>
                 
-                <?= Html::activeHiddenInput($model, 'id') ?>
-
-                <?= Html::encode('确定要删除该协作人？') ?>
+                <?= Html::activeHiddenInput($model, 'is_publish', ['value'=> 1]) ?>
+                
+                <?= Html::activeHiddenInput($model, 'publish_time', ['value'=> time()]) ?>
+                
+                <?= Html::encode('确定要'.Html::encode($this->title).'？') ?>
 
                 <?php ActiveForm::end(); ?>
             </div>
@@ -61,21 +63,12 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 
 <?php
 
-$helpman = Url::to(['course-make/helpman-index', 'course_id' => $model->course_id]);
-$helpmanUrl = Url::to(['course-make/delete-helpman', 'id' => $model->id]);
-$actlog = Url::to(['course-make/log-index', 'course_id' => $model->course_id]);
-
 $js = 
 <<<JS
         
     /** 提交表单 */
     $("#submitsave").click(function(){
-        $.post("$helpmanUrl",$('#form-helpman').serialize(),function(data){
-            if(data['code'] == '200'){
-                $("#help-man").load("$helpman");
-                $("#action-log").load("$actlog");
-            }
-        });
+        $("#mcbs-form").submit();
     });
         
 JS;

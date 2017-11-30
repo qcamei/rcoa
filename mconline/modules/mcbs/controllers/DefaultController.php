@@ -2,9 +2,11 @@
 
 namespace mconline\modules\mcbs\controllers;
 
+use common\models\mconline\McbsAttention;
 use common\models\mconline\McbsCourse;
 use common\models\mconline\searchs\McbsCourseSearch;
 use common\models\User;
+use mconline\modules\mcbs\utils\McbsAction;
 use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\ItemType;
 use Yii;
@@ -31,7 +33,7 @@ class DefaultController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index','attention','lookup','create','view','update'],
+                        //'actions' => ['index','attention','lookup','create','view','update','close'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -87,7 +89,7 @@ class DefaultController extends Controller
     {
         $model = new McbsCourse(['id' => md5(rand(1,10000) + time()), 'created_by' => Yii::$app->user->id]);
         $model->loadDefaultValues();
-        
+        $model->scenario = McbsCourse::SCENARIO_CREATE;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -110,7 +112,8 @@ class DefaultController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $model->scenario = McbsCourse::SCENARIO_UPDATE;
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -121,6 +124,90 @@ class DefaultController extends Controller
                 'itemChilds' => $this->getChildrens($model->item_id),
                 'courses' => $this->getChildrens($model->item_child_id),
             ]);
+        }
+    }
+        
+    /**
+     * Close an existing McbsCourse model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionClose($id)
+    {
+        $model = $this->findModel($id);
+        
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            McbsAction::getInstance()->saveMcbsActionLog([
+                'action' => '关闭',
+                'title' => '课程管理',
+                'content' => '关闭课程',
+                'course_id' => $model->id,
+            ]);
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->renderAjax('close', [
+                'model' => $model,
+            ]);
+        }
+    }
+    
+    /**
+     * Open an existing McbsCourse model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionOpen($id)
+    {
+        $model = $this->findModel($id);
+        
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            McbsAction::getInstance()->saveMcbsActionLog([
+                'action' => '开启',
+                'title' => '课程管理',
+                'content' => '开启课程',
+                'course_id' => $model->id,
+            ]);
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->renderAjax('open', [
+                'model' => $model,
+            ]);
+        }
+    }
+    
+    /**
+     * Publish an existing McbsCourse model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionPublish($id)
+    {
+        $model = $this->findModel($id);
+        
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->renderAjax('publish', [
+                'model' => $model,
+            ]);
+        }
+    }
+    
+    /**
+     * Attention an existing McbsAttention model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionAttention($id)
+    {
+        $model = $this->findModel($id);
+        $attention = $this->findMcbsAttentionModel($model->id);
+        if ($attention->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
         }
     }
 
@@ -141,7 +228,7 @@ class DefaultController extends Controller
      * 跳转到我的关注
      * @return array
      */
-    public function actionAttention()
+    public function actionAttentionIndex()
     {
         $searchResult = new McbsCourseSearch();
         $results = $searchResult->searchMyAttention(Yii::$app->request->queryParams);
@@ -197,6 +284,25 @@ class DefaultController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+    
+    /**
+     * Finds the McbsAttention model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $course_id
+     * @return McbsCourse the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findMcbsAttentionModel($course_id)
+    {
+        $model = McbsAttention::findOne(['user_id'=> Yii::$app->user->id,'course_id'=>$course_id]);
+        if ($model !== null) {
+            return $model;
+        } else {
+            return new McbsAttention(['user_id'=> Yii::$app->user->id,'course_id'=>$course_id]);
+        }
+    }
+    
+    
     
     /**
      * 获取所有行业
