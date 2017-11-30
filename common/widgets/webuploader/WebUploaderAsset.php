@@ -7,7 +7,7 @@ use yii\web\AssetBundle;
 class WebUploaderAsset extends AssetBundle
 {
     public $css = [
-        'style.css',
+        //'style.css',  //样式冲突
         'euploader.css',
     ];
     public $js = [

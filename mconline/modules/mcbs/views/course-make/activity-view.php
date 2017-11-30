@@ -184,6 +184,7 @@ $meslist = Url::to(['course-make/mes-index','course_id'=>$model->section->chapte
     'activity_id'=>$model->id]);
 $actlog = Url::to(['course-make/log-index','course_id'=>$model->section->chapter->block->phase->course_id,
     'relative_id'=>$model->id]);
+$createmse = Url::to(['course-make/create-message', 'activity_id'=>$model->id]);
 $js = 
 <<<JS
         
@@ -193,7 +194,12 @@ $js =
     $("#action-log").load("$actlog"); 
     //提交表单
     $("#submitsave").click(function(){
-        $("#form-message").submit()
+        $.post("$createmse",$('#form-message').serialize(),function(data){
+            if(data['code'] == '200'){
+                $("#mes-list").load("$meslist"); 
+                $("#form-message textarea").val("");
+            }
+        });
     });
 JS;
     $this->registerJs($js,  View::POS_READY);

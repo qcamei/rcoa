@@ -45,67 +45,28 @@ use yii\widgets\ActiveForm;
         
     <?= $form->field($model, 'name')->textInput(['placeholder'=>'请输入...']) ?>
 
-    <?= $form->field($model, 'des')->textarea(['rows'=>6,'value'=>$model->isNewRecord?'无':$model->des]) ?>
+    <?= $form->field($model, 'des')->textarea(['rows'=>3,'value'=>$model->isNewRecord?'无':$model->des]) ?>
     
-    <div id="uploader" class="container">
-        <div class="col-lg-1 col-md-1" style="text-align: right;padding: 0px;">文件上传：</div>
-        <div id="uploader-container" class="col-lg-10 col-md-10"></div>
+    <div class="form-group field-mcbsactivityfile-file_id">
+        <div id="uploader" class="col-lg-12 col-md-12">
+            <label class="col-lg-1 col-md-1 form-label" style="padding-left:0;font-size:14px;" for="mcbsactivityfile-file_id">文件上传：</label>
+            <div id="uploader-container" class="col-lg-10 col-md-10"></div>
+            <div class="col-lg-10 col-md-10"><div class="help-block"></div></div>
+        </div>
     </div>
     
-    <div class="form-group">
-        <?= Html::a($model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'), 'javascript:;' ,['id'=>'submitsave', 'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
-
     <?php ActiveForm::end(); ?>
 
 </div>
 
 <?php
-    //获取flash上传组件路径
-    $swfpath = $this->assetManager->getPublishedUrl(WebUploaderAsset::register($this)->sourcePath);
-    //获取已上传文件
-    $files = json_encode($files);
-?>
 
-<script type='text/javascript'>
-    var uploader;
-    window.onload = function () {
-        uploader = new Wskeee.Uploader({
-            // 文件接收服务端。
-            server: '/webuploader/default/upload',
-            //检查文件是否存在
-            checkFile: '/webuploader/default/check-file',
-            //分片合并
-            mergeChunks: '/webuploader/default/merge-chunks',
-            //flash上传组件
-            swf: '<?= $swfpath ?>' + '/Uploader.swf',
-            // 上传容器
-            container: '#uploader-container',
-            //自动上传
-            auto: false,
-            //每次上传都会传到服务器的固定参数
-            formData: {
-                _csrf: "<?= Yii::$app->request->csrfToken ?>",
-                //指定文件上传到的应用
-                app_path: 'mcoline',
-                //debug: 1,
-            }
-        });
-        uploader.addCompleteFiles(<?= $files ?>);
-    }
-    /**
-     * 上传文件完成才可以提交
-     * @returns {Wskeee.Uploader.isFinish}
-     */
-    function tijiao(){
-        //uploader,isFinish 是否已经完成所有上传
-        //uploader.hasError 是否有上传错误的文件
-        console.log(hasError);
-        //return uploader.isFinish;
-    } 
-</script>
+//获取flash上传组件路径
+$swfpath = $this->assetManager->getPublishedUrl(WebUploaderAsset::register($this)->sourcePath);
+//获取已上传文件
+$files = json_encode($files);
+$csrfToken = Yii::$app->request->csrfToken;
 
-<?php
 $js = 
 <<<JS
     
@@ -117,6 +78,40 @@ $js =
         $(".field-mcbscourseactivity-type_id .help-block").html("");
         $("#mcbscourseactivity-type_id").val($(this).children("p").attr("data-key"));
     });
+    //加载文件上传  
+    var uploader;
+    uploader = new Wskeee.Uploader({
+        // 文件接收服务端。
+        server: '/webuploader/default/upload',
+        //检查文件是否存在
+        checkFile: '/webuploader/default/check-file',
+        //分片合并
+        mergeChunks: '/webuploader/default/merge-chunks',
+        //flash上传组件
+        swf: '$swfpath' + '/Uploader.swf',
+        // 上传容器
+        container: '#uploader-container',
+        //自动上传
+        auto: false,
+        //每次上传都会传到服务器的固定参数
+        formData: {
+            _csrf: "$csrfToken",
+            //指定文件上传到的应用
+            app_path: 'mcoline',
+            //debug: 1,
+        }
+    });
+    uploader.addCompleteFiles($files);
+    /**
+     * 上传文件完成才可以提交
+     * @returns {Wskeee.Uploader.isFinish}
+     */
+    function tijiao(){
+        //uploader,isFinish 是否已经完成所有上传
+        //uploader.hasError 是否有上传错误的文件
+        //console.log(uploader.isFinish);
+        return uploader.isFinish;
+    } 
         
 JS;
     $this->registerJs($js,  View::POS_READY);

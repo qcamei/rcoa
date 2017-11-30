@@ -56,7 +56,7 @@ class McbsCourseActivitySearch extends McbsCourseActivity
         $this->course_id = ArrayHelper::getValue($params, 'course_id');
         
         $query = McbsCourseActivity::find()
-                ->select(['CourseActivity.*','CourseSection.name AS sect_name','ActivityType.icon_path AS iocn_type'])
+                ->select(['CourseActivity.*','ActivityType.name AS type_name','ActivityType.icon_path'])
                 ->from(['CourseActivity'=> McbsCourseActivity::tableName()]);
 
         // add conditions that should always apply here
