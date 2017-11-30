@@ -13,6 +13,7 @@ use yii\db\ActiveRecord;
  * @property string $name   `           文件名
  * @property string $path               文件路径
  * @property string $thumb_path         缩略图路径
+ * @property string $app_id             应用ID
  * @property string $download_count     下载次数
  * @property integer $del_mark          即将删除标记：0未标记，1已标记
  * @property integer $is_del            是否已经删除标记：0未删除，1已删除
@@ -65,6 +66,7 @@ class Uploadfile extends ActiveRecord
             [['id'], 'required'],
             [['download_count', 'del_mark', 'is_del', 'is_fixed', 'created_at','deleted_at', 'updated_at', 'size'], 'integer'],
             [['id'], 'string', 'max' => 32],
+            [['app_id'], 'string', 'max' => 50],
             [['name', 'path', 'thumb_path'], 'string', 'max' => 255],
             [['created_by','deleted_by'], 'string', 'max' => 36],
         ];
@@ -80,6 +82,7 @@ class Uploadfile extends ActiveRecord
             'name' => Yii::t('app', 'Name'),
             'path' => Yii::t('app', 'Path'),
             'thumb_path' => Yii::t('app', 'Thumb Path'),
+            'app_id' => Yii::t('app', 'App ID'),
             'download_count' => Yii::t('app', 'Download Count'),
             'del_mark' => Yii::t('app', 'Del Mark'),
             'is_del' => Yii::t('app', 'Is Del'),

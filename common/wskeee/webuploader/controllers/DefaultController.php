@@ -64,9 +64,11 @@ class DefaultController extends Controller {
         // usleep(5000);
         // Settings
         // $targetDir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
-        $app_path = isset($_REQUEST["app_path"]) ? DIRECTORY_SEPARATOR . $_REQUEST["app_path"] : '';
-        $targetDir = 'upload/weuploader/upload_tmp';
-        $uploadDir = 'upload/weuploader/upload' . $app_path;
+        //应用web路径，默认会放本应用的web下，通过设置root_path可改变目标路径
+        $root_path = isset($_REQUEST["root_path"]) ? $_REQUEST["root_path"].'/' : '';
+        $dir_path = isset($_REQUEST["dir_path"]) ? '/' . $_REQUEST["dir_path"] : '';
+        $targetDir = $root_path.'upload/weuploader/upload_tmp';
+        $uploadDir = $root_path.'upload/weuploader/upload' . $dir_path;
         $cleanupTargetDir = true; // Remove old files
         $maxFileAge = 5 * 3600; // Temp file age in seconds
         // Create target dir
@@ -88,8 +90,8 @@ class DefaultController extends Controller {
         $chunkMd5 = isset($_REQUEST["chunkMd5"]) ? $_REQUEST["chunkMd5"] : '';
         $fileMd5 = isset($_REQUEST["fileMd5"]) ? $_REQUEST["fileMd5"] : '';
 
-        $filePath = $targetDir . DIRECTORY_SEPARATOR . $fileMd5;
-        $uploadPath = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
+        $filePath = $targetDir . '/' . $fileMd5;
+        $uploadPath = $uploadDir . '/' . $fileName;
         /* @var $fileChunk UploadfileChunk 分片模型 */
         $fileChunk;
         //检查分片是否上传过
@@ -106,7 +108,7 @@ class DefaultController extends Controller {
                 die('{"jsonrpc" : "2.0", "error" : {"code": 100, "message": "Failed to open temp directory."}, "id" : "id"}');
             }
             while (($file = readdir($dir)) !== false) {
-                $tmpfilePath = $targetDir . DIRECTORY_SEPARATOR . $file;
+                $tmpfilePath = $targetDir . '/' . $file;
                 // If temp file is current file proceed to the next
                 if ($tmpfilePath == "{$filePath}_{$chunk}.part" || $tmpfilePath == "{$filePath}_{$chunk}.parttmp") {
                     continue;
@@ -282,10 +284,13 @@ class DefaultController extends Controller {
                 exit;
             }
         }
-        //应用目录
-        $app_path = isset($_REQUEST["app_path"]) ? DIRECTORY_SEPARATOR . $_REQUEST["app_path"] : '';
-        $targetDir = 'upload/weuploader/upload_tmp';
-        $uploadDir = 'upload/weuploader/upload' . $app_path;
+        //应用
+        $app_id = isset($_REQUEST["app_id"]) ? $_REQUEST["app_id"].'/' : '';
+        //应用web路径，默认会放本应用的web下，通过设置root_path可改变目标路径
+        $root_path = isset($_REQUEST["root_path"]) ? $_REQUEST["root_path"].'/' : '';
+        $dir_path = isset($_REQUEST["dir_path"]) ? '/' . $_REQUEST["dir_path"] : '';
+        $targetDir = $root_path.'upload/weuploader/upload_tmp';
+        $uploadDir = $root_path.'upload/weuploader/upload' . $dir_path;
         $cleanupTargetDir = true; // Remove old files
         $maxFileAge = 5 * 3600; // Temp file age in seconds
         // Create target dir
@@ -307,7 +312,7 @@ class DefaultController extends Controller {
         //文件大小
         $fileSize = isset($_REQUEST["size"]) ? (integer) $_REQUEST["size"] : 0;
         //文件路径
-        $uploadPath = $uploadDir . DIRECTORY_SEPARATOR . $fileMd5 . strrchr($fileName, '.');
+        $uploadPath = $uploadDir . '/' . $fileMd5 . strrchr($fileName, '.');
 
         if ($fileMd5 == '') {
             die('{"jsonrpc" : "2.0", "error" : {"code": 200, "message": "fileMd5 不能为空!"}, "id" : "id"}');
@@ -352,6 +357,7 @@ class DefaultController extends Controller {
                 $dbFile->created_by = Yii::$app->user->id;
                 $dbFile->thumb_path = '';
                 $dbFile->size = $fileSize;
+                $dbFile->app_id = $app_id;
                 if ($dbFile->save()) {
                     //删除临时文件
                     foreach ($fileChunks as $fileChunk) {
@@ -473,10 +479,11 @@ class DefaultController extends Controller {
      * @param string $path
      */
     private function mkdir($path) {
+        $path = str_replace('\\', '/', $path);
         $dirs = explode('/', $path);
         $parent = '';
         foreach ($dirs as $dir) {
-            $dir = $parent == '' ? $dir : $parent . DIRECTORY_SEPARATOR . $dir;
+            $dir = $parent == '' ? $dir : $parent . '/' . $dir;
             if (!file_exists($dir)) {
                 @mkdir($dir);
             }
