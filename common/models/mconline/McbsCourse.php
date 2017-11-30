@@ -100,11 +100,13 @@ class McbsCourse extends ActiveRecord
     {
         $format = $this->getAttribute($attribute);  
         $course = $this->findOne(['course_id'=> $this->course_id])['course_id'];
-        if($format == $course){
-            $this->addError($attribute, "该课程已存在！"); 
-            return false;
+        if($this->isNewRecord){
+                if($format == $course){
+                $this->addError($attribute, "该课程已存在！"); 
+                return false;
+            }
+            return true;
         }
-        return true;
     }
 
     /**

@@ -21,10 +21,10 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t(null, '{File}{List}{Administ
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="uploadfile-create">
-    <div id="create">
+    <div id="uploader">
         <?php ActiveForm::begin() ?>
             <div class="col-xs-12 col-sm-1" style="text-align: right; margin-top: 15px; padding-right: 0px">选择文件：</div>
-            <div id="create-container" class="col-xs-12 col-sm-11">
+            <div id="uploader-container" class="col-xs-12 col-sm-11">
             </div>
             <div class="col-sm-12" style="text-align: right;">
                 <?= Html::submitButton('提交',['class' => 'btn btn-success','onclick' => 'return tijiao();']) ?>
@@ -36,9 +36,9 @@ $this->params['breadcrumbs'][] = $this->title;
         $swfpath = $this->assetManager->getPublishedUrl(WebUploaderAsset::register($this)->sourcePath);
     ?>
     <script type='text/javascript'>
-        var create;
+        var uploader;
         window.onload = function () {
-            create = new Wskeee.Uploader({
+            uploader = new Wskeee.Uploader({
                 // 文件接收服务端。
                 server: '/webuploader/default/upload',
                 //检查文件是否存在
@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 //flash上传组件
                 swf: '<?= $swfpath ?>' + '/Uploader.swf',
                 // 上传容器
-                container: '#create-container',
+                container: '#uploader-container',
                 //自动上传
                 auto: false,
                 //每次上传都会传到服务器的固定参数
@@ -68,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //uploader,isFinish 是否已经完成所有上传
             //uploader.hasError 是否有上传错误的文件
             
-            return create.isFinish;
+            return uploader.isFinish;
         } 
     </script>
 </div>

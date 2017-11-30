@@ -128,7 +128,7 @@ class McbsCourseSearch extends McbsCourse {
         ]);
         //分组、排序、截取
         $query->groupBy(['McbsCourse.id'])
-                ->orderBy(['McbsCourse.id' => SORT_DESC]);
+                ->orderBy(['McbsCourse.updated_at' => SORT_DESC]);
         //查询结果
         $results = $query->limit(20)->offset(($page - 1) * 20)->all();
         
@@ -168,7 +168,7 @@ class McbsCourseSearch extends McbsCourse {
         ]);
         //分组、排序、截取
         $query->groupBy(['McbsAttention.id'])
-                ->orderBy(['McbsAttention.id' => SORT_DESC]);
+                ->orderBy(['McbsAttention.updated_at' => SORT_DESC]);
         //查询结果
         $results = $query->limit(20)->offset(($page - 1) * 20)->all();
         
@@ -215,7 +215,7 @@ class McbsCourseSearch extends McbsCourse {
         ]);
         //分组、排序、截取
         $query->groupBy(['McbsCourse.id'])
-                ->orderBy(['McbsCourse.id' => SORT_DESC]);
+                ->orderBy(['McbsCourse.updated_at' => SORT_DESC]);
         //查询结果
         $results = $query->limit(20)->offset(($page - 1) * 20)->all();
         
