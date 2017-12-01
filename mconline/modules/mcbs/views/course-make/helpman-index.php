@@ -3,7 +3,7 @@
 use common\models\mconline\McbsCourseUser;
 use common\models\mconline\searchs\McbsCourseUserSearch;
 use mconline\modules\mcbs\assets\McbsAssets;
-use wskeee\rbac\components\ResourceHelper;
+use mconline\modules\mcbs\utils\McbsAction;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -110,7 +110,8 @@ $this->params['breadcrumbs'][] = $this->title;
                             'conditions' => $model->course->created_by == Yii::$app->user->id,
                             'adminOptions' => true,
                         ];
-                        return Html::a($buttonHtml['name'],$buttonHtml['url'],$buttonHtml['options']);
+                        if(McbsAction::getIsPermission($model->course->id, McbsCourseUser::OWNERSHIP))
+                            return Html::a($buttonHtml['name'],$buttonHtml['url'],$buttonHtml['options']);
                         //return ResourceHelper::a($buttonHtml['name'], $buttonHtml['url'],$buttonHtml['options'],$buttonHtml['conditions']);
                     },
                     'delete' => function ($url, $model, $key) {
@@ -131,7 +132,8 @@ $this->params['breadcrumbs'][] = $this->title;
                             'conditions' => $model->course->created_by == Yii::$app->user->id,
                             'adminOptions' => true,
                         ];
-                        return Html::a($buttonHtml['name'],$buttonHtml['url'],$buttonHtml['options']);
+                        if(McbsAction::getIsPermission($model->course->id, McbsCourseUser::OWNERSHIP))
+                            return Html::a($buttonHtml['name'],$buttonHtml['url'],$buttonHtml['options']);
                         //return ResourceHelper::a($buttonHtml['name'], $buttonHtml['url'],$buttonHtml['options'],$buttonHtml['conditions']);
                     },       
                 ],

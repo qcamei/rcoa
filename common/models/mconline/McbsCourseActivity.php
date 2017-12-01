@@ -86,7 +86,7 @@ class McbsCourseActivity extends ActiveRecord
             if($this->isNewRecord){
                 /* @var $model McbsCourseActivity */
                 $model = $this->find()->select(['sort_order'])
-                        ->where(['section_id' => $this->section_id])
+                        ->where(['section_id' => $this->section_id, 'is_del' => 0])
                         ->orderBy(['sort_order'=>SORT_DESC])->one();
         
                 if($model != null)

@@ -47,7 +47,7 @@ class McbsCourseChapter extends ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'block_id'], 'required'],
+            [['id', 'block_id', 'name'], 'required'],
             [['sort_order', 'is_del', 'created_at', 'updated_at'], 'integer'],
             [['id', 'block_id'], 'string', 'max' => 32],
             [['name'], 'string', 'max' => 100],
@@ -83,7 +83,7 @@ class McbsCourseChapter extends ActiveRecord
             if($this->isNewRecord){
                 /* @var $model McbsCourseChapter */
                 $model = $this->find()->select(['sort_order'])
-                        ->where(['block_id' => $this->block_id])
+                        ->where(['block_id' => $this->block_id, 'is_del' => 0])
                         ->orderBy(['sort_order'=>SORT_DESC])->one();
         
                 if($model != null)

@@ -24,7 +24,7 @@ use yii\widgets\ActiveForm;
         ], 
     ]); ?>
 
-    <?= $form->field($model, 'name')->textInput() ?>
+    <?= $form->field($model, 'name')->textInput(['placeholder'=>'请输入...']) ?>
 
     <?php
         if($is_show != null)

@@ -48,7 +48,7 @@ class McbsCoursePhase extends ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'course_id'], 'required'],
+            [['id', 'course_id', 'name', 'value_percent'], 'required'],
             [['value_percent'], 'number'],
             [['des'], 'string'],
             [['sort_order', 'is_del', 'created_at', 'updated_at'], 'integer'],
@@ -86,7 +86,7 @@ class McbsCoursePhase extends ActiveRecord
             if($this->isNewRecord){
                 /* @var $model McbsCoursePhase */
                 $model = $this->find()->select(['sort_order'])
-                        ->where(['course_id' => $this->course_id])
+                        ->where(['course_id' => $this->course_id, 'is_del' => 0])
                         ->orderBy(['sort_order'=>SORT_DESC])->one();
                 
                 if($model != null)

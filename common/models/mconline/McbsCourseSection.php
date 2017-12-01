@@ -47,7 +47,7 @@ class McbsCourseSection extends ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'chapter_id'], 'required'],
+            [['id', 'chapter_id', 'name'], 'required'],
             [['sort_order', 'is_del', 'created_at', 'updated_at'], 'integer'],
             [['id', 'chapter_id'], 'string', 'max' => 32],
             [['name'], 'string', 'max' => 100],
@@ -83,7 +83,7 @@ class McbsCourseSection extends ActiveRecord
             if($this->isNewRecord){
                 /* @var $model McbsCourseSection */
                 $model = $this->find()->select(['sort_order'])
-                        ->where(['chapter_id' => $this->chapter_id])
+                        ->where(['chapter_id' => $this->chapter_id, 'is_del' => 0])
                         ->orderBy(['sort_order'=>SORT_DESC])->one();
         
                 if($model != null)

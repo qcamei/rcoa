@@ -90,6 +90,7 @@ class DefaultController extends Controller
         $model = new McbsCourse(['id' => md5(rand(1,10000) + time()), 'created_by' => Yii::$app->user->id]);
         $model->loadDefaultValues();
         $model->scenario = McbsCourse::SCENARIO_CREATE;
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -112,8 +113,10 @@ class DefaultController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $model->scenario = McbsCourse::SCENARIO_UPDATE;
+        if(!McbsAction::getIsPermission($id, McbsCourseUser::OWNERSHIP))
+            throw new NotAcceptableHttpException('无权限操作！');
         
+        $model->scenario = McbsCourse::SCENARIO_UPDATE;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -136,6 +139,8 @@ class DefaultController extends Controller
     public function actionClose($id)
     {
         $model = $this->findModel($id);
+        if(!McbsAction::getIsPermission($id, McbsCourseUser::OWNERSHIP))
+            throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             McbsAction::getInstance()->saveMcbsActionLog([
@@ -161,6 +166,8 @@ class DefaultController extends Controller
     public function actionOpen($id)
     {
         $model = $this->findModel($id);
+        if(!McbsAction::getIsPermission($id, McbsCourseUser::OWNERSHIP))
+            throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             McbsAction::getInstance()->saveMcbsActionLog([
@@ -186,6 +193,8 @@ class DefaultController extends Controller
     public function actionPublish($id)
     {
         $model = $this->findModel($id);
+        if(!McbsAction::getIsPermission($id, McbsCourseUser::OWNERSHIP))
+            throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);

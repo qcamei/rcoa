@@ -62,11 +62,11 @@ $js =
             if(data['code'] == '200'){
                 var dome = renderDom(item,data['data']);
                 if(data['data']['parent_id'] == ''){
-                    $(".data-cou-"+data['data']['frame_name']).append(dome);
+                    $(".sortable").eq(0).append(dome);
                 }else{
-                    $("#"+data['data']['parent_id']+">div >.list").append(dome);
+                    $("#"+data['data']['parent_id']+">div >.sortable").append(dome);
                 }
-                sortable(".data-cou-"+data['data']['frame_name'],{
+                sortable('.sortable', {
                     forcePlaceholderSize: true,
                     items: 'li',
                     handle: '.fa-arrows'

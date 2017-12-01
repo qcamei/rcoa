@@ -21,6 +21,6 @@
         </div>
     </div>
     <div id="data-{%id%}" class="collapse in" aria-expanded="true">
-        <ul class="sortable list cursor-move data-cou-{%sub_frame%}"></ul>
+        <ul id="mcbs_course_{%sub_frame%}" class="sortable list cursor-move"></ul>
     </div>
 </li>

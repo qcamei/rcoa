@@ -81,6 +81,8 @@ class McbsMessageSearch extends McbsMessage
         $query->andFilterWhere(['like', 'title', $this->title])
             ->andFilterWhere(['like', 'content', $this->content]);
 
+        $query->orderBy(['created_at' => SORT_DESC]);
+        
         return $query->asArray()->all();
     }
 }

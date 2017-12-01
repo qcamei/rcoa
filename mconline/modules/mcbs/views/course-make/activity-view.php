@@ -12,14 +12,35 @@ use yii\widgets\DetailView;
 /* @var $this View */
 /* @var $model McbsCourseActivity */
 
-$this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Mcbs Courses'), 'url' => ['index']];
+$this->title = "【{$model->section->name}】：{$model->name}" ;
+$this->params['breadcrumbs'][] = ['label' => Yii::t(null, '{mcbs}{courses}',[
+    'mcbs' => Yii::t('app', 'Mcbs'),
+    'courses' => Yii::t('app', 'Courses'),
+]), 'url' => ['default/index']];
+$this->params['breadcrumbs'][] = [
+    'label' => $model->section->chapter->block->phase->course->course->name,
+    'url' => ['default/index', 'id' => $model->section->chapter->block->phase->course_id],
+];
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 
 <div class="mcbs-activity-view mcbs mcbs-activity default-view">
+    <p>
+        <?php
+            if($isPermission) {
+                echo Html::a(Yii::t(null, '{edit}{activity}',[
+                    'edit' => Yii::t('app', 'Edit'),
+                    'activity' => Yii::t('app', 'Activity')
+                ]), ['update-couactivity', 'id' => $model->id], ['id'=>'update-couactivity', 'class' => 'btn btn-primary']).' ';
+                echo Html::a(Yii::t(null, '{delete}{activity}',[
+                    'delete' => Yii::t('app', 'Delete'),
+                    'activity' => Yii::t('app', 'Activity')
+                ]), ['delete-couactivity', 'id' => $model->id], ['id'=>'delete-couactivity','class' => 'btn btn-danger']);
+            }
+        ?>
 
+    </p>
     <div class="col-xs-12 frame">
         <div class="col-xs-12 frame-title">
             <span><?= Yii::t(null, "{activity}{info}",[
@@ -39,7 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 [
                     'attribute' => 'name',
-                    'value' => !empty($model->section_id) ? "【{$model->section->name}】：{$model->name}" : null,
+                    'value' => $model->name,
                 ],
                 [
                     'attribute' => 'des',
@@ -154,7 +175,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'action'=>['create-message', 'activity_id'=>$model->id]
                     ]); ?>
                     
-                    <?= Html::textarea('content');  ?>
+                    <?= Html::textarea('content',null,['placeholder'=>'请输入你想说的话...']);  ?>
                     
                     <?php ActiveForm::end(); ?>
                     
@@ -179,7 +200,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?= $this->render('/layouts/model') ?>
 
-<?php
+<?php 
 $meslist = Url::to(['course-make/mes-index','course_id'=>$model->section->chapter->block->phase->course_id,
     'activity_id'=>$model->id]);
 $actlog = Url::to(['course-make/log-index','course_id'=>$model->section->chapter->block->phase->course_id,
@@ -201,6 +222,20 @@ $js =
             }
         });
     });
+        
+    //编辑活动弹出框
+    $("#update-couactivity").click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    });
+    //删除活动弹出框
+    $("#delete-couactivity").click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    });
+   
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>

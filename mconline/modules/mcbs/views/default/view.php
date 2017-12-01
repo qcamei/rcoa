@@ -1,7 +1,10 @@
 <?php
 
 use common\models\mconline\McbsCourse;
+use common\models\mconline\McbsCourseUser;
 use mconline\modules\mcbs\assets\McbsAssets;
+use mconline\modules\mcbs\utils\McbsAction;
+use wskeee\rbac\components\ResourceHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\View;
@@ -25,36 +28,73 @@ $this->params['breadcrumbs'][] = $this->title;
     <h4><?= Html::encode($this->title) ?></h4>
 
     <p>
-        <?= Html::a(Yii::t(null, '{edit}{courses}',[
-                'edit' => Yii::t('app', 'Edit'),
-                'courses' => Yii::t('app', 'Courses')
-            ]), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) 
-        ?>
-        <?= Html::a(Yii::t(null, '{close}{courses}',[
-                'close' => Yii::t('app', 'Close'),
-                'courses' => Yii::t('app', 'Courses')
-            ]), ['close', 'id' => $model->id], ['id'=>'close-courses','class' => 'btn btn-danger']) 
-        ?>
-        <?= Html::a(Yii::t(null, '{open}{courses}',[
-                'open' => Yii::t('app', 'Open'),
-                'courses' => Yii::t('app', 'Courses')
-            ]), ['open', 'id' => $model->id], ['id'=>'open-courses','class' => 'btn btn-success']) 
-        ?>
-        <?= Html::a(Yii::t(null, '{publish}{courses}',[
-                'publish' => Yii::t('app', 'Publish'),
-                'courses' => Yii::t('app', 'Courses')
-            ]), ['publish', 'id' => $model->id], ['id'=>'publish-courses','class' => 'btn btn-info']) 
-        ?>
-        <?= Html::a(Yii::t(null, '{attention}{courses}',[
-                'attention' => Yii::t('app', 'Attention'),
-                'courses' => Yii::t('app', 'Courses')
-            ]), ['attention', 'id' => $model->id], ['id'=>'publish-courses','class' => 'btn btn-success']) 
-        ?>
-        <?= Html::a(Yii::t(null, '{file}{list}',[
-                'file' => Yii::t('app', 'File'),
-                'list' => Yii::t('app', 'List')
-            ]), ['activity-file/index', 'course_id' => $model->id], ['class' => 'btn btn-default']) 
-        ?>
+        <?php
+            /**
+            * $menuItems = [
+            *   [
+            *      controllerId => 控制器ID,                          
+            *      name  => 菜单名称，
+            *      url  =>  菜单url，
+            *      options  => 菜单属性，
+            *      conditions  => 菜单显示条件，
+            *   ],
+            * ]
+            */
+            $controllerId = Yii::$app->controller->id;          //当前控制器
+            $actionId = Yii::$app->controller->action->id;      //当前行为方法
+            $menuItems = [
+                [
+                    'controllerId' => 'default',
+                    'name' => Yii::t('app', 'Edit').Yii::t('app', 'Courses'),
+                    'url' => ['update', 'id' => $model->id],
+                    'options' => ['class' => 'btn btn-primary'],
+                    'conditions' => McbsAction::getIsPermission($model->id, McbsCourseUser::OWNERSHIP),
+                ],
+                [
+                    'controllerId' => 'default',
+                    'name' => Yii::t('app', 'Close').Yii::t('app', 'Courses'),
+                    'url' => ['close', 'id' => $model->id],
+                    'options' => ['id'=>'close-courses','class' => 'btn btn-danger'],
+                    'conditions' => McbsAction::getIsPermission($model->id, McbsCourseUser::OWNERSHIP),
+                ],
+                [
+                    'controllerId' => 'default',
+                    'name' => Yii::t('app', 'Open').Yii::t('app', 'Courses'),
+                    'url' => ['open', 'id' => $model->id],
+                    'options' => ['id'=>'open-courses','class' => 'btn btn-success'],
+                    'conditions' => McbsAction::getIsPermission($model->id, McbsCourseUser::OWNERSHIP),
+                ],
+                [
+                    'controllerId' => 'default',
+                    'name' => Yii::t('app', 'Publish').Yii::t('app', 'Courses'),
+                    'url' => ['publish', 'id' => $model->id],
+                    'options' => ['id'=>'publish-courses','class' => 'btn btn-info'],
+                    'conditions' => McbsAction::getIsPermission($model->id, McbsCourseUser::OWNERSHIP),
+                ],
+                [
+                    'controllerId' => 'default',
+                    'name' => Yii::t('app', 'Attention').Yii::t('app', 'Courses'),
+                    'url' => ['attention', 'id' => $model->id],
+                    'options' => ['class' => 'btn btn-success'],
+                    'conditions' => true,
+                ],
+                [
+                    'controllerId' => 'activity-file',
+                    'name' => Yii::t('app', 'File').Yii::t('app', 'List'),
+                    'url' => ['activity-file/index', 'course_id' => $model->id],
+                    'options' => ['class' => 'btn btn-default'],
+                    'conditions' => true,
+                ],
+                
+            ];
+
+            foreach ($menuItems AS $item){
+                if($item['conditions']){
+                    echo Html::a($item['name'], $item['url'], $item['options']).' ';
+                }
+            }
+
+        ?>        
     </p>
     
     <div class="col-md-6 col-xs-12 frame frame-left">
@@ -108,9 +148,11 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-xs-12 frame-title">
             <span><?= Yii::t('app', 'Help Man') ?></span>
             <div class="framebtn">
-                <?= Html::a(Yii::t('app', 'Add'),
-                  ['course-make/create-helpman', 'course_id' => $model->id], 
-                  ['id' => 'add-helpman','class' => 'btn btn-sm btn-success'])
+                <?php 
+                   if(McbsAction::getIsPermission($model->id, McbsCourseUser::OWNERSHIP))         
+                        echo Html::a(Yii::t('app', 'Add'),
+                        ['course-make/create-helpman', 'course_id' => $model->id], 
+                        ['id' => 'add-helpman','class' => 'btn btn-sm btn-success'])
                 ?>
             </div>
         </div>

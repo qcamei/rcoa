@@ -79,7 +79,7 @@ $js =
                 if(data['code'] == '200'){
                     var dome = renderDom(item,data['data']);
                     $("#"+data['data']['parent_id']+">div >.list").append(dome);
-                    sortable(".data-cou-"+data['data']['frame_name'],{
+                    sortable(".sortable", {
                         forcePlaceholderSize: true,
                         items: 'li',
                         handle: '.fa-arrows'

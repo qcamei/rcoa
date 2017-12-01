@@ -80,7 +80,7 @@ class McbsAction
     public function UpdateHelpman($model)
     {
         //获取新属性值
-        $newAttr = $model->getDirtyAttributes('privilege');
+        $newAttr = $model->getDirtyAttributes();
         //获取旧属性值
         $oldPrivilege = $model->getOldAttribute('privilege');
         /** 开启事务 */
@@ -585,5 +585,26 @@ class McbsAction
                 'relative_id'=>$activityId
             ]);
         }
+    }
+    
+    /**
+     * 获取是否有权限
+     * @param string $course_id                                     课程id
+     * @param integer|array $privilege                              权限
+     * @return boolean
+     */
+    public static function getIsPermission($course_id, $privilege)
+    {
+        //获取关联课程用户
+        $courseUsers = (new Query)
+                ->select(['user_id'])->from(McbsCourseUser::tableName())
+                ->where(['course_id' => $course_id, 'privilege' => $privilege])->all();
+        //取出所有用户id
+        $users = ArrayHelper::getColumn($courseUsers, 'user_id');
+        //判断当前用户是否拥有该权限
+        if(in_array(Yii::$app->user->id,$users))
+            return true;
+        
+        return false;
     }
 }

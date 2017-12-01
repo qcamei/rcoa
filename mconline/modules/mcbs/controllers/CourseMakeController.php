@@ -31,6 +31,7 @@ use yii\db\Query;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
+use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -73,6 +74,9 @@ class CourseMakeController extends Controller
      */
     public function actionCreateHelpman($course_id)
     {
+        if(!McbsAction::getIsPermission($course_id, McbsCourseUser::OWNERSHIP))
+            throw new NotAcceptableHttpException('无权限操作！');
+        
         $model = new McbsCourseUser(['course_id' => $course_id]);
         $model->loadDefaultValues();
         
@@ -102,7 +106,10 @@ class CourseMakeController extends Controller
     public function actionUpdateHelpman($id)
     {
         $model = McbsCourseUser::findOne($id);
-
+        
+        if(!McbsAction::getIsPermission($model->course->id, McbsCourseUser::OWNERSHIP))
+            throw new NotAcceptableHttpException('无权限操作！');
+        
         if ($model->load(Yii::$app->request->post())) {
             Yii::$app->getResponse()->format = 'json';
             $result = McbsAction::getInstance()->UpdateHelpman($model);
@@ -127,6 +134,8 @@ class CourseMakeController extends Controller
     public function actionDeleteHelpman($id)
     {
         $model = McbsCourseUser::findOne($id);
+        if(!McbsAction::getIsPermission($model->course->id, McbsCourseUser::OWNERSHIP))
+            throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
             Yii::$app->getResponse()->format = 'json';
@@ -157,6 +166,7 @@ class CourseMakeController extends Controller
         
         return $this->renderAjax('couframe-index', [
             'course_id' => $course_id,
+            'isPermission' => McbsAction::getIsPermission($course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]),
             'dataCouphase' => $phaseSearch->search(['course_id'=>$course_id]),
             'dataCoublock' => $blockSearch->search(['course_id'=>$course_id]),
             'dataCouchapter' => $chapterSearch->search(['course_id'=>$course_id]),
@@ -172,6 +182,9 @@ class CourseMakeController extends Controller
      */
     public function actionCreateCouphase($course_id)
     {
+        if(!McbsAction::getIsPermission($course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+            throw new NotAcceptableHttpException('无权限操作！');
+        
         $model = new McbsCoursePhase(['id' => md5(rand(1,10000) + time()), 'course_id' => $course_id]);
         $model->loadDefaultValues();
         
@@ -209,6 +222,8 @@ class CourseMakeController extends Controller
     public function actionUpdateCouphase($id)
     {
         $model = McbsCoursePhase::findOne($id);
+        if(!McbsAction::getIsPermission($model->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+            throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
             Yii::$app->getResponse()->format = 'json';
@@ -241,6 +256,8 @@ class CourseMakeController extends Controller
     public function actionDeleteCouphase($id)
     {
         $model = McbsCoursePhase::findOne($id);
+        if(!McbsAction::getIsPermission($model->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+            throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
             Yii::$app->getResponse()->format = 'json';
@@ -268,6 +285,8 @@ class CourseMakeController extends Controller
     {
         $model = new McbsCourseBlock(['id' => md5(rand(1,10000) + time()), 'phase_id' => $phase_id]);
         $model->loadDefaultValues();
+        if(!McbsAction::getIsPermission($model->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+            throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
             Yii::$app->getResponse()->format = 'json';
@@ -302,7 +321,9 @@ class CourseMakeController extends Controller
     public function actionUpdateCoublock($id)
     {
         $model = McbsCourseBlock::findOne($id);
-
+        if(!McbsAction::getIsPermission($model->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+            throw new NotAcceptableHttpException('无权限操作！');
+        
         if ($model->load(Yii::$app->request->post())) {
             Yii::$app->getResponse()->format = 'json';
             $result = McbsAction::getInstance()->UpdateCouFrame($model,Yii::t('app', 'Block'),$model->phase->course_id);
@@ -333,6 +354,8 @@ class CourseMakeController extends Controller
     public function actionDeleteCoublock($id)
     {
         $model = McbsCourseBlock::findOne($id);
+        if(!McbsAction::getIsPermission($model->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+            throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
             Yii::$app->getResponse()->format = 'json';
@@ -360,6 +383,8 @@ class CourseMakeController extends Controller
     {
         $model = new McbsCourseChapter(['id' => md5(rand(1,10000) + time()), 'block_id' => $block_id]);
         $model->loadDefaultValues();
+        if(!McbsAction::getIsPermission($model->block->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+            throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
             Yii::$app->getResponse()->format = 'json';
@@ -394,7 +419,9 @@ class CourseMakeController extends Controller
     public function actionUpdateCouchapter($id)
     {
         $model = McbsCourseChapter::findOne($id);
-
+        if(!McbsAction::getIsPermission($model->block->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+            throw new NotAcceptableHttpException('无权限操作！');
+        
         if ($model->load(Yii::$app->request->post())) {
             Yii::$app->getResponse()->format = 'json';
             $result = McbsAction::getInstance()->UpdateCouFrame($model,Yii::t('app', 'Chapter'),$model->block->phase->course_id);
@@ -425,6 +452,8 @@ class CourseMakeController extends Controller
     public function actionDeleteCouchapter($id)
     {
         $model = McbsCourseChapter::findOne($id);
+        if(!McbsAction::getIsPermission($model->block->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+            throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
             Yii::$app->getResponse()->format = 'json';
@@ -452,6 +481,9 @@ class CourseMakeController extends Controller
     {
         $model = new McbsCourseSection(['id' => md5(rand(1,10000) + time()), 'chapter_id' => $chapter_id]);
         $model->loadDefaultValues();
+        if(!McbsAction::getIsPermission($model->chapter->block->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+            throw new NotAcceptableHttpException('无权限操作！');
+        
         if ($model->load(Yii::$app->request->post())) {
             Yii::$app->getResponse()->format = 'json';
             $result = McbsAction::getInstance()->CreateCouFrame($model,Yii::t('app', 'Section'),$model->chapter->block->phase->course_id);
@@ -485,7 +517,9 @@ class CourseMakeController extends Controller
     public function actionUpdateCousection($id)
     {
         $model = McbsCourseSection::findOne($id);
-
+        if(!McbsAction::getIsPermission($model->chapter->block->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+            throw new NotAcceptableHttpException('无权限操作！');
+        
         if ($model->load(Yii::$app->request->post())) {
             Yii::$app->getResponse()->format = 'json';
             $result = McbsAction::getInstance()->UpdateCouFrame($model,Yii::t('app', 'Section'),$model->chapter->block->phase->course_id);
@@ -516,6 +550,8 @@ class CourseMakeController extends Controller
     public function actionDeleteCousection($id)
     {
         $model = McbsCourseSection::findOne($id);
+        if(!McbsAction::getIsPermission($model->chapter->block->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+            throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
             Yii::$app->getResponse()->format = 'json';
@@ -541,12 +577,14 @@ class CourseMakeController extends Controller
      */
     public function actionCouactivityView($id)
     {
+        $model = McbsCourseActivity::findOne($id);
         $dataProvider = new ArrayDataProvider([
             'allModels' => $this->getUploadedActivityFile($id),
         ]);
         
         return $this->render('activity-view', [
-            'model' => McbsCourseActivity::findOne($id),
+            'model' => $model,
+            'isPermission' => McbsAction::getIsPermission($model->section->chapter->block->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]),
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -560,6 +598,8 @@ class CourseMakeController extends Controller
     {
         $model = new McbsCourseActivity(['id' => md5(rand(1,10000) + time()), 'section_id' => $section_id]);
         $model->loadDefaultValues();
+        if(!McbsAction::getIsPermission($model->section->chapter->block->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+            throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
             Yii::$app->getResponse()->format = 'json';
@@ -597,6 +637,8 @@ class CourseMakeController extends Controller
     public function actionUpdateCouactivity($id)
     {
         $model = McbsCourseActivity::findOne($id);
+        if(!McbsAction::getIsPermission($model->section->chapter->block->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+            throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
             Yii::$app->getResponse()->format = 'json';
@@ -632,6 +674,8 @@ class CourseMakeController extends Controller
     public function actionDeleteCouactivity($id)
     {
         $model = McbsCourseActivity::findOne($id);
+        if(!McbsAction::getIsPermission($model->section->chapter->block->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+            throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
             Yii::$app->getResponse()->format = 'json';
@@ -714,6 +758,35 @@ class CourseMakeController extends Controller
     }
     
     /**
+     * Move a single AllMcbs model.
+     * @return mixed
+     */
+    public function actionMove()
+    {
+        Yii::$app->getResponse()->format = 'json';
+        $num = 0;
+        try
+        {
+            if(Yii::$app->request->isPost){
+                $table = ArrayHelper::getValue(Yii::$app->request->post(), 'tableName');
+                $saveIndexs = ArrayHelper::getValue(Yii::$app->request->post(), 'saveIndexs');
+                $items = json_decode(json_encode($saveIndexs), true);
+                foreach ($items as $id => $sortOrder)
+                    $num += $this->UpdateTableAttribute ($table, $id, $sortOrder);
+                
+            }     
+        } catch (Exception $ex) {
+            $errors [] = $ex->getMessage();
+        }
+        
+        return [
+            'code' => $num > 0 ? 200 : 404,
+            'num' => $num,
+            'message' => ''
+        ];
+    }
+    
+    /**
      * Finds the McbsCourse model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
@@ -727,6 +800,24 @@ class CourseMakeController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    
+    /**
+     * 修改表属性值
+     * @param string $table                           表名
+     * @param string $id                              id
+     * @param integer $sortOrder                      顺序
+     * @return integer|null
+     */
+    private function UpdateTableAttribute($table,$id,$sortOrder)
+    {
+        $number = Yii::$app->db->createCommand()
+           ->update("{{%$table}}",['sort_order'=>$sortOrder],['id'=>$id])->execute();
+        
+        if($number > 0)
+            return $number;
+        
+        return null;
     }
     
     /**
@@ -788,4 +879,5 @@ class CourseMakeController extends Controller
                 ->where(['activity_id'=>$activity_id])
                 ->all();
     }
+        
 }
