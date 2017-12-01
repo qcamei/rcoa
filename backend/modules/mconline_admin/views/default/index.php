@@ -24,28 +24,28 @@ $this->params['breadcrumbs'][] = $this->title;
             'attributes' => [
                 [
                     'label' => '历史总文件数',
-                    'value' => !empty($model['dataHistroy']['number'] . ' 个') ? $model['dataHistroy']['number'] . ' 个' : null,
+                    'value' => !empty($model['dataHistroy']['number']) ? $model['dataHistroy']['number'] . ' 个' : null,
                 ],
                 [
                     'label' => '现存总文件数',
-                    'value' => !empty($model['dataNow']['number'] . ' 个') ? $model['dataNow']['number'] . ' 个' : null,
+                    'value' => !empty($model['dataNow']['number']) ? $model['dataNow']['number'] . ' 个' : null,
                 ],
                 [
                     'label' => '历史总文件大小',
-                    'value' => !empty($model['dataHistroy']['size'] . ' GB') ? $model['dataHistroy']['size'] . ' GB' : null,
+                    'value' => !empty($model['dataHistroy']['size']) ? \Yii::$app->formatter->asShortSize($model['dataHistroy']['size']) : null,
                 ],
                 [
                     'label' => '现存总文件大小',
-                    'value' => !empty($model['dataNow']['size'] . ' GB') ? $model['dataNow']['size'] . ' GB' : null,
+                    'value' => !empty($model['dataNow']['size']) ? \Yii::$app->formatter->asShortSize($model['dataNow']['size']) : null,
                 ],
-                [
-                    'label' => '已标记文件个数',
-                    'value' => null,
-                ],
-                [
-                    'label' => '已标记文件大小',
-                    'value' => null,
-                ],
+//                [
+//                    'label' => '已标记文件个数',
+//                    'value' => null,
+//                ],
+//                [
+//                    'label' => '已标记文件大小',
+//                    'value' => null,
+//                ],
             ]
         ]);?>
     </div>
