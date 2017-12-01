@@ -44,9 +44,9 @@ use yii\helpers\Html;
                 'adminOptions' => null,
             ],
             [
-                'actionId' => 'attention',
+                'actionId' => 'attention-index',
                 'name' => '我的关注',
-                'url' => ['attention'],
+                'url' => ['attention-index'],
                 'icon' => '<i class="fa fa-star"></i>',
                 'options' => ['class' => null],
                 'symbol' => null,
@@ -54,9 +54,9 @@ use yii\helpers\Html;
                 'adminOptions' => null,
             ],
             [
-                'actionId' => 'lookup',
+                'actionId' => 'lookup-index',
                 'name' => '查找课程',
-                'url' => ['lookup'],
+                'url' => ['lookup-index'],
                 'icon' => '<i class="fa fa-search"></i>',
                 'options' => ['class' => null],
                 'symbol' => null,

@@ -62,7 +62,7 @@ use yii\widgets\ActiveForm;
 $js = 
 <<<JS
         
-    /** 下拉选择【专业/工种】 */
+     /** 下拉选择【专业/工种】 */
     $('#mcbscourse-item_id').change(function(){
         $("#mcbscourse-item_child_id").html("");
         $('#select2-mcbscourse-item_child_id-container').html('<span class="select2-selection__placeholder">请选择...</span>');
