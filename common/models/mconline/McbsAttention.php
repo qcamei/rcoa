@@ -3,6 +3,8 @@
 namespace common\models\mconline;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%mcbs_attention}}".
@@ -13,7 +15,7 @@ use Yii;
  * @property string $created_at
  * @property string $updated_at
  */
-class McbsAttention extends \yii\db\ActiveRecord
+class McbsAttention extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -21,6 +23,16 @@ class McbsAttention extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return '{{%mcbs_attention}}';
+    }
+    
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() 
+    {
+        return [
+            TimestampBehavior::className()
+        ];
     }
 
     /**

@@ -35,12 +35,40 @@ use yii\db\ActiveRecord;
  */
 class McbsCourse extends ActiveRecord
 {
+    /** 创建场景 */
+    const SCENARIO_CREATE = 'create';
+    /** 更新场景 */
+    const SCENARIO_UPDATE = 'update';
+    
+    /** 正常状态 */
+    const NORMAL_STATUS = 1;
+    /** 关闭状态 */
+    const CLOSE_STATUS = 10;
+   
+
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
         return '{{%mcbs_course}}';
+    }
+    
+    public function scenarios() 
+    {
+        return [
+           self::SCENARIO_CREATE => 
+                ['id','item_type_id','item_id','item_child_id','course_id','created_by','status','is_publish',
+                    'publish_time','close_time','des'],
+            self::SCENARIO_UPDATE => 
+                ['id','item_type_id','item_id','item_child_id','course_id','created_by','status','is_publish',
+                    'publish_time','close_time','des'],
+            self::SCENARIO_DEFAULT => [
+                'id', 'item_type_id', 'item_id', 'item_child_id', 'course_id',
+                'status', 'is_publish', 'publish_time', 'close_time', 'created_at', 'updated_at',
+                'created_by','des'
+            ]
+        ];
     }
     
     /**
@@ -61,7 +89,7 @@ class McbsCourse extends ActiveRecord
         return [
             [['id', 'item_type_id', 'item_id', 'item_child_id', 'course_id'], 'required'],
             [['item_type_id', 'item_id', 'item_child_id', 'course_id', 'status', 'is_publish', 'publish_time', 'close_time', 'created_at', 'updated_at'], 'integer'],
-            [['course_id'], 'checkCourseExist'],
+            [['course_id'], 'checkCourseExist','on'=>[self::SCENARIO_CREATE,self::SCENARIO_UPDATE]],
             [['des'], 'string'],
             [['id'], 'string', 'max' => 32],
             [['created_by'], 'string', 'max' => 36],
@@ -100,13 +128,11 @@ class McbsCourse extends ActiveRecord
     {
         $format = $this->getAttribute($attribute);  
         $course = $this->findOne(['course_id'=> $this->course_id])['course_id'];
-        if($this->isNewRecord){
-                if($format == $course){
-                $this->addError($attribute, "该课程已存在！"); 
-                return false;
-            }
-            return true;
+        if($format == $course){
+            $this->addError($attribute, "该课程已存在！"); 
+            return false;
         }
+        return true;
     }
 
     /**
