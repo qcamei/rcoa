@@ -209,4 +209,6 @@ return [
     'Route' => '路径',
     'Size' => '大小',
     'Reason' => '原因',
+    'Last' => '最后',
+    'Revise' => '修改',
 ];

@@ -246,7 +246,7 @@ class DefaultController extends Controller
             'allModels' => $results['result'],
         ]);  
         
-        return $this->render('attention', [
+        return $this->render('attention_index', [
             'param' => $results['param'],
             'dataProvider' => $dataProvider,
             'totalCount' => $results['totalCount'],
@@ -257,7 +257,7 @@ class DefaultController extends Controller
      * 跳转到查找课程
      * @return array
      */
-    public function actionLookup()
+    public function actionLookupIndex()
     {
         $searchResult = new McbsCourseSearch();
         $results = $searchResult->searchCourseInfo(Yii::$app->request->queryParams);
@@ -266,7 +266,7 @@ class DefaultController extends Controller
             'allModels' => $results['result'],
         ]);  
         
-        return $this->render('lookup', [
+        return $this->render('lookup_index', [
             'param' => $results['param'],
             'dataProvider' => $dataProvider,
             'totalCount' => $results['totalCount'],

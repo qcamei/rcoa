@@ -83,6 +83,11 @@ class McbsActivityFileSearch extends McbsActivityFile
         return $dataProvider;
     }
     
+    /**
+     * 查找与该课程相关的文件
+     * @param array $params
+     * @return ActiveDataProvider
+     */
     public function searchFileList($params)
     {
         $course_id = ArrayHelper::getValue($params, 'course_id', null);
@@ -97,12 +102,13 @@ class McbsActivityFileSearch extends McbsActivityFile
                     'CourseChapter.name AS chapter_name','CourseSection.name AS section_name',
                     'CourseActivity.name AS activity_name','CreateBy.nickname AS created_by',
                     'Uploadfile.name AS filename','ActivityFile.file_id', 'ItemCourse.name AS course_name'])
-                ->from(['McbsCourse' => McbsCourse::tableName()]);
+                ->from(['ActivityFile' => McbsActivityFile::tableName()]);
         
         // add conditions that should always apply here
         //根据课程查询显示内容
         $query->where([
-            'McbsCourse.id' => $course_id,
+            'McbsCourse.id' => $course_id, 'CoursePhase.is_del' => 0, 'CourseBlock.is_del' => 0,
+            'CourseChapter.is_del' => 0, 'CourseSection.is_del' => 0, 'CourseActivity.is_del' => 0,
         ]);
         
         $dataProvider = new ActiveDataProvider([
@@ -116,26 +122,25 @@ class McbsActivityFileSearch extends McbsActivityFile
             // $query->where('0=1');
             return $dataProvider;
         }
-
-        //关联查询阶段
-        $query->leftJoin(['CoursePhase' => McbsCoursePhase::tableName()], 'CoursePhase.course_id = McbsCourse.id');
-        //关联查询区块
-        $query->leftJoin(['CourseBlock' => McbsCourseBlock::tableName()], 'CourseBlock.phase_id = CoursePhase.id');
-        //关联查询章
-        $query->leftJoin(['CourseChapter' => McbsCourseChapter::tableName()], 'CourseChapter.block_id = CourseBlock.id');
-        //关联查询节
-        $query->leftJoin(['CourseSection' => McbsCourseSection::tableName()], 'CourseSection.chapter_id = CourseChapter.id');
+        
         //关联查询活动表
-        $query->leftJoin(['CourseActivity' => McbsCourseActivity::tableName()], 'CourseActivity.section_id = CourseSection.id');
-        //关联查询活动文件表
-        $query->leftJoin(['ActivityFile' => McbsActivityFile::tableName()], 'ActivityFile.activity_id = CourseActivity.id');
+        $query->leftJoin(['CourseActivity' => McbsCourseActivity::tableName()], 'CourseActivity.id = ActivityFile.activity_id');
+        //关联查询节
+        $query->leftJoin(['CourseSection' => McbsCourseSection::tableName()], 'CourseSection.id = CourseActivity.section_id');
+        //关联查询章
+        $query->leftJoin(['CourseChapter' => McbsCourseChapter::tableName()], 'CourseChapter.id = CourseSection.chapter_id');
+        //关联查询区块
+        $query->leftJoin(['CourseBlock' => McbsCourseBlock::tableName()], 'CourseBlock.id = CourseChapter.block_id');
+        //关联查询阶段
+        $query->leftJoin(['CoursePhase' => McbsCoursePhase::tableName()], 'CoursePhase.id = CourseBlock.phase_id');
+        //关联查询课程
+        $query->leftJoin(['McbsCourse' => McbsCourse::tableName()], 'McbsCourse.id = CoursePhase.course_id');
+        //查询课程名称
+        $query->leftJoin(['ItemCourse' => Item::tableName()], 'ItemCourse.id = McbsCourse.course_id');
         //关联查询文件名
         $query->leftJoin(['Uploadfile' => Uploadfile::tableName()], 'Uploadfile.id = ActivityFile.file_id');
         //关联查询创建者
         $query->leftJoin(['CreateBy' => User::tableName()], 'CreateBy.id = ActivityFile.created_by');
-        //查询课程名称
-        $query->leftJoin(['ItemCourse' => Item::tableName()], 'ItemCourse.id = McbsCourse.course_id');
-        
         // grid filtering conditions
         $query->andFilterWhere([
             'CourseChapter.id' => $chapter_id,

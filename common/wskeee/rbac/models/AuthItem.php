@@ -108,7 +108,7 @@ class AuthItem extends Model
     {
         return [
             [['group_id', 'name', 'type'], 'required'],
-            [['name'],'unique','when'=>function()
+            [['name'],'coustom_unique','when'=>function()
                 {
                     return $this->getIsNewRecord() || ($this->_item->name != $this->name);
                 }],
@@ -126,7 +126,7 @@ class AuthItem extends Model
     /**
      * 重写唯一过虑器
      */
-    public function unique()
+    public function coustom_unique()
     {
         $value = $this->name;
         if($this->authManager->getRole($value) !== null || $this->authManager->getPermission($value) !== null)

@@ -40,7 +40,7 @@ class DefaultController extends Controller {
      */
     public function getSpaceInfo($is_del=null) {
             $query = (new Query())
-                ->select(['COUNT(Uploadfile.id) AS number','(SUM(Uploadfile.size) / (1024 * 1024 * 1024)) AS size'])
+                ->select(['COUNT(Uploadfile.id) AS number','SUM(Uploadfile.size) AS size'])
                 ->from(['Uploadfile' => Uploadfile::tableName()])
                 ->filterWhere(['Uploadfile.is_del' => $is_del])
                 ->one();

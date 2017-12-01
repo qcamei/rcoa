@@ -6,6 +6,9 @@
 */
 
 /********* left-nav样式 ***********/
+.left-nav {
+    padding-top: 5px;
+}
 .left-nav .navigation {
     width: 100%;
     padding: 0;

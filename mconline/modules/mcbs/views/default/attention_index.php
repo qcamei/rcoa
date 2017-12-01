@@ -98,7 +98,10 @@ $this->title = Yii::t(null, '{Courses}-{Attention}', [
                     ],
                 ],
                 [
-                    'label' => Yii::t('app', 'Updated At'),
+                    'label' => Yii::t(null, '{Last}{Revise}',[
+                        'Last' => Yii::t('app', 'Last'),
+                        'Revise' => Yii::t('app', 'Revise'),
+                    ]),
                     'format' => 'raw',
                     'value' => function($data) {
                         return !empty(date('Y-m-d H:i', $data['updated_at'])) ? date('Y-m-d H:i', $data['updated_at']) : null;

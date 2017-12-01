@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="mcbs-activity-file-index">
 
-    <p>
+    <p><span>文件列表</span>
         <?= Html::a(Yii::t('app', 'Back'), ['default/view' . '?id=' . $couModel->id], ['class' => 'btn btn-default']) ?>
     </p>
     <?= GridView::widget([
@@ -244,7 +244,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
                 'value' => function($data) {
-                    return !empty(date('Y-m-d H:i', $data['expire_time'])) ? date('Y-m-d H:i', $data['expire_time']) : NULL;
+                    if($data['expire_time'] != null){
+                        if((($data['expire_time'] - time()) / 86400) <= 7){
+                            return '<span style="color:red;">'.date('Y-m-d H:i', $data['expire_time']).'</span>';
+                        }
+                        return date('Y-m-d H:i', $data['expire_time']);
+                    }
+                    return NULL;
                 },
                 'contentOptions' => [
                     'class' => 'activity-name list-td hidden-xs hidden-sm',
