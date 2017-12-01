@@ -127,10 +127,14 @@ class McbsCourse extends ActiveRecord
     public function checkCourseExist($attribute, $pramas)
     {
         $format = $this->getAttribute($attribute);  
-        $course = $this->findOne(['course_id'=> $this->course_id])['course_id'];
-        if($format == $course){
-            $this->addError($attribute, "该课程已存在！"); 
-            return false;
+        $model = McbsCourse::find()->where(['!=','id', $this->id])
+                ->andWhere(['course_id'=> $this->course_id])->one();
+        
+        if($model != null){
+            if($format == $model->course_id){
+                $this->addError($attribute, "该课程已存在！"); 
+                return false;
+            }
         }
         return true;
     }
