@@ -15,7 +15,7 @@ use yii\widgets\ActiveForm;
     
     <?php $form = ActiveForm::begin([
         'id' => 'mcbs-search',
-        'action' => ['lookup'],
+        'action' => ['lookup-index'],
         'method' => 'get',
     ]); ?>
     

@@ -146,7 +146,10 @@ class ActivityFileController extends Controller {
                 ->leftJoin(['CourseBlock' => McbsCourseBlock::tableName()], 'CourseBlock.phase_id = CoursePhase.id')
                 //关联查询章
                 ->leftJoin(['CourseChapter' => McbsCourseChapter::tableName()], 'CourseChapter.block_id = CourseBlock.id')
-                ->where(['McbsCourse.id' => $course_id,]);
+                ->where([
+                    'McbsCourse.id' => $course_id, 'CoursePhase.is_del' => 0, 'CourseBlock.is_del' => 0,
+                    'CourseChapter.is_del' => 0,
+                ]);
         $chapter = $query->all();
 
         return ArrayHelper::map($chapter, 'chapter_id', 'name');
@@ -169,7 +172,10 @@ class ActivityFileController extends Controller {
                 ->leftJoin(['CourseChapter' => McbsCourseChapter::tableName()], 'CourseChapter.block_id = CourseBlock.id')
                 //关联查询节
                 ->leftJoin(['CourseSection' => McbsCourseSection::tableName()], 'CourseSection.chapter_id = CourseChapter.id')
-                ->where(['McbsCourse.id' => $course_id,]);
+                ->where([
+                    'McbsCourse.id' => $course_id, 'CoursePhase.is_del' => 0, 'CourseBlock.is_del' => 0,
+                    'CourseChapter.is_del' => 0, 'CourseSection.is_del' => 0, 
+                ]);
         $section = $query->all();
 
         return ArrayHelper::map($section, 'section_id', 'name');
@@ -194,7 +200,10 @@ class ActivityFileController extends Controller {
                 ->leftJoin(['CourseSection' => McbsCourseSection::tableName()], 'CourseSection.chapter_id = CourseChapter.id')
                 //关联查询活动表
                 ->leftJoin(['CourseActivity' => McbsCourseActivity::tableName()], 'CourseActivity.section_id = CourseSection.id')
-                ->where(['McbsCourse.id' => $course_id,]);
+                ->where([
+                    'McbsCourse.id' => $course_id, 'CoursePhase.is_del' => 0, 'CourseBlock.is_del' => 0,
+                    'CourseChapter.is_del' => 0, 'CourseSection.is_del' => 0, 'CourseActivity.is_del' => 0,
+                ]);
         $activity = $query->all();
 
         return ArrayHelper::map($activity, 'activity_id', 'activity_name');
@@ -212,6 +221,7 @@ class ActivityFileController extends Controller {
                 //关联查询上传者
                 ->leftJoin(['CreateBy' => User::tableName()], 'CreateBy.id = ActivityFile.created_by')
                 ->addSelect(['CreateBy.nickname AS username'])
+                ->distinct()
                 ->where(['ActivityFile.course_id' => $course_id,])
                 ->all();
 

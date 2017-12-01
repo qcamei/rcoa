@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
     
     <?php $form = ActiveForm::begin([
         'id' => 'mcbs-search',
-        'action' => ['attention'],
+        'action' => ['attention-index'],
         'method' => 'get',
     ]); ?>
     
