@@ -1,5 +1,6 @@
 <?php
 return [
+    'timeZone' => 'PRC',
     'language' => 'zh-CN',
     'name' => '工匠',
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
