@@ -6,6 +6,7 @@ use common\models\mconline\McbsAttention;
 use common\models\mconline\McbsCourse;
 use common\models\mconline\McbsCourseUser;
 use common\models\mconline\searchs\McbsCourseSearch;
+use common\models\User;
 use mconline\modules\mcbs\utils\McbsAction;
 use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\ItemType;
@@ -18,7 +19,6 @@ use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
-use yii\web\User;
 
 
 /**
