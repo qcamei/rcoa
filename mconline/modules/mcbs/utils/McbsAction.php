@@ -52,6 +52,7 @@ class McbsAction
         try
         {  
             $results = $this->saveMcbsCourseUser($post);
+             
             if($results != null){
                 $this->saveMcbsRecentContacts($post);
                 $this->saveMcbsActionLog([
@@ -295,7 +296,7 @@ class McbsAction
         $title = Yii::t('app', 'Activity');
         $fileIds = ArrayHelper::getValue($post, 'files');
         $actiType = McbsActivityType::findOne([$oldAttr['type_id']]);
-       
+        
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
@@ -490,6 +491,7 @@ class McbsAction
      */
     public function saveMcbsActionLog($params=null)
     {
+         
         $action = ArrayHelper::getValue($params, 'action');                                 //动作
         $title = ArrayHelper::getValue($params, 'title');                                   //标题  
         $content = ArrayHelper::getValue($params, 'content');                               //内容
@@ -503,7 +505,6 @@ class McbsAction
             'created_by' => $created_by,'course_id' => $course_id,'relative_id' => $relative_id,
             'created_at' => time(),'updated_at' => time(),
         ];
-       
         /** 添加$values数组到表里 */
         Yii::$app->db->createCommand()->insert(McbsActionLog::tableName(), $values)->execute();
     }

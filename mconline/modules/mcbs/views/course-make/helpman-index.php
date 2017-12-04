@@ -111,7 +111,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'adminOptions' => true,
                         ];
                         if(McbsAction::getIsPermission($model->course->id, McbsCourseUser::OWNERSHIP))
-                            return Html::a($buttonHtml['name'],$buttonHtml['url'],$buttonHtml['options']);
+                            return Html::a($buttonHtml['name'],$buttonHtml['url'],$buttonHtml['options']).' ';
                         //return ResourceHelper::a($buttonHtml['name'], $buttonHtml['url'],$buttonHtml['options'],$buttonHtml['conditions']);
                     },
                     'delete' => function ($url, $model, $key) {
