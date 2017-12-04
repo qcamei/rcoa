@@ -56,7 +56,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     'controllerId' => 'default',
                     'name' => Yii::t('app', 'Close').Yii::t('app', 'Courses'),
                     'url' => ['close', 'id' => $model->id],
-                    'options' => ['id'=>'close-courses','class' => 'btn btn-danger'],
+                    'options' => ['id'=>'close-courses','class' => 'btn btn-danger', 
+                                'onclick'=>'showModal($(this)):return false;'],
                     'conditions' => McbsAction::getIsPermission($model->id, McbsCourseUser::OWNERSHIP)
                                     && $model->status == McbsCourse::NORMAL_STATUS
                                     && $model->is_publish == 0,
@@ -65,7 +66,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     'controllerId' => 'default',
                     'name' => Yii::t('app', 'Open').Yii::t('app', 'Courses'),
                     'url' => ['open', 'id' => $model->id],
-                    'options' => ['id'=>'open-courses','class' => 'btn btn-success'],
+                    'options' => ['id'=>'open-courses','class' => 'btn btn-success',
+                                    'onclick'=>'showModal($(this));return false;'],
                     'conditions' => McbsAction::getIsPermission($model->id, McbsCourseUser::OWNERSHIP)
                                     && $model->status == McbsCourse::CLOSE_STATUS
                                     && $model->is_publish == 0,
@@ -74,7 +76,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     'controllerId' => 'default',
                     'name' => Yii::t('app', 'Publish').Yii::t('app', 'Courses'),
                     'url' => ['publish', 'id' => $model->id],
-                    'options' => ['id'=>'publish-courses','class' => 'btn btn-info'],
+                    'options' => ['id'=>'publish-courses','class' => 'btn btn-info',
+                                   'onclick'=>'showModal($(this));return false;'],
                     'conditions' => McbsAction::getIsPermission($model->id, McbsCourseUser::OWNERSHIP)
                                     && $model->status == McbsCourse::NORMAL_STATUS
                                     && $model->is_publish == 0,
@@ -83,7 +86,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     'controllerId' => 'default',
                     'name' => Yii::t('app', 'Cancel').Yii::t('app', 'Attention'),
                     'url' => ['cancel-attention', 'id' => $model->id],
-                    'options' => ['id' => 'cancel_attention', 'class' => 'btn btn-danger'],
+                    'options' => ['id' => 'cancel_attention', 'class' => 'btn btn-danger',
+                                'onclick'=>'showModal($(this));return false;'],
                     'conditions' => $attModel != null,
                 ],
                 [
@@ -220,36 +224,13 @@ $js =
     $("#cou-frame").load("$couframe"); 
     //加载操作记录列表
     $("#action-log").load("$actlog"); 
-    //添加协作人弹出框
-    $("#add-helpman").click(function(){
+    /** 显示模态框 */
+    function showModal(elem){
         $(".myModal").html("");
-        $('.myModal').modal("show").load($(this).attr("href"));
-        return false;
-    });
-    //关闭课程弹出框
-    $("#close-courses").click(function(){
-        $(".myModal").html("");
-        $('.myModal').modal("show").load($(this).attr("href"));
-        return false;
-    });
-    //开启课程弹出框
-    $("#open-courses").click(function(){
-        $(".myModal").html("");
-        $('.myModal').modal("show").load($(this).attr("href"));
-        return false;
-    });
-    //发布课程弹出框
-    $("#publish-courses").click(function(){
-        $(".myModal").html("");
-        $('.myModal').modal("show").load($(this).attr("href"));
-        return false;
-    });
-    //取消关注弹出框
-    $("#cancel-attention").click(function(){
-        $(".myModal").html("");
-        $('.myModal').modal("show").load($(this).attr("href"));
-        return false;
-    });
+        $('.myModal').modal("show").load(elem.attr("href"));
+    }    
+        
+    
             
 JS;
     $this->registerJs($js,  View::POS_READY);

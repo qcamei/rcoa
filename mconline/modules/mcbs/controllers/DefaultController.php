@@ -217,10 +217,14 @@ class DefaultController extends Controller
      */
     public function actionCancelAttention($id)
     {
-        $attention = $this->findMcbsAttentionModel(Yii::$app->user->id, $id);
+        $model = $this->findMcbsAttentionModel(Yii::$app->user->id, $id);
         //var_dump($attention);exit;
-        if ($attention->save()) {
-            return $this->redirect(['view', 'id' => $attention->course_id]);
+        if (Yii::$app->request->isPost && $model->delete()) {
+            return $this->redirect(['view', 'id' => $model->course_id]);
+        }else{
+            return $this->renderAjax('attention',[
+                'model' => $model,
+            ]);
         }
         
     }

@@ -10,9 +10,9 @@ use yii\widgets\ActiveForm;
 /* @var $this View */
 /* @var $model McbsCourse */
 
-$this->title = Yii::t(null, "{cancel}{courses}：{$model->course->name}", [
-    'cancel' => Yii::t('app', 'Cancel'),
-    'courses' => Yii::t('app', 'Courses')
+$this->title = Yii::t(null, "{close}{attention}：{$model->course->name}", [
+    'close' => Yii::t('app', 'Close'),
+    'attention' => Yii::t('app', 'Attention')
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Mcbs Courses'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
