@@ -115,4 +115,5 @@ class McbsCourseActivity extends ActiveRecord
     {
         return $this->hasOne(McbsCourseSection::className(), ['id' => 'section_id']);
     }
+    
 }

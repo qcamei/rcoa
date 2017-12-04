@@ -1,15 +1,14 @@
 <?php
 
-use common\models\mconline\McbsAttention;
+use common\models\mconline\McbsCourse;
 use mconline\modules\mcbs\assets\McbsAssets;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
 
 /* @var $this View */
-/* @var $model McbsAttention */
 
-$this->title = Yii::t(null, "{cancel}{attention}", [
+$this->title = Yii::t(null, "{cancel}{attention}：{$model->course->course->name}", [
     'cancel' => Yii::t('app', 'Cancel'),
     'attention' => Yii::t('app', 'Attention')
 ]);
@@ -41,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],  
                     ], 
                 ]); ?>
-                                
+                            
                 <?= Html::encode('确定要'.Html::encode($this->title).'？') ?>
 
                 <?php ActiveForm::end(); ?>

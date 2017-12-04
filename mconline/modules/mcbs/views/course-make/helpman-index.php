@@ -87,12 +87,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]
                 ],
             ],
-                        
             [
                 'class' => 'yii\grid\ActionColumn',
                 //'header' => Yii::t('app', 'Operating'),
                 'buttons' => [
-                    'update' => function ($url, $model, $key) {
+                    'update' => function ($url, $model, $key) use($isPermission) {
                         /* @var $model McbsCourseUser */
                          $options = [
                             'class' => 'btn btn-sm btn-primary',
@@ -110,11 +109,11 @@ $this->params['breadcrumbs'][] = $this->title;
                             'conditions' => $model->course->created_by == Yii::$app->user->id,
                             'adminOptions' => true,
                         ];
-                        if(McbsAction::getIsPermission($model->course->id, McbsCourseUser::OWNERSHIP))
+                        if($isPermission)
                             return Html::a($buttonHtml['name'],$buttonHtml['url'],$buttonHtml['options']).' ';
                         //return ResourceHelper::a($buttonHtml['name'], $buttonHtml['url'],$buttonHtml['options'],$buttonHtml['conditions']);
                     },
-                    'delete' => function ($url, $model, $key) {
+                    'delete' => function ($url, $model, $key) use($isPermission) {
                         $options = [
                             'class' => 'btn btn-sm btn-danger',
                             'style' => $model->user_id == $model->course->created_by ? 'display: none' : '',
@@ -132,7 +131,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'conditions' => $model->course->created_by == Yii::$app->user->id,
                             'adminOptions' => true,
                         ];
-                        if(McbsAction::getIsPermission($model->course->id, McbsCourseUser::OWNERSHIP))
+                        if($isPermission)
                             return Html::a($buttonHtml['name'],$buttonHtml['url'],$buttonHtml['options']);
                         //return ResourceHelper::a($buttonHtml['name'], $buttonHtml['url'],$buttonHtml['options'],$buttonHtml['conditions']);
                     },       

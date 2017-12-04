@@ -4,6 +4,7 @@ namespace common\models\mconline;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
@@ -14,6 +15,8 @@ use yii\db\ActiveRecord;
  * @property string $course_id
  * @property string $created_at
  * @property string $updated_at
+ * 
+ * @property McbsCourse $course                             板书课程
  */
 class McbsAttention extends ActiveRecord
 {
@@ -60,5 +63,14 @@ class McbsAttention extends ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+    
+    /**
+     * 获取板书课程
+     * @return ActiveQuery
+     */
+    public function getCourse()
+    {
+        return $this->hasOne(McbsCourse::className(), ['id' => 'course_id']);
     }
 }

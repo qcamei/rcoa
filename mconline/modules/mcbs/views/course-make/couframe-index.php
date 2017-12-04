@@ -246,14 +246,21 @@ $js =
         e.addEventListener('sortupdate', function(evt){
             var oldList = evt.detail.oldStartList,
                 newList = evt.detail.newEndList,
-                saveIndexs = {};
-            $.each(newList,function(index,item){
-                if(oldList[index] != item){
-                    saveIndexs[$(item).attr('id')] = index;
+                oldIndexs = {},
+                newIndexs = {};
+            $.each(oldList,function(index,item){
+                if(newList[index] != item){
+                    oldIndexs[$(item).attr('id')] = index
                 }
             });
-            $.post("/mcbs/course-make/move",{"tableName":e.id,"saveIndexs":saveIndexs},function(data){
-                //console.log(data);
+            $.each(newList,function(index,item){
+                if(oldList[index] != item){
+                    newIndexs[$(item).attr('id')] = index;
+                }
+            });
+            
+            $.post("/mcbs/course-make/move",{"tableName":e.id,"oldIndexs":oldIndexs,"newIndexs":newIndexs},function(data){
+                console.log(data['oldItems']);
             });
         });
     }); 

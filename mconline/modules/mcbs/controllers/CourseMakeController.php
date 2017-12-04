@@ -55,15 +55,31 @@ class CourseMakeController extends Controller
     }
 
     /**
+     * 是否拥有权限
+     */
+    private static function IsPermission($course_id, $status, $is_array = true)
+    {
+        if($is_array)
+            $privilege = McbsCourseUser::OWNERSHIP;
+        else
+            $privilege = [McbsCourseUser::EDIT, McbsCourseUser::OWNERSHIP];
+        
+        return McbsAction::getIsPermission($course_id, $privilege) && $status == McbsCourse::NORMAL_STATUS;
+    }
+
+
+    /**
      * Lists all McbsCourseUser models.
      * @return mixed
      */
     public function actionHelpmanIndex($course_id)
     {
+        $model = $this->findMcbsCourseModel($course_id);
         $searchModel = new McbsCourseUserSearch();
-      
+        
         return $this->renderAjax('helpman-index', [
-            'dataProvider' => $searchModel->search(['course_id'=>$course_id]),
+            'dataProvider' => $searchModel->search(['course_id'=>$model->id]),
+            'isPermission' => self::IsPermission($model->id, $model->status)
         ]);
     }
 
@@ -74,11 +90,11 @@ class CourseMakeController extends Controller
      */
     public function actionCreateHelpman($course_id)
     {
-        if(!McbsAction::getIsPermission($course_id, McbsCourseUser::OWNERSHIP))
-            throw new NotAcceptableHttpException('无权限操作！');
-        
         $model = new McbsCourseUser(['course_id' => $course_id]);
         $model->loadDefaultValues();
+        
+        if(!self::IsPermission($course_id,$model->course->status))
+            throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
             Yii::$app->getResponse()->format = 'json';
@@ -107,7 +123,7 @@ class CourseMakeController extends Controller
     {
         $model = McbsCourseUser::findOne($id);
         
-        if(!McbsAction::getIsPermission($model->course->id, McbsCourseUser::OWNERSHIP))
+        if(!self::IsPermission($model->course_id,$model->course->status))
             throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
@@ -134,7 +150,7 @@ class CourseMakeController extends Controller
     public function actionDeleteHelpman($id)
     {
         $model = McbsCourseUser::findOne($id);
-        if(!McbsAction::getIsPermission($model->course->id, McbsCourseUser::OWNERSHIP))
+        if(!self::IsPermission($model->course_id,$model->course->status))
             throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
@@ -158,6 +174,8 @@ class CourseMakeController extends Controller
      */
     public function actionCouframeIndex($course_id)
     {
+        
+        $model = $this->findMcbsCourseModel($course_id);
         $phaseSearch = new McbsCoursePhaseSearch();
         $blockSearch = new McbsCourseBlockSearch();
         $chapterSearch = new McbsCourseChapterSearch();
@@ -165,8 +183,8 @@ class CourseMakeController extends Controller
         $activitySearch = new McbsCourseActivitySearch();
         
         return $this->renderAjax('couframe-index', [
-            'course_id' => $course_id,
-            'isPermission' => McbsAction::getIsPermission($course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]),
+            'course_id' => $model->id,
+            'isPermission' => self::IsPermission($model->id, $model->status, false),
             'dataCouphase' => $phaseSearch->search(['course_id'=>$course_id]),
             'dataCoublock' => $blockSearch->search(['course_id'=>$course_id]),
             'dataCouchapter' => $chapterSearch->search(['course_id'=>$course_id]),
@@ -181,12 +199,11 @@ class CourseMakeController extends Controller
      * @return mixed
      */
     public function actionCreateCouphase($course_id)
-    {
-        if(!McbsAction::getIsPermission($course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
-            throw new NotAcceptableHttpException('无权限操作！');
-        
+    {        
         $model = new McbsCoursePhase(['id' => md5(rand(1,10000) + time()), 'course_id' => $course_id]);
         $model->loadDefaultValues();
+        if(!self::IsPermission($model->course->id, $model->course->status, false))
+            throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
             Yii::$app->getResponse()->format = 'json';
@@ -222,7 +239,7 @@ class CourseMakeController extends Controller
     public function actionUpdateCouphase($id)
     {
         $model = McbsCoursePhase::findOne($id);
-        if(!McbsAction::getIsPermission($model->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+        if(!self::IsPermission($model->course_id, $model->course->status, false))
             throw new NotAcceptableHttpException('无权限操作！');
         
         $post = Yii::$app->request->post();
@@ -260,7 +277,7 @@ class CourseMakeController extends Controller
     public function actionDeleteCouphase($id)
     {
         $model = McbsCoursePhase::findOne($id);
-        if(!McbsAction::getIsPermission($model->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+        if(!self::IsPermission($model->course_id, $model->course->status, false))
             throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
@@ -289,7 +306,7 @@ class CourseMakeController extends Controller
     {
         $model = new McbsCourseBlock(['id' => md5(rand(1,10000) + time()), 'phase_id' => $phase_id]);
         $model->loadDefaultValues();
-        if(!McbsAction::getIsPermission($model->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+        if(!self::IsPermission($model->phase->course_id, $model->phase->course->status, false))
             throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
@@ -325,7 +342,7 @@ class CourseMakeController extends Controller
     public function actionUpdateCoublock($id)
     {
         $model = McbsCourseBlock::findOne($id);
-        if(!McbsAction::getIsPermission($model->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+        if(!self::IsPermission($model->phase->course_id, $model->phase->course->status, false))
             throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
@@ -358,7 +375,7 @@ class CourseMakeController extends Controller
     public function actionDeleteCoublock($id)
     {
         $model = McbsCourseBlock::findOne($id);
-        if(!McbsAction::getIsPermission($model->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+        if(!self::IsPermission($model->phase->course_id, $model->phase->course->status, false))
             throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
@@ -387,7 +404,7 @@ class CourseMakeController extends Controller
     {
         $model = new McbsCourseChapter(['id' => md5(rand(1,10000) + time()), 'block_id' => $block_id]);
         $model->loadDefaultValues();
-        if(!McbsAction::getIsPermission($model->block->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+        if(!self::IsPermission($model->block->phase->course_id, $model->block->phase->course->status, false))
             throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
@@ -423,7 +440,7 @@ class CourseMakeController extends Controller
     public function actionUpdateCouchapter($id)
     {
         $model = McbsCourseChapter::findOne($id);
-        if(!McbsAction::getIsPermission($model->block->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+        if(!self::IsPermission($model->block->phase->course_id, $model->block->phase->course->status, false))
             throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
@@ -456,7 +473,7 @@ class CourseMakeController extends Controller
     public function actionDeleteCouchapter($id)
     {
         $model = McbsCourseChapter::findOne($id);
-        if(!McbsAction::getIsPermission($model->block->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+        if(!self::IsPermission($model->block->phase->course_id, $model->block->phase->course->status, false))
             throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
@@ -485,7 +502,7 @@ class CourseMakeController extends Controller
     {
         $model = new McbsCourseSection(['id' => md5(rand(1,10000) + time()), 'chapter_id' => $chapter_id]);
         $model->loadDefaultValues();
-        if(!McbsAction::getIsPermission($model->chapter->block->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+        if(!self::IsPermission($model->chapter->block->phase->course_id, $model->chapter->block->phase->course->status, false))
             throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
@@ -521,7 +538,7 @@ class CourseMakeController extends Controller
     public function actionUpdateCousection($id)
     {
         $model = McbsCourseSection::findOne($id);
-        if(!McbsAction::getIsPermission($model->chapter->block->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+        if(!self::IsPermission($model->chapter->block->phase->course_id, $model->chapter->block->phase->course->status, false))
             throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
@@ -554,7 +571,7 @@ class CourseMakeController extends Controller
     public function actionDeleteCousection($id)
     {
         $model = McbsCourseSection::findOne($id);
-        if(!McbsAction::getIsPermission($model->chapter->block->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+        if(!self::IsPermission($model->chapter->block->phase->course_id, $model->chapter->block->phase->course->status, false))
             throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
@@ -586,10 +603,13 @@ class CourseMakeController extends Controller
             'allModels' => $this->getUploadedActivityFile($id),
         ]);
         
+        $number = (new Query())->from(McbsMessage::tableName())->where(['activity_id'=>$model->id])->count();
+        
         return $this->render('activity-view', [
             'model' => $model,
-            'isPermission' => McbsAction::getIsPermission($model->section->chapter->block->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]),
+            'isPermission' => self::IsPermission($model->section->chapter->block->phase->course_id, $model->section->chapter->block->phase->course->status, false),
             'dataProvider' => $dataProvider,
+            'number' => $number
         ]);
     }
     
@@ -602,7 +622,7 @@ class CourseMakeController extends Controller
     {
         $model = new McbsCourseActivity(['id' => md5(rand(1,10000) + time()), 'section_id' => $section_id]);
         $model->loadDefaultValues();
-        if(!McbsAction::getIsPermission($model->section->chapter->block->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+        if(!self::IsPermission($model->section->chapter->block->phase->course_id, $model->section->chapter->block->phase->course->status, false))
             throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
@@ -641,7 +661,7 @@ class CourseMakeController extends Controller
     public function actionUpdateCouactivity($id)
     {
         $model = McbsCourseActivity::findOne($id);
-        if(!McbsAction::getIsPermission($model->section->chapter->block->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+        if(!self::IsPermission($model->section->chapter->block->phase->course_id, $model->section->chapter->block->phase->course->status, false))
             throw new NotAcceptableHttpException('无权限操作！');
         $post = Yii::$app->request->post();
         if(isset($post['McbsCourseActivity']))
@@ -680,7 +700,7 @@ class CourseMakeController extends Controller
     public function actionDeleteCouactivity($id)
     {
         $model = McbsCourseActivity::findOne($id);
-        if(!McbsAction::getIsPermission($model->section->chapter->block->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
+        if(!self::IsPermission($model->section->chapter->block->phase->course_id, $model->section->chapter->block->phase->course->status, false))
             throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post())) {
@@ -775,9 +795,11 @@ class CourseMakeController extends Controller
         {
             if(Yii::$app->request->isPost){
                 $table = ArrayHelper::getValue(Yii::$app->request->post(), 'tableName');
-                $saveIndexs = ArrayHelper::getValue(Yii::$app->request->post(), 'saveIndexs');
-                $items = json_decode(json_encode($saveIndexs), true);
-                foreach ($items as $id => $sortOrder)
+                $oldIndexs = ArrayHelper::getValue(Yii::$app->request->post(), 'oldIndexs');
+                $newIndexs = ArrayHelper::getValue(Yii::$app->request->post(), 'newIndexs');
+                $oldItems = json_decode(json_encode($oldIndexs), true);
+                $newItems = json_decode(json_encode($newIndexs), true);
+                foreach ($newItems as $id => $sortOrder)
                     $num += $this->UpdateTableAttribute ($table, $id, $sortOrder);
                 
             }     
@@ -787,6 +809,7 @@ class CourseMakeController extends Controller
         
         return [
             'code' => $num > 0 ? 200 : 404,
+            'oldItems' => $oldItems,
             'num' => $num,
             'message' => ''
         ];
@@ -885,5 +908,4 @@ class CourseMakeController extends Controller
                 ->where(['activity_id'=>$activity_id])
                 ->all();
     }
-        
 }

@@ -6,7 +6,7 @@ use common\models\Config;
 use common\models\mconline\McbsActionLog;
 use common\models\mconline\McbsActivityFile;
 use common\models\mconline\McbsActivityType;
-use common\models\mconline\McbsCourseActivity;
+use common\models\mconline\McbsCourse;
 use common\models\mconline\McbsCourseUser;
 use common\models\mconline\McbsRecentContacts;
 use common\models\User;
@@ -598,8 +598,8 @@ class McbsAction
     {
         //获取关联课程用户
         $courseUsers = (new Query)
-                ->select(['user_id'])->from(McbsCourseUser::tableName())
-                ->where(['course_id' => $course_id, 'privilege' => $privilege])->all();
+                ->select(['McbsCourseUser.user_id'])->from(['McbsCourseUser' => McbsCourseUser::tableName()])
+                ->where(['McbsCourseUser.course_id' => $course_id, 'McbsCourseUser.privilege' => $privilege])->all();
         //取出所有用户id
         $users = ArrayHelper::getColumn($courseUsers, 'user_id');
         //判断当前用户是否拥有该权限
