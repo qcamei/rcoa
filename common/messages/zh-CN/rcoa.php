@@ -78,6 +78,7 @@ return [
     'Download' => '下载',
     'Message' => '留言',
     'Backup' => '备份',
+    'Database' => '数据库',
     
     
     //拍摄预约-公共部分
