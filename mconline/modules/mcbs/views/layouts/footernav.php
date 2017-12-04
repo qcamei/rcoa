@@ -71,7 +71,7 @@ use yii\helpers\Html;
         foreach ($menuItems AS $item) {
             $selected = is_array($item['actionId']) ? in_array($actionId, $item['actionId']) : $actionId == $item['actionId'];
             $active = $selected ? $selectClass : null;
-            echo "<div class=\"{$active} footer-menu-item col-md-3\">";
+            echo "<div class=\"{$active} footer-menu-item col-xs-3\">";
             echo Html::a($item['icon'], $item['url']);
             echo '</div>';
         }
