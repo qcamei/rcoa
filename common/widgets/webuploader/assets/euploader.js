@@ -105,6 +105,7 @@
         var _self = this;
         /* 全局配置 */
         this.config = $.extend({
+            name:'euploader-'+Math.round(Math.random()*100000000),
             swf: '/Uploader.swf',
             // 文件接收服务端。
             server: '/site/upload',
@@ -153,6 +154,7 @@
          * para:block: 分片对象
          *************************************************************************************/
         WebUploader.Uploader.register({
+            "name":this.config['name'],//删除名称，删除
             //"add-file": "addFile", //整个文件上传前
             "before-send-file": "beforeSendFile", //整个文件上传前
             "before-send": "beforeSend", //每个分片上传前
@@ -421,6 +423,16 @@
                     $('#'+$(this).attr('data-file')).remove();
                 });
             }
+        }
+        
+        /**
+         * 销毁对象
+         * @returns {void}
+         */
+        this.destroy = function(){
+            uploader.destroy();
+            WebUploader.Uploader.unRegister(this.config['name']);
+            //console.log('销毁 '+this.config['name']);
         }
     };
     

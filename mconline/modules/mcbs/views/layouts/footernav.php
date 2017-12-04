@@ -5,15 +5,8 @@ use yii\helpers\Html;
 ?>
 
 <div class="hidden-lg footer-nav ">
-    <div class="create col-xs-3">
-        <?=
-            Html::a('', ['create'], [
-                'class' => 'fa fa-pencil-square-o create-icon',
-            ])
-        ?> 
-    </div>
 
-    <div class="navigation col-xs-9">
+    <div class="navigation col-xs-12">
         <?php
         /**
          * $menuItems = [
@@ -33,6 +26,16 @@ use yii\helpers\Html;
         $actionId = Yii::$app->controller->action->id;      //当前行为方法
         $selectClass = 'active';                            //选择样式
         $menuItems = [
+            [
+                'actionId' => 'create',
+                'name' => '创建课程',
+                'url' => ['create'],
+                'icon' => '<i class="fa fa-pencil-square-o"></i>',
+                'options' => ['class' => null],
+                'symbol' => null,
+                'conditions' => true,
+                'adminOptions' => null,
+            ],
             [
                 'actionId' => 'index',
                 'name' => '我的课程',
@@ -68,7 +71,7 @@ use yii\helpers\Html;
         foreach ($menuItems AS $item) {
             $selected = is_array($item['actionId']) ? in_array($actionId, $item['actionId']) : $actionId == $item['actionId'];
             $active = $selected ? $selectClass : null;
-            echo "<div class=\"{$active} footer-menu-item col-md-4\">";
+            echo "<div class=\"{$active} footer-menu-item col-xs-3\">";
             echo Html::a($item['icon'], $item['url']);
             echo '</div>';
         }

@@ -23,7 +23,7 @@ $this->title = Yii::t(null, '{Mcbs}{Courses}', [
 
     <?= $this->render('/layouts/leftnav'); ?>
 
-    <div class="col-md-10 col-xs-12">
+    <div class="col-lg-10 col-xs-12">
         <?=
         $this->render('_search', [
             'params' => $param,
@@ -54,7 +54,7 @@ $this->title = Yii::t(null, '{Mcbs}{Courses}', [
                             'th' => 'hidden-xs hidden-sm',
                         ],
                         'style' => [
-                            'width' => '250px',
+//                            'width' => '250px',
                             'padding' => '8px'
                         ],
                     ],
@@ -70,7 +70,7 @@ $this->title = Yii::t(null, '{Mcbs}{Courses}', [
                     },
                     'headerOptions' => [
                         'style' => [
-                            'width' => '250px',
+//                            'width' => '250px',
                             'padding' => '8px'
                         ],
                     ],
@@ -78,28 +78,28 @@ $this->title = Yii::t(null, '{Mcbs}{Courses}', [
                         'class' => 'course-name list-td',
                     ],
                 ],
-                [
-                    'label' => Yii::t(null, '{Last}{Revise}',[
-                        'Last' => Yii::t('app', 'Last'),
-                        'Revise' => Yii::t('app', 'Revise'),
-                    ]),
-                    'format' => 'raw',
-                    'value' => function($data) {
-                        return !empty(date('Y-m-d H:i', $data['updated_at'])) ? date('Y-m-d H:i', $data['updated_at']) : null;
-                    },
-                    'headerOptions' => [
-                        'class' => [
-                            'th' => 'hidden-xs hidden-sm',
-                        ],
-                        'style' => [
-                            'width' => '250px',
-                            'padding' => '8px'
-                        ],
-                    ],
-                    'contentOptions' => [
-                        'class' => 'hidden-xs updated-at list-td hidden-sm',
-                    ],
-                ],
+//                [
+//                    'label' => Yii::t(null, '{Last}{Revise}',[
+//                        'Last' => Yii::t('app', 'Last'),
+//                        'Revise' => Yii::t('app', 'Revise'),
+//                    ]),
+//                    'format' => 'raw',
+//                    'value' => function($data) {
+//                        return !empty(date('Y-m-d H:i', $data['updated_at'])) ? date('Y-m-d H:i', $data['updated_at']) : null;
+//                    },
+//                    'headerOptions' => [
+//                        'class' => [
+//                            'th' => 'hidden-xs hidden-sm',
+//                        ],
+//                        'style' => [
+//                            'width' => '250px',
+//                            'padding' => '8px'
+//                        ],
+//                    ],
+//                    'contentOptions' => [
+//                        'class' => 'hidden-xs updated-at list-td hidden-sm',
+//                    ],
+//                ],
                 [
                     'header' => Yii::t('app', 'Operating'),
                     'headerOptions' => [
