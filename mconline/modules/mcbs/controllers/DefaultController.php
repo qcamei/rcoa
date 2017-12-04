@@ -80,6 +80,7 @@ class DefaultController extends Controller
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'attModel' => $this->findMcbsAttentionModel($id),
         ]);
     }
 
@@ -206,6 +207,22 @@ class DefaultController extends Controller
                 'model' => $model,
             ]);
         }
+    }
+    
+    /**
+     * CancelAttention an existing McbsAttention model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionCancelAttention($id)
+    {
+        $attention = $this->findMcbsAttentionModel(Yii::$app->user->id, $id);
+        //var_dump($attention);exit;
+        if ($attention->save()) {
+            return $this->redirect(['view', 'id' => $attention->course_id]);
+        }
+        
     }
     
     /**

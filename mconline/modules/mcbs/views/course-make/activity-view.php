@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t(null, '{mcbs}{courses}',[
 ]), 'url' => ['default/index']];
 $this->params['breadcrumbs'][] = [
     'label' => $model->section->chapter->block->phase->course->course->name,
-    'url' => ['default/index', 'id' => $model->section->chapter->block->phase->course_id],
+    'url' => ['default/view', 'id' => $model->section->chapter->block->phase->course_id],
 ];
 $this->params['breadcrumbs'][] = $this->title;
 

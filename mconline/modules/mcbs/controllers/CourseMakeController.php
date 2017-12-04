@@ -225,7 +225,11 @@ class CourseMakeController extends Controller
         if(!McbsAction::getIsPermission($model->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
             throw new NotAcceptableHttpException('无权限操作！');
         
-        if ($model->load(Yii::$app->request->post())) {
+        $post = Yii::$app->request->post();
+        if(isset($post['McbsCoursePhase']))
+            $post['McbsCoursePhase']['value_percent'] = (float)$post['McbsCoursePhase']['value_percent'];
+        
+        if ($model->load($post)) {
             Yii::$app->getResponse()->format = 'json';
             $result = McbsAction::getInstance()->UpdateCouFrame($model,Yii::t('app', 'Phase'),$model->course_id);
             return [
@@ -639,10 +643,12 @@ class CourseMakeController extends Controller
         $model = McbsCourseActivity::findOne($id);
         if(!McbsAction::getIsPermission($model->section->chapter->block->phase->course_id, [McbsCourseUser::OWNERSHIP, McbsCourseUser::EDIT]))
             throw new NotAcceptableHttpException('无权限操作！');
-        
-        if ($model->load(Yii::$app->request->post())) {
+        $post = Yii::$app->request->post();
+        if(isset($post['McbsCourseActivity']))
+            $post['McbsCourseActivity']['type_id'] = (integer)$post['McbsCourseActivity']['type_id'];
+        if ($model->load($post)) {
             Yii::$app->getResponse()->format = 'json';
-            $result = McbsAction::getInstance()->UpdateCouactivity($model,Yii::$app->request->post());
+            $result = McbsAction::getInstance()->UpdateCouactivity($model,$post);
             return [
                 'code'=> $result ? 200 : 404,
                 'data'=> $result ? [

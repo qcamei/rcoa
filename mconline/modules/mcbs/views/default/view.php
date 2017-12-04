@@ -48,35 +48,50 @@ $this->params['breadcrumbs'][] = $this->title;
                     'name' => Yii::t('app', 'Edit').Yii::t('app', 'Courses'),
                     'url' => ['update', 'id' => $model->id],
                     'options' => ['class' => 'btn btn-primary'],
-                    'conditions' => McbsAction::getIsPermission($model->id, McbsCourseUser::OWNERSHIP),
+                    'conditions' => McbsAction::getIsPermission($model->id, McbsCourseUser::OWNERSHIP) 
+                                    && $model->status == McbsCourse::NORMAL_STATUS
+                                    && $model->is_publish == 0,
                 ],
                 [
                     'controllerId' => 'default',
                     'name' => Yii::t('app', 'Close').Yii::t('app', 'Courses'),
                     'url' => ['close', 'id' => $model->id],
                     'options' => ['id'=>'close-courses','class' => 'btn btn-danger'],
-                    'conditions' => McbsAction::getIsPermission($model->id, McbsCourseUser::OWNERSHIP),
+                    'conditions' => McbsAction::getIsPermission($model->id, McbsCourseUser::OWNERSHIP)
+                                    && $model->status == McbsCourse::NORMAL_STATUS
+                                    && $model->is_publish == 0,
                 ],
                 [
                     'controllerId' => 'default',
                     'name' => Yii::t('app', 'Open').Yii::t('app', 'Courses'),
                     'url' => ['open', 'id' => $model->id],
                     'options' => ['id'=>'open-courses','class' => 'btn btn-success'],
-                    'conditions' => McbsAction::getIsPermission($model->id, McbsCourseUser::OWNERSHIP),
+                    'conditions' => McbsAction::getIsPermission($model->id, McbsCourseUser::OWNERSHIP)
+                                    && $model->status == McbsCourse::CLOSE_STATUS
+                                    && $model->is_publish == 0,
                 ],
                 [
                     'controllerId' => 'default',
                     'name' => Yii::t('app', 'Publish').Yii::t('app', 'Courses'),
                     'url' => ['publish', 'id' => $model->id],
                     'options' => ['id'=>'publish-courses','class' => 'btn btn-info'],
-                    'conditions' => McbsAction::getIsPermission($model->id, McbsCourseUser::OWNERSHIP),
+                    'conditions' => McbsAction::getIsPermission($model->id, McbsCourseUser::OWNERSHIP)
+                                    && $model->status == McbsCourse::NORMAL_STATUS
+                                    && $model->is_publish == 0,
+                ],
+                [
+                    'controllerId' => 'default',
+                    'name' => Yii::t('app', 'Cancel').Yii::t('app', 'Attention'),
+                    'url' => ['cancel-attention', 'id' => $model->id],
+                    'options' => ['id' => 'cancel_attention', 'class' => 'btn btn-danger'],
+                    'conditions' => $attModel != null,
                 ],
                 [
                     'controllerId' => 'default',
                     'name' => Yii::t('app', 'Attention').Yii::t('app', 'Courses'),
                     'url' => ['attention', 'id' => $model->id],
                     'options' => ['class' => 'btn btn-success'],
-                    'conditions' => true,
+                    'conditions' => $attModel == null,
                 ],
                 [
                     'controllerId' => 'activity-file',
@@ -225,6 +240,12 @@ $js =
     });
     //发布课程弹出框
     $("#publish-courses").click(function(){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load($(this).attr("href"));
+        return false;
+    });
+    //取消关注弹出框
+    $("#cancel-attention").click(function(){
         $(".myModal").html("");
         $('.myModal').modal("show").load($(this).attr("href"));
         return false;

@@ -61,7 +61,7 @@ $js =
             $("#uploader").addClass("has-error");
             $("#uploader >div >.help-block").html("还有文件未上传");
         }else{
-            //$("#form-activity").submit();
+            //$("#form-activity").submit(); return;
             $.post("$action",$('#form-activity').serialize(),function(data){
                 if(data['code'] == '200'){
                     $.each(data['data'],function(key,value){

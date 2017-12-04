@@ -66,6 +66,7 @@ return [
     'Detail' => '详情',
     'Deploy' => '配置',
     'Close' => '关闭',
+    'Cancel' => '取消',
     'Open' => '开启',
     'Confirm' => '确定',
     'Operating' => '操作',

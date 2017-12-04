@@ -129,6 +129,7 @@ $js =
         
     /** 提交表单 */
     $("#submitsave").click(function(){
+        //$('#form-helpman').submit();return;
         $.post("$helpmanUrl",$('#form-helpman').serialize(),function(data){
             if(data['code'] == '200'){
                 $("#help-man").load("$helpman");
