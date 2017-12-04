@@ -58,7 +58,7 @@
     z-index: 1010;
     left: 0;
     bottom: 0;
-    position: absolute;
+    position: fixed;
 }
 
 .footer-nav .fa {
@@ -78,17 +78,12 @@
     padding-left: 8%;
 }
 
-.footer-nav .create .create-icon{
-    color: #fff;
-}
-
 .footer-nav .navigation {
     text-align: center;
+    /*padding-left: 8%;*/
 }
 
 .footer-nav .footer-menu-item{
-    width: 60px;
-    height: 60px;
     display: table-cell;
 }
 
