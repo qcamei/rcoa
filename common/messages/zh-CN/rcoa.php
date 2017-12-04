@@ -212,4 +212,8 @@ return [
     'Reason' => '原因',
     'Last' => '最后',
     'Revise' => '修改',
+    
+    'Post' => '文章',
+    'Category' => '分类',
+    'Show' => '显示',
 ];
