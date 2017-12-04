@@ -115,6 +115,16 @@ $js =
         //console.log(uploader.isFinish);
         return uploader.isFinish;
     } 
+    
+    /**
+     * 侦听模态框关闭事件，销毁 uploader 实例
+     *
+     **/
+         
+    $('.myModal').on('hidden.bs.modal',function(){
+        $('.myModal').off('hidden.bs.modal');
+        uploader.destroy();
+    })
         
 JS;
     $this->registerJs($js,  View::POS_READY);
