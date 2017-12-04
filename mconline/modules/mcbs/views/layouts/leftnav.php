@@ -4,7 +4,7 @@ use mconline\modules\mcbs\assets\McbsAssets;
 use yii\helpers\Html;
 ?>
 
-<div class="col-md-2 visible-lg-block left-nav">
+<div class="col-lg-2 visible-lg-block left-nav">
     <p> 
         <?=
             Html::a(Yii::t('app', 'Create'), ['create'], [

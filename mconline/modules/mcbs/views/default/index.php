@@ -23,7 +23,7 @@ $this->title = Yii::t(null, '{Mcbs}{Courses}', [
 
     <?= $this->render('/layouts/leftnav'); ?>
 
-    <div class="col-md-10 col-xs-12">
+    <div class="col-lg-10 col-xs-12">
         <?=
         $this->render('_search', [
             'params' => $param,
