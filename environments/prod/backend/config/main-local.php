@@ -64,6 +64,9 @@ $config = [
         'mconline_admin' => [
             'class' => 'backend\modules\mconline_admin\Module',
         ],
+        'backup' => [
+            'class' => 'spanjeta\modules\backup\Module',
+        ],
     ],
     'as access' => [
         'allowActions' => [
