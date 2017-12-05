@@ -3,6 +3,7 @@
 use mconline\modules\mcbs\assets\McbsAssets;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\View;
 
 /* @var $this View */
@@ -229,6 +230,9 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php
+
+$actlog = Url::to(['course-make/log-index', 'course_id' => $course_id]);
+
 $js = 
 <<<JS
     //初始化组件
@@ -259,8 +263,14 @@ $js =
                 }
             });
             
-            $.post("/mcbs/course-make/move",{"tableName":e.id,"oldIndexs":oldIndexs,"newIndexs":newIndexs},function(data){
-                console.log(data['oldItems']);
+            $.post("/mcbs/course-make/sort-order",
+                {"tableName":e.id,"oldIndexs":oldIndexs,"newIndexs":newIndexs,"course_id":"$course_id"},
+            function(data){
+                if(data['code'] == '200'){
+                    $("#action-log").load("$actlog");
+                }else{
+                    alert("顺序调整失败");
+                }
             });
         });
     }); 

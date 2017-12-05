@@ -6,6 +6,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%mcbs_course_chapter}}".
@@ -93,6 +94,29 @@ class McbsCourseChapter extends ActiveRecord
             return true;
         }else
             return false;
+    }
+    
+    /**
+     * 获取父级路径
+     * @param array $params
+     * @return array
+     */
+    public static function getParentPath($params = null)
+    {
+        $id = ArrayHelper::getValue($params, 'id');
+        //查询数据表
+        $query = self::find()
+            ->select(['CoursePhase.name AS cp_name','CourseBlock.name AS cb_name'])
+            ->from(['CourseChapter'=> self::tableName()])
+            ->where(['CourseChapter.id' => $id,'CourseChapter.is_del'=>0]);
+        $query->leftJoin(['CourseBlock'=> McbsCourseBlock::tableName()], 'CourseBlock.id = block_id');
+        $query->leftJoin(['CoursePhase'=> McbsCoursePhase::tableName()], 'CoursePhase.id = CourseBlock.phase_id');
+        $results = $query->asArray()->one();
+        
+        return [
+            'cp_name' => $results['cp_name'],
+            'cb_name' => $results['cb_name'],
+        ];
     }
     
     /**

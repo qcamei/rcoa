@@ -784,34 +784,36 @@ class CourseMakeController extends Controller
     }
     
     /**
-     * Move a single AllMcbs model.
+     * SortOrder a single AllMcbs model.
      * @return mixed
      */
-    public function actionMove()
+    public function actionSortOrder()
     {
         Yii::$app->getResponse()->format = 'json';
         $num = 0;
+        $errors = [];
         try
         {
             if(Yii::$app->request->isPost){
                 $table = ArrayHelper::getValue(Yii::$app->request->post(), 'tableName');
+                $course_id = ArrayHelper::getValue(Yii::$app->request->post(), 'course_id');
                 $oldIndexs = ArrayHelper::getValue(Yii::$app->request->post(), 'oldIndexs');
                 $newIndexs = ArrayHelper::getValue(Yii::$app->request->post(), 'newIndexs');
                 $oldItems = json_decode(json_encode($oldIndexs), true);
                 $newItems = json_decode(json_encode($newIndexs), true);
                 foreach ($newItems as $id => $sortOrder)
                     $num += $this->UpdateTableAttribute ($table, $id, $sortOrder);
-                
-            }     
+                if($num > 0)
+                    $this->saveSortOrderLog ($table, $course_id, array_keys($newItems), $oldItems, $newItems);
+            }
         } catch (Exception $ex) {
             $errors [] = $ex->getMessage();
         }
         
         return [
             'code' => $num > 0 ? 200 : 404,
-            'oldItems' => $oldItems,
             'num' => $num,
-            'message' => ''
+            'message' => $errors
         ];
     }
     
@@ -849,6 +851,48 @@ class CourseMakeController extends Controller
         return null;
     }
     
+    /**
+     * 保存顺序调整记录
+     * @param string $table                                 数据表
+     * @param string $course_id                             数据表
+     * @param string|array $id                              id
+     * @param array $oldIndexs                              旧顺序
+     * @param array $newIndexs                              新顺序
+     */
+    public function saveSortOrderLog($table, $course_id, $id, $oldIndexs, $newIndexs)
+    {
+        $oleItems = [];
+        $newItems = [];
+        $tableName = [
+            McbsCoursePhase::tableName() => McbsCoursePhase::getParentPath(['id' => $id[0]]),
+            McbsCourseBlock::tableName() => McbsCourseBlock::getParentPath(['id' => $id[0]]),
+            McbsCourseChapter::tableName() => McbsCourseChapter::getParentPath(['id' => $id[0]]),
+            McbsCourseSection::tableName() => McbsCourseSection::getParentPath(['id' => $id[0]]),
+            McbsCourseActivity::tableName() => McbsCourseActivity::getParentPath(['id' => $id[0]]),
+        ];
+        $parentPath = implode('>>',$tableName["{{%$table}}"]);
+        $content = $parentPath != null ? "调整：{$parentPath}：\n\r" : null;
+        //获取名称、顺序
+        $query = (new Query())->select(['id','name'])
+                ->from("{{%$table}}")->where(['id'=>$id])->all();
+        //结果数组
+        $results = ArrayHelper::map($query, 'id', 'name');
+        //组装新旧目录
+        foreach ($oldIndexs as $oldkey => $oldvalue) {
+            $oleItems[$oldkey] = $results[$oldkey];
+        }
+        foreach ($newIndexs as $newkey => $newvalue) {
+            $newItems[$newkey] = $results[$newkey];
+        }
+        //保存记录
+        McbsAction::getInstance()->saveMcbsActionLog([
+            'action' => '修改',
+            'title' => '顺序调整',
+            'content' => $content."【旧】". implode('、', $oleItems)."\n\r【新】".implode('、', $newItems),
+            'course_id' => $course_id
+        ]);
+    }
+
     /**
      * 获取和自己关联的最近联系人
      * @return array

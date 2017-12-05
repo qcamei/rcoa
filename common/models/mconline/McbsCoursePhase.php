@@ -100,6 +100,15 @@ class McbsCoursePhase extends ActiveRecord
     }
     
     /**
+     * 获取父级路径
+     * @return array
+     */
+    public static function getParentPath($params = null)
+    {
+        return [];
+    }
+
+    /**
      * 获取板书课程
      * @return ActiveQuery
      */
