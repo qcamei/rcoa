@@ -6,6 +6,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%mcbs_course_activity}}".
@@ -99,6 +100,35 @@ class McbsCourseActivity extends ActiveRecord
     }
     
     /**
+     * 获取父级路径
+     * @param array $params
+     * @return array
+     */
+    public static function getParentPath($params = null)
+    {
+        $id = ArrayHelper::getValue($params, 'id');
+        //查询数据表
+        $query = self::find()
+            ->select([
+                'CoursePhase.name AS cp_name','CourseBlock.name AS cb_name',
+                'CourseChapter.name AS cc_name','CourseSection.name AS cs_name'
+            ])->from(['CourseActivity'=> self::tableName()])
+            ->where(['CourseActivity.id' => $id,'CourseActivity.is_del'=>0]);
+        $query->leftJoin(['CourseSection'=> McbsCourseSection::tableName()], 'CourseSection.id = section_id');
+        $query->leftJoin(['CourseChapter'=> McbsCourseChapter::tableName()], 'CourseChapter.id = CourseSection.chapter_id');
+        $query->leftJoin(['CourseBlock'=> McbsCourseBlock::tableName()], 'CourseBlock.id = CourseChapter.block_id');
+        $query->leftJoin(['CoursePhase'=> McbsCoursePhase::tableName()], 'CoursePhase.id = CourseBlock.phase_id');
+        $results = $query->asArray()->one();
+        
+        return [
+            'cp_name' => $results['cp_name'],
+            'cb_name' => $results['cb_name'],
+            'cc_name' => $results['cc_name'],
+            'cs_name' => $results['cs_name'],
+        ];
+    }
+    
+    /**
      * 获取活动类型
      * @return ActiveQuery
      */
@@ -115,4 +145,5 @@ class McbsCourseActivity extends ActiveRecord
     {
         return $this->hasOne(McbsCourseSection::className(), ['id' => 'section_id']);
     }
+    
 }

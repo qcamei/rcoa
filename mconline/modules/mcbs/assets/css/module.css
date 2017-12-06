@@ -114,6 +114,12 @@
     line-height: 20px;
     background-color: rgba(153, 153, 153, 1);
 }
+.default-view
+.frame-title .icon {
+    float: left; 
+    margin-top: 3px;
+    margin-right: 5px;
+}
 
 .default-view
 .frame-title>span {

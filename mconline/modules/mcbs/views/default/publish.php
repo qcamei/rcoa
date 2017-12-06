@@ -42,9 +42,13 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
                     ], 
                 ]); ?>
                 
+                <?= Html::activeHiddenInput($model, 'status', ['value'=> McbsCourse::CLOSE_STATUS]) ?>
+                
                 <?= Html::activeHiddenInput($model, 'is_publish', ['value'=> 1]) ?>
                 
                 <?= Html::activeHiddenInput($model, 'publish_time', ['value'=> time()]) ?>
+                
+                <?= Html::activeHiddenInput($model, 'close_time', ['value'=> time()]) ?>
                 
                 <?= Html::encode('确定要'.Html::encode($this->title).'？') ?>
 

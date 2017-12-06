@@ -1,10 +1,10 @@
 <?php
 
+use common\models\mconline\McbsAttention;
 use common\models\mconline\McbsCourse;
 use common\models\mconline\McbsCourseUser;
 use mconline\modules\mcbs\assets\McbsAssets;
 use mconline\modules\mcbs\utils\McbsAction;
-use wskeee\rbac\components\ResourceHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\View;
@@ -12,6 +12,7 @@ use yii\widgets\DetailView;
 
 /* @var $this View */
 /* @var $model McbsCourse */
+/* @var $attModel McbsAttention */
 
 $this->title = Yii::t(null, '{Courses}{Make}',['Courses'=> Yii::t('app', 'Courses'),'Make'=> Yii::t('app', 'Make')]);
 
@@ -35,6 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
             *      controllerId => 控制器ID,                          
             *      name  => 菜单名称，
             *      url  =>  菜单url，
+            *      icon => '按钮图标',
             *      options  => 菜单属性，
             *      conditions  => 菜单显示条件，
             *   ],
@@ -47,60 +49,59 @@ $this->params['breadcrumbs'][] = $this->title;
                     'controllerId' => 'default',
                     'name' => Yii::t('app', 'Edit').Yii::t('app', 'Courses'),
                     'url' => ['update', 'id' => $model->id],
+                    'icon' => '<i class="fa fa-pencil-square-o"></i> ',
                     'options' => ['class' => 'btn btn-primary'],
-                    'conditions' => McbsAction::getIsPermission($model->id, McbsCourseUser::OWNERSHIP) 
-                                    && $model->status == McbsCourse::NORMAL_STATUS
-                                    && $model->is_publish == 0,
+                    'conditions' => $isPermission && $model->status == McbsCourse::NORMAL_STATUS,
                 ],
                 [
                     'controllerId' => 'default',
                     'name' => Yii::t('app', 'Close').Yii::t('app', 'Courses'),
                     'url' => ['close', 'id' => $model->id],
+                    'icon' => '<i class="fa fa-power-off"></i> ',
                     'options' => ['id'=>'close-courses','class' => 'btn btn-danger', 
-                                'onclick'=>'showModal($(this)):return false;'],
-                    'conditions' => McbsAction::getIsPermission($model->id, McbsCourseUser::OWNERSHIP)
-                                    && $model->status == McbsCourse::NORMAL_STATUS
-                                    && $model->is_publish == 0,
+                                'onclick'=>'return showElemModal($(this));'],
+                    'conditions' => $isPermission && $model->status == McbsCourse::NORMAL_STATUS,
                 ],
                 [
                     'controllerId' => 'default',
                     'name' => Yii::t('app', 'Open').Yii::t('app', 'Courses'),
                     'url' => ['open', 'id' => $model->id],
+                    'icon' => '<i class="fa fa-refresh"></i> ',
                     'options' => ['id'=>'open-courses','class' => 'btn btn-success',
-                                    'onclick'=>'showModal($(this));return false;'],
-                    'conditions' => McbsAction::getIsPermission($model->id, McbsCourseUser::OWNERSHIP)
-                                    && $model->status == McbsCourse::CLOSE_STATUS
-                                    && $model->is_publish == 0,
+                                    'onclick'=>'return showElemModal($(this))'],
+                    'conditions' => $isPermission && $model->status == McbsCourse::CLOSE_STATUS,
                 ],
                 [
                     'controllerId' => 'default',
                     'name' => Yii::t('app', 'Publish').Yii::t('app', 'Courses'),
                     'url' => ['publish', 'id' => $model->id],
+                    'icon' => '<i class="fa fa-external-link"></i>',
                     'options' => ['id'=>'publish-courses','class' => 'btn btn-info',
-                                   'onclick'=>'showModal($(this));return false;'],
-                    'conditions' => McbsAction::getIsPermission($model->id, McbsCourseUser::OWNERSHIP)
-                                    && $model->status == McbsCourse::NORMAL_STATUS
-                                    && $model->is_publish == 0,
+                                   'onclick'=>'return showElemModal($(this))'],
+                    'conditions' => $isPermission ,
                 ],
                 [
                     'controllerId' => 'default',
                     'name' => Yii::t('app', 'Cancel').Yii::t('app', 'Attention'),
                     'url' => ['cancel-attention', 'id' => $model->id],
+                    'icon' => '<i class="fa fa-heart"></i> ',
                     'options' => ['id' => 'cancel_attention', 'class' => 'btn btn-danger',
-                                'onclick'=>'showModal($(this));return false;'],
-                    'conditions' => $attModel != null,
+                                'onclick'=>'return showElemModal($(this))'],
+                    'conditions' => !$attModel->isNewRecord,
                 ],
                 [
                     'controllerId' => 'default',
                     'name' => Yii::t('app', 'Attention').Yii::t('app', 'Courses'),
                     'url' => ['attention', 'id' => $model->id],
+                    'icon' => '<i class="fa fa-heart-o"></i> ',
                     'options' => ['class' => 'btn btn-success'],
-                    'conditions' => $attModel == null,
+                    'conditions' => $attModel->isNewRecord,
                 ],
                 [
                     'controllerId' => 'activity-file',
                     'name' => Yii::t('app', 'File').Yii::t('app', 'List'),
                     'url' => ['activity-file/index', 'course_id' => $model->id],
+                    'icon' => '<i class="fa fa-file"></i> ',
                     'options' => ['class' => 'btn btn-default'],
                     'conditions' => true,
                 ],
@@ -109,7 +110,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             foreach ($menuItems AS $item){
                 if($item['conditions']){
-                    echo Html::a($item['name'], $item['url'], $item['options']).' ';
+                    echo Html::a($item['icon'].$item['name'], $item['url'], $item['options']).' ';
                 }
             }
 
@@ -118,6 +119,7 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <div class="col-md-6 col-xs-12 frame frame-left">
         <div class="col-xs-12 frame-title">
+            <i class="icon fa fa-file-text-o"></i>
             <span><?= Yii::t('app', 'Course Info') ?></span>
         </div>
         <?= DetailView::widget([
@@ -165,13 +167,15 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <div class="col-md-6 col-xs-12 frame frame-right">
         <div class="col-xs-12 frame-title">
+            <i class="icon fa fa-users"></i>
             <span><?= Yii::t('app', 'Help Man') ?></span>
             <div class="framebtn">
                 <?php 
-                   if(McbsAction::getIsPermission($model->id, McbsCourseUser::OWNERSHIP))         
-                        echo Html::a(Yii::t('app', 'Add'),
+                   if($isPermission && $model->status == McbsCourse::NORMAL_STATUS)         
+                        echo Html::a('<i class="fa fa-user-plus"></i> '.Yii::t('app', 'Add'),
                         ['course-make/create-helpman', 'course_id' => $model->id], 
-                        ['id' => 'add-helpman','class' => 'btn btn-sm btn-success'])
+                        ['id' => 'add-helpman','class' => 'btn btn-sm btn-success',
+                        'onclick'=>'return showElemModal($(this));'])
                 ?>
             </div>
         </div>
@@ -182,12 +186,13 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <div class="col-xs-12 frame">
         <div class="col-xs-12 frame-title">
+            <i class="icon fa fa-cubes"></i>
             <span><?= Yii::t('app', 'Course Frame') ?></span>
             <div class="framebtn">
-                <?= Html::a(Yii::t('app', '导入'),'javascript:;', [
+                <?= Html::a('<i class="fa fa-sign-in"></i> '.Yii::t('app', '导入'),'javascript:;', [
                     'class' => 'btn btn-sm btn-info disabled'
                 ]) ?>
-                <?= Html::a(Yii::t('app', '导出'),'javascript:;', [
+                <?= Html::a('<i class="fa fa-sign-out"></i> '.Yii::t('app', '导出'),'javascript:;', [
                     'class' => 'btn btn-sm btn-info disabled'
                 ]) ?>
             </div>
@@ -199,6 +204,7 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <div class="col-xs-12 frame">
         <div class="col-xs-12 frame-title">
+            <i class="icon fa fa-history"></i>
             <span><?= Yii::t('app', 'Action Log') ?></span>
         </div>
         <div id="action-log" class="col-xs-12 frame-table course-make-actlog">
@@ -224,12 +230,14 @@ $js =
     $("#cou-frame").load("$couframe"); 
     //加载操作记录列表
     $("#action-log").load("$actlog"); 
+    
     /** 显示模态框 */
-    function showModal(elem){
+    window.showElemModal = function(elem){
         $(".myModal").html("");
         $('.myModal').modal("show").load(elem.attr("href"));
+        return false;
     }    
-        
+    
     
             
 JS;

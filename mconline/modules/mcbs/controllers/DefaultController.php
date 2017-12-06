@@ -52,6 +52,23 @@ class DefaultController extends Controller
     }
 
     /**
+     * 是否拥有权限
+     */
+    private static function IsPermission($course_id, $status, $default = true)
+    {
+        if($default){
+            $privilege = McbsCourseUser::OWNERSHIP;
+            $_status = McbsCourse::NORMAL_STATUS;
+        }
+        else{
+            $privilege = [McbsCourseUser::EDIT, McbsCourseUser::OWNERSHIP];
+            $_status = McbsCourse::CLOSE_STATUS;
+        }
+        
+        return McbsAction::getIsPermission($course_id, $privilege) && $status == $_status;
+    }
+    
+    /**
      * Lists all McbsCourse models.
      * @return mixed
      */
@@ -81,6 +98,7 @@ class DefaultController extends Controller
         return $this->render('view', [
             'model' => $this->findModel($id),
             'attModel' => $this->findMcbsAttentionModel($id),
+            'isPermission' => McbsAction::getIsPermission($id, McbsCourseUser::OWNERSHIP),
         ]);
     }
 
@@ -117,7 +135,7 @@ class DefaultController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if(!McbsAction::getIsPermission($id, McbsCourseUser::OWNERSHIP))
+        if(!self::IsPermission($model->id, $model->status))
             throw new NotAcceptableHttpException('无权限操作！');
         
         $model->scenario = McbsCourse::SCENARIO_UPDATE;
@@ -143,7 +161,7 @@ class DefaultController extends Controller
     public function actionClose($id)
     {
         $model = $this->findModel($id);
-        if(!McbsAction::getIsPermission($id, McbsCourseUser::OWNERSHIP))
+        if(!self::IsPermission($model->id, $model->status))
             throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -170,7 +188,7 @@ class DefaultController extends Controller
     public function actionOpen($id)
     {
         $model = $this->findModel($id);
-        if(!McbsAction::getIsPermission($id, McbsCourseUser::OWNERSHIP))
+        if(!self::IsPermission($model->id, $model->status, false))
             throw new NotAcceptableHttpException('无权限操作！');
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -217,10 +235,10 @@ class DefaultController extends Controller
      */
     public function actionCancelAttention($id)
     {
-        $model = $this->findMcbsAttentionModel(Yii::$app->user->id, $id);
-        //var_dump($attention);exit;
-        if (Yii::$app->request->isPost && $model->delete()) {
-            return $this->redirect(['view', 'id' => $model->course_id]);
+        $model = $this->findMcbsAttentionModel($id);
+        if (Yii::$app->request->isPost) {
+            $model->delete();
+            return $this->redirect(['view', 'id' => $id]);
         }else{
             return $this->renderAjax('attention',[
                 'model' => $model,

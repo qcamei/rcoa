@@ -43,6 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
     <div class="col-xs-12 frame">
         <div class="col-xs-12 frame-title">
+            <i class="icon fa fa-info-circle"></i>
             <span><?= Yii::t(null, "{activity}{info}",[
                 'activity' => Yii::t('app', 'Activity'),
                 'info' => Yii::t('app', 'Info'),
@@ -72,6 +73,7 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <div class="col-xs-12 frame">
         <div class="col-xs-12 frame-title">
+            <i class="icon fa fa-paperclip"></i>
             <span><?= Yii::t(null, "{file}{list}",[
                 'file' => Yii::t('app', 'File'),
                 'list' => Yii::t('app', 'List'),
@@ -158,7 +160,8 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <div class="col-xs-12 frame">
         <div class="col-xs-12 frame-title">
-            <span><?= Yii::t('app', 'Message') ?></span>
+            <i class="icon fa fa-commenting"></i>
+            <span><?= Yii::t('app', 'Message')."（{$number}）" ?></span>
         </div>
         <div class="col-xs-12 frame-table message">
             <div id="mes-list" class="meslist">
@@ -189,6 +192,7 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <div class="col-xs-12 frame">
         <div class="col-xs-12 frame-title">
+            <i class="icon fa fa-history"></i>
             <span><?= Yii::t('app', 'Action Log') ?></span>
         </div>
         <div id="action-log" class="col-xs-12 frame-table course-make-actlog">

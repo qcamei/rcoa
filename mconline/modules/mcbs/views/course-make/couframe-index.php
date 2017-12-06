@@ -3,6 +3,7 @@
 use mconline\modules\mcbs\assets\McbsAssets;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\View;
 
 /* @var $this View */
@@ -229,6 +230,9 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php
+
+$actlog = Url::to(['course-make/log-index', 'course_id' => $course_id]);
+
 $js = 
 <<<JS
     //初始化组件
@@ -246,14 +250,27 @@ $js =
         e.addEventListener('sortupdate', function(evt){
             var oldList = evt.detail.oldStartList,
                 newList = evt.detail.newEndList,
-                saveIndexs = {};
-            $.each(newList,function(index,item){
-                if(oldList[index] != item){
-                    saveIndexs[$(item).attr('id')] = index;
+                oldIndexs = {},
+                newIndexs = {};
+            $.each(oldList,function(index,item){
+                if(newList[index] != item){
+                    oldIndexs[$(item).attr('id')] = index
                 }
             });
-            $.post("/mcbs/course-make/move",{"tableName":e.id,"saveIndexs":saveIndexs},function(data){
-                //console.log(data);
+            $.each(newList,function(index,item){
+                if(oldList[index] != item){
+                    newIndexs[$(item).attr('id')] = index;
+                }
+            });
+            
+            $.post("/mcbs/course-make/sort-order",
+                {"tableName":e.id,"oldIndexs":oldIndexs,"newIndexs":newIndexs,"course_id":"$course_id"},
+            function(data){
+                if(data['code'] == '200'){
+                    $("#action-log").load("$actlog");
+                }else{
+                    alert("顺序调整失败");
+                }
             });
         });
     }); 

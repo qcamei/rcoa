@@ -6,6 +6,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%mcbs_course_block}}".
@@ -93,6 +94,26 @@ class McbsCourseBlock extends ActiveRecord
             return true;
         }else
             return false;
+    }
+    
+    /**
+     * 获取父级路径
+     * @param array $params
+     * @return array
+     */
+    public static function getParentPath($params = null)
+    {
+        $id = ArrayHelper::getValue($params, 'id');
+        //查询数据表
+        $query = self::find()->select(['CoursePhase.name AS cp_name'])
+            ->from(['CourseBlock'=> self::tableName()])
+            ->where(['CourseBlock.id' => $id,'CourseBlock.is_del'=>0]);
+        $query->leftJoin(['CoursePhase'=> McbsCoursePhase::tableName()], 'CoursePhase.id = phase_id');
+        $results = $query->asArray()->one();
+        
+        return [
+            'cp_name' => $results['cp_name']
+        ];
     }
     
     /**
