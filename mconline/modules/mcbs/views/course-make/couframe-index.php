@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= Html::a("<i class=\"fa fa-bars\"></i>".
                    "<span class=\"name\">{$couphase['name']}</span>".
-                   "<span class=\"value_percent\">（{$couphase['value_percent']}分）</span>") 
+                   "<span class=\"value_percent\">占课程总分比例：{$couphase['value_percent']}%</span>")
                 ?>
                 <div class="cou-icon">
                 <?php if($isPermission): ?>

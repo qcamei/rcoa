@@ -217,7 +217,7 @@ class CourseMakeController extends Controller
                     'id'=>$model->id,
                     'parent_id'=>'',
                     'name'=>$model->name,
-                    'value_percent'=>'（'. number_format($model->value_percent,2).'分）',
+                    'value_percent'=>"占课程总分比例：".number_format($model->value_percent,2)."%",
                 ] : [],
                 'message' => ''
             ];
@@ -255,7 +255,7 @@ class CourseMakeController extends Controller
                 'data'=> $result ? [
                     'id'=>$model->id,
                     'name'=>$model->name,
-                    'value_percent'=>'（'. number_format($model->value_percent,2).'分）',
+                    'value_percent'=>"占课程总分比例：".number_format($model->value_percent,2)."%",
                 ] : [],
                 'message' => ''
             ];
@@ -419,6 +419,7 @@ class CourseMakeController extends Controller
                     'id'=>$model->id,
                     'parent_id'=>$model->block_id,
                     'name'=>$model->name,
+                    'des'=>$model->des,
                 ] : [],
                 'message' => ''
             ];

@@ -241,8 +241,16 @@
 
 .course-make-couframe
 .sortable .cou-phase a>i {
-    margin: 0 10px;
+    margin-right: 10px;
     font-size: 20px;
+}
+
+.course-make-couframe
+.sortable .cou-phase .value_percent {
+    font-size: 14px;
+    color: #ccc;
+    font-weight: normal;
+    margin-left: 15px;
 }
 
 .course-make-couframe

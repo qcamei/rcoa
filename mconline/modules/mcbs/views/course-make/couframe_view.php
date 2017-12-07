@@ -26,6 +26,12 @@
         </div>
     </div>
     <div id="data-{%id%}" class="collapse in" aria-expanded="true">
+        <?php if(strstr(Yii::$app->controller->action->id,'cou') == 'couchapter'): ?>
+        <div class="cou-default chapter-des">
+            <p><b>本章信息</b></p>
+            <p class="des">{%des%}</p>
+        </div>
+        <?php endif; ?> 
         <ul id="mcbs_course_{%sub_frame%}" class="sortable list cursor-move"></ul>
     </div>
 </li>
