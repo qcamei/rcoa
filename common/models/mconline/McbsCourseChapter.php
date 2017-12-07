@@ -52,7 +52,7 @@ class McbsCourseChapter extends ActiveRecord
             [['sort_order', 'is_del', 'created_at', 'updated_at'], 'integer'],
             [['id', 'block_id'], 'string', 'max' => 32],
             [['name'], 'string', 'max' => 100],
-            [['des'], 'string', 'max' => 255],
+            [['des'], 'string'],
         ];
     }
 
