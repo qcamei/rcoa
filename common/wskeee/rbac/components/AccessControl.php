@@ -67,8 +67,9 @@ class AccessControl extends ActionFilter {
     public function beforeAction($action) {
         $actionId = $action->getUniqueId();
         $user = $this->getUser();
+        
         if (Helper::checkRoute('/' . $actionId, Yii::$app->getRequest()->get(), $user)) {
-            $this->checkRepeat($action->id);
+            //$this->checkRepeat($action->id);
             return true;
         }
         
@@ -80,6 +81,7 @@ class AccessControl extends ActionFilter {
      */
     
     private function checkRepeat($actionID) {
+        
         //登录  所有操作都虚经过过滤器控制输出  
         if (!Yii::$app->user->isGuest && $actionID != 'logout') {
             $id = Yii::$app->user->id;
@@ -88,7 +90,7 @@ class AccessControl extends ActionFilter {
             $tokenSES = $session->get(md5(sprintf("%s&%s", $id, $username))); //取出session中的用户登录token  
             $sessionTBL = AdminSession::findOne(['id' => $id]);
             $tokenTBL = $sessionTBL->session_token;
-
+            
             if ($tokenSES != $tokenTBL) {  //如果用户登录在 session中token不同于数据表中token  
                 Yii::$app->user->logout(); //执行登出操作  
                 Yii::$app->run();
