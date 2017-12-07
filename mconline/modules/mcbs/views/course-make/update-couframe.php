@@ -60,6 +60,7 @@ $js =
             if(data['code'] == '200'){
                 $.each(data['data'],function(key,value){
                     $("#$model->id").find('> div.head span.'+key).html(value);
+                    $("#$model->id").find('> div.collapse p.'+key).html(value);
                 });
                 $("#action-log").load("$actlog");
             }
