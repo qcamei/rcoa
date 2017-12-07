@@ -182,13 +182,9 @@
 
 .course-make-couframe
 .sortable .cou-icon {
-    float: right;
-}
-
-.course-make-couframe
-.sortable .cou-icon a>i {
-    font-size: 12px;
-    margin-right: 3px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
 
 .course-make-couframe
@@ -209,57 +205,124 @@
 
 .course-make-couframe
 .sortable .cou-default {
+    position: relative;
     padding: 8px;
-    margin: 0 3px;
+    margin: 1px 10px 0;
 }
 
 .course-make-couframe
 .sortable .cou-phase {
-    margin-top: 5px; 
-    padding-top: 15px; 
+    margin-top: 5px;
+    padding-top: 15px;
     padding-bottom: 15px;
-    background-color: #428bca;
+    margin-left: 0px;
+    margin-right: 0px;
+    line-height: 28px;
+    font-size: 20px;
+    background-color: #ffffff;
+    border-top: 2px solid #3f99ce;
+}
+
+.course-make-couframe
+.sortable .add-cou-phase {
+    margin-top: 20px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin-left: 0px;
+    margin-right: 0px;
+    line-height: 28px;
+    background-color: #3f97cf;
+}
+
+.course-make-couframe
+.sortable .cou-phase a {
+    color: #3f97cf;
+}
+
+.course-make-couframe
+.sortable .cou-phase a>i {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.course-make-couframe
+.sortable .cou-phase .value_percent {
+    font-size: 14px;
+    color: #ccc;
+    font-weight: normal;
+    margin-left: 15px;
 }
 
 .course-make-couframe
 .sortable .cou-block {
-    background-color: #006699;
+    font-size: 16px;
+    line-height: 32px;
+    background-color: #3f97cf;
 }
 
 .course-make-couframe
 .sortable .cou-chapter {
-    background-color: #66bbfc;
+    font-size: 14px;
+    line-height: 22px;
+    background-color: #89cbf5;
+}
+
+.course-make-couframe
+.sortable .cou-chapter a {
+    color: #0f4967;
+}
+
+.course-make-couframe
+.sortable .cou-chapter a>span{
+    font-weight: normal;
 }
 
 .course-make-couframe
 .sortable .chapter-des {
-    padding-right: 20px;
-    padding-left: 20px; 
-    border: 1px #cccccc solid;
+    padding: 30px 40px;
+    background-color: #f2f2f3;
+}
+
+.course-make-couframe
+.sortable .chapter-des>p>b {
+    color: #f39700;
+}
+
+.course-make-couframe
+.sortable .chapter-des>.des {
+    color: #888888;
 }
 
 .course-make-couframe
 .sortable .cou-section {
-    background-color: #cccccc;
+    line-height: 10px;
+    background-color: #d0d5d8;
 }
 
 .course-make-couframe
 .sortable .cou-section a {
-    color: #333333;
+    color: #879196;
 }
 
 .course-make-couframe
 .sortable .cou-activity {
-    margin-top: 5px;
-    margin-bottom: 5px;
-    padding: 8px 15px; 
-    color: #333333;
-    border: 1px #cccccc solid;
+    margin: 5px 20px;
+    padding: 3px 15px; 
+    line-height: 10px;
+    border: 1px #bdc9cf solid;
+    background-color: #e2e8ed;
 }
 
 .course-make-couframe
 .sortable .cou-activity a {
-    color: #333333;
+    color: #879196;
+}
+
+.course-make-couframe
+.sortable .cou-icon a>i {
+    font-size: 12px;
+    margin-left: 0px;
+    margin-right: 3px;
 }
 
 .course-make-actlog .actlog {

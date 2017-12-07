@@ -30,6 +30,7 @@ use yii\data\ArrayDataProvider;
 use yii\db\Query;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
@@ -216,7 +217,7 @@ class CourseMakeController extends Controller
                     'id'=>$model->id,
                     'parent_id'=>'',
                     'name'=>$model->name,
-                    'value_percent'=>'（'. number_format($model->value_percent,2).'分）',
+                    'value_percent'=>"占课程总分比例：".number_format($model->value_percent,2)."%",
                 ] : [],
                 'message' => ''
             ];
@@ -254,7 +255,7 @@ class CourseMakeController extends Controller
                 'data'=> $result ? [
                     'id'=>$model->id,
                     'name'=>$model->name,
-                    'value_percent'=>'（'. number_format($model->value_percent,2).'分）',
+                    'value_percent'=>"占课程总分比例：".number_format($model->value_percent,2)."%",
                 ] : [],
                 'message' => ''
             ];
@@ -418,6 +419,7 @@ class CourseMakeController extends Controller
                     'id'=>$model->id,
                     'parent_id'=>$model->block_id,
                     'name'=>$model->name,
+                    'des'=>$model->des,
                 ] : [],
                 'message' => ''
             ];
@@ -451,6 +453,7 @@ class CourseMakeController extends Controller
                 'data'=> $result ? [
                     'id'=>$model->id,
                     'name'=>$model->name,
+                    'des'=>$model->des
                 ] : [],
                 'message' => ''
             ];
@@ -762,13 +765,30 @@ class CourseMakeController extends Controller
     public function actionLogIndex($course_id,$relative_id=null,$page=null)
     {
         $searchModel = new McbsActionLogSearch();
-        
-        return $this->renderAjax('log-index', [
-            'course_id' => $course_id,
-            'relative_id' => $relative_id,
-            'page' => $page,
-            'dataProvider' => $searchModel->search(['course_id'=>$course_id,'relative_id'=>$relative_id,'page'=>$page]),
-        ]);
+        $results = $searchModel->search(Yii::$app->request->queryParams);
+        $logs = $this->getActionLogs($course_id, $relative_id);
+        if(Yii::$app->request->isPost){
+            $filter = Yii::$app->request->post();
+            Yii::$app->getResponse()->format = 'json';
+            return [
+                'code'=> $results ? 200 : 404,
+                'data' =>$filter,
+                'url' => Url::to(array_merge(['course-make/log-index'], $filter)),
+                'message' => ''
+            ];
+        }else{
+            return $this->renderAjax('log-index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $results['dataProvider'],
+                'filter' => $results['filter'],
+                'action' => $logs['action'],
+                'title' => $logs['title'],
+                'createdBy' => $logs['created_by'],
+                'course_id' => $course_id,
+                'relative_id' => $relative_id,
+                'page' => $page,
+            ]);
+        }
     }
     
     /**
@@ -951,5 +971,26 @@ class CourseMakeController extends Controller
                 ->leftJoin(['Uploadfile'=> Uploadfile::tableName()], 'Uploadfile.id = ActivityFile.file_id')
                 ->where(['activity_id'=>$activity_id])
                 ->all();
+    }
+    
+    /**
+     * 获取该课程下的所有记录
+     * @param string $course_id                             课程id
+     * @param string $relative_id                           相关id
+     * @return array
+     */
+    public function getActionLogs($course_id, $relative_id)
+    {
+        $query = (new Query())->select(['action','title','created_by', 'User.nickname'])
+              ->from(McbsActionLog::tableName())
+              ->leftJoin(['User' => User::tableName()], 'User.id = created_by')
+              ->where(['course_id' => $course_id])
+              ->andFilterWhere(['relative_id' => $relative_id])->all();
+        
+        return [
+            'action' => ArrayHelper::map($query, 'action', 'action'),
+            'title' => ArrayHelper::map($query, 'title', 'title'),
+            'created_by' => ArrayHelper::map($query, 'created_by', 'nickname'),
+        ];
     }
 }

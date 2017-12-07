@@ -5,7 +5,6 @@ namespace common\models\mconline\searchs;
 use common\models\mconline\McbsActionLog;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use yii\data\ArrayDataProvider;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -42,19 +41,13 @@ class McbsActionLogSearch extends McbsActionLog
      */
     public function search($params)
     {
-        
         $this->course_id = ArrayHelper::getValue($params, 'course_id');
         $this->relative_id = ArrayHelper::getValue($params, 'relative_id');
-        $this->created_by = ArrayHelper::getValue($params, 'created_by');
         $pageSize = ArrayHelper::getValue($params, 'page');
-       
+        
         $query = McbsActionLog::find();
 
         // add conditions that should always apply here
-
-        /*$dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);*/
 
         $this->load($params);
 
@@ -79,14 +72,18 @@ class McbsActionLogSearch extends McbsActionLog
             ->andFilterWhere(['like', 'content', $this->content]);
         
         $query->orderBy('id DESC');
+        $query->with('createBy');
         
-        $dataProvider = new ArrayDataProvider([
-            'allModels' => $query->with('createBy')->all(),
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
             'pagination' => [
                 'pageSize' => $pageSize == null ? 10 : $pageSize,
             ],
         ]);
         
-        return $dataProvider;
+        return [
+            'filter' => $params,
+            'dataProvider' => $dataProvider
+        ];
     }
 }

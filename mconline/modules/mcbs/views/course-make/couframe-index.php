@@ -22,10 +22,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <li id="<?= $couphase['id'] ?>">
             <div class="head cou-default cou-phase">
 
-                <?= Html::a("<i class=\"fa fa-minus-square-o\"></i>".
+                <?= Html::a("<i class=\"fa fa-bars\"></i>".
                    "<span class=\"name\">{$couphase['name']}</span>".
-                   "<span class=\"value_percent\">（{$couphase['value_percent']}分）</span>",
-                   "#data-{$couphase['id']}",['data-toggle'=>'collapse', 'aria-expanded'=> 'true', 'onclick'=>'replace($(this))']) 
+                   "<span class=\"value_percent\">占课程总分比例：{$couphase['value_percent']}%</span>")
                 ?>
                 <div class="cou-icon">
                 <?php if($isPermission): ?>
@@ -160,7 +159,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                                                 ?>
                                                                 <div class="cou-icon">
                                                                     <?= Html::a('<i class="fa fa-eye"></i>',
-                                                                        ['course-make/couactivity-view','id'=>$couactivity['id']])
+                                                                        ['course-make/couactivity-view','id'=>$couactivity['id']],
+                                                                        ['target'=>'_blank'])
                                                                     ?>
                                                                 <?php if($isPermission): ?>
                                                                     <?= Html::a('<i class="fa fa-pencil"></i>',
@@ -215,7 +215,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php if($isPermission): ?>
     <ul class="sortable list cursor-move">
         <li>
-            <div class="cou-default cou-phase">
+            <div class="cou-default add-cou-phase">
                 <center>
                     <?= Html::a('<i class="fa fa-plus-square"></i>&nbsp;&nbsp;'.Yii::t(null, '{add}{phase}',[
                             'add' => Yii::t('app', 'Add'),

@@ -3,10 +3,12 @@
 use common\models\mconline\McbsActionLog;
 use common\models\mconline\McbsCourseUser;
 use common\models\mconline\searchs\McbsActionLogSearch;
+use kartik\widgets\Select2;
 use mconline\modules\mcbs\assets\McbsAssets;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\View;
 
 /* @var $this View */
@@ -19,8 +21,11 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="mcbs-actlog-index actlog">
 
     <?= GridView::widget([
+        'id' => 'gv1',
         'dataProvider' => $dataProvider,
-        //'filterModel' => $searchModel,
+        'filterModel' => $searchModel,
+        //'filterUrl' => array_merge (['course-make/log-index'], $filter),
+        //'filterSelector'=>'',
         'tableOptions' => ['class' => 'table table-striped table-list'],
         'layout' => "{items}\n{summary}\n{pager}",
         'summaryOptions' => [
@@ -39,13 +44,24 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label' => Yii::t('app', 'Action'),
                 'format' => 'raw',
-                'value'=> function ($model) {
+                'value'=> function ($model) use($action) {
                     /* @var $model McbsActionLog */
                     return $model->action;
                 },
+                'filter' => Select2::widget([
+                    //'value' => null,
+                    'model' => $searchModel,
+                    'attribute' => 'action',
+                    'data' => $action,
+                    'hideSearch'=>true,
+                    'options' => ['placeholder' => Yii::t('app', 'Select Placeholder')],
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
+                ]),
                 'headerOptions' => [
                     'style' => [
-                        'width' => '110px',
+                        'width' => '85px',
                         'padding' => '8px',
                     ],
                 ],
@@ -58,10 +74,21 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label' => Yii::t('app', 'Title'),
                 'format' => 'raw',
-                'value'=> function ($model) {
+                'value'=> function ($model) use($title) {
                     /* @var $model McbsActionLog */
                     return $model->title;
                 },
+                'filter' => Select2::widget([
+                    //'value' => null,
+                    'model' => $searchModel,
+                    'attribute' => 'title',
+                    'data' => $title,
+                    'hideSearch'=>true,
+                    'options' => ['placeholder' => Yii::t('app', 'Select Placeholder')],
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
+                ]),
                 'headerOptions' => [
                     'style' => [
                         'width' => '100px',
@@ -81,17 +108,21 @@ $this->params['breadcrumbs'][] = $this->title;
                     /* @var $model McbsActionLog */
                     return $model->content;
                 },
+                'filter' => Html::activeTextInput($searchModel,'content',[
+                    'class' => 'form-control',
+                    'placeholder' => Yii::t('app', 'Input Placeholder')
+                ]),
                 'headerOptions' => [
                     'style' => [
-                        'max-width' => '200px',
-                        'min-width' => '55px',
+                        'max-width' => '300px;',
+                        'min-width' => '100px',
                         'padding' => '8px',
                     ],
                 ],
                 'contentOptions' =>[
                     'style' => [
-                        'max-width' => '200px',
-                        'min-width' => '55px',
+                        'max-width' => '300px;',
+                        'min-width' => '100px',
                         'padding' => '8px',
                     ],
                     'class'=> 'course-name'
@@ -100,13 +131,24 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label' => Yii::t('app', 'Create By'),
                 'format' => 'raw',
-                'value'=> function($model){
+                'value'=> function($model) use($createdBy){
                     /* @var $model McbsActionLog */
                     return !empty($model->created_by) ? $model->createBy->nickname : null;
                 },
+                'filter' => Select2::widget([
+                    //'value' => null,
+                    'model' => $searchModel,
+                    'attribute' => 'created_by',
+                    'data' => $createdBy,
+                    'hideSearch'=>true,
+                    'options' => ['placeholder' => Yii::t('app', 'Select Placeholder')],
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
+                ]),
                 'headerOptions' => [
                     'style' => [
-                        'width' => '100px',
+                        'width' => '85px',
                         'padding' => '8px',
                     ],
                 ],
@@ -125,7 +167,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'headerOptions' => [
                     'style' => [
-                        'width' => '85px',
+                        'width' => '95px',
                         'padding' => '8px',
                     ],
                 ],
@@ -181,8 +223,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <center>
         <?php
             if($page == null)
-                echo Html::a('查看更多',['course-make/log-index','course_id' => $course_id,'relative_id'=>$relative_id,'page'=>$dataProvider->totalCount],[
-                    'onclick'=>'more($(this));return false;']) 
+                echo Html::a('查看更多',
+                    array_merge (['course-make/log-index'], array_merge ($filter, ['page'=>$dataProvider->totalCount])),
+                    ['onclick'=>'more($(this));return false;'])
         ?>
         </center>
     </div>
@@ -190,6 +233,9 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php
+
+$url = Url::to(array_merge(['course-make/log-index'], $filter));
+
 $js = 
 <<<JS
    
@@ -203,6 +249,17 @@ $js =
         $(".myModal").html("");
         $('.myModal').modal("show").load(elem.attr("href"));
     }    
+        
+    $('#gv1').on('beforeFilter',function(evt){
+        evt.result = false;
+        var url = $('#gv1 form').attr("action");
+        $.post("$url",$('#gv1 form').serialize(),function(data){
+            if(data['code'] == '200'){
+                $("#action-log").load(data['url']); 
+            }
+        });
+    });
+
         
 JS;
     $this->registerJs($js,  View::POS_READY);
