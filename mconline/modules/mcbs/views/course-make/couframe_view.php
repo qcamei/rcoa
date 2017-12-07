@@ -10,7 +10,6 @@
         <a href="#data-{%id%}" data-toggle="collapse" aria-expanded="true" onclick="replace($(this))">
             <i class="fa fa-minus-square-o"></i>
             <span class="name">{%name%}</span>
-            <span class="value_percent">{%value_percent%}</span>
         </a>
         <?php endif; ?> 
         <div class="cou-icon">

@@ -452,6 +452,7 @@ class CourseMakeController extends Controller
                 'data'=> $result ? [
                     'id'=>$model->id,
                     'name'=>$model->name,
+                    'des'=>$model->des
                 ] : [],
                 'message' => ''
             ];
