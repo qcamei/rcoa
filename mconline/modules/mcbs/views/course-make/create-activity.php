@@ -68,7 +68,7 @@ $js =
                         '<span class="name">{%name%}</span>'+
                     '</a>'+
                     '<div class="cou-icon">'+
-                        '<a href="../course-make/cou{%frame_name%}-view?id={%id%}"><i class="fa fa-eye"></i></a>'+
+                        '<a href="../course-make/cou{%frame_name%}-view?id={%id%}" target="_blank"><i class="fa fa-eye"></i></a>'+
                         '<a href="../course-make/update-cou{%frame_name%}?id={%id%}" onclick="couFrame($(this));return false;"><i class="fa fa-pencil"></i></a>'+
                         '<a href="../course-make/delete-cou{%frame_name%}?id={%id%}" onclick="couFrame($(this));return false;"><i class="fa fa-times"></i></a>'+
                         '<a href="javascript:;" class="handle"><i class="fa fa-arrows"></i></a>'+
