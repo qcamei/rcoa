@@ -215,7 +215,14 @@ return [
     'Last' => '最后',
     'Revise' => '修改',
     
+    //帮助中心后台
     'Post' => '文章',
     'Category' => '分类',
     'Show' => '显示',
+    'Href' => '超链接',
+    'Count' => '数',
+    'Comment' => '评论',
+    'Can' => '能否',
+    'Praise' => '赞',
+    'Tread' => '踩',
 ];
