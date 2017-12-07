@@ -26,21 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="mcbs-activity-view mcbs mcbs-activity default-view">
-    <p>
-        <?php
-            if($isPermission) {
-                echo Html::a(Yii::t(null, '{edit}{activity}',[
-                    'edit' => Yii::t('app', 'Edit'),
-                    'activity' => Yii::t('app', 'Activity')
-                ]), ['update-couactivity', 'id' => $model->id], ['id'=>'update-couactivity', 'class' => 'btn btn-primary']).' ';
-                echo Html::a(Yii::t(null, '{delete}{activity}',[
-                    'delete' => Yii::t('app', 'Delete'),
-                    'activity' => Yii::t('app', 'Activity')
-                ]), ['delete-couactivity', 'id' => $model->id], ['id'=>'delete-couactivity','class' => 'btn btn-danger']);
-            }
-        ?>
-
-    </p>
+    
     <div class="col-xs-12 frame">
         <div class="col-xs-12 frame-title">
             <i class="icon fa fa-info-circle"></i>
