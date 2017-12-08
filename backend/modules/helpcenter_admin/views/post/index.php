@@ -35,6 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'layout' => "{items}\n{summary}\n{pager}",
         'columns' => [
+            //['class' => 'yii\grid\SerialColumn'],
             [
                 'attribute' => 'id',
                 'label' => Yii::t('app', 'ID'),
@@ -42,13 +43,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'headerOptions' => [
                     'style' => [
                         'text-align' => 'center',
-                        'width' => '40px'
-                    ]
+                        'width' => '40px',
+                    ],
                 ],
                 'contentOptions' => [
                     'style' => [
-                        'text-align' => 'center'
-                    ]
+                        'text-align' => 'center',
+                    ],
                 ],
             ],
             [
@@ -67,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'category_id',
-                'label' => Yii::t(null, '{Belong}{Category}',[
+                'label' => Yii::t('app', '{Belong}{Category}',[
                     'Belong' => Yii::t('app', 'Belong'),
                     'Category' => Yii::t('app', 'Category'),
                 ]),
@@ -113,7 +114,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //'content:ntext',
             [
                 'attribute' => 'view_count',
-                'label' => Yii::t(null, '{View}{Count}',[
+                'label' => Yii::t('app', '{View}{Count}',[
                     'View' => Yii::t('app', 'View'),
                     'Count' => Yii::t('app', 'Count'),
                 ]),
@@ -131,7 +132,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'comment_count',
-                'label' => Yii::t(null, '{Comment}{Count}',[
+                'label' => Yii::t('app', '{Comment}{Count}',[
                     'Comment' => Yii::t('app', 'Comment'),
                     'Count' => Yii::t('app' , 'Count')
                 ]),
@@ -148,7 +149,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ],
             [
-                'label' => Yii::t(null, '{Praise}/{Tread}',[
+                'label' => Yii::t('app', '{Praise}/{Tread}',[
                     'Praise' => Yii::t('app', 'Praise'),
                     'Tread' => Yii::t('app' , 'Tread')
                 ]),
@@ -171,7 +172,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'can_comment',
-                'label' => Yii::t(null, '{Can}{Comment}', [
+                'label' => Yii::t('app', '{Can}{Comment}', [
                     'Can' => Yii::t('app', 'Can'),
                     'Comment' => Yii::t('app', 'Comment'),
                 ]),
@@ -189,14 +190,44 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]),
                 'headerOptions' => [
                     'style' => [
-                        'text-align' => 'center'
-                    ]
+                        'text-align' => 'center',
+                    ],
                 ],
                 'contentOptions' => [
                     'style' => [
                         'text-align' => 'center',
-                        'width' => '80px'
-                    ]
+                        'width' => '80px',
+                    ],
+                ],
+            ],
+            [
+                'attribute' => 'is_show',
+                'label' => Yii::t('app', '{Is}{Show}', [
+                    'Is' => Yii::t('app', 'Is'),
+                    'Show' => Yii::t('app', 'Show'),
+                ]),
+                'format' => 'raw',
+                'class' => GridViewChangeSelfColumn::className(),
+                'filter' => Select2::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'is_show',
+                    'data' => Post::$TYPES,
+                    'hideSearch' => true,
+                    'options' => ['placeholder' => Yii::t('app', 'All')],
+                    'pluginOptions' => [
+                        'allowClear' => true,
+                    ],
+                ]),
+                'headerOptions' => [
+                    'style' => [
+                        'text-align' => 'center',
+                    ],
+                ],
+                'contentOptions' => [
+                    'style' => [
+                        'text-align' => 'center',
+                        'width' => '80px',
+                    ],
                 ],
             ],
             [

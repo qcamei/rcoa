@@ -19,6 +19,7 @@ use yii\db\ActiveRecord;
  * @property string $view_count             查看次数
  * @property string $comment_count          回复数目
  * @property integer $can_comment           是否可以评论：0不可以，1可以
+ * @property integer $is_show               是否显示：0不显示，1显示
  * @property string $like_count             点赞数
  * @property string $unlike_count           不喜欢数
  * @property string $created_by             创建人
@@ -63,7 +64,7 @@ class Post extends ActiveRecord
     {
         return [
             [['name', 'title', 'content'], 'required'],
-            [['category_id', 'view_count', 'comment_count', 'can_comment', 'like_count', 'unlike_count', 'created_at', 'updated_at'], 'integer'],
+            [['category_id', 'view_count', 'comment_count', 'can_comment', 'is_show', 'like_count', 'unlike_count', 'created_at', 'updated_at'], 'integer'],
             [['content'], 'string'],
             [['name'], 'string', 'max' => 50],
             [['title'], 'string', 'max' => 255],
@@ -78,7 +79,7 @@ class Post extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'category_id' => Yii::t(null, '{Belong}{Category}',[
+            'category_id' => Yii::t('app', '{Belong}{Category}',[
                 'Belong' => Yii::t('app', 'Belong'),
                 'Category' => Yii::t('app', 'Category'),
             ]),
@@ -87,9 +88,13 @@ class Post extends ActiveRecord
             'content' => Yii::t('app', 'Content'),
             'view_count' => Yii::t('app', 'View Count'),
             'comment_count' => Yii::t('app', 'Comment Count'),
-            'can_comment' => Yii::t(null, '{Can}{Comment}',[
+            'can_comment' => Yii::t('app', '{Can}{Comment}',[
                 'Can' => Yii::t('app', 'Can'),
                 'Comment' => Yii::t('app', 'Comment')
+            ]),
+            'is_show' => Yii::t('app', '{Is}{Show}', [
+                'Is' => Yii::t('app', 'Is'),
+                'Show' => Yii::t('app', 'Show'),
             ]),
             'like_count' => Yii::t('app', 'Like Count'),
             'unlike_count' => Yii::t('app', 'Unlike Count'),

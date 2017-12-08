@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model common\models\helpcenter\PostCategory */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t(null, '{Post}{Category}{Administration}', [
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', '{Post}{Category}{Administration}', [
         'Post' => Yii::t('app', 'Post'),
         'Category' => Yii::t('app', 'Category'),
         'Administration' => Yii::t('app', 'Administration'),

@@ -170,8 +170,11 @@ class PostController extends BaseController
      */
     public function getParentCats($app_id)
     {
-        
         $parentCats =  PostCategory::find()->where(['app_id'=>$app_id])->asArray()->all();
+         //除顶级菜单外缩进两格(圆角符号下的空格)
+        foreach ($parentCats as &$parentCat) {
+            $parentCat ['name'] = str_repeat('　　', $parentCat ['level'] - 1) . $parentCat ['name'];
+        }
         return $parentCats;
     }
     

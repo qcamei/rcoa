@@ -14,7 +14,7 @@ use yii\web\View;
 /* @var $searchModel PostCategorySearch */
 /* @var $dataProvider ActiveDataProvider */
 
-$this->title = Yii::t(null, '{Post}{Category}{Administration}',[
+$this->title = Yii::t('app', '{Post}{Category}{Administration}',[
     'Post' => Yii::t('app', 'Post'),
     'Category' => Yii::t('app', 'Category'),
     'Administration' => Yii::t('app', 'Administration'),
@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t(null, '{Create}{Post}{Category}',[
+        <?= Html::a(Yii::t('app', '{Create}{Post}{Category}',[
             'Create' => Yii::t('app', 'Create'),
             'Post' => Yii::t('app', 'Post'),
             'Category' => Yii::t('app', 'Category'),
@@ -125,7 +125,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //'is_show',
             [
                 'attribute' => 'is_show',
-                'header' => Yii::t(null, '{Is}{Show}', [
+                'header' => Yii::t('app', '{Is}{Show}', [
                     'Is' => Yii::t('app', 'Is'),
                     'Show' => Yii::t('app', 'Show'),
                 ]),

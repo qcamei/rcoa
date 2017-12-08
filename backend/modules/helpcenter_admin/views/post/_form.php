@@ -51,6 +51,13 @@ use yii\widgets\ActiveForm;
         ]
     ]); ?>
     
+    <?= $form->field($model, 'is_show')->widget(SwitchInput::classname(), [
+        'pluginOptions' => [
+            'onText' => Yii::t('app', 'Y'),
+            'offText' => Yii::t('app', 'N'),
+        ]
+    ]); ?>
+    
     <span class="team-leader" style="font-weight:bold;padding-bottom:-10px">编辑-文章内容</span>
     
     <?= $form->field($model, 'content')->textarea([

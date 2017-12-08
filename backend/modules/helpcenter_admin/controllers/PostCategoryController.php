@@ -6,7 +6,6 @@ use backend\components\BaseController;
 use common\models\helpcenter\PostCategory;
 use common\models\helpcenter\searchs\PostCategorySearch;
 use Yii;
-use yii\bootstrap\Html;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
@@ -39,11 +38,10 @@ class PostCategoryController extends BaseController
     {
         $searchModel = new PostCategorySearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-//        $dataProvider->query->orderBy('parent_id');
-        
+
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -55,7 +53,7 @@ class PostCategoryController extends BaseController
     public function actionView($id)
     {
         return $this->render('view', [
-            'model' => $this->findModel($id),
+                    'model' => $this->findModel($id),
         ]);
     }
 
@@ -72,8 +70,8 @@ class PostCategoryController extends BaseController
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
-                'model' => $model,
-                'parents' => !empty($model->app_id) ? ArrayHelper::map($this->getParentCats($model->app_id), 'id', 'name') : [],
+                        'model' => $model,
+                        'parents' => !empty($model->app_id) ? ArrayHelper::map($this->getParentCats($model->app_id), 'id', 'name') : [],
             ]);
         }
     }
@@ -88,13 +86,13 @@ class PostCategoryController extends BaseController
     {
         $model = $this->findModel($id);
         $parentsdata = $this->getParentCats($model->app_id);
-        
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
-                'model' => $model,
-                'parents' => ArrayHelper::map($parentsdata, 'id', 'name'),
+                        'model' => $model,
+                        'parents' => ArrayHelper::map($parentsdata, 'id', 'name'),
             ]);
         }
     }
@@ -127,7 +125,7 @@ class PostCategoryController extends BaseController
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-    
+
     /**
      * 返回该$app_id下的所有分类
      * @param type $id          应用ID
@@ -136,21 +134,21 @@ class PostCategoryController extends BaseController
     public function actionSearchCats($id)
     {
         Yii::$app->getResponse()->format = 'json';
-        
+
         $errors = [];
         $items = [];
-        try{
+        try {
             $items = $this->getParentCats($id);
         } catch (Exception $ex) {
             $errors [] = $ex->getMessage();
         }
         return [
-            'type'=>'S',
+            'type' => 'S',
             'data' => $items,
             'error' => $errors
         ];
     }
-    
+
     /**
      * 根据$app_id查找相对应的分类
      * @param type $app_id          应用ID
@@ -158,6 +156,12 @@ class PostCategoryController extends BaseController
      */
     public function getParentCats($app_id)
     {
-        return PostCategory::find()->where(['app_id'=>$app_id])->asArray()->all();
+        $parentCats = PostCategory::find()->where(['app_id' => $app_id])->asArray()->all();
+        //除顶级菜单外缩进两格(圆角符号下的空格)
+        foreach ($parentCats as &$parentCat) {
+            $parentCat ['name'] = str_repeat('　　', $parentCat ['level'] - 1) . $parentCat ['name'];
+        }
+        return $parentCats;
     }
+
 }

@@ -63,6 +63,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => $model->can_comment == 0 ? Yii::t('app', 'N') : Yii::t('app', 'Y'),
             ],
             [
+                'attribute' => 'is_show',
+                'value' => $model->is_show == 0 ? Yii::t('app', 'N') : Yii::t('app', 'Y'),
+            ],
+            [
                 'attribute' => 'like_count',
                 'label' => Yii::t(null, '{Praise}{Count}',[
                     'Praise' => Yii::t('app', 'Praise'),

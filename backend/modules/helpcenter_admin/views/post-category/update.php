@@ -10,7 +10,7 @@ $this->title = Yii::t('app', '{Update}{Post}{Category}: ', [
             'Post' => Yii::t('app', 'Post'),
             'Category' => Yii::t('app', 'Category'),
         ]) . $model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t(null, '{Post}{Category}{Administration}', [
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', '{Post}{Category}{Administration}', [
         'Post' => Yii::t('app', 'Post'),
         'Category' => Yii::t('app', 'Category'),
         'Administration' => Yii::t('app', 'Administration'),

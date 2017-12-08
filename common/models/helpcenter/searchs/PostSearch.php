@@ -21,7 +21,7 @@ class PostSearch extends Post
     public function rules()
     {
         return [
-            [['id', 'category_id', 'view_count', 'comment_count', 'can_comment', 'like_count', 'unlike_count', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'category_id', 'view_count', 'comment_count', 'can_comment', 'is_show', 'like_count', 'unlike_count', 'created_at', 'updated_at'], 'integer'],
             [['name', 'title', 'content', 'created_by'], 'safe'],
         ];
     }
@@ -49,8 +49,8 @@ class PostSearch extends Post
         $query = (new Query())
                 ->select([
                     'Post.id','Post.name','Post.title','Post.content','Post.view_count','Post.comment_count',
-                    'Post.can_comment','Post.like_count','Post.unlike_count','Post.created_at','Post.updated_at',
-                    'PostCategory.name AS categoryName','User.nickname AS created_by',
+                    'Post.can_comment','Post.is_show','Post.like_count','Post.unlike_count','Post.created_at',
+                    'Post.updated_at','PostCategory.name AS categoryName','User.nickname AS created_by',
                 ])
                 ->from(['Post' => Post::tableName()]);
         
@@ -77,8 +77,8 @@ class PostSearch extends Post
         $query->andFilterWhere([
             'Post.created_by' => $createBy,
             'category_id' => $this->category_id,
-            'view_count' => $this->view_count,
             'can_comment' => $this->can_comment,
+            'Post.is_show' => $this->is_show,
         ]);
 
         $query->andFilterWhere(['like', 'Post.name', $this->name])

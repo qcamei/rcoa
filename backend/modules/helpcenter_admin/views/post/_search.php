@@ -30,6 +30,8 @@ use yii\widgets\ActiveForm;
     <?php // echo $form->field($model, 'comment_count') ?>
 
     <?php // echo $form->field($model, 'can_comment') ?>
+    
+    <?php // echo $form->field($model, 'is_show') ?>
 
     <?php // echo $form->field($model, 'like_count') ?>
     
