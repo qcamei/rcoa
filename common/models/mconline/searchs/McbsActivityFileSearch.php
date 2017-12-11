@@ -152,6 +152,9 @@ class McbsActivityFileSearch extends McbsActivityFile
         $query->andFilterWhere(['or',
             ['like', 'Uploadfile.name', $keyword],
         ]);
+        
+        $query->orderBy(["ActivityFile.created_at" => SORT_DESC]);
+        
         return [
             'filter' => $params,
             'dataProvider' => $dataProvider

@@ -1,5 +1,6 @@
 <?php
 
+use common\models\mconline\McbsActivityFile;
 use common\models\mconline\McbsCourse;
 use common\models\mconline\searchs\McbsActivityFileSearch;
 use kartik\widgets\Select2;
@@ -209,7 +210,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'Time' => Yii::t('app', 'Time')
                 ]),
                 'format' => 'raw',
-                'filter' => '',
+                'filter' => FALSE,
                 'headerOptions' => [
                     'class' => [
                         'th' => 'hidden-xs hidden-sm',
@@ -233,7 +234,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'Time' => Yii::t('app', 'Time')
                 ]),
                 'format' => 'raw',
-                'filter' => '',
+                'filter' => FALSE,
                 'headerOptions' => [
                     'class' => [
                         'th' => 'hidden-xs hidden-sm',
