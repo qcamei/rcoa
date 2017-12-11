@@ -4,6 +4,7 @@ namespace common\models\mconline\searchs;
 
 use common\models\mconline\McbsAttention;
 use common\models\mconline\McbsCourse;
+use common\models\mconline\McbsCourseUser;
 use common\models\User;
 use wskeee\framework\models\Item;
 use wskeee\framework\models\ItemType;
@@ -91,6 +92,12 @@ class McbsCourseSearch extends McbsCourse {
         $query = (new Query())
                 ->select(['McbsCourse.id'])
                 ->from(['McbsCourse' => McbsCourse::tableName()]);
+        //查询相关的课程
+        $relevantCourse = (new Query())
+                ->select(['McbsCourseUser.course_id AS id'])
+                ->from(['McbsCourseUser' => McbsCourseUser::tableName()])
+                ->where(['McbsCourseUser.user_id' => Yii::$app->user->id]);
+        
         //关联查询创建者
         $query->leftJoin(['CreateBy' => User::tableName()], 'CreateBy.id = McbsCourse.created_by');
         //关联查询基础课程
@@ -110,9 +117,11 @@ class McbsCourseSearch extends McbsCourse {
     public function searchMyCourse($params) {
         $page = ArrayHelper::getValue($params, 'page', 1);                      //分页
         $keywords = ArrayHelper::getValue($params, 'keyword');                  //关键字
-        $query = $this->searchIdentity($params);                                //获取查询相同的内容                                   
+        $query = $this->searchIdentity($params);                                //获取查询相同的内容
+        //关联查询与自己相关的课程
+        $query->leftJoin(['CourseUser' => McbsCourseUser::tableName()], 'CourseUser.course_id = McbsCourse.id');
         //查询条件
-        $query->where(['created_by' => Yii::$app->user->id]);
+        $query->where(['CourseUser.user_id' => Yii::$app->user->id]);
         //按关键字模糊搜索
         $query->andFilterWhere(['or',
             ['like', 'ItemChild.name', $keywords],
