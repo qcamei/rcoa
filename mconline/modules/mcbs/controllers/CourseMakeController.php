@@ -12,6 +12,7 @@ use common\models\mconline\McbsCourseChapter;
 use common\models\mconline\McbsCoursePhase;
 use common\models\mconline\McbsCourseSection;
 use common\models\mconline\McbsCourseUser;
+use common\models\mconline\McbsFileActionResult;
 use common\models\mconline\McbsMessage;
 use common\models\mconline\McbsRecentContacts;
 use common\models\mconline\searchs\McbsActionLogSearch;
@@ -804,6 +805,25 @@ class CourseMakeController extends Controller
     }
     
     /**
+     * Download a single McbsActionLog model.
+     * @param string $activity_id
+     * @param string $file_id
+     * @return mixed
+     */
+    public function actionDownload($activity_id, $file_id)
+    {
+        $model = McbsFileActionResult::findOne([
+            'activity_id' => $activity_id,
+            'file_id' => $file_id,
+            'user_id' => Yii::$app->user->id
+        ]);
+        $model->status = 1;
+        if($model->update()){
+            return $this->redirect(['/webuploader/default/download', 'file_id'=>$file_id]);
+        }
+    }
+    
+    /**
      * SortOrder a single AllMcbs model.
      * @return mixed
      */
@@ -966,7 +986,7 @@ class CourseMakeController extends Controller
      */
     public function getUploadedActivityFile($activity_id)
     {
-        return (new Query())->select(['ActivityFile.file_id AS id','Uploadfile.name','Uploadfile.is_del','Uploadfile.size'])
+        return (new Query())->select(['ActivityFile.activity_id', 'ActivityFile.file_id AS id','Uploadfile.name','Uploadfile.is_del','Uploadfile.size'])
                 ->from(['ActivityFile'=>McbsActivityFile::tableName()])
                 ->leftJoin(['Uploadfile'=> Uploadfile::tableName()], 'Uploadfile.id = ActivityFile.file_id')
                 ->where(['activity_id'=>$activity_id])

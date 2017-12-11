@@ -1,5 +1,6 @@
 <?php
 
+use common\models\mconline\McbsFileActionResult;
 use mconline\modules\mcbs\assets\McbsAssets;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
@@ -150,13 +151,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
                                                         <?php foreach($dataCouactivity as $couactivity): ?>
                                                         <?php if($couactivity['section_id'] == $cousection['id']): ?>
-                                                        
+                                                        <?php $is_show = McbsFileActionResult::getIsFileRelation($couactivity['id']); ?>
                                                         <li id="<?= $couactivity['id'] ?>">
                                                             <div class="head cou-default cou-activity">
                                                                 <?= Html::a(Html::img([$couactivity['icon_path']],['width'=>25,'height'=>25,'class'=>'icon_path']).
                                                                     "<span class=\"type_name\">【{$couactivity['type_name']}】：</span>".
-                                                                    "<span class=\"name\">{$couactivity['name']}</span>") 
+                                                                    "<span class=\"name\">{$couactivity['name']}</span>")
                                                                 ?>
+                                                                <?php if($is_show) echo Html::img(WEB_ROOT.'/filedata/image/new.gif',['class'=>'new']); ?>
                                                                 <div class="cou-icon">
                                                                     <?= Html::a('<i class="fa fa-eye"></i>',
                                                                         ['course-make/couactivity-view','id'=>$couactivity['id']],
@@ -232,6 +234,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 
 $actlog = Url::to(['course-make/log-index', 'course_id' => $course_id]);
+$img = Html::img(WEB_ROOT.'/filedata/image/new.gif',['class'=>'new']);
 
 $js = 
 <<<JS
@@ -288,6 +291,15 @@ $js =
         else
             elem.children('i').removeClass("fa-plus-square-o").addClass("fa-minus-square-o");
     }
+    //添加通知
+    $(".cou-activity .new").each(function(index, item){
+        if(item != ''){
+            var section_new = $(item).parent().parent().parent().parent().prev("div").children("a"),
+                chapter_new = $(item).parent().parent().parent().parent().parent().parent().parent().prev("div").children("a");
+            section_new.after('$img');
+            chapter_new.after('$img');
+        }
+    });
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>

@@ -81,3 +81,8 @@
 .mcbs .has-title {
     padding-top: 0px;
 }
+
+.mcbs .new {
+    position: absolute;
+    top: -5px;
+}

@@ -60,6 +60,7 @@ $js =
             $("#uploader").addClass("has-error");
             $("#uploader >div >.help-block").html("还有文件未上传");
         }else{
+            //$("#form-activity").submit(); return;
             var item = '<li id="{%id%}">'+
                 '<div class="head cou-default cou-activity">'+
                     '<a>'+

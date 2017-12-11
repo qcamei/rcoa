@@ -53,7 +53,9 @@ class DemandSearch
         $query->leftJoin(['CreateBy' => User::tableName()], 'CreateBy.id = DemandTask.create_by');
         //关联查询承接人
         $query->leftJoin(['Undertaker' => TeamMember::tableName()], 
-            "(IF(DemandTask.status>=".DemandTask::STATUS_UNDERTAKE.",Undertaker.team_id=DemandTask.team_id AND Undertaker.is_leader='".TeamMember::TEAMLEADER."',NULL))"
+            "(IF(DemandTask.status>=".DemandTask::STATUS_UNDERTAKE.
+            ",Undertaker.team_id=DemandTask.team_id AND Undertaker.is_leader='".TeamMember::TEAMLEADER.
+            "' AND Undertaker.is_delete ='".TeamMember::CANCEL_DELETE."',NULL))"
         )
             ->leftJoin(['UndertakerUser' => User::tableName()], 'UndertakerUser.id = Undertaker.u_id');
         //关联查询审核人

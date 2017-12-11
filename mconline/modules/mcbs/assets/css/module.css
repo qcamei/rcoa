@@ -207,7 +207,7 @@
 .sortable .cou-default {
     position: relative;
     padding: 8px;
-    margin: 1px 10px 0;
+    margin: 1px 2px 0;
 }
 
 .course-make-couframe
@@ -215,12 +215,11 @@
     margin-top: 5px;
     padding-top: 15px;
     padding-bottom: 15px;
-    margin-left: 0px;
-    margin-right: 0px;
+    margin-left: 2px;
+    margin-right: 2px;
     line-height: 28px;
     font-size: 20px;
-    background-color: #ffffff;
-    border-top: 2px solid #3f99ce;
+    background-color: #333333;
 }
 
 .course-make-couframe
@@ -232,11 +231,6 @@
     margin-right: 0px;
     line-height: 28px;
     background-color: #3f97cf;
-}
-
-.course-make-couframe
-.sortable .cou-phase a {
-    color: #3f97cf;
 }
 
 .course-make-couframe
