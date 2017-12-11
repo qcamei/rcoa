@@ -67,6 +67,9 @@ $config = [
         'backup' => [
             'class' => 'spanjeta\modules\backup\Module',
         ],
+        'helpcenter_admin' => [
+            'class' => 'backend\modules\helpcenter_admin\Module',
+        ],
     ],
     'as access' => [
         'allowActions' => [
