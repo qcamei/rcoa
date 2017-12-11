@@ -146,6 +146,15 @@ use common\widgets\Menu;
                             ['label' => '日常任务日志','icon' => 'circle-o', 'url' => ['/mconline_admin/task-log']],
                         ],
                     ],
+                    [
+                        'label' => '帮助中心',
+                        'icon' => 'bars',
+                        'url' => '#',
+                        'items' => [
+                            ['label' => '文章分类列表','icon' => 'circle-o','url' => ['/helpcenter_admin/post-category']],
+                            ['label' => '文章列表','icon' => 'circle-o','url' => ['/helpcenter_admin/post']],
+                        ],
+                    ],
                 ],
             ]
         ) ?>
