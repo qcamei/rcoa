@@ -292,6 +292,11 @@ $js =
             elem.children('i').removeClass("fa-plus-square-o").addClass("fa-minus-square-o");
     }
     //添加通知
+//    console.log($("ul.list").find("ul.list li div.head>a:has(img.new)").not("div.head>a:has(img.new)"));
+//    var heads = $("ul.list").find("ul.list li div.head>a:has(img.new)").not("div.head>a:has(img.new)");
+//    //过滤已经有标记的头部
+//    heads.after($('$img'))    
+    
     $(".cou-activity .new").each(function(index, item){
         if(item != ''){
             var section_new = $(item).parent().parent().parent().parent().prev("div").children("a"),

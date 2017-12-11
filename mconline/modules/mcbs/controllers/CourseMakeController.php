@@ -606,14 +606,14 @@ class CourseMakeController extends Controller
         $dataProvider = new ArrayDataProvider([
             'allModels' => $this->getUploadedActivityFile($id),
         ]);
-        
+       
         $number = (new Query())->from(McbsMessage::tableName())->where(['activity_id'=>$model->id])->count();
         
         return $this->render('activity-view', [
             'model' => $model,
             'isPermission' => self::IsPermission($model->section->chapter->block->phase->course_id, $model->section->chapter->block->phase->course->status, false),
             'dataProvider' => $dataProvider,
-            'number' => $number
+            'number' => $number,
         ]);
     }
     
@@ -815,12 +815,12 @@ class CourseMakeController extends Controller
         $model = McbsFileActionResult::findOne([
             'activity_id' => $activity_id,
             'file_id' => $file_id,
-            'user_id' => Yii::$app->user->id
+            'user_id' => Yii::$app->user->id,
         ]);
         $model->status = 1;
-        if($model->update()){
-            return $this->redirect(['/webuploader/default/download', 'file_id'=>$file_id]);
-        }
+        $model->update();
+        
+        return $this->redirect(['/webuploader/default/download', 'file_id'=>$file_id]);
     }
     
     /**
