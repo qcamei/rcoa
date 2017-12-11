@@ -1,6 +1,7 @@
 <?php
 
 use common\models\mconline\McbsCourseActivity;
+use common\models\mconline\McbsFileActionResult;
 use mconline\modules\mcbs\assets\McbsAssets;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -88,7 +89,14 @@ $this->params['breadcrumbs'][] = $this->title;
                         'label' => Yii::t(null, '{file}{name}',['file'=>Yii::t('app', 'File'),'name'=>Yii::t('app', 'Name')]),
                         'format' => 'raw',
                         'value'=> function ($data) {
-                            return $data['is_del'] ? "<span style=\"color:#ccc\">{$data['name']}</span>" : $data['name'];
+                            /* @var $fileAction McbsFileActionResult */
+                           $model = McbsFileActionResult::findOne([
+                                'activity_id' => $data['activity_id'],
+                                'file_id' => $data['id'],
+                                'user_id' => Yii::$app->user->id,
+                            ]);
+                            return $data['is_del'] ? "<span style=\"color:#ccc\">{$data['name']}</span>" : 
+                                ($model->status==0 ? $data['name'].Html::img(WEB_ROOT.'/filedata/image/new.gif',['class'=>'new','style'=>'top:0']):$data['name']);
                         },
                         'headerOptions' => [
                             'style' => [
@@ -99,6 +107,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'contentOptions' =>[
                             'style' => [
                                 'padding' => '8px',
+                                 'position'=>'relative',
                             ],
                             'class'=>'course-name'
                         ],
@@ -116,7 +125,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ];
                                 $buttonHtml = [
                                     'name' => !$data['is_del'] ? '<span class="fa fa-download"></span>'.Yii::t('app', 'Download') : '已删除',
-                                    'url' => ['/webuploader/default/download', 'file_id'=>$data['id']],
+                                    'url' => ['download', 'activity_id'=>$data['activity_id'],'file_id'=>$data['id']],
                                     'options' => $options,
                                     'symbol' => '&nbsp;',
                                     'conditions' => true,

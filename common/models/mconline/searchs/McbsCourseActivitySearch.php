@@ -8,6 +8,7 @@ use common\models\mconline\McbsCourseBlock;
 use common\models\mconline\McbsCourseChapter;
 use common\models\mconline\McbsCoursePhase;
 use common\models\mconline\McbsCourseSection;
+use common\models\mconline\McbsFileActionResult;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
@@ -72,6 +73,7 @@ class McbsCourseActivitySearch extends McbsCourseActivity
             // $query->where('0=1');
             return $dataProvider;
         }*/
+        
         $query->leftJoin(['ActivityType' => McbsActivityType::tableName()], 'ActivityType.id = type_id');
         $query->leftJoin(['CourseSection'=> McbsCourseSection::tableName()], '(CourseSection.id = section_id AND CourseSection.is_del = 0)');
         $query->leftJoin(['CourseChapter'=>McbsCourseChapter::tableName()], '(CourseChapter.id = chapter_id AND CourseChapter.is_del = 0)');

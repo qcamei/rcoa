@@ -6,8 +6,8 @@ use common\models\Config;
 use common\models\mconline\McbsActionLog;
 use common\models\mconline\McbsActivityFile;
 use common\models\mconline\McbsActivityType;
-use common\models\mconline\McbsCourse;
 use common\models\mconline\McbsCourseUser;
+use common\models\mconline\McbsFileActionResult;
 use common\models\mconline\McbsRecentContacts;
 use common\models\User;
 use wskeee\webuploader\models\Uploadfile;
@@ -259,11 +259,12 @@ class McbsAction
         try
         {  
             if($model->save()){
-                $this->saveMcbsActivityFile([
+                $results = $this->saveMcbsActivityFile([
                     'activity_id'=>$model->id,
                     'file_id'=>$fileIds,
                     'course_id'=>$model->section->chapter->block->phase->course_id
                 ]);
+                $this->saveMcbsFileActionResult($results);
                 $this->saveMcbsActionLog([
                     'action'=>'增加','title'=>"{$title}管理",
                     'content'=>"{$model->name}",
@@ -302,6 +303,12 @@ class McbsAction
         try
         {  
             if($model->save()){
+                $results = $this->saveMcbsActivityFile([
+                    'activity_id'=>$model->id,
+                    'file_id'=>$fileIds,
+                    'course_id'=>$model->section->chapter->block->phase->course_id
+                ]);
+                $this->saveMcbsFileActionResult($results);
                 if($newAttr){
                     $this->saveMcbsActionLog([
                         'action'=>'修改','title'=>"{$title}管理",
@@ -313,11 +320,6 @@ class McbsAction
                         'relative_id'=>$model->id
                     ]);
                 }
-                $this->saveMcbsActivityFile([
-                    'activity_id'=>$model->id,
-                    'file_id'=>$fileIds,
-                    'course_id'=>$model->section->chapter->block->phase->course_id
-                ]);
             }else
                 throw new Exception($model->getErrors());
             
@@ -548,7 +550,8 @@ class McbsAction
         $new_adds = array_diff($fileIds, $actfileIds);       //新增
         $del_adds = array_diff($actfileIds, $fileIds);       //删除
         //新添加的文件
-        $addfiles = (new Query())->select(['id','name'])->from(Uploadfile::tableName())->where(['id'=>$new_adds])->all();
+        $addfiles = (new Query())->select(['id','name'])
+            ->from(Uploadfile::tableName())->where(['id'=>$new_adds])->all();
         $addName = ArrayHelper::map($addfiles, 'id', 'name');
         $delName = ArrayHelper::map($actfiles, 'file_id', 'name');
         //添加
@@ -562,7 +565,7 @@ class McbsAction
             }
             Yii::$app->db->createCommand()->batchInsert(McbsActivityFile::tableName(),[
                 'activity_id','file_id','course_id','created_by','expire_time','created_at','updated_at'],$values)->execute();
-            
+           
             $this->saveMcbsActionLog([
                 'action'=>'增加','title'=>"活动文件",
                 'content'=> implode('、', $add),
@@ -586,8 +589,59 @@ class McbsAction
                 'relative_id'=>$activityId
             ]);
         }
+        
+        return [
+            'course_id' => $courseId,
+            'activity_id' => $activityId,
+            'add' => $new_adds,
+            'del' => $del_adds,
+        ];
     }
     
+    /**
+     * 保存板书课堂，活动文件操作结果表
+     * @param array $params
+     */
+    public function saveMcbsFileActionResult($params=null)
+    {
+        $results = [];
+        $courseId = ArrayHelper::getValue($params, 'course_id');
+        $activityId = ArrayHelper::getValue($params, 'activity_id');
+        $new_adds = ArrayHelper::getValue($params, 'add');
+        $del_adds = ArrayHelper::getValue($params, 'del');
+        //获取所有协作人员
+        $helpmans = (new Query())->from(McbsCourseUser::tableName())
+            ->where(['course_id'=>$courseId])->all();
+       
+        //添加通知
+        if($new_adds){
+            foreach ($new_adds as $fileId){
+                foreach ($helpmans as $item) {
+                    if(Yii::$app->user->id != $item['user_id']){
+                        $results[] = [
+                            'activity_id' => $activityId,
+                            'file_id' => $fileId,
+                            'user_id' => $item['user_id'],
+                            'status' => 0,
+                            'created_at' => time(),
+                            'updated_at' => time()
+                        ];
+                    }
+                }
+            }
+
+            Yii::$app->db->createCommand()->batchInsert(McbsFileActionResult::tableName(),[
+                'activity_id','file_id','user_id','status','created_at','updated_at'],$results)->execute();
+        }
+        //删除通知
+        if($del_adds){
+            foreach ($del_adds as $fileId){
+                Yii::$app->db->createCommand()->update(McbsFileActionResult::tableName(),['status'=>1],
+                   ['activity_id' => $activityId, 'file_id' => $fileId])->execute();
+            }
+        }
+    }
+
     /**
      * 获取是否有权限
      * @param string $course_id                                     课程id
