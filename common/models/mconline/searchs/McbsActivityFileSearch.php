@@ -113,6 +113,12 @@ class McbsActivityFileSearch extends McbsActivityFile
         
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => [
+                'attributes' => [
+                    'chapter_name','section_name','activity_name','created_at','expire_time'
+                ],
+                'defaultOrder' => ["created_at" => SORT_DESC],
+            ]
         ]);
 
         $this->load($params);
@@ -153,7 +159,7 @@ class McbsActivityFileSearch extends McbsActivityFile
             ['like', 'Uploadfile.name', $keyword],
         ]);
         
-        $query->orderBy(["ActivityFile.created_at" => SORT_DESC]);
+//        $query->orderBy(["ActivityFile.created_at" => SORT_DESC]);
         
         return [
             'filter' => $params,
