@@ -298,6 +298,10 @@
     color: #879196;
 }
 
+#mcbs_course_activity {
+    padding: 20px 0 70px;
+}
+
 .course-make-couframe
 .sortable .cou-activity {
     margin: 5px 20px;

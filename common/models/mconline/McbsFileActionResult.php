@@ -56,16 +56,33 @@ class McbsFileActionResult extends ActiveRecord
     }
     
     /**
-     * 查看该用户是否有关联文件
+     * 查看活动下该用户有关联文件
+     * @param string $activity_id                   活动id
+     * @return array
+     */
+    public static function getFileRelation($activity_id)
+    {
+        //获取当前用户相关活动文件通知
+        $results = self::findAll(['activity_id'=>$activity_id,'user_id'=>Yii::$app->user->id]);
+        //文件id=>状态
+        $fileStatus = ArrayHelper::map($results, 'file_id', 'status');
+        
+        return $fileStatus;
+    }
+    
+    /**
+     * 查看活动下该用户是否所有有关联文件
      * @param string $activity_id                   活动id
      * @return boolean
      */
-    public static function getIsFileRelation($activity_id)
+    public static function getIsFileRelations($activity_id)
     {
-        $result = self::findAll(['activity_id'=>$activity_id,'status'=>0]);
-        $user_ids = ArrayHelper::getColumn($result, 'user_id');
-        
-        if(in_array(\Yii::$app->user->id, $user_ids))
+        //获取所有未读文件关联
+        $results = self::findAll(['activity_id'=>$activity_id,'status'=>0]);
+        //获取所有用户id
+        $userIds = ArrayHelper::getColumn($results, 'user_id');
+        //如果当前用户在数组里面则返回true，默认返回false
+        if(in_array(\Yii::$app->user->id, $userIds))
             return true;
         
         return false;

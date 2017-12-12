@@ -88,15 +88,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     [
                         'label' => Yii::t(null, '{file}{name}',['file'=>Yii::t('app', 'File'),'name'=>Yii::t('app', 'Name')]),
                         'format' => 'raw',
-                        'value'=> function ($data) {
-                            /* @var $fileAction McbsFileActionResult */
-                           $model = McbsFileActionResult::findOne([
-                                'activity_id' => $data['activity_id'],
-                                'file_id' => $data['id'],
-                                'user_id' => Yii::$app->user->id,
-                            ]);
+                        'value'=> function ($data) use($fileStatus) {
                             return $data['is_del'] ? "<span style=\"color:#ccc\">{$data['name']}</span>" : 
-                                ($model->status==0 ? $data['name'].Html::img(WEB_ROOT.'/filedata/image/new.gif',['class'=>'new','style'=>'top:0']):$data['name']);
+                                (isset($fileStatus[$data['id']]) && $fileStatus[$data['id']] == 0 ? 
+                                    $data['name'].Html::img(WEB_ROOT.'/filedata/image/new.gif',['class'=>'new','style'=>'top:0']):$data['name']);
                         },
                         'headerOptions' => [
                             'style' => [

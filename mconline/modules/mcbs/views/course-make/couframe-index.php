@@ -151,7 +151,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                                                         <?php foreach($dataCouactivity as $couactivity): ?>
                                                         <?php if($couactivity['section_id'] == $cousection['id']): ?>
-                                                        <?php $is_show = McbsFileActionResult::getIsFileRelation($couactivity['id']); ?>
+                                                        <?php $is_show = McbsFileActionResult::getIsFileRelations($couactivity['id']); ?>
                                                         <li id="<?= $couactivity['id'] ?>">
                                                             <div class="head cou-default cou-activity">
                                                                 <?= Html::a(Html::img([$couactivity['icon_path']],['width'=>25,'height'=>25,'class'=>'icon_path']).

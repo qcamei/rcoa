@@ -606,14 +606,17 @@ class CourseMakeController extends Controller
         $dataProvider = new ArrayDataProvider([
             'allModels' => $this->getUploadedActivityFile($id),
         ]);
-       
+        $isPermission = self::IsPermission($model->section->chapter->block->phase->course_id, 
+                    $model->section->chapter->block->phase->course->status, false);
         $number = (new Query())->from(McbsMessage::tableName())->where(['activity_id'=>$model->id])->count();
+        $fileStatus = McbsFileActionResult::getFileRelation($model->id);
         
         return $this->render('activity-view', [
             'model' => $model,
-            'isPermission' => self::IsPermission($model->section->chapter->block->phase->course_id, $model->section->chapter->block->phase->course->status, false),
             'dataProvider' => $dataProvider,
+            'isPermission' => $isPermission,
             'number' => $number,
+            'fileStatus' => $fileStatus,
         ]);
     }
     
@@ -986,11 +989,12 @@ class CourseMakeController extends Controller
      */
     public function getUploadedActivityFile($activity_id)
     {
-        return (new Query())->select(['ActivityFile.activity_id', 'ActivityFile.file_id AS id','Uploadfile.name','Uploadfile.is_del','Uploadfile.size'])
-                ->from(['ActivityFile'=>McbsActivityFile::tableName()])
-                ->leftJoin(['Uploadfile'=> Uploadfile::tableName()], 'Uploadfile.id = ActivityFile.file_id')
-                ->where(['activity_id'=>$activity_id])
-                ->all();
+        return (new Query())->select([
+            'ActivityFile.file_id AS id','ActivityFile.activity_id',
+            'Uploadfile.name','Uploadfile.is_del','Uploadfile.size'
+            ])->from(['ActivityFile'=>McbsActivityFile::tableName()])
+            ->leftJoin(['Uploadfile'=> Uploadfile::tableName()], 'Uploadfile.id = ActivityFile.file_id')
+            ->where(['ActivityFile.activity_id'=>$activity_id])->all();
     }
     
     /**
