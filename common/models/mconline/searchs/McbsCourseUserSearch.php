@@ -66,6 +66,8 @@ class McbsCourseUserSearch extends McbsCourseUser
             'updated_at' => $this->updated_at,
         ]);
        
+        $query->orderBy(['privilege' => SORT_DESC]);
+        
         return  new ArrayDataProvider([
             'allModels' => $query->all(),
         ]);
