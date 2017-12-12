@@ -748,12 +748,13 @@ class CourseMakeController extends Controller
     {
         $model = new McbsMessage(['activity_id'=>$activity_id]);
         $model->loadDefaultValues();
-        
+        $num = 0;
         if(Yii::$app->request->isPost){
             Yii::$app->getResponse()->format = 'json';
             $result = McbsAction::getInstance()->CreateMessage($model,Yii::$app->request->post());
             return [
                 'code'=> $result ? 200 : 404,
+                'num' => $result ? $num + 1: $num,
                 'message' => ''
             ];
             //return $this->redirect(['couactivity-view', 'id' => $model->activity_id]);

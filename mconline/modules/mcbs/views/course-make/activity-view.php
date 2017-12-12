@@ -151,7 +151,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="col-xs-12 frame">
         <div class="col-xs-12 frame-title">
             <i class="icon fa fa-commenting"></i>
-            <span><?= Yii::t('app', 'Message')."（{$number}）" ?></span>
+            <span><?= Yii::t('app', 'Message')?>（<span id="number"><?= $number ?></span>）</span>
         </div>
         <div class="col-xs-12 frame-table message">
             <div id="mes-list" class="meslist">
@@ -209,8 +209,10 @@ $js =
     $("#action-log").load("$actlog"); 
     //提交表单
     $("#submitsave").click(function(){
+        var number = $("#number").text();
         $.post("$createmse",$('#form-message').serialize(),function(data){
             if(data['code'] == '200'){
+                $("#number").text(parseInt(number) + parseInt(data['num']));
                 $("#mes-list").load("$meslist"); 
                 $("#form-message textarea").val("");
             }
