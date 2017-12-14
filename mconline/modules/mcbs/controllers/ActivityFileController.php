@@ -4,16 +4,8 @@ namespace mconline\modules\mcbs\controllers;
 
 use common\models\mconline\McbsActivityFile;
 use common\models\mconline\McbsCourse;
-use common\models\mconline\McbsCourseActivity;
-use common\models\mconline\McbsCourseBlock;
-use common\models\mconline\McbsCourseChapter;
-use common\models\mconline\McbsCoursePhase;
-use common\models\mconline\McbsCourseSection;
-use common\models\mconline\McbsFileActionResult;
 use common\models\mconline\searchs\McbsActivityFileSearch;
-use common\models\User;
 use Yii;
-use yii\db\Query;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -46,15 +38,15 @@ class ActivityFileController extends Controller {
         $couModel = McbsCourse::findOne($course_id);
         $searchModel = new McbsActivityFileSearch();
         $dataProvider = $searchModel->searchFileList(Yii::$app->request->queryParams);
-        
+
         return $this->render('index', [
-                    'couModel' => $couModel,
-                    'searchModel' => $searchModel,
-                    'dataProvider' => $dataProvider,
-                    'belongChapter' => ArrayHelper::map($dataProvider['dataProvider']->models, 'chapter_id', 'chapter_name'), //$this->getBelongChapter(),       //所属章
-                    'belongSection' => ArrayHelper::map($dataProvider['dataProvider']->models, 'section_id', 'section_name'), //$this->getBelongSection(),       //所属节
-                    'belongActivity' => ArrayHelper::map($dataProvider['dataProvider']->models, 'activity_id', 'activity_name'), //$this->getBelongActivity(),     //所属活动
-                    'uploadBy' => ArrayHelper::map($dataProvider['dataProvider']->models, 'created_by', 'nickname'),                 //上传者
+            'couModel' => $couModel,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'belongChapter' => ArrayHelper::map($dataProvider['dataProvider']->models, 'chapter_id', 'chapter_name'),    //所属章
+            'belongSection' => ArrayHelper::map($dataProvider['dataProvider']->models, 'section_id', 'section_name'),    //所属节
+            'belongActivity' => ArrayHelper::map($dataProvider['dataProvider']->models, 'activity_id', 'activity_name'), //所属活动
+            'uploadBy' => ArrayHelper::map($dataProvider['dataProvider']->models, 'created_by', 'nickname'),             //上传者
         ]);
     }
 
@@ -68,7 +60,7 @@ class ActivityFileController extends Controller {
                     'model' => $this->findModel($id),
         ]);
     }
-    
+
     /**
      * Creates a new McbsActivityFile model.
      * If creation is successful, the browser will be redirected to the 'view' page.
