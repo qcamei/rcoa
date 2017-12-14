@@ -36,7 +36,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'icon')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'href')->textInput(['maxlength' => true]) ?>
-
+    
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

@@ -38,6 +38,7 @@ class PostCategoryController extends BaseController
     {
         $searchModel = new PostCategorySearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->orderBy('parent_id_path');
 
         return $this->render('index', [
                     'searchModel' => $searchModel,
@@ -67,6 +68,7 @@ class PostCategoryController extends BaseController
         $model = new PostCategory();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->updateParentPath();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -88,6 +90,7 @@ class PostCategoryController extends BaseController
         $parentsdata = $this->getParentCats($model->app_id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->updateParentPath();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
