@@ -1,6 +1,5 @@
 <?php
 
-use common\models\mconline\McbsActivityFile;
 use common\models\mconline\McbsCourse;
 use common\models\mconline\searchs\McbsActivityFileSearch;
 use kartik\widgets\Select2;
@@ -161,13 +160,19 @@ $this->params['breadcrumbs'][] = $this->title;
                         'padding' => '8px'
                     ],
                 ],
-                'value' => function($data) {
-                    return !empty($data['filename']) ? $data['filename'] : NULL;
+                'value' => function($data) use($fileStatus) {
+                    return $data['is_del'] ? "<span style=\"color:#ccc\">{$data['filename']}</span>" : 
+                                (isset($fileStatus[$data['file_id']]) && $fileStatus[$data['file_id']] == 0 ? 
+                                    $data['filename'].Html::img(WEB_ROOT.'/filedata/image/new.gif',['style'=>'margin-top:-30px']):$data['filename']);
                 },
                 'contentOptions' => [
                     'class' => 'activity-name list-td',
                 ],
                 
+            ],
+            [
+                'attribute' => 'status',
+//                'visible' => '0',
             ],
             [
                 'attribute' => 'created_by',
@@ -258,23 +263,40 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ],
             [
-                'header' => Yii::t('app', 'Operating'),
+                'class' => 'yii\grid\ActionColumn',
+                //'header' => Yii::t('app', 'Operating'),
+                'buttons' => [
+                    'view' => function ($url, $data, $key) {
+                        $options = [
+                            'class' => 'btn btn-sm '.($data['is_del'] ? 'btn-danger disabled' : 'btn-success'),
+                            'title' => Yii::t('app', 'Download'),
+                            'aria-label' => Yii::t('app', 'Download'),
+                            'data-pjax' => '0',
+                        ];
+                        $buttonHtml = [
+                            'name' => !$data['is_del'] ? '<span class="fa fa-download"></span>'.Yii::t('app', 'Download') : '已删除',
+                            'url' => ['download', 'activity_id'=>$data['activity_id'],'file_id'=>$data['file_id']],
+                            'options' => $options,
+                            'symbol' => '&nbsp;',
+                            'conditions' => true,
+                            'adminOptions' => true,
+                        ];
+                        return Html::a($buttonHtml['name'],$buttonHtml['url'],$buttonHtml['options']);
+                        //return ResourceHelper::a($buttonHtml['name'], $buttonHtml['url'],$buttonHtml['options'],$buttonHtml['conditions']);
+                    }
+                ],
                 'headerOptions' => [
                     'style' => [
                         'width' => '74px',
+                        'padding' => '8px',
                     ],
                 ],
-                'format' => 'raw',
-                'value' => function($data) {
-                    return Html::a('<span class="fa fa-download">下载</span>', ['/webuploader/default/download', 'file_id' => $data['file_id']], [
-                                'class' => 'btn btn-success btn-sm', 'target' => '_blank',
-                    ]);
-                },
-                'contentOptions' => [
+                'contentOptions' =>[
                     'style' => [
-                        'width' => '74px',
+                        'padding' => '4px 8px',
                     ],
                 ],
+                'template' => '{view}',
             ],
         ],
     ]);?>

@@ -18,12 +18,14 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'id') ?>
 
     <?= $form->field($model, 'parent_id') ?>
+    
+    <?= $form->field($model, 'parent_id_path') ?> 
 
     <?= $form->field($model, 'app_id') ?>
 
     <?= $form->field($model, 'name') ?>
 
-    <?= $form->field($model, 'des') ?>
+    <?php //$form->field($model, 'des') ?>
 
     <?php // echo $form->field($model, 'is_show') ?>
 

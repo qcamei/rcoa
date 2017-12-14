@@ -19,7 +19,7 @@ class PostCategorySearch extends PostCategory
     {
         return [
             [['id', 'parent_id', 'is_show', 'level', 'created_at', 'updated_at'], 'integer'],
-            [['app_id', 'name', 'des', 'icon', 'href'], 'safe'],
+            [['parent_id_path', 'app_id', 'name', 'des', 'icon', 'href'], 'safe'],
         ];
     }
 
@@ -47,6 +47,10 @@ class PostCategorySearch extends PostCategory
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'key' => 'id',
+            'pagination' => [
+                'pageSize' => 100,
+            ],
         ]);
 
         $this->load($params);
@@ -67,7 +71,8 @@ class PostCategorySearch extends PostCategory
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'app_id', $this->app_id])
+        $query->andFilterWhere(['like', 'parent_id_path', $this->parent_id_path])
+            ->andFilterWhere(['like', 'app_id', $this->app_id])
             ->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'des', $this->des])
             ->andFilterWhere(['like', 'icon', $this->icon])

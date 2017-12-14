@@ -9,10 +9,9 @@ use common\models\mconline\McbsCourseBlock;
 use common\models\mconline\McbsCourseChapter;
 use common\models\mconline\McbsCoursePhase;
 use common\models\mconline\McbsCourseSection;
+use common\models\mconline\McbsFileActionResult;
 use common\models\mconline\searchs\McbsActivityFileSearch;
 use common\models\User;
-use wskeee\framework\models\Item;
-use wskeee\webuploader\models\Uploadfile;
 use Yii;
 use yii\db\Query;
 use yii\filters\VerbFilter;
@@ -43,20 +42,22 @@ class ActivityFileController extends Controller {
      * Lists all McbsActivityFile models.
      * @return mixed
      */
-    public function actionIndex() {
+    public function actionIndex($course_id) {
+        $couModel = McbsCourse::findOne($course_id);
         $searchModel = new McbsActivityFileSearch();
         $dataProvider = $searchModel->searchFileList(Yii::$app->request->queryParams);
-        $course_id = ArrayHelper::getValue(Yii::$app->request->queryParams, 'course_id');
-        $couModel = McbsCourse::findOne($course_id);
-        
+        //获取该课程下的信息->所有活动
+        $model = $dataProvider['dataProvider']->models;
+        $fileStatus = McbsFileActionResult::getFileRelation($model);
         return $this->render('index', [
                     'couModel' => $couModel,
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
-                    'belongChapter' => $this->getBelongChapter(),
-                    'belongSection' => $this->getBelongSection(),
-                    'belongActivity' => $this->getBelongActivity(),
-                    'uploadBy' => $this->getUploadBy(),
+                    'belongChapter' => $this->getBelongChapter(),       //所属章
+                    'belongSection' => $this->getBelongSection(),       //所属节
+                    'belongActivity' => $this->getBelongActivity(),     //所属活动
+                    'uploadBy' => $this->getUploadBy(),                 //上传者
+                    'fileStatus' => $fileStatus,                        //文件id=>状态
         ]);
     }
 
@@ -69,6 +70,25 @@ class ActivityFileController extends Controller {
         return $this->render('view', [
                     'model' => $this->findModel($id),
         ]);
+    }
+    
+    /**
+     * Download a single McbsActionLog model.
+     * @param string $activity_id
+     * @param string $file_id
+     * @return mixed
+     */
+    public function actionDownload($activity_id, $file_id)
+    {
+        $model = McbsFileActionResult::findOne([
+            'activity_id' => $activity_id,
+            'file_id' => $file_id,
+            'user_id' => Yii::$app->user->id,
+        ]);
+        $model->status = 1;
+        $model->update();
+        
+        return $this->redirect(['/webuploader/default/download', 'file_id'=>$file_id]);
     }
 
     /**

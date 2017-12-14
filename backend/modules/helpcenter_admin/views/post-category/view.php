@@ -38,6 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'parent_id',
                 'value' => $model->parent_id == 0 ? '顶级菜单' : $model->parent->name,
             ],
+            'parent_id_path',
             'app_id',
             'name',
             'des',
