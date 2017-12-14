@@ -821,8 +821,10 @@ class CourseMakeController extends Controller
             'file_id' => $file_id,
             'user_id' => Yii::$app->user->id,
         ]);
-        $model->status = 1;
-        $model->update();
+        if($model !== null){
+            $model->status = 1;
+            $model->update();
+        }
         
         return $this->redirect(['/webuploader/default/download', 'file_id'=>$file_id]);
     }

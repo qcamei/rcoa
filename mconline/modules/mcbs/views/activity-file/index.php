@@ -28,8 +28,9 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="mcbs-activity-file-index">
 
-    <p><span>文件列表</span>
-        <?= Html::a(Yii::t('app', 'Back'), ['default/view' . '?id=' . $couModel->id], ['class' => 'btn btn-default']) ?>
+    <p>
+        <h4>文件列表</h4>
+        <?php // Html::a(Yii::t('app', 'Back'), ['default/view' . '?id=' . $couModel->id], ['class' => 'btn btn-default']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider['dataProvider'],
@@ -160,9 +161,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         'padding' => '8px'
                     ],
                 ],
-                'value' => function($data) use($fileStatus) {
+                'value' => function($data) {
                     return $data['is_del'] ? "<span style=\"color:#ccc\">{$data['filename']}</span>" : 
-                                (isset($fileStatus[$data['file_id']]) && $fileStatus[$data['file_id']] == 0 ? 
+                                ($data['status']? 
                                     $data['filename'].Html::img(WEB_ROOT.'/filedata/image/new.gif',['style'=>'margin-top:-30px']):$data['filename']);
                 },
                 'contentOptions' => [
@@ -172,7 +173,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'status',
-//                'visible' => '0',
+                'visible' => '0',
             ],
             [
                 'attribute' => 'created_by',
@@ -202,7 +203,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
                 'value' => function($data) {
-                    return !empty($data['created_by']) ? $data['created_by'] : NULL;
+                    return !empty($data['nickname']) ? $data['nickname'] : NULL;
                 },
                 'contentOptions' => [
                     'class' => 'activity-name list-td hidden-xs hidden-sm',
@@ -275,7 +276,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ];
                         $buttonHtml = [
                             'name' => !$data['is_del'] ? '<span class="fa fa-download"></span>'.Yii::t('app', 'Download') : '已删除',
-                            'url' => ['download', 'activity_id'=>$data['activity_id'],'file_id'=>$data['file_id']],
+                            'url' => ['course-make/download', 'activity_id'=>$data['activity_id'],'file_id'=>$data['file_id']],
                             'options' => $options,
                             'symbol' => '&nbsp;',
                             'conditions' => true,

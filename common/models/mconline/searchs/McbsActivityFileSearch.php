@@ -101,9 +101,10 @@ class McbsActivityFileSearch extends McbsActivityFile
                 ->select(['McbsCourse.id','CourseChapter.id AS chapter_id','CourseSection.id AS section_id',
                     'ActivityFile.activity_id','ActivityFile.created_at','ActivityFile.expire_time',
                     'CourseChapter.name AS chapter_name','CourseSection.name AS section_name',
-                    'CourseActivity.name AS activity_name','CreateBy.nickname AS created_by','Uploadfile.is_del',
+                    'CourseActivity.name AS activity_name','ActivityFile.created_by','CreateBy.nickname','Uploadfile.is_del',
                     'Uploadfile.name AS filename','ActivityFile.file_id', 'ItemCourse.name AS course_name',
-                    'FileActionResult.status'
+                    //'FileActionResult.status'
+                    'IF(FileActionResult.status IS NULL,NULL,IF(FileActionResult.status = 0,1,0)) AS `status`'
                     ])
                 ->from(['ActivityFile' => McbsActivityFile::tableName()]);
         
@@ -114,13 +115,6 @@ class McbsActivityFileSearch extends McbsActivityFile
             'CourseChapter.is_del' => 0, 'CourseSection.is_del' => 0, 'CourseActivity.is_del' => 0,
         ]);
         
-        $a = McbsActivityFile::find(['McbsCourse.id' => $course_id])->asArray()->all();
-        $where = McbsFileActionResult::getIsFileRelations($a);
-        if($where){
-            $order = ['status' => SORT_ASC];
-        } else {
-            $order = ['created_at' => SORT_DESC];
-        }
         
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -128,8 +122,7 @@ class McbsActivityFileSearch extends McbsActivityFile
                 'attributes' => [
                     'chapter_name','section_name','activity_name','created_at','expire_time','status'
                 ],
-                'defaultOrder' => $order,
-                'defaultOrder' => ['created_at' => SORT_DESC],
+                'defaultOrder' => ['status' => SORT_DESC, 'created_at'=>SORT_DESC],
             ]
         ]);
 
@@ -160,7 +153,11 @@ class McbsActivityFileSearch extends McbsActivityFile
         $query->leftJoin(['Uploadfile' => Uploadfile::tableName()], 'Uploadfile.id = ActivityFile.file_id');
         //关联查询创建者
         $query->leftJoin(['CreateBy' => User::tableName()], 'CreateBy.id = ActivityFile.created_by');
-        $query->leftJoin(['FileActionResult' => McbsFileActionResult::tableName()], '(FileActionResult.activity_id = ActivityFile.activity_id and  FileActionResult.file_id = ActivityFile.file_id)');
+        
+        $query->leftJoin(['FileActionResult' => McbsFileActionResult::tableName()],
+             "(FileActionResult.activity_id = ActivityFile.activity_id".
+              " AND  FileActionResult.file_id = ActivityFile.file_id".
+              " AND FileActionResult.user_id = '".\Yii::$app->user->id."')");
         // grid filtering conditions
         $query->andFilterWhere([
             'CourseChapter.id' => $chapter_id,
@@ -174,8 +171,10 @@ class McbsActivityFileSearch extends McbsActivityFile
         ]);
         
         $query->groupBy("ActivityFile.id");
-//        $query->orderBy(["ActivityFile.created_at" => SORT_DESC]);
+        //$query->orderBy(["FileActionResult.status" => SORT_ASC,"ActivityFile.created_at" => SORT_DESC]);
         
+        //var_dump($query->all());exit;
+        //var_dump($dataProvider);exit;
         return [
             'filter' => $params,
             'dataProvider' => $dataProvider
