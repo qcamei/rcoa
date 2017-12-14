@@ -1,7 +1,7 @@
 <?php
 
 use mconline\modules\mcbs\assets\McbsAssets;
-use yii\helpers\Html;
+use wskeee\rbac\components\ResourceHelper;
 ?>
 
 <div class="hidden-lg footer-nav ">
@@ -72,7 +72,7 @@ use yii\helpers\Html;
             $selected = is_array($item['actionId']) ? in_array($actionId, $item['actionId']) : $actionId == $item['actionId'];
             $active = $selected ? $selectClass : null;
             echo "<div class=\"{$active} footer-menu-item col-xs-3\">";
-            echo Html::a($item['icon'], $item['url']);
+            echo ResourceHelper::a($item['icon'], $item['url']);
             echo '</div>';
         }
         ?>

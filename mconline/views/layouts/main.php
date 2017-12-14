@@ -29,26 +29,35 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'My Company',
+        'brandLabel' => '在线制作课程平台',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
+    
     $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
+        ['label' => '首页', 'url' => ['/site/index']],
     ];
+    
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
+        $menuItems = [
+            ['label' => '首页', 'url' => ['/site/index']],
+            ['label' => '板书课堂', 'url' => ['/mcbs/default/index']],
+            ['label' => '情景课堂', 'url' => ['#']],
+            ['label' => '帮主中心', 'url' => ['/helpcenter/default/index']],
+        ];
         $menuItems[] = [
             'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
             'url' => ['/site/logout'],
-            'linkOptions' => ['data-method' => 'post']
+            'options' => ['class'=>'navbar-right'],
+            'linkOptions' => ['data-method' => 'post'],
         ];
     }
     echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
+        'options' => Yii::$app->user->isGuest ? ['class' =>'navbar-nav navbar-right'] : ['class' => 'navbar-nav navbar-left','style'=>'width:86%'],
         'items' => $menuItems,
     ]);
     NavBar::end();

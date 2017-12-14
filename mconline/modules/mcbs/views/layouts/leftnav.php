@@ -1,13 +1,14 @@
 <?php
 
 use mconline\modules\mcbs\assets\McbsAssets;
+use wskeee\rbac\components\ResourceHelper;
 use yii\helpers\Html;
 ?>
 
 <div class="col-lg-2 visible-lg-block left-nav">
     <p> 
         <?=
-            Html::a(Yii::t('app', 'Create'), ['create'], [
+            ResourceHelper::a(Yii::t('app', 'Create'), ['create'], [
                 'class' => 'btn btn-success',
                 'style' => ['width' => '120px','font-size' => '16px',]
             ])
