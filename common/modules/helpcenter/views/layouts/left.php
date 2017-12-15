@@ -17,8 +17,8 @@ $menus = DefaultController::getMenu();
             }
             echo Menu::widget(
                     [
-                        'items' => $menuItems,
-                        'options' => ['class' => 'sidebar-menu'],
+                        'options' => ['class' => 'sidebar-menu tree', 'data-widget' => 'tree'],
+                        'items' => $menuItems
                     ]
             )
         ?>

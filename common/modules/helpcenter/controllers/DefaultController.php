@@ -205,8 +205,8 @@ class DefaultController extends Controller {
             if ($menu->category_id == $category_id) {
                 $items[] = [
                     'label' => $menu->name,
-                    'url' => ['view?id=' . $menu->id],
-                    'icon' => '',
+                    'url' => ['/helpcenter/default/view', 'id'=>$menu->id],
+                    'icon' => 'file-text-o',
                 ];
             }
         }

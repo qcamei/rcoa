@@ -48,7 +48,11 @@ AppAsset::register($this);
             ['label' => '首页', 'url' => ['/site/index']],
             ['label' => '板书课堂', 'url' => ['/mcbs/default/index']],
             ['label' => '情景课堂', 'url' => ['#']],
-            ['label' => '帮助中心', 'url' => ['/helpcenter/default/index']],
+            [
+                'label' => '帮助中心',
+                'url' => ['/helpcenter/default/index'],
+                'linkOptions'=>['target'=>'_blank']
+            ],
         ];
 //        $menuItems[] = [
 //            'label' => 'Logout (' . Yii::$app->user->identity->username . ')',

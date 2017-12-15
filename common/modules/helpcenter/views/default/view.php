@@ -68,7 +68,14 @@ use yii\widgets\ActiveForm;
     </div>
     <div class="post-content">
         <?php
-            echo $model['content'];
+            $content = $model['content'];
+            //设置img中src的前缀(常量-后台网址)
+            $suffix = WEB_ADMIN_ROOT ;
+            //用正则查找内容中的所有img标签
+            $pregRule = "/<[img|IMG].*?src=[\'|\"](.*?(?:[\.jpg|\.jpeg|\.png|\.gif|\.bmp]))[\'|\"].*?[\/]?>/";
+            //批量增加前缀
+            $contents = preg_replace($pregRule, '<img src="'.$suffix.'${1}" style="max-width:100%">', $content);
+            echo $contents;
         ?>
     </div>
     <?php
