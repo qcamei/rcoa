@@ -1,0 +1,72 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2017-12-14, 18:42:19
+    Author     : Administrator
+*/
+.post-view{
+    padding-top: 20px
+}
+
+.post-view .post-header{
+    border-bottom: 1px #999999 solid;
+}
+
+.post-view .post-header .post-title,.post-caozuo{
+    margin-top: 5px;
+    display: inline-block
+}
+.post-view .post-header .post-title{
+    width: 200px;
+}
+
+.post-view .post-header .post-caozuo{
+    float: right;
+}
+
+.post-view .post-header .post-caozuo .caozuo{
+    margin-top: 16px;
+    margin-bottom: 4px;
+}
+
+#thumbs-up{
+    display: inline-block
+}
+
+#thumbs-down{
+    display: inline-block
+}
+
+.post-view .fa{
+    font-size: 16px;
+    color: #9d9d9d;
+    vertical-align: middle;
+    margin-top: -5px;
+}
+
+.fa.fa-thumbs-up, .fa.fa-thumbs-down{
+    color: #337ab7;
+}
+
+.post-view .font{
+    font-size: 14px;
+    color: #000;
+}
+
+.post-view .thumbs-up{
+    margin-left: 25px;
+    display: inline-block;
+}
+
+.post-view .thumbs-down{
+    margin-left: 25px;
+    display: inline-block;
+}
+
+.post-view  .post-content{
+    margin-top: 10px;
+    min-height: 520px;
+}

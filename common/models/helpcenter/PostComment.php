@@ -64,4 +64,14 @@ class PostComment extends ActiveRecord
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
+    
+    
+    /**
+     * 获取文章
+     * @return ActiveQuery
+     */
+    public function getPost()
+    {
+        return $this->hasOne(Post::className(), ['id' => 'post_id']);
+    }
 }
