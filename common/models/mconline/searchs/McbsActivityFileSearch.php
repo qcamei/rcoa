@@ -95,15 +95,14 @@ class McbsActivityFileSearch extends McbsActivityFile
         $chapter_id = ArrayHelper::getValue($params, 'chapter_id');                     //章ID
         $section_id = ArrayHelper::getValue($params, 'section_id');                     //节ID
         $activity_id = ArrayHelper::getValue($params, 'activity_id');                   //活动ID
-        $createBy = ArrayHelper::getValue($params, 'created_by');                        //创建者ID
+        $createBy = ArrayHelper::getValue($params, 'created_by');                       //创建者ID
         $keyword = ArrayHelper::getValue($params, 'McbsActivityFileSearch.file_id');    //查询文件名的关键字
         $query = (new Query())
                 ->select(['McbsCourse.id','CourseChapter.id AS chapter_id','CourseSection.id AS section_id',
                     'ActivityFile.activity_id','ActivityFile.created_at','ActivityFile.expire_time',
-                    'CourseChapter.name AS chapter_name','CourseSection.name AS section_name',
-                    'CourseActivity.name AS activity_name','ActivityFile.created_by','CreateBy.nickname','Uploadfile.is_del',
+                    'CourseChapter.name AS chapter_name','CourseSection.name AS section_name','Uploadfile.is_del',
+                    'CourseActivity.name AS activity_name','ActivityFile.created_by','CreateBy.nickname',
                     'Uploadfile.name AS filename','ActivityFile.file_id', 'ItemCourse.name AS course_name',
-                    //'FileActionResult.status'
                     'IF(FileActionResult.status IS NULL,NULL,IF(FileActionResult.status = 0,1,0)) AS `status`'
                     ])
                 ->from(['ActivityFile' => McbsActivityFile::tableName()]);
@@ -114,7 +113,6 @@ class McbsActivityFileSearch extends McbsActivityFile
             'McbsCourse.id' => $course_id, 'CoursePhase.is_del' => 0, 'CourseBlock.is_del' => 0,
             'CourseChapter.is_del' => 0, 'CourseSection.is_del' => 0, 'CourseActivity.is_del' => 0,
         ]);
-        
         
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -133,7 +131,6 @@ class McbsActivityFileSearch extends McbsActivityFile
             // $query->where('0=1');
             return $dataProvider;
         }
-        
         
         //关联查询活动表
         $query->leftJoin(['CourseActivity' => McbsCourseActivity::tableName()], 'CourseActivity.id = ActivityFile.activity_id');
@@ -155,9 +152,9 @@ class McbsActivityFileSearch extends McbsActivityFile
         $query->leftJoin(['CreateBy' => User::tableName()], 'CreateBy.id = ActivityFile.created_by');
         
         $query->leftJoin(['FileActionResult' => McbsFileActionResult::tableName()],
-             "(FileActionResult.activity_id = ActivityFile.activity_id".
-              " AND  FileActionResult.file_id = ActivityFile.file_id".
-              " AND FileActionResult.user_id = '".\Yii::$app->user->id."')");
+                "(FileActionResult.activity_id = ActivityFile.activity_id".
+                " AND  FileActionResult.file_id = ActivityFile.file_id".
+                " AND FileActionResult.user_id = '".\Yii::$app->user->id."')");
         // grid filtering conditions
         $query->andFilterWhere([
             'CourseChapter.id' => $chapter_id,
@@ -171,10 +168,7 @@ class McbsActivityFileSearch extends McbsActivityFile
         ]);
         
         $query->groupBy("ActivityFile.id");
-        //$query->orderBy(["FileActionResult.status" => SORT_ASC,"ActivityFile.created_at" => SORT_DESC]);
-        
-        //var_dump($query->all());exit;
-        //var_dump($dataProvider);exit;
+
         return [
             'filter' => $params,
             'dataProvider' => $dataProvider

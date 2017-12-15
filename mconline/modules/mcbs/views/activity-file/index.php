@@ -73,7 +73,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th' => 'hidden-xs hidden-sm',
                     ],
                     'style' => [
-                        'padding' => '8px'
+                        'padding' => '8px',
+                        'width' => '96px'
                     ],
                 ],
                 'value' => function($data) {
@@ -109,7 +110,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th' => 'hidden-xs hidden-sm',
                     ],
                     'style' => [
-                        'padding' => '8px'
+                        'padding' => '8px',
+                        'width' => '96px'
                     ],
                 ],
                 'value' => function($data) {
@@ -139,7 +141,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]),
                 'headerOptions' => [
                     'style' => [
-                        'padding' => '8px'
+                        'padding' => '8px',
+                        'width' => '200px'
                     ],
                 ],
                 'value' => function($data) {
@@ -150,7 +153,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ],
             [
-                'attribute' => 'file_id',
+                'attribute' => 'filename',
                 'label' => Yii::t(null, '{File}{Name}', [
                     'File' => Yii::t('app', 'File'),
                     'Name' => Yii::t('app', 'Name')
@@ -158,13 +161,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'headerOptions' => [
                     'style' => [
-                        'padding' => '8px'
+                        'padding' => '8px',
+                        'width' => '350px'
                     ],
                 ],
                 'value' => function($data) {
                     return $data['is_del'] ? "<span style=\"color:#ccc\">{$data['filename']}</span>" : 
                                 ($data['status']? 
-                                    $data['filename'].Html::img(WEB_ROOT.'/filedata/image/new.gif',['style'=>'margin-top:-30px']):$data['filename']);
+                                    $data['filename'].Html::img(WEB_ROOT.'/filedata/image/new.gif',['style'=>'margin-top:-20px']):$data['filename']);
                 },
                 'contentOptions' => [
                     'class' => 'activity-name list-td',
@@ -173,6 +177,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'status',
+                //隐藏该列
                 'visible' => '0',
             ],
             [
