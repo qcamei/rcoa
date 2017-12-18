@@ -78,7 +78,8 @@ class ApiController extends Controller {
                 $model->update();
             }
             return [
-                'number' => $model->like_count
+                'number' => $model->like_count,
+                'like' => true,
             ];
         }
     }
@@ -107,7 +108,8 @@ class ApiController extends Controller {
             $model->update();
         }
         return [
-            'number' => $model->like_count
+            'number' => $model->like_count,
+            'like' => false,
         ];
     }
 
@@ -133,7 +135,8 @@ class ApiController extends Controller {
                 $model->update();
             }
             return [
-                'number' => $model->unlike_count
+                'number' => $model->unlike_count,
+                'unlike' => true,
             ];
         }
     }
@@ -162,7 +165,8 @@ class ApiController extends Controller {
             $model->update();
         }
         return [
-            'number' => $model->unlike_count
+            'number' => $model->unlike_count,
+            'unlike' => false,
         ];
     }
 

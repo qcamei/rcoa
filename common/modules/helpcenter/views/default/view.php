@@ -31,7 +31,8 @@ use yii\widgets\ActiveForm;
                 <!--教学视频播放量-->
                 <!--点赞部分-->
                 <span class="thumbs-up">
-                    <a id="thumbs-up" href="#" data-add="<?= $isLike ? 'true' : 'false'?>">
+                    <?php if($isUnlike == false) : ?>
+                    <a id="thumbs-up" class="btn" href="#" data-add="<?= $isLike ? 'true' : 'false'?>">
                         <i class="fa <?= $isLike ? 'fa-thumbs-up' : 'fa-thumbs-o-up'?>"></i>
                         <?php $form = ActiveForm::begin([
                             'id' => 'thumbs-up-form'
@@ -41,6 +42,9 @@ use yii\widgets\ActiveForm;
                         <?= Html::hiddenInput('PostAppraise[result]', 1) ?>
                         <?php ActiveForm::end(); ?>
                     </a>
+                    <?php elseif ($isUnlike == true) :?>
+                    <a id="thumbs-up"><i class="fa fa-thumbs-o-up"></i></a>
+                    <?php endif; ?>
                     <font class="font">
                         <?= $model['like_count'] <= 99999 ? number_format($model['like_count']) : substr(number_format((($model['like_count'] / 10000) * 10) / 10, 4), 0, -3) . '万'; ?>
                     </font>
@@ -48,7 +52,8 @@ use yii\widgets\ActiveForm;
                 <!--点赞部分-->
                 <!--踩部分-->
                 <span class="thumbs-down">
-                    <a id="thumbs-down" href="#" data-add="<?= $isUnlike ? 'true' : 'false'?>">
+                    <?php if($isLike == false) : ?>
+                    <a id="thumbs-down" class="btn" href="#" data-add="<?= $isUnlike ? 'true' : 'false'?>">
                         <i class="fa <?= $isUnlike ? 'fa-thumbs-down' : 'fa-thumbs-o-down'?>"></i>
                         <?php $form = ActiveForm::begin([
                             'id' => 'thumbs-down-form'
@@ -58,6 +63,9 @@ use yii\widgets\ActiveForm;
                         <?= Html::hiddenInput('PostAppraise[result]', 2) ?>
                         <?php ActiveForm::end(); ?>
                     </a>
+                    <?php elseif ($isLike == true) :?>
+                    <a id="thumbs-down"><i class="fa fa-thumbs-o-down"></i></a>
+                    <?php endif; ?>
                     <font class="font">
                         <?= $model['unlike_count'] <= 99999 ? number_format($model['unlike_count']) : substr(number_format((($model['unlike_count'] / 10000) * 10) / 10, 4), 0, -3) . '万'; ?>
                     </font>

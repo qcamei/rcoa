@@ -7,6 +7,11 @@ and open the template in the editor.
     Created on : 2017-12-14, 18:42:19
     Author     : Administrator
 */
+.post-view .btn{
+    padding: 0px;
+    vertical-align: unset;
+}
+
 .post-view{
     padding-top: 20px
 }
