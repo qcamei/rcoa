@@ -52,7 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => 'yii\grid\ActionColumn',
                 'headerOptions' => [
-                    'style' => 'width: 75px'
+                    'style' => 'width: 150px'
                 ],
                 'buttons' => [
                     'view' => function ($url, $model, $key) {
@@ -66,8 +66,20 @@ $this->params['breadcrumbs'][] = $this->title;
                         return Html::a(Yii::t('app/rbac', 'Edit'), 
                             ['view', 'id' => $model->name], $options);
                     },
+                    'delete' => function ($url, $model, $key) {
+                        /* @var $model AuthItemSearch */
+                        $options = [
+                            'class' => 'btn btn-danger',
+                            'title' => Yii::t('yii', 'Delete'),
+                            'aria-label' => Yii::t('yii', 'Delete'),
+                            'data-pjax' => '0',
+                            'data-method' => 'POST',
+                        ];
+                        return Html::a(Yii::t('app/rbac', 'Remove'), 
+                            ['delete', 'id' => $model->name], $options);
+                    },
                 ],
-                'template' => '{view}',
+                'template' => '{view} {delete}',
             ],
         ],
     ]); 
