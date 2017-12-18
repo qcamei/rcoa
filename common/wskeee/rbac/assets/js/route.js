@@ -41,7 +41,7 @@ $('#btn-refresh').click(function () {
     var $icon = $(this).children('span.glyphicon');
     $icon.addClass('glyphicon-refresh-animate');
     $.post($(this).attr('href'), function (r) {
-        console.log(r);
+        //console.log(r);
         updateRoutes(r);
     }).always(function () {
         $icon.removeClass('glyphicon-refresh-animate');
