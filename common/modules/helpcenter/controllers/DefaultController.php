@@ -133,22 +133,20 @@ class DefaultController extends Controller {
         foreach ($menus as $_menu) {
             if ($_menu->parent_id == 0) {
                 $children = self::getChildrenMenu($menus, $_menu->id);
-                $posts = self::getPosts($_menu->id);
-                $childrens = array_merge($children,$posts);
                 $item = [
                     'label' => $_menu->name,
                 ];
                 if (count($children) > 0) {
                     $item['url'] = $_menu->href;
-                    $item['items'] = $childrens;
+                    $item['items'] = $children;
                 } else {
-                    $item['items'] = $childrens;
                     $item['url'] = [$_menu->href];
                 }
                 $item['icon'] = $_menu->icon;
                 $menuItems[] = $item;
             }
         }
+//      exit;
         return $menuItems;
     }
 
@@ -179,13 +177,22 @@ class DefaultController extends Controller {
         foreach ($allMenus as $menu) {
             /* @var $menu Menu */
             if ($menu->parent_id == $parent_id) {
-                $items[] = [
+                $children = self::getPosts($menu->parent_id);
+//                var_dump($children);
+                $item = [
                     'label' => $menu->name,
-                    'url' => [$menu->href],
-                    'icon' => $menu->icon,
                 ];
+                if (count($children) > 0) {
+                    $item['url'] = $menu->href;
+                    $item['items'] = $children;
+                } else {
+                    $item['url'] = [$menu->href];
+                }
+                $item['icon'] = $menu->icon;
+                $items[] = $item;
             }
         }
+        
         return $items;
     }
 
