@@ -41,19 +41,22 @@ class ApiController extends Controller {
             ],
         ];
     }
-
-    public function __construct($id, $module, $config = array()) {
-        parent::__construct($id, $module, $config);
-        $response = Yii::$app->getResponse();
-        $response->on('beforeSend', function ($event) {
-            $response = $event->sender;
-            $response->data = [
-                'code' => $response->getStatusCode(),
-                'data' => $response->data,
-                'message' => $response->statusText
-            ];
-            $response->format = Response::FORMAT_JSON;
-        });
+    
+    public function beforeAction($action) {
+        if(parent::beforeAction($action)){
+            $response = Yii::$app->getResponse();
+            $response->on('beforeSend', function ($event) {
+                $response = $event->sender;
+                $response->data = [
+                    'code' => $response->getStatusCode(),
+                    'data' => $response->data,
+                    'message' => $response->statusText
+                ];
+                $response->format = Response::FORMAT_JSON;
+            });
+            return true;
+        }
+        return false;
     }
 
     /**
