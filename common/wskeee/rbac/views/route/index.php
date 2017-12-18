@@ -73,8 +73,10 @@ $animateIcon = ' <i class="glyphicon glyphicon-refresh glyphicon-refresh-animate
     </div>
 
 <?php
+    $post_append = [Yii::$app->getRequest()->csrfParam => Yii::$app->getRequest()->csrfToken];
     $opts = Json::htmlEncode([
         'routes' => $routes,
+        'post_append' => $post_append,
     ]);
     $js = <<<JS
         window._opts = {$opts};

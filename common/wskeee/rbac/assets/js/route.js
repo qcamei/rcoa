@@ -11,7 +11,7 @@ $('#btn-new').click(function () {
     var route = $('#inp-route').val().trim();
     if (route != '') {
         $this.children('i.glyphicon-refresh-animate').show();
-        $.post($this.attr('href'), {route: route}, function (r) {
+        $.post($this.attr('href'), $.extend({route: route},_opts.post_append), function (r) {
             $('#inp-route').val('').focus();
             updateRoutes(r);
         }).always(function () {
@@ -28,7 +28,7 @@ $('.btn-assign').click(function () {
     
     if (routes && routes.length) {
         $this.children('i.glyphicon-refresh-animate').show();
-        $.post($this.attr('href'), {routes: routes}, function (r) {
+        $.post($this.attr('href'), $.extend({routes: routes},_opts.post_append), function (r) {
             updateRoutes(r);
         }).always(function () {
             $this.children('i.glyphicon-refresh-animate').hide();
@@ -40,7 +40,7 @@ $('.btn-assign').click(function () {
 $('#btn-refresh').click(function () {
     var $icon = $(this).children('span.glyphicon');
     $icon.addClass('glyphicon-refresh-animate');
-    $.post($(this).attr('href'), function (r) {
+    $.post($(this).attr('href'),$.extend({},_opts.post_append), function (r) {
         //console.log(r);
         updateRoutes(r);
     }).always(function () {
