@@ -1,11 +1,12 @@
 <?php
 namespace mconline\controllers;
 
+use common\models\LoginForm;
+use common\models\User;
 use Yii;
 use yii\filters\AccessControl;
-use yii\web\Controller;
-use common\models\LoginForm;
 use yii\filters\VerbFilter;
+use yii\web\Controller;
 
 /**
  * Site controller
@@ -26,7 +27,7 @@ class SiteController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index'],
+                        'actions' => ['logout', 'index','info'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -79,5 +80,31 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+    
+    /**
+     * 修改我的属性
+     * @return mixed
+     */
+    public function actionInfo()
+    {
+        if (\Yii::$app->user->isGuest) 
+            return $this->goHome();
+        
+        $model = User::findOne(\Yii::$app->user->id);
+        $model->scenario = User::SCENARIO_UPDATE;
+        if($model->load(Yii::$app->request->post()))
+        {
+            if($model->save())
+                return $this->redirect(['index']);
+            else
+                Yii::error ($model->errors);
+        }else
+        {
+            $model->password = '';
+            return $this->render('info',[
+                'model' => $model,
+            ]);
+        }
     }
 }

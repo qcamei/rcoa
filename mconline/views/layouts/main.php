@@ -4,6 +4,7 @@
 /* @var $content string */
 
 use backend\assets\AppAsset;
+use kartik\dropdown\DropdownX;
 use kartik\widgets\AlertBlock;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
@@ -41,25 +42,49 @@ AppAsset::register($this);
     ];
     
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+        $menuItems[] = ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']];
     } else {
         $menuItems = [
             ['label' => '首页', 'url' => ['/site/index']],
             ['label' => '板书课堂', 'url' => ['/mcbs/default/index']],
             ['label' => '情景课堂', 'url' => ['#']],
-            ['label' => '帮助中心', 'url' => ['/helpcenter/default/index']],
+            [
+                'label' => '帮助中心',
+                'url' => ['/helpcenter/default/index'],
+                'linkOptions'=>['target'=>'_blank']
+            ],
         ];
-        $menuItems[] = [
-            'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
-            'url' => ['/site/logout'],
-            'options' => ['class'=>'navbar-right'],
-            'linkOptions' => ['data-method' => 'post'],
-        ];
+//        $menuItems[] = [
+//            'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+//            'url' => ['/site/logout'],
+//            'options' => ['class'=>'navbar-right'],
+//            'linkOptions' => ['data-method' => 'post'],
+//        ];
     }
+    
     echo Nav::widget([
-        'options' => Yii::$app->user->isGuest ? ['class' =>'navbar-nav navbar-right'] : ['class' => 'navbar-nav navbar-left','style'=>'width:86%'],
+        'options' => Yii::$app->user->isGuest ? ['class' =>'navbar-nav navbar-right'] : ['class' => 'navbar-nav navbar-left','style'=>'width:75%'],
         'items' => $menuItems,
     ]);
+    if(!Yii::$app->user->isGuest){
+        echo "<ul class=\"navbar-nav navbar-right nav\">".
+            "<li class=\"dropdown\">".
+                Html::a(Html::img(WEB_ROOT.Yii::$app->user->identity->avatar,['width'=> '25','height' => '25',
+                    'style' => 'border: 1px solid #ccc;margin-top:-7px; margin-right:5px;',
+               ]).Yii::$app->user->identity->nickname."<b class=\"caret\"></b>",'javascript:;',[
+                'class'=>'dropdown-toggle',
+                'data-toggle' => 'dropdown',
+                'aria-expanded' => 'false']).DropdownX::widget([
+                    'options'=>['class'=>'dropdown-menu'], // for a right aligned dropdown menu
+                    'items' => [
+                        ['label' => '我的属性', 'url' => ['/site/info'], 'linkOptions'=>['class'=>'glyphicon glyphicon-user','style'=>'padding-left:5px;']],
+                        ['label' => Yii::t('app', 'Login Out'), 'url' => ['/site/logout'], 'linkOptions' => ['data-method' => 'post','class'=>'glyphicon glyphicon-log-out','style'=>'padding-left:5px;']],
+                    ],
+                ]).
+            "</li>".
+        "</ul>";
+    }
+    
     NavBar::end();
     ?>
 

@@ -229,7 +229,7 @@ class SiteController extends Controller
      * 修改我的属性
      * @return mixed
      */
-    public function actionResetInfo()
+    public function actionInfo()
     {
         if (\Yii::$app->user->isGuest) 
             return $this->goHome();
@@ -245,7 +245,7 @@ class SiteController extends Controller
         }else
         {
             $model->password = '';
-            return $this->render('resetInfo',[
+            return $this->render('info',[
                 'model' => $model,
             ]);
         }

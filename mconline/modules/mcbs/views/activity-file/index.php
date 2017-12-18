@@ -176,11 +176,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 
             ],
             [
-                'attribute' => 'status',
-                //隐藏该列
-                'visible' => '0',
-            ],
-            [
                 'attribute' => 'created_by',
                 'label' => Yii::t('app', 'Upload By'),
                 'format' => 'raw',
