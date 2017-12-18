@@ -3,7 +3,7 @@
 use common\modules\helpcenter\controllers\DefaultController;
 use common\widgets\Menu;
 
-$menus = DefaultController::getMenu();
+$menus = DefaultController::getMenu($app_id);
 
 ?>
 <aside class="main-sidebar" style="padding-top: 0px">

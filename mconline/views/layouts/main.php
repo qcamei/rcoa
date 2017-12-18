@@ -50,7 +50,7 @@ AppAsset::register($this);
             ['label' => '情景课堂', 'url' => ['#']],
             [
                 'label' => '帮助中心',
-                'url' => ['/helpcenter/default/index'],
+                'url' => ['/helpcenter/default/index', 'app_id'=> 'app-mconline'],
                 'linkOptions'=>['target'=>'_blank']
             ],
         ];

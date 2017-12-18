@@ -25,7 +25,9 @@ class DefaultController extends Controller {
      * Renders the index view for the module
      * @return string
      */
-    public function actionIndex() {
+    public function actionIndex($app_id) {
+        $view = \Yii::$app->view;
+        $view->params['app_id'] = $app_id;
         return $this->render('index');
     }
     
@@ -35,6 +37,7 @@ class DefaultController extends Controller {
      */
     public function actionView() {
         $id = Yii::$app->request->queryParams['id'];
+        $app_id = ArrayHelper::getValue(Yii::$app->request->queryParams, 'app_id');
         $number = (new Query())->from(PostComment::tableName())->where(['post_id'=>$id])->count();
         $model = $this->getPostContents($id);
         //是否点赞
@@ -51,6 +54,9 @@ class DefaultController extends Controller {
         $view_count = Post::findOne($id);
         $view_count->view_count += 1;           //打开文章时查看次数+1
         $view_count->save(FALSE,['view_count']);
+        $view = \Yii::$app->view;
+        $view->params['app_id'] = $app_id;
+        
         return $this->render('view', [
             'model' => $model,
             'number' => $number,                //评论数量
@@ -127,8 +133,8 @@ class DefaultController extends Controller {
      * 组装菜单
      * @return array
      */
-    public static function getMenu() {
-        $menus = self::getCategories(null)->all();
+    public static function getMenu($app_id) {
+        $menus = self::getCategories(null, $app_id)->all();
         $menuItems = [];
         foreach ($menus as $_menu) {
             if ($_menu->parent_id == 0) {
@@ -146,20 +152,21 @@ class DefaultController extends Controller {
                 $menuItems[] = $item;
             }
         }
-//      exit;
+        
         return $menuItems;
     }
 
     /**
      * 获取所有菜单
-     * @param integer $level        等级
-     * @return model Menu
+     * @param integer $level    等级
+     * @param string $app_id   应用id
+     * @return array
      */
-    public static function getCategories($level = 1) {
+    public static function getCategories($level = 1, $app_id) {
         $parentCats = PostCategory::find()
                 ->from(['PostCategory' => PostCategory::tableName()]);
         $parentCats->leftJoin(['Post' => Post::tableName()], 'Post.category_id = PostCategory.id');
-        $parentCats->where(['PostCategory.is_show' => true,'app_id' => 'app-mconline'])
+        $parentCats->where(['PostCategory.is_show' => true,'app_id' => $app_id])
                 ->andFilterWhere(['level' => $level]);
         
         return $parentCats;
@@ -175,10 +182,9 @@ class DefaultController extends Controller {
     private static function getChildrenMenu($allMenus, $parent_id) {
         $items = [];
         foreach ($allMenus as $menu) {
+            $children = self::getPosts($menu->id);
             /* @var $menu Menu */
             if ($menu->parent_id == $parent_id) {
-                $children = self::getPosts($menu->parent_id);
-//                var_dump($children);
                 $item = [
                     'label' => $menu->name,
                 ];
@@ -190,9 +196,11 @@ class DefaultController extends Controller {
                 }
                 $item['icon'] = $menu->icon;
                 $items[] = $item;
+            }else if($menu->id == $parent_id){
+                $items = $children;
             }
         }
-        
+       
         return $items;
     }
 

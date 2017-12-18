@@ -151,11 +151,6 @@ class CourseController extends Controller
      */
     public function actionCreate($demand_task_id)
     {
-        /* @var $rbacManager RbacManager */  
-        $rbacManager = \Yii::$app->authManager;
-        if(!$rbacManager->isRole(RbacName::ROLE_COMMON_COURSE_DEV_MANAGER, Yii::$app->user->id))
-            throw new NotAcceptableHttpException('无权限操作！');
-        
         /* @var $model CourseManage */
         $model = new CourseManage();
         /* @var $twTool TeamworkTool */
@@ -199,11 +194,12 @@ class CourseController extends Controller
         $rbacManager = \Yii::$app->authManager;
         $post = Yii::$app->request->post();
        
-        if(!($model->coursePrincipal->u_id == \Yii::$app->user->id
-          || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)))
+        if($model->coursePrincipal->u_id == \Yii::$app->user->id){
+            if(!$model->getIsNormal())
+                throw new NotAcceptableHttpException('该课程'.$model->getStatusName().'！');
+        }else {
             throw new NotAcceptableHttpException('无权限操作！');
-        if(!$model->getIsNormal())
-            throw new NotAcceptableHttpException('该课程'.$model->getStatusName().'！');
+        }
         
         if ($model->load($post) && $model->validate()) {
             $twTool->UpdateTask($model, $post);         //更新任务操作

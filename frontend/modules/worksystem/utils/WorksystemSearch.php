@@ -64,10 +64,10 @@ class WorksystemSearch
         //关联查询指派人
         $query->leftJoin(['AssignPeople' => TeamMember::tableName()], 
             "(IF(WorksystemTask.is_brace=".WorksystemTask::SEEK_BRACE_MARK.
-            " AND WorksystemTask.external_team=0,AssignPeople.is_leader='".TeamMember::TEAMLEADER."',".
+            " AND WorksystemTask.external_team=0, AssignPeople.is_leader='".TeamMember::TEAMLEADER."' AND AssignPeople.is_delete ='".TeamMember::CANCEL_DELETE."',".
             "IF(WorksystemTask.`status`>=".WorksystemTask::STATUS_WAITCHECK.
             " AND WorksystemTask.`status`<=".WorksystemTask::STATUS_WAITUNDERTAKE.",AssignPeople.team_id=WorksystemTask.create_team".
-            "AND AssignPeople.is_leader='".TeamMember::TEAMLEADER."' AND AssignPeople.is_delete ='".TeamMember::CANCEL_DELETE."',NUll)))"
+            " AND AssignPeople.is_leader='".TeamMember::TEAMLEADER."' AND AssignPeople.is_delete ='".TeamMember::CANCEL_DELETE."',NUll)))"
         );
         //关联查询团队
         $query->leftJoin(['ExternalTeam' => Team::tableName()], 'ExternalTeam.id = WorksystemTask.external_team')      

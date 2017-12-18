@@ -32,8 +32,7 @@ $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed201
         <?php $this->beginBody() ?>
         <div class="wrapper">
 
-            <?= $this->render('left.php', [
-            ]);?>
+            <?= $this->render('left.php', $this->params);?>
             
             <div class="content-wrapper" style="margin-top: -20px">
                 <section class="content" style="padding-top: 0px">
