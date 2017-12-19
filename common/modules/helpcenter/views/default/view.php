@@ -25,7 +25,7 @@ use yii\widgets\ActiveForm;
                 <span class="play-volume">
                     <i class="fa fa-eye"></i>
                     <font class="font">
-                        <?= $model['view_count'] <= 99999 ? number_format($model['view_count']) : substr(number_format((($model['view_count'] / 10000) * 10) / 10, 4), 0, -3) . '万'; ?>
+                        <?= $model['view_count']+1 <= 99999 ? number_format($model['view_count']+1) : substr(number_format(((($model['view_count']+1) / 10000) * 10) / 10, 4), 0, -3) . '万'; ?>
                     </font>
                 </span>
                 <!--教学视频播放量-->

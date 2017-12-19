@@ -74,7 +74,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                     'style' => [
                         'padding' => '8px',
-                        'width' => '96px'
+                        'width' => '130px'
                     ],
                 ],
                 'value' => function($data) {
@@ -111,7 +111,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                     'style' => [
                         'padding' => '8px',
-                        'width' => '96px'
+                        'width' => '130px'
                     ],
                 ],
                 'value' => function($data) {
@@ -142,7 +142,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'headerOptions' => [
                     'style' => [
                         'padding' => '8px',
-                        'width' => '200px'
+                        'width' => '220px'
                     ],
                 ],
                 'value' => function($data) {
@@ -162,7 +162,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'headerOptions' => [
                     'style' => [
                         'padding' => '8px',
-                        'width' => '350px'
+                        'width' => '260px'
                     ],
                 ],
                 'value' => function($data) {
