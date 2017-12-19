@@ -1,6 +1,7 @@
 <?php
 
 use backend\assets\AppAsset;
+use common\modules\helpcenter\assets\HelpCenterAssets;
 use dmstr\web\AdminLteAsset;
 use yii\helpers\Html;
 use yii\web\View;
@@ -34,8 +35,8 @@ $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed201
 
             <?= $this->render('left.php', $this->params);?>
             
-            <div class="content-wrapper" style="margin-top: -20px">
-                <section class="content" style="padding-top: 0px">
+            <div class="content-wrapper">
+                <section class="content">
                     <?= $content ?>
                 </section>
             </div>
@@ -46,3 +47,6 @@ $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed201
     </body>
 </html>
 <?php $this->endPage() ?>
+<?php
+    HelpCenterAssets::register($this);
+?>

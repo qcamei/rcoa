@@ -25,7 +25,8 @@ class DefaultController extends Controller {
      * Renders the index view for the module
      * @return string
      */
-    public function actionIndex($app_id) {
+    public function actionIndex($app_id)
+    {
         $view = \Yii::$app->view;
         $view->params['app_id'] = $app_id;
         return $this->render('index');
@@ -35,28 +36,21 @@ class DefaultController extends Controller {
      * Renders the index view for the module
      * @return mixed
      */
-    public function actionView() {
-        $id = Yii::$app->request->queryParams['id'];
-        $app_id = ArrayHelper::getValue(Yii::$app->request->queryParams, 'app_id');
-        $number = (new Query())->from(PostComment::tableName())->where(['post_id'=>$id])->count();
+    public function actionView($id) 
+    {
+        $app_id = ArrayHelper::getValue(Yii::$app->request->queryParams, 'app_id');                 //应用ID
+        $number = (new Query())->from(PostComment::tableName())->where(['post_id'=>$id])->count();  //文章评论数量
         $model = $this->getPostContents($id);
-        //是否点赞
-        $isLike = PostAppraise::findOne([
-            'post_id' => $id,
-            'user_id' => Yii::$app->user->id,
-            'result' => '1',]);
-        //是否踩
-        $isUnlike = PostAppraise::findOne([
-            'post_id' => $id,
-            'user_id' => Yii::$app->user->id,
-            'result' => '2',]);
-
+        $uer_id = Yii::$app->user->id;
+        $isLike = PostAppraise::findOne(['post_id' => $id,'user_id' => $uer_id,'result' => '1',]);  //是否点赞
+        $isUnlike = PostAppraise::findOne(['post_id' => $id,'user_id' => $uer_id,'result' => '2',]);//是否踩
+        //传递参数
+        $view = \Yii::$app->view;
+        $view->params['app_id'] = $app_id;
+        //获取文章
         $view_count = Post::findOne($id);
         $view_count->view_count += 1;           //打开文章时查看次数+1
         $view_count->save(FALSE,['view_count']);
-        $view = \Yii::$app->view;
-        $view->params['app_id'] = $app_id;
-        
         return $this->render('view', [
             'model' => $model,
             'number' => $number,                //评论数量
@@ -107,6 +101,9 @@ class DefaultController extends Controller {
     
     /**
      * 添加评论操作
+     * @param type $model
+     * @param type $post
+     * @return boolean
      * @throws Exception
      */
     public function CreateMessage($model,$post)
@@ -131,10 +128,11 @@ class DefaultController extends Controller {
     
     /**
      * 组装菜单
+     * @param string $app_id    应用ID
      * @return array
      */
     public static function getMenu($app_id) {
-        $menus = self::getCategories(null, $app_id)->all();
+        $menus = self::getCategories($app_id, null)->all();
         $menuItems = [];
         foreach ($menus as $_menu) {
             if ($_menu->parent_id == 0) {
@@ -158,14 +156,14 @@ class DefaultController extends Controller {
 
     /**
      * 获取所有菜单
+     * @param string $app_id    应用id
      * @param integer $level    等级
-     * @param string $app_id   应用id
      * @return array
      */
-    public static function getCategories($level = 1, $app_id) {
+    public static function getCategories($app_id, $level = 1) {
         $parentCats = PostCategory::find()
                 ->from(['PostCategory' => PostCategory::tableName()]);
-        $parentCats->leftJoin(['Post' => Post::tableName()], 'Post.category_id = PostCategory.id');
+//        $parentCats->leftJoin(['Post' => Post::tableName()], 'Post.category_id = PostCategory.id');
         $parentCats->where(['PostCategory.is_show' => true,'app_id' => $app_id])
                 ->andFilterWhere(['level' => $level]);
         
@@ -175,14 +173,14 @@ class DefaultController extends Controller {
     /**
      * 获取二级菜单
      * @param Menu $menu
-     * @param array $allMenus  获取所有菜单
-     * @param type $parnet_id
+     * @param array $allMenus   获取所有菜单
+     * @param type $parnet_id   父级ID
      * @return array
      */
     private static function getChildrenMenu($allMenus, $parent_id) {
         $items = [];
         foreach ($allMenus as $menu) {
-            $children = self::getPosts($menu->id);
+            $children = self::getPosts($menu->id, $menu->app_id);   //文章（菜单）
             /* @var $menu Menu */
             if ($menu->parent_id == $parent_id) {
                 $item = [
@@ -190,7 +188,7 @@ class DefaultController extends Controller {
                 ];
                 if (count($children) > 0) {
                     $item['url'] = $menu->href;
-                    $item['items'] = $children;
+                    $item['items'] = $children;         //组装三级菜单
                 } else {
                     $item['url'] = [$menu->href];
                 }
@@ -206,9 +204,11 @@ class DefaultController extends Controller {
 
     /**
      * 获取所有文章（菜单）
+     * @param integer $category_id  分类ID
+     * @param string $app_id        应用ID
      * @return array
      */
-    public static function getPosts($category_id) {
+    public static function getPosts($category_id, $app_id) {
         $posts = Post::find()
                         ->from(['Post' => Post::tableName()])
                         ->where([
@@ -220,7 +220,7 @@ class DefaultController extends Controller {
             if ($menu->category_id == $category_id) {
                 $items[] = [
                     'label' => $menu->name,
-                    'url' => ['/helpcenter/default/view', 'id'=>$menu->id],
+                    'url' => ['/helpcenter/default/view', 'app_id'=>$app_id, 'id'=>$menu->id],
                     'icon' => 'file-text-o',
                 ];
             }
@@ -230,10 +230,10 @@ class DefaultController extends Controller {
 
     /**
      * 获取文章内容
-     * @param int $id
+     * @param integer $id       文章ID
      * @return array
      */
-    public function getPostContents($id){
+    public function getPostContents($id) {
         $postContents = (new Query())
                     ->from(['Post' => Post::tableName()])
                     ->where([
