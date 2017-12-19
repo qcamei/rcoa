@@ -1,9 +1,7 @@
 <?php
 
-use common\models\teamwork\CourseManage;
 use frontend\modules\teamwork\TwAsset;
-use frontend\modules\teamwork\utils\TeamworkTool;
-use wskeee\rbac\RbacName;
+use wskeee\rbac\components\ResourceHelper;
 use yii\helpers\Html;
 
 /* 
@@ -59,7 +57,7 @@ $team_id = !is_array($twTool->getHotelTeam(Yii::$app->user->id)) ? $twTool->getH
                     [
                         'controllerId' => 'statistics',
                         'name' => '统计',
-                        'url' => ['/teamwork/statistics'],
+                        'url' => ['statistics/index'],
                         'icon' => '/filedata/demand/image/statistics.png',
                         'options' => ['class' => 'footer-menu-item'],
                         'symbol' => '&nbsp;',

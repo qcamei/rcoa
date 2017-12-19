@@ -6,6 +6,7 @@ use common\models\teamwork\CoursePhase;
 use common\models\teamwork\Link;
 use frontend\modules\teamwork\TeamworkTool;
 use frontend\modules\teamwork\TwAsset;
+use wskeee\rbac\components\ResourceHelper;
 use wskeee\rbac\RbacName;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
@@ -20,16 +21,6 @@ use yii\widgets\Breadcrumbs;
 
 $this->title = Yii::t('rcoa/teamwork', 'Course Links');
 $this->params['breadcrumbs'][] = $this->title;
-
-if($model->course->getIsNormal() && ($model->course->coursePrincipal->u_id == \Yii::$app->user->id 
-   || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id)))
-{
-    $classUpdate = 'btn btn-primary';
-    $classDeletee = 'btn btn-danger';
-}else{
-    $classUpdate = 'btn btn-primary disabled';
-    $classDeletee = 'btn btn-danger disabled';
-}
 
 ?>
 
@@ -80,8 +71,8 @@ if($model->course->getIsNormal() && ($model->course->coursePrincipal->u_id == \Y
                 <td>'.$phase->weights.'</td>
                 <td class="hidden-xs"></td>
                 <td class="hidden-xs"></td>
-                <td>'.Html::a('修改',['update', 'id' => $phase->id], ['class' => $classUpdate]).' '.
-                 Html::a('删除',['phase-delete', 'id' => $phase->id], ['class' => $classDeletee]).'</td>
+                <td>'.ResourceHelper::a('修改',['update', 'id' => $phase->id], ['class' => 'btn btn-primary'], $model->course->getIsNormal()).' '.
+                 ResourceHelper::a('删除',['phase-delete', 'id' => $phase->id], ['class' => 'btn btn-danger'], $model->course->getIsNormal()).'</td>
             </tr>';
             foreach ($phase->courseLinks as $link) {
                 /* @var $link CourseLink */
@@ -91,7 +82,7 @@ if($model->course->getIsNormal() && ($model->course->coursePrincipal->u_id == \Y
                     <td></td>
                     <td class="hidden-xs">'.Link::$types[$link->type].'</td>
                     <td class="hidden-xs">'.$link->unit.'</td>
-                    <td><div class="hidden-xs" style="width:58px;height:34px;float:left;"></div>'.Html::a('删除',['link-delete', 'id' => $link->id], ['class' => $classDeletee]).'</td>
+                    <td><div class="hidden-xs" style="width:58px;height:34px;float:left;"></div>'.ResourceHelper::a('删除',['link-delete', 'id' => $link->id], ['class' => 'btn btn-danger'], $model->course->getIsNormal()).'</td>
                 </tr>';
             }
         }
@@ -103,18 +94,43 @@ if($model->course->getIsNormal() && ($model->course->coursePrincipal->u_id == \Y
 
 <div class="controlbar">
     <div class="container">
-        <?= Html::a(Yii::t('rcoa', 'Back'), ['course/view','id' => $course_id], ['class' => 'btn btn-default']) ?>
         <?php
             /**
-             * 新增 按钮显示必须满足以下条件：
-             * 1、必须是【队长】
-             * 2、创建者是自己
+             * $buttonHtml = [
+             *     [
+             *         name  => 按钮名称，
+             *         url  =>  按钮url，
+             *         options  => 按钮属性，
+             *         symbol => html字符符号：&nbsp;，
+             *         conditions  => 按钮显示条件，
+             *         adminOptions  => 按钮管理选项，
+             *     ],
+             * ]
              */
-            if($model->course->getIsNormal() && (Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_TASK_COLLOCATION) || $model->course->coursePrincipal->u_id == Yii::$app->user->id
-               || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, \Yii::$app->user->id)))
-               echo Html::a('新增', ['create', 'course_id' => $course_id], ['class' => 'btn btn-primary']) 
-        ?>
-        <?php /* Html::a('进度', ['progress', 'course_id' => $course_id], ['class' => 'btn btn-primary'])*/ ?>
+            $buttonHtml = [
+                [
+                    'name' => Yii::t('rcoa', 'Back'),
+                    'url' => ['course/view','id' => $course_id],
+                    'options' => ['class' => 'btn btn-default'],
+                    'symbol' => '&nbsp;',
+                    'conditions' => true,
+                    'adminOptions' => true,
+                ],
+                [
+                    'name' => '新增',
+                    'url' => ['create', 'course_id' => $course_id],
+                    'options' => ['class' => 'btn btn-primary'],
+                    'symbol' => '&nbsp;',
+                    'conditions' => $model->course->getIsNormal(),
+                    'adminOptions' => true,
+                ],
+            ];
+
+            foreach ($buttonHtml as $item) {
+                echo ResourceHelper::a($item['name'], $item['url'], $item['options'], $item['conditions']).($item['conditions'] ? $item['symbol'] : null);
+            }
+            
+            ?>
     </div>
 </div>
 

@@ -16,6 +16,7 @@ class TwAsset extends AssetBundle
     public $css = [
        'css/teamwork.css',
        'css/default.css',
+       'css/footer.css',
     ];
     public $js = [
        'js/search-select.js'

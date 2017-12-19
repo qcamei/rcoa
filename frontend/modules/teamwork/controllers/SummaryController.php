@@ -161,9 +161,6 @@ class SummaryController extends Controller
         $model->create_by = \Yii::$app->user->id;
         $model->create_time = date('Y-m-d', time());
         
-        if(!($course->weeklyEditorsPeople->u_id == \Yii::$app->user->id
-          || $course->coursePrincipal->u_id == \Yii::$app->user->id || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)))
-            throw new NotAcceptableHttpException('无权限操作！');
         if($model != null && !$model->course->getIsNormal())
             throw new NotAcceptableHttpException('该课程'.$model->course->getStatusName().'！');
         
@@ -194,9 +191,6 @@ class SummaryController extends Controller
         else
             $model = $this->findModel($course_id, $create_time);
         
-        if(!($model->course->weeklyEditorsPeople->u_id == \Yii::$app->user->id
-          || $model->course->coursePrincipal->u_id == \Yii::$app->user->id || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)))
-            throw new NotAcceptableHttpException('无权限操作！');
         if(!$model->course->getIsNormal())
             throw new NotAcceptableHttpException('该课程'.$model->course->getStatusName().'！');
         
