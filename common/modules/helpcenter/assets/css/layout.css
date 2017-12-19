@@ -7,20 +7,22 @@ and open the template in the editor.
     Created on : 2017-12-14, 18:42:19
     Author     : Administrator
 */
-.post-view .btn{
-    padding: 0px;
-    vertical-align: unset;
-}
-
+/****************** default--->view----样式 ******************/
 .post-view{
-    padding-top: 20px
+    padding-top: 20px;
 }
 
 .post-view .post-header{
     border-bottom: 1px #999999 solid;
 }
 
-.post-view .post-header .post-title,.post-caozuo{
+/***更改bootstrap下btn的样式***/
+.post-view .btn{
+    padding: 0px;
+    vertical-align: unset;
+}
+
+.post-view .post-header .post-title, .post-caozuo{
     margin-top: 5px;
     display: inline-block
 }
@@ -45,7 +47,7 @@ and open the template in the editor.
     display: inline-block
 }
 
-.post-view .fa{
+.post-view .caozuo .fa{
     font-size: 16px;
     color: #9d9d9d;
     vertical-align: middle;
@@ -71,7 +73,17 @@ and open the template in the editor.
     display: inline-block;
 }
 
-.post-view  .post-content{
+.post-view .post-content{
     margin-top: 10px;
     min-height: 520px;
+}
+
+/****************** layouts---->main----样式 ******************/
+.content-wrapper {
+    margin-top: -20px;
+    background-color: #ffffff !important;
+}
+
+.content-wrapper .content{
+    padding: 0px 15px;
 }
