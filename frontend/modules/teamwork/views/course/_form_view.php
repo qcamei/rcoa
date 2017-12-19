@@ -4,8 +4,6 @@ use common\models\teamwork\CourseManage;
 use frontend\modules\teamwork\utils\TeamworkTool;
 use wskeee\rbac\components\ResourceHelper;
 use wskeee\rbac\RbacManager;
-use wskeee\rbac\RbacName;
-use yii\helpers\Html;
 
 /* @var $model CourseManage */
 /* @var $twTool TeamworkTool */ 
@@ -49,15 +47,15 @@ $page = [
                     'url' => ['update', 'id' => $model->id],
                     'options' => ['class' => 'btn btn-primary'],
                     'symbol' => '&nbsp;',
-                    'conditions' => $model->coursePrincipal->u_id == Yii::$app->user->id && $model->getIsNormal(),
+                    'conditions' => $model->getIsNormal(),
                     'adminOptions' => true,
                 ],
                 [
                     'name' => '配置',
-                    'url' => ['/teamwork/courselink/index', 'course_id' => $model->id],
+                    'url' => ['courselink/index', 'course_id' => $model->id],
                     'options' => ['class' => 'btn btn-success'],
                     'symbol' => '&nbsp;',
-                    'conditions' => $model->coursePrincipal->u_id == Yii::$app->user->id && $model->getIsNormal(),
+                    'conditions' => $model->getIsNormal(),
                     'adminOptions' => true,
                 ],
                 [
@@ -65,7 +63,7 @@ $page = [
                     'url' => ['wait-start', 'id' => $model->id],
                     'options' => ['class' => 'btn btn-danger'],
                     'symbol' => '&nbsp;',
-                    'conditions' => $model->coursePrincipal->u_id == Yii::$app->user->id && $model->getIsWaitStart(),
+                    'conditions' => $model->getIsWaitStart(),
                     'adminOptions' => true,
                 ],
                 [
@@ -73,15 +71,15 @@ $page = [
                     'url' => ['pause', 'id' => $model->id],
                     'options' => ['id' => 'pause','class' => 'btn btn-info'],
                     'symbol' => '&nbsp;',
-                    'conditions' => $model->coursePrincipal->u_id == Yii::$app->user->id && $model->getIsNormal(),
+                    'conditions' => $model->getIsNormal(),
                     'adminOptions' => true,
                 ],
                 [
                     'name' => '完成',
                     'url' => ['carry-out', 'id' => $model->id],
-                    'options' => ['id' => 'pause','class' => 'btn btn-info'],
+                    'options' => ['id' => 'carry-out','class' => 'btn btn-info'],
                     'symbol' => '&nbsp;',
-                    'conditions' => $model->coursePrincipal->u_id == Yii::$app->user->id && $model->getIsNormal(),
+                    'conditions' => $model->getIsNormal(),
                     'adminOptions' => true,
                 ],
                 [

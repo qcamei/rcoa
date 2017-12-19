@@ -190,16 +190,10 @@ class CourseController extends Controller
         $model->scenario = CourseManage::SCENARIO_DEFAULT;
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
-        /* @var $rbacManager RbacManager */  
-        $rbacManager = \Yii::$app->authManager;
         $post = Yii::$app->request->post();
        
-        if($model->coursePrincipal->u_id == \Yii::$app->user->id){
-            if(!$model->getIsNormal())
+        if(!$model->getIsNormal())
                 throw new NotAcceptableHttpException('该课程'.$model->getStatusName().'！');
-        }else {
-            throw new NotAcceptableHttpException('无权限操作！');
-        }
         
         if ($model->load($post) && $model->validate()) {
             $twTool->UpdateTask($model, $post);         //更新任务操作
@@ -257,9 +251,10 @@ class CourseController extends Controller
         
         $model->scenario = CourseManage::SCENARIO_CHANGE;
         $post = Yii::$app->request->post();
-        if ($model->getIsCarryOut() && !Yii::$app->user->can(RbacName::PERMSSION_TEAMWORK_COURSE_TRANSFER)) 
-            throw new NotFoundHttpException('无权限操作！');
         
+        if($model->getIsCarryOut())
+            throw new NotAcceptableHttpException('该课程'.$model->getStatusName().'！');
+       
         $oldCoursePrincipal = $model->coursePrincipal->u_id;
         $teamMemberId = ArrayHelper::getValue($post, 'CourseManage.course_principal');
         $teamMember = $tmTool->getTeammemberById($teamMemberId);
@@ -289,13 +284,9 @@ class CourseController extends Controller
         $model = $this->findModel($id);
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
-        /* @var $rbacManager RbacManager */  
-        $rbacManager = \Yii::$app->authManager;
-        if(!($model->coursePrincipal->u_id == \Yii::$app->user->id
-          || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)))
-            throw new NotAcceptableHttpException('无权限操作！');
+        
         if($model != null && !$model->getIsWaitStart())
-            throw new NotFoundHttpException('该课程'.$model->getStatusName().'！');
+                throw new NotAcceptableHttpException('该课程'.$model->getStatusName().'！');
         
         $model->scenario = CourseManage::SCENARIO_WAITSTART;
         $model->real_start_time = date('Y-m-d H:i', time());
@@ -316,13 +307,9 @@ class CourseController extends Controller
         $model = $this->findModel($id);
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
-        /* @var $rbacManager RbacManager */  
-        $rbacManager = \Yii::$app->authManager;
-        if(!($model->coursePrincipal->u_id == \Yii::$app->user->id
-          || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)))
-           throw new NotAcceptableHttpException('无权限操作！');
+        
         if($model != null && !$model->getIsNormal())
-            throw new NotFoundHttpException('该课程'.$model->getStatusName().'！');
+                throw new NotAcceptableHttpException('该课程'.$model->getStatusName().'！');
         
         $model->status = CourseManage::STATUS_PAUSE;
         $model->save();
@@ -342,15 +329,11 @@ class CourseController extends Controller
         $model = $this->findModel($id);
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
-        /* @var $rbacManager RbacManager */  
-        $rbacManager = \Yii::$app->authManager;
         CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($model->id)->all(), 'id', 'progress');
         $model->scenario = CourseManage::SCENARIO_CARRYOUT;
-        if(!($model->coursePrincipal->u_id == \Yii::$app->user->id 
-          || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)))
-            throw new NotAcceptableHttpException('无权限操作！');
+        
         if(!$model->getIsNormal())
-            throw new NotFoundHttpException('该课程'.$model->getStatusName().'！');
+            throw new NotAcceptableHttpException('该课程'.$model->getStatusName().'！');
         
         if($model->load(Yii::$app->request->post())){
             $twTool->CarryOutTask($model);
@@ -376,21 +359,16 @@ class CourseController extends Controller
         $model = $this->findModel($id);
          /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
-        /* @var $rbacManager RbacManager */  
-        $rbacManager = \Yii::$app->authManager;
+        
         if($model != null && !($model->getIsPause() || $model->getIsCarryOut())){
             throw new NotFoundHttpException('该课程'.$model->getStatusName().'！');
         }
 
-        if($rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id) || 
-                ($model->coursePrincipal->u_id == \Yii::$app->user->id && $model->getIsPause())){
-            $model->real_carry_out = null;
-            $model->status = CourseManage::STATUS_NORMAL;
-            $model->save();
-            $this->redirect(['view', 'id' => $model->id]);
-        }else{
-            throw new NotAcceptableHttpException('无权限操作！');
-        }
+        $model->real_carry_out = null;
+        $model->status = CourseManage::STATUS_NORMAL;
+        $model->save();
+        $this->redirect(['view', 'id' => $model->id]);
+        
     }
     
     /**

@@ -4,6 +4,7 @@ use common\models\teamwork\CourseManage;
 use frontend\modules\teamwork\TwAsset;
 use frontend\modules\teamwork\utils\TeamworkTool;
 use kartik\widgets\Select2;
+use wskeee\rbac\components\ResourceHelper;
 use wskeee\rbac\RbacName;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -74,6 +75,37 @@ $isAuthorization = Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER);    //�
     
     <div class="row">
     <?php
+        /**
+         * $buttonHtml = [
+         *     [
+         *         name  => 按钮名称，
+         *         url  =>  按钮url，
+         *         options  => 按钮属性，
+         *         symbol => html字符符号：&nbsp;，
+         *         conditions  => 按钮显示条件，
+         *         adminOptions  => 按钮管理选项，
+         *     ],
+         * ]
+         */
+        $buttonHtml = [
+            [
+                'name' => Yii::t('rcoa/teamwork', 'Updated Weekly'),
+                'url' => ['summary/update', 'course_id' => $model->id, 'create_time' => $results['create_time']],
+                'options' => ['id' => 'update', 'class' => 'btn btn-primary weekinfo'],
+                'symbol' => '&nbsp;',
+                'conditions' => $weeklyInfoResult && $model->getIsNormal(),
+                'adminOptions' => true,
+            ],
+            [
+                'name' => Yii::t('rcoa/teamwork', 'Create Weekly'),
+                'url' =>['summary/create', 'course_id' => $model->id],
+                'options' => ['class' => 'btn btn-primary weekinfo'],
+                'symbol' => '&nbsp;',
+                'conditions' => !$weeklyInfoResult && $model->getIsNormal(),
+                'adminOptions' => true,
+            ],
+        ];
+
         echo Html::beginTag('div', ['class' => 'col-lg-12 col-md-12 col-sm-12 col-xs-12',
             'style' => 'padding:0px;']);
             /** 下拉月份选择 */
@@ -102,31 +134,9 @@ $isAuthorization = Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER);    //�
             echo Html::endTag('div');
             /** 编辑、新增按钮 */
             echo Html::beginTag('div', ['class' => 'col-lg-2 col-md-2 col-sm-2 col-xs-5', 'style' => 'padding:0px;']);
-            if($model->getIsNormal() && ($model->weeklyEditorsPeople->u_id == Yii::$app->user->id
-               || $model->coursePrincipal->u_id == Yii::$app->user->id || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)))
-            {
-                    /**
-                     * 编辑 按钮显示必须满足以下条件：
-                     * 1、状态非为【已完成】
-                     * 2、周报必须不能为空
-                     * 3、(必须是【队长】 and 课程 【创建者】 是自己)
-                     * or 【周报编辑人】 or 【项目管理员】 or 【课程负责人】
-                     */
-                    if($weeklyInfoResult)
-                        echo Html::a(Yii::t('rcoa/teamwork', 'Updated Weekly'), [
-                            'summary/update', 'course_id' => $model->id, 'create_time' => $results['create_time']], 
-                            ['id' => 'update', 'class' => 'btn btn-primary weekinfo']);
-                    /**
-                     * 新增 按钮显示必须满足以下条件：
-                     * 1、状态非为【已完成】
-                     * 2、周报必须为空
-                     * 3、(必须是【队长】 and 课程 【创建者】 是自己)
-                     * or 【周报编辑人】 or 【项目管理员】 or 【课程负责人】
-                     */
-                    if(!$weeklyInfoResult)
-                        echo Html::a(Yii::t('rcoa/teamwork', 'Create Weekly'), ['summary/create', 'course_id' => $model->id], [
-                         'class' => 'btn btn-primary weekinfo']);
-                }
+            foreach ($buttonHtml as $item) {
+                echo ResourceHelper::a($item['name'], $item['url'], $item['options'], $item['conditions']).($item['conditions'] ? $item['symbol'] : null);
+            }
             echo Html::endTag('div');
         echo Html::endTag('div');
         /** 内容信息 */

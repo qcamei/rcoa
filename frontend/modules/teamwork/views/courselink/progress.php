@@ -5,6 +5,7 @@ use common\models\teamwork\CourseManage;
 use common\models\teamwork\CoursePhase;
 use frontend\modules\teamwork\TwAsset;
 use kartik\switchinput\SwitchInputAsset;
+use wskeee\rbac\components\ResourceHelper;
 use wskeee\rbac\RbacName;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
@@ -53,9 +54,6 @@ $this->params['breadcrumbs'][] = $this->title;
         $isUserBelongProducer = $twTool->getIsUserBelongProducer($course_id);
         
         foreach ($coursePhase as $phase) {
-            $className = $phase->course->getIsNormal() && ($isUserBelongProducer 
-                || $phase->course->coursePrincipal->u_id == Yii::$app->user->id || $rbacManager->isRole(RbacName::ROLE_TEAMWORK_DEVELOP_MANAGER, Yii::$app->user->id)) ?
-                    'btn btn-primary entry' : 'btn btn-primary disabled';
             /* @var $phase CoursePhase */
             echo '<tr style="background-color:#eee">
                 <td>'.$phase->name.'</td>
@@ -89,8 +87,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ($link->total == 0 ? 0 :(int)(($link->completed / $link->total) * 100)).'%'.
                                 Html::endTag('div').
                             Html::endTag('div').'</td>
-                    <td>'.Html::a('录入', 'javascript:;', 
-                            ['class' => $className, 'data_id' =>$link->id]).'</td>
+                    <td>'.ResourceHelper::a('录入', ['courselink/entry', 'id' => $link->id], 
+                            ['class' => 'btn btn-primary entry'], $phase->course->getIsNormal()).'</td>
                 </tr>';
             }
         }
@@ -123,9 +121,8 @@ $js =
     });*/    
         
     $('.entry').click(function(){
-        var data_id = $(this).attr("data_id");
         $(".myModal").modal('show');
-        $(".myModal .modal-dialog .modal-content").load("/teamwork/courselink/entry?id="+data_id, null, function(){
+        $(".myModal .modal-dialog .modal-content").load($(this).attr("href"), null, function(){
             $(".myModal .modal-dialog").addClass("modal-md");
             $(".myModal .modal-dialog .modal-content").addClass("has-title");    
         });
