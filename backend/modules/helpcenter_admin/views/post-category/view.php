@@ -47,6 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => $model->is_show == 0 ? Yii::t('app', 'N') : Yii::t('app', 'Y'),
             ],
             'level',
+            'sort_order', 
             'icon',
             'href',
             'created_at:datetime',

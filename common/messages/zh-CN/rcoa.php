@@ -226,4 +226,7 @@ return [
     'Can' => '能否',
     'Praise' => '赞',
     'Tread' => '踩',
+    'Sort' => '排序',
+    'Help' => '帮助',
+    'Center' => '中心',
 ];

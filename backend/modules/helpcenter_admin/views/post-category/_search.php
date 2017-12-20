@@ -25,11 +25,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name') ?>
 
-    <?php //$form->field($model, 'des') ?>
+    <?php // echo $form->field($model, 'des') ?>
 
     <?php // echo $form->field($model, 'is_show') ?>
 
     <?php // echo $form->field($model, 'level') ?>
+    
+    <?php // echo $form->field($model, 'sort_order') ?> 
 
     <?php // echo $form->field($model, 'icon') ?>
 

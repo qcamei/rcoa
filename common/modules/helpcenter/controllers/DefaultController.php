@@ -165,7 +165,8 @@ class DefaultController extends Controller {
                 ->from(['PostCategory' => PostCategory::tableName()]);
 //        $parentCats->leftJoin(['Post' => Post::tableName()], 'Post.category_id = PostCategory.id');
         $parentCats->where(['PostCategory.is_show' => true,'app_id' => $app_id])
-                ->andFilterWhere(['level' => $level]);
+                ->andFilterWhere(['level' => $level])
+                ->orderBy('sort_order');
         
         return $parentCats;
     }
@@ -213,7 +214,9 @@ class DefaultController extends Controller {
                         ->from(['Post' => Post::tableName()])
                         ->where([
                             'is_show' => true,
-                        ])->all();
+                        ])
+                        ->orderBy('sort_order')
+                        ->all();
         $items = [];
         foreach ($posts as $menu) {
             /* @var $menu Menu */

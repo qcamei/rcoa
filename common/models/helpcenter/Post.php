@@ -23,6 +23,7 @@ use yii\db\ActiveRecord;
  * @property string $like_count             点赞数
  * @property string $unlike_count           不喜欢数
  * @property string $created_by             创建人
+ * @property integer $sort_order            排序索引
  * @property string $created_at
  * @property string $updated_at
  */
@@ -64,7 +65,8 @@ class Post extends ActiveRecord
     {
         return [
             [['name', 'title', 'content'], 'required'],
-            [['category_id', 'view_count', 'comment_count', 'can_comment', 'is_show', 'like_count', 'unlike_count', 'created_at', 'updated_at'], 'integer'],
+            [['category_id', 'view_count', 'comment_count', 'can_comment', 'is_show', 'like_count', 'unlike_count',
+                'sort_order', 'created_at', 'updated_at'], 'integer'],
             [['content'], 'string'],
             [['name'], 'string', 'max' => 50],
             [['title'], 'string', 'max' => 255],
@@ -99,6 +101,7 @@ class Post extends ActiveRecord
             'like_count' => Yii::t('app', 'Like Count'),
             'unlike_count' => Yii::t('app', 'Unlike Count'),
             'created_by' => Yii::t('app', 'Created By'),
+            'sort_order' => Yii::t('app', 'Sort'), 
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];

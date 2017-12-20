@@ -18,7 +18,7 @@ class PostCategorySearch extends PostCategory
     public function rules()
     {
         return [
-            [['id', 'parent_id', 'is_show', 'level', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'parent_id', 'is_show', 'level', 'sort_order', 'created_at', 'updated_at'], 'integer'],
             [['parent_id_path', 'app_id', 'name', 'des', 'icon', 'href'], 'safe'],
         ];
     }
@@ -67,6 +67,7 @@ class PostCategorySearch extends PostCategory
             'parent_id' => $this->parent_id,
             'is_show' => $this->is_show,
             'level' => $this->level,
+            'sort_order' => $this->sort_order, 
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);

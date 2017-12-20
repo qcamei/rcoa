@@ -44,6 +44,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
     
+    <?= $form->field($model, 'sort_order')->textInput() ?>
+    
     <?= $form->field($model, 'can_comment')->widget(SwitchInput::classname(), [
         'pluginOptions' => [
             'onText' => Yii::t('app', 'Y'),

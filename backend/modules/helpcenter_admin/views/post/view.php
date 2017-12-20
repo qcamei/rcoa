@@ -89,6 +89,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => Yii::t('app', 'Create By'),
                 'value' => $model->user->nickname,
             ],
+            'sort_order',
             'created_at:datetime',
             'updated_at:datetime',
         ],

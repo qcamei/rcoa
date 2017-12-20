@@ -17,6 +17,7 @@ use yii\db\ActiveRecord;
  * @property string $des                描述
  * @property integer $is_show           是否显示：0不显示，1显示
  * @property integer $level             等级
+ * @property integer $sort_order        排序索引
  * @property string $icon               图标
  * @property string $href               跳转路径
  * @property string $created_at
@@ -63,7 +64,7 @@ class PostCategory extends ActiveRecord
     {
         return [
             [['app_id', 'name'], 'required'],
-            [['parent_id', 'is_show', 'level', 'created_at', 'updated_at'], 'integer'],
+            [['parent_id', 'is_show', 'level', 'sort_order', 'created_at', 'updated_at'], 'integer'],
             [['app_id', 'parent_id_path', 'des', 'icon', 'href'], 'string', 'max' => 255],
             [['name'], 'string', 'max' => 50],
         ];
@@ -128,6 +129,7 @@ class PostCategory extends ActiveRecord
                     'Show' => Yii::t('app', 'Show'),
                 ]),
             'level' => Yii::t('app', 'Level'),
+            'sort_order' => Yii::t('app', 'Sort'), 
             'icon' => Yii::t('app', 'Icon'),
             'href' => Yii::t('app', 'Href'),
             'created_at' => Yii::t('app', 'Created At'),

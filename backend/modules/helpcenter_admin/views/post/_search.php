@@ -38,6 +38,8 @@ use yii\widgets\ActiveForm;
     <?php // echo $form->field($model, 'unlike_count') ?>
 
     <?php // echo $form->field($model, 'created_by') ?>
+    
+    <?php // echo $form->field($model, 'sort_order') ?> 
 
     <?php // echo $form->field($model, 'created_at') ?>
 

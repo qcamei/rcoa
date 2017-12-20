@@ -13,6 +13,10 @@ use yii\widgets\ActiveForm;
  * and open the template in the editor.
  */
 
+$this->title = Yii::t('app', '{Help}{Center}', [
+            'Help' => Yii::t('app', 'Help'),
+            'Center' => Yii::t('app', 'Center'),
+        ]);
 ?>
 <div class="post-view mcbs-activity default-view">
     <div class="post-header">
