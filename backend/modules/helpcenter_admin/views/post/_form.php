@@ -82,16 +82,7 @@ $js =
 <<<JS
     /** 富文本编辑器 */
     $('#container').removeClass('form-control');
-    var ue = UE.getEditor('container', {toolbars:[
-        [
-            'fullscreen', 'source', '|', 'undo', 'redo', '|',  
-            'bold', 'italic', 'underline','fontborder', 'strikethrough', 'removeformat', 'formatmatch', '|', 
-            'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',
-            'paragraph', 'fontfamily', 'fontsize', '|',
-            'justifyleft', 'justifyright' , 'justifycenter', 'justifyjustify', '|',
-            'simpleupload', 'horizontal'
-        ]
-    ]});
+    var ue = UE.getEditor('container');
     /** 下拉选择父级分类 */
     $('#post-app_id').change(function(){
         $("#post-category_id").html("");

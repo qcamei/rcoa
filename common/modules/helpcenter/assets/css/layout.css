@@ -26,8 +26,9 @@ and open the template in the editor.
     margin-top: 5px;
     display: inline-block
 }
+
 .post-view .post-header .post-title{
-    width: 200px;
+    min-width: 200px;
 }
 
 .post-view .post-header .post-caozuo{
