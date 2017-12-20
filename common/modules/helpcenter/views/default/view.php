@@ -74,13 +74,23 @@ $this->title = Yii::t('app', '{Help}{Center}', [
         <?php
             $content = $model['content'];
             //设置img中src的前缀(常量-后台网址)
-            $suffix = WEB_ADMIN_ROOT ;
-            //用正则查找内容中的所有img标签
-            $pregRule = "/<[img|IMG].*?src=[\'|\"](.*?(?:[\.jpg|\.jpeg|\.png|\.gif|\.bmp]))[\'|\"].*?[\/]?>/";
-            //批量增加前缀
-            $contents = preg_replace($pregRule, '<img src="'.$suffix.'${1}" style="max-width:100%">', $content);
-            echo $contents;
+            $imgPrefix = WEB_ADMIN_ROOT;
+            //设置a中href的前缀(常量-帮助中心网址)
+            $aPrefix = MCONLINE_WEB_ROOT;
+            //用正则查找内容中的所有img标签的规则
+            $imgRule = "/<[img|IMG].*?src=[\'|\"](.*?(?:[\.jpg|\.jpeg|\.png|\.gif|\.bmp]))[\'|\"].*?[\/]?>/";
+            //用正则查找内容中的所有a标签的规则
+            $aRule = "/<[a|A].*?href=['|\"]([\\w\\W]*?)['|\"]([\\w\\W]*?)>/";
+            //批量给img标签中src增加前缀
+            $content_img = preg_replace($imgRule, '<img src="'.$imgPrefix.'${1}" style="max-width:100%">', $content);
+            //批量给a标签中href增加前缀
+            $content_a = preg_replace($aRule, '<a href="'.$aPrefix.'${1}" >', $content_img);
+            echo $content_a;
         ?>
+    </div>
+    <div class="created_at">
+        <span>发布时间：</span>
+        <?= date('Y-m-d H:i', $model['updated_at']);?>
     </div>
     <?php
         //能否评论（0不可以，1可以）

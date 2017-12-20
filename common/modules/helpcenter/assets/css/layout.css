@@ -76,7 +76,14 @@ and open the template in the editor.
 
 .post-view .post-content{
     padding: 10px 60px 0 60px;
+    margin-bottom: 10px;
     min-height: 520px;
+    border-bottom: 1px #999999 solid
+}
+
+.post-view .created_at{
+    float: right;
+    margin-bottom: 20px;
 }
 
 .post-content img {
