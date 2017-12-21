@@ -104,6 +104,14 @@ $hostInfo = \Yii::$app->urlManager->hostInfo;
    
     //开发按钮     
     var netbutton;
+    var netbuttonContainer = $('<div></div>');
+    //初始画板
+    netbutton = new Wskeee.ccoa.NetButton({
+        path:'filedata/site/netbutton/',
+        container : netbuttonContainer,
+        onSelected : onSelected,
+        onReady : onReady
+    });
     //new图标
     if($undertakeCount > 0)
         $('.words .new').animate({top: '-10px;',opacity: 1}, 500, 'linear');
@@ -117,12 +125,6 @@ $hostInfo = \Yii::$app->urlManager->hostInfo;
     $(".menu .container .netbutton").each(function(i, e){
         setTimeout(function(){
             $(e).animate({top: 0, opacity: 1}, 500, "easeOutBack", function(){
-                //初始画板
-                netbutton = new Wskeee.ccoa.NetButton({
-                    path:'filedata/site/netbutton/',
-                    container:'.netbutton',
-                    onSelected:onSelected
-                });
             });
         }, 300 + i * 100)
     });         
@@ -136,8 +138,13 @@ $hostInfo = \Yii::$app->urlManager->hostInfo;
             $(e).children(".words").removeClass("replace");
         });
     });
+     
     //开发子按钮按下回调
-    function onSelected(data){}     
+    function onSelected(data){};
+    //netbutton 初始完成调用
+    function onReady(){
+        $('.netbutton').empty().append(netbuttonContainer);
+    }
     // 鼠标经过换图标背景颜色  
     $('.menu .container .modules .circle').each(function(i, e){
         $(e).hover(function(){

@@ -96,7 +96,7 @@
         for(var i= 0,len=manifest.length;i<len;i++)
             manifest[i]['src'] = this.config['path']+manifest[i]['src']
         loader.loadManifest(manifest);
-        console.log(manifest);
+        //console.log(manifest);
     };
     //-------------------------------------------------------------
     //
@@ -146,9 +146,11 @@
         this.consts.linkPaths = linkPaths;
 
         this.__resetChild();
-		
-		if(this.config['onReady'])
-            this.config['onReady']();
+        var _this = this;
+        setTimeout(function(){
+            if(_this.config['onReady'])
+                _this.config['onReady']();
+        },100);
     };
     /**
      * 重置子对象初始状态
