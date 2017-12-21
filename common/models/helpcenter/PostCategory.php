@@ -120,8 +120,15 @@ class PostCategory extends ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'parent_id' => Yii::t('app', 'Parent ID'),
-            'parent_id_path' => Yii::t('app', 'Parent Id Path'),
-            'app_id' => Yii::t('app', 'App ID'),
+            'parent_id_path' => Yii::t('app', '{Parent}{ID}{Path}',[
+                'Parent' => \Yii::t('app', 'Parent'),
+                'ID' => \Yii::t('app', 'ID'),
+                'Path' => \Yii::t('app', 'Path'),
+            ]),
+            'app_id' => Yii::t('app', '{App}{ID}',[
+                'App' => \Yii::t('app', 'App'),
+                'ID' => \Yii::t('app', 'ID'),
+            ]),
             'name' => Yii::t('app', 'Name'),
             'des' => Yii::t('app', 'Des'),
             'is_show' => Yii::t(null, '{Is}{Show}', [

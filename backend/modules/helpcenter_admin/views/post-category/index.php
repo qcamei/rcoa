@@ -70,7 +70,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'app_id',
-                'header' => Yii::t('app', 'app_id'),
+                'header' => Yii::t('app', '{App}{ID}',[
+                        'App' => \Yii::t('app', 'App'),
+                        'ID' => \Yii::t('app', 'ID'),
+                    ]),
                 'filter' => Select2::widget([
                     'model' => $searchModel,
                     'attribute' => 'app_id',
