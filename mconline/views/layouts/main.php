@@ -106,9 +106,7 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
-
-        <p class="pull-right"><?= Yii::powered() ?></p>
+        <p class="pull-left">&copy; 广州远程教育中心&nbsp;&nbsp;版本号：v1.50 </p>
     </div>
 </footer>
 

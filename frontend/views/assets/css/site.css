@@ -130,7 +130,7 @@ body .wrap > .content,
 
 .course .menu .icon{
     position: absolute;
-    top: -25px;
+    top: 25px;
     right: 15px;
     font-size: 20px;
     opacity: 0;

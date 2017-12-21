@@ -6,13 +6,12 @@ use yii\web\View;
 
 /* @var $this View */
 /*has-title*/
-$this->title = '工匠';
+$this->title = '课程建设工作平台';
 ?>
 
 <div class="site-home">
     <div class="site-home-logo">
-        <?= Html::img(['/filedata/site/image/wap_site_logo.png'])?>
-        <p><span class="site-home-title">课程建设工作平台</span></p>
+        <p><span class="site-home-title"><?= Html::encode($this->title) ?></span></p>
     </div>
     <div class="container site-home-jumbotron">
         <div class="col-xs-12 site-home-circlebox line-box">  
@@ -63,7 +62,7 @@ $this->title = '工匠';
             <div class="site-home-introduction">
                 <a href="/worksystem/default" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                     <div class="site-home-circle img-circle">
-                        <?= Html::img(['/filedata/site/system/development.png'], ['width' => '50']) ?>
+                        <?= Html::img(['/filedata/site/image/icon_1-3.png'], ['width' => '50']) ?>
                         <!--<span class="ciricle-num"><span class="timer" data-to="0" data-speed="550">0</span><span class="num-words">条</span></span>
                         <span class="icon">+</span>-->
                     </div>
