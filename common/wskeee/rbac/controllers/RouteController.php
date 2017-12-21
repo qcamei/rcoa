@@ -36,8 +36,6 @@ class RouteController extends Controller
     public function actionIndex()
     {
         $model = new Route();
-        $model->invalidate();
-        //var_dump($model->getRoutes());exit;
         return $this->render('index',[
                 'routes' => $model->getRoutes(),
             ]);
