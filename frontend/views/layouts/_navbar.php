@@ -20,9 +20,7 @@ $system = AppGlobalVariables::getSystems();
 
 NavBar::begin([
         //'brandLabel' => '课程中心工作平台',
-        'brandLabel' => Html::img(['/filedata/site/image/logo.png'], [
-            'class' => 'logo', 'width' => '40', 'height' => '40'
-        ]),
+        'brandLabel' => Html::img(['/filedata/site/image/icon_logo.png'], ['class' => 'logo']),
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',

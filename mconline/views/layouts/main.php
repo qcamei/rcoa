@@ -30,7 +30,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => '在线制作课程平台',
+        'brandLabel' => Html::img(WEB_ROOT.'/filedata/site/image/icon_logo.png', ['class' => 'logo']),
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -47,7 +47,7 @@ AppAsset::register($this);
         $menuItems = [
             ['label' => '首页', 'url' => ['/site/index']],
             ['label' => '板书课堂', 'url' => ['/mcbs/default/index']],
-            ['label' => '情景课堂', 'url' => ['#']],
+            ['label' => '情景课堂', 'url' => 'javascript:;'],
             [
                 'label' => '帮助中心',
                 'url' => ['/helpcenter/default/index', 'app_id'=> 'app-mconline'],

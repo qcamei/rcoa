@@ -17,7 +17,7 @@ $this->title = '在线制作课程平台';
                 <?= Html::img(WEB_ROOT.'/filedata/site/image/logo.png', ['width'=> '220px']) ?>
             </div> 
             <div class="name">
-                <p><span class="CHS">在线制作课程平台</span></p>
+                <p><span class="CHS"><?= Html::encode($this->title) ?></span></p>
                 <span class="EN">Online Making Of Course Platform</span>
             </div> 
         </div>
@@ -27,7 +27,7 @@ $this->title = '在线制作课程平台';
                     <a href="/mcbs/default/index">
                         <div class="classroom">
                             <div class="icon">
-                                <?= Html::img(WEB_ROOT.'/filedata/site/image/icon_1-1.png', ['width'=>'67px']) ?>
+                                <?= Html::img(WEB_ROOT.'/filedata/site/image/icon_2-1.png', ['width'=>'67px']) ?>
                             </div>
                             <div class="name">
                                 <p><span class="CHS">板书课堂</span></p>
@@ -42,7 +42,7 @@ $this->title = '在线制作课程平台';
                     <a href="javascript:;">
                         <div class="classroom">
                             <div class="icon">
-                                <?= Html::img(WEB_ROOT.'/filedata/site/image/icon_1-2.png', ['width'=>'67px;']) ?>
+                                <?= Html::img(WEB_ROOT.'/filedata/site/image/icon_2-2.png', ['width'=>'67px;']) ?>
                             </div>
                             <div class="name">
                                 <p><span class="CHS">情景课堂</span></p>
@@ -68,13 +68,19 @@ $js =
 
     $(".menu .container .modules").each(function(){
        var demo = $(this);
+       var outerWidth = demo.css("margin-left");
        $(this).children("a").hover(function(){
-            $(".line-x").animate({left: (demo.position().left - $(this).width()/2) + 20}, 1000);
-            $(".line-left").stop().animate({left: "-115px"}, 1000);
-            $(".line-right").stop().animate({right: "-115px"}, 1000);
+            var left = $(".line-left").position().left;
+            if(left == 0){
+                $(".line-x").css({left: (demo.position().left - $(this).width() / 2) + parseInt(outerWidth.replace("px","")) - 15});
+            }else{
+                $(".line-x").stop().animate({left: (demo.position().left - $(this).width() / 2) + parseInt(outerWidth.replace("px","")) - 15}, 400);
+            }
+            $(".line-left").stop().animate({left: "-110px"}, 200);
+            $(".line-right").stop().animate({right: "-110px"}, 200);
        },function(){
-            $(".line-left").stop().animate({left: 0}, 1000);
-            $(".line-right").stop().animate({right: 0}, 1000);
+            $(".line-left").stop().animate({left: 0}, 200);
+            $(".line-right").stop().animate({right: 0}, 200);
        });
        
     });

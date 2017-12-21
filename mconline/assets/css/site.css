@@ -67,7 +67,7 @@
 }
 
 .mconline .menu .modules {
-    width: 252px;
+    width: 250px;
     margin-left: 45px;
     margin-right: 45px;
     position: relative;
@@ -112,17 +112,17 @@
 }
 
 .mconline .menu .line-x {
-    width: 230px;
+    width: 220px;
     height: 2px;
     position: relative;
     bottom: -2px;
-    left: 35px;
+    left: 0px;
     overflow: hidden;
     background-color: #a9b4bb;
 }
 
 .mconline .menu .line-x div {
-    width: 115px;
+    width: 110px;
     height: 2px;
     position: absolute;
     background-color: #ffffff;

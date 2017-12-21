@@ -62,17 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php
 $js = <<<JS
-   $(window).resize(function(){
-        size();
-    });
-    size();
-    function size(){
-        var height = $(document.body).height() - 100;
-        if(height < 820)
-            height = 820;
-        $(".site-login").css({width:'100%',height:height, display:"block"});
-    }
-    
+   
     /** 滚动到登录框 */
     $('html,body').animate({scrollTop:($('.site-login-form').offset().top) - 140},1000);
 JS;
