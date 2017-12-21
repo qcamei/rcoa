@@ -66,7 +66,7 @@
         }
         this.container = $(this.config['container']);
         this.container.empty();
-        this.canvas = $('<canvas id="canvas" width="340" height="370"></canvas>').appendTo(this.container)[0];
+        this.canvas = $('<canvas id="canvas" width="340" height="325"></canvas>').appendTo(this.container)[0];
         var _this = this;
 
 
@@ -114,6 +114,7 @@
 
 
     p.__initChild = function(){
+        this.skin.cursor = "pointer";
         this.circle = this.skin['big_circle'];
         this.circle_hui = this.skin['big_circle_hui'];
         this.icon = this.skin['icon'];
