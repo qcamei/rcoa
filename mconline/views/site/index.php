@@ -2,6 +2,7 @@
 
 use mconline\assets\AppAsset;
 use mconline\assets\SiteAssets;
+use yii\helpers\Html;
 use yii\web\View;
 
 /* @var $this View */
@@ -10,27 +11,71 @@ $this->title = '在线制作课程平台';
 ?>
 <div class="site-index">
 
-    <div class="body-content">
-
-        <div class="row">
-            <div class="col-lg-6">
-                <a href="../mcbs/default/">
-                    <div class="mcbs">
-                        <p>板书课堂</p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-6">
-                <a href="javasrip:;">
-                    <div class="mcqj">
-                        <p>情景课堂</p>
-                    </div>
-                </a>
+    <div class="mconline" style='background-image: url("<?= WEB_ROOT ?>/filedata/site/image/site_homebg.jpg");'>
+        <div class="platform container">
+            <div class="logo">
+                <?= Html::img(WEB_ROOT.'/filedata/site/image/logo.png', ['width'=> '220px']) ?>
+            </div> 
+            <div class="name">
+                <p><span class="CHS">在线制作课程平台</span></p>
+                <span class="EN">Online Making Of Course Platform</span>
+            </div> 
+        </div>
+        <div class="menu">
+            <div class="container">
+                <div class="modules">
+                    <a href="/mcbs/default/index">
+                        <div class="classroom">
+                            <div class="icon">
+                                <?= Html::img(WEB_ROOT.'/filedata/site/image/icon_1-1.png', ['width'=>'67px']) ?>
+                            </div>
+                            <div class="name">
+                                <p><span class="CHS">板书课堂</span></p>
+                                <span class="EN">Blackboard class</span>
+                            </div>
+                        </div>
+                    </a>
+                    <!-- 右竖线 -->
+                    <div class="line-y"></div>
+                </div>
+                <div class="modules">
+                    <a href="javascript:;">
+                        <div class="classroom">
+                            <div class="icon">
+                                <?= Html::img(WEB_ROOT.'/filedata/site/image/icon_1-2.png', ['width'=>'67px;']) ?>
+                            </div>
+                            <div class="name">
+                                <p><span class="CHS">情景课堂</span></p>
+                                <span class="EN">Situational class</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- 下横线  -->
+                <div class="line-x">
+                    <div class="line-left"></div>
+                    <div class="line-right"></div>
+                </div>
             </div>
         </div>
-        
     </div>
+    
 </div>
+
+<?php
+$js = 
+<<<JS
+
+    $(".menu .container .modules>a").hover(function(){
+        $(".line-left").stop().animate({left: "-115px"}, 1000);
+        $(".line-right").stop().animate({right: "-115px"}, 1000);
+    },function(){
+        $(".line-left").stop().animate({left: 0}, 1000);
+        $(".line-right").stop().animate({right: 0}, 1000);
+    });
+JS;
+    $this->registerJs($js,  View::POS_READY);
+?>
 
 <?php
     AppAsset::register($this);

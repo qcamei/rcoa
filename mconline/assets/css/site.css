@@ -1,31 +1,136 @@
-.site-index .mcbs {
-    display: flex;
-    text-align: center;
-    margin: 25% auto;
-    width: 356px;
-    height: 205px;
-    line-height: 205px;
-    border-radius: 10px;
-    background-color: #f2f2f2;
+.wrap > .container,
+.site-index {
+   width: 100%;
+   margin: 0;
+   padding: 0;
 }
 
-.site-index .mcqj {
-    display: flex;
-    text-align: center;
-    margin: 25% auto;
-    width: 356px;
-    height: 205px;
-    line-height: 205px;
-    border-radius: 10px;
-    background-color: #f2f2f2;
+.site-index .mconline {
+    width: 100%;
+    min-height: 914px;
+    background-size: cover;
+    background-position: center 0;
+    background-repeat: no-repeat;
+    background-color: #ebebeb;
 }
 
-.site-index .mcbs p,.site-index .mcqj p{
-    margin: auto;
-    font-size: 16px;
+.mconline .container {
+    width: 750px;
 }
 
-.wrap a{
-    color: #000;
-    text-decoration: none;
+.mconline .CHS {
+    margin-bottom: -15px;
+    display: block;
+}
+
+.mconline .EN {
+    margin-top: -15px;
+    display: block;
+    opacity: 0.5
+}
+
+.mconline .platform {
+    position: relative;
+    top: 280px;
+    font-size: 0px;
+}
+
+.mconline .platform .logo {
+    width: 220px;
+    display: inline-block;
+}
+
+.mconline .platform .name {
+    height: 238px;
+    text-align: left;
+    margin-left: 15px;
+    display: inline-block;
+}
+
+.mconline .platform .CHS {
+    font-size: 45px;
+    color: #58646b;
+}
+
+.mconline .platform .EN {
+    font-size: 20px;
+    color: #65727a;
+}
+
+.mconline .menu {
+    width: 100%;
+    position: relative;
+    top: 248px;
+    font-size: 0px;
+    border-bottom: 2px #ffffff solid;
+}
+
+.mconline .menu .modules {
+    width: 252px;
+    margin-left: 45px;
+    margin-right: 45px;
+    position: relative;
+    display: inline-block;
+}
+
+.mconline .menu .classroom {
+    height: 105px;
+    padding: 20px 0;
+    font-size: 0px;
+}
+
+.mconline .menu .line-y {
+    width: 2px;
+    height: 65px;
+    position: absolute;
+    top: 0;
+    right: -45px;
+    margin: 20px 0;
+    background-color: #a9b4bb;
+}
+
+.mconline .menu .modules .icon {
+    width: 67px;
+    float: left;
+}
+
+.mconline .menu .modules .name {
+    height: 60px;
+    margin: 10px 30px;
+    display: inline-block;
+}
+
+.mconline .menu .modules .CHS {
+    font-size: 25px;
+    color: #65727a;
+}
+
+.mconline .menu .modules .EN {
+    font-size: 14px;
+    color: #a9b4bb;
+}
+
+.mconline .menu .line-x {
+    width: 230px;
+    height: 2px;
+    position: relative;
+    bottom: -2px;
+    left: 35px;
+    overflow: hidden;
+    background-color: #a9b4bb;
+}
+
+.mconline .menu .line-x div {
+    width: 115px;
+    height: 2px;
+    position: absolute;
+    background-color: #ffffff;
+}
+
+.mconline .menu .line-left {
+    left: 0;
+}
+
+.mconline .menu .line-right {
+    right: 0;
 }
