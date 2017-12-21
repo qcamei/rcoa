@@ -14,7 +14,8 @@
         this.config = $.extend({
             path:'',                            //路径
             container:'#richbutton',
-            onSelected:null                     //选择回调
+            onSelected:null,                    //选择回调
+			onReady:null,						//初始化完成回调
         },config);
 
         this.container = null;
@@ -95,6 +96,7 @@
         for(var i= 0,len=manifest.length;i<len;i++)
             manifest[i]['src'] = this.config['path']+manifest[i]['src']
         loader.loadManifest(manifest);
+        console.log(manifest);
     };
     //-------------------------------------------------------------
     //
@@ -144,6 +146,9 @@
         this.consts.linkPaths = linkPaths;
 
         this.__resetChild();
+		
+		if(this.config['onReady'])
+            this.config['onReady']();
     };
     /**
      * 重置子对象初始状态
@@ -257,9 +262,9 @@
         var b;
         for(var i=0,len=this.consts['btnnum'];i<len;i++){
             b = this.btns[i];
-            if(i==6){
-                b.ideui.cursor = 'pointer';
-            }
+			if(i==6){
+				b.cursor = 'pointer';
+			}
             b.ideui.on('click',function(evt){
                 _this.__iconMinClick(this.index);
             },b);
