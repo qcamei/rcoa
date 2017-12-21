@@ -66,13 +66,21 @@ $this->title = '在线制作课程平台';
 $js = 
 <<<JS
 
-    $(".menu .container .modules>a").hover(function(){
-        $(".line-left").stop().animate({left: "-115px"}, 1000);
-        $(".line-right").stop().animate({right: "-115px"}, 1000);
-    },function(){
-        $(".line-left").stop().animate({left: 0}, 1000);
-        $(".line-right").stop().animate({right: 0}, 1000);
+    $(".menu .container .modules").each(function(){
+       var demo = $(this);
+        
+       $(this).children("a").hover(function(){
+            $(".line-x").animate({left: demo.position().left - 305.5}, 1000);
+            $(".line-left").stop().animate({left: "-115px"}, 1000);
+            $(".line-right").stop().animate({right: "-115px"}, 1000);
+       },function(){
+            //$(".line-x").css({left: demo.position().left - 305.5});
+            $(".line-left").stop().animate({left: 0}, 1000);
+            $(".line-right").stop().animate({right: 0}, 1000);
+       });
+       
     });
+    
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>
