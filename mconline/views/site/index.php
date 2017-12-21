@@ -68,13 +68,11 @@ $js =
 
     $(".menu .container .modules").each(function(){
        var demo = $(this);
-        
        $(this).children("a").hover(function(){
-            $(".line-x").animate({left: demo.position().left - 305.5}, 1000);
+            $(".line-x").animate({left: (demo.position().left - $(this).width()/2) + 20}, 1000);
             $(".line-left").stop().animate({left: "-115px"}, 1000);
             $(".line-right").stop().animate({right: "-115px"}, 1000);
        },function(){
-            //$(".line-x").css({left: demo.position().left - 305.5});
             $(".line-left").stop().animate({left: 0}, 1000);
             $(".line-right").stop().animate({right: 0}, 1000);
        });

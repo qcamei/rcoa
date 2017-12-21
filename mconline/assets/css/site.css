@@ -16,6 +16,7 @@
 
 .mconline .container {
     width: 750px;
+    position: relative;
 }
 
 .mconline .CHS {
