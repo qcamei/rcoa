@@ -14,7 +14,8 @@
         this.config = $.extend({
             path:'',                            //路径
             container:'#richbutton',
-            onSelected:null                     //选择回调
+            onSelected:null,                    //选择回调
+			onReady:null,						//初始化完成回调
         },config);
 
         this.container = null;
@@ -65,7 +66,7 @@
         }
         this.container = $(this.config['container']);
         this.container.empty();
-        this.canvas = $('<canvas id="canvas" width="340" height="370"></canvas>').appendTo(this.container)[0];
+        this.canvas = $('<canvas id="canvas" width="340" height="325"></canvas>').appendTo(this.container)[0];
         var _this = this;
 
 
@@ -95,6 +96,7 @@
         for(var i= 0,len=manifest.length;i<len;i++)
             manifest[i]['src'] = this.config['path']+manifest[i]['src']
         loader.loadManifest(manifest);
+        //console.log(manifest);
     };
     //-------------------------------------------------------------
     //
@@ -112,6 +114,7 @@
 
 
     p.__initChild = function(){
+        this.skin.cursor = "pointer";
         this.circle = this.skin['big_circle'];
         this.circle_hui = this.skin['big_circle_hui'];
         this.icon = this.skin['icon'];
@@ -144,6 +147,11 @@
         this.consts.linkPaths = linkPaths;
 
         this.__resetChild();
+        var _this = this;
+        setTimeout(function(){
+            if(_this.config['onReady'])
+                _this.config['onReady']();
+        },100);
     };
     /**
      * 重置子对象初始状态
@@ -257,9 +265,9 @@
         var b;
         for(var i=0,len=this.consts['btnnum'];i<len;i++){
             b = this.btns[i];
-            if(i==6){
-                b.ideui.cursor = 'pointer';
-            }
+			if(i==6){
+				b.cursor = 'pointer';
+			}
             b.ideui.on('click',function(evt){
                 _this.__iconMinClick(this.index);
             },b);
