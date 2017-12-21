@@ -75,12 +75,12 @@ $this->title = Yii::t('app', '{Help}{Center}', [
             $content = $model['content'];
             //设置img中src的前缀(常量-后台网址)
             $imgPrefix = WEB_ADMIN_ROOT;
-            //设置a中href的前缀(常量-帮助中心网址)
+            //设置a中href的前缀(常量-在线制作课程平台网址)
             $aPrefix = MCONLINE_WEB_ROOT;
             //用正则查找内容中的所有img标签的规则
             $imgRule = "/<[img|IMG].*?src=[\'|\"](.*?(?:[\.jpg|\.jpeg|\.png|\.gif|\.bmp]))[\'|\"].*?[\/]?>/";
             //用正则查找内容中的所有a标签的规则
-            $aRule = "/<[a|A].*?href=['|\"]([\\w\\W]*?)['|\"]([\\w\\W]*?)>/";
+            $aRule = "/<[a|A].*?href=[\'|\"](\S+)[\'|\"]>/";
             //批量给img标签中src增加前缀
             $content_img = preg_replace($imgRule, '<img src="'.$imgPrefix.'${1}" style="max-width:100%">', $content);
             //批量给a标签中href增加前缀
@@ -89,7 +89,7 @@ $this->title = Yii::t('app', '{Help}{Center}', [
         ?>
     </div>
     <div class="created_at">
-        <span>发布时间：</span>
+        <span>最后一次修改：</span>
         <?= date('Y-m-d H:i', $model['updated_at']);?>
     </div>
     <?php

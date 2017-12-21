@@ -217,6 +217,8 @@ return [
     'Revise' => '修改',
     
     //帮助中心后台
+    'Parent' => '父级',
+    'App' => '应用',
     'Post' => '文章',
     'Category' => '分类',
     'Show' => '显示',
