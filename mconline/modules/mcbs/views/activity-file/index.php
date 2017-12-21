@@ -67,13 +67,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]),
                 'filterOptions' => [
                     'class' => 'hidden-xs hidden-sm',
+                    'style' => [
+                        'padding' => '8px 3px',
+                    ],
                 ],
                 'headerOptions' => [
                     'class' => [
                         'th' => 'hidden-xs hidden-sm',
                     ],
                     'style' => [
-                        'padding' => '8px',
+                        'padding' => '8px 3px',
                         'width' => '130px'
                     ],
                 ],
@@ -82,6 +85,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'contentOptions' => [
                     'class' => 'activity-name list-td hidden-xs hidden-sm',
+                    'style' => [
+                        'padding' => '8px 3px',
+                    ],
                 ],
             ],
             [
@@ -104,13 +110,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]),
                 'filterOptions' => [
                     'class' => 'hidden-xs hidden-sm',
+                    'style' => [
+                        'padding' => '8px 3px',
+                    ],
                 ],
                 'headerOptions' => [
                     'class' => [
                         'th' => 'hidden-xs hidden-sm',
                     ],
                     'style' => [
-                        'padding' => '8px',
+                        'padding' => '8px 3px',
                         'width' => '130px'
                     ],
                 ],
@@ -119,6 +128,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'contentOptions' => [
                     'class' => 'activity-name list-td hidden-xs hidden-sm',
+                    'style' => [
+                        'padding' => '8px 3px',
+                    ],
                 ],
             ],
             [
@@ -139,9 +151,14 @@ $this->params['breadcrumbs'][] = $this->title;
                         'allowClear' => true,
                     ],
                 ]),
+                'filterOptions' => [
+                    'style' => [
+                        'padding' => '8px 3px',
+                    ],
+                ],
                 'headerOptions' => [
                     'style' => [
-                        'padding' => '8px',
+                        'padding' => '8px 3px',
                         'width' => '220px'
                     ],
                 ],
@@ -150,6 +167,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'contentOptions' => [
                     'class' => 'activity-name list-td',
+                    'style' => [
+                        'padding' => '8px 3px',
+                    ],
                 ],
             ],
             [
@@ -159,9 +179,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     'Name' => Yii::t('app', 'Name')
                 ]),
                 'format' => 'raw',
+                'filterOptions' => [
+                    'style' => [
+                        'padding' => '8px 3px',
+                    ],
+                ],
                 'headerOptions' => [
                     'style' => [
-                        'padding' => '8px',
+                        'padding' => '8px 3px',
                         'width' => '260px'
                     ],
                 ],
@@ -172,6 +197,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'contentOptions' => [
                     'class' => 'activity-name list-td',
+                    'style' => [
+                        'padding' => '8px 3px',
+                    ],
                 ],
                 
             ],
@@ -192,14 +220,17 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]),
                 'filterOptions' => [
                     'class' => 'hidden-xs hidden-sm',
+                    'style' => [
+                        'padding' => '8px 3px',
+                    ],
                 ],
                 'headerOptions' => [
                     'class' => [
                         'th' => 'hidden-xs hidden-sm',
                     ],
                     'style' => [
-                        'width' => '95px',
-                        'padding' => '8px'
+                        'width' => '85px',
+                        'padding' => '8px 3px',
                     ],
                 ],
                 'value' => function($data) {
@@ -207,6 +238,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'contentOptions' => [
                     'class' => 'activity-name list-td hidden-xs hidden-sm',
+                    'style' => [
+                        'padding' => '8px 3px',
+                    ],
                 ],
             ],
             [
@@ -222,8 +256,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th' => 'hidden-xs hidden-sm',
                     ],
                     'style' => [
-                        'width' => '100px',
-                        'padding' => '8px'
+                        'width' => '85px',
+                        'padding' => '8px 3px',
                     ],
                 ],
                 'value' => function($data) {
@@ -231,6 +265,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'contentOptions' => [
                     'class' => 'activity-name list-td hidden-xs hidden-sm',
+                    'style' => [
+                        'padding' => '8px 3px',
+                    ],
                 ],
             ],
             [
@@ -246,8 +283,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th' => 'hidden-xs hidden-sm',
                     ],
                     'style' => [
-                        'width' => '100px',
-                        'padding' => '8px'
+                        'width' => '85px',
+                        'padding' => '8px 3px',
                     ],
                 ],
                 'value' => function($data) {
@@ -261,6 +298,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'contentOptions' => [
                     'class' => 'activity-name list-td hidden-xs hidden-sm',
+                    'style' => [
+                        'padding' => '8px 3px',
+                    ],
                 ],
             ],
             [
@@ -288,13 +328,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'headerOptions' => [
                     'style' => [
-                        'width' => '74px',
-                        'padding' => '8px',
+                        'width' => '65px',
+                        'padding' => '8px 3px',
                     ],
                 ],
                 'contentOptions' =>[
                     'style' => [
-                        'padding' => '4px 8px',
+                        'padding' => '8px 3px',
                     ],
                 ],
                 'template' => '{view}',
