@@ -1,0 +1,75 @@
+/************************************首页样式***********************************/
+body .wrap > .container{
+   width: 100%;
+   padding: 50px 0px 0px;
+}
+
+.mconline .CHS {
+    margin-bottom: -15px;
+    display: block;
+}
+
+.mconline .EN {
+    margin-top: -15px;
+    display: block;
+    opacity: 0.5
+}
+
+.site-index .mconline .platform {
+    width: 100%;
+    padding: 60px 0px;
+    text-align: center;
+    background-repeat: no-repeat;
+    background-size:cover;
+    background-position: center 0;
+}
+
+.mconline .platform .CHS {
+    font-size: 30px;
+    color: #58646b;
+}
+
+.mconline .platform .EN {
+    font-size: 12px;
+    color: #65727a;
+}
+
+.mconline .menu {
+    width: 100%;
+    font-size: 0px;
+}
+
+.mconline .menu .modules {
+    width: 100%;
+    margin-top: 50px;
+    padding-left: 45px;
+    padding-right: 45px;
+    display: inline-block;
+}
+
+.mconline .menu .classroom {
+    height: 105px;
+    padding: 20px 0;
+    font-size: 0px;
+}
+
+.mconline .menu .modules .icon {
+    width: 67px;
+    float: left;
+}
+
+.mconline .menu .modules .name {
+    height: 60px;
+    margin: 10px 30px;
+    display: inline-block;
+}
+
+.mconline .menu .modules .CHS {
+    font-size: 25px;
+    color: #65727a;
+}
+
+.mconline .menu .modules .EN {
+    font-size: 14px;
+    color: #a9b4bb;
+}

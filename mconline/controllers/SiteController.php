@@ -3,6 +3,7 @@ namespace mconline\controllers;
 
 use common\models\LoginForm;
 use common\models\User;
+use Detection\MobileDetect;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -56,7 +57,8 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+        $detect = new MobileDetect();
+        return $this->render(!$detect->isMobile() ? 'index' : 'wap_index');
     }
 
     public function actionLogin()

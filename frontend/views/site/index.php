@@ -97,12 +97,10 @@ $this->title = '课程建设工作平台';
 
 <?php
 
-$hostInfo = \Yii::$app->urlManager->hostInfo;
-
  $js =   
 <<<JS
    
-    //开发按钮     
+    //任务按钮     
     var netbutton;
     var netbuttonContainer = $('<div></div>');
     //初始画板
@@ -112,6 +110,16 @@ $hostInfo = \Yii::$app->urlManager->hostInfo;
         onSelected : onSelected,
         onReady : onReady
     });
+    //开发子按钮按下回调
+    function onSelected(data){
+        if(data == 6){
+            location.href="/worksystem/default";
+        }
+    };
+    //netbutton 初始完成调用
+    function onReady(){
+        $('.netbutton').empty().append(netbuttonContainer);
+    }
     //new图标
     if($undertakeCount > 0)
         $('.words .new').animate({top: '-10px;',opacity: 1}, 500, 'linear');
@@ -138,13 +146,6 @@ $hostInfo = \Yii::$app->urlManager->hostInfo;
             $(e).children(".words").removeClass("replace");
         });
     });
-     
-    //开发子按钮按下回调
-    function onSelected(data){};
-    //netbutton 初始完成调用
-    function onReady(){
-        $('.netbutton').empty().append(netbuttonContainer);
-    }
     // 鼠标经过换图标背景颜色  
     $('.menu .container .modules .circle').each(function(i, e){
         $(e).hover(function(){

@@ -1,22 +1,10 @@
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/* 
-    Created on : 2017-4-26, 15:43:45
-    Author     : Kiwi°
-*/
-
-
-/**
- * 首页样式 
- */
-.site-home{
-    width: 100%;
-    /*background-color: #ebebeb;*/
+/************************************首页样式***********************************/
+body .wrap > .content,
+.site-index {
+   width: 100%;
 }
-.site-home-logo{
+
+.site-index .course {
     width: 100%;
     padding: 60px 0px;
     text-align: center;
@@ -25,18 +13,22 @@ and open the template in the editor.
     background-size:cover;
     background-position: center 0;
 }
-.site-home-logo img{
-    width: 158px;
-}
-.site-home-title{
+
+.course .CHS {
+    font-size: 30px;
+    color: #58646b;
+    margin-bottom: -15px;
     display: block;
-    width: 100%;
-    font-family: '方正细倩_GBK';
-    font-size: 20px;
-    color: #565656;
-    font-weight: 500;
-    text-align: center;
 }
+
+.course .EN {
+    font-size: 12px;
+    color: #65727a;
+    margin-top: -15px;
+    display: block;
+    opacity: 0.5
+}
+
  .site-home-jumbotron{
     width: 100%;
     padding: 20px 0px;

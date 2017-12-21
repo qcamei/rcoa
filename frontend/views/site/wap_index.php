@@ -9,9 +9,10 @@ use yii\web\View;
 $this->title = '课程建设工作平台';
 ?>
 
-<div class="site-home">
-    <div class="site-home-logo">
-        <p><span class="site-home-title"><?= Html::encode($this->title) ?></span></p>
+<div class="site-index">
+    <div class="course">
+        <p><span class="CHS"><?= Html::encode($this->title) ?></span></p>
+        <span class="EN">The Platform Of Curriculum Construction</span>
     </div>
     <div class="container site-home-jumbotron">
         <div class="col-xs-12 site-home-circlebox line-box">  
@@ -72,38 +73,6 @@ $this->title = '课程建设工作平台';
                 </div>
             </div>
         </div>
-<!--        <div class="col-xs-12 site-home-circlebox collapse" id="collapseExample">
-            <div class="col-xs-12 site-home-circlebox line-box">  
-                <div class="site-home-introduction" style="height: auto;">  
-                    <div class="line subset-line"></div>
-                </div>  
-            </div>
-            <div class="site-home-introduction" style="height: 50px;">
-                <a href="/teamwork/default" style="padding: 0 25px">
-                    <div class="subset-circle img-circle">进度</div>
-                </a>
-            </div>
-            <div class="col-xs-12 site-home-circlebox line-box">  
-                <div class="site-home-introduction" style="height: auto;">  
-                    <div class="line subset-line"></div>
-                </div>  
-            </div>
-            <div class="site-home-introduction" style="height: 50px;">
-                <a href="/shoot/bookdetail" style="padding: 0 25px">
-                    <div class="subset-circle img-circle">预约</div>
-                </a>
-            </div>
-            <div class="col-xs-12 site-home-circlebox line-box">  
-                <div class="site-home-introduction" style="height: auto;">  
-                    <div class="line subset-line"></div>
-                </div>  
-            </div>
-            <div class="site-home-introduction" style="height: 50px;">
-                <a href="/multimedia/home" style="padding: 0 25px">
-                    <div class="subset-circle img-circle">视频</div>
-                </a>
-            </div>
-        </div>-->
         <div class="col-xs-12 site-home-circlebox line-box">  
             <div class="site-home-introduction" style="height: auto;">  
                 <div class="line"></div>
@@ -133,7 +102,7 @@ $this->title = '课程建设工作平台';
 </div>
 
 <?php
-$hostInfo = Yii::$app->urlManager->hostInfo;
+
  $js =   
 <<<JS
     if($undertakeCount > 0)
