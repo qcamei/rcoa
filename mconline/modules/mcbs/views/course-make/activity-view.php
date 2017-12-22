@@ -1,7 +1,7 @@
 <?php
 
 use common\models\mconline\McbsCourseActivity;
-use common\models\mconline\McbsFileActionResult;
+use common\modules\preview\controllers\DefaultController;
 use mconline\modules\mcbs\assets\McbsAssets;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -106,6 +106,45 @@ $this->params['breadcrumbs'][] = $this->title;
                             ],
                             'class'=>'course-name'
                         ],
+                    ],
+                    [
+                        'class' => 'yii\grid\ActionColumn',
+                        'header' => Yii::t('app', 'Operating'),
+                        'buttons' => [
+                            'view' => function ($url, $data, $key) {
+                                $file_id = $data['id'];
+                                $fileType = DefaultController::checkupLook($file_id);
+                                $options = [
+                                    'class' => 'btn btn-sm ' . (($fileType == '10') ? ($data['is_del'] ? 'btn-danger disabled' : 'btn-danger') : 'btn-info'),
+                                    'title' => ($fileType == '10') ? '该文件暂不支持预览' : Yii::t('app', 'Preview'),
+                                    'aria-label' => ($fileType == '10') ? '该文件暂不支持预览' : Yii::t('app', 'Preview'),
+                                    'target' => '_blank',
+                                    'data-pjax' => '0',
+                                ];
+                                $buttonHtml = [
+                                    'name' => !$data['is_del'] ? '<span class="fa fa-eye"></span> '.Yii::t('app', 'Preview') : '已删除',
+                                    'url' => ['/preview/default/index', 'file_id'=>$data['id']],
+                                    'options' => $options,
+                                    'symbol' => '&nbsp;',
+                                    'conditions' => true,
+                                    'adminOptions' => true,
+                                ];
+                                return Html::a($buttonHtml['name'],$buttonHtml['url'],$buttonHtml['options']);
+                                //return ResourceHelper::a($buttonHtml['name'], $buttonHtml['url'],$buttonHtml['options'],$buttonHtml['conditions']);
+                            }
+                        ],
+                        'headerOptions' => [
+                            'style' => [
+                                'width' => '65px',
+                                'padding' => '8px 3px',
+                            ],
+                        ],
+                        'contentOptions' =>[
+                            'style' => [
+                                'padding' => '8px 3px',
+                            ],
+                        ],
+                        'template' => '{view}',
                     ],
                     [
                         'class' => 'yii\grid\ActionColumn',
