@@ -18,6 +18,7 @@ use wskeee\webuploader\models\Uploadfile;
 use Yii;
 use yii\console\Controller;
 use yii\db\Query;
+use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 
 /**
