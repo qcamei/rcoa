@@ -17,7 +17,7 @@ $this->title = '在线制作课程平台';
         </div>
         <div class="menu">
             <div class="container">
-                <div class="modules">
+                <div class="col-sm-6 col-xs-12 modules">
                     <a href="/mcbs/default/index">
                         <div class="classroom">
                             <div class="icon">
@@ -29,8 +29,10 @@ $this->title = '在线制作课程平台';
                             </div>
                         </div>
                     </a>
+                    <!-- 右竖线 -->
+                    <div class="line-y hidden-xs"></div>
                 </div>
-                <div class="modules">
+                <div class="col-sm-6 col-xs-12 modules">
                     <a href="javascript:;">
                         <div class="classroom">
                             <div class="icon">
