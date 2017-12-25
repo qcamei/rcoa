@@ -2,6 +2,7 @@
 
 use common\models\mconline\McbsCourse;
 use common\models\mconline\searchs\McbsActivityFileSearch;
+use common\modules\preview\controllers\DefaultController;
 use kartik\widgets\Select2;
 use mconline\modules\mcbs\assets\McbsAssets;
 use yii\data\ActiveDataProvider;
@@ -305,6 +306,45 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
+                'header' => Yii::t('app', 'Operating'),
+                'buttons' => [
+                    'view' => function ($url, $data, $key) {
+                        $file_id = $data['file_id'];
+                        $fileType = DefaultController::checkupLook($file_id);
+                        $options = [
+                            'class' => 'btn btn-sm ' . (($fileType == '10') ? ($data['is_del'] ? 'btn-danger disabled' : 'btn-danger') : 'btn-info'),
+                            'title' => ($fileType == '10') ? '该文件暂不支持预览' : Yii::t('app', 'Preview'),
+                            'aria-label' => ($fileType == '10') ? '该文件暂不支持预览' : Yii::t('app', 'Preview'),
+                            'target' => '_blank',
+                            'data-pjax' => '0',
+                        ];
+                        $buttonHtml = [
+                            'name' => !$data['is_del'] ? '<span class="fa fa-eye"></span> '.Yii::t('app', 'Preview') : '已删除',
+                            'url' => ['/preview/default/index', 'file_id'=>$data['file_id']],
+                            'options' => $options,
+                            'symbol' => '&nbsp;',
+                            'conditions' => true,
+                            'adminOptions' => true,
+                        ];
+                        return Html::a($buttonHtml['name'],$buttonHtml['url'],$buttonHtml['options']);
+                        //return ResourceHelper::a($buttonHtml['name'], $buttonHtml['url'],$buttonHtml['options'],$buttonHtml['conditions']);
+                    }
+                ],
+                'headerOptions' => [
+                    'style' => [
+                        'width' => '65px',
+                        'padding' => '8px 3px',
+                    ],
+                ],
+                'contentOptions' =>[
+                    'style' => [
+                        'padding' => '8px 3px',
+                    ],
+                ],
+                'template' => '{view}',
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
                 //'header' => Yii::t('app', 'Operating'),
                 'buttons' => [
                     'view' => function ($url, $data, $key) {
@@ -315,7 +355,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'data-pjax' => '0',
                         ];
                         $buttonHtml = [
-                            'name' => !$data['is_del'] ? '<span class="fa fa-download"></span>'.Yii::t('app', 'Download') : '已删除',
+                            'name' => !$data['is_del'] ? '<span class="fa fa-download"></span> '.Yii::t('app', 'Download') : '已删除',
                             'url' => ['course-make/download', 'activity_id'=>$data['activity_id'],'file_id'=>$data['file_id']],
                             'options' => $options,
                             'symbol' => '&nbsp;',
