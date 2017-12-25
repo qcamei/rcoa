@@ -38,6 +38,8 @@ class ScheduleController extends Controller {
         $this->clearExpireFile();
         //检查存储上限
         $this->checkMaxFileSize();
+		
+	echo 'success!';
     }
 
     /**
