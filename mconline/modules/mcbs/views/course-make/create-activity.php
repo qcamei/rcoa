@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </button>
                 <h4 class="modal-title" id="myModalLabel"><?= Html::encode($this->title) ?></h4>
             </div>
-            <div class="modal-body" style="overflow-y: auto;">
+            <div class="modal-body" style="max-height: 479px;overflow-y: auto;">
                 <?= $this->render('activity_form',[
                     'model' => $model,
                     'actiType' => $actiType,
