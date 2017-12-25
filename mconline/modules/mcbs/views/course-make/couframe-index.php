@@ -156,7 +156,9 @@ $this->params['breadcrumbs'][] = $this->title;
                                                             <div class="head cou-default cou-activity">
                                                                 <?= Html::a(Html::img([$couactivity['icon_path']],['width'=>25,'height'=>25,'class'=>'icon_path']).
                                                                     "<span class=\"type_name\">【{$couactivity['type_name']}】：</span>".
-                                                                    "<span class=\"name\">{$couactivity['name']}</span>")
+                                                                    "<span class=\"name\">{$couactivity['name']}</span>",
+                                                                    ['course-make/couactivity-view','id'=>$couactivity['id']],
+                                                                    ['target'=>'_blank'])
                                                                 ?>
                                                                 <?php if($is_show) echo Html::img(WEB_ROOT.'/filedata/image/new.gif',['class'=>'new']); ?>
                                                                 <div class="cou-icon">

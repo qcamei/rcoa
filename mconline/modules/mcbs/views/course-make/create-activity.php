@@ -63,7 +63,7 @@ $js =
             //$("#form-activity").submit(); return;
             var item = '<li id="{%id%}">'+
                 '<div class="head cou-default cou-activity">'+
-                    '<a>'+
+                    '<a href="/mcbs/course-make/couactivity-view?id={%id%}" target="_blank">'+
                         '<img src="{%icon_path%}" width="25" height="25" class="icon_path">'+
                         '<span class="type_name">【{%type_name%}】：</span>'+
                         '<span class="name">{%name%}</span>'+
