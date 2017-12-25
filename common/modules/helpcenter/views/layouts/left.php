@@ -6,7 +6,7 @@ use common\widgets\Menu;
 $menus = DefaultController::getMenu($app_id);
 
 ?>
-<aside class="main-sidebar" style="padding-top: 0px">
+<aside class="main-sidebar">
     <section class="sidebar">
         <?php
             $menuItems = [

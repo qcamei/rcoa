@@ -33,6 +33,8 @@ $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed201
         <?php $this->beginBody() ?>
         <div class="wrapper">
 
+            <?= $this->render('navbar.php');?>
+            
             <?= $this->render('left.php', $this->params);?>
             
             <div class="content-wrapper">

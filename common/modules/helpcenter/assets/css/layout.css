@@ -7,9 +7,21 @@ and open the template in the editor.
     Created on : 2017-12-14, 18:42:19
     Author     : Administrator
 */
+
+/****************** default--->index----样式 ******************/
+.help-index{
+    text-align: center;
+    color: #999999;
+    padding-top: 160px
+}
+
+.skin-blue .logo {
+    margin-top: -8px;
+}
+
 /****************** default--->view----样式 ******************/
 .post-view{
-    padding-top: 20px;
+    padding-top: 70px;
 }
 
 .post-view .post-header{
@@ -81,6 +93,19 @@ and open the template in the editor.
     border-bottom: 1px #999999 solid
 }
 
+.post-view .additional{
+    width: 100%;
+    text-align: center;
+}
+
+.post-view .page, .post-view .created_at{
+    display: inline-block
+}
+
+.post-view .page{
+    text-align: center
+}
+
 .post-view .created_at{
     float: right;
     margin-bottom: 20px;
@@ -99,3 +124,4 @@ and open the template in the editor.
 .content-wrapper .content{
     padding: 0px 15px 20px 15px;
 }
+
