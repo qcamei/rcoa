@@ -23,7 +23,7 @@ class DefaultController extends Controller {
     ];
 
     /**
-     * 
+     * 根据不同的文件格式跳转到不同的页面
      * @return mixed
      */
     public function actionIndex() {
@@ -81,8 +81,7 @@ class DefaultController extends Controller {
         $pramas = Yii::$app->request->queryParams;
         $file_id = $pramas['file_id'];
         $query = (new Query())
-                ->select(['Uploadfile.name', 'Uploadfile.path', '(Uploadfile.size / (1024 * 1024 * 1024)) AS size',
-                    'file_id', 'activity_id'])
+                ->select(['Uploadfile.name', 'Uploadfile.path', 'file_id', 'activity_id'])
                 ->from(['Uploadfile' => Uploadfile::tableName()])
                 ->leftJoin(['ActivityFile' => McbsActivityFile::tableName()], 'ActivityFile.file_id = Uploadfile.id')
                 ->where(['Uploadfile.id' => $file_id])

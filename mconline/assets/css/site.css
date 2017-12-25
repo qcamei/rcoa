@@ -67,9 +67,7 @@
 }
 
 .mconline .menu .modules {
-    width: 250px;
-    margin-left: 45px;
-    margin-right: 45px;
+    margin-left: 115px;
     position: relative;
     display: inline-block;
 }
@@ -82,10 +80,10 @@
 
 .mconline .menu .line-y {
     width: 2px;
-    height: 65px;
+    height: 45px;
     position: absolute;
-    top: 0;
-    right: -45px;
+    top: 15px;
+    right: -57.5px;
     margin: 20px 0;
     background-color: #a9b4bb;
 }
@@ -97,7 +95,7 @@
 
 .mconline .menu .modules .name {
     height: 60px;
-    margin: 10px 30px;
+    margin: 10px 0 10px 20px;
     display: inline-block;
 }
 
