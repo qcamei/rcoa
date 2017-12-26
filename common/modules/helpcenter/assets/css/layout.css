@@ -19,6 +19,10 @@ and open the template in the editor.
     margin-top: -8px;
 }
 
+.skin-blue .main-sidebar{
+    position: fixed;
+}
+
 /****************** default--->view----样式 ******************/
 .post-view{
     padding-top: 70px;
@@ -87,28 +91,34 @@ and open the template in the editor.
 }
 
 .post-view .post-content{
-    padding: 10px 60px 0 60px;
+    padding: 10px 60px 0px 60px;
     margin-bottom: 10px;
     min-height: 520px;
-    border-bottom: 1px #999999 solid
 }
 
-.post-view .additional{
+.post-view .updated_at{
     width: 100%;
-    text-align: center;
+    height: 22px;
+    margin-bottom: 10px;
+    border-bottom: 1px #999999 solid;
 }
 
-.post-view .page, .post-view .created_at{
-    display: inline-block
+.post-view .updated_at .time{
+    float: right;
 }
 
 .post-view .page{
-    text-align: center
+    width: 100%;
+    height: 22px;
+    margin-bottom: 30px;
 }
 
-.post-view .created_at{
+.post-view .page-left{
+    float: left;
+}
+
+.post-view .page-right{
     float: right;
-    margin-bottom: 20px;
 }
 
 .post-content img {

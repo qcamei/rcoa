@@ -23,8 +23,8 @@ if (Yii::$app->user->isGuest) {
     $menuItems[] = ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']];
 } else {
     $menuItems = [
-        ['label' => '在线制作课程平台', 'url' => ['/helpcenter/default/index', 'app_id' => 'app-mconline']],
-        ['label' => '课程建设工作平台', 'url' => 'javascript:;'],
+        ['label' => '课程建设', 'url' => ['/helpcenter/default/index', 'app_id' => 'app-frontend']],
+        ['label' => '课程制作', 'url' => ['/helpcenter/default/index', 'app_id' => 'app-mconline']],
     ];
 //        $menuItems[] = [
 //            'label' => 'Logout (' . Yii::$app->user->identity->username . ')',

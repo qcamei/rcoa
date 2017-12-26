@@ -256,6 +256,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ],
             [
+                'attribute' => 'sort_order',
+                'filter' => FALSE,
+                'class' => GridViewChangeSelfColumn::className(),
+                'plugOptions' => [
+                    'type' => 'input',
+                ]
+            ],
+            [
                 'attribute' => 'created_at',
                 'filter' => FALSE,
                 'headerOptions' => [

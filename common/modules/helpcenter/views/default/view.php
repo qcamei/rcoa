@@ -88,17 +88,23 @@ $this->title = Yii::t('app', '{Help}{Center}', [
             echo $content_a;
         ?>
     </div>
-<!--    <div class="additional">
-        <div class="page">
-            <span><a href="">上一篇</a></span>
-            <span>|</span>
-            <span><a href="">下一篇</a></span>
-        </div>-->
-        <div class="created_at">
-            <span>最后一次修改：</span>
+    <div class="updated_at">
+        <div class="time"><span>最后修改：</span>
             <?= date('Y-m-d', $model['updated_at']);?>
         </div>
-    <!--</div>-->
+    </div>
+    <div class="page">
+        <span class="page-left">上一篇： 
+            <a href="<?=$page['prev_article']['url']?>">
+                <?=$page['prev_article']['title']?>
+            </a>
+        </span>
+        <span class="page-right">下一篇：
+            <a href="<?=$page['next_article']['url']?>">
+                <?=$page['next_article']['title']?>
+            </a>
+        </span>
+    </div>
     <?php
         //能否评论（0不可以，1可以）
         if($model['can_comment'] == 1):        

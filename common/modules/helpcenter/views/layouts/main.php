@@ -1,6 +1,7 @@
 <?php
 
 use backend\assets\AppAsset;
+use common\models\User;
 use common\modules\helpcenter\assets\HelpCenterAssets;
 use dmstr\web\AdminLteAsset;
 use yii\helpers\Html;
@@ -8,6 +9,7 @@ use yii\web\View;
 
 /* @var $this View */
 /* @var $content string */
+/* @var $user User */
 
 if (class_exists('backend\assets\AppAsset')) {
     AppAsset::register($this);
@@ -17,6 +19,7 @@ if (class_exists('backend\assets\AppAsset')) {
 AdminLteAsset::register($this);
 
 $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
+$user = Yii::$app->user->identity;
 ?>
 
 <?php $this->beginPage() ?>
@@ -33,7 +36,7 @@ $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed201
         <?php $this->beginBody() ?>
         <div class="wrapper">
 
-            <?= $this->render('navbar.php');?>
+            <?= $this->render('navbar.php',['directoryAsset' => $directoryAsset,'user' => $user]);?>
             
             <?= $this->render('left.php', $this->params);?>
             
