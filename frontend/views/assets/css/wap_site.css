@@ -180,6 +180,7 @@ body .wrap > .content,
     padding:0px !important;
     top: 0;
     left: 7px;
+    opacity: 1;
 }
 
 .site-login .course .platform .frame .button {
