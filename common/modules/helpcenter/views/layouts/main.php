@@ -36,7 +36,11 @@ $user = Yii::$app->user->identity;
         <?php $this->beginBody() ?>
         <div class="wrapper">
 
-            <?= $this->render('navbar.php',['directoryAsset' => $directoryAsset,'user' => $user]);?>
+            <?= $this->render('navbar.php',[
+                'app_id' => $this->params,
+                'directoryAsset' => $directoryAsset,
+                'user' => $user
+            ]);?>
             
             <?= $this->render('left.php', $this->params);?>
             
