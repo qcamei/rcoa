@@ -85,3 +85,63 @@ body .wrap > .container{
     font-size: 14px;
     color: #a9b4bb;
 }
+
+/************************************登录页样式*********************************/
+.site-login .mconline {
+    width: 100%;
+    width: 100%;
+    min-height: 567px;
+    background-size: cover;
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    background-color: #ebebeb;
+}
+
+.site-login .mconline .platform {
+    width: 100%;
+    position: relative;
+    top: 120px;
+    font-size: 0px;
+}
+
+.site-login .mconline .platform .name {
+    height: auto;
+    text-align: center;
+    position: relative;
+}
+
+.site-login .mconline .platform .CHS {
+    font-size: 30px;
+    color: #58646b;
+}
+
+.site-login .mconline .platform .EN {
+    font-size: 15px;
+    color: #65727a;
+}
+
+.site-login .mconline .platform .frame {
+    width: 100%;
+    position: relative;
+    font-size: 14px;
+}
+
+.site-login .mconline .platform .frame .attribute{
+     margin-top: 21px;
+     padding-left: 10px !important;
+     padding-right: 10px !important;
+}
+
+.site-login .mconline .platform .frame .icon {
+    width:40px !important;
+    padding:0px !important;
+    top: 0;
+    left: 7px;
+    z-index: 100
+}
+
+.site-login .mconline .platform .frame .button {
+    margin-top: 55px;
+    margin-left: 35px;
+    margin-right: 35px;
+}

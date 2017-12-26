@@ -1,35 +1,80 @@
 <?php
 
-/* @var $this yii\web\View */
-/* @var $form yii\bootstrap\ActiveForm */
-/* @var $model \common\models\LoginForm */
-
-use yii\helpers\Html;
+use common\models\LoginForm;
+use mconline\assets\AppAsset;
+use mconline\assets\SiteAssets;
 use yii\bootstrap\ActiveForm;
+use yii\helpers\Html;
+use yii\web\View;
 
-$this->title = 'Login';
-$this->params['breadcrumbs'][] = $this->title;
+/* @var $this View */
+/* @var $form ActiveForm */
+/* @var $model LoginForm */
+
+$this->title = '用户登录';
+
+$root = WEB_ROOT 
+
 ?>
+
 <div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="mconline" style='background-image: url("<?= $root ?>/filedata/site/image/site_loginbg.jpg");'>
+        <div class="platform container" style='background-image: url("<?= $root ?>/filedata/site/image/site_loginboxbg.png");'>
+            <div class="logo">
+                <?= Html::img(WEB_ROOT.'/filedata/site/image/small_logo.png', ['width'=>'100%']) ?>
+            </div> 
+            <div class="name">
+                <p><span class="CHS"><?= Html::encode('在线制作课程平台') ?></span></p>
+                <span class="EN">Online Making Of Course Platform</span>
+            </div> 
+            <div class="frame">
+                <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+                
+                    <?= $form->field($model, 'username',[
+                        'options' => [
+                            'class' => 'col-xs-12 attribute',
+                        ],
+                        'template' => "<div class=\"col-xs-12 icon\"><img src=\"$root/filedata/site/image/user_name.png\"></div><div class=\"col-xs-10\" style=\"padding:0px;\">{input}</div>\n<div class=\"col-xs-10\" style=\"padding: 0px 5px;\">{error}</div>"
+                    ]); ?>
 
-    <p>Please fill out the following fields to login:</p>
-
-    <div class="row">
-        <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
-
-                <?= $form->field($model, 'username') ?>
-
-                <?= $form->field($model, 'password')->passwordInput() ?>
-
-                <?= $form->field($model, 'rememberMe')->checkbox() ?>
-
-                <div class="form-group">
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-                </div>
-
-            <?php ActiveForm::end(); ?>
+                    <?= $form->field($model, 'password', [
+                        'options' => [
+                            'class' => 'col-xs-12 attribute',
+                        ], 
+                        'template' => "<div class=\"col-xs-12 icon\"><img src=\"$root/filedata/site/image/password.png\"></div><div class=\"col-xs-10\" style=\"padding:0px;\">{input}</div>\n<div class=\"col-xs-10\" style=\"padding: 0px 5px;\">{error}</div>"
+                    ])->passwordInput() ?>
+                    <?= $form->field($model, 'rememberMe', [
+                        'options' => [
+                            'class' => 'col-xs-12',
+                        ],
+                        //'template' => "{label}\n<div class=\"col-lg-12\">{input}</div>",
+                    ])->checkbox([
+                        'template' => "<div class=\"checkbox\"><label for=\"loginform-rememberme\">{input}自动登录</label></div>"
+                    ]) ?>
+                    <div class="col-xs-9 button">
+                        <?= Html::submitButton('登录', [
+                            'name' => 'login-button', 
+                            'class' => 'btn btn-primary col-xs-12', 
+                        ]) ?>
+                    </div>
+                
+               <?php ActiveForm::end(); ?>
+            </div>
         </div>
     </div>
 </div>
+
+
+<?php
+$js = <<<JS
+   
+    /** 滚动到登录框 */
+    $('html,body').animate({scrollTop: ($(".platform").offset().top) - 100}, 200);
+JS;
+    $this->registerJs($js, View::POS_READY);
+?>
+
+<?php
+    AppAsset::register($this);
+    SiteAssets::register($this);
+?>

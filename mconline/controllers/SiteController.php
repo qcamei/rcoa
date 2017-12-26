@@ -68,10 +68,11 @@ class SiteController extends Controller
         }
 
         $model = new LoginForm();
+        $detect = new MobileDetect();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {
-            return $this->render('login', [
+            return $this->render(!$detect->isMobile() ? 'login' : 'wap_login', [
                 'model' => $model,
             ]);
         }

@@ -1,7 +1,7 @@
 <?php
 
 use common\models\LoginForm;
-use frontend\views\WapSiteAsset;
+use mconline\assets\WapSiteAsset;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 use yii\web\View;
@@ -11,17 +11,16 @@ use yii\web\View;
 /* @var $model LoginForm */
 
 $this->title = '用户登录';
-$this->params['breadcrumbs'][] = $this->title;
 
 $root = WEB_ROOT
 ?>
 
 <div class="site-login">
-    <div class="course">
+    <div class="mconline" style='background-image: url("<?= $root ?>/filedata/site/image/site_loginbg.jpg");'>
         <div class="platform container">
             <div class="name">
-                <p><span class="CHS"><?= Html::encode('课程建设工作平台') ?></span></p>
-                <span class="EN">The Platform Of Curriculum Construction</span>
+                <p><span class="CHS"><?= Html::encode('在线制作课程平台') ?></span></p>
+                <span class="EN">Online Making Of Course Platform</span>
             </div> 
             <div class="frame">
                 <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
@@ -30,14 +29,14 @@ $root = WEB_ROOT
                         'options' => [
                             'class' => 'col-xs-12 attribute',
                         ],
-                        'template' => "<div class=\"col-xs-12 icon\"><img src=\"/filedata/site/image/user_name.png\"></div><div class=\"col-xs-10\" style=\"padding:0px;\">{input}</div>\n<div class=\"col-xs-10\" style=\"padding: 0px 5px;\">{error}</div>"
+                        'template' => "<div class=\"col-xs-12 icon\"><img src=\"$root/filedata/site/image/user_name.png\"></div><div class=\"col-xs-10\" style=\"padding:0px;\">{input}</div>\n<div class=\"col-xs-10\" style=\"padding: 0px 5px;\">{error}</div>"
                     ]); ?>
 
                     <?= $form->field($model, 'password', [
                         'options' => [
                             'class' => 'col-xs-12 attribute',
                         ], 
-                        'template' => "<div class=\"col-xs-12 icon\"><img src=\"/filedata/site/image/password.png\"></div><div class=\"col-xs-10\" style=\"padding:0px;\">{input}</div>\n<div class=\"col-xs-10\" style=\"padding: 0px 5px;\">{error}</div>"
+                        'template' => "<div class=\"col-xs-12 icon\"><img src=\"$root/filedata/site/image/password.png\"></div><div class=\"col-xs-10\" style=\"padding:0px;\">{input}</div>\n<div class=\"col-xs-10\" style=\"padding: 0px 5px;\">{error}</div>"
                     ])->passwordInput() ?>
                     <?= $form->field($model, 'rememberMe', [
                         'options' => [

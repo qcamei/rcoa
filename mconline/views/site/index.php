@@ -65,11 +65,12 @@ $this->title = '在线制作课程平台';
 <?php
 $js = 
 <<<JS
-
+    var timeOut;
     $(".menu .container .modules").each(function(){
        var demo = $(this);
        var outerWidth = demo.css("margin-left");
        $(this).children("a").hover(function(){
+            clearTimeout(timeOut);
             var left = $(".line-left").position().left;
             if(left == 0){
                 $(".line-x").css({left: (demo.position().left - $(this).width() / 2) + parseInt(outerWidth.replace("px","")) - 15});
@@ -79,8 +80,10 @@ $js =
             $(".line-left").stop().animate({left: "-110px"}, 200);
             $(".line-right").stop().animate({right: "-110px"}, 200);
        },function(){
-            $(".line-left").stop().animate({left: 0}, 200);
-            $(".line-right").stop().animate({right: 0}, 200);
+            timeOut = setTimeout(function(){
+                $(".line-left").stop().animate({left: 0}, 200);
+                $(".line-right").stop().animate({right: 0}, 200);
+            }, 200);
        });
        
     });

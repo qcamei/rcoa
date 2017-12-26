@@ -128,72 +128,67 @@ body .wrap > .content,
 .subset-line{
     height: 10px;
 }
-/**
- *  登录页样式
- */
-.site-login{
-    background: url("/filedata/site/image/wap_site_loginbg.jpg");
-    background-color: #ebebeb;
+
+/*************************************登录页样式*********************************/
+.site-login .course {
+    width: 100%;
+    min-height: 567px;
+    background-image: url("/filedata/site/image/site_loginbg.jpg");
+    background-size: cover;
+    background-position: 0 0;
     background-repeat: no-repeat;
-    background-size:cover;
-    background-position: center 0;
-}
-.site-login-box{
-    height: 480px;
-    margin: 0px auto;
-    padding: 0px 15px;
-}
-.site-login-form{
-    height: 378px;
-    margin: 30px auto;
-    padding: 0px 15px;
-}
-.site-login-logo{
-    width: 100%;
-    height: 108px;
-    margin-bottom:40px;
-    text-align: center;
-}
-.site-login-logo img{
-    width: 96px;
-    height: 108px;
-}
-.site-login-logo span{
-    font-family: '方正细倩_GBK';
-    font-size: 21px;
-    color: #565656;
-    font-weight: 500;
-}
-.site-login-case{
-    width: 100%;
-}
-.site-login-attribute{
-    margin-top: 21px;
-    padding: 0px 10px !important;
-}
-.site-login-icon{
-    width:40px !important;
-    left: 7px;
-    padding:0px !important;
-    z-index: 100
-}
-.site-login-button{
-    margin-top: 10px;
-    margin-left: 20px;
-    margin-right: 20px;
-}
-@media (min-width: 320px){
-    .site-login-box{
-        padding: 0px;
-    }
-    .site-login-form{
-        padding: 0px;
-    }
+    background-color: #ebebeb;
 }
 
-/**
- * 公共部分
- */
+.site-login .course .platform {
+    width: 100%;
+    position: relative;
+    top: 120px;
+    font-size: 0px;
+}
+
+.site-login .course .platform .name {
+    height: auto;
+    text-align: center;
+    position: relative;
+}
+
+.site-login .course .platform .CHS {
+    font-size: 30px;
+    color: #58646b;
+}
+
+.site-login .course .platform .EN {
+    font-size: 12px;
+    color: #65727a;
+}
+
+.site-login .course .platform .frame {
+    width: 100%;
+    position: relative;
+    font-size: 14px;
+}
+
+.site-login .course .platform .frame .attribute {
+     margin-top: 21px;
+     padding-left: 10px !important;
+     padding-right: 10px !important;
+}
+
+.site-login .course .platform .frame .icon {
+    width:40px !important;
+    padding:0px !important;
+    top: 0;
+    left: 7px;
+}
+
+.site-login .course .platform .frame .button {
+    margin-top: 55px;
+    margin-left: 35px;
+    margin-right: 35px;
+}
+
+/*************************************公共部分**********************************/
 @font-face{
     font-family: '方正细倩_GBK';
     src: url('/filedata/site/font/fangzhengxiqian.woff') format('woff'),

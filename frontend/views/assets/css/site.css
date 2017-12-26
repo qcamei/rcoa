@@ -169,59 +169,77 @@ body .wrap > .content,
     opacity: 0;
 }
 /************************************登录页样式*********************************/
-.site-login{
+.site-login .course {
     width: 100%;
     min-height: 924px;
-    background: url("/filedata/site/image/site_loginbg.jpg");
-    background-color: #ebebeb;
-    background-repeat: no-repeat;
-    background-size:cover;
+    background-image: url("/filedata/site/image/site_loginbg.jpg");
+    background-size: cover;
     background-position: center 0;
+    background-repeat: no-repeat;
+    background-color: #ebebeb;
 }
-.site-login-box{
+
+.site-login .course .platform {
     width: 422px;
     height: 450px;
-    margin: 171px auto;
-    padding: 17px;
+    padding: 40px;
+    background-image: url("/filedata/site/image/site_loginboxbg.png");
     border-radius: 23px;
-    background: url("/filedata/site/image/site_loginboxbg.png");
+    background-size: cover;
+    background-position: center 0;
     background-repeat: no-repeat;
+    position: relative;
+    top: 170px;
+    font-size: 0px;
 }
-.site-login-form{
-    width: 390px;
-    height: 415px;
-    padding: 24px 37px 34px 40px;
-    border-radius: 23px;
+
+.site-login .course .platform .logo {
+    width: 70px;
+    height: 80px;
+    float: left;
+    display: inline-block;
 }
-.site-login-logo{
+
+.site-login .course .platform .name {
+    height: auto;
+    text-align: left;
+    margin-left: 15px;
+    float: left;
+    display: inline-block;
+    position: relative;
+    top: 10px;
+}
+
+.site-login .course .platform .CHS {
+    font-size: 30px;
+    color: #58646b;
+}
+
+.site-login .course .platform .EN {
+    font-size: 12px;
+    color: #65727a;
+}
+
+.site-login .course .platform .frame {
     width: 100%;
-    height: 78px;
+    position: relative;
+    font-size: 14px;
 }
-.site-login-logo img{
-    width: 69px;
-    height: 78px;
-}
-.site-login-logo span{
-    font-family: '方正细倩_GBK';
-    font-size: 21px;
-    color: #565656;
-    font-weight: 500;
-}
-.site-login-case{
-    width: 100%;
-}
-.site-login-attribute{
+
+.site-login .course .platform .frame .attribute{
      margin-top: 21px;
      padding-left: 10px !important;
      padding-right: 10px !important;
 }
-.site-login-icon{
+
+.site-login .course .platform .frame .icon{
     width:40px !important;
-    left: 7px;
     padding:0px !important;
+    left: 7px;
     z-index: 100
 }
-.site-login-button{
+
+.site-login .course .platform .frame .button{
     margin-top: 55px;
     margin-left: 35px;
     margin-right: 35px;

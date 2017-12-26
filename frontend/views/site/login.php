@@ -15,45 +15,47 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="site-login">
-    <div class="container">
-        <div class="site-login-box">
-            <div class="site-login-form">
-                <div class="site-login-logo">
-                    <?= Html::img(['/filedata/site/image/logo.png'])?>
-                    <!--<span>课程建设分散式众包平台</span>-->
-                </div>
-                <div class="site-login-case">
-                    <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+    <div class="course">
+        <div class="platform container">
+            <div class="logo">
+                <?= Html::img(['/filedata/site/image/small_logo.png'], ['width'=>'100%']) ?>
+            </div> 
+            <div class="name">
+                <p><span class="CHS"><?= Html::encode('课程建设工作平台') ?></span></p>
+                <span class="EN">The Platform Of Curriculum Construction</span>
+            </div> 
+            <div class="frame">
+                <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
-                        <?= $form->field($model, 'username',[
-                            'options' => [
-                                'class' => 'col-xs-12 site-login-attribute',
-                            ],
-                            'template' => "<div class=\"col-xs-12 site-login-icon\"><img src=\"/filedata/site/image/user_name.png\"></div><div class=\"col-xs-10\" style=\"padding:0px;\">{input}</div>\n<div class=\"col-xs-10\" style=\"padding: 0px 5px;\">{error}</div>"
-                        ]); ?>
+                    <?= $form->field($model, 'username',[
+                        'options' => [
+                            'class' => 'col-xs-12 attribute',
+                        ],
+                        'template' => "<div class=\"col-xs-12 icon\"><img src=\"/filedata/site/image/user_name.png\"></div><div class=\"col-xs-10\" style=\"padding:0px;\">{input}</div>\n<div class=\"col-xs-10\" style=\"padding: 0px 5px;\">{error}</div>"
+                    ]); ?>
 
-                        <?= $form->field($model, 'password', [
-                            'options' => [
-                                'class' => 'col-xs-12 site-login-attribute',
-                            ], 
-                            'template' => "<div class=\"col-xs-12 site-login-icon\"><img src=\"/filedata/site/image/password.png\"></div><div class=\"col-xs-10\" style=\"padding:0px;\">{input}</div>\n<div class=\"col-xs-10\" style=\"padding: 0px 5px;\">{error}</div>"
-                        ])->passwordInput() ?>
-                        <?= $form->field($model, 'rememberMe', [
-                            'options' => [
-                                'class' => 'col-xs-12',
-                            ],
-                            //'template' => "{label}\n<div class=\"col-lg-12\">{input}</div>",
-                        ])->checkbox([
-                            'template' => "<div class=\"checkbox\"><label for=\"loginform-rememberme\">{input}自动登录</label></div>"
+                    <?= $form->field($model, 'password', [
+                        'options' => [
+                            'class' => 'col-xs-12 attribute',
+                        ], 
+                        'template' => "<div class=\"col-xs-12 icon\"><img src=\"/filedata/site/image/password.png\"></div><div class=\"col-xs-10\" style=\"padding:0px;\">{input}</div>\n<div class=\"col-xs-10\" style=\"padding: 0px 5px;\">{error}</div>"
+                    ])->passwordInput() ?>
+                    <?= $form->field($model, 'rememberMe', [
+                        'options' => [
+                            'class' => 'col-xs-12',
+                        ],
+                        //'template' => "{label}\n<div class=\"col-lg-12\">{input}</div>",
+                    ])->checkbox([
+                        'template' => "<div class=\"checkbox\"><label for=\"loginform-rememberme\">{input}自动登录</label></div>"
+                    ]) ?>
+                    <div class="col-xs-9 button">
+                        <?= Html::submitButton('登录', [
+                            'name' => 'login-button', 
+                            'class' => 'btn btn-primary col-xs-12', 
                         ]) ?>
-                        <div class="col-xs-9 site-login-button">
-                            <?= Html::submitButton('登录', [
-                                'name' => 'login-button', 
-                                'class' => 'btn btn-primary col-xs-12', 
-                            ]) ?>
-                        </div>
-                   <?php ActiveForm::end(); ?>
-                </div>
+                    </div>
+                
+               <?php ActiveForm::end(); ?>
             </div>
         </div>
     </div>
@@ -64,7 +66,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $js = <<<JS
    
     /** 滚动到登录框 */
-    $('html,body').animate({scrollTop:($('.site-login-form').offset().top) - 140},1000);
+    $('html,body').animate({scrollTop: ($(".platform").offset().top) - 100}, 200);
 JS;
     $this->registerJs($js, View::POS_READY);
 ?>
