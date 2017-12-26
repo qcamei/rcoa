@@ -993,10 +993,12 @@ class CourseMakeController extends Controller
     public function getUploadedActivityFile($activity_id)
     {
         return (new Query())->select([
-            'ActivityFile.file_id AS id','ActivityFile.activity_id',
+            'ActivityFile.file_id AS id','ActivityFile.activity_id','ActivityFile.expire_time',
+            'User.nickname AS created_by',
             'Uploadfile.name','Uploadfile.is_del','Uploadfile.size'
             ])->from(['ActivityFile'=>McbsActivityFile::tableName()])
             ->leftJoin(['Uploadfile'=> Uploadfile::tableName()], 'Uploadfile.id = ActivityFile.file_id')
+            ->leftJoin(['User'=> User::tableName()], 'User.id = ActivityFile.created_by')
             ->where(['ActivityFile.activity_id'=>$activity_id])->all();
     }
     

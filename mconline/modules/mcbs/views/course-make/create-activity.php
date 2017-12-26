@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </button>
                 <h4 class="modal-title" id="myModalLabel"><?= Html::encode($this->title) ?></h4>
             </div>
-            <div class="modal-body" style="overflow-y: auto;">
+            <div class="modal-body" style="max-height: 479px;overflow-y: auto;">
                 <?= $this->render('activity_form',[
                     'model' => $model,
                     'actiType' => $actiType,
@@ -63,7 +63,7 @@ $js =
             //$("#form-activity").submit(); return;
             var item = '<li id="{%id%}">'+
                 '<div class="head cou-default cou-activity">'+
-                    '<a>'+
+                    '<a href="/mcbs/course-make/couactivity-view?id={%id%}" target="_blank">'+
                         '<img src="{%icon_path%}" width="25" height="25" class="icon_path">'+
                         '<span class="type_name">【{%type_name%}】：</span>'+
                         '<span class="name">{%name%}</span>'+

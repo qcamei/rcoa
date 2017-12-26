@@ -108,6 +108,55 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                     ],
                     [
+                        'label' => Yii::t('app', 'Upload By'),
+                        'format' => 'raw',
+                        'value'=> function($data){
+                            return $data['created_by'];
+                        },
+                        'headerOptions' => [
+                            'style' => [
+                                'min-width' => '100px',
+                                'padding' => '8px',
+                            ],
+                        ],
+                        'contentOptions' =>[
+                            'style' => [
+                                'padding' => '8px',
+                                 'position'=>'relative',
+                            ],
+                            'class'=>'course-name'
+                        ],
+                    ],
+                    [
+                        'label' => Yii::t(null, '{Expire}{Time}', [
+                            'Expire' => Yii::t('app', 'Expire'),
+                            'Time' => Yii::t('app', 'Time')
+                        ]),
+                        'format' => 'raw',
+                        'value'=> function($data){
+                            if($data['expire_time'] != null){
+                                if((($data['expire_time'] - time()) / 86400) <= 7){
+                                    return '<span style="color:red;">'.date('Y-m-d H:i', $data['expire_time']).'</span>';
+                                }
+                                return date('Y-m-d H:i', $data['expire_time']);
+                            }
+                            return NULL;
+                        },
+                        'headerOptions' => [
+                            'style' => [
+                                'min-width' => '100px',
+                                'padding' => '8px',
+                            ],
+                        ],
+                        'contentOptions' =>[
+                            'style' => [
+                                'padding' => '8px',
+                                 'position'=>'relative',
+                            ],
+                            'class'=>'course-name'
+                        ],
+                    ],
+                    [
                         'class' => 'yii\grid\ActionColumn',
                         'header' => Yii::t('app', 'Operating'),
                         'buttons' => [
