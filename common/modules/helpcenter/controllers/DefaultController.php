@@ -11,6 +11,7 @@ use Yii;
 use yii\db\Exception;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\widgets\Menu;
 
@@ -56,6 +57,7 @@ class DefaultController extends Controller {
             'number' => $number,                //评论数量
             'isLike' => $isLike != null,
             'isUnlike' => $isUnlike != null,
+            'page' => $this->getPage($app_id, $id),
         ]);
     }
 
@@ -247,4 +249,47 @@ class DefaultController extends Controller {
         return $postContents;
     }
     
+    /**
+     * 查询上/下篇文章
+     * @param string $app_id    应用ID
+     * @param integer $id       文章ID
+     * @return array
+     */
+    public function getPage($app_id, $id) {
+        //查询相关数据
+        $query = (new Query())
+                ->select(['Post.id', 'Post.title', 'Post.sort_order', 'category_id'])
+                ->from(['Post' => Post::tableName()])
+                ->leftJoin(['PostCategory' => PostCategory::tableName()], 'PostCategory.id = Post.category_id')
+                ->where(['PostCategory.app_id' => $app_id,'Post.is_show' => true,]);
+        $categoryQuery = clone $query;
+        //获取当前文章所在的分类ID
+        $category_id = $categoryQuery->where(['Post.id' => $id])->one()['category_id'];
+        $query->andWhere(['Post.category_id' => $category_id]);
+        
+        $sortQuery = clone $query;
+        //获取当前文章的排序索引
+        $sort_order = $sortQuery->where(['Post.id' => $id])->one()['sort_order'];
+        
+        $nextQuery = clone $query;
+        //查询上一篇文章
+        $prev_article = $query->andfilterWhere(['<', 'Post.sort_order', $sort_order])
+                ->orderBy(['Post.sort_order' => SORT_DESC])
+                ->one();
+        //查询下一篇文章
+        $next_article = $nextQuery->andfilterWhere(['>', 'Post.sort_order', $sort_order])
+                ->orderBy(['Post.sort_order' => SORT_ASC])
+                ->one();
+
+        $model['prev_article'] = [
+            'url' => !empty($prev_article) ? Url::current(['id'=>$prev_article['id']]) : 'javascript:;',
+            'title' => !empty($prev_article) ? $prev_article['title'] : '没有了',
+        ];
+        $model['next_article'] = [
+            'url' => !empty($next_article) ? Url::current(['id'=>$next_article['id']]) : 'javascript:;',
+            'title' => !empty($next_article) ? $next_article['title'] : '没有了',
+        ];
+
+        return $model;
+    }
 }

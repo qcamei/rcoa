@@ -1,63 +1,66 @@
 <?php
 
-use common\modules\helpcenter\assets\HelpCenterAssets;
-use kartik\dropdown\DropdownX;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
+use common\models\User;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
 
 /* @var $this View */
+/* @var $content string */
+/* @var $user User */
+$app_id = ArrayHelper::getValue($app_id, 'app_id')
 ?>
+
+<header class="main-header">
+    <?= Html::a('<span class="logo-mini">APP</span><span class="logo-lg">'
+            . '帮助中心' . '</span>', 'javascript:;', ['class' => 'logo'])
+    ?>
+    
+    <nav class="navbar navbar-static-top" role="navigation">
+        
+        <a href="#" class="logo-img" data-toggle="offcanvas" role="button">
+            <img src="<?= WEB_ROOT . '/filedata/site/image/icon_logo.png'?>">
+        </a>
+        <ul class="nav navbar-nav">
+            <li id="app-frontend" class="post-menu">
+                <a href="/helpcenter/default/index?app_id=app-frontend">课程建设</a>
+            </li>
+            <li id="app-mconline" class="post-menu">
+                <a href="/helpcenter/default/index?app_id=app-mconline">课程制作</a>
+            </li>
+        </ul>
+        
+        <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+                <!-- User Account: style can be found in dropdown.less -->
+                <li class="dropdown user user-menu" style="margin-right: 5px">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="<?= WEB_ROOT . $user->avatar ?>" class="user-image" alt="User Image"/>
+                        <span class="hidden-xs"><?= $user->nickname ?></span>
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="user-footer">
+                            <div>
+                                <a href="/site/info" class="glyphicon glyphicon-user">我的属性</a>
+                            </div>
+                            <div>
+                                <?= Html::a('退出', ['/site/logout'],
+                                        ['data-method' => 'post', 'class' => 'glyphicon glyphicon-log-out']
+                                )?>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
 <?php
 
-NavBar::begin([
-    'brandLabel' => Html::img(WEB_ROOT . '/filedata/site/image/icon_logo.png', ['class' => 'logo']),
-    'brandUrl' => null,
-    'options' => [
-        'class' => 'navbar-inverse navbar-fixed-top',
-    ],
-]);
-
-if (Yii::$app->user->isGuest) {
-    $menuItems[] = ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']];
-} else {
-    $menuItems = [
-        ['label' => '在线制作课程平台', 'url' => ['/helpcenter/default/index', 'app_id' => 'app-mconline']],
-        ['label' => '课程建设工作平台', 'url' => 'javascript:;'],
-    ];
-//        $menuItems[] = [
-//            'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
-//            'url' => ['/site/logout'],
-//            'options' => ['class'=>'navbar-right'],
-//            'linkOptions' => ['data-method' => 'post'],
-//        ];
-}
-
-echo Nav::widget([
-    'options' => Yii::$app->user->isGuest ? ['class' => 'navbar-nav navbar-right'] : ['class' => 'navbar-nav navbar-left', 'style' => 'width:75%'],
-    'items' => $menuItems,
-]);
-if (!Yii::$app->user->isGuest) {
-    echo "<ul class=\"navbar-nav navbar-right nav\">" .
-    "<li class=\"dropdown\">" .
-    Html::a(Html::img(WEB_ROOT . Yii::$app->user->identity->avatar, ['width' => '25', 'height' => '25',
-                'style' => 'border: 1px solid #ccc;margin-top:-7px; margin-right:5px;',
-            ]) . Yii::$app->user->identity->nickname . "<b class=\"caret\"></b>", 'javascript:;', [
-        'class' => 'dropdown-toggle',
-        'data-toggle' => 'dropdown',
-        'aria-expanded' => 'false']) . DropdownX::widget([
-        'options' => ['class' => 'dropdown-menu'], // for a right aligned dropdown menu
-        'items' => [
-            ['label' => '我的属性', 'url' => ['/site/info'], 'linkOptions' => ['class' => 'glyphicon glyphicon-user', 'style' => 'padding-left:5px;']],
-            ['label' => Yii::t('app', 'Login Out'), 'url' => ['/site/logout'], 'linkOptions' => ['data-method' => 'post', 'class' => 'glyphicon glyphicon-log-out', 'style' => 'padding-left:5px;']],
-        ],
-    ]) .
-    "</li>" .
-    "</ul>";
-}
-
-NavBar::end();
+$js = 
+<<<JS
+    $("li.post-menu[id=$app_id]").addClass("active");
+JS;
+    $this->registerJs($js,  View::POS_READY);
 ?>
-<?php
-    HelpCenterAssets::register($this);
