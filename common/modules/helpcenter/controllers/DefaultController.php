@@ -270,12 +270,12 @@ class DefaultController extends Controller {
         $sortQuery = clone $query;
         //获取当前文章的排序索引
         $sort_order = $sortQuery->where(['Post.id' => $id])->one()['sort_order'];
-
+        
+        $nextQuery = clone $query;
         //查询上一篇文章
         $prev_article = $query->andfilterWhere(['<', 'Post.sort_order', $sort_order])
                 ->orderBy(['Post.sort_order' => SORT_DESC])
                 ->one();
-        $nextQuery = clone $query;
         //查询下一篇文章
         $next_article = $nextQuery->andfilterWhere(['>', 'Post.sort_order', $sort_order])
                 ->orderBy(['Post.sort_order' => SORT_ASC])
