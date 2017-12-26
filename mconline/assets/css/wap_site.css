@@ -89,8 +89,7 @@ body .wrap > .container{
 /************************************登录页样式*********************************/
 .site-login .mconline {
     width: 100%;
-    width: 100%;
-    min-height: 567px;
+    min-height: 557px;
     background-size: cover;
     background-position: 0 0;
     background-repeat: no-repeat;
