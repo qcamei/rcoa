@@ -181,7 +181,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'format' => 'raw',
                 'value' => function($data) {
-                    return Html::a('查看', $data['type'] == 1 ? Url::to(['view', 'id' => $data['id']]) :
+                    return Html::a('查看', true ? Url::to(['view2', 'id' => $data['id']]) :
                             Url::to(['view-space', 'id' => $data['id']]), [
                                 'class' => 'btn btn-default btn-sm',
                     ]);
