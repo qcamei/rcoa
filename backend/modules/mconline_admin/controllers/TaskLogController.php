@@ -45,6 +45,10 @@ class TaskLogController extends Controller {
                     'dataProvider' => $dataProvider,
         ]);
     }
+    
+    public function actionView2($id){
+        return $this->render('view2', ['model' => ScheduledTaskLog::findOne($id)]);
+    }
 
     /**
      * Displays a single ScheduledTaskLog model.
@@ -52,7 +56,7 @@ class TaskLogController extends Controller {
      * @return mixed
      */
     public function actionView($id) {
-
+        
         return $this->render('view', 
                 $this->searchFileCheck($id)
         );
