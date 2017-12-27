@@ -7,6 +7,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\Html;
 
 /**
  * This is the model class for table "{{%post}}".
@@ -60,10 +61,15 @@ class Post extends ActiveRecord
     
     public function beforeSave($insert) {
         if(parent::beforeSave($insert)){
-            //$this->content = html_e
+            $this->content = Html::encode($this->content);
             return true;
         }
         return false;
+    }
+    
+    public function afterFind() {
+        $this->content = Html::decode($this->content);
+        parent::afterFind();
     }
     
     /**
