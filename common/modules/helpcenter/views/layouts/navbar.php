@@ -21,15 +21,16 @@ $app_id = ArrayHelper::getValue($app_id, 'app_id')
         <a href="#" class="logo-img" data-toggle="offcanvas" role="button">
             <img src="<?= WEB_ROOT . '/filedata/site/image/icon_logo.png'?>">
         </a>
-        <ul class="nav navbar-nav">
-            <li id="app-frontend" class="post-menu">
-                <a href="/helpcenter/default/index?app_id=app-frontend">课程建设</a>
-            </li>
-            <li id="app-mconline" class="post-menu">
-                <a href="/helpcenter/default/index?app_id=app-mconline">课程制作</a>
-            </li>
-        </ul>
-        
+        <div class="navbar-custom-menu" style="float: left">
+            <ul class="nav navbar-nav">
+                <li id="app-frontend" class="post-menu">
+                    <a href="/helpcenter/default/index?app_id=app-frontend">课程建设</a>
+                </li>
+                <li id="app-mconline" class="post-menu">
+                    <a href="/helpcenter/default/index?app_id=app-mconline">课程制作</a>
+                </li>
+            </ul>
+        </div>
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
                 <!-- User Account: style can be found in dropdown.less -->
