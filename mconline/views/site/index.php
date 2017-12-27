@@ -39,7 +39,7 @@ $this->title = '在线制作课程平台';
                     <div class="line-y"></div>
                 </div>
                 <div class="modules">
-                    <a href="javascript:;">
+                    <a href="/mcqj/default/index">
                         <div class="classroom">
                             <div class="icon">
                                 <?= Html::img(WEB_ROOT.'/filedata/site/image/icon_2-2.png', ['width'=>'67px;']) ?>
