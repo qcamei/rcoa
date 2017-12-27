@@ -47,6 +47,9 @@ and open the template in the editor.
     margin-right: 5px;
 }
 
+.active{
+    background-color: #222d32;
+}
 /****************** default--->index----样式 ******************/
 .help-index{
     text-align: center;
