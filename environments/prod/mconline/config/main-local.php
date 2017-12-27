@@ -11,6 +11,9 @@ $config = [
         'mcbs' => [
             'class' => 'mconline\modules\mcbs\Module',
         ],
+        'mcqj' => [
+            'class' => 'mconline\modules\mcqj\Module',
+        ],
         'helpcenter' => [
             'class' => 'common\modules\helpcenter\Module',
         ]
@@ -18,7 +21,7 @@ $config = [
     'as access' => [
         'class' => 'wskeee\rbac\components\AccessControl',
         'allowActions' => [
-            'mcbs/*',
+            'mcqj/*',
             'helpcenter/*',
             // The actions listed here will be allowed to everyone including guests.
             // So, 'admin/*' should not appear here in the production, of course.
