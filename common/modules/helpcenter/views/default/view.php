@@ -72,7 +72,7 @@ $this->title = Yii::t('app', '{Help}{Center}', [
     </div>
     <div class="post-content">
         <?php
-            $content = $model['content'];
+            $content = Html::decode($model['content']);
             //设置img中src的前缀(常量-后台网址)
             $imgPrefix = WEB_ADMIN_ROOT;
             //设置a中href的前缀(常量-在线制作课程平台网址)
