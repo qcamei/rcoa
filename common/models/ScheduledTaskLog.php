@@ -56,6 +56,10 @@ class ScheduledTaskLog extends ActiveRecord
     public function behaviors() {
         return [TimestampBehavior::className()];
     }
+    
+    public function afterFind() {
+        $this->feedback = json_decode($this->feedback, true);
+    }
 
     /**
      * @inheritdoc
