@@ -8,6 +8,7 @@ use kartik\dropdown\DropdownX;
 use kartik\widgets\AlertBlock;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\Breadcrumbs;
@@ -46,8 +47,8 @@ AppAsset::register($this);
     } else {
         $menuItems = [
             ['label' => '首页', 'url' => ['/site/index']],
-            ['label' => '板书课堂', 'url' => ['/mcbs/default/index']],
-            ['label' => '情景课堂', 'url' => ['/mcqj/default/index']],
+            ['label' => '板书课堂', 'url' => ['/mcbs/default']],
+            ['label' => '情景课堂', 'url' => ['/mcqj/default']],
             [
                 'label' => '帮助中心',
                 'url' => ['/helpcenter/default/index', 'app_id'=> 'app-mconline'],
@@ -61,10 +62,33 @@ AppAsset::register($this);
 //            'linkOptions' => ['data-method' => 'post'],
 //        ];
     }
+    $moduleId = Yii::$app->controller->module->id;   //模块ID
+    if($moduleId == 'app-mconline')
+    {
+        //站点经过首页或登录，直接获取当前路由
+        $route = Yii::$app->controller->getRoute();
+    }else
+    {
+        $urls = [];
+        $vals = [];
+        $menuUrls = ArrayHelper::getColumn($menuItems, 'url');
+        foreach ($menuUrls as $url){
+            $urls[] = array_filter(explode('/', $url[0]));
+        }
+        foreach($urls as $val){
+            $vals[$val[1]] = implode('/', $val);
+        }
+        try{
+            $route = substr($vals[$moduleId], 0);
+        } catch (Exception $ex) {
+             $route = Yii::$app->controller->getRoute();    
+        }
+    }
     
     echo Nav::widget([
         'options' => Yii::$app->user->isGuest ? ['class' =>'navbar-nav navbar-right'] : ['class' => 'navbar-nav navbar-left'],
         'items' => $menuItems,
+        'route' => $route,
     ]);
     if(!Yii::$app->user->isGuest){
         echo "<ul class=\"navbar-nav navbar-right nav\">".
