@@ -196,10 +196,10 @@ class ScheduleController extends Controller {
              * 3、检查是否超出设定的警告值
              */
             $feedback = [
-                'current_value' => \Yii::$app->formatter->asShortSize($all_size),
-                'warning_value' => \Yii::$app->formatter->asShortSize((double) $configs['max_filesize_warning']),
-                'max_value' => \Yii::$app->formatter->asShortSize((double) $configs['max_filesize_limit']),
-                'remain_value' => \Yii::$app->formatter->asShortSize((double) $configs['max_filesize_limit'] - $all_size),
+                'current_value' => $all_size,
+                'warning_value' => (double) $configs['max_filesize_warning'],
+                'max_value' => (double) $configs['max_filesize_limit'],
+                'remain_value' => (double) $configs['max_filesize_limit'] - $all_size,
                 'des' => '无',
             ];
             if ($all_size >= (double) $configs['max_filesize_warning']) {

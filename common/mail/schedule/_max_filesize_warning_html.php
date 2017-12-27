@@ -21,12 +21,12 @@ use yii\helpers\Html;
 ?>
 <div class="gray">请注意！文件空间已经超出警戒线，请及时处理！</div>
     
-<div class="normal">实际占用：<?= Html::encode($current_value) ?></div>
+<div class="normal">实际占用：<?= Html::encode(Yii::$app->formatter->asShortSize($current_value)) ?></div>
 
-<div class="normal">警戒设置：<?= Html::encode($warning_value) ?></div>
+<div class="normal">警戒设置：<?= Html::encode(Yii::$app->formatter->asShortSize($warning_value)) ?></div>
 
-<div class="normal">上限设置：<?= Html::encode($max_value) ?></div>
+<div class="normal">上限设置：<?= Html::encode(Yii::$app->formatter->asShortSize($max_value)) ?></div>
 
-<div class="highlight">剩余空间：<?= Html::encode($remain_value) ?></div>
+<div class="highlight">剩余空间：<?= Html::encode(Yii::$app->formatter->asShortSize($remain_value)) ?></div>
 
 <div class="normal">备注：<?= Html::encode($des) ?></div>
