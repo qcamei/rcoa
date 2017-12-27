@@ -15,47 +15,63 @@ $this->title = Yii::t('app', '【{File}{Expire}{Check}】', [
             'Expire' => Yii::t('app', 'Expire'),
             'Check' => Yii::t('app', 'Check'),
         ]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('null', '{Daily}{Task}{Log}{Administration}', [
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', '{Daily}{Task}{Log}{Administration}', [
         'Daily' => Yii::t('app', 'Daily'),
         'Task' => Yii::t('app', 'Task'),
         'Log' => Yii::t('app', 'Log'),
         'Administration' => Yii::t('app', 'Administration'),
     ]), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 
 <?php
 if($model->result == 1){
     $detailAttributes = [
         [
-            'label' => '文件总数',
+            'label' => Yii::t('app', '{File}{Total}',[
+                'File' => Yii::t('app', 'File'),
+                'Total' => Yii::t('app', 'Total'),
+            ]),
             'format' => 'raw',
             'value' => '<span style="color:green">' . $model->feedback['success_num']. '成功' . '</span>' .
             ' / ' . '<span style="color:red">' . $model->feedback['fail_num'] . '失败' . '</span>' ,
         ],
-        "feedback.all_size:shortSize:删除总数",
         [
-            'label' => '标记结果',
+            'label' => Yii::t('app', '{Delete}{Total}',[
+                'Delete' => Yii::t('app', 'Delete'),
+                'Total' => Yii::t('app', 'Total'),
+            ]),
+            'value' => Yii::$app->formatter->asShortSize($model->feedback['all_size']),
+        ],
+        [
+            'label' => Yii::t('app', '{Mark}{Feedback}',[
+                'Mark' => Yii::t('app', 'Mark'),
+                'Feedback' => Yii::t('app', 'Feedback'),
+            ]),
             'format' => 'raw',
             'value' => $model->feedback['mark_del_result'] ? '<span class="fa fa-check" style="color:green">成功</span>' :
                         '<span class="fa fa-times" style="color:red">失败</span>',
         ],
         [
-            'label' => '标记反馈',
+            'label' => Yii::t('app', '{Mark}{Result}',[
+                'Mark' => Yii::t('app', 'Mark'),
+                'Result' => Yii::t('app', 'Result'),
+            ]),
             'format' => 'raw',
-            'value' => $model->feedback['mark_del_result'] ? '无' : '<span style="color:red">' . $model['mark_del_mes'] . '</span',
+            'value' => $model->feedback['mark_del_result'] ? '无' : '<span style="color:red">' . $model->feedback['mark_del_mes'] . '</span',
         ],
     ];
 }else{
     $detailAttributes = [
         [
-            'label' => '结果',
+            'label' => Yii::t('app', 'Result'),
             'format' => 'raw',
             'value' => $model->result ? '<span class="fa fa-check" style="color:green">成功</span>' :
                         '<span class="fa fa-times" style="color:red">失败</span>',
         ],
         [
-            'label' => '备注',
+            'label' => Yii::t('app', 'Remark'),
             'format' => 'raw',
             'value' => '<span style="color:red">' . $model->feedback . '</span>' ,
         ],
@@ -86,7 +102,7 @@ if($model->result == 1){
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
                     [
-                        'label' => Yii::t(null, '{File}{ID}',[
+                        'label' => Yii::t('app', '{File}{ID}',[
                             'File' => Yii::t('app', 'File'),
                             'ID' => Yii::t('app', 'ID'),
                         ]),
@@ -108,7 +124,7 @@ if($model->result == 1){
                         ],
                     ],
                     [
-                        'label' => Yii::t(null, '{File}{Name}',[
+                        'label' => Yii::t('app', '{File}{Name}',[
                             'File' => Yii::t('app', 'File'),
                             'Name' => Yii::t('app', 'Name'),
                         ]),
@@ -151,7 +167,7 @@ if($model->result == 1){
                     [
                         'label' => Yii::t('app', 'Size'),
                         'value'=> function($data){
-                            return (round($data['file_size'] / (1024 * 1024), 2) . 'MB');
+                            return (Yii::$app->formatter->asShortSize($data['file_size']));
                         },
                         'headerOptions' => [
                             'style' => [

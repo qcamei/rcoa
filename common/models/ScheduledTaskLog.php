@@ -58,7 +58,11 @@ class ScheduledTaskLog extends ActiveRecord
     }
     
     public function afterFind() {
-        $this->feedback = json_decode($this->feedback, true);
+        if($this->result){
+            $this->feedback = json_decode($this->feedback, true);
+        }else{
+            $this->feedback = $this->feedback;
+        }
     }
 
     /**

@@ -15,7 +15,7 @@ use yii\web\View;
 /* @var $searchModel ScheduledTaskLogSearch */
 /* @var $dataProvider ActiveDataProvider */
 
-$this->title = Yii::t('null', '{Daily}{Task}{Log}{Administration}', [
+$this->title = Yii::t('app', '{Daily}{Task}{Log}{Administration}', [
             'Daily' => Yii::t('app', 'Daily'),
             'Task' => Yii::t('app', 'Task'),
             'Log' => Yii::t('app', 'Log'),
@@ -50,7 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //'type',
             [
                 'attribute' => 'type',
-                'label' => Yii::t(null, '{Task}{Type}',[
+                'label' => Yii::t('app', '{Task}{Type}',[
                     'Task' => Yii::t('app', 'Task'),
                     'Type' => Yii::t('app', 'Type'),
                 ]),
@@ -152,7 +152,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //'feedback:ntext',
             [
                 'attribute' => 'feedback',
-                'label' => Yii::t(null, '{Feedback}{Info}',[
+                'label' => Yii::t('app', '{Feedback}{Info}',[
                     'Feedback' => Yii::t('app', 'Feedback'),
                     'Info' => Yii::t('app', 'Info'),
                 ]),
@@ -181,8 +181,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'format' => 'raw',
                 'value' => function($data) {
-                    return Html::a('查看', true ? Url::to(['view2', 'id' => $data['id']]) :
-                            Url::to(['view-space', 'id' => $data['id']]), [
+                    return Html::a(Yii::t('app', 'View'), Url::to(['view', 'id' => $data['id']]), [
                                 'class' => 'btn btn-default btn-sm',
                     ]);
                 },
