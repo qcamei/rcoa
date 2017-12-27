@@ -63,7 +63,7 @@ AppAsset::register($this);
     }
     
     echo Nav::widget([
-        'options' => Yii::$app->user->isGuest ? ['class' =>'navbar-nav navbar-right'] : ['class' => 'navbar-nav navbar-left','style'=>'width:75%'],
+        'options' => Yii::$app->user->isGuest ? ['class' =>'navbar-nav navbar-right'] : ['class' => 'navbar-nav navbar-left'],
         'items' => $menuItems,
     ]);
     if(!Yii::$app->user->isGuest){
