@@ -136,6 +136,7 @@ body .wrap > .container{
     padding:0px !important;
     top: 0;
     left: 7px;
+    z-index: 100;
 }
 
 .site-login .mconline .platform .frame .button {

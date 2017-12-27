@@ -80,12 +80,12 @@ $this->title = Yii::t('app', '{Help}{Center}', [
             //用正则查找内容中的所有img标签的规则
             $imgRule = "/<[img|IMG].*?src=[\'|\"](.*?(?:[\.jpg|\.jpeg|\.png|\.gif|\.bmp]))[\'|\"].*?[\/]?>/";
             //用正则查找内容中的所有a标签的规则
-            $aRule = "/<[a|A].*?href=[\'|\"](\S+)[\'|\"]>/";
+            //$aRule = "/<[a|A].*?href=[\'|\"](\S+)[\'|\"]>/";
             //批量给img标签中src增加前缀
             $content_img = preg_replace($imgRule, '<img src="'.$imgPrefix.'${1}" style="max-width:100%">', $content);
             //批量给a标签中href增加前缀
-            $content_a = preg_replace($aRule, '<a href="'.$aPrefix.'${1}" >', $content_img);
-            echo $content_a;
+            //$content_a = preg_replace($aRule, '<a href="'.$aPrefix.'"${1}">', $content_img);
+            echo $content_img;
         ?>
     </div>
     <div class="updated_at">

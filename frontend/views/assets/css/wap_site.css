@@ -181,6 +181,7 @@ body .wrap > .content,
     top: 0;
     left: 7px;
     opacity: 1;
+    z-index: 100;
 }
 
 .site-login .course .platform .frame .button {
