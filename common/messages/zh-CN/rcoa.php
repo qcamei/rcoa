@@ -215,6 +215,12 @@ return [
     'Reason' => '原因',
     'Last' => '最后',
     'Revise' => '修改',
+    'Upper' => '上限',
+    'Actual' => '实际',
+    'Occupy' => '占用',
+    'Warning' => '警戒',
+    'Surplus' => '剩余',
+    'Total' => '总数',
     
     //帮助中心后台
     'Parent' => '父级',

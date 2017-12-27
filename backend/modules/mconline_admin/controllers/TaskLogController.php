@@ -5,10 +5,7 @@ namespace backend\modules\mconline_admin\controllers;
 use common\models\ScheduledTaskLog;
 use common\models\searchs\ScheduledTaskLogSearch;
 use Yii;
-use yii\data\ArrayDataProvider;
-use yii\db\Query;
 use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -45,10 +42,6 @@ class TaskLogController extends Controller {
                     'dataProvider' => $dataProvider,
         ]);
     }
-    
-    public function actionView2($id){
-        return $this->render('view2', ['model' => ScheduledTaskLog::findOne($id)]);
-    }
 
     /**
      * Displays a single ScheduledTaskLog model.
@@ -56,21 +49,10 @@ class TaskLogController extends Controller {
      * @return mixed
      */
     public function actionView($id) {
-        
-        return $this->render('view', 
-                $this->searchFileCheck($id)
-        );
-    }
+        $model = ScheduledTaskLog::findOne($id);
 
-    /**
-     * Displays a single ScheduledTaskLog model.
-     * @param string $id
-     * @return mixed
-     */
-    public function actionViewSpace($id) {
-
-        return $this->render('view-space', [
-                    'model' => $this->searchSpaceCheck($id),
+        return $this->render("_log_" . $model->type . "_view", [
+                    'model' => $model
         ]);
     }
 
@@ -134,50 +116,6 @@ class TaskLogController extends Controller {
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
-    }
-
-    /**
-     * 文件到期检查
-     * @param int $id
-     * @return array
-     */
-    public function searchFileCheck($id) {
-        $query = (new Query())
-                ->select(['feedback', 'result'])
-                ->from(['ScheduledTaskLog' => ScheduledTaskLog::tableName()])
-                ->where(['type' => 1, 'id' => $id])
-                ->one();
-        if($query['result']){
-            $feedback = json_decode($query['feedback'], true);
-        }else{
-            $feedback = $query['feedback'];
-        }
-        $dataProvider = new ArrayDataProvider([
-            'allModels' => ArrayHelper::getValue($feedback, 'file_results'),
-        ]);
-        return [
-            'model' => $feedback,
-            'result' => $query['result'],
-            'dataProvider' => $dataProvider
-        ];
-    }
-
-    /**
-     * 空间上限检查
-     * @param int $id
-     * @return array
-     */
-    public function searchSpaceCheck($id) {
-        $query = (new Query())
-                ->select(['feedback', 'result'])
-                ->from(['ScheduledTaskLog' => ScheduledTaskLog::tableName()])
-                ->where(['type' => 2, 'id' => $id])
-                ->one();
-
-        return [
-            'result' => $query['result'],
-            'feedback' => $query['result'] == 1 ? json_decode($query['feedback'], true) : $query['feedback'],
-        ];
     }
 
 }

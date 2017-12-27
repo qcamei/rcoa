@@ -18,7 +18,6 @@ if (class_exists('backend\assets\AppAsset')) {
 }
 AdminLteAsset::register($this);
 
-$directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
 $user = Yii::$app->user->identity;
 ?>
 
@@ -38,7 +37,6 @@ $user = Yii::$app->user->identity;
 
             <?= $this->render('navbar.php',[
                 'app_id' => $this->params,
-                'directoryAsset' => $directoryAsset,
                 'user' => $user
             ]);?>
             
