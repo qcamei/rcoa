@@ -58,6 +58,14 @@ class Post extends ActiveRecord
         ];
     }
     
+    public function beforeSave($insert) {
+        if(parent::beforeSave($insert)){
+            //$this->content = html_e
+            return true;
+        }
+        return false;
+    }
+    
     /**
      * @inheritdoc
      */
