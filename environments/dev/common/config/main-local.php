@@ -7,6 +7,10 @@ return [
             'dsn' => 'mysql:host=172.16.163.111;dbname=ccoa',
             'username' => 'wskeee',
             'password' => '1234',
+            //测试机
+            //'dsn' => 'mysql:host=172.16.146.83;dbname=ccoa_tt',
+            //'username' => 'ccoa_tt',
+            //'password' => 'ccoa1234',
             'charset' => 'utf8',
             'enableSchemaCache' => true,
             'tablePrefix' => 'ccoa_'   //加入前缀名称fc_
