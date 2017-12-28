@@ -181,7 +181,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
         <div id="help-man" class="col-xs-12 frame-table frame-right-table">
-            
+            <center>加载中...</center>
         </div>
     </div>
     
@@ -199,7 +199,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
         <div id="cou-frame" class="col-xs-12 frame-table">
-           
+            <div style="width: 100%;min-height: 340px;"><center>加载中...</center></div>
         </div>
     </div>
     
@@ -209,7 +209,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <span><?= Yii::t('app', 'Action Log') ?></span>
         </div>
         <div id="action-log" class="col-xs-12 frame-table course-make-actlog">
-           
+            <div style="width: 100%;min-height: 340px;"><center>加载中...</center></div>
         </div>
     </div>
     
