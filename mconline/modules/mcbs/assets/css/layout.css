@@ -41,12 +41,14 @@
 .left-nav .navigation>.active>a,
 .left-nav .navigation>li>a:hover {
     color: #666666;
+    font-weight: 700;
     text-decoration: none;
 }
 
 .left-nav .navigation>.active>a,
 .left-nav .navigation>li>a:focus {
     color: #666666;
+    font-weight: 700;
     text-decoration: none;
 }
 
@@ -62,7 +64,7 @@
 }
 
 .footer-nav .fa {
-    width: 50px;
+    width: 57px;
     height: 50px;
     line-height: 56px;
     float: left;

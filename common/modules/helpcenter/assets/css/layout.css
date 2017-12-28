@@ -30,7 +30,21 @@ and open the template in the editor.
 }
 
 .skin-blue .main-header .navbar{
-    background-color: #333 !important;
+    background-color: #222 !important;
+}
+
+.skin-blue .main-header .navbar .nav>li>a{
+    color: #9d9d9d !important;
+}
+
+.skin-blue .main-header .navbar .nav>li>a:hover,
+.skin-blue .main-header .navbar .nav .active a
+{
+    color: #fff !important;
+}
+
+.nav .active{
+    background-color: #080808;
 }
 
 .skin-blue .main-header .post-menu{
@@ -47,8 +61,12 @@ and open the template in the editor.
     margin-right: 5px;
 }
 
-.active{
-    background-color: #222d32;
+.user-footer a{
+    color: #555555 !important;
+}
+
+.user-footer a:hover{
+    color: #000000 !important;
 }
 /****************** default--->index----样式 ******************/
 .help-index{
