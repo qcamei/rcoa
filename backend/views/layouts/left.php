@@ -92,6 +92,14 @@ use common\widgets\Menu;
                         ],
                     ],
                     [
+                        'label' => '情景预约',
+                        'icon' => 'bars',
+                        'url' => '#',
+                        'items' => [
+                            ['label' => '场地列表', 'icon' => 'circle-o', 'url' => ['/scene_admin/site']],
+                        ],
+                    ],
+                    [
                         'label' => '拍摄模块',
                         'icon' => 'bars',
                         'url' => '#',

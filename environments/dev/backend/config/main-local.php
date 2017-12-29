@@ -70,6 +70,9 @@ $config = [
         'helpcenter_admin' => [
             'class' => 'backend\modules\helpcenter_admin\Module',
         ],
+        'scene_admin' => [
+            'class' => 'backend\modules\scene_admin\Module',
+        ],
     ],
     'as access' => [
         'allowActions' => [
