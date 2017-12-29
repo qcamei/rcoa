@@ -110,6 +110,7 @@ return [
             'site/*',
             'gii/*',
             'debug/*',
+            'datecontrol/*',
             'webuploader/*',
             'preview/*',
         // The actions listed here will be allowed to everyone including guests.
