@@ -1,0 +1,12 @@
+/* 
+    模块的样式
+    例如：.default-index .样式名 {
+            样式...
+        }
+*/
+
+body .wrap > .container {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}

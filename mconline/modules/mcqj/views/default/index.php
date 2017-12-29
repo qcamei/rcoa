@@ -1,5 +1,7 @@
-<?php 
-    use yii\helpers\Html;
+<?php
+
+use mconline\modules\mcqj\assets\McqjAssets;
+use yii\helpers\Html;
     
     $this->title = Yii::t(null, '{Mcqj}{Courses}', [
         'Mcqj' => Yii::t('app', '情景'),
@@ -8,5 +10,10 @@
 ?>
 
 <div class="mcjq-default-index">
-    <h1><?= Html::encode('建设中...') ?></h1>
+    <?= Html::img(WEB_ROOT.'/filedata/site/image/404.jpg', ['width' => '100%']) ?>
 </div>
+
+
+<?php
+    McqjAssets::register($this);
+?>
