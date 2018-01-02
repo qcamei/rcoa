@@ -21,7 +21,6 @@ class ShootBookdetailListWeekTd extends ShootBookdetailListTd{
         if(isset($this->contentOptions["rowspan"]))
         {
             $rowspan = $this->contentOptions["rowspan"];
-            var_dump($rowspan);exit;
             if($index%$rowspan == 0)
                 return parent::renderDataCell($model, $key, $index);
             else
