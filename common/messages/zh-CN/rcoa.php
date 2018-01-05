@@ -79,6 +79,15 @@ return [
     'Message' => '留言',
     'Backup' => '备份',
     'Database' => '数据库',
+    'Is Publish' => '是否发布',
+    
+    //假日
+    'Holiday' => '假日',
+    'Holiday Year' => '所属年份',
+    'Holiday Date' => '日期',
+    'Is Lunar' => '农历',
+    'Holiday Year Placeholder' => '重复节日年份留空',
+    'Holiday Clear Cache' => '清理假日缓存',
     
     
     //拍摄预约-公共部分
