@@ -47,6 +47,7 @@ use common\widgets\Menu;
                         'items' => [
                             ['label' => '模块管理', 'icon' => 'circle-o', 'url' => ['/system_admin/default'],],
                             ['label' => '配置管理', 'icon' => 'circle-o', 'url' => ['/system_admin/config'],],
+                            ['label' => '假日管理', 'icon' => 'circle-o', 'url' => ['/system_admin/holiday'],],
                         ],
                     ],
                     [
