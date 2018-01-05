@@ -12,6 +12,9 @@ return [
     'Item Type ID' => '行业',
     'Item ID' => '层次/类型',
     'Item Child ID' => '专业/工种',
+    'Business ID' => '行业',
+    'Level ID' => '层次/类型',
+    'Profession ID' => '专业/工种',
     'Course ID' => '课程名称',
     'Y' => '是',
     'N' => '否',
@@ -79,6 +82,10 @@ return [
     'Message' => '留言',
     'Backup' => '备份',
     'Database' => '数据库',
+    'Teacher' => '老师',
+    'Booker' => '预约人',
+    'Contacter' => '接洽人',
+    'Shoot Man' => '摄影师',
     'Is Publish' => '是否发布',
     
     //假日

@@ -1,5 +1,5 @@
 <?php
-namespace frontend\modules\scene;
+namespace frontend\modules\scene\assets;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
