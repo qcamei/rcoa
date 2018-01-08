@@ -59,15 +59,13 @@ use yii\widgets\ActiveForm;
             'offText' => Yii::t('app', 'N'),
         ]
     ]); ?>
-    
-    <span class="team-leader" style="font-weight:bold;padding-bottom:-10px">编辑-文章内容</span>
-    
+        
     <?= $form->field($model, 'content')->textarea([
             'id' => 'container', 
             'type' => 'text/plain', 
             'style' => 'width:100%; height:400px;',
             'placeholder' => '文章内容...'
-    ])->label('') ?>
+    ]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

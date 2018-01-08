@@ -2,10 +2,11 @@
 
 namespace common\models\scene\searchs;
 
-use Yii;
+use common\models\scene\SceneSite;
+use common\models\User;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\scene\SceneSite;
+use yii\db\Query;
 
 /**
  * SceneSiteSearch represents the model behind the search form about `common\models\scene\SceneSite`.
@@ -42,12 +43,16 @@ class SceneSiteSearch extends SceneSite
      */
     public function search($params)
     {
-        $query = SceneSite::find();
+        $query = (new Query())
+                ->select(['Site.id','Site.op_type','Site.area','Site.name','Site.manager_id','Site.content_type',
+                    'Site.is_publish','Site.sort_order','User.nickname AS created_by'])
+                ->from(['Site' => SceneSite::tableName()]);
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'key' => 'id',
         ]);
 
         $this->load($params);
@@ -58,6 +63,9 @@ class SceneSiteSearch extends SceneSite
             return $dataProvider;
         }
 
+        //关联查询管理员
+        $query->leftJoin(['User' => User::tableName()], 'User.id = Site.manager_id');
+                        
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,

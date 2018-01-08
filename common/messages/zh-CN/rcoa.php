@@ -243,5 +243,19 @@ return [
     
     //
     'Scene' => '场地',
+    'Nature' => '性质',
+    'Area' => '区域',
+    'Manager' => '管理员',
+    'Address' => '详细地址',
+    'Price' => '价格',
+    'Contact' => '联系人',
+    'Picture' => '主图片',
+    'Location' => '位置',
+    'Introduction' => '简介',
+    'Country' => '国家',
+    'Province' => '省',
+    'City' => '市',
+    'District' => '区/县',
+    'Twon' => '镇/街道',
     
 ];

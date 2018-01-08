@@ -2,10 +2,15 @@
 
 namespace common\models\scene;
 
+use common\models\Region;
+use common\models\User;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\db\Query;
+use yii\helpers\ArrayHelper;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "{{%scene_site}}".
@@ -37,6 +42,36 @@ use yii\db\ActiveRecord;
  */
 class SceneSite extends ActiveRecord
 {
+    /** 自营 */
+    const TYPE_NO_CHOICE = 1;
+    /** 合作 */
+    const TYPE_YES_CHOICE = 2;
+    /** 类型 */
+    public static $TYPES = [
+        self::TYPE_NO_CHOICE => '自营',
+        self::TYPE_YES_CHOICE => '合作',
+    ];
+    
+    /** 板书 */
+    const TYPE_ONE = '板书';
+    /** 蓝箱 */
+    const TYPE_TWO = '蓝箱';
+    /** 外拍 */
+    const TYPE_THREE = '外拍';
+    /** 白布 */
+    const TYPE_FOUR = '白布';
+    /** 书架 */
+    const TYPE_FIVE = '书架';
+    /** 类型 */
+    public static $CONTENT_TYPES = [
+        self::TYPE_ONE => '板书',
+        self::TYPE_TWO => '蓝箱',
+        self::TYPE_THREE => '外拍',
+        self::TYPE_FOUR => '白布',
+        self::TYPE_FIVE => '书架',
+    ];
+    
+    
     /**
      * @inheritdoc
      */
@@ -61,6 +96,7 @@ class SceneSite extends ActiveRecord
     public function rules()
     {
         return [
+            [['op_type','area', 'province', 'city', 'district', 'name', 'contact', 'manager_id', 'content_type', 'price'], 'required'],
             [['op_type', 'country', 'province', 'city', 'district', 'twon', 'is_publish', 'sort_order', 'created_at', 'updated_at'], 'integer'],
             [['price'], 'number'],
             [['location', 'content'], 'string'],
@@ -68,7 +104,7 @@ class SceneSite extends ActiveRecord
             [['area', 'contact'], 'string', 'max' => 50],
             [['address'], 'string', 'max' => 120],
             [['manager_id'], 'string', 'max' => 36],
-            [['content_type'], 'string', 'max' => 30],
+//            [['content_type'], 'string', 'max' => 30],
         ];
     }
 
@@ -79,8 +115,8 @@ class SceneSite extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'name' => Yii::t('app', 'Name'),
-            'op_type' => Yii::t('app', 'Op Type'),
+            'name' => Yii::t('app', '{Scene}{Name}',['Scene' => Yii::t('app', 'Scene'),'Name' => Yii::t('app', 'Name'),]),
+            'op_type' => Yii::t('app', 'Nature'),
             'area' => Yii::t('app', 'Area'),
             'country' => Yii::t('app', 'Country'),
             'province' => Yii::t('app', 'Province'),
@@ -90,19 +126,94 @@ class SceneSite extends ActiveRecord
             'address' => Yii::t('app', 'Address'),
             'price' => Yii::t('app', 'Price'),
             'contact' => Yii::t('app', 'Contact'),
-            'manager_id' => Yii::t('app', 'Manager ID'),
+            'manager_id' => Yii::t('app', 'Manager'),
             'content_type' => Yii::t('app', 'Content Type'),
-            'img_path' => Yii::t('app', 'Img Path'),
-            'is_publish' => Yii::t('app', 'Is Publish'),
-            'sort_order' => Yii::t('app', 'Sort Order'),
-            'des' => Yii::t('app', 'Des'),
+            'img_path' => Yii::t('app', 'Picture'),
+            'is_publish' => Yii::t('app', '{Is}{Publish}',['Is' => Yii::t('app', 'Is'),'Publish' => Yii::t('app', 'Publish'),]),
+            'sort_order' => Yii::t('app', 'Sort'),
+            'des' => Yii::t('app', 'Introduction'),
             'location' => Yii::t('app', 'Location'),
-            'content' => Yii::t('app', 'Content'),
+            'content' => Yii::t('app', 'Detail'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
+    
+    /**
+     * 联系人
+     * @return ActiveQuery
+     */
+    public function getUser(){
+        return $this->hasOne(User::className(), ['id'=>'contact']);
+    }
+    
+    /**
+     * 管理员
+     * @return ActiveQuery
+     */
+    public function getManame(){
+        return $this->hasOne(User::className(), ['id'=>'manager_id']);
+    }
+    
+    /**
+     * 省/市/区/镇
+     * @return ActiveQuery
+     */
+    public function getAdds1(){
+        return $this->hasOne(Region::className(), ['id'=>'province']);
+    }
+    public function getAdds2(){
+        return $this->hasOne(Region::className(), ['id'=>'city']);
+    }
+    public function getAdds3(){
+        return $this->hasOne(Region::className(), ['id'=>'district']);
+    }
+    public function getAdds4(){
+        return $this->hasOne(Region::className(), ['id'=>'twon']);
+    }
 
+    /**
+     * 
+     * @param type $insert
+     * @return boolean
+     */
+    public function beforeSave($insert) {
+        if (parent::beforeSave($insert)){
+            //把内容性质转为字符串保存
+            $content_type = ArrayHelper::getValue(Yii::$app->request->post(), 'SceneSite.content_type', []);
+            $this->content_type = implode(",", $content_type);
+            //图片上传
+            $img_name = md5(time());
+            $upload = UploadedFile::getInstance($this, 'img_path');
+            if($upload !== null){
+                $string = $upload->name;
+                $array = explode('.', $string);
+                //获取后缀名，默认名为.jpg
+                $ext = count($array) == 0 ? 'jpg' : $array[count($array)-1];
+                $uploadpath = $this->fileExists(Yii::getAlias('@filedata') . '/scene/');
+                $upload->saveAs($uploadpath . $img_name . '.' . $ext) ;
+                $this->img_path = '/filedata/scene/' . $img_name . '.' . $ext . '?r=' . rand(1, 10000);
+            }
+            if(trim($this->img_path) == ''){
+                $this->img_path = $this->getOldAttribute('img_path');
+            }
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * 检查目标路径是否存在，不存即创建目标
+     * @param type $uploadpath  目标路径
+     * @return type
+     */
+    private function fileExists($uploadpath){
+        if(!file_exists($uploadpath)){
+            mkdir($uploadpath);
+        }
+        return $uploadpath;
+    }
+    
     /**
      * @return ActiveQuery
      */
@@ -110,4 +221,29 @@ class SceneSite extends ActiveRecord
     {
         return $this->hasMany(SceneSiteDisable::className(), ['site_id' => 'id']);
     }
+    
+    /**
+     * 获取省/市/区/镇
+     * @param integer $parent_id
+     * @return array
+     */
+    public function getCityList($parent_id)
+    {  
+        $model = Region::findAll(['parent_id' => $parent_id]);  
+        return ArrayHelper::map($model, 'id', 'name');  
+    }
+    
+    /**
+     * 获取所有人
+     * @return array
+     */
+    public function getUsers()
+    {
+        $users = (new Query())
+                ->select(['id','nickname'])
+                ->from(['Users' => User::tableName()])
+                ->all();
+        return ArrayHelper::map($users, 'id', 'nickname');
+    }
+
 }
