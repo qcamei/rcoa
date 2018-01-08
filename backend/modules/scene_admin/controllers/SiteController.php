@@ -7,6 +7,7 @@ use common\models\scene\SceneSite;
 use common\models\scene\searchs\SceneSiteSearch;
 use common\models\User;
 use Yii;
+use yii\db\Expression;
 use yii\db\Query;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -145,9 +146,11 @@ class SiteController extends BaseController
     public function actionSaveLocation($id, $location)
     {
         //var_dump($location);exit;
-        $point = "[[GeomFromText(POINT($location))]]";
+        $point = new Expression("GeomFromText('POINT($location)')");
+        $tabelName = SceneSite::tableName();
         $v = \Yii::$app->db->createCommand()->update(SceneSite::tableName(), 
             ['location' => $point], ['id' => $id])->execute();
+        //\Yii::$app->db->createCommand("update $tabelName set location=$point where id=$id")->execute();
         
     }
 

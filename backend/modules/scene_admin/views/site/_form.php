@@ -133,10 +133,7 @@ use yii\widgets\ActiveForm;
             'id' => 'map',
             'style' => 'width:100%; height:500px;',
         ])?>
-        <?php // $form->field($model, 'location')->hiddenInput()->label('',[
-//            'id' => 'map',
-//            'style' => 'width:100%; height:500px;',
-//        ])?>
+        <?= Html::activeHiddenInput($model, 'location') ?>
         
         <?= $form->field($model, 'content')->textarea([
             'id' => 'container', 
@@ -173,19 +170,15 @@ $js =
         // 将地址解析结果显示在地图上,并调整地图视野
         myGeo.getPoint($('#scenesite-address').val(), function(point){
             if (point) {
+                $('#scenesite-location').val(point.lng + " " + point.lat);
                 map.centerAndZoom(point, 16);
                 var marker = new BMap.Marker(point);    // 创建标注
                 map.addOverlay(marker);                 // 将标注添加到地图中
-                marker.addEventListener("click",attribute);
+                marker.addEventListener("dragend",onMarkerDragend);
                 marker.enableDragging();                //设置标注是否可以移动
-                function attribute(){
-                    var p = marker.getPosition();       //获取marker的位置
-                    $.post("/scene_admin/site/save-location?id=$model->id&location=" + p.lng + " " + p.lat,function(data){
-                        $('<option/>').val('').text(this['name']).appendTo($('#scenesite-address'));
-                        $.each(data['data'],function(){
-                            $('<option>').val(this['id']).text(this['name']).appendTo($('#scenesite-address'));
-                        });
-                    });
+                function onMarkerDragend(e){
+                    //获取marker的位置
+                    $('#scenesite-location').val(e.point.lng + " " + e.point.lat);
                 }
             }else{
                 alert("您输入的详细地址没有解析到结果!");
@@ -201,6 +194,10 @@ $js =
         anchor: BMAP_ANCHOR_TOP_RIGHT,
         offset: size,
     }));
+    map.addEventListener("tilesloaded",function(){
+        map.removeEventListener("tilesloaded",arguments.callee);
+        $('#scenesite-address').trigger('blur');
+    });
         
 //    map.enableScrollWheelZoom(true);                      //开启鼠标滚轮缩放
 JS;
