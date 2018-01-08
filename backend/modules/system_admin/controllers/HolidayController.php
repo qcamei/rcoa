@@ -1,18 +1,18 @@
 <?php
 
-namespace frontend\modules\scene\controllers;
+namespace backend\modules\system_admin\controllers;
 
 use Yii;
-use common\models\scene\SceneBook;
-use common\models\scene\searchs\SceneBookSearch;
+use common\models\Holiday;
+use common\models\searchs\HolidaySearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * SceneBookController implements the CRUD actions for SceneBook model.
+ * HolidayController implements the CRUD actions for Holiday model.
  */
-class SceneBookController extends Controller
+class HolidayController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,22 +30,23 @@ class SceneBookController extends Controller
     }
 
     /**
-     * Lists all SceneBook models.
+     * Lists all Holiday models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new SceneBookSearch();
-        $dataProvider = $searchModel->searchWeek(Yii::$app->request->queryParams);
+        //var_dump(Holiday::getHolidayBetween("20180128", '20180303'));exit;
+        $searchModel = new HolidaySearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-            //'searchModel' => $searchModel,
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Displays a single SceneBook model.
+     * Displays a single Holiday model.
      * @param string $id
      * @return mixed
      */
@@ -57,13 +58,13 @@ class SceneBookController extends Controller
     }
 
     /**
-     * Creates a new SceneBook model.
+     * Creates a new Holiday model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new SceneBook();
+        $model = new Holiday(['year' => null]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -75,7 +76,7 @@ class SceneBookController extends Controller
     }
 
     /**
-     * Updates an existing SceneBook model.
+     * Updates an existing Holiday model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
      * @return mixed
@@ -94,7 +95,7 @@ class SceneBookController extends Controller
     }
 
     /**
-     * Deletes an existing SceneBook model.
+     * Deletes an existing Holiday model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id
      * @return mixed
@@ -105,17 +106,25 @@ class SceneBookController extends Controller
 
         return $this->redirect(['index']);
     }
+    
+    /**
+     * 清理缓存
+     */
+    public function actionClearCache(){
+        Holiday::invalidateCache();
+        return '缓存已清除！';
+    }
 
     /**
-     * Finds the SceneBook model based on its primary key value.
+     * Finds the Holiday model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
-     * @return SceneBook the loaded model
+     * @return Holiday the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = SceneBook::findOne($id)) !== null) {
+        if (($model = Holiday::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

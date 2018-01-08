@@ -2,10 +2,12 @@
 
 namespace common\models\scene\searchs;
 
-use Yii;
+use common\models\scene\SceneBook;
+use wskeee\utils\DateUtil;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\scene\SceneBook;
+use yii\data\ArrayDataProvider;
+use yii\helpers\ArrayHelper;
 
 /**
  * SceneBookSearch represents the model behind the search form about `common\models\scene\SceneBook`.
@@ -85,6 +87,70 @@ class SceneBookSearch extends SceneBook
             ->andFilterWhere(['like', 'booker_id', $this->booker_id])
             ->andFilterWhere(['like', 'created_by', $this->created_by]);
 
+        return $dataProvider;
+    }
+    
+    /**
+     * 
+     * @param type $se array(start=>周起始时间，end=>周结束时间 )
+     * @return array 一周拍摄预约数据
+    */
+    public  function searchWeek($params) 
+    {
+        $date = ArrayHelper::getValue($params, 'date', date('Y-m-d'));                  //日期
+        $dateStart = ArrayHelper::getValue(DateUtil::getWeekSE($date), 'start');        //开始日期               
+        $dateEnd = ArrayHelper::getValue(DateUtil::getWeekSE($date), 'end');            //结束日期
+        $site_id = ArrayHelper::getValue($params, 'site_id');                           //场景id
+        
+        $query = SceneBookSearch::find();
+        //添加查询条件
+        $query->andFilterWhere(['between', 'date', $dateStart, $dateEnd]);
+        $query->andFilterWhere(['site_id' => $site_id]);
+        
+        //排序
+        $query->orderBy(['date' => SORT_DESC, 'time_index' => SORT_DESC]);
+       
+//        $indexOffsetTimes = [
+//            '9 hours',
+//            '14 hours',
+//            '18 hours',
+//        ];
+        
+        //创建一周空数据
+        $weekdatas = [];
+        for ($i = 0, $len = 7; $i < $len; $i++) {
+            for ($index = 0; $index < 3; $index++) {
+                $weekdatas[] = new SceneBookSearch([
+                    'id' => md5($site_id + date('Y-m-d', time()) + $index + rand(1,10000)),
+                    'site_id' => $site_id,
+                    'date' => date('Y-m-d', strtotime($dateStart . ' +' . ($i) . 'days ')),
+                    'time_index' => $index,
+                ]);
+            }
+        }
+        
+        $startIndex = 0;
+        foreach ($query->all() as $model) {
+            for ($i = $startIndex, $len = count($weekdatas); $i < $len; $i++) {
+                if (date('Y/m/d',$weekdatas[$i]->date) == date('Y/m/d',$model->date) 
+                   && $weekdatas[$i]->time_index == $model->time_index) 
+                {
+                    $weekdatas[$i] = $model;
+                    $startIndex = $i + 1;
+                    break;
+                }
+            }
+        }
+        
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $weekdatas,
+            'sort' => [
+                'attributes' => ['date', 'time_index'],
+            ],
+            'pagination' => [
+                'pageSize' =>21,
+            ],
+        ]);
         return $dataProvider;
     }
 }

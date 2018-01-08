@@ -1,28 +1,27 @@
 <?php
-namespace frontend\modules\scene\assets;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+namespace backend\modules\system_admin\assets;
+
 use yii\web\AssetBundle;
+
 /**
- * Description of RbacAsset
+ * Description of HDatepickerAssets
  *
  * @author Administrator
  */
-class SceneAsset extends AssetBundle
-{
-    //public $basePath = '@webroot/assets';
-    //public $baseUrl = '@web/assets';
-    public $sourcePath = '@frontend/modules/scene/assets';
+class HolidayAssets extends AssetBundle {
+    public $sourcePath = '@backend/modules/system_admin/assets';
     public $css = [
-       'css/style.css',
-       'css/layout.css',
-       'css/module.css',
+       
     ];
     public $js = [
-        
+        'js/Lunar.js',
     ];
     public $depends = [
         'yii\web\YiiAsset'
