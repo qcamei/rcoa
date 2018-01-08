@@ -8,6 +8,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\db\Expression;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;
@@ -182,6 +183,9 @@ class SceneSite extends ActiveRecord
             //把内容性质转为字符串保存
             $content_type = ArrayHelper::getValue(Yii::$app->request->post(), 'SceneSite.content_type', []);
             $this->content_type = implode(",", $content_type);
+            //拿到经纬度并处理
+            $location = ArrayHelper::getValue(Yii::$app->request->post(), 'SceneSite.location');
+            $this->location = new Expression("GeomFromText('POINT($location)')");
             //图片上传
             $img_name = md5(time());
             $upload = UploadedFile::getInstance($this, 'img_path');

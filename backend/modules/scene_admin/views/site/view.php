@@ -82,7 +82,11 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'sort_order',
             'des',
-            'location',
+            [
+                'attribute' => 'location',
+                'format' => 'raw',
+                'value' => $point['AsText(location)'],
+            ],
             [
                 'attribute' => 'content',
                 'format' => 'raw',

@@ -77,9 +77,7 @@ use yii\widgets\ActiveForm;
 
             <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
             
-            <?= $form->field($model, 'contact')->widget(Select2::classname(), [
-                'data' => $model->getUsers(), 'options' => ['placeholder' => '请选择...']
-            ]) ?>
+            <?= $form->field($model, 'contact')->textInput(['maxlength' => true]) ?>
             
             <?= $form->field($model, 'manager_id')->widget(Select2::classname(), [
                 'data' => $model->getUsers(), 'options' => ['placeholder' => '请选择...']
@@ -194,9 +192,10 @@ $js =
         anchor: BMAP_ANCHOR_TOP_RIGHT,
         offset: size,
     }));
-    map.addEventListener("tilesloaded",function(){
+        
+    map.addEventListener("tilesloaded",function(){          //增加监听事件
         map.removeEventListener("tilesloaded",arguments.callee);
-        $('#scenesite-address').trigger('blur');
+        $('#scenesite-address').trigger('blur');            //获取移动后的位置
     });
         
 //    map.enableScrollWheelZoom(true);                      //开启鼠标滚轮缩放

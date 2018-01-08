@@ -60,6 +60,7 @@ class SiteController extends BaseController
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'point' => $this->getPoint($id),
         ]);
     }
 
@@ -142,19 +143,8 @@ class SiteController extends BaseController
             echo Html::tag('option', Html::encode($name), ['value' => $value]);
         }
     }
-    
-    public function actionSaveLocation($id, $location)
-    {
-        //var_dump($location);exit;
-        $point = new Expression("GeomFromText('POINT($location)')");
-        $tabelName = SceneSite::tableName();
-        $v = \Yii::$app->db->createCommand()->update(SceneSite::tableName(), 
-            ['location' => $point], ['id' => $id])->execute();
-        //\Yii::$app->db->createCommand("update $tabelName set location=$point where id=$id")->execute();
-        
-    }
 
-        /**
+    /**
      * Finds the SceneSite model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
@@ -171,6 +161,21 @@ class SiteController extends BaseController
     }
 
     /**
+     * 查询经纬度
+     * @param integer $id
+     * @return type
+     */
+    public function getPoint($id){
+        $point = (new Query())
+                ->select(['AsText(location)'])
+                ->from(['Site' => SceneSite::tableName()])
+                ->where(['id' => $id])
+                ->one();
+
+        return $point;
+    }
+
+        /**
      * 查询场地所在区域
      * @return array
      */
