@@ -194,7 +194,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function($data) {
                     return $data['is_del'] ? "<span style=\"color:#ccc\">{$data['filename']}</span>" : 
                                 ($data['status']? 
-                                    $data['filename'].Html::img(WEB_ROOT.'/filedata/image/new.gif',['style'=>'margin-top:-20px']):$data['filename']);
+                                    $data['filename'].Html::img('/upload/mcbs/images/new.gif',['style'=>'margin-top:-20px']):$data['filename']);
                 },
                 'contentOptions' => [
                     'class' => 'activity-name list-td',

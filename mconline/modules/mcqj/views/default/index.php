@@ -10,7 +10,7 @@ use yii\helpers\Html;
 ?>
 
 <div class="mcjq-default-index">
-    <?= Html::img(WEB_ROOT.'/filedata/site/image/404.jpg', ['width' => '100%']) ?>
+    <?= Html::img('/upload/site/images/404.jpg', ['width' => '100%']) ?>
 </div>
 
 
