@@ -47,8 +47,8 @@ AppAsset::register($this);
     } else {
         $menuItems = [
             ['label' => '首页', 'url' => ['/site/index']],
-            ['label' => '板书课堂', 'url' => ['/mcbs/default']],
-            ['label' => '情景课堂', 'url' => ['/mcqj/default']],
+            ['label' => '微课', 'url' => ['/mcqj/default']],
+            ['label' => 'P课程', 'url' => ['/mcbs/default']],
             [
                 'label' => '帮助中心',
                 'url' => ['/helpcenter/default/index', 'app_id'=> 'app-mconline'],
