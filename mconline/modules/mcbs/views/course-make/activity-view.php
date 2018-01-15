@@ -91,7 +91,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'value'=> function ($data) use($fileStatus) {
                             return $data['is_del'] ? "<span style=\"color:#ccc\">{$data['name']}</span>" : 
                                 (isset($fileStatus[$data['id']]) && $fileStatus[$data['id']] == 0 ? 
-                                    $data['name'].Html::img(WEB_ROOT.'/filedata/image/new.gif',['class'=>'new','style'=>'top:0']):$data['name']);
+                                    $data['name'].Html::img('/upload/mcbs/images/new.gif',['class'=>'new','style'=>'top:0']):$data['name']);
                         },
                         'headerOptions' => [
                             'style' => [

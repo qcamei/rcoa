@@ -71,6 +71,9 @@ $this->title = Yii::t('app', '{Help}{Center}', [
         </div>
     </div>
     <div class="post-content">
+        <div class="post-title">
+            <?= $model['title'] ?>
+        </div>
         <?php
             $content = Html::decode($model['content']);
             //设置img中src的前缀(常量-后台网址)
