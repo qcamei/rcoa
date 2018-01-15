@@ -141,18 +141,10 @@ class SceneSite extends ActiveRecord
     }
     
     /**
-     * 联系人
-     * @return ActiveQuery
-     */
-    public function getUser(){
-        return $this->hasOne(User::className(), ['id'=>'contact']);
-    }
-    
-    /**
      * 管理员
      * @return ActiveQuery
      */
-    public function getManame(){
+    public function getUser(){
         return $this->hasOne(User::className(), ['id'=>'manager_id']);
     }
     

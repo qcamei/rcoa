@@ -64,11 +64,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'price',
             [
                 'attribute' => 'contact',
-                'value' => $model->user->nickname,
+                'value' => $model->contact,
             ],
             [
                 'attribute' => 'manager_id',
-                'value' => $model->maname->nickname,
+                'value' => $model->user->nickname,
             ],
             'content_type',
             [

@@ -218,6 +218,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'headerOptions' => [
                     'style' => [
                         'text-align' => 'center',
+                        'width' => '120px',
                     ],
                 ],
                 'format' => 'raw',
@@ -234,6 +235,12 @@ $this->params['breadcrumbs'][] = $this->title;
                             ],
                     ]);
                 },
+                 'contentOptions' => [
+                    'style' => [
+                        'text-align' => 'center',
+                        'width' => '120px',
+                    ],
+                ],
             ],
         ],
     ]); ?>

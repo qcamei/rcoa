@@ -7,7 +7,6 @@ use common\models\scene\SceneSite;
 use common\models\scene\searchs\SceneSiteSearch;
 use common\models\User;
 use Yii;
-use yii\db\Expression;
 use yii\db\Query;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -175,7 +174,7 @@ class SiteController extends BaseController
         return $point;
     }
 
-        /**
+    /**
      * 查询场地所在区域
      * @return array
      */
