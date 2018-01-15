@@ -12,9 +12,8 @@ body .wrap > .container {
 }
 /*********************************scene-default-index***************************/
 .scene-default-index {
-    /*margin-bottom: 35px;*/
-    width: 1200px;
-    margin: 0 auto;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
 }
 
 .scene-default-index .map,.select{
@@ -196,7 +195,7 @@ body .wrap > .container {
 
 .scene-default-index
 .address-right .address-area .font{
-    width: 180px;
+    width: 160px;
     float: right;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -205,13 +204,14 @@ body .wrap > .container {
 /*********************************scene-default-view***************************/
 .scene-default-view{
     margin: 7px auto;
-    width: 1200px;
+    /*width: 1200px;*/
 }
 
 .scene-default-view
 .introduce{
     width: 100%;
-
+    padding-right: 0px;
+    padding-left: 0px;
 }
 
 .scene-default-view
@@ -259,7 +259,8 @@ body .wrap > .container {
 
 .scene-default-view
 .introduce .scene-info .info-content span{
-    min-width: 70px;
+    min-width: 15%;
+    vertical-align: top;
     color: #999999;
     display: inline-block;
     text-align: right;
@@ -269,7 +270,8 @@ body .wrap > .container {
 
 .scene-default-view
 .introduce .scene-info .info-content font{
-    max-width: 380px;
+    max-width: 83%;
+    display: inline-block;
 }
 
 .scene-default-view
@@ -301,6 +303,8 @@ body .wrap > .container {
 
 .scene-default-view .scene-details {
     height: 100%;
+    padding-right: 0px;
+    padding-left: 0px;
 }
 
 .scene-default-view .scene-details .tablist {
@@ -368,7 +372,7 @@ body .wrap > .container {
 }
 
 .scene-default-view .scene-details .tabcontent .tabpane .resource img{
-    width: 580px;
+    width: 564px;
     padding: 1px;
     break-inside: avoid;
     border: 1px solid #ccc;

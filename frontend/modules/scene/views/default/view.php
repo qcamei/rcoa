@@ -15,7 +15,7 @@ $this->title = Yii::t('app', '{Scene}{Detail}', [
 <script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
 <link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
 
-<div class="scene-default-view">
+<div class="scene-default-view container">
     <div class="introduce col-lg-12">
         <div class="scene-img col-lg-7">
             <img src="<?= $sceneData['img_path'] ?>">
@@ -25,7 +25,7 @@ $this->title = Yii::t('app', '{Scene}{Detail}', [
                 <div class="scene-name"><?= $sceneData['name'] ?></div>
                 <div class="scene-nature"><span class="span">性质：</span>
                     <div class="bg-color <?= ($sceneData['op_type'] == 1) ? 'add-red' : 'add-blue' ?>">
-                        <?= ($sceneData['op_type'] == 1) ? '自营' : '合作' ?>
+                        <font><?= ($sceneData['op_type'] == 1) ? '自营' : '合作' ?></font>
                     </div>
                 </div>
                 <div class="scene-area"><span>区域：</span><font><?= $sceneData['area'] ?></font></div>
