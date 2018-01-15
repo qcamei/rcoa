@@ -11,10 +11,10 @@ use common\models\teamwork\CourseProducer;
 use common\models\User;
 use frontend\modules\demand\utils\DemandTool;
 use frontend\modules\teamwork\utils\TeamworkTool;
+use frontend\modules\teamwork\utils\TeamworSearch;
 use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\ItemType;
 use wskeee\rbac\RbacManager;
-use wskeee\rbac\RbacName;
 use wskeee\team\TeamMemberTool;
 use Yii;
 use yii\data\ArrayDataProvider;
@@ -59,45 +59,26 @@ class CourseController extends Controller
      * Index all CourseManage models.
      * @return mixed
      */
-    public function actionIndex($status = null, $team_id = null, $item_type_id = null,
-            $item_id =null, $item_child_id = null, $course_id = null, $keyword = null, $time = null, $mark = null, $page = null)
+    public function actionIndex()
     {
-        $page = $page == null ? 0 : $page-1;        
-        /* @var $twTool TeamworkTool */
-        $twTool = TeamworkTool::getInstance();
-        $query = $twTool->getCourseInfo($id = null, $demand_task_id = null, $status, $team_id, $item_type_id, $item_id, $item_child_id, $course_id, $keyword, $time);
-        $count = $query->count();
+        $searchResult = new TeamworSearch();
+        $results = $searchResult->search(Yii::$app->request->queryParams);
         
         $dataProvider = new ArrayDataProvider([
-            'allModels' => $query->addSelect([
-                'Tw_course.demand_task_id', 'Demand_task.course_id', 
-                'Tw_course.status', 'Tw_course.team_id', 'Demand_task.mode',
-                'Demand_task.item_type_id', 'Demand_task.item_id', 'Demand_task.item_child_id',
-                'Team.`name` AS team_name', 'Fw_item_type.`name` AS item_type_name',
-                'Fw_item.`name` AS item_name','Fw_item_child.`name` AS item_child_name',
-                'Fw_item_course.`name` AS item_course_name'
-            ])->limit(20)->offset($page*20)->all(),
+            'allModels' => $results['result'],
         ]);
-       
+        
         return $this->render('index', [
-            'twTool' => $twTool,
+            'twTool' => TeamworkTool::getInstance(),
             'dataProvider' => $dataProvider,
-            'itemType' => $this->getItemType(),
+            'params' => $results['param'],
+            'totalCount' => $results['totalCount'],
+            //条件
+            'itemTypes' => $this->getItemType(),
             'items' => $this->getCollegesForSelect(),
-            'itemChild' => empty($mark) ? [] : $this->getChildren($item_id),
-            'course' => empty($mark) ? [] : $this->getChildren($item_child_id),
-            'team' => $this->getTeam(),
-            'count' => $count,
-            //搜索默认字段值
-            'itemTypeId' => $item_type_id,
-            'itemId' => $item_id,
-            'itemChildId' => $item_child_id,
-            'courseId' => $course_id,
-            'keyword' => $keyword,
-            'status' => $status,
-            'team_id' => $team_id,
-            'time' => !empty($time) ? $time : null,
-            'mark' => !empty($mark) ? $mark : 0,
+            'itemChilds' => empty($mark) ? [] : $this->getChildren($item_id),
+            'courses' => empty($mark) ? [] : $this->getChildren($item_child_id),
+            'teams' => $this->getTeam(),
         ]);
     }
     
@@ -130,7 +111,7 @@ class CourseController extends Controller
         /* @var $rbacManager RbacManager */  
         $rbacManager = \Yii::$app->authManager;
         /* @var $model CourseManage */
-        $model = $twTool->getCourseInfo($id, $demand_task_id)->addSelect(['Tw_course.*'])->one();
+        $model = $this->findModel($id);
         $weekly = $twTool->getWeeklyInfo($id, $twTool->getWeek(date('Y-m-d', time())));
         
         return $this->render('view', [

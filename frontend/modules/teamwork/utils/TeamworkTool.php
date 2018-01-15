@@ -183,67 +183,6 @@ class TeamworkTool{
     }
     
     /**
-     * 获取课程查询结果
-     * @param TeamworkQuery $twQuery       
-     * @param ActiveQuery $results       
-     * @param integer $id                           ID
-     * @param integer $demand_task_id               课程需求任务ID
-     * @param integer $projectId                    项目管理 ID
-     * @param integer $status                       状态
-     * @param integer $teamId                       团队ID
-     * @param integer $itemTypeId                   行业ID
-     * @param integer $itemId                       层次/类型ID
-     * @param integer $itemChildId                  专业/工种ID
-     * @param integer $courseId                     课程ID
-     * @param string $keyword                       关键字
-     * @param string $time                          时间段
-     * @return Query                                返回查询结果对象
-     */
-    public function getCourseInfo($id = null, $demand_task_id = null, $status = null, $teamId = null, 
-            $itemTypeId = null, $itemId = null, $itemChildId = null, $courseId = null, $keyword = null, $time = null)
-    {
-        /* @var $twQuery TeamworkQuery */
-        $twQuery = TeamworkQuery::getInstance();
-        /* @var $results ActiveQuery */
-        $results = $twQuery->getCourseManageTable();
-        $results->andFilterWhere([
-            'Demand_task.item_type_id' => $itemTypeId,
-            'Demand_task.item_id' => $itemId,
-            'Demand_task.item_child_id' => $itemChildId,
-            'Demand_task.course_id' => $courseId,
-            'Tw_course.id' => $id,
-            'Tw_course.demand_task_id' => $demand_task_id,
-            'Tw_course.`status`'=> $status,
-            'Tw_course.team_id'=> $teamId,
-        ]);
-        
-        if($time != null){
-            $time = explode(" - ",$time);
-            if($status == CourseManage::STATUS_WAIT_START)
-                $results->andFilterWhere(['<=','Tw_course.created_at', strtotime($time[1])]);
-            else if($status == CourseManage::STATUS_NORMAL)
-                $results->andFilterWhere(['<=','Tw_course.real_start_time',$time[1]]);
-            else if($status == CourseManage::STATUS_CARRY_OUT)
-                $results->andFilterWhere(['between','Tw_course.real_carry_out',$time[0],$time[1]]);
-            else
-                $results->andFilterWhere([
-                    'or', ['and',"Tw_course.status=".CourseManage::STATUS_WAIT_START,  ['<=','Tw_course.created_at', strtotime($time[1])]], 
-                    ['and',"Tw_course.status=".CourseManage::STATUS_NORMAL, ['<=','Tw_course.real_start_time', $time[1]]],
-                    ['and',"Tw_course.status=".CourseManage::STATUS_CARRY_OUT,   ['between','Tw_course.real_carry_out',$time[0],$time[1]]]
-                ]);
-        }
-        $results->andFilterWhere(['or',
-            ['like', 'Fw_item_type.name', $keyword],
-            ['like', 'Fw_item.name', $keyword],
-            ['like', 'Fw_item_child.name', $keyword],
-            ['like', 'Fw_item_course.name', $keyword],
-            ['like', 'Team.name', $keyword]
-        ]);
-        
-        return $results;
-    }
-    
-    /**
      * 获取课程进度
      * @param integer|array $courseId       课程ID
      * @return Query
@@ -381,9 +320,9 @@ class TeamworkTool{
     public function getWeeklyInfo($courseId, $week, $isAll = true) 
     {
         $result = CourseSummary::find()
-                  ->where(['course_id' => $courseId])
-                  ->andFilterWhere(['>=', 'create_time', ArrayHelper::getValue($week, 'start')])
-                  ->andFilterWhere(['<=', 'create_time', ArrayHelper::getValue($week, 'end')]);
+            ->where(['course_id' => $courseId])
+            ->andFilterWhere(['>=', 'create_time', ArrayHelper::getValue($week, 'start')])
+            ->andFilterWhere(['<=', 'create_time', ArrayHelper::getValue($week, 'end')]);
         if($isAll)
             return $result->all();
         else

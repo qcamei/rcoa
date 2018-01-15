@@ -31,20 +31,13 @@ CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($courseIds
 <div class="container course-manage-index item-manage">
     
     <?= $this->render('_search_detai',[
-        'itemType' => $itemType,
+        'params' => $params,
+        //条件
+        'itemTypes' => $itemTypes,
         'items' => $items,
-        'itemChild' => $itemChild,
-        'course' => $course,
-        'team' => $team,
-        'itemTypeId' => $itemTypeId,
-        'itemId' => $itemId,
-        'itemChildId' => $itemChildId,
-        'courseId' => $courseId,
-        'keyword' => $keyword,
-        'time' => $time,
-        'status' => $status,
-        'team_id' => $team_id,
-        'mark' => $mark,
+        'itemChilds' => $itemChilds,
+        'courses' => $courses,
+        'teams' => $teams,
     ]); ?>
         
     <div id="course-manage-index">
@@ -232,11 +225,16 @@ CourseManage::$progress = ArrayHelper::map($twTool->getCourseProgress($courseIds
             ],
         ]); ?>
         
-        <div class="summary">总共<b><?= $count ?></b>条数据</div>
+        <?php
+            $page = !isset($param['page']) ? 1 :$param['page'];
+            $pageCount = ceil($totalCount/20);
+            if($pageCount > 0)
+                echo "<div class=\"summary\">第<b>".(($page*20-20)+1)."</b>-<b>".($page!=$pageCount?$page*20:$totalCount)."</b>条，总共<b>{$totalCount}</b>条数据.</div>";
+        ?>
         
         <?= LinkPager::widget([  
             'pagination' => new Pagination([
-                'totalCount' => $count,  
+                'totalCount' => $totalCount,  
             ]),  
         ]) ?> 
     </div>

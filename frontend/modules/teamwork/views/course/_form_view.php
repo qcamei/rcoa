@@ -14,6 +14,7 @@ $page = [
     'team_id' => $model->team_id,
     'status' => CourseManage::STATUS_NORMAL
 ];
+
 ?>
 
 <div class="controlbar">
@@ -35,8 +36,11 @@ $page = [
             $buttonHtml = [
                 [
                     'name' => Yii::t('rcoa', 'Back'),
-                    'url' => ['back'],
-                    'options' => ['class' => 'btn btn-default', 'onclick'=> 'history.go(-1);return false'],
+                    'url' => ['back'],//Yii::$app->request->getReferrer(),
+                    'options' => [
+                        'class' => 'btn btn-default', 
+                        'onclick'=> strpos(Yii::$app->request->getReferrer(), '/teamwork/course/index') === false ? 
+                            'window.history.go(-3);return false' : 'window.history.go(-1);return false'],
                     'symbol' => '&nbsp;',
                     'conditions' => true,
                     'adminOptions' => true,
