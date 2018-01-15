@@ -15,6 +15,18 @@ use yii\helpers\ArrayHelper;
 class SceneBookSearch extends SceneBook
 {
     /**
+     * 开始日期
+     * @var string 
+     */
+    private $date_start;
+    /**
+     * 结束日期
+     * @var string 
+     */
+    private $date_end;
+
+
+    /**
      * @inheritdoc
      */
     public function rules()
@@ -90,52 +102,30 @@ class SceneBookSearch extends SceneBook
         return $dataProvider;
     }
     
+    
     /**
      * 
      * @param type $se array(start=>周起始时间，end=>周结束时间 )
      * @return array 一周拍摄预约数据
     */
-    public  function searchWeek($params) 
+    public function searchModel($params, $firstSite)
     {
-        $date = ArrayHelper::getValue($params, 'date', date('Y-m-d'));                  //日期
-        $dateStart = ArrayHelper::getValue(DateUtil::getWeekSE($date), 'start');        //开始日期               
-        $dateEnd = ArrayHelper::getValue(DateUtil::getWeekSE($date), 'end');            //结束日期
-        $site_id = ArrayHelper::getValue($params, 'site_id');                           //场景id
+        $this->date = ArrayHelper::getValue($params, 'date', date('Y-m-d'));                         //日期
+        $this->date_start = ArrayHelper::getValue(DateUtil::getWeekSE($this->date), 'start');        //开始日期               
+        $this->date_end = ArrayHelper::getValue(DateUtil::getWeekSE($this->date), 'end');            //结束日期
+        $this->site_id = ArrayHelper::getValue($params, 'site_id', reset($firstSite)); //场景id
+        $this->date_switch = ArrayHelper::getValue($params, 'date_switch', 'month');                 //月 or 周
         
-        $query = SceneBookSearch::find();
-        //添加查询条件
-        $query->andFilterWhere(['between', 'date', $dateStart, $dateEnd]);
-        $query->andFilterWhere(['site_id' => $site_id]);
-        
-        //排序
-        $query->orderBy(['date' => SORT_DESC, 'time_index' => SORT_DESC]);
-       
-//        $indexOffsetTimes = [
-//            '9 hours',
-//            '14 hours',
-//            '18 hours',
-//        ];
-        
-        //创建一周空数据
-        $weekdatas = [];
-        for ($i = 0, $len = 7; $i < $len; $i++) {
-            for ($index = 0; $index < 3; $index++) {
-                $weekdatas[] = new SceneBookSearch([
-                    'id' => md5($site_id + date('Y-m-d', time()) + $index + rand(1,10000)),
-                    'site_id' => $site_id,
-                    'date' => date('Y-m-d', strtotime($dateStart . ' +' . ($i) . 'days ')),
-                    'time_index' => $index,
-                ]);
-            }
-        }
+        //查询预约任务数据
+        $results = $this->searchSceneBook();
+        //创建空的日期数据
+        $dateDatas = $this->date_switch == 'month' ?  $this->searchMonth()  : $this->searchWeek();
         
         $startIndex = 0;
-        foreach ($query->all() as $model) {
-            for ($i = $startIndex, $len = count($weekdatas); $i < $len; $i++) {
-                if (date('Y/m/d',$weekdatas[$i]->date) == date('Y/m/d',$model->date) 
-                   && $weekdatas[$i]->time_index == $model->time_index) 
-                {
-                    $weekdatas[$i] = $model;
+        foreach ($results as $model) {
+            for ($i = $startIndex, $len = count($dateDatas); $i < $len; $i++) {
+                if ($dateDatas[$i]->date === $model->date && $dateDatas[$i]->time_index === $model->time_index){
+                    $dateDatas[$i] = $model;
                     $startIndex = $i + 1;
                     break;
                 }
@@ -143,7 +133,7 @@ class SceneBookSearch extends SceneBook
         }
         
         $dataProvider = new ArrayDataProvider([
-            'allModels' => $weekdatas,
+            'allModels' => $dateDatas,
             'sort' => [
                 'attributes' => ['date', 'time_index'],
             ],
@@ -151,6 +141,80 @@ class SceneBookSearch extends SceneBook
                 'pageSize' =>21,
             ],
         ]);
-        return $dataProvider;
+        
+        return [
+            'filters' => $params,
+            'data' => $dataProvider,
+        ];
+    }
+    
+    /**
+     * 一个月拍摄预约数据     
+     * @return SceneBookSearch
+     */
+    private function searchMonth()
+    {
+        //创建一个月空数据
+        $monthdatas = [];
+        for ($i = 0, $len = 7; $i < $len; $i++) {
+            for ($index = 0; $index < 3; $index++) {
+                $monthdatas[] = new SceneBookSearch([
+                    'id' => md5($this->site_id + date('Y-m-d', time()) + $index + rand(1,10000)),
+                    'site_id' => $this->site_id,
+                    'date' => date('Y-m-d', strtotime($this->date_start . ' +' . ($i) . 'days ')),
+                    'time_index' => $index,
+                    'date_switch' => $this->date_switch,
+                ]);
+            }
+        }
+        
+        return $monthdatas;
+    }
+
+    /**
+     * 一周拍摄预约数据     
+     * @return SceneBookSearch
+     */
+    private function searchWeek()
+    {
+        
+//        $indexOffsetTimes = [
+//            '9 hours',
+//            '14 hours',
+//            '18 hours',
+//        ];
+        //创建一周空数据
+        $weekdatas = [];
+        for ($i = 0, $len = 7; $i < $len; $i++) {
+            for ($index = 0; $index < 3; $index++) {
+                $weekdatas[] = new SceneBookSearch([
+                    'id' => md5($this->site_id + date('Y-m-d', time()) + $index + rand(1,10000)),
+                    'site_id' => $this->site_id,
+                    'date' => date('Y-m-d', strtotime($this->date_start . ' +' . ($i) . 'days ')),
+                    'time_index' => $index,
+                    'date_switch' => $this->date_switch,
+                ]);
+            }
+        }
+        
+        return $weekdatas;
+    }
+    
+    /**
+     * 查询预约任务数据
+     * @return Query
+     */
+    private function searchSceneBook() 
+    {
+        
+        $query = SceneBookSearch::find();
+        //添加查询条件
+        $query->andFilterWhere(['between', 'date', $this->date_start, $this->date_end]);
+        $query->andFilterWhere(['site_id' => $this->site_id]);
+        
+        //排序
+        $query->orderBy(['date' => SORT_ASC, 'time_index' => SORT_ASC]);
+        
+        return $query->all();
     }
 }

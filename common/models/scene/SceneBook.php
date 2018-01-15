@@ -42,6 +42,7 @@ use yii\db\ActiveRecord;
  * @property Item $level                        获取层次/类型
  * @property Item $profession                   获取专业/工种
  * @property Item $course                       获取课程
+ * @property SceneSite $sceneSite                获取场景场地
  * @property Expert $teacher                    获取老师
  * @property User $booker                       获取预约人
  * @property User $createdBy                    获取创建者
@@ -77,35 +78,36 @@ class SceneBook extends ActiveRecord
     const SHOOT_MODE_SD = 1;
     /** 拍摄模式-高清 */
     const SHOOT_MODE_HD = 2;
-    
-    /** 内容类型-板书 */
-    const CONTENT_TYPE_BOARDBOOK = 1;
-    /** 内容类型-蓝箱 */
-    const CONTENT_TYPE_BLUEBOX = 2;
-    /** 内容类型-外拍 */
-    const CONTENT_TYPE_WAIPAI = 3;
-    /** 内容类型-白布 */
-    const CONTENT_TYPE_WHITECLOTH = 4;
-    /** 内容类型-书架 */
-    const CONTENT_TYPE_BOOKSHELVES = 5;
-
-
     /** 时段 上午 */
     const TIME_INDEX_MORNING = 0;
     /** 时段 下午 */
     const TIME_INDEX_AFTERNOON = 1;
     /** 时段 晚上 */
     const TIME_INDEX_NIGHT = 2;
-    /**默认开始时间 上午*/
-    const START_TIME_MORNING = '09:15';
-    /**默认开始时间 下午午*/
-    const START_TIME_AFTERNOON = '13:45';
-    /**默认开始时间 晚上*/
-    const START_TIME_NIGHT = '19:00';
     /* 临时创建场景 */
     const SCENARIO_TEMP_CREATE = 'tempCreate';
-
-    /** 状态列表 */
+    
+    /**
+     * 自定义属性
+     * @var string 
+     */
+    public $date_switch;
+    /**
+     * 老师电话
+     * @var integer 
+     */
+    public $teacher_phone;
+    
+    /**
+     * 老师邮箱
+     * @var string 
+     */
+    public $teacher_email;
+    
+    /**
+     * 状态列表
+     * @var array
+     */
     public $statusMap = [
         self::STATUS_DEFAULT => '未预约',
         self::STATUS_BOOKING => '预约中',
@@ -117,26 +119,33 @@ class SceneBook extends ActiveRecord
         self::STATUS_CANCEL => '已取消',
     ];
     
-    /** 拍摄模式列表 */
+    /**
+     * 拍摄模式列表
+     * @var array 
+     */
     public static $shootModeMap = [
         self::SHOOT_MODE_SD => '标清',
         self::SHOOT_MODE_HD => '高清',
     ];
     
-    /** 内容类型列表 */
-    public static $contentTypeMap = [
-        self::CONTENT_TYPE_BOARDBOOK => '板书',
-        self::CONTENT_TYPE_BLUEBOX => '蓝箱',
-        self::CONTENT_TYPE_WAIPAI => '外拍',
-        self::CONTENT_TYPE_WHITECLOTH => '白布',
-        self::CONTENT_TYPE_BOOKSHELVES => '书架',
-    ];
-
-        /** 时间段名称 */
+    /**
+     * 时间段名称
+     * @var array 
+     */
     public static $timeIndexMap = [
-        self::TIME_INDEX_MORNING => '上',
-        self::TIME_INDEX_AFTERNOON => '下',
-        self::TIME_INDEX_NIGHT => '晚',
+        self::TIME_INDEX_MORNING => '上午',
+        self::TIME_INDEX_AFTERNOON => '下午',
+        self::TIME_INDEX_NIGHT => '晚上',
+    ];
+    
+    /**
+     * 开始时间段
+     * @var array 
+     */
+    public static $startTimeIndexMap = [
+        self::TIME_INDEX_MORNING => '09:15',
+        self::TIME_INDEX_AFTERNOON => '13:45',
+        self::TIME_INDEX_NIGHT => '19:00',
     ];
     
     /**
@@ -163,11 +172,12 @@ class SceneBook extends ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'booker_id', 'created_by'], 'required'],
-            [['site_id', 'time_index', 'status', 'business_id', 'level_id', 'profession_id', 'course_id', 'lession_time', 'content_type', 'shoot_mode', 'is_photograph', 'camera_count', 'is_transfer', 'created_at', 'updated_at', 'ver'], 'integer'],
+            [['business_id', 'level_id', 'profession_id', 'course_id', 'lession_time', 'start_time', 'camera_count', 'teacher_id', 'content_type', 'booker_id'], 'required'],
+            [['site_id', 'status', 'business_id', 'level_id', 'profession_id', 'course_id', 'lession_time', 'shoot_mode', 'is_photograph', 'camera_count', 'is_transfer', 'created_at', 'updated_at', 'ver'], 'integer'],
             [['date'], 'safe'],
             [['id'], 'string', 'max' => 32],
             [['start_time'], 'string', 'max' => 20],
+            [['content_type'], 'string', 'max' => 8],
             [['remark'], 'string', 'max' => 255],
             [['teacher_id', 'booker_id', 'created_by'], 'string', 'max' => 36],
         ];
@@ -196,8 +206,16 @@ class SceneBook extends ActiveRecord
             'start_time' => Yii::t('app', 'Start Time'),
             'remark' => Yii::t('app', 'Remark'),
             'is_transfer' => Yii::t('app', 'Is Transfer'),
-            'teacher_id' => Yii::t('app', 'Teacher ID'),
-            'booker_id' => Yii::t('app', 'Booker ID'),
+            'teacher_id' => Yii::t('app', 'Teacher'),
+            'teacher_phone' => Yii::t(null, '{teacher}{phone}',[
+                'teacher'=> Yii::t('app', 'Teacher'),
+                'phone'=> Yii::t('app', 'Phone'),
+            ]),
+            'teacher_email' => Yii::t(null, '{teacher}{email}',[
+                'teacher'=> Yii::t('app', 'Teacher'),
+                'email'=> Yii::t('app', 'Email'),
+            ]),
+            'booker_id' => Yii::t('app', 'Booker'),
             'created_by' => Yii::t('app', 'Created By'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
@@ -241,6 +259,15 @@ class SceneBook extends ActiveRecord
         return $this->hasOne(Item::className(), ['id' => 'course_id']);
     }
     
+    /**
+     * 获取场景场地
+     * @return ActiveQuery
+     */
+    public function getSceneSite()
+    {
+        return $this->hasOne(SceneSite::className(), ['id' => 'site_id']);
+    }
+
     /**
      * 获取预约人
      * @return ActiveQuery
@@ -428,5 +455,14 @@ class SceneBook extends ActiveRecord
     public function getTimeIndexName()
     {
         return self::$timeIndexMap[$this->time_index];
+    }
+    
+    /**
+     * 获取开始时间段
+     * @return string
+     */
+    public function getstartTimeIndex()
+    {
+        return self::$startTimeIndexMap[$this->time_index];
     }
 }

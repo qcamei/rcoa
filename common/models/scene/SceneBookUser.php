@@ -24,6 +24,11 @@ use yii\db\ActiveRecord;
  */
 class SceneBookUser extends ActiveRecord
 {
+    public static $roleName = [
+        1 => '接洽人',
+        2 => '摄影师',
+    ];
+
     /**
      * @inheritdoc
      */
