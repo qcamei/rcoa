@@ -28,12 +28,12 @@ $this->title = Yii::t('app', '{Scene}{Detail}', [
                         <?= ($sceneData['op_type'] == 1) ? '自营' : '合作' ?>
                     </div>
                 </div>
-                <div class="scene-area"><span>区域：</span><?= $sceneData['area'] ?></div>
-                <div class="scene-type"><span>内容：</span><?= $sceneData['content_type'] ?></div>
-                <div class="scene-price"><span>价格：</span>￥<?= $sceneData['price'] ?>/小时</div>
-                <div class="scene-num"><span>总预约：</span><?= $registerNum ?> 次</div>
-                <div class="scene-contact"><span>联系人：</span><?= $sceneData['contact'] ?></div>
-                <div class="scene-address"><span>地址：</span><?= $sceneData['address'] ?></div>
+                <div class="scene-area"><span>区域：</span><font><?= $sceneData['area'] ?></font></div>
+                <div class="scene-type"><span>内容：</span><font><?= $sceneData['content_type'] ?></font></div>
+                <div class="scene-price"><span>价格：</span><font>￥<?= $sceneData['price'] ?>/小时</font></div>
+                <div class="scene-num"><span>总预约：</span><font><?= $registerNum ?> 次</font></div>
+                <div class="scene-contact"><span>联系人：</span><font><?= $sceneData['contact'] ?></font></div>
+                <div class="scene-address"><span>地址：</span><font><?= $sceneData['address'] ?></font></div>
                 <div class="scene-des"><span>简介：</span><font><?= $sceneData['des'] ?></font></div>
             </div>
         </div>

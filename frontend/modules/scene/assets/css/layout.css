@@ -91,6 +91,10 @@
     float: left;
 }
 
+.page .page-wrap .page-num span{
+    padding: 6px 9px;
+}
+
 .page .page-num .page-prev.disabled,
 .page .page-num .page-next.disabled {
     background: #fff;
@@ -116,7 +120,7 @@
 }
 
 .page .page-skip .input-txt {
-    width: 43px;
+    width: 36px;
     height: 28px;
     margin: 0 3px;
     text-align: center;
