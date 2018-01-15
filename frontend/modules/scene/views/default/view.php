@@ -116,9 +116,18 @@ $js = <<<JS
         searchInfoWindow.open(marker);
     });
     map.addOverlay(marker);                         //将标注添加到地图中
-    map.addEventListener("tilesloaded",function aa(){  //增加地图加载完成监听事件
-        map.panTo(point);                           //将地图中心点移动到定位的这个点位置
-    });    
+    map.addEventListener("resize",function(){  //增加地图加载完成监听事件
+        if($("#scene-map").hasClass('show')){
+            //将地图中心点移动到定位的这个点位置
+            map.panTo(point); 
+        }             
+    }); 
+    map.addEventListener("dragend",function(){  //增加地图加载完成监听事件
+        //将地图中心点移动到定位的这个点位置
+        setTimeout(function(){
+            map.panTo(point); 
+        },10);           
+    }); 
     var top_left_navigation = new BMap.NavigationControl(); //左上角，添加默认缩放平移控件
     map.addControl(top_left_navigation);
 JS;
