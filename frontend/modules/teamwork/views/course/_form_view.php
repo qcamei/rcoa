@@ -36,11 +36,11 @@ $page = [
             $buttonHtml = [
                 [
                     'name' => Yii::t('rcoa', 'Back'),
-                    'url' => ['back'],//Yii::$app->request->getReferrer(),//获取上一次访问的链接
+                    'url' => ['index'],//Yii::$app->request->getReferrer(),//获取上一次访问的链接
                     'options' => [
                         'class' => 'btn btn-default', 
-                        'onclick'=> strpos(Yii::$app->request->getReferrer(), '/teamwork/course/index') === false ? 
-                            'window.history.go(-3);return false' : 'window.history.go(-1);return false'],
+                        /*'onclick'=> strpos(Yii::$app->request->getReferrer(), '/teamwork/course/index') === false ? 
+                            'window.history.go(-2);return false' : 'window.history.go(-1);return false'*/],
                     'symbol' => '&nbsp;',
                     'conditions' => true,
                     'adminOptions' => true,
