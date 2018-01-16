@@ -31,7 +31,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => Html::img(WEB_ROOT.'/filedata/site/image/icon_logo.png', ['class' => 'logo']),
+        'brandLabel' => Html::img('/upload/site/images/icon_logo.png', ['class' => 'logo']),
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -47,8 +47,8 @@ AppAsset::register($this);
     } else {
         $menuItems = [
             ['label' => '首页', 'url' => ['/site/index']],
-            ['label' => '板书课堂', 'url' => ['/mcbs/default']],
-            ['label' => '情景课堂', 'url' => ['/mcqj/default']],
+            ['label' => '微课', 'url' => ['/mcqj/default']],
+            ['label' => 'P课程', 'url' => ['/mcbs/default']],
             [
                 'label' => '帮助中心',
                 'url' => ['/helpcenter/default/index', 'app_id'=> 'app-mconline'],

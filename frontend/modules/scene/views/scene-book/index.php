@@ -88,7 +88,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     
     <div id="month" class="dataProvider">
-        <?= $this->render('_month') ?>
+        <?= $this->render('_month', ['dataProvider' => $dataProvider, 'sceneBookUser' => $sceneBookUser]) ?>
     </div>
     <div id="week" class="dataProvider">
         <?= $this->render('_week', ['dataProvider' => $dataProvider, 'sceneBookUser' => $sceneBookUser]) ?>

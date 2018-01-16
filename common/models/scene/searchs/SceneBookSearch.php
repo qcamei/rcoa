@@ -111,16 +111,19 @@ class SceneBookSearch extends SceneBook
     public function searchModel($params, $firstSite)
     {
         $this->date = ArrayHelper::getValue($params, 'date', date('Y-m-d'));                         //日期
-        $this->date_start = ArrayHelper::getValue(DateUtil::getWeekSE($this->date), 'start');        //开始日期               
-        $this->date_end = ArrayHelper::getValue(DateUtil::getWeekSE($this->date), 'end');            //结束日期
-        $this->site_id = ArrayHelper::getValue($params, 'site_id', reset($firstSite)); //场景id
         $this->date_switch = ArrayHelper::getValue($params, 'date_switch', 'month');                 //月 or 周
+        $hasDo = $this->date_switch == 'month';
+        $date = $hasDo ? DateUtil::getMonthSE($this->date) : DateUtil::getWeekSE($this->date);
         
+        $this->site_id = ArrayHelper::getValue($params, 'site_id', reset($firstSite));              //场景id
+        $this->date_switch = ArrayHelper::getValue($params, 'date_switch', 'month');                //月 or 周
+        $this->date_start = ArrayHelper::getValue($date, 'start');                                  //开始日期               
+        $this->date_end = ArrayHelper::getValue($date, 'end');                                      //结束日期
         //查询预约任务数据
         $results = $this->searchSceneBook();
         //创建空的日期数据
-        $dateDatas = $this->date_switch == 'month' ?  $this->searchMonth()  : $this->searchWeek();
-        
+        $dateDatas = $hasDo ? $this->searchMonth() : $this->searchWeek();
+       
         $startIndex = 0;
         foreach ($results as $model) {
             for ($i = $startIndex, $len = count($dateDatas); $i < $len; $i++) {
@@ -156,15 +159,26 @@ class SceneBookSearch extends SceneBook
     {
         //创建一个月空数据
         $monthdatas = [];
-        for ($i = 0, $len = 7; $i < $len; $i++) {
-            for ($index = 0; $index < 3; $index++) {
-                $monthdatas[] = new SceneBookSearch([
-                    'id' => md5($this->site_id + date('Y-m-d', time()) + $index + rand(1,10000)),
-                    'site_id' => $this->site_id,
-                    'date' => date('Y-m-d', strtotime($this->date_start . ' +' . ($i) . 'days ')),
-                    'time_index' => $index,
-                    'date_switch' => $this->date_switch,
-                ]);
+        $dateArray = explode('-', date('Y-m', strtotime($this->date_end)));
+        $startWeek = 0;        //从星期天开始为0
+        $start = date('w', strtotime("first monday of $this->date_start"));           //当月从星期几天始
+        $end = cal_days_in_month(CAL_GREGORIAN, $dateArray[1], $dateArray[0]);        //当月的天数        
+        $mday = 1;          //第几天
+        for ($i = 0, $len = ceil((intval($start) + $end) / 7); $i < $len; $i++){
+            for($d = 0;  $d < 7; $d++){
+                $nowday = 7 * $i + $d + $startWeek;
+                if($nowday >= $start && $mday <= $end){
+                    for ($index = 0; $index < 3; $index++){
+                        $monthdatas[] = new SceneBookSearch([
+                            'id' => md5($this->site_id + date('Y-m-d', strtotime($dateArray[0].'-'.$dateArray[1].'-'.($mday))) + $index + rand(1,10000)),
+                            'site_id' => $this->site_id,
+                            'date' => date('Y-m-d', strtotime($dateArray[0].'-'.$dateArray[1].'-'.($mday))),
+                            'time_index' => $index,
+                            'date_switch' => $this->date_switch,
+                        ]);
+                    }
+                    $mday++;
+                }
             }
         }
         
@@ -188,7 +202,7 @@ class SceneBookSearch extends SceneBook
         for ($i = 0, $len = 7; $i < $len; $i++) {
             for ($index = 0; $index < 3; $index++) {
                 $weekdatas[] = new SceneBookSearch([
-                    'id' => md5($this->site_id + date('Y-m-d', time()) + $index + rand(1,10000)),
+                    'id' => md5($this->site_id + date('Y-m-d', strtotime($this->date_start . ' +' . ($i) . 'days ')) + $index + rand(1,10000)),
                     'site_id' => $this->site_id,
                     'date' => date('Y-m-d', strtotime($this->date_start . ' +' . ($i) . 'days ')),
                     'time_index' => $index,

@@ -25,6 +25,7 @@ class TeamworSearch
     public function search($params)
     {
         $nowTeam = TeamworkTool::getInstance()->getHotelTeam();
+        $nowTeam = is_array($nowTeam) ? array_keys($nowTeam) : $nowTeam;
         $mark = ArrayHelper::getValue($params, 'mark');                             //标记
         $demand_task_id = ArrayHelper::getValue($params, 'demand_task_id');         //需求任务id
         $status = ArrayHelper::getValue($params, 'status');                         //状态

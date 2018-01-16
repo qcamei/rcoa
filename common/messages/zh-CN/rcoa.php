@@ -96,10 +96,15 @@ return [
     'Booker' => '预约人',
     'Contacter' => '接洽人',
     'Shoot Man' => '摄影师',
-    'Camera Count' => '机位数',
-    'Is Photograph' => '是否拍照',
-    'Scene' => '场景',
-    'Book' => '预约',
+    'Is Publish' => '是否发布',
+    
+    //假日
+    'Holiday' => '假日',
+    'Holiday Year' => '所属年份',
+    'Holiday Date' => '日期',
+    'Is Lunar' => '农历',
+    'Holiday Year Placeholder' => '重复节日年份留空',
+    'Holiday Clear Cache' => '清理假日缓存',
     
     
     //拍摄预约-公共部分
@@ -264,5 +269,22 @@ return [
     
     //
     'Scene' => '场地',
+    'Nature' => '性质',
+    'Area' => '区域',
+    'Manager' => '管理员',
+    'Address' => '详细地址',
+    'Price' => '价格',
+    'Contact' => '联系人',
+    'Picture' => '主图片',
+    'Location' => '位置',
+    'Introduction' => '简介',
+    'Country' => '国家',
+    'Province' => '省',
+    'City' => '市',
+    'District' => '区/县',
+    'Twon' => '镇/街道',
     
+    //情景预约前端
+    'Prev' => '上一页',
+    'Next' => '下一页',
 ];

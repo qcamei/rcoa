@@ -160,7 +160,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                                                     ['course-make/couactivity-view','id'=>$couactivity['id']],
                                                                     ['target'=>'_blank'])
                                                                 ?>
-                                                                <?php if($is_show) echo Html::img(WEB_ROOT.'/filedata/image/new.gif',['class'=>'new']); ?>
+                                                                <?php if($is_show) echo Html::img('/upload/mcbs/images/new.gif',['class'=>'new']); ?>
                                                                 <div class="cou-icon">
                                                                     <?= Html::a('<i class="fa fa-eye"></i>',
                                                                         ['course-make/couactivity-view','id'=>$couactivity['id']],
@@ -236,7 +236,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 
 $actlog = Url::to(['course-make/log-index', 'course_id' => $course_id]);
-$img = Html::img(WEB_ROOT.'/filedata/image/new.gif',['class'=>'new']);
+$img = Html::img('/upload/mcbs/images/new.gif',['class'=>'new']);
 
 $js = 
 <<<JS

@@ -36,7 +36,7 @@ $page = [
             $buttonHtml = [
                 [
                     'name' => Yii::t('rcoa', 'Back'),
-                    'url' => ['back'],//Yii::$app->request->getReferrer(),
+                    'url' => ['back'],//Yii::$app->request->getReferrer(),//获取上一次访问的链接
                     'options' => [
                         'class' => 'btn btn-default', 
                         'onclick'=> strpos(Yii::$app->request->getReferrer(), '/teamwork/course/index') === false ? 

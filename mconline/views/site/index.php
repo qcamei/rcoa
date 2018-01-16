@@ -11,10 +11,10 @@ $this->title = '在线制作课程平台';
 ?>
 <div class="site-index">
 
-    <div class="mconline" style='background-image: url("<?= WEB_ROOT ?>/filedata/site/image/site_homebg.jpg");'>
+    <div class="mconline" style='background-image: url("/upload/site/images/site_homebg.jpg");'>
         <div class="platform container">
             <div class="logo">
-                <?= Html::img(WEB_ROOT.'/filedata/site/image/logo.png', ['width'=> '220px']) ?>
+                <?= Html::img('/upload/site/images/logo.png', ['width'=> '220px']) ?>
             </div> 
             <div class="name">
                 <p><span class="CHS"><?= Html::encode($this->title) ?></span></p>
@@ -24,14 +24,14 @@ $this->title = '在线制作课程平台';
         <div class="menu">
             <div class="container">
                 <div class="modules">
-                    <a href="/mcbs/default/index">
+                    <a href="/mcqj/default/index">
                         <div class="classroom">
                             <div class="icon">
-                                <?= Html::img(WEB_ROOT.'/filedata/site/image/icon_2-1.png', ['width'=>'67px']) ?>
+                                <?= Html::img('/upload/site/images/icon_2-1.png', ['width'=>'67px']) ?>
                             </div>
                             <div class="name">
-                                <p><span class="CHS">板书课堂</span></p>
-                                <span class="EN">Blackboard class</span>
+                                <p><span class="CHS">微课</span></p>
+                                <span class="EN">Micro Class</span>
                             </div>
                         </div>
                     </a>
@@ -39,14 +39,14 @@ $this->title = '在线制作课程平台';
                     <div class="line-y"></div>
                 </div>
                 <div class="modules">
-                    <a href="/mcqj/default/index">
+                    <a href="/mcbs/default/index">
                         <div class="classroom">
                             <div class="icon">
-                                <?= Html::img(WEB_ROOT.'/filedata/site/image/icon_2-2.png', ['width'=>'67px;']) ?>
+                                <?= Html::img('/upload/site/images/icon_2-2.png', ['width'=>'67px;']) ?>
                             </div>
                             <div class="name">
-                                <p><span class="CHS">情景课堂</span></p>
-                                <span class="EN">Situational class</span>
+                                <p><span class="CHS">P课程</span></p>
+                                <span class="EN">P Class</span>
                             </div>
                         </div>
                     </a>

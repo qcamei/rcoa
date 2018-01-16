@@ -4,5 +4,153 @@
             样式...
         }
 */
+/*********************************filter页面**********************************/
+.filter {
+    width: 100%;
+    display: inline-block;
+    background-color: #f0f0f0; 
+}
 
+.filter .sort-order {
+    width: 110px;
+    float: left;
+    text-align: center;
+    line-height: 45px;
+}
 
+.filter .sort-order a{
+    width: 100px;
+    height: 43px;
+    display: block;
+    color: #666;
+    position: relative;
+}
+
+.filter .sort-order a:hover {
+    color: #3aa9db;
+    text-decoration: none;
+    border-bottom: 2px solid;
+    border-bottom-color: #3aa9db;
+}
+
+.filter .sort-order .active {
+    color: #3aa9db;
+    border-bottom: 2px solid;
+    border-bottom-color: #3aa9db;
+}
+
+.filter .sort-order .icon {
+    width: 23px;
+    height: 23px;
+    position: absolute;
+    top: 10px;
+    left:5px;
+    display: inline-block;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.filter .sort-order .icon-4 {
+    background-image: url("/filedata/study/icon/icon_4.png");
+}
+
+.filter .filter-choice {
+    float: right;
+    position: relative;
+    line-height: 43px;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.filter .filter-choice>input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    top: 13px;
+    left: -13px;
+    margin-top: 0;
+}
+
+.filter .filter-choice>label {
+    margin-right: 20px;
+    margin-bottom: 0px;
+    font-weight: normal;
+}
+/*********************************page页面**********************************/
+.page {
+    width: 100%;
+}
+
+.page-wrap {
+    width: 390px;
+    margin: 0px auto;
+    display: flex;
+}
+
+.page .page-wrap .page-num {
+    float: left;
+}
+
+.page .page-wrap .page-num span{
+    padding: 6px 9px;
+}
+
+.page .page-num .page-prev.disabled,
+.page .page-num .page-next.disabled {
+    background: #fff;
+    cursor: default;
+}
+
+.page .page-num a {
+    color: #666;
+    padding: 0 10px;
+    border: 1px solid #ddd;
+}
+
+.page .page-num .pagination > .active > a {
+    color: #fff;
+    border-color: #3aa9db;
+    background-color: #3aa9db;
+}
+
+.page .page-skip {
+    float: right;
+    margin-left: 5px;
+    line-height: 30px;
+}
+
+.page .page-skip .input-txt {
+    width: 36px;
+    height: 28px;
+    margin: 0 3px;
+    text-align: center;
+}
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden
+}
+
+.clearfix {
+    *zoom: 1
+}
+
+.page .page-wrap .page-num, 
+.page .page-wrap .page-skip {
+    font-size: 10px;
+}
+
+.page .page-num a, 
+.page .page-skip b {
+    height: 30px;
+    margin: 0px 1.5px;
+    line-height: 30px;
+}
+
+.page .page-skip
+.btn-sm, .btn-group-sm > .btn{
+    line-height: 1.45;
+    margin-top: -2px;
+}

@@ -22,15 +22,26 @@ use yii\helpers\Html;
     </thead>
     
     <tbody>
-        <tr>
-            <td>sss</td>
-            <td>sss</td>
-            <td>sss</td>
-            <td>sss</td>
-            <td>sss</td>
-            <td>sss</td>
-            <td>sss</td>
-        </tr>
+        <?php 
+//            $startWeek = 0;
+//            $mday = 1;
+//            $date = isset($dataProvider->allModels[0]) ? $dataProvider->allModels[0]->date : date('Y-m-d');
+//            $start = date('w', strtotime("first monday of $this->date_start"));           //当月从星期几天始
+//            $end = cal_days_in_month(CAL_GREGORIAN, $dateArray[1], $dateArray[0]);        //当月的天数     
+//            for($i=0; $i < ceil((intval($start) + $end) / 7); $i++){
+//                echo '<tr>';
+//                    for ($d = 0; $d < 7; $d++) {
+//                        $nowday = 7 * $i + $d + $startWeek;
+//                        if($nowday >= $start && $mday < count($dataProvider->allModels)){
+//                            echo '<td>'.date('d', strtotime($dataProvider->allModels[$nowday-1]->date . '-' . $mday)) . '</td>';
+//                            $mday++;
+//                        }else{
+//                            echo '<td> </td>';
+//                        }
+//                    }
+//                echo '</tr>';
+//            }
+        ?>
     </tbody>
     
 </table>

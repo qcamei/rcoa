@@ -2,9 +2,7 @@
 
 use common\models\mconline\McbsAttention;
 use common\models\mconline\McbsCourse;
-use common\models\mconline\McbsCourseUser;
 use mconline\modules\mcbs\assets\McbsAssets;
-use mconline\modules\mcbs\utils\McbsAction;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\View;
@@ -212,10 +210,10 @@ $this->params['breadcrumbs'][] = $this->title;
             <div style="width: 100%;min-height: 340px;"><center>加载中...</center></div>
         </div>
     </div>
-    
 </div>
 
 <?= $this->render('/layouts/model') ?>
+<?= $this->render('/layouts/_footer') ?>
 
 <?php
 

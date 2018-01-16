@@ -39,7 +39,7 @@ use yii\web\View;
     </div>
 </div>
 
-<footer class="footer">
+<footer class="footer col-lg-12">
     <div class="container" style="padding: 3px 10px;">
         <p class="pull-left" style="margin-top: 15px;">&copy; 广州远程教育中心&nbsp;&nbsp;版本号：v1.50 </p>
     </div>
