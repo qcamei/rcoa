@@ -66,11 +66,6 @@ and open the template in the editor.
     background-color: #2e6da4 !important;
 }
 
-.mcbs-view .footer-navbar a:hover, a:focus {
-    background-color: rgba(255, 255, 255, 1);;
-    text-decoration: blink;
-}
-
 /** 水平分隔线 */
 .mcbs-view .footer-navbar .footer-h-rule{
     display: inline-block;
