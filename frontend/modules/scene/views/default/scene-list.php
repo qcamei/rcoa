@@ -15,7 +15,7 @@ $filter = Yii::$app->request->queryParams;
 <div class="scene-default-list container">
     <div class="list col-lg-12">
         <!--场地列表-->
-        <?php foreach ($sceneItem['query'] as $key => $scnes) :?>
+        <?php foreach ($sceneItem['querylist'] as $key => $scnes) :?>
         <div class="list-content col-lg-6 col-xs-12">
             <div class="content-content">
                 <div class="list-top">

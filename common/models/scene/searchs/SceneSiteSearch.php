@@ -136,21 +136,23 @@ class SceneSiteSearch extends SceneSite
             $query->orderBy(["SceneSite.price" => SORT_ASC]);
         }
         //复制搜索结果
-        $data = clone $query;
+        $data = clone $query;       //该数据用于点聚合功能
+        $querylist = clone $query;  //该数据用于场地列表页面
         //场地预约（主页）--显示数量 
         $query->offset(($this->page-1)*$this->limit)->limit($this->limit);
         //场地预约（主页）--分页
         $pages = new Pagination(['totalCount' => $totalCount, 'defaultPageSize' => $this->limit]);
         
         //场地列表--显示数量 
-        $query->offset(($this->page-1)*$this->limits)->limit($this->limits);
+        $querylist->offset(($this->page-1)*$this->limits)->limit($this->limits);
         //场地列表--分页
         $listpages = new Pagination(['totalCount' => $totalCount, 'defaultPageSize' => $this->limits]);
         
         return [
-            'query' => $query->all(),
-            'data' => $data->all(),
             'totalCount' => $totalCount,
+            'data' => $data->all(),
+            'query' => $query->all(),
+            'querylist' => $querylist->all(),
             'pages' => $pages,
             'listpages' => $listpages,
         ];
