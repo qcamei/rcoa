@@ -27,6 +27,8 @@ class SceneSiteSearch extends SceneSite
     private $page;
     /** @var integer 显示数量 */
     private $limit;
+    /** @var integer 显示数量 */
+    private $limits;
     
     /**
      * @inheritdoc
@@ -133,17 +135,24 @@ class SceneSiteSearch extends SceneSite
         } else {
             $query->orderBy(["SceneSite.price" => SORT_ASC]);
         }
+        //复制搜索结果
         $data = clone $query;
-        //显示数量 
+        //场地预约（主页）--显示数量 
         $query->offset(($this->page-1)*$this->limit)->limit($this->limit);
-        //分页
+        //场地预约（主页）--分页
         $pages = new Pagination(['totalCount' => $totalCount, 'defaultPageSize' => $this->limit]);
+        
+        //场地列表--显示数量 
+        $query->offset(($this->page-1)*$this->limits)->limit($this->limits);
+        //场地列表--分页
+        $listpages = new Pagination(['totalCount' => $totalCount, 'defaultPageSize' => $this->limits]);
         
         return [
             'query' => $query->all(),
             'data' => $data->all(),
             'totalCount' => $totalCount,
             'pages' => $pages,
+            'listpages' => $listpages,
         ];
     }
     
@@ -160,6 +169,7 @@ class SceneSiteSearch extends SceneSite
         $this->sort_order = ArrayHelper::getValue($params, 'sort_order', 'sort_order');     //排序
         $this->page = ArrayHelper::getValue($params, 'page', 1);                            //分页
         $this->limit = ArrayHelper::getValue($params, 'limit', 4);                          //限制显示数量    
+        $this->limits = ArrayHelper::getValue($params, 'limit', 8);                          //限制显示数量    
         
         $query = (new Query())->select('SceneSite.id')->from(['SceneSite' => SceneSite::tableName()]);
         //查询的必要条件
