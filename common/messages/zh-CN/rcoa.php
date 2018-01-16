@@ -257,7 +257,7 @@ return [
     //预览模块
     'Preview' => '预览',
     
-    //
+    //情景预约后台
     'Scene' => '场地',
     'Nature' => '性质',
     'Area' => '区域',
@@ -273,6 +273,8 @@ return [
     'City' => '市',
     'District' => '区/县',
     'Twon' => '镇/街道',
+    'Time Interval' => '时段',
+    'Booker' => '预约人',
     
     //情景预约前端
     'Bespeak' => '预约', 

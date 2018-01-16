@@ -3,10 +3,14 @@
 namespace common\models\scene\searchs;
 
 use common\models\scene\SceneBook;
+use common\models\scene\SceneSite;
+use common\models\User;
+use wskeee\framework\models\Item;
 use wskeee\utils\DateUtil;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -151,6 +155,27 @@ class SceneBookSearch extends SceneBook
                 'pageSize' =>21,
             ],
         ]);
+        return $dataProvider;
+    }
+    
+    public function searchBooks($params)
+    {
+        $query = (new Query())
+                ->select(['Book.id', 'Site.name', 'date', 'time_index', 'ItemCourse.name AS course_name',
+                    'User.nickname AS booker', 'Book.status'])
+                ->from(['Book' => SceneBook::tableName()]);
+        
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+        
+        //关联查询场地名
+        $query->leftJoin(['Site' => SceneSite::tableName()], 'Site.id = Book.site_id');
+        //关联查询课程名
+        $query->leftJoin(['ItemCourse' => Item::tableName()], 'ItemCourse.id = Book.course_id');
+        //关联查询预约人
+        $query->leftJoin(['User' => User::tableName()], 'User.id = Book.booker_id');
+        
         return $dataProvider;
     }
 }

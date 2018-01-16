@@ -362,17 +362,18 @@ body .wrap > .container {
     width: 100%;
 }
 
+/*瀑布流布局*/
 .scene-default-view .scene-details .tabcontent .tabpane .resource{
-    -moz-column-count:2; /* Firefox */
-    -webkit-column-count:2; /* Safari 和 Chrome */
+/*    -moz-column-count:2;  Firefox 
+    -webkit-column-count:2;  Safari 和 Chrome 
     column-count:2;
     -moz-column-gap: 1em;
     -webkit-column-gap: 1em;
-    column-gap: 1em;
+    column-gap: 1em;*/
 }
 
 .scene-default-view .scene-details .tabcontent .tabpane .resource img{
-    width: 564px;
+    /*width: 564px;*/
     padding: 1px;
     break-inside: avoid;
     border: 1px solid #ccc;

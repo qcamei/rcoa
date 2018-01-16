@@ -45,6 +45,10 @@ class DefaultController extends Controller
         ]);
     }
 
+    /**
+     * Renders View the index view for the module
+     * @return string
+     */
     public function actionSceneList()
     {
         $params = Yii::$app->request->queryParams;
