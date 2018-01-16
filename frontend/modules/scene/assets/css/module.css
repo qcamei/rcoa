@@ -24,9 +24,8 @@
 }
 /*********************************scene-default-index***************************/
 .scene-default-index {
-    /*margin-bottom: 35px;*/
-    width: 1200px;
-    margin: 0 auto;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
 }
 
 .scene-default-index .map,.select{
@@ -208,7 +207,7 @@
 
 .scene-default-index
 .address-right .address-area .font{
-    width: 180px;
+    width: 160px;
     float: right;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -217,13 +216,14 @@
 /*********************************scene-default-view***************************/
 .scene-default-view{
     margin: 7px auto;
-    width: 1200px;
+    /*width: 1200px;*/
 }
 
 .scene-default-view
 .introduce{
     width: 100%;
-
+    padding-right: 0px;
+    padding-left: 0px;
 }
 
 .scene-default-view
@@ -271,7 +271,8 @@
 
 .scene-default-view
 .introduce .scene-info .info-content span{
-    min-width: 70px;
+    min-width: 15%;
+    vertical-align: top;
     color: #999999;
     display: inline-block;
     text-align: right;
@@ -281,7 +282,8 @@
 
 .scene-default-view
 .introduce .scene-info .info-content font{
-    max-width: 380px;
+    max-width: 83%;
+    display: inline-block;
 }
 
 .scene-default-view
@@ -313,6 +315,8 @@
 
 .scene-default-view .scene-details {
     height: 100%;
+    padding-right: 0px;
+    padding-left: 0px;
 }
 
 .scene-default-view .scene-details .tablist {
@@ -380,7 +384,7 @@
 }
 
 .scene-default-view .scene-details .tabcontent .tabpane .resource img{
-    width: 580px;
+    width: 564px;
     padding: 1px;
     break-inside: avoid;
     border: 1px solid #ccc;
@@ -404,6 +408,103 @@
 /**地图中的信息检索框样式**/
 .scene-default-view .scene-details .tabcontent .tabpane .allmap td{
     padding-left: 4px !important;
+}
+/*********************************scene-default-list***************************/
+.scene-default-list .list{
+    margin-top: 10px;
+    padding: 0px;
+}
+
+.scene-default-list .list-content{
+    padding: 0px;
+    margin-bottom: 5px;
+}
+
+.scene-default-list .list-content .content-content{
+    border: 1px solid #cccccc;
+    margin: 5px;
+}
+
+.scene-default-list
+.list-content .list-top{
+    height: 40px;
+    padding: 5px;
+}
+
+.scene-default-list
+.list-content .list-top .list-name{
+    vertical-align: -webkit-baseline-middle;
+}
+
+.scene-default-list .list .list-img, .list-right{
+    display: inline-block;
+    height: 105px;
+    margin: 5px 5px 10px 5px;
+}
+
+.scene-default-list
+.list .list-content .list-img img{
+    width: 105px;
+    height: 105px;
+} 
+
+.scene-default-list
+.list .list-content .list-right{
+    /*width: 72%;*/
+    position: absolute;
+} 
+
+.scene-default-list .list-right .bg-color{
+    padding: 2px 5px;
+    font-size: 12px;
+    border-radius: 3px;
+    color: #fff;
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border: 1px solid transparent;
+}
+
+.scene-default-list .list-right .add-red{
+    background-color: #ff3333;
+    border-color: #d43f3a;
+}
+
+.scene-default-list .list-right .add-blue{
+    background-color: #6699ff;
+    border-color: #46b8da;
+}
+
+.scene-default-list
+.list-right .list-nature{
+    margin-bottom: 5px;
+}
+
+.scene-default-list
+.list-right .list-area,.list-type,.list-price{
+    padding: 2px 0px;
+    color: #999999;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.scene-default-list
+.list-right .list-area span,.list-type span,.list-price span{
+    color: #000;
+    font-weight: bold;
+}
+
+.scene-default-list
+.list-right .list-area .font{
+    width: 175px;
+    float: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 /*********************************scene-book***************************/

@@ -27,6 +27,8 @@ class SceneSiteSearch extends SceneSite
     private $page;
     /** @var integer 显示数量 */
     private $limit;
+    /** @var integer 显示数量 */
+    private $limits;
     
     /**
      * @inheritdoc
@@ -133,15 +135,26 @@ class SceneSiteSearch extends SceneSite
         } else {
             $query->orderBy(["SceneSite.price" => SORT_ASC]);
         }
-        //显示数量 
+        //复制搜索结果
+        $data = clone $query;       //该数据用于点聚合功能
+        $querylist = clone $query;  //该数据用于场地列表页面
+        //场地预约（主页）--显示数量 
         $query->offset(($this->page-1)*$this->limit)->limit($this->limit);
-        //分页
+        //场地预约（主页）--分页
         $pages = new Pagination(['totalCount' => $totalCount, 'defaultPageSize' => $this->limit]);
         
+        //场地列表--显示数量 
+        $querylist->offset(($this->page-1)*$this->limits)->limit($this->limits);
+        //场地列表--分页
+        $listpages = new Pagination(['totalCount' => $totalCount, 'defaultPageSize' => $this->limits]);
+        
         return [
-            'query' => $query->all(),
             'totalCount' => $totalCount,
+            'data' => $data->all(),
+            'query' => $query->all(),
+            'querylist' => $querylist->all(),
             'pages' => $pages,
+            'listpages' => $listpages,
         ];
     }
     
@@ -158,6 +171,7 @@ class SceneSiteSearch extends SceneSite
         $this->sort_order = ArrayHelper::getValue($params, 'sort_order', 'sort_order');     //排序
         $this->page = ArrayHelper::getValue($params, 'page', 1);                            //分页
         $this->limit = ArrayHelper::getValue($params, 'limit', 4);                          //限制显示数量    
+        $this->limits = ArrayHelper::getValue($params, 'limit', 8);                          //限制显示数量    
         
         $query = (new Query())->select('SceneSite.id')->from(['SceneSite' => SceneSite::tableName()]);
         //查询的必要条件
@@ -183,24 +197,22 @@ class SceneSiteSearch extends SceneSite
         $filters = [];
         //性质
         if($op_type != null){
-            $nature = (new Query())->select(['SceneSite.op_type AS filter_value'])
-                    ->from(['SceneSite' => SceneSite::tableName()])->where(['op_type' => $op_type])->one();
+            $nature = ['filter_value' => SceneSite::$TYPES[$op_type]];
             unset($params['op_type']);
-            $filters += [Yii::t('app', 'Nature') => array_merge($nature,['url' => Url::to(array_merge(['index'], $params))])];
+            $filters += [Yii::t('app', 'Nature') => array_merge($nature, ['url' => Url::to(array_merge(['index'], $params))])];
         }
         //区域
         if($area != null){
             $address = (new Query())->select(['SceneSite.area AS filter_value'])
                     ->from(['SceneSite' => SceneSite::tableName()])->where(['area' => $area])->one();
             unset($params['area']);
-            $filters += [Yii::t('app', 'Area') => array_merge($address,['url' => Url::to(array_merge(['index'], $params))])];
+            $filters += [Yii::t('app', 'Area') => array_merge($address, ['url' => Url::to(array_merge(['index'], $params))])];
         }
         //内容类型
         if($content_type != null){
-            $type_name = (new Query())->select(['SceneSite.content_type AS filter_value'])
-                    ->from(['SceneSite' => SceneSite::tableName()])->where(['like','content_type', $content_type])->one();
+            $type_name = ['filter_value' => SceneSite::$CONTENT_TYPES[$content_type]];
             unset($params['content_type']);
-            $filters += [Yii::t('app', 'Type') => array_merge($type_name,['url' => Url::to(array_merge(['index'], $params))])];
+            $filters += [Yii::t('app', 'Type') => array_merge($type_name, ['url' => Url::to(array_merge(['index'], $params))])];
         }
         
         return $filters;

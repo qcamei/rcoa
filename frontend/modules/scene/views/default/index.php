@@ -8,14 +8,18 @@ use yii\web\View;
 
 /* @var $this View */
 
-$this->title = Yii::t('app', 'Scene');
+$this->title = Yii::t('app', '{Scene}{Bespeak}',[
+    'Scene' => Yii::t('app', 'Scene'),
+    'Bespeak' => Yii::t('app', 'Bespeak'),
+]);
 $filter = Yii::$app->request->queryParams;
 
 ?>
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=r2OdCIhHY8ZEY4fZQG7DGjl1nAIVoH0a"></script>
-<!--<script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>-->
+<script type="text/javascript" src="http://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
 
-<div class="scene-default-index">
+<div class="scene-default-index container">
     <!--地图-->
     <div class="map col-lg-8">
         <span>全国分布图</span>
@@ -27,7 +31,7 @@ $filter = Yii::$app->request->queryParams;
     <div class="select col-lg-4">
         <div class="crumb">
             <ul class="crumb-nav">
-                <li><span>场地选择</span></li>
+                <li><span>场地选择:</span></li>
                 <?php foreach ($filterItem as $filter_key => $item): ?>
                     <li>
                         <i class="arrow">&gt;</i>
@@ -113,46 +117,49 @@ $filter = Yii::$app->request->queryParams;
 </div>
 <?php
 
-    foreach ($sceneItem['query'] as $key => $sceneInfo){
-        preg_match_all("/\((.*)\)/", $sceneInfo['AsText(location)'], $map_xy);        //获取括号里面的内容
-        $map_all = explode(' ', $map_xy['1']['0']);         //拆分转为数组
-        $map_x = $map_all['0'];                             //经度
-        $map_y = $map_all['1'];                             //纬度
-        $map_address = $sceneInfo['address'];               //地址
-//        var_dump($map_x,$map_y,$map_address);exit;
-    }
+$map = [];
+foreach ($sceneItem['data'] as $key => $sceneInfo){
+    preg_match_all("/\((.*)\)/", $sceneInfo['AsText(location)'], $map_xy);        //获取括号里面的内容
+    $map_all = explode(' ', $map_xy['1']['0']);         //拆分转为数组
+    $map_x = $map_all[0];                               //经度
+    $map_y = $map_all[1];                               //纬度
+    $map_address = $sceneInfo['address'];               //地址
+    $map[] = [
+        'x' => $map_x,
+        'y' => $map_y,
+        'ads' => $map_address,
+    ];
+}   
+$maps = json_encode($map); 
 
 $js = <<<JS
         
     // 百度地图API功能	
     map = new BMap.Map("allmap");
     map.centerAndZoom(new BMap.Point(105.880746, 31.95393), 5);
-      
-//    var MAX = 10;
-//    var markers = [];
-//    var pt = null;
-//    var i = 0;
-//    for ( ; i < MAX; i++) {
-//        pt = new BMap.Point(Math.random() * 40 + 85, Math.random() * 30 + 21);
-//        markers.push(new BMap.Marker(pt));
-//    }
-    var data_info = [[$map_x,$map_y, "地址：$map_address"],
-                     [116.406605,39.921585, "地址：北京市东城区东华门大街"],
-                     [116.412222,39.912345, "地址：北京市东城区正义路甲5号"]
-                   ];
-    var opts = {
-            width : 200,            // 信息窗口宽度
-            height: 60,             // 信息窗口高度
-            title : "地点信息" ,     // 信息窗口标题
-            enableMessage:true      //设置允许信息窗发送短息
-       };
-    for(var i=0;i<data_info.length;i++){
-        var marker = new BMap.Marker(new BMap.Point(data_info[i][0],data_info[i][1]));  // 创建标注
-        var content = data_info[i][2];
-        map.addOverlay(marker);               // 将标注添加到地图中
-        addClickHandler(content,marker);
+    
+    var data_info = $maps;
+    var markers = [];
+    var point = null;
+    for (var i in data_info) {
+        var point = new BMap.Point(data_info[i].x, data_info[i].y);
+        var marker = new BMap.Marker(point);
+        var content = data_info[i].ads;
+        addClickHandler(content, marker); //添加点击事件
+        markers.push(marker);
     };
-    function addClickHandler(content,marker){
+    //最简单的用法，生成一个marker数组，然后调用markerClusterer类即可。
+    var markerClusterer = new BMapLib.MarkerClusterer(map, {
+        markers:markers,
+    });
+
+    var opts = {
+        width : 200,            // 信息窗口宽度
+        height: 60,             // 信息窗口高度
+        title : "地址：" ,       // 信息窗口标题
+        enableMessage:true      //设置允许信息窗发送短息
+    };
+    function addClickHandler(content,marker){       //点击事件
         marker.addEventListener("click",function(e){
                 openInfo(content,e)}
         );
@@ -160,12 +167,13 @@ $js = <<<JS
     function openInfo(content,e){
         var p = e.target;
         var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
-        var infoWindow = new BMap.InfoWindow(content,opts);  // 创建信息窗口对象 
-        map.openInfoWindow(infoWindow,point); //开启信息窗口
+        var infoWindow = new BMap.InfoWindow(content,opts); // 创建信息窗口对象 
+        map.openInfoWindow(infoWindow,point);               //开启信息窗口
     }; 
+        
     var top_left_navigation = new BMap.NavigationControl(); //左上角，添加默认缩放平移控件
     map.addControl(top_left_navigation);
-    map.enableScrollWheelZoom(true);                      //开启鼠标滚轮缩放
+    map.enableScrollWheelZoom(true);                        //开启鼠标滚轮缩放
 JS;
 $this->registerJs($js, View::POS_READY);
 ?>

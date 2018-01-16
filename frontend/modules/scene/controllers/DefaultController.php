@@ -45,7 +45,18 @@ class DefaultController extends Controller
         ]);
     }
 
-    /**
+    public function actionSceneList()
+    {
+        $params = Yii::$app->request->queryParams;
+        $search = new SceneSiteSearch();
+        $sceneItem = $search->dataSearceh($params);             //场地搜索的结果
+        
+        return $this->render('scene-list',[
+            'sceneItem' => $sceneItem,
+        ]);
+    }
+
+        /**
      * 查询场地所在区域
      * @return array
      */
