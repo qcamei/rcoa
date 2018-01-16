@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = Yii::t('rcoa/teamwork', 'Update');
 
 <div class="container course-summary-update has-title">
 
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="container" role="document" style="margin: 30px auto;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
