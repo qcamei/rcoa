@@ -41,6 +41,34 @@ class DateUtil {
     }
     
     /**
+     * 
+     * @param date $date 指定日期
+     * @return array(start=>起始日期,end=>结束日期)
+     */
+    public static function getMonthSE($date,$offset=0)
+    {
+        $y = date("Y", strtotime($date));
+        $m = date("m", strtotime($date));
+        $m = sprintf("%02d", intval($m));
+        $y = str_pad(intval($y), 4, "0", STR_PAD_RIGHT);
+        $now_start = date("Y-m-d", strtotime($y . $m . "01000000"));
+        $now_end = date('Y-m-d', strtotime(date('Y-m-d 23:59:59', strtotime("$now_start +1 month -1 day"))));
+        
+        if($offset != 0)
+        {
+            $y = date('Y', strtotime("$date $offset month"));
+            $m = date('m', strtotime("$date $offset month"));
+            $now_start = date("Y-m-d", strtotime($y . $m . "01000000"));
+            $now_end = date('Y-m-d', strtotime(date('Y-m-d 23:59:59', strtotime("$now_start +1 month -1 day"))));
+        }
+        
+        return [
+            'start' => $now_start,
+            'end' => $now_end,
+        ];
+    }
+    
+    /**
      * 时间转换成时间格式
      * @param int $value
      * @param int $type 1(hh:mm:ss)2(mm:ss)

@@ -2,6 +2,7 @@
 
 namespace common\models\scene;
 
+use common\models\User;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
@@ -20,6 +21,7 @@ use yii\db\ActiveRecord;
  * @property string $updated_at
  *
  * @property SceneBook $book
+ * @property User $createdBy
  */
 class SceneMessage extends ActiveRecord
 {
@@ -47,7 +49,7 @@ class SceneMessage extends ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'content', 'created_by'], 'required'],
+            [['title', 'content'], 'required'],
             [['content'], 'string'],
             [['reply_id', 'created_at', 'updated_at'], 'integer'],
             [['title'], 'string', 'max' => 50],
@@ -73,6 +75,23 @@ class SceneMessage extends ActiveRecord
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
+    
+    /**
+     * 
+     * @param type $insert 
+     */
+    public function beforeSave($insert) 
+    {
+        if(parent::beforeSave($insert))
+        {
+            if($this->isNewRecord){
+                $this->created_by = Yii::$app->user->id;
+            }
+            
+            return true;
+        }else
+            return false;
+    }
 
     /**
      * @return ActiveQuery
@@ -80,5 +99,13 @@ class SceneMessage extends ActiveRecord
     public function getBook()
     {
         return $this->hasOne(SceneBook::className(), ['id' => 'book_id']);
+    }
+    
+    /**
+     * @return ActiveQuery
+     */
+    public function getCreatedBy()
+    {
+        return $this->hasOne(User::className(), ['id' => 'created_by']);
     }
 }

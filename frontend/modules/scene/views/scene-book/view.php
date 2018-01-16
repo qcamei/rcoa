@@ -1,57 +1,64 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\DetailView;
+use common\models\scene\SceneBook;
+use frontend\modules\scene\assets\SceneAsset;
+use yii\web\View;
 
-/* @var $this yii\web\View */
-/* @var $model common\models\scene\SceneBook */
+/* @var $this View */
+/* @var $model SceneBook */
 
-$this->title = $model->id;
+$this->title =  !empty($model->course_id) ? $model->course->name : null;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Scene Books'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="scene-book-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<?= $this->render('/layouts/_title', [
+    'title' => "【{$model->sceneSite->name}】{$model->date} ".SceneBook::$timeIndexMap[$model->time_index]. "：{$this->title}"
+]) ?>
 
-    <p>
-        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
+<div class="container scene-book-view has-title scene">
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'site_id',
-            'date',
-            'time_index:datetime',
-            'status',
-            'business_id',
-            'level_id',
-            'profession_id',
-            'course_id',
-            'lession_time:datetime',
-            'content_type',
-            'shoot_mode',
-            'is_photograph',
-            'camera_count',
-            'start_time',
-            'remark',
-            'is_transfer',
-            'teacher_id',
-            'booker_id',
-            'created_by',
-            'created_at',
-            'updated_at',
-            'ver',
-        ],
-    ]) ?>
+    <div class="col-xs-12 frame">
+       <div class="col-xs-12 frame-title">
+           <i class="icon fa fa-file-text-o"></i>
+           <span><?= Yii::t('app', '预约详情') ?></span>
+       </div>
 
+       <?= $this->render('_form_detai', [
+           'model' => $model,
+           'sceneBookUser' => $sceneBookUser,
+       ]) ?>
+
+    </div>
+    
+    <?= $this->render('_form_msg', ['model' => $model, 'dataProvider' => $dataProvider, 'msgNum' => $msgNum]) ?>
+    
+    <?= $this->render('appraise', ['appraiseResult' => $appraiseResult]) ?>
+    
 </div>
+
+<?= $this->render('_form_view', [
+    'model' => $model, 
+    'isRole' => $isRole,
+    'appraiseResult' => $appraiseResult,
+]) ?>
+
+<?= $this->render('/layouts/_model', ['model' => $model]) ?>
+
+<?php
+
+$js = <<<JS
+    
+    //显示模态框
+    window.myModal = function(elem){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load(elem.attr("href"));
+    }
+        
+JS;
+    $this->registerJs($js, View::POS_READY);
+?>
+
+<?php
+    SceneAsset::register($this);
+?>

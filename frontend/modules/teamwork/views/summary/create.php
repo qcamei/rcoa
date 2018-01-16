@@ -17,56 +17,41 @@ $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 
-<div class="title">
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'options' => ['class' => 'breadcrumb','style'=> 'width:300px;'],
-            'homeLink' => [
-                'label' => Yii::t('rcoa/teamwork', 'Courses'),
-                'url' => ['course/index', 'status' => CourseManage::STATUS_NORMAL],
-                'template' => '<li class="course-name" style="width:30px;">{link}</li>',
-            ],
-            'links' => [
-                [
-                    'label' => Yii::t('rcoa/teamwork', 'Course View').'：'.$model->course->demandTask->course->name,
-                    'url' => ['course/view', 'id' => $model->course_id],
-                    'template' => '<li class="course-name" style="max-width:158px;min-width:58px">{link}</li>',
-                ],
-                [
-                    'label' => Yii::t('rcoa/teamwork', 'Create Course Summary'),
-                    'template' => '<li class="course-name active" style="width:112px;">{link}</li>',
-                ],
-            ],
-        ]);?>
-    </div>
-</div>
-
 <div class="container course-summary-create has-title">
 
-    <?= $this->render('_form', [
-        'model' => $model,
-        'weekly' => $weekly,
-    ]) ?>
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel"><?= Html::encode($this->title) ?></h4>
+            </div>
+            <div class="modal-body">
 
-</div>
+                <?= $this->render('_form', [
+                    'model' => $model,
+                    'weekly' => $weekly,
+                ]) ?>
 
-<div class="controlbar">
-    <div class="container">
-        <?= Html::a(Yii::t('rcoa', 'Back'), ['course/view', 'id' => $model->course_id], ['class' => 'btn btn-default']) ?>
-        <?= Html::a(
-                $model->isNewRecord ? Yii::t('rcoa', 'Create') : Yii::t('rcoa', 'Update'),
-                'javascript:;', 
-                ['id'=>'submit', 'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            </div>
+            <div class="modal-footer">
+                <?= Html::button(Yii::t('app', 'Submit'), ['id'=>'submitsave','class'=>'btn btn-primary',
+                    'onclick' => 'submitsave();']) ?>
+            </div>
+        </div>
     </div>
+    
 </div>
 
 <?php
 $js = 
 <<<JS
-    $('#submit').click(function()
-    {
+        
+    window.submitsave = function(){
         $('#course-summary-form').submit();
-    });
+    }
+    
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>

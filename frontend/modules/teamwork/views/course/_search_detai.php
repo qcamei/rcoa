@@ -3,6 +3,7 @@
 use common\models\teamwork\CourseManage;
 use kartik\daterange\DateRangePicker;
 use kartik\widgets\Select2;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
@@ -17,7 +18,7 @@ use yii\widgets\ActiveForm;
 
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 search-box"> 
     <div class="search-text-input">
-        <?= Html::textInput('keyword', $keyword, [
+        <?= Html::textInput('keyword', ArrayHelper::getValue($params, 'keyword'), [
             'class' => 'form-control search-input',
             'placeholder' => '请输入关键字...'
         ]); ?>
@@ -39,9 +40,9 @@ use yii\widgets\ActiveForm;
             <div class="col-lg-9">
                 <?= Select2::widget([
                     'id' => 'select2-item_type_id',
-                    'value'=> $itemTypeId,
+                    'value'=> ArrayHelper::getValue($params, 'item_type_id'),
                     'name' => 'item_type_id',
-                    'data' => $itemType,
+                    'data' => $itemTypes,
                     'options' => [
                         'placeholder' => '全部',
                     ],
@@ -58,7 +59,7 @@ use yii\widgets\ActiveForm;
             <div class="col-lg-9">
                 <?= Select2::widget([
                     'id' => 'select2-item_id',
-                    'value'=> $itemId,
+                    'value'=> ArrayHelper::getValue($params, 'item_id'),
                     'name' => 'item_id',
                     'data' => $items,
                     'options' => [
@@ -77,9 +78,9 @@ use yii\widgets\ActiveForm;
             <div class="col-lg-9">
                 <?= Select2::widget([
                     'id' => 'select2-item_child_id',
-                    'value'=> $itemChildId,
+                    'value'=> ArrayHelper::getValue($params, 'item_child_id'),
                     'name' => 'item_child_id',
-                    'data' => $itemChild,
+                    'data' => $itemChilds,
                     'options' => [
                         'placeholder' => '全部',
                     ],
@@ -96,9 +97,9 @@ use yii\widgets\ActiveForm;
             <div class="col-lg-9">
                 <?= Select2::widget([
                     'id' => 'select2-course_id',
-                    'value'=> $courseId,
+                    'value'=> ArrayHelper::getValue($params, 'course_id'),
                     'name' => 'course_id',
-                    'data' => $course,
+                    'data' => $courses,
                     'options' => [
                         'placeholder' => '全部',
                     ],
@@ -115,9 +116,9 @@ use yii\widgets\ActiveForm;
             <div class="col-lg-9">
                 <?= Select2::widget([
                     'id' => 'select2-team_id',
-                    'value'=> $team_id,
+                    'value'=> ArrayHelper::getValue($params, 'team_id'),
                     'name' => 'team_id',
-                    'data' => $team,
+                    'data' => $teams,
                     'options' => [
                         'placeholder' => '全部',
                     ],
@@ -134,7 +135,7 @@ use yii\widgets\ActiveForm;
             <div class="col-lg-9">
                 <?= Select2::widget([
                     'id' => 'select2-status',
-                    'value'=> $status,
+                    'value'=> ArrayHelper::getValue($params, 'status'),
                     'name' => 'status',
                     'data' => CourseManage::$statusName,
                     'options' => [
@@ -152,7 +153,7 @@ use yii\widgets\ActiveForm;
             </label>
             <div class="col-lg-9">
                 <?= DateRangePicker::widget([
-                    'value'=> $time,
+                    'value'=> ArrayHelper::getValue($params, 'time'),
                     'name' => 'time',
                     //'presetDropdown' => true,
                     'hideInput' => true,
@@ -188,7 +189,7 @@ use yii\widgets\ActiveForm;
 
 <?php
 //$url = Yii::$app->urlManager->createUrl(['teamwork/course/search']);
-
+$mark = ArrayHelper::getValue($params, 'mark', 0);
 $js = 
 <<<JS
     var mark = $mark;

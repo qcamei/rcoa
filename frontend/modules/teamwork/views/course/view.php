@@ -1,6 +1,7 @@
 <?php
 
 use common\models\teamwork\CourseManage;
+use common\widgets\ueditor\UeditorAsset;
 use frontend\modules\teamwork\TwAsset;
 use yii\helpers\Html;
 use yii\web\View;
@@ -101,4 +102,5 @@ JS;
 
 <?php
     TwAsset::register($this);
+    UeditorAsset::register($this);
 ?>

@@ -2,8 +2,10 @@
 
 namespace common\models\scene;
 
+use common\models\question\Question;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
@@ -14,6 +16,9 @@ use yii\db\ActiveRecord;
  * @property string $q_id       问题滴
  * @property integer $value     得分
  * @property integer $index     索引
+ * 
+ * @property Question $question         获取评价题目
+ * @property SceneAppraise[] $appraises 获取所有场景评价
  */
 class SceneAppraiseTemplate extends ActiveRecord
 {
@@ -57,5 +62,21 @@ class SceneAppraiseTemplate extends ActiveRecord
             'value' => Yii::t('app', 'Value'),
             'index' => Yii::t('app', 'Index'),
         ];
+    }
+    
+    /**
+     * @return ActiveQuery
+     */
+    public function getQuestion()
+    {
+        return $this->hasOne(Question::className(), ['id' => 'q_id']);
+    }
+    
+    /**
+     * @return ActiveQuery
+     */
+    public function getAppraises()
+    {
+        return $this->hasMany(SceneAppraise::className(), ['q_id' => 'q_id']);
     }
 }

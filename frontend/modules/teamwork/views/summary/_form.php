@@ -19,14 +19,10 @@ use yii\widgets\ActiveForm;
         ],
     ]) ?>
 
-    <?php
-        if(!$model->isNewRecord)
-            echo '<span class="team-leader">编辑-本周周报 ('.date('Y-m-d', $model->created_at).')</span>'
-    ?>
-     <?= $form->field($model, 'content')->textarea([
+    <?= $form->field($model, 'content')->textarea([
             'id' => 'container', 
             'type' => 'text/plain', 
-            'style' => 'width:100%; height:400px;',
+            'style' => 'width:100%; height:350px;',
             'placeholder' => '课程总结...'
     ])->label('') ?>
     
@@ -39,7 +35,9 @@ use yii\widgets\ActiveForm;
 
  $js =
 <<<JS
+    
     $('#container').removeClass('form-control');
+    
     var ue = UE.getEditor('container', {toolbars:[
         [
             'fullscreen', 'source', '|', 'undo', 'redo', '|',  
@@ -50,9 +48,11 @@ use yii\widgets\ActiveForm;
             'simpleupload', 'horizontal'
         ]
     ]});
+         
     ue.ready(function(){
         ue.setContent('$weekly');
     });
+    
 JS;
     $this->registerJs($js,  View::POS_READY); 
 ?> 

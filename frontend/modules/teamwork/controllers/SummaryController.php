@@ -167,7 +167,7 @@ class SummaryController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['course/view', 'id' => $model->course_id]);
         } else {
-            return $this->render('create', [
+            return $this->renderAjax('create', [
                 'model' => $model,
                 'weekly' => file_get_contents('./filedata/teamwork/weekly/weekly_template.html'),       //获取文件内容
             ]);
@@ -197,7 +197,7 @@ class SummaryController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['course/view', 'id' => $model->course_id]);
         } else {
-            return $this->render('update', [
+            return $this->renderAjax('update', [
                 'model' => $model,
                 'weekly' => $model->content,
             ]);

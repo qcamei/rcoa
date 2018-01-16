@@ -5,10 +5,22 @@
         }
 */
 
-body .wrap > .container {
+/**********************************scene-book-index*****************************/
+.scene-book .scene-book-navbar {
     width: 100%;
-    margin: 0;
-    padding: 0;
+    padding: 5px 0; 
+}
+
+.scene-book .btn-group {
+    padding:0; 
+}
+
+.scene-book .dataProvider {
+    display: none;
+}
+
+.scene-book .dataProvider.in {
+    display: block;
 }
 /*********************************scene-default-index***************************/
 .scene-default-index {
@@ -506,6 +518,11 @@ body .wrap > .container {
     border-bottom: 1px solid #ddd;
 }
 
+.scene-book 
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #fff;
+}
+
 .scene-book .date,
 .scene-book .time_index {
     border: 1px solid #ddd;
@@ -534,6 +551,7 @@ body .wrap > .container {
 
 .scene-book .content_type {
     width: 30px;
+    height: 21px;
     padding: 2px;
     display: block;
     font-size: 12px;
@@ -543,12 +561,209 @@ body .wrap > .container {
     background-color: rgba(243, 123, 83, 1);
 }
 
-.scene-book .table-striped > tbody > tr:nth-of-type(odd) {
-    background-color: #fff;
+.scene-book .photograph {
+    width: 30px;
+    padding: 2px;
+    display: block;
+    font-size: 12px;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
 }
 
-.scene-book .table-striped > tbody > tr:nth-of-type(6n+1),
-.scene-book .table-striped > tbody > tr:nth-of-type(6n+2),
-.scene-book .table-striped > tbody > tr:nth-of-type(6n+3) {
+.scene-book .photograph.Yes {
+    background-color: #d9534f;
+}
+
+.scene-book .photograph.No {
+    background-color: #333333;
+}
+
+.scene-book .table-month > thead > tr > th,
+.scene-book .table-month > tbody > tr > td {
+    text-align: center;
+}
+
+.scene-book .table-month > thead > tr > th,
+.scene-book .table-week > tbody > tr:nth-of-type(6n+1),
+.scene-book .table-week > tbody > tr:nth-of-type(6n+2),
+.scene-book .table-week > tbody > tr:nth-of-type(6n+3) {
     background-color: #f9f9f9;
+}
+
+/**********************************scene-book-_form****************************/
+.scene .site, .scene .time {
+    font-size: 12px;
+    color: rgb(153, 153, 153);
+}
+
+.scene .time-index-map {
+    width: 100%;
+    margin-top: 25px;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+/**********************************scene-book-view****************************/
+.scene .frame {
+    padding-left: 0;
+    padding-right: 0;
+    display: inline-block
+}
+
+.scene .frame .frame-title {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    color: #ffffff;
+    line-height: 20px;
+    background-color: rgba(153, 153, 153, 1);
+}
+
+.scene .frame .frame-table {
+    margin-bottom: 20px;
+    padding-right: 0;
+    padding-left: 0;
+    border: 1px #ddd solid;
+}
+
+.scene .frame
+.frame-title .icon {
+    float: left; 
+    margin-top: 3px;
+    margin-right: 5px;
+}
+
+.scene .frame
+.frame-title>span {
+    display: block;
+    float: left;
+}
+
+/***************************************留言样式********************************/
+.scene .frame .msg {
+    height: 470px;
+    border: 1px #cccccc solid;
+}
+
+.scene .frame .msglist {
+    width: 100%;
+    height: 388px;
+    padding-left: 75px;
+    padding-right: 15px;
+    position: relative;
+    overflow-y: auto;
+}
+
+.scene .frame
+.time-vertical {
+    list-style-type: none;
+    border-left: 1px solid #eee;
+    padding: 0px;
+    margin-bottom: 0;
+}
+
+.scene .frame
+.time-vertical li {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.scene .frame
+.time-vertical li b:before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: -5px;
+    width: 10px;
+    height: 10px;
+    border: 2px solid #cccccc;
+    border-radius: 10px;
+    background: #cccccc;
+}
+ 
+.scene .frame
+.time-vertical li .img-circle {
+    width: 45px;
+    height: 45px;
+    position: absolute;
+    top: 5px;
+    left: -65px;
+    background-color: #ccc;
+}
+
+.scene .frame
+.time-vertical li .msg-frame {
+    display: inline-block;
+    margin-left: 20px;
+    padding: 10px;
+    color: #666666;
+    border-radius: 6px;
+    background-color: #ededed;
+}
+
+.scene .frame
+.time-vertical li .username {
+    color: #cccccc;
+}
+
+.scene .frame
+.time-vertical li .time {
+    color: #999999;
+}
+
+.scene .frame .msgform {
+    height: 80px;
+    padding: 10px;
+    position: relative;
+    background-color: #ddd;
+}
+
+.scene .frame .msginput {
+   padding: 0;
+}
+
+.scene .frame
+.msginput textarea {
+   width: 100%;
+   height: 60px;
+   padding: 10px;
+}
+
+.scene .frame .msgbtn {
+   padding-right: 0;
+   padding-left: 10px;
+}
+
+.scene .frame .msgbtn>a {
+   width: 100%;
+   height: 60px;
+   padding-top: 20px;
+   padding-bottom: 20px;
+}
+
+/*************************scene-appraise-_form*********************************/
+.scene-appraise {
+    padding: 30px;
+}
+
+.scene-appraise .appraise {
+    margin-left: 25px !important;
+}
+
+.scene-appraise .appraise.add-color {
+    color: #2E6DA4;
+}
+
+.scene-appraise .appraise:hover label {
+    cursor:pointer;
+}
+
+/*************************scene-appraise-index*********************************/
+.scene-appraise .role-name {
+    width: 255px;
+    padding: 5px 10px;
+    margin: 0 -30px 15px;
+    display: inline-block;
+    background-color: #eeeeee;
 }

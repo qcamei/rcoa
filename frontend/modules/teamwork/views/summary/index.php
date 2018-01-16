@@ -91,7 +91,7 @@ $isAuthorization = Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER);    //�
             [
                 'name' => Yii::t('rcoa/teamwork', 'Updated Weekly'),
                 'url' => ['summary/update', 'course_id' => $model->id, 'create_time' => $results['create_time']],
-                'options' => ['id' => 'update', 'class' => 'btn btn-primary weekinfo'],
+                'options' => ['id' => 'update', 'class' => 'btn btn-primary weekinfo', 'onclick' => 'myModal($(this));return false'],
                 'symbol' => '&nbsp;',
                 'conditions' => $weeklyInfoResult && $model->getIsNormal(),
                 'adminOptions' => true,
@@ -99,7 +99,7 @@ $isAuthorization = Yii::$app->user->can(RbacName::ROLE_PROJECT_MANAGER);    //�
             [
                 'name' => Yii::t('rcoa/teamwork', 'Create Weekly'),
                 'url' =>['summary/create', 'course_id' => $model->id],
-                'options' => ['class' => 'btn btn-primary weekinfo'],
+                'options' => ['class' => 'btn btn-primary weekinfo', 'onclick' => 'myModal($(this));return false'],
                 'symbol' => '&nbsp;',
                 'conditions' => !$weeklyInfoResult && $model->getIsNormal(),
                 'adminOptions' => true,
@@ -161,21 +161,21 @@ $js =
         result = $results,
         createdAt = "$createdAt",
         createdBy = "$createdBy";
-    /** 每月周数列表 */
+    // 每月周数列表
     $.each(weekinfo, function(){
         $('<a>').html('<i class="state-icon '+this['icon']+'"></i>'+this['date']).addClass(this['class']).attr(
            'date', this.week['start']+'/'+this.week['end']).appendTo($("#weekinfo"));
     });
-    /** 单击选中 */
+    // 单击选中
     $('.weekinfo').click(function(){
         clickSelect($(this));
     });
-    /** 周报详情 */
+    // 周报详情
     $('<p>').html('<span>'+createdAt+'：'+result['created_at']+'</span>&nbsp;&nbsp;<span>'+createdBy+'：'+result['create_by']+'</span>').addClass('time').appendTo(".summar");
     $('<p>').html(result['content']).addClass('content').insertAfter('.time');
         
     
-    /** 下拉框AJAX */
+    // 下拉框AJAX
     function select2Log(e){
         var lastMonth = $(e).val();
         $.ajax({
@@ -196,7 +196,7 @@ $js =
                         $('<span>').html('请求超时！').attr('style', 'display: block;margin: 12px 0 0 5px;').appendTo($("#weekinfo"));
                     }, 10000);
                 }
-                /** 单击选中 */
+                //单击选中
                 $('.weekinfo').click(function(){
                     clickSelect($(this));
                 });
@@ -207,7 +207,7 @@ $js =
             }
         })
     }
-    /** 每周列表AJAX */          
+    // 每周列表AJAX       
     function clickWeekinfo(e){
         var date = $(e).attr('date'),
             isAuthorization = $isAuthorization; 
@@ -241,12 +241,17 @@ $js =
             }
         })
     }
-    /** 按钮选中状态 */
+    //按钮选中状态
     function clickSelect(e){
         if($('.btn-info').hasClass('active'))
             $('.btn-info').removeClass('active')
         $(e).addClass('active');
         clickWeekinfo($(e));
+    }
+    //显示模态框
+    window.myModal = function(elem){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load(elem.attr("href"));
     }
 JS;
     $this->registerJs($js,  View::POS_READY);

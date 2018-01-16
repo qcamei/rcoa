@@ -1,6 +1,9 @@
 <?php
 
-use mconline\modules\mcbs\assets\McbsAssets;
+use common\models\worksystem\WorksystemTask;
+use frontend\modules\worksystem\assets\WorksystemAssets;
+    
+/* @var $model WorksystemTask */
 
 ?>
 
@@ -24,5 +27,5 @@ use mconline\modules\mcbs\assets\McbsAssets;
 </div>
 
 <?php
-    McbsAssets::register($this);
+    WorksystemAssets::register($this);
 ?>
