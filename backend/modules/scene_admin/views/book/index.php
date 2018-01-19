@@ -1,9 +1,12 @@
 <?php
 
+use common\models\scene\SceneBook;
 use common\models\scene\searchs\SceneBookSearch;
+use kartik\daterange\DateRangePicker;
 use kartik\widgets\Select2;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
 
@@ -16,6 +19,7 @@ $this->title = Yii::t('app', '{Bespeak}{List}',[
     'List' => Yii::t('app', 'List'),
 ]);
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="scene-book-index">
 
@@ -45,8 +49,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         'allowClear' => true,
                     ],
                 ]),
-                'value' => function($data) {
-                    return !empty($data['name']) ? $data['name'] : NULL;
+                'value' => function($model) {
+                    /* @var $model SceneBook */
+                    return !empty($model->site_id) ? $model->sceneSite->name : NULL;
                 },
                 'contentOptions' => [
                     'style' => [
@@ -58,12 +63,28 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'date',
                 'label' => Yii::t('app', 'Holiday Date'),
+                'filter' => true,
                 'headerOptions' => [
                     'style' => [
                         'text-align' => 'center',
-                        'min-width' => '120px',
+                        'min-width' => '231px',
                     ],
                 ],
+                'filter' => DateRangePicker::widget([    // 日期组件
+                    'model' => $searchModel,
+                    'name' => 'date',
+                    'value' => ArrayHelper::getValue($params, 'date'),
+                    'hideInput' => true,
+                    'convertFormat'=>true,
+                    'pluginOptions' => [
+                        'locale'=>['format' => 'Y-m-d'],
+                        'allowClear' => true,
+                    ],
+                ]),
+                'value' => function($model) {
+                    /* @var $model SceneBook */
+                    return date('Y/m/d ', strtotime($model->date)) . Yii::t('rcoa', 'Week ' . date('D', strtotime($model->date)));
+                },
                 'contentOptions' => [
                     'style' => [
                         'text-align' => 'center',
@@ -72,7 +93,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ],
             [
-                'attribute' => 'time_index',
+                'attribute' => 'timeIndexName',
                 'label' => Yii::t('app', 'Time Interval'),
                 'headerOptions' => [
                     'style' => [
@@ -81,9 +102,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
                 'filter' => false,
-                'value' => function($data) {
-                    return (($data['time_index'] == 0) ? '上午' : ($data['time_index'] == 1) ? '下午' : '晚上');
-                },
                 'contentOptions' => [
                     'style' => [
                         'text-align' => 'center',
@@ -100,8 +118,19 @@ $this->params['breadcrumbs'][] = $this->title;
                         'min-width' => '180px',
                     ],
                 ],
-                'value' => function($data) {
-                    return !empty($data['course_name']) ? $data['course_name'] : NULL;
+                'filter' => Select2::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'course_id',
+                    'data' => $courseName,
+                    'hideSearch' => false,
+                    'options' => ['placeholder' => Yii::t('app', 'All')],
+                    'pluginOptions' => [
+                        'allowClear' => true,
+                    ],
+                ]),
+                'value' => function($model) {
+                    /* @var $model SceneBook */
+                    return !empty($model->course_id) ? $model->course->name : NULL;
                 },
                 'contentOptions' => [
                     'style' => [
@@ -120,8 +149,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
                 'filter' => false,
-                'value' => function($data) {
-                    return !empty($data['booker']) ? $data['booker'] : NULL;
+                'value' => function($model) {
+                    /* @var $model SceneBook */
+                    return !empty($model->booker_id) ? $model->booker->nickname : NULL;
                 },
                 'contentOptions' => [
                     'style' => [
@@ -132,13 +162,31 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'status',
-                'label' => Yii::t('app', 'Status'),
+                'label' => Yii::t('app', '{Is}{Cancel}',[
+                    'Is' => Yii::t('app', 'Is'),
+                    'Cancel' => Yii::t('app', 'Cancel'),
+                ]),
+                'format' => 'raw',
                 'headerOptions' => [
                     'style' => [
                         'text-align' => 'center',
                         'min-width' => '100px',
                     ],
                 ],
+                'filter' => SceneBook::$statusMap,
+                'value' => function($model) {
+                    /* @var $model SceneBook */
+                    return Html::a(Yii::t('app', '{Cancel}{Bespeak}',[
+                            'Cancel' => Yii::t('app', 'Cancel'),
+                            'Bespeak' => Yii::t('app', 'Bespeak'),
+                        ]), ['cancel', 'id' => $model->id], [
+                            'class' => ($model->getIsCancel()) ? 'btn btn-danger btn-sm' : 'btn btn-danger btn-sm disabled',
+                            'data' => [
+                                   'confirm' => Yii::t('app', 'Are you sure you want to cancel the reservation? After the cancellation will not be restored!'),
+                                   'method' => 'post'
+                                ],
+                    ]);
+                },
                 'contentOptions' => [
                     'style' => [
                         'text-align' => 'center',
@@ -155,12 +203,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
                 'format' => 'raw',
-                'value' => function( $data) {
-                    return Html::a(Yii::t('app', 'View'), ['view', 'id' => $data['id']], [
+                'value' => function($model) {
+                    /* @var $model SceneBook */
+                    return Html::a(Yii::t('app', 'View'), ['view', 'id' => $model->id], [
                             'class' => 'btn btn-default btn-sm',
                             'style' => ['margin-right' => '5px']
                     ]) .
-                        Html::a(Yii::t('app', 'Edit'), ['update', 'id' => $data['id']], [
+                        Html::a(Yii::t('app', 'Edit'), ['update', 'id' => $model->id], [
                             'class' => 'btn btn-primary btn-sm',
                     ]);
                 },

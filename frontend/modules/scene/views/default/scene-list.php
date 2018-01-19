@@ -1,6 +1,7 @@
 <?php
 
 use frontend\modules\scene\assets\SceneAsset;
+use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\View;
 
@@ -20,7 +21,13 @@ $filter = Yii::$app->request->queryParams;
             <div class="content-content">
                 <div class="list-top">
                     <span class="list-name"><?= $scnes['name']?></span>
-                    <span class="btn btn-default btn-sm" style="float: right">设置禁用</span>
+                    <?= Html::a(Yii::t('app', '{Set}{Disabled}',[
+                            'Set' => Yii::t('app', 'Set'),
+                            'Disabled' => Yii::t('app', 'Disabled'),
+                        ]),['', 'id' => $scnes['id']],[
+                            'class' => 'btn btn-default btn-sm',
+                            'style' => ['float' => 'right']
+                        ])?>
                 </div>
                 <div class="list-content">
                     <a href="<?= Url::to(['view', 'id' => $scnes['id']]) ?>" class="list-img" title="<?= $scnes['address']?>">

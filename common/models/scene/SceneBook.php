@@ -108,7 +108,7 @@ class SceneBook extends ActiveRecord
      * 状态列表
      * @var array
      */
-    public $statusMap = [
+    public static $statusMap = [
         self::STATUS_DEFAULT => '未预约',
         self::STATUS_BOOKING => '预约中',
         self::STATUS_ASSIGN => '待指派',
@@ -408,6 +408,14 @@ class SceneBook extends ActiveRecord
     public function getIsStatusCancel()
     {
         return $this->status == self::STATUS_CANCEL;
+    }
+
+    /**
+     * 获取是否是可以取消的状态
+     */
+    public function getIsCancel()
+    {
+        return $this->status > self::STATUS_BOOKING && $this->status < self::STATUS_BREAK_PROMISE;
     }
 
     /**

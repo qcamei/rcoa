@@ -296,7 +296,7 @@
     margin-bottom: 0;
     font-weight: normal;
     line-height: 1.42857143;
-    text-align: center;
+    /*text-align: center;*/
     white-space: nowrap;
     border: 1px solid transparent;
 }
@@ -461,10 +461,10 @@
     border-radius: 3px;
     color: #fff;
     display: inline-block;
-    margin-bottom: 0;
+    /*margin-bottom: 0;*/
     font-weight: normal;
     line-height: 1.42857143;
-    text-align: center;
+    /*text-align: center;*/
     white-space: nowrap;
     vertical-align: middle;
     border: 1px solid transparent;
@@ -501,7 +501,7 @@
 
 .scene-default-list
 .list-right .list-area .font{
-    width: 175px;
+    width: 169px;
     float: right;
     overflow: hidden;
     text-overflow: ellipsis;

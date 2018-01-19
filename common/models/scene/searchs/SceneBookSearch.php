@@ -3,9 +3,6 @@
 namespace common\models\scene\searchs;
 
 use common\models\scene\SceneBook;
-use common\models\scene\SceneSite;
-use common\models\User;
-use wskeee\framework\models\Item;
 use wskeee\utils\DateUtil;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -59,6 +56,7 @@ class SceneBookSearch extends SceneBook
      */
     public function search($params)
     {
+        $this->date = ArrayHelper::getValue($params, 'date');                         //时间段
         $query = SceneBook::find();
 
         // add conditions that should always apply here
@@ -74,11 +72,11 @@ class SceneBookSearch extends SceneBook
             // $query->where('0=1');
             return $dataProvider;
         }
-
+        
         // grid filtering conditions
         $query->andFilterWhere([
+            'id' => $this->id,
             'site_id' => $this->site_id,
-            'date' => $this->date,
             'time_index' => $this->time_index,
             'status' => $this->status,
             'business_id' => $this->business_id,
@@ -95,9 +93,14 @@ class SceneBookSearch extends SceneBook
             'updated_at' => $this->updated_at,
             'ver' => $this->ver,
         ]);
+        
+        //按时间段搜索
+        if($this->date != null){
+            $this->date = explode(" - ", $this->date);
+            $query->andFilterWhere(['between', 'date', $this->date[0], $this->date[1]]);
+        }
 
-        $query->andFilterWhere(['like', 'id', $this->id])
-            ->andFilterWhere(['like', 'start_time', $this->start_time])
+        $query->andFilterWhere(['like', 'start_time', $this->start_time])
             ->andFilterWhere(['like', 'remark', $this->remark])
             ->andFilterWhere(['like', 'teacher_id', $this->teacher_id])
             ->andFilterWhere(['like', 'booker_id', $this->booker_id])
@@ -236,24 +239,4 @@ class SceneBookSearch extends SceneBook
         return $query->all();
     }
     
-    public function searchBooks($params)
-    {
-        $query = (new Query())
-                ->select(['Book.id', 'Site.name', 'date', 'time_index', 'ItemCourse.name AS course_name',
-                    'User.nickname AS booker', 'Book.status'])
-                ->from(['Book' => SceneBook::tableName()]);
-        
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-        
-        //关联查询场地名
-        $query->leftJoin(['Site' => SceneSite::tableName()], 'Site.id = Book.site_id');
-        //关联查询课程名
-        $query->leftJoin(['ItemCourse' => Item::tableName()], 'ItemCourse.id = Book.course_id');
-        //关联查询预约人
-        $query->leftJoin(['User' => User::tableName()], 'User.id = Book.booker_id');
-        
-        return $dataProvider;
-    }
 }

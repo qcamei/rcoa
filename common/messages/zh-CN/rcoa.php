@@ -181,6 +181,7 @@ return [
     'The requested page does not exist.' => '所请求的页面不存在。',
     'Select Placeholder' => '请选择...',
     'Input Placeholder' => '请输入...',
+    'Are you sure you want to cancel the reservation? After the cancellation will not be restored!' => '你确定要取消预约吗？取消后将不能恢复！',
     
     //后台
     'Config' => '配置',
@@ -290,4 +291,7 @@ return [
     'Bespeak' => '预约', 
     'Prev' => '上一页',
     'Next' => '下一页',
+    'Assign' => '指派',
+    'Camera Count' => '机位',
+    'Disabled' => '禁用',
 ];
