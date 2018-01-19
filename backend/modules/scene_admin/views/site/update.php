@@ -24,6 +24,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
         'model' => $model,
         'area' => $area,
         'manager' => $manager,
+        'point' => $point,
     ]) ?>
 
 </div>

@@ -79,6 +79,7 @@ class SiteController extends BaseController
                 'model' => $model,
                 'area' => $this->getArea(),
                 'manager' => $this->getManager(),
+                'point' => $this->getPoint($model->id),
             ]);
         }
     }
@@ -100,6 +101,7 @@ class SiteController extends BaseController
                 'model' => $model,
                 'area' => $this->getArea(),
                 'manager' => $this->getManager(),
+                'point' => $this->getPoint($id),
             ]);
         }
     }
