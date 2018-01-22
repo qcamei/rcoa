@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 
-<?= $this->render('/layouts/_form_nav', ['model' => $model]) ?>
+<?= $this->render('/layouts/_form_nav', ['model' => $model, 'params' => ['exit-create', 'id' => $model->id, 'date_switch' => $model->date_switch]]) ?>
 
 <?= $this->render('/layouts/_model') ?>
 

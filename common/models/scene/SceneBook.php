@@ -56,9 +56,11 @@ class SceneBook extends ActiveRecord
     const BOOKING_TIMEOUT = 2*60;
     /** 失约超时 */
     const STATUS_BREAK_PROMISE_TIMEOUT = 72*60*60;
+    /* 临时创建场景 */
+    const SCENARIO_TEMP_CREATE = 'tempCreate';
     
     /** 默认状态 未预约 */
-    const STATUS_DEFAULT = 100;
+    const STATUS_DEFAULT = 0;
     /** 预约进行中 */
     const STATUS_BOOKING = 200;
     /** 委派状态,任务刚发出 */
@@ -84,8 +86,6 @@ class SceneBook extends ActiveRecord
     const TIME_INDEX_AFTERNOON = 1;
     /** 时段 晚上 */
     const TIME_INDEX_NIGHT = 2;
-    /* 临时创建场景 */
-    const SCENARIO_TEMP_CREATE = 'tempCreate';
     
     /**
      * 自定义属性
@@ -155,6 +155,19 @@ class SceneBook extends ActiveRecord
     {
         return '{{%scene_book}}';
     }
+    
+    public function scenarios() {
+        return [
+            self::SCENARIO_DEFAULT => [
+                'business_id', 'level_id', 'profession_id', 'course_id', 'lession_time', 'start_time', 'camera_count', 'teacher_id', 'content_type', 'booker_id',
+                'site_id', 'status', 'shoot_mode', 'is_photograph', 'is_transfer', 'created_at', 'updated_at', 'ver',
+                'date', 'remark', 'created_by'
+            ],
+            self::SCENARIO_TEMP_CREATE => [
+                'id', 'site_id', 'date', 'time_index', 'status',  'create_by', 'ver'
+            ],
+        ];
+    }
 
     /**
      * @inheritdoc
@@ -201,7 +214,7 @@ class SceneBook extends ActiveRecord
             'lession_time' => Yii::t('app', 'Lession Time'),
             'content_type' => Yii::t('app', 'Content Type'),
             'shoot_mode' => Yii::t('app', 'Shoot Mode'),
-            'is_photograph' => Yii::t('app', 'Is Photograph'),
+            'is_photograph' => Yii::t('app', 'Photograph'),
             'camera_count' => Yii::t('app', 'Camera Count'),
             'start_time' => Yii::t('app', 'Start Time'),
             'remark' => Yii::t('app', 'Remark'),
@@ -221,6 +234,14 @@ class SceneBook extends ActiveRecord
             'updated_at' => Yii::t('app', 'Updated At'),
             'ver' => Yii::t('app', 'Ver'),
         ];
+    }
+    
+    public function afterFind() {
+        if($this->getIsBooking() && (time() - $this->updated_at > self::BOOKING_TIMEOUT))
+            $this->status = self::STATUS_DEFAULT;
+            $this->save(false,['status']);
+        
+        parent::afterFind();
     }
 
     /**
@@ -333,7 +354,8 @@ class SceneBook extends ActiveRecord
      */
     public function getStatusName()
     {
-        return $this->statusMap[$this->status];
+        if(isset($this->statusMap[$this->status]))
+            return $this->statusMap[$this->status];
     }
     
     /**

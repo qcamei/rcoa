@@ -35,6 +35,8 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <?= $this->render('appraise', ['appraiseResult' => $appraiseResult]) ?>
     
+    <?= $this->render('log', ['logResult' => $logResult]) ?>
+    
 </div>
 
 <?= $this->render('_form_view', [

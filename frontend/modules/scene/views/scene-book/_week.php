@@ -5,6 +5,12 @@ use yii\grid\GridView;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
+
+//date('d')+1 明天预约时间
+$dayTomorrow = date('Y-m-d H:i:s',strtotime("+1 days"));
+//30天后预约时间
+$dayEnd = date('Y-m-d H:i:s',strtotime("+31 days"));
+
 ?>
 <?= GridView::widget([
     'dataProvider' => $dataProvider,
@@ -52,8 +58,8 @@ use yii\helpers\Html;
             'label' => '',
             'value' => function($model) {
                 return $model->is_photograph ? 
-                        '<i class="glyphicon glyphicon-camera" style="color:#333"></i>':
-                        '<i class="glyphicon glyphicon-camera" style="color:#ddd"></i>';
+                        '<i class="fa fa-camera" style="color:#333"></i>':
+                        '<i class="fa fa-camera" style="color:#ddd"></i>';
             },
             'headerOptions'=>[
                 'class'=>[
@@ -82,9 +88,9 @@ use yii\helpers\Html;
             'label' => '',
             'value' => function($model) {
                 return $model->camera_count > 0 ? 
-                        "<i class=\"glyphicon glyphicon-facetime-video\" style=\"color:#333\"></i>"
+                        "<i class=\"fa fa-video-camera\" style=\"color:#333\"></i>"
                             ."<span class=\"camera_count\">×{$model->camera_count}</span>" : 
-                        "<i class=\"glyphicon glyphicon-facetime-video\" style=\"color:#ddd\"></i>";
+                        "<i class=\"fa fa-video-camera\" style=\"color:#ddd\"></i>";
             },
             'headerOptions'=>[
                 'class'=>[
@@ -292,15 +298,33 @@ use yii\helpers\Html;
             'class' => 'yii\grid\ActionColumn',
             'header' => Yii::t('app', 'Operating'),
             'buttons' => [
-                'view' => function ($url, $model) {
+                'view' => function ($url, $model) use($dayTomorrow, $dayEnd) {
                     /* @var $model SceneBook */
-                    $url = $model->isNewRecord ? 
-                        ['create', 'id' => $model->id, 'site_id' => $model->site_id, 'date' => $model->date, 'time_index' => $model->time_index, 'date_switch' => $model->date_switch] : 
-                        ['view', 'id' => $model->id];
+                    //预约时间
+                    $bookTime = date('Y-m-d H:i:s', strtotime($model->date.SceneBook::$startTimeIndexMap[$model->time_index]));
+                    $isNew = $model->getIsNew();                        //新建任务
+                    $isValid = $model->getIsValid();                    //非新建及锁定任务
+                    $isBooking = $model->getIsBooking();                //是否预约中
+                    $isAssign = $model->getIsAssign();                  //是否在【待指派】任务
+                    $isStausShootIng = $model->getIsStausShootIng();    //是否在【待评价】任务
+                    $isMe = $model->booker_id == Yii::$app->user->id;   //该预约是否为自己预约
+                    $isTransfer = $model->is_transfer;                  //该预约是否为转让预约
+                    //判断30天内的预约时段
+                    if($dayTomorrow < $bookTime && $bookTime < $dayEnd){
+                        $buttonName = $isNew  ? '<i class="fa fa-video-camera"></i>&nbsp;预约' : (!$isValid ? '预约中' : ($isTransfer ? '<i class="fa fa-refresh"></i>&nbsp;转让' : ($isAssign ? $model->getStatusName() : $model->getStatusName())));
+                        $buttonClass = $isNew ? 'btn-primary' : (!$isValid ? 'btn-primary disabled' : ($isTransfer ? 'btn-primary' : ($isAssign ? 'btn-info' : 'btn-default')));
+                    }else{
+                        $buttonName = !$isNew ? ($isTransfer ? '<i class="fa fa-refresh"></i>&nbsp;转让' : $model->getStatusName()) : '<i class="fa fa-ban"></i>&nbsp;禁用';
+                        $buttonClass = !$isNew ? ($isTransfer ? 'btn-primary' : 'btn-default') : 'btn-default disabled';
+                    }
+                    $url = $isNew ? 
+                        ['create', 'id' => $model->id, 'site_id' => $model->site_id, 
+                            'date' => $model->date, 'time_index' => $model->time_index, 
+                            'date_switch' => $model->date_switch] : ['view', 'id' => $model->id];
                     $options = [
-                        'class' => 'btn btn-primary btn-sm',
+                        'class' => "btn $buttonClass btn-sm",
                     ];
-                    return Html::a('预约', $url, $options);
+                    return Html::a('<span class="'.($isMe ? 'isMe' : '').'"></span>'.$buttonName, $url, $options);
                 },
             ],
             'headerOptions' => [
@@ -311,7 +335,7 @@ use yii\helpers\Html;
             ],
             'contentOptions' =>[
                 'style' => [
-                    'padding' => '8px 2px;',
+                    'padding' => '10px 2px;',
                 ],
             ],
             'template' => '{view}',

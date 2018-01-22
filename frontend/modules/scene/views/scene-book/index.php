@@ -77,11 +77,13 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <div class="col-lg-1 col-md-1 col-xs-4" style="padding-right:0">
             <?= Html::a('<',Url::to(['index', 
-                'site_id'=> $refsite, 'date' => DateUtil::getWeekSE($refdate,-1)['start'], 
+                'site_id'=> $refsite, 
+                'date' => $date_switch == 'month' ? DateUtil::getMonthSE($refdate,-1)['start'] : DateUtil::getWeekSE($refdate,-1)['start'], 
                 'date_switch' => $date_switch]),['class'=>'btn btn-default']);
             ?>
             <?= Html::a('>', Url::to(['index', 
-                'site_id'=> $refsite, 'date'=> DateUtil::getWeekSE($refdate,+1)['start'], 
+                'site_id'=> $refsite, 
+                'date' => $date_switch == 'month' ? DateUtil::getMonthSE($refdate,+1)['start'] : DateUtil::getWeekSE($refdate,+1)['start'],
                 'date_switch' => $date_switch]),['class'=>'btn btn-default']);
             ?>
         </div>

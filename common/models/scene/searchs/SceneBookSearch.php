@@ -114,7 +114,6 @@ class SceneBookSearch extends SceneBook
         $this->date_switch = ArrayHelper::getValue($params, 'date_switch', 'month');                 //月 or 周
         $hasDo = $this->date_switch == 'month';
         $date = $hasDo ? DateUtil::getMonthSE($this->date) : DateUtil::getWeekSE($this->date);
-        
         $this->site_id = ArrayHelper::getValue($params, 'site_id', reset($firstSite));              //场景id
         $this->date_switch = ArrayHelper::getValue($params, 'date_switch', 'month');                //月 or 周
         $this->date_start = ArrayHelper::getValue($date, 'start');                                  //开始日期               
@@ -159,20 +158,20 @@ class SceneBookSearch extends SceneBook
     {
         //创建一个月空数据
         $monthdatas = [];
-        $dateArray = explode('-', date('Y-m', strtotime($this->date_end)));
-        $startWeek = 0;        //从星期天开始为0
-        $start = date('w', strtotime("first monday of $this->date_start"));           //当月从星期几天始
-        $end = cal_days_in_month(CAL_GREGORIAN, $dateArray[1], $dateArray[0]);        //当月的天数        
+        //当前月从星期几天始
+        $weekStart = date('w', mktime(0, 0, 0, date('m', strtotime($this->date_start)), date('d', strtotime($this->date_start)), date('Y', strtotime($this->date_start))));                        
+        //当前月有多少天
+        $dayNum = date('t', mktime(0, 0, 0, date('m', strtotime($this->date_end)), date('d', strtotime($this->date_end)), date('Y', strtotime($this->date_end))));            
         $mday = 1;          //第几天
-        for ($i = 0, $len = ceil((intval($start) + $end) / 7); $i < $len; $i++){
+        for ($i = 0, $len = ceil(($weekStart + $dayNum) / 7); $i < $len; $i++){
             for($d = 0;  $d < 7; $d++){
-                $nowday = 7 * $i + $d + $startWeek;
-                if($nowday >= $start && $mday <= $end){
+                $nowDay = 7 * $i + $d + 0;
+                if($nowDay >= $weekStart && $mday <= $dayNum){
                     for ($index = 0; $index < 3; $index++){
                         $monthdatas[] = new SceneBookSearch([
-                            'id' => md5($this->site_id + date('Y-m-d', strtotime($dateArray[0].'-'.$dateArray[1].'-'.($mday))) + $index + rand(1,10000)),
+                            'id' => md5($this->site_id + date('Y-m-d', strtotime(date('Y-m', strtotime($this->date_start)).'-'.$mday)) + $index + rand(1,10000)),
                             'site_id' => $this->site_id,
-                            'date' => date('Y-m-d', strtotime($dateArray[0].'-'.$dateArray[1].'-'.($mday))),
+                            'date' => date('Y-m-d', strtotime(date('Y-m', strtotime($this->date_start)).'-'.$mday)),
                             'time_index' => $index,
                             'date_switch' => $this->date_switch,
                         ]);
@@ -220,11 +219,12 @@ class SceneBookSearch extends SceneBook
      */
     private function searchSceneBook() 
     {
-        
+        $notStatus = [SceneBook::STATUS_DEFAULT, SceneBook::STATUS_CANCEL];
         $query = SceneBookSearch::find();
         //添加查询条件
         $query->andFilterWhere(['between', 'date', $this->date_start, $this->date_end]);
         $query->andFilterWhere(['site_id' => $this->site_id]);
+        $query->andFilterWhere(['NOT IN', 'status', $notStatus]);
         
         //排序
         $query->orderBy(['date' => SORT_ASC, 'time_index' => SORT_ASC]);

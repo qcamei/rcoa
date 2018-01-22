@@ -97,6 +97,8 @@ return [
     'Contacter' => '接洽人',
     'Shoot Man' => '摄影师',
     'Is Publish' => '是否发布',
+    'Camera Count' => '机位数',
+    'Photograph' => '拍照',
     
     //假日
     'Holiday' => '假日',
