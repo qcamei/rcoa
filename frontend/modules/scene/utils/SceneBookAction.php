@@ -2,12 +2,16 @@
 
 namespace frontend\modules\scene\utils;
 
+use common\models\expert\Expert;
+use common\models\scene\SceneActionLog;
 use common\models\scene\SceneAppraise;
 use common\models\scene\SceneBook;
 use common\models\scene\SceneBookUser;
 use common\models\scene\SceneSite;
 use common\models\User;
 use frontend\modules\scene\utils\SceneBookAction;
+use wskeee\framework\models\Item;
+use wskeee\framework\models\ItemType;
 use Yii;
 use yii\db\Exception;
 use yii\db\Query;
@@ -51,6 +55,11 @@ class SceneBookAction
                 $results = $this->saveDayMultiPeriodSceneBook($model, $post);
                 $this->isExistSceneBookUser($model, $post);
                 $this->saveSceneBookUser($results, $post);
+                foreach ($results as $book_id) {
+                    $this->saveSceneActionLog([
+                        'action' => '创建','title'=>'创建预约','content'=>'无','book_id'=> $book_id
+                    ]);
+                }
             }else
                 throw new Exception($model->getErrors());
             
@@ -70,6 +79,27 @@ class SceneBookAction
      */
     public function UpdateSceneBook($model, $post)
     {
+        $content = '';
+        //获取所有新属性值
+        $newAttr = $model->getDirtyAttributes();
+        //获取所有旧属性值
+        $oldAttr = $model->getOldAttributes();
+        if($newAttr != null){
+            $oldModel = SceneBook::findOne(['id' => $oldAttr['id']]);            
+            //修改内容
+            $content .= "修改了以下内容：\n\r".
+                (isset($newAttr['course_id']) ? "课程名称：【旧】{$oldModel->course->name}>>【新】{$model->course->name}，\n\r" : null).
+                (isset($newAttr['lession_time']) ? "课时：【旧】{$oldAttr['lession_time']}>>【新】{$newAttr['lession_time']}，\n\r" : null).
+                (isset($newAttr['content_type']) ? "内容类型：【旧】{$oldAttr['content_type']}>>【新】{$newAttr['content_type']}，\n\r" : null).
+                (isset($newAttr['is_photograph']) ? "是否拍照：【旧】".($oldAttr['is_photograph'] ? "需要" : "不需要").">>【新】".($newAttr['is_photograph'] ? "需要" : "不需要")."}，\n\r" : null).
+                (isset($newAttr['camera_count']) ? "机位数：【旧】{$oldAttr['camera_count']}>>【新】{$newAttr['camera_count']}，\n\r" : null).
+                (isset($newAttr['start_time']) ? "开始时间：【旧】{$oldAttr['start_time']}>>【新】{$newAttr['start_time']}，\n\r" : null).
+                (isset($newAttr['teacher_id']) ? "老师：【旧】{$oldModel->teacher->user->nickname}>>【新】{$model->teacher->user->nickname}，\n\r" : null).
+                (isset($newAttr['booker_id']) ? "预约人：【旧】{$oldModel->booker->nickname}>>【新】{$model->booker->nickname}，\n\r" : null);
+        }
+        $sceneUser = $this->getOldNewSceneUser($oldAttr['id'], ArrayHelper::getValue($post, 'SceneBookUser.user_id'));
+        $content .= $sceneUser['oldBookUserName'] != $sceneUser['newBookUserName']  ? 
+                "接洽人：【旧】{$sceneUser['oldBookUserName']}>>【新】{$sceneUser['newBookUserName']}" : null;
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
@@ -77,6 +107,9 @@ class SceneBookAction
             if($model->save()){
                 $this->isExistSceneBookUser($model, $post);
                 $this->saveSceneBookUser($model->id, $post);
+                $this->saveSceneActionLog([
+                    'action' => '修改','title'=>'修改预约','content'=> $content,'book_id'=> $model->id
+                ]);
             }else
                 throw new Exception($model->getErrors());
             
@@ -96,6 +129,12 @@ class SceneBookAction
      */
     public function AssignSceneBook($model, $post)
     {
+        //获取所有旧属性值
+        $oldAttr = $model->getOldAttributes();
+        $sceneUser = $this->getOldNewSceneUser($oldAttr['id'], ArrayHelper::getValue($post, 'SceneBookUser.user_id'), 2);
+        $content = $sceneUser['oldBookUserName'] != '' ? 
+                "修改了以下内容：\n\r【旧摄影师】{$sceneUser['oldBookUserName']}，\n\r【新摄影师】{$sceneUser['newBookUserName']}" : 
+                 "新增：{$sceneUser['newBookUserName']}";
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
@@ -103,6 +142,63 @@ class SceneBookAction
             if($model->save()){
                 $this->isExistSceneBookUser($model, $post, 2);
                 $this->saveSceneBookUser($model->id, $post, 2);
+                $this->saveSceneActionLog([
+                    'action' => '指派','title'=> $sceneUser['oldBookUserName'] == '' ? '新增指派' : '修改指派', 
+                    'content'=> $content,'book_id'=> $model->id
+                ]);
+            }else
+                throw new Exception($model->getErrors());
+            
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        }catch (Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            throw new NotFoundHttpException("操作失败！".$ex->getMessage());
+        }
+    }
+    
+    /**
+     * 转让任务
+     * @param SceneBook $model
+     * @param array $post
+     * @throws Exception
+     */
+    public function TransferSceneBook($model, $post)
+    {
+        $content = ArrayHelper::getValue($post, 'content');
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {  
+            if($model->save()){
+                $this->saveSceneActionLog([
+                    'action' => '转让','title'=> '转让申请', 'content'=> $content,'book_id'=> $model->id
+                ]);
+            }else
+                throw new Exception($model->getErrors());
+            
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        }catch (Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            throw new NotFoundHttpException("操作失败！".$ex->getMessage());
+        }
+    }
+    
+    /**
+     * 取消转让任务
+     * @param SceneBook $model
+     * @param array $post
+     * @throws Exception
+     */
+    public function CancelTransferSceneBook($model, $post)
+    {
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {  
+            if($model->save()){
+                
             }else
                 throw new Exception($model->getErrors());
             
@@ -127,6 +223,9 @@ class SceneBookAction
         {  
             if($post != null){
                 $this->saveSceneAppraise($post);
+                $this->saveSceneActionLog([
+                    'action' => '评价','title'=> '新增评价', 'content'=> '无','book_id'=> $model->id
+                ]);
             }else
                 throw new Exception($model->getErrors());
             
@@ -167,6 +266,35 @@ class SceneBookAction
         }
     }
     
+    /**
+     * 获取旧新预约用户
+     * @param string $old_book_id           
+     * @param array $post_user_id           
+     * @param integer $role             角色：1接洽人，2摄影师
+     * @return array
+     */
+    protected function getOldNewSceneUser($old_book_id, $post_user_id, $role = 1)
+    {
+        //旧预约用户
+        $oldBookUser = (new Query())->select(['User.nickname'])
+            ->from(['SceneBookUser' => SceneBookUser::tableName()])
+            ->leftJoin(['User' => User::tableName()], 'User.id = SceneBookUser.user_id')
+            ->where(['SceneBookUser.book_id' => $old_book_id])
+            ->andWhere(['SceneBookUser.role' => $role])
+            ->orderBy(['sort_order' => SORT_ASC])->all();
+        $oldBookUserName = implode('、', ArrayHelper::getColumn($oldBookUser, 'nickname'));
+        //新接洽人
+        $newBookUser = (new Query())->select(['User.nickname'])
+            ->from(['User' => User::tableName()])
+            ->where(['User.id' => $post_user_id])->all();
+        $newBookUserName = implode('、', ArrayHelper::getColumn($newBookUser, 'nickname'));
+        
+        return [
+            'oldBookUserName' => $oldBookUserName,
+            'newBookUserName' => $newBookUserName
+        ];
+    }
+
     /**
      * 保存一天多选时段预约任务
      * @param SceneBook $model
@@ -221,6 +349,7 @@ class SceneBookAction
                 'SceneBook.date' => $model->date,
                 'SceneBook.time_index' => $multi_period
             ]);
+            
             return ArrayHelper::getColumn($query->all(), 'id');
         } else {
             $model->save();
@@ -299,6 +428,37 @@ class SceneBookAction
         }catch (Exception $ex) {
             $trans ->rollBack(); //回滚事务
         }
+    }
+    
+    /**
+     * 保存操作记录
+     * $params[
+     *   'action' => '动作',
+     *   'title' => '标题',
+     *   'content' => '内容',
+     *   'created_by' => '创建者',
+     *   'course_id' => '课程id',
+     *   'relative_id' => '相关id'
+     * ]
+     * @param array $params                                   
+     */
+    public function saveSceneActionLog($params=null)
+    {
+         
+        $action = ArrayHelper::getValue($params, 'action');                                 //动作
+        $title = ArrayHelper::getValue($params, 'title');                                   //标题  
+        $content = ArrayHelper::getValue($params, 'content');                               //内容
+        $created_by = ArrayHelper::getValue($params, 'created_by', Yii::$app->user->id);    //创建者
+        $course_id = ArrayHelper::getValue($params, 'book_id');                             //课程id
+        
+        //values数组
+        $values = [
+            'action' => $action,'title' => $title,'content' => $content,
+            'created_by' => $created_by,'book_id' => $course_id,
+            'created_at' => time(),'updated_at' => time(),
+        ];
+        /** 添加$values数组到表里 */
+        Yii::$app->db->createCommand()->insert(SceneActionLog::tableName(), $values)->execute();
     }
 
     /**

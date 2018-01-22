@@ -22,7 +22,7 @@ class SceneAsset extends AssetBundle
        'css/module.css',
     ];
     public $js = [
-        
+        'js/jquery.raty.min.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

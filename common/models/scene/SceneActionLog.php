@@ -2,6 +2,7 @@
 
 namespace common\models\scene;
 
+use common\models\User;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
@@ -20,6 +21,7 @@ use yii\db\ActiveRecord;
  * @property string $updated_at
  *
  * @property SceneBook $book
+ * @property User $createBy
  */
 class SceneActionLog extends ActiveRecord
 {
@@ -80,5 +82,14 @@ class SceneActionLog extends ActiveRecord
     public function getBook()
     {
         return $this->hasOne(SceneBook::className(), ['id' => 'book_id']);
+    }
+    
+    /**
+     * 获取创建者
+     * @return ActiveQuery
+     */
+    public function getCreateBy()
+    {
+        return $this->hasOne(User::className(), ['id' => 'created_by']);
     }
 }

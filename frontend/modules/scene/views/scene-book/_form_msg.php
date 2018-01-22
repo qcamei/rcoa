@@ -18,7 +18,7 @@ use yii\widgets\ActiveForm;
     </div>
     <div class="col-xs-12 frame-table msg">
         <div id="msg-list" class="msglist">
-            <?= $this->render('_msg_index', ['dataProvider' => $dataProvider]) ?>
+            <?= $this->render('msg_index', ['dataProvider' => $dataProvider]) ?>
         </div>
         <div class="msgform">
             <div class="col-xs-11 msginput">

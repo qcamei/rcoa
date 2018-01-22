@@ -2,6 +2,7 @@
 
 use common\models\scene\SceneBook;
 use frontend\modules\scene\assets\SceneAsset;
+use yii\helpers\Url;
 use yii\web\View;
 
 /* @var $this View */
@@ -35,7 +36,15 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <?= $this->render('appraise', ['appraiseResult' => $appraiseResult]) ?>
     
-    <?= $this->render('log', ['logResult' => $logResult]) ?>
+    <div class="col-xs-12 frame">
+        <div class="col-xs-12 frame-title">
+            <i class="icon fa fa-history"></i>
+            <span><?= Yii::t('app', 'Action Log') ?></span>
+        </div>
+        <div id="action-log" class="col-xs-12 frame-table course-make-actlog">
+            <div style="width: 100%;min-height: 450px;"><center>加载中...</center></div>
+        </div>
+    </div>
     
 </div>
 
@@ -48,9 +57,10 @@ $this->params['breadcrumbs'][] = $this->title;
 <?= $this->render('/layouts/_model', ['model' => $model]) ?>
 
 <?php
-
+$actlog = Url::to(['scene-book/log-index', 'book_id' => $model->id]);
 $js = <<<JS
-    
+    //加载操作记录列表
+    $("#action-log").load("$actlog"); 
     //显示模态框
     window.myModal = function(elem){
         $(".myModal").html("");

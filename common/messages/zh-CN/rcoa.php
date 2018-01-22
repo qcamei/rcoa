@@ -45,6 +45,7 @@ return [
     'Progress' => '进度',
     'Status' => '状态',
     'Create By' => '创建者',
+    'Created By' => '创建者',
     'Created At' => '创建时间',
     'Updated At' => '更新时间',
     'Start Time' => '开始时间',

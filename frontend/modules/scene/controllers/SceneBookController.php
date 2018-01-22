@@ -3,10 +3,12 @@
 namespace frontend\modules\scene\controllers;
 
 use common\models\expert\Expert;
+use common\models\scene\SceneActionLog;
 use common\models\scene\SceneBook;
 use common\models\scene\SceneBookUser;
 use common\models\scene\SceneMessage;
 use common\models\scene\SceneSite;
+use common\models\scene\searchs\SceneActionLogSearch;
 use common\models\scene\searchs\SceneAppraiseSearch;
 use common\models\scene\searchs\SceneBookSearch;
 use common\models\scene\searchs\SceneMessageSearch;
@@ -20,6 +22,7 @@ use Yii;
 use yii\db\Query;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
@@ -162,7 +165,14 @@ class SceneBookController extends Controller
     {
         $model = $this->findModel($id);
         
-        if ($model->load(Yii::$app->request->post())) {
+        $post = Yii::$app->request->post();
+        if(isset($post['SceneBook']['lession_time']) 
+          || isset($post['SceneBook']['camera_count'])){
+            $post['SceneBook']['lession_time'] = (int)$post['SceneBook']['lession_time'];
+            $post['SceneBook']['camera_count'] = (int)$post['SceneBook']['camera_count'];
+        }
+        
+        if ($model->load($post)) {
             SceneBookAction::getInstance()->UpdateSceneBook($model, Yii::$app->request->post());
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -198,6 +208,46 @@ class SceneBookController extends Controller
                 'model' => $model,
                 'createSceneBookUser' => $this->getShootManUser($model),
                 'existSceneBookUser' => $this->getExistSceneBookUser($model, 2),
+            ]);
+        }
+    }
+    
+    /**
+     * Transfer an existing SceneBook model.
+     * If assign is successful, the browser will be redirected to the 'view' page.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionTransfer($id)
+    {
+        $model = $this->findModel($id);
+        
+        if ($model->load(Yii::$app->request->post())) {
+            SceneBookAction::getInstance()->TransferSceneBook($model, Yii::$app->request->post());
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->renderAjax('transfer', [
+                'model' => $model,
+            ]);
+        }
+    }
+    
+    /**
+     * CancelTransfer an existing SceneBook model.
+     * If assign is successful, the browser will be redirected to the 'view' page.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionCancelTransfer($id)
+    {
+        $model = $this->findModel($id);
+        
+        if ($model->load(Yii::$app->request->post())) {
+            SceneBookAction::getInstance()->CancelTransferSceneBook($model, Yii::$app->request->post());
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->renderAjax('cancel_transfer', [
+                'model' => $model,
             ]);
         }
     }
@@ -252,6 +302,50 @@ class SceneBookController extends Controller
         } else {
             return $this->goBack(['scene-book/view', 'id' => $model->book_id]);
         }
+    }
+    
+    /**
+     * Lists all SceneActionLog models.
+     * @return mixed
+     */
+    public function actionLogIndex($book_id, $page = null)
+    {
+        $searchModel = new SceneActionLogSearch();
+        $results = $searchModel->search(Yii::$app->request->queryParams);
+        $logs = $this->getActionLogs($book_id);
+        if(Yii::$app->request->isPost){
+            $filter = Yii::$app->request->post();
+            Yii::$app->getResponse()->format = 'json';
+            return [
+                'code'=> $results ? 200 : 404,
+                'data' =>$filter,
+                'url' => Url::to(array_merge(['scene-book/log-index'], $filter)),
+                'message' => ''
+            ];
+        }else{
+            return $this->renderAjax('log_index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $results['dataProvider'],
+                'filter' => $results['filter'],
+                'action' => $logs['action'],
+                'title' => $logs['title'],
+                'createdBy' => $logs['created_by'],
+                'book_id' => $book_id,
+                'page' => $page,
+            ]);
+        }
+    }
+    
+    /**
+     * Displays a single SceneActionLog model.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionLogView($id)
+    {
+        return $this->renderAjax('log_view', [
+            'model' => SceneActionLog::findOne($id),
+        ]);
     }
     
     
@@ -481,6 +575,25 @@ class SceneBookController extends Controller
         $query->where(['book_id' => $book_id]);
         
         return $query->all();
+    }
+    
+    /**
+     * 获取该预约任务下的所有记录
+     * @param string $book_id                            
+     * @return array
+     */
+    public function getActionLogs($book_id)
+    {
+        $query = (new Query())->select(['action','title','created_by', 'User.nickname'])
+              ->from(SceneActionLog::tableName())
+              ->leftJoin(['User' => User::tableName()], 'User.id = created_by')
+              ->where(['book_id' => $book_id])->all();
+        
+        return [
+            'action' => ArrayHelper::map($query, 'action', 'action'),
+            'title' => ArrayHelper::map($query, 'title', 'title'),
+            'created_by' => ArrayHelper::map($query, 'created_by', 'nickname'),
+        ];
     }
     
     /**

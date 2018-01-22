@@ -45,8 +45,16 @@ use yii\helpers\Html;
                     ],
                     [
                         'name' => '申请转让',
-                        'url' => ['shift', 'book_id' => $model->id],
-                        'options' => ['id' => '', 'class' => 'btn btn-danger'],
+                        'url' => ['transfer', 'id' => $model->id],
+                        'options' => ['id' => 'transfer', 'class' => 'btn btn-danger', 'onclick' => 'myModal($(this));return false;'],
+                        'symbol' => '&nbsp;',
+                        'conditions' => true,
+                        'adminOptions' => true,
+                    ],
+                    [
+                        'name' => '取消转让',
+                        'url' => ['cancel-transfer', 'id' => $model->id],
+                        'options' => ['id' => 'cancel-transfer', 'class' => 'btn btn-danger', 'onclick' => 'myModal($(this));return false;'],
                         'symbol' => '&nbsp;',
                         'conditions' => true,
                         'adminOptions' => true,
