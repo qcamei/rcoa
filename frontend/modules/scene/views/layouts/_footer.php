@@ -1,13 +1,12 @@
 <?php
 
-use common\models\worksystem\WorksystemTask;
-use frontend\modules\worksystem\assets\WorksystemAssets;
+use frontend\modules\scene\assets\FooterAsset;
 use wskeee\rbac\components\ResourceHelper;
 use yii\helpers\Html;
 
 ?>
 
-<div class="controlbar worksystem">
+<div class="controlbar scene">
     <div class="footer-navbar">
         <div class="container">
             <?php
@@ -40,19 +39,19 @@ use yii\helpers\Html;
                         'adminOptions' => null,
                     ],
                     [
-                        'controllerId' => 'task',
-                        'name' => '任务',
-                        'url' => ['task/index'],
-                        'icon' => '/filedata/demand/image/list-check.png',
+                        'controllerId' => 'scene-book',
+                        'name' => '预约',
+                        'url' => ['scene-book/index'],
+                        'icon' => '/filedata/demand/image/calendar.png',
                         'options' => ['class' => 'footer-menu-item'],
                         'symbol' => '&nbsp;',
                         'conditions' => true,
                         'adminOptions' => null,
                     ],
                     [
-                        'controllerId' => 'statistics',
+                        'controllerId' => '',
                         'name' => '统计',
-                        'url' => ['statistics/index'],
+                        'url' => ['/'],
                         'icon' => '/filedata/demand/image/statistics.png',
                         'options' => ['class' => 'footer-menu-item'],
                         'symbol' => '&nbsp;',
@@ -60,13 +59,13 @@ use yii\helpers\Html;
                         'adminOptions' => null,
                     ],
                     [
-                        'controllerId' => 'task',
-                        'name' => '创建任务',
-                        'url' => ['task/create'],
-                        'icon' => '/filedata/demand/image/create.png',
-                        'options' => ['class' => 'footer-menu-item submenu-right'],
+                        'controllerId' => 'scene-manage',
+                        'name' => '场地',
+                        'url' => ['scene-manage/index'],
+                        'icon' => '/filedata/demand/image/telescope.png',
+                        'options' => ['class' => 'footer-menu-item'],
                         'symbol' => '&nbsp;',
-                        'conditions' => $controllerId == 'task' ? true : false,
+                        'conditions' => true,
                         'adminOptions' => null,
                     ],
                 ];
@@ -74,8 +73,10 @@ use yii\helpers\Html;
                 foreach ($menuItems AS $item){
                     $selected = is_array($item['controllerId']) ? in_array($controllerId, $item['controllerId']) : $controllerId == $item['controllerId'];
                     $item['options']['class'] .= $selected ? $selectClass : null;
-                    echo ResourceHelper::a(Html::img([$item['icon']]).Html::tag('span', $item['name'], ['class'=>'menu-name hidden-xs']), $item['url'], 
+                    echo Html::a(Html::img([$item['icon']]).Html::tag('span', $item['name'], ['class'=>'menu-name hidden-xs']), $item['url'], 
                             $item['options'], $item['conditions']);
+//                    echo ResourceHelper::a(Html::img([$item['icon']]).Html::tag('span', $item['name'], ['class'=>'menu-name hidden-xs']), $item['url'], 
+//                            $item['options'], $item['conditions']);
                 }
                 
             ?>
@@ -84,5 +85,4 @@ use yii\helpers\Html;
 </div>
 
 <?php
-    WorksystemAssets::register($this);
-?>
+    FooterAsset::register($this);

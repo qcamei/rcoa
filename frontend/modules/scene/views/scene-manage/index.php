@@ -13,7 +13,7 @@ $this->title = Yii::t('app', '{Scene}{List}',[
 ]);
 $filter = Yii::$app->request->queryParams;
 ?>
-<div class="scene-default-list container">
+<div class="scene-manage-index container">
     <div class="list col-lg-12">
         <!--场地列表-->
         <?php foreach ($sceneItem['querylist'] as $key => $scnes) :?>

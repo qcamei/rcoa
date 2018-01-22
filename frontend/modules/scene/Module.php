@@ -7,6 +7,7 @@ namespace frontend\modules\scene;
  */
 class Module extends \yii\base\Module
 {
+    public $layout = 'scene';
     /**
      * @inheritdoc
      */

@@ -213,45 +213,45 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-/*********************************scene-default-view***************************/
-.scene-default-view{
+/*********************************scene-manage-view***************************/
+.scene-manage-view{
     margin: 7px auto;
     /*width: 1200px;*/
 }
 
-.scene-default-view
+.scene-manage-view
 .introduce{
     width: 100%;
     padding-right: 0px;
     padding-left: 0px;
 }
 
-.scene-default-view
+.scene-manage-view
 .introduce .scene-img{
     padding-right: 0px;
     padding-left: 0px;
 }
 
-.scene-default-view
+.scene-manage-view
 .introduce .scene-img img{
     width: 100%;
     padding: 5px;
     border: #cccccc 1px solid;  
 }
 
-.scene-default-view
+.scene-manage-view
 .introduce .scene-info{
     padding-left: 0px;
     /*border: #cccccc 1px solid;*/
 }
 
-.scene-default-view
+.scene-manage-view
 .introduce .scene-info .info-content{
     padding-left: 20px;
     /*border: #cccccc 1px solid;*/
 }
 
-.scene-default-view
+.scene-manage-view
 .introduce .scene-info .scene-name{
     font-size: 16px;
     margin-top: 5px;
@@ -259,7 +259,7 @@
     font-weight: bold;
 }
 
-.scene-default-view
+.scene-manage-view
 .introduce .scene-info .scene-nature,.scene-area,.scene-type,.scene-price,
 .scene-num,.scene-contact,.scene-address,.scene-des{
     color: #000;
@@ -269,7 +269,7 @@
     margin-bottom: 10px;
 }
 
-.scene-default-view
+.scene-manage-view
 .introduce .scene-info .info-content span{
     min-width: 15%;
     vertical-align: top;
@@ -280,13 +280,13 @@
     font-weight: bold;
 }
 
-.scene-default-view
+.scene-manage-view
 .introduce .scene-info .info-content font{
     max-width: 83%;
     display: inline-block;
 }
 
-.scene-default-view
+.scene-manage-view
 .introduce .scene-info .scene-nature .bg-color{
     padding: 2px 5px;
     font-size: 12px;
@@ -301,37 +301,37 @@
     border: 1px solid transparent;
 }
 
-.scene-default-view
+.scene-manage-view
 .introduce .scene-info .scene-nature .add-red{
     background-color: #ff3333;
     border-color: #d43f3a;
 }
 
-.scene-default-view
+.scene-manage-view
 .introduce .scene-info .scene-nature .add-blue{
     background-color: #6699ff;
     border-color: #46b8da;
 }
 
-.scene-default-view .scene-details {
+.scene-manage-view .scene-details {
     height: 100%;
     padding-right: 0px;
     padding-left: 0px;
 }
 
-.scene-default-view .scene-details .tablist {
+.scene-manage-view .scene-details .tablist {
     width: 100%;
     margin-top: 50px;
     display: inline-block;
     background-color: #f0f0f0; 
 }
 
-.scene-default-view .scene-details .tablist ul {
+.scene-manage-view .scene-details .tablist ul {
     margin-bottom: 0;
     padding-left: 0;
 }
 
-.scene-default-view .scene-details .tablist ul li {
+.scene-manage-view .scene-details .tablist ul li {
     width: 110px;
     height: 48px;
     line-height: 48px;
@@ -339,18 +339,18 @@
     border-right: 1px #cbcbcb solid;
 }
 
-.scene-default-view .scene-details .tablist ul li.none {
+.scene-manage-view .scene-details .tablist ul li.none {
     border-right: none;
 }
 
-.scene-default-view .scene-details .tablist ul li a {
+.scene-manage-view .scene-details .tablist ul li a {
     height: 48px;
     display: block;
     color: #666666;
     text-decoration: none;
 }
 
-.scene-default-view .scene-details .tablist ul li a>i {
+.scene-manage-view .scene-details .tablist ul li a>i {
     width: 34px;
     height: 48px;
     float: left;
@@ -359,23 +359,23 @@
     background-repeat: no-repeat;
 }
 
-.scene-default-view .scene-details .tablist ul li a>em {
+.scene-manage-view .scene-details .tablist ul li a>em {
     font-size: 18px;
     font-style: normal;
 }
 
-.scene-default-view .scene-details .tablist ul li.active>a,
-.scene-default-view .scene-details .tablist ul li>a:hover {
+.scene-manage-view .scene-details .tablist ul li.active>a,
+.scene-manage-view .scene-details .tablist ul li>a:hover {
     color: #1b80d5;
     border-bottom: 2px #1b80d5 solid;
 }
 
-.scene-default-view .scene-details .tabcontent {
+.scene-manage-view .scene-details .tabcontent {
     width: 100%;
 }
 
 /*瀑布流布局*/
-.scene-default-view .scene-details .tabcontent .tabpane .resource{
+.scene-manage-view .scene-details .tabcontent .tabpane .resource{
 /*    -moz-column-count:2;  Firefox 
     -webkit-column-count:2;  Safari 和 Chrome 
     column-count:2;
@@ -384,78 +384,78 @@
     column-gap: 1em;*/
 }
 
-.scene-default-view .scene-details .tabcontent .tabpane .resource img{
+.scene-manage-view .scene-details .tabcontent .tabpane .resource img{
     /*width: 564px;*/
     padding: 1px;
     break-inside: avoid;
     border: 1px solid #ccc;
 }
 
-.scene-default-view .scene-details .tabcontent .tabpane {
+.scene-manage-view .scene-details .tabcontent .tabpane {
     margin: 15px 0;
     display: none;
     opacity: 0;
 }
 
-.scene-default-view .scene-details .tabcontent .tabpane.show {
+.scene-manage-view .scene-details .tabcontent .tabpane.show {
     display: block;
     opacity: 1;
 }
 
-.scene-default-view .scene-details .tabcontent .tabpane .allmap{
+.scene-manage-view .scene-details .tabcontent .tabpane .allmap{
     width: 100%;
     height: 600px;
 }
 /**地图中的信息检索框样式**/
-.scene-default-view .scene-details .tabcontent .tabpane .allmap td{
+.scene-manage-view .scene-details .tabcontent .tabpane .allmap td{
     padding-left: 4px !important;
 }
-/*********************************scene-default-list***************************/
-.scene-default-list .list{
+/*********************************scene-manage-index***************************/
+.scene-manage-index .list{
     margin-top: 10px;
     padding: 0px;
 }
 
-.scene-default-list .list-content{
+.scene-manage-index .list-content{
     padding: 0px;
     margin-bottom: 5px;
 }
 
-.scene-default-list .list-content .content-content{
+.scene-manage-index .list-content .content-content{
     border: 1px solid #cccccc;
     margin: 5px;
 }
 
-.scene-default-list
+.scene-manage-index
 .list-content .list-top{
     height: 40px;
     padding: 5px;
 }
 
-.scene-default-list
+.scene-manage-index
 .list-content .list-top .list-name{
     vertical-align: -webkit-baseline-middle;
 }
 
-.scene-default-list .list .list-img, .list-right{
+.scene-manage-index .list .list-img, .list-right{
     display: inline-block;
     height: 105px;
     margin: 5px 5px 10px 5px;
 }
 
-.scene-default-list
+.scene-manage-index
 .list .list-content .list-img img{
     width: 105px;
     height: 105px;
 } 
 
-.scene-default-list
+.scene-manage-index
 .list .list-content .list-right{
     /*width: 72%;*/
     position: absolute;
 } 
 
-.scene-default-list .list-right .bg-color{
+.scene-manage-index .list-right .bg-color{
     padding: 2px 5px;
     font-size: 12px;
     border-radius: 3px;
@@ -470,22 +470,22 @@
     border: 1px solid transparent;
 }
 
-.scene-default-list .list-right .add-red{
+.scene-manage-index .list-right .add-red{
     background-color: #ff3333;
     border-color: #d43f3a;
 }
 
-.scene-default-list .list-right .add-blue{
+.scene-manage-index .list-right .add-blue{
     background-color: #6699ff;
     border-color: #46b8da;
 }
 
-.scene-default-list
+.scene-manage-index
 .list-right .list-nature{
     margin-bottom: 5px;
 }
 
-.scene-default-list
+.scene-manage-index
 .list-right .list-area,.list-type,.list-price{
     padding: 2px 0px;
     color: #999999;
@@ -493,13 +493,13 @@
     margin-bottom: 5px;
 }
 
-.scene-default-list
+.scene-manage-index
 .list-right .list-area span,.list-type span,.list-price span{
     color: #000;
     font-weight: bold;
 }
 
-.scene-default-list
+.scene-manage-index
 .list-right .list-area .font{
     width: 169px;
     float: right;

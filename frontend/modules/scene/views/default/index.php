@@ -8,7 +8,7 @@ use yii\web\View;
 
 /* @var $this View */
 
-$this->title = Yii::t('app', '{Scene}{Bespeak}',[
+$this->title = Yii::t('app', '{Scene}-{Bespeak}',[
     'Scene' => Yii::t('app', 'Scene'),
     'Bespeak' => Yii::t('app', 'Bespeak'),
 ]);
@@ -100,7 +100,7 @@ $filter = Yii::$app->request->queryParams;
                     ])?>
                 </div>
                 <div class="address-content">
-                    <a href="<?= Url::to(['view', 'id' => $scenes['id']]) ?>" class="address-img" title="<?= $scenes['address']?>">
+                    <a href="<?= Url::to(['scene-manage/view', 'id' => $scenes['id']]) ?>" class="address-img" title="<?= $scenes['address']?>">
                         <img src="<?= $scenes['img_path']?>">
                     </a>
                     <div class="address-right">
