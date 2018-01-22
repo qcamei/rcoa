@@ -2,7 +2,6 @@
 
 namespace frontend\modules\scene\controllers;
 
-use common\models\scene\SceneBook;
 use common\models\scene\SceneSite;
 use common\models\scene\searchs\SceneSiteSearch;
 use Yii;
@@ -21,6 +20,7 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
+        $this->layout = 'scene';
         $params = Yii::$app->request->queryParams;
         $search = new SceneSiteSearch();
         $sceneItem = $search->dataSearceh($params);             //场地搜索的结果

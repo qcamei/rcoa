@@ -23,6 +23,12 @@ use yii\db\ActiveRecord;
 class SceneSiteDisable extends ActiveRecord
 {
     /**
+     * 自定义属性
+     * @var string 
+     */
+    public $date_switch;
+    
+    /**
      * @inheritdoc
      */
     public static function tableName()
