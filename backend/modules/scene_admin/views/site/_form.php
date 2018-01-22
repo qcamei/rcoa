@@ -12,7 +12,7 @@ use yii\widgets\ActiveForm;
 /* @var $this View */
 /* @var $model SceneSite */
 /* @var $form ActiveForm */
-//var_dump($model->getCityList(28240));exit;
+
 ?>
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=r2OdCIhHY8ZEY4fZQG7DGjl1nAIVoH0a"></script>
         
@@ -117,7 +117,7 @@ use yii\widgets\ActiveForm;
                     'browseLabel' => '选择上传主图片...',
                     'initialPreview' => [
                         $model->isNewRecord ?
-                                Html::img(Yii::getAlias('@filedata') . '/filedata/scene', ['class' => 'file-preview-image', 'width' => '213']) :
+                                Html::img('', ['class' => 'file-preview-image', 'width' => '213']) :
                                 Html::img(WEB_ROOT . $model->img_path, ['class' => 'file-preview-image', 'width' => '213']),
                     ],
                     'overwriteInitial' => true,
@@ -150,9 +150,21 @@ use yii\widgets\ActiveForm;
 
 </div>
 <?php
-
+$isNewRecord = $model->isNewRecord ? 0 : 1;
+if($isNewRecord){
+    preg_match_all("/\((.*)\)/", $point['AsText(location)'], $map_xy);        //获取括号里面的内容
+    $map_all = explode(' ', $map_xy['1']['0']);         //拆分转为数组
+    $map_x = $map_all[0];                               //经度
+    $map_y = $map_all[1];                               //纬度
+}else{
+    $map_x = 113.2759952545166;
+    $map_y = 23.117055306224895;
+}
 $js =
 <<<JS
+    var isNewRecord = $isNewRecord,
+        map_x = $map_x,
+        map_y = $map_y;
     /** 富文本编辑器 */
     $('#container').removeClass('form-control');
     var ue = UE.getEditor('container');
@@ -163,26 +175,39 @@ $js =
     map.centerAndZoom(point, 12);                       // 初始化地图，设置中心点坐标和地图级别
 
     var myGeo = new BMap.Geocoder();                    // 创建地址解析器实例
-    // 当地址输入框失去焦点时出发事件
-    $('#scenesite-address').blur(function() {
-        // 将地址解析结果显示在地图上,并调整地图视野
-        myGeo.getPoint($('#scenesite-address').val(), function(point){
-            if (point) {
-                $('#scenesite-location').val(point.lng + " " + point.lat);
-                map.centerAndZoom(point, 16);
-                var marker = new BMap.Marker(point);    // 创建标注
-                map.addOverlay(marker);                 // 将标注添加到地图中
-                marker.addEventListener("dragend",onMarkerDragend);
-                marker.enableDragging();                //设置标注是否可以移动
-                function onMarkerDragend(e){
-                    //获取marker的位置
-                    $('#scenesite-location').val(e.point.lng + " " + e.point.lat);
+    if(isNewRecord){
+        var point = new BMap.Point(map_x, map_y);   
+        map.centerAndZoom(point, 16);
+        var marker = new BMap.Marker(point);    // 创建标注
+        map.addOverlay(marker);                 // 将标注添加到地图中
+        marker.addEventListener("dragend",onMarkerDragend);
+        marker.enableDragging();                //设置标注是否可以移动
+        function onMarkerDragend(e){
+            //获取marker的位置
+            $('#scenesite-location').val(e.point.lng + " " + e.point.lat);
+        }
+    }else{
+        // 当地址输入框失去焦点时出发事件
+        $('#scenesite-address').blur(function() {
+            // 将地址解析结果显示在地图上,并调整地图视野
+            myGeo.getPoint($('#scenesite-address').val(), function(point){
+                if (point) {
+                    $('#scenesite-location').val(point.lng + " " + point.lat);
+                    map.centerAndZoom(point, 16);
+                    var marker = new BMap.Marker(point);    // 创建标注
+                    map.addOverlay(marker);                 // 将标注添加到地图中
+                    marker.addEventListener("dragend",onMarkerDragend);
+                    marker.enableDragging();                //设置标注是否可以移动
+                    function onMarkerDragend(e){
+                        //获取marker的位置
+                        $('#scenesite-location').val(e.point.lng + " " + e.point.lat);
+                    }
+                }else{
+                    alert("您输入的详细地址没有解析到结果!");
                 }
-            }else{
-                alert("您输入的详细地址没有解析到结果!");
-            }
+            });
         });
-    });
+    };
         
     var top_left_navigation = new BMap.NavigationControl(); //左上角，添加默认缩放平移控件
     map.addControl(top_left_navigation);

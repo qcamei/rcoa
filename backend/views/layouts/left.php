@@ -98,6 +98,7 @@ use common\widgets\Menu;
                         'url' => '#',
                         'items' => [
                             ['label' => '场地列表', 'icon' => 'circle-o', 'url' => ['/scene_admin/site']],
+                            ['label' => '预约列表', 'icon' => 'circle-o', 'url' => ['/scene_admin/book']],
                         ],
                     ],
                     [

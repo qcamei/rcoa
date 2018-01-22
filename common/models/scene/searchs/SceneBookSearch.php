@@ -7,6 +7,7 @@ use wskeee\utils\DateUtil;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -55,6 +56,7 @@ class SceneBookSearch extends SceneBook
      */
     public function search($params)
     {
+        $this->date = ArrayHelper::getValue($params, 'date');                         //时间段
         $query = SceneBook::find();
 
         // add conditions that should always apply here
@@ -70,11 +72,11 @@ class SceneBookSearch extends SceneBook
             // $query->where('0=1');
             return $dataProvider;
         }
-
+        
         // grid filtering conditions
         $query->andFilterWhere([
+            'id' => $this->id,
             'site_id' => $this->site_id,
-            'date' => $this->date,
             'time_index' => $this->time_index,
             'status' => $this->status,
             'business_id' => $this->business_id,
@@ -91,9 +93,14 @@ class SceneBookSearch extends SceneBook
             'updated_at' => $this->updated_at,
             'ver' => $this->ver,
         ]);
+        
+        //按时间段搜索
+        if($this->date != null){
+            $this->date = explode(" - ", $this->date);
+            $query->andFilterWhere(['between', 'date', $this->date[0], $this->date[1]]);
+        }
 
-        $query->andFilterWhere(['like', 'id', $this->id])
-            ->andFilterWhere(['like', 'start_time', $this->start_time])
+        $query->andFilterWhere(['like', 'start_time', $this->start_time])
             ->andFilterWhere(['like', 'remark', $this->remark])
             ->andFilterWhere(['like', 'teacher_id', $this->teacher_id])
             ->andFilterWhere(['like', 'booker_id', $this->booker_id])
@@ -231,4 +238,5 @@ class SceneBookSearch extends SceneBook
         
         return $query->all();
     }
+    
 }

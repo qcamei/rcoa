@@ -45,6 +45,10 @@ class DefaultController extends Controller
         ]);
     }
 
+    /**
+     * Renders View the index view for the module
+     * @return string
+     */
     public function actionSceneList()
     {
         $params = Yii::$app->request->queryParams;
@@ -56,7 +60,7 @@ class DefaultController extends Controller
         ]);
     }
 
-        /**
+    /**
      * 查询场地所在区域
      * @return array
      */

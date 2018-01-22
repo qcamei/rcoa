@@ -89,23 +89,27 @@ $filter = Yii::$app->request->queryParams;
         <?= $this->render('/layouts/filter', ['filter' => $filter]) ?>
         <!--场地列表-->
         <div class="select-content">
-            <?php foreach ($sceneItem['query'] as $index => $scnes):?>
+            <?php foreach ($sceneItem['query'] as $index => $scenes):?>
             <div class="address">
                 <div class="address-top">
-                    <span class="address-name"><?= $scnes['name']?></span>
-                    <span class="btn btn-default btn-sm" style="float: right">预约</span>
+                    <span class="address-name"><?= $scenes['name']?></span>
+                    <?= Html::a(Yii::t('app', 'Bespeak'), [
+                        'scene-book/index', 'site_id' => $scenes['id'], 'date' => date('Y-m-d'), 'date_switch' => 'week'], [
+                            'class' => 'btn btn-default btn-sm',
+                            'style' => ['float' => 'right']
+                    ])?>
                 </div>
                 <div class="address-content">
-                    <a href="<?= Url::to(['view', 'id' => $scnes['id']]) ?>" class="address-img" title="<?= $scnes['address']?>">
-                        <img src="<?= $scnes['img_path']?>">
+                    <a href="<?= Url::to(['view', 'id' => $scenes['id']]) ?>" class="address-img" title="<?= $scenes['address']?>">
+                        <img src="<?= $scenes['img_path']?>">
                     </a>
                     <div class="address-right">
-                        <div class="address-nature bg-color <?= ($scnes['op_type'] == 1) ? 'add-red' : 'add-blue'?>">
-                                                    <?= ($scnes['op_type'] == 1) ? '自营' : '合作'?></div>
-                        <div class="address-area">区域：<span><?= $scnes['area']?></span>&nbsp;
-                                                    <font class="font">(<?= $scnes['address']?>)</font></div>
-                        <div class="address-type">内容类型：<span><?= $scnes['content_type']?></span></div>
-                        <div class="address-price">价格：<span>￥<?= $scnes['price']?>/小时</span> （4小时起）</div>
+                        <div class="address-nature bg-color <?= ($scenes['op_type'] == 1) ? 'add-red' : 'add-blue'?>">
+                                                    <?= ($scenes['op_type'] == 1) ? '自营' : '合作'?></div>
+                        <div class="address-area">区域：<span><?= $scenes['area']?></span>&nbsp;
+                                                    <font class="font">(<?= $scenes['address']?>)</font></div>
+                        <div class="address-type">内容类型：<span><?= $scenes['content_type']?></span></div>
+                        <div class="address-price">价格：<span>￥<?= $scenes['price']?>/小时</span> （4小时起）</div>
                     </div>
                 </div>
             </div>
