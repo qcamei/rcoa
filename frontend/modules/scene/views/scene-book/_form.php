@@ -1,6 +1,7 @@
 <?php
 
 use common\models\scene\SceneBook;
+use kartik\widgets\Growl;
 use kartik\widgets\Select2;
 use kartik\widgets\TouchSpin;
 use yii\helpers\Html;
@@ -15,6 +16,31 @@ use yii\widgets\ActiveForm;
 
 <div class="scene-book-form">
 
+    <?php
+    //在设置更新时不显示锁定时间
+    if($model->status == $model::STATUS_BOOKING){
+         echo Growl::widget([
+            'type' => Growl::TYPE_WARNING,
+            'body' => '锁定时间 2 分钟',
+            'showSeparator' => true,
+            'delay' => 0,
+            'pluginOptions' => [
+                'offset'=> [
+                        'x'=> 0,
+                        'y'=> 0
+                ],
+                'delay' => 2*60*1000,
+                'showProgressbar' => true,
+                'placement' => [
+                    'from' => 'top',
+                    'align' => 'center',
+                ]
+            ]
+        ]);
+    }
+    ?>
+    
+    
     <?php $form = ActiveForm::begin([
         'options'=>[
             'id' => 'scene-book-form',
@@ -56,7 +82,7 @@ use yii\widgets\ActiveForm;
     
     <?= $form->field($model, 'start_time')->textInput([
         'type'=>'time', 
-        'value' => $model->isNewRecord ? $model->getstartTimeIndex() : $model->start_time
+        'value' => !$model->getIsValid() ? $model->getstartTimeIndex() : $model->start_time
     ]) ?>
 
     
@@ -70,7 +96,7 @@ use yii\widgets\ActiveForm;
             <?= Yii::t('app', 'Personal Image') ?>
         </label>
         <div class="col-lg-10 col-md-10">
-            <?= Html::img(!$model->isNewRecord ? [$model->teacher->personal_image] : null, [
+            <?= Html::img(!$model->isNewRecord && !$model->getIsNew() && $model->getIsValid() ? [$model->teacher->personal_image] : null, [
                 'id' => 'scenebook-teacher_personal_image',
                 'width' => '128', 'height' => '125'
             ])?>
@@ -79,12 +105,12 @@ use yii\widgets\ActiveForm;
     </div>
     
     <?= $form->field($model, 'teacher_phone')->textInput([
-        'value' => !$model->isNewRecord ? $model->teacher->user->phone : null, 
+        'value' => $model->getIsValid() ? $model->teacher->user->phone : null, 
         'disabled' => 'disabled'
     ]) ?>
     
     <?= $form->field($model, 'teacher_email')->textInput([
-        'value' => !$model->isNewRecord ? $model->teacher->user->email : null, 
+        'value' => $model->getIsValid() ? $model->teacher->user->email : null, 
         'disabled' => 'disabled'
     ]) ?>
 
@@ -114,7 +140,7 @@ use yii\widgets\ActiveForm;
     
     <div class="form-group field-scenebook-is_photograph">
         <label class="col-lg-1 col-md-1 control-label form-label" for="scenebook-is_photograph">
-            <?= Yii::t('app', 'Is Photograph') ?>
+            <?= Yii::t('app', 'Photograph') ?>
         </label>
         <div class="col-lg-10 col-md-10" style="margin-top: 5px;">
             <?= Html::checkbox('SceneBook[is_photograph]') ?>
@@ -127,9 +153,9 @@ use yii\widgets\ActiveForm;
     
     <h5><b>其他信息</b></h5>
     <?= $form->field($model, 'booker_id')->widget(Select2::classname(), [
-        'data' => $createSceneBookUser, 
+        'data' => array_merge($createSceneBookUser, [Yii::$app->user->id => $model->createdBy->nickname]), 
         'options' => [
-            'value' => $model->isNewRecord ? Yii::$app->user->id : $model->booker_id, 
+            'value' => !$model->getIsValid() ? Yii::$app->user->id : $model->booker_id, 
             'placeholder' => '请选择...'
         ]
     ])?>
@@ -140,7 +166,7 @@ use yii\widgets\ActiveForm;
             
             <?= Select2::widget([
                 'name' => 'SceneBookUser[user_id][]',
-                'value' => $model->isNewRecord ? Yii::$app->user->id : array_keys($existSceneBookUser),
+                'value' => !$model->getIsValid() ? Yii::$app->user->id : array_keys($existSceneBookUser),
                 'data' => $createSceneBookUser,
                 'maintainOrder' => true,    //无序排列
                 'hideSearch' => true,
@@ -171,8 +197,12 @@ use yii\widgets\ActiveForm;
     
     <?= $form->field($model, 'remark')->textarea(['rows' => 6]) ?>
     
+    <?= Html::activeHiddenInput($model, 'status', ['value' => SceneBook::STATUS_ASSIGN]) ?>
+    
     <?= Html::hiddenInput('SceneBook[multi_period]', null, ['id' => 'multi-period']) ?>
     
+    <?= Html::hiddenInput('book_id', $model->id) ?>
+            
     <?php ActiveForm::end(); ?>
 
 </div>
@@ -221,7 +251,15 @@ $js = <<<JS
             }
 	});
     });
-      
+    //定时执行
+    setTimeout(function(){
+        $.get("/scene/scene-book/exit-create?id=$model->id",function(data){
+            if(data['code'] == '200'){
+                window.history.go(-1);
+            }
+        });
+    }, 2*60*1000); 
+    //window.clearTimeout(exit);
 JS;
     $this->registerJs($js, View::POS_READY);
 ?>

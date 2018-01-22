@@ -14,8 +14,8 @@ use yii\web\View;
         <?= Html::a(Yii::t('rcoa', 'Back'), isset($params) ? $params : 'javascript:;', ['class' => 'btn btn-default'])?>
         
         <?= Html::a(
-            $model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), 'javascript:;', 
-            ['id'=>'submit', 'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']);
+            !$model->getIsValid() ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), 'javascript:;', 
+            ['id'=>'submit', 'class' => !$model->getIsValid() ? 'btn btn-success' : 'btn btn-primary']);
         ?>
     </div>
 </div>

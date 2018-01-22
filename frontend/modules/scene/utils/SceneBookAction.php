@@ -49,6 +49,7 @@ class SceneBookAction
         {  
             if($post != null){
                 $results = $this->saveDayMultiPeriodSceneBook($model, $post);
+                $this->isExistSceneBookUser($model, $post);
                 $this->saveSceneBookUser($results, $post);
             }else
                 throw new Exception($model->getErrors());
@@ -74,6 +75,7 @@ class SceneBookAction
         try
         {  
             if($model->save()){
+                $this->isExistSceneBookUser($model, $post);
                 $this->saveSceneBookUser($model->id, $post);
             }else
                 throw new Exception($model->getErrors());
@@ -99,6 +101,7 @@ class SceneBookAction
         try
         {  
             if($model->save()){
+                $this->isExistSceneBookUser($model, $post, 2);
                 $this->saveSceneBookUser($model->id, $post, 2);
             }else
                 throw new Exception($model->getErrors());
@@ -180,6 +183,8 @@ class SceneBookAction
             $sceneBooks['is_photograph'] = 0;
         }
         if(count($multi_period) > 1){
+            $model->status = SceneBook::STATUS_DEFAULT;
+            $model->update();
             $results = $this->isDayExistSceneBook($model, $post);
             foreach ($multi_period as $timeIndex) {
                 $initial  = [
@@ -195,6 +200,7 @@ class SceneBookAction
                     'created_by' => \Yii::$app->user->id, 'created_at' => time(), 'updated_at' => time()
                 ]));
             }
+            
             
             //如果存在已被预约的信息，返回被预约的信息
             if($results != null){
@@ -227,7 +233,6 @@ class SceneBookAction
      * @param integer|array $book_id
      * @param array $post
      * @param integer $role                 角色：1接洽人，2摄影师
-     * @return array
      */
     public function saveSceneBookUser($book_id, $post, $role = 1)
     {
@@ -263,6 +268,10 @@ class SceneBookAction
         }
     }
     
+    /**
+     * 保存场景接洽人or摄影师用户评价
+     * @param array $post
+     */
     public function saveSceneAppraise($post)
     {
         $values = [];
@@ -275,15 +284,11 @@ class SceneBookAction
             if(isset($appraise['q_id'])){
                 foreach ($appraise['q_id'] as $value) {
                     $values[] = [
-                        'book_id' => $appraise['book_id'],
-                        'role' => $appraise['role'],
-                        'q_id' => $value,
-                        'q_value' => $appraise['q_value'][$value],
-                        'index' => $appraise['index'][$value],
-                        'user_id' => $appraise['user_id'],
+                        'book_id' => $appraise['book_id'],'role' => $appraise['role'],
+                        'q_id' => $value,'q_value' => $appraise['q_value'][$value],
+                        'index' => $appraise['index'][$value],'user_id' => $appraise['user_id'],
                         'user_value' => $appraise['user_value'][$value],
-                        'created_at' => time(),
-                        'updated_at' => time(),
+                        'created_at' => time(),'updated_at' => time(),
                     ];
                 }
                 Yii::$app->db->createCommand()
@@ -305,7 +310,8 @@ class SceneBookAction
     public function isDayExistSceneBook($model, $post)
     {
         $values = [];
-        $multiPperiod = son_decode(ArrayHelper::getValue($post, 'SceneBook.multi_period'));
+        $notStatus = [SceneBook::STATUS_DEFAULT, SceneBook::STATUS_BOOKING, SceneBook::STATUS_CANCEL];
+        $multiPperiod = json_decode(ArrayHelper::getValue($post, 'SceneBook.multi_period'));
         $query = (new Query())->select(['SceneSite.name', 'SceneBook.date', 'SceneBook.time_index', 'User.nickname', 'User.phone'])
             ->from(['SceneBook' => SceneBook::tableName()]);
         $query->leftJoin(['SceneSite' => SceneSite::tableName()], 'SceneSite.id = SceneBook.site_id');
@@ -313,8 +319,9 @@ class SceneBookAction
         $query->where([
             'SceneBook.site_id' => $model->site_id,
             'SceneBook.date' => $model->date,
-            'SceneBook.time_index' => $multiPperiod
+            'SceneBook.time_index' => $multiPperiod,
         ]);
+        $query->andWhere(['NOT IN', 'SceneBook.status', $notStatus]);
         
         $results = $query->all();
         if($results != null){
@@ -323,10 +330,68 @@ class SceneBookAction
                     $values[$value['time_index']] = $value;
             }
         }
-        
         return $values;
     }
     
+    /**
+     * 判断同一时段不同场地是否有接洽人or摄影师存在
+     * @param SceneBook $model
+     * @param array $post
+     * @param integer $role                         角色：1接洽人，2摄影师
+     * @throws NotFoundHttpException
+     */
+    public function isExistSceneBookUser($model, $post, $role = 1)
+    {
+        $values = [];
+        $message = '以下所选的【'.SceneBookUser::$roleName[$role].'】已存在其它预约时段：';
+        //多时段选项
+        $multiPperiod = json_decode(ArrayHelper::getValue($post, 'SceneBook.multi_period'));
+        //提交的接洽人or摄影师用户
+        $user_ids = ArrayHelper::getValue($post, 'SceneBookUser.user_id');
+        //查询在同一时段是否已有相同的接洽人or摄影师
+        $query = (new Query())->select([
+            'SceneSite.name', 'SceneBook.date', 'SceneBook.time_index', 
+            'BookerUser.nickname AS booker_name', 'BookerUser.phone AS booker_phone',
+            'SceneBookUser.user_id', 'User.nickname'
+            //'GROUP_CONCAT(DISTINCT SceneBookUser.user_id SEPARATOR \',\') as user_id',
+            //'GROUP_CONCAT(DISTINCT User.nickname SEPARATOR \',\') as user_name'
+        ])->from(['SceneBook' => SceneBook::tableName()]);
+        //关联场地查询
+        $query->leftJoin(['SceneSite' => SceneSite::tableName()], 'SceneSite.id = SceneBook.site_id');
+        //关联场景预约用户查询
+        $query->leftJoin(['SceneBookUser' => SceneBookUser::tableName()], 
+               'SceneBookUser.book_id = SceneBook.id AND SceneBookUser.role = '.$role);
+        //关联用户查询
+        $query->leftJoin(['BookerUser' => User::tableName()], 'BookerUser.id = SceneBook.booker_id');
+        $query->leftJoin(['User' => User::tableName()], 'User.id = SceneBookUser.user_id');
+        //条件查询
+        $query->where([
+            'SceneBook.date' => $model->date,
+            'SceneBook.time_index' => $multiPperiod
+        ]);
+        $results = $query->all();  //查询结果
+        //循环判断已经存在的预约用户信息
+        foreach ($results as $value) {
+            foreach($user_ids as $user_id){
+                if($value['user_id'] == $user_id){
+                    $values[$value['nickname']] = $value;
+                }
+            }
+            unset($values[$value['nickname']]['user_id']);
+            unset($values[$value['nickname']]['nickname']);
+        }
+        //如果存在已被预约的用户信息，返回被预约的信息
+        if($values != null){
+            $timeIndexMap = SceneBook::$timeIndexMap;
+            foreach ($values as $index => $item) {
+                $message .= "\r\n{$index}：【场地：{$item['name']}；时间：{$item['date']} {$timeIndexMap[$item['time_index']]}；"
+                            ."预约人：{$item['booker_name']}（{$item['booker_phone']}）】";
+            }
+            throw new NotFoundHttpException("操作失败！".$message);
+        }
+    }
+
+
     /**
      * 获取已存在的场景评价
      * @param string $book_id

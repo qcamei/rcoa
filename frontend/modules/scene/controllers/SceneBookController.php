@@ -21,6 +21,7 @@ use yii\db\Query;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
+use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -60,7 +61,7 @@ class SceneBookController extends Controller
             'dataProvider' => $results['data'],
             'sceneSite' => $sceneSite,
             'firstSite' => $firstSite,
-            'sceneBookUser' => $this->getSceneBookUser(ArrayHelper::getColumn($results['data']->allModels, 'id')),
+            'sceneBookUser' => $this->getExistSceneBookUserAll(ArrayHelper::getColumn($results['data']->allModels, 'id')),
         ]);
     }
 
@@ -77,7 +78,7 @@ class SceneBookController extends Controller
         return $this->render('view', [
             'model' => $this->findModel($id),
             'dataProvider' => $msgSearch->search(['book_id' => $id]),
-            'sceneBookUser' => $this->getSceneBookUser($id),
+            'sceneBookUser' => $this->getExistSceneBookUserAll($id),
             'msgNum' => count($this->getSceneMessage($id)),
             'isRole' => $this->isOwnSceneBookRole($id),
             'appraiseResult' => $appraiseSearch->search(['book_id' => $id]),
@@ -91,10 +92,23 @@ class SceneBookController extends Controller
      */
     public function actionCreate()
     {
-        $model = new SceneBook(array_merge(Yii::$app->request->queryParams, ['created_by' => \Yii::$app->user->id]));
-        $model->loadDefaultValues();
+        $post = Yii::$app->request->post();
+        /** 先查找对应数据（临时预约锁定的数据）找不到再新建数据 */
+        if(isset($post['book_id'])){
+            $model = $this->findModel($post['book_id']);
+            $model->scenario = SceneBook::SCENARIO_DEFAULT;
+        }else{
+            $this->isExistNewSceneBook(Yii::$app->request->queryParams);
+        }
+        if(!isset($model)){
+            $model = new SceneBook(array_merge(Yii::$app->request->queryParams, 
+                ['created_by' => \Yii::$app->user->id, 'status' => SceneBook::STATUS_BOOKING]));
+            $model->scenario = SceneBook::SCENARIO_TEMP_CREATE;
+            $model->save();
+            $model->loadDefaultValues();
+        }
         
-        if ($model->load(Yii::$app->request->post())) {
+        if ($model->load($post)) {
             SceneBookAction::getInstance()->CreateSceneBook($model, Yii::$app->request->post());
             return $this->redirect(array_merge(['index'], Yii::$app->request->queryParams));
         } else {
@@ -112,6 +126,32 @@ class SceneBookController extends Controller
         }
     }
 
+    /**
+     * ExitCreate a new SceneBook model.
+     * 清除临时预约数据
+     * @return mixed
+     */
+    public function actionExitCreate($id, $date_switch = 'month')
+    {
+        $model = $this->findModel($id);
+        if($model->created_by == Yii::$app->user->id){
+            $model->setScenario(SceneBook::SCENARIO_TEMP_CREATE);
+            $model->status = SceneBook::STATUS_DEFAULT;
+            $model->save();
+            if(Yii::$app->request->isAjax){
+                Yii::$app->getResponse()->format = 'json';
+                return [
+                    'code' => 200,
+                    'data' => [],
+                    'message' => '执行成功'
+                ];
+            }else{
+                return $this->redirect(array_merge(['index', 'date_switch' => $date_switch]));
+            }
+        }
+      
+    }
+    
     /**
      * Updates an existing SceneBook model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -342,7 +382,7 @@ class SceneBookController extends Controller
         $query->where(['NOT IN', 'id', array_keys($this->getExpert())]);
         $query->andWhere(['status' => 10]);
         
-        $bookUsers = $this->getSceneBookUser($model->id);
+        $bookUsers = $this->getExistSceneBookUserAll($model->id);
         if(isset($bookUsers[$model->id])){
             foreach ($bookUsers[$model->id] as $user) {
                 if($user['role'] == 1)
@@ -369,7 +409,7 @@ class SceneBookController extends Controller
         //获取角色为摄影师的所有用户
         $roleUser = $rbacManager->getItemUsers(RbacName::ROLE_SHOOT_MAN);
         
-        $bookUsers = $this->getSceneBookUser($model->id);
+        $bookUsers = $this->getExistSceneBookUserAll($model->id);
         if(isset($bookUsers[$model->id])){
             foreach ($bookUsers[$model->id] as $user) {
                 if($user['role'] == 2)
@@ -406,11 +446,11 @@ class SceneBookController extends Controller
     }
     
     /**
-     * 获取场景预约任务的所有接洽人or摄影师
+     * 获取场景预约任务已存在的所有接洽人or摄影师
      * @param string|array $book_id
      * @return array
      */
-    protected function getSceneBookUser($book_id)
+    protected function getExistSceneBookUserAll($book_id)
     {
         $results = [];
         $query = (new Query())->select([
@@ -443,6 +483,23 @@ class SceneBookController extends Controller
         return $query->all();
     }
     
+    /**
+     * 判断同一时间段是否存在相同的预约
+     * @param array $param
+     * @throws NotAcceptableHttpException
+     */
+    protected function isExistNewSceneBook($param)
+    {
+        $site_id = ArrayHelper::getValue($param, 'site_id');
+        $date = ArrayHelper::getValue($param, 'date');
+        $time_index = ArrayHelper::getValue($param, 'time_index');
+        $query = SceneBook::find();
+        $query->where(['site_id' => $site_id, 'time_index' => $time_index,'status' => SceneBook::STATUS_BOOKING]);
+        $query->andWhere(['between', 'date', $date, date('Y-m-d',strtotime('+1 days'.$date))]);;  
+        if(count ($query->all()) > 0)  
+            throw new NotAcceptableHttpException('正在预约中！');  
+    }
+
     /**
      * 判断是否当前自己匹配的预约角色
      * @param string $book_id
