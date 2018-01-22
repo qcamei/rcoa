@@ -49,9 +49,9 @@ use yii\helpers\Html;
                         'adminOptions' => null,
                     ],
                     [
-                        'controllerId' => '',
+                        'controllerId' => 'statistics',
                         'name' => '统计',
-                        'url' => ['/'],
+                        'url' => ['statistics/index'],
                         'icon' => '/filedata/demand/image/statistics.png',
                         'options' => ['class' => 'footer-menu-item'],
                         'symbol' => '&nbsp;',

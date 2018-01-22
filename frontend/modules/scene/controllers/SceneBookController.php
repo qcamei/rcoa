@@ -53,6 +53,7 @@ class SceneBookController extends Controller
      */
     public function actionIndex()
     {
+        $this->layout = 'scene';
         $searchModel = new SceneBookSearch();
         $sceneSite = $this->getSceneSite();
         $firstSite = array_keys(reset($sceneSite));       //获取场景的第一个场地

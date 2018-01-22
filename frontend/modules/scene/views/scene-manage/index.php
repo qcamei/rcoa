@@ -16,30 +16,30 @@ $filter = Yii::$app->request->queryParams;
 <div class="scene-manage-index container">
     <div class="list col-lg-12">
         <!--场地列表-->
-        <?php foreach ($sceneItem['querylist'] as $key => $scnes) :?>
+        <?php foreach ($sceneItem['querylist'] as $key => $scenes) :?>
         <div class="list-content col-lg-6 col-xs-12">
             <div class="content-content">
                 <div class="list-top">
-                    <span class="list-name"><?= $scnes['name']?></span>
+                    <span class="list-name"><?= $scenes['name']?></span>
                     <?= Html::a(Yii::t('app', '{Set}{Disabled}',[
                             'Set' => Yii::t('app', 'Set'),
                             'Disabled' => Yii::t('app', 'Disabled'),
-                        ]),['', 'id' => $scnes['id']],[
+                        ]),['disable', 'site_id' => $scenes['id'], 'date' => date('Y-m-d'), 'date_switch' => 'month'],[
                             'class' => 'btn btn-default btn-sm',
                             'style' => ['float' => 'right']
                         ])?>
                 </div>
                 <div class="list-content">
-                    <a href="<?= Url::to(['view', 'id' => $scnes['id']]) ?>" class="list-img" title="<?= $scnes['address']?>">
-                        <img src="<?= $scnes['img_path']?>">
+                    <a href="<?= Url::to(['view', 'id' => $scenes['id']]) ?>" class="list-img" title="<?= $scenes['address']?>">
+                        <img src="<?= $scenes['img_path']?>">
                     </a>
                     <div class="list-right">
-                        <div class="list-nature bg-color <?= ($scnes['op_type'] == 1) ? 'add-red' : 'add-blue'?>">
-                                                    <?= ($scnes['op_type'] == 1) ? '自营' : '合作'?></div>
-                        <div class="list-area">区域：<span><?= $scnes['area']?></span>&nbsp;
-                                                    <font class="font">(<?= $scnes['address']?>)</font></div>
-                        <div class="list-type">内容类型：<span><?= $scnes['content_type']?></span></div>
-                        <div class="list-price">价格：<span>￥<?= $scnes['price']?>/小时</span> （4小时起）</div>
+                        <div class="list-nature bg-color <?= ($scenes['op_type'] == 1) ? 'add-red' : 'add-blue'?>">
+                                                    <?= ($scenes['op_type'] == 1) ? '自营' : '合作'?></div>
+                        <div class="list-area">区域：<span><?= $scenes['area']?></span>&nbsp;
+                                                    <font class="font">(<?= $scenes['address']?>)</font></div>
+                        <div class="list-type">内容类型：<span><?= $scenes['content_type']?></span></div>
+                        <div class="list-price">价格：<span>￥<?= $scenes['price']?>/小时</span> （4小时起）</div>
                     </div>
                 </div>
             </div>
