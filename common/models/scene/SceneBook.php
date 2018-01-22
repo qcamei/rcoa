@@ -354,8 +354,8 @@ class SceneBook extends ActiveRecord
      */
     public function getStatusName()
     {
-        if(isset($this->statusMap[$this->status]))
-            return $this->statusMap[$this->status];
+        if(isset(self::$statusMap[$this->status]))
+            return self::$statusMap[$this->status];
     }
     
     /**
