@@ -1,6 +1,6 @@
 <?php
 
-use common\models\scene\searchs\SceneBookSearch;
+use common\models\scene\searchs\SceneSiteDisableSearch;
 use frontend\modules\scene\assets\SceneAsset;
 use kartik\widgets\DatePicker;
 use wskeee\utils\DateUtil;
@@ -42,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'url'=> array_merge(['disable'], array_merge($filter, ['date_switch' => 'week'])),
                 'options' => [
                     'id' => 'week',
-                    'class' => 'btn btn-default date-switch'
+                    'class' => 'btn btn-default date-switch disabled'
                 ],
             ],
         ];
@@ -93,13 +93,8 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     
     <div id="month" class="dataProvider">
-        <?= $this->render('_month', ['dataProvider' => $dataProvider, 'sceneBookUser' => $sceneBookUser]) ?>
+        <?= $this->render('_month', ['dataProvider' => $dataProvider, 'books' => $books]) ?>
     </div>
-    <div id="week" class="dataProvider">
-        <?= $this->render('_week', ['dataProvider' => $dataProvider, 'sceneBookUser' => $sceneBookUser]) ?>
-    </div>
-    
-    
     
 </div>
 

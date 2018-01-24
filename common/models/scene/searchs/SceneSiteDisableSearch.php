@@ -2,7 +2,6 @@
 
 namespace common\models\scene\searchs;
 
-use common\models\scene\SceneBook;
 use common\models\scene\SceneSiteDisable;
 use wskeee\utils\DateUtil;
 use yii\base\Model;
@@ -21,13 +20,13 @@ class SceneSiteDisableSearch extends SceneSiteDisable
      * @var string 
      */
     private $date_start;
+    
     /**
      * 结束日期
      * @var string 
      */
     private $date_end;
 
-    
     /**
      * @inheritdoc
      */
@@ -90,22 +89,20 @@ class SceneSiteDisableSearch extends SceneSiteDisable
     /**
      * 
      * @param type $se array(start=>周起始时间，end=>周结束时间 )
-     * @return array 一周拍摄预约数据
+     * @return array 一周场地禁用数据
     */
     public function searchModel($params, $firstSite)
     {
         $this->date = ArrayHelper::getValue($params, 'date', date('Y-m-d'));                         //日期
         $this->date_switch = ArrayHelper::getValue($params, 'date_switch', 'month');                 //月 or 周
-        $hasDo = $this->date_switch == 'month';
-        $date = $hasDo ? DateUtil::getMonthSE($this->date) : DateUtil::getWeekSE($this->date);
+        $date = DateUtil::getMonthSE($this->date);
         $this->site_id = ArrayHelper::getValue($params, 'site_id', reset($firstSite));              //场景id
-        $this->date_switch = ArrayHelper::getValue($params, 'date_switch', 'month');                //月 or 周
         $this->date_start = ArrayHelper::getValue($date, 'start');                                  //开始日期               
         $this->date_end = ArrayHelper::getValue($date, 'end');                                      //结束日期
-        //查询预约任务数据
-        $results = $this->searchSceneBook();
+        //查询场地禁用数据
+        $results = $this->searchSceneDisable();
         //创建空的日期数据
-        $dateDatas = $hasDo ? $this->searchMonth() : $this->searchWeek();
+        $dateDatas = $this->searchMonth();
        
         $startIndex = 0;
         foreach ($results as $model) {
@@ -135,7 +132,7 @@ class SceneSiteDisableSearch extends SceneSiteDisable
     }
     
     /**
-     * 一个月拍摄预约数据     
+     * 一个月场地禁用数据     
      * @return SceneBookSearch
      */
     private function searchMonth()
@@ -152,8 +149,7 @@ class SceneSiteDisableSearch extends SceneSiteDisable
                 $nowDay = 7 * $i + $d + 0;
                 if($nowDay >= $weekStart && $mday <= $dayNum){
                     for ($index = 0; $index < 3; $index++){
-                        $monthdatas[] = new SceneBookSearch([
-                            'id' => md5($this->site_id + date('Y-m-d', strtotime(date('Y-m', strtotime($this->date_start)).'-'.$mday)) + $index + rand(1,10000)),
+                        $monthdatas[] = new SceneSiteDisableSearch([
                             'site_id' => $this->site_id,
                             'date' => date('Y-m-d', strtotime(date('Y-m', strtotime($this->date_start)).'-'.$mday)),
                             'time_index' => $index,
@@ -164,55 +160,24 @@ class SceneSiteDisableSearch extends SceneSiteDisable
                 }
             }
         }
-        
-        return $monthdatas;
-    }
 
-    /**
-     * 一周拍摄预约数据     
-     * @return SceneBookSearch
-     */
-    private function searchWeek()
-    {
-        
-//        $indexOffsetTimes = [
-//            '9 hours',
-//            '14 hours',
-//            '18 hours',
-//        ];
-        //创建一周空数据
-        $weekdatas = [];
-        for ($i = 0, $len = 7; $i < $len; $i++) {
-            for ($index = 0; $index < 3; $index++) {
-                $weekdatas[] = new SceneBookSearch([
-                    'id' => md5($this->site_id + date('Y-m-d', strtotime($this->date_start . ' +' . ($i) . 'days ')) + $index + rand(1,10000)),
-                    'site_id' => $this->site_id,
-                    'date' => date('Y-m-d', strtotime($this->date_start . ' +' . ($i) . 'days ')),
-                    'time_index' => $index,
-                    'date_switch' => $this->date_switch,
-                ]);
-            }
-        }
-        
-        return $weekdatas;
+        return $monthdatas;
     }
     
     /**
-     * 查询预约任务数据
+     * 查询场地禁用数据
      * @return Query
      */
-    private function searchSceneBook() 
+    public function searchSceneDisable()
     {
-        $notStatus = [SceneBook::STATUS_DEFAULT, SceneBook::STATUS_CANCEL];
-        $query = SceneBookSearch::find();
+        $query = SceneSiteDisableSearch::find();
         //添加查询条件
         $query->andFilterWhere(['between', 'date', $this->date_start, $this->date_end]);
         $query->andFilterWhere(['site_id' => $this->site_id]);
-        $query->andFilterWhere(['NOT IN', 'status', $notStatus]);
         
         //排序
         $query->orderBy(['date' => SORT_ASC, 'time_index' => SORT_ASC]);
-        
+   
         return $query->all();
     }
 }
