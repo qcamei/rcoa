@@ -143,8 +143,10 @@ use yii\widgets\ActiveForm;
             <?= Yii::t('app', 'Photograph') ?>
         </label>
         <div class="col-lg-10 col-md-10" style="margin-top: 5px;">
-            <?= Html::checkbox('SceneBook[is_photograph]') ?>
-            <label>需要</label>
+            <?= Html::hiddenInput('SceneBook[is_photograph]', 0) ?>
+            <label>
+                <?= Html::checkbox('SceneBook[is_photograph]', $model->getIsValid()? $model->is_photograph : null) ?> 需要
+            </label>
         </div>
         <div class="col-lg-10 col-md-10"><div class="help-block"></div></div>
     </div>
@@ -251,15 +253,7 @@ $js = <<<JS
             }
 	});
     });
-    //定时执行
-    setTimeout(function(){
-        $.get("/scene/scene-book/exit-create?id=$model->id",function(data){
-            if(data['code'] == '200'){
-                window.history.go(-1);
-            }
-        });
-    }, 2*60*1000); 
-    //window.clearTimeout(exit);
+    
 JS;
     $this->registerJs($js, View::POS_READY);
 ?>

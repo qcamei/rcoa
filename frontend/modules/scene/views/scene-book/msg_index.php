@@ -5,7 +5,7 @@ use yii\web\View;
 
 /* @var $this View */
 
-$this->title = Yii::t('app', 'Mcbs Courses');
+//$this->title = Yii::t('app', 'Mcbs Courses');
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>

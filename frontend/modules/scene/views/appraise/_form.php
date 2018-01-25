@@ -31,8 +31,8 @@ use yii\widgets\ActiveForm;
                 });
                 echo Html::label(($index++).'、'.$appraise->question->title);              
                 echo Html::radioList("SceneAppraise[user_value][{$appraise->q_id}]", 
-                        (count($appraiseResult[$appraise->role]) > 0 ? 
-                            $appraiseResult[$appraise->role][$appraise->q_id]->user_value : $appraise->value),
+                        (count($appraiseResult['results']) > 0 ? 
+                            $appraiseResult['results'][$appraise->role][$appraise->q_id]->user_value : $appraise->value),
                         $items, 
                         [
                             'class'=>'form-group appraise',
@@ -40,7 +40,7 @@ use yii\widgets\ActiveForm;
                                 'labelOptions'=>[
                                     'class' =>'radio-group',
                                 ],
-                                'disabled' => count($appraiseResult[$appraise->role]) > 0 ? true : false,
+                                'disabled' => count($appraiseResult['results']) > 0 ? true : false,
                             ],
                         ]);
                 

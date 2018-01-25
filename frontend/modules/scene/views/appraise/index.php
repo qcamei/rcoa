@@ -4,6 +4,7 @@ use common\models\question\QuestionOp;
 use common\models\scene\SceneAppraise;
 use common\models\scene\SceneBookUser;
 use common\models\scene\searchs\SceneAppraiseSearch;
+use frontend\modules\scene\assets\SceneAsset;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\web\View;
@@ -12,19 +13,24 @@ use yii\web\View;
 /* @var $searchModel SceneAppraiseSearch */
 /* @var $dataProvider ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Scene Appraises');
+//$this->title = Yii::t('app', 'Scene Appraises');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="scene-appraise-index">
     <div class="scene-appraise">
     <?php
-        if(count($appraiseResult) > 0)
-            echo '<h4>没有评价数据。</h4>';
+        if(count($appraiseResult['results']) <= 0)
+            echo '<h5>没有评价数据。</h5>';
         else{
             $index = 1;
-            foreach($appraiseResult as $key => $allModels){
-                echo '<div class="role-name"><h5><b>对'.SceneBookUser::$roleName[$key].'评价</b></h5></div>';
+            foreach($appraiseResult['results'] as $key => $allModels){
+                $score = array_sum($appraiseResult['user_value'][$key])/array_sum($appraiseResult['q_value'][$key]) * count($appraiseResult['q_value'][$key]);
+                echo "<div class=\"role-name\">"
+                        ."<h5><b>对".SceneBookUser::$roleName[$key]."评价</b></h5>"
+                            .'<div id="star" class="star" data-score="'.$score.'"></div>'
+                    ."</div>";
                 foreach ($allModels as $appraise) {
+                    if($index > 3) $index = 1;
                     /* @var $appraise SceneAppraise */
                     echo "<p>".Html::label(($index++).'、'.$appraise->question->title)."</p>";
                     foreach ($appraise->question->ops as $questionOp) {
@@ -42,3 +48,25 @@ $this->params['breadcrumbs'][] = $this->title;
     ?>
     </div>
 </div>
+
+<?php
+
+$js = 
+<<<JS
+    
+    $('.star').raty({
+        number: 3,
+        score: function() {
+            return Math.floor($(this).attr('data-score'));
+        },
+        path: '/filedata/scene/icons',
+        readOnly: true,
+    });
+        
+JS;
+    $this->registerJs($js,  View::POS_READY);
+?>
+
+<?php
+    SceneAsset::register($this);
+?>

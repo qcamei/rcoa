@@ -1,8 +1,8 @@
 <?php
 
 use common\models\scene\SceneBook;
+use wskeee\rbac\components\ResourceHelper;
 use wskeee\rbac\RbacManager;
-use yii\helpers\Html;
 
 /* @var $model SceneBook */
 /* @var $rbacManager RbacManager */  
@@ -40,7 +40,7 @@ use yii\helpers\Html;
                         'url' => ['update', 'id' => $model->id],
                         'options' => ['class' => 'btn btn-primary'],
                         'symbol' => '&nbsp;',
-                        'conditions' => true,
+                        'conditions' => $model->getIsAssign() && $model->booker_id == Yii::$app->user->id,
                         'adminOptions' => true,
                     ],
                     [
@@ -48,7 +48,15 @@ use yii\helpers\Html;
                         'url' => ['transfer', 'id' => $model->id],
                         'options' => ['id' => 'transfer', 'class' => 'btn btn-danger', 'onclick' => 'myModal($(this));return false;'],
                         'symbol' => '&nbsp;',
-                        'conditions' => true,
+                        'conditions' => $model->getIsTransfer() && !$model->is_transfer && $model->booker_id == Yii::$app->user->id,
+                        'adminOptions' => true,
+                    ],
+                    [
+                        'name' => '预约',
+                        'url' => ['receive', 'id' => $model->id],
+                        'options' => ['id' => 'receive', 'class' => 'btn btn-success', 'onclick' => 'myModal($(this));return false;'],
+                        'symbol' => '&nbsp;',
+                        'conditions' => $model->getIsTransfer() && $model->is_transfer && $model->booker_id != Yii::$app->user->id,
                         'adminOptions' => true,
                     ],
                     [
@@ -56,16 +64,16 @@ use yii\helpers\Html;
                         'url' => ['cancel-transfer', 'id' => $model->id],
                         'options' => ['id' => 'cancel-transfer', 'class' => 'btn btn-danger', 'onclick' => 'myModal($(this));return false;'],
                         'symbol' => '&nbsp;',
-                        'conditions' => true,
+                        'conditions' => $model->getIsTransfer() && $model->is_transfer && $model->booker_id == Yii::$app->user->id,
                         'adminOptions' => true,
                     ],
                     //摄影组长角色按钮组
                     [
                         'name' => '指派',
                         'url' => ['assign', 'id' => $model->id],
-                        'options' => ['class' => 'btn btn-primary', 'onclick' => 'myModal($(this));return false;'],
+                        'options' => ['class' => 'btn btn-info', 'onclick' => 'myModal($(this));return false;'],
                         'symbol' => '&nbsp;',
-                        'conditions' => true,
+                        'conditions' => $model->getIsAssign() || $model->getIsStausShootIng(),
                         'adminOptions' => true,
                     ],
                     //接洽人和摄影师角色按钮
@@ -74,14 +82,13 @@ use yii\helpers\Html;
                         'url' => ['appraise/create', 'book_id' => $model->id, 'role' => $isRole['role'], 'user_id' => $isRole['user_id']],
                         'options' => ['class' => 'btn btn-info', 'onclick' => 'myModal($(this));return false;'],
                         'symbol' => '&nbsp;',
-                        'conditions' => true,
+                        'conditions' => ($model->getIsStausShootIng() || $model->getIsAppraise()) && $isRole && $model->date < date('Y-m-d', strtotime('+1 days')),
                         'adminOptions' => true,
                     ],
                 ];
 
                 foreach ($buttonHtml as $item){
-                    //echo ResourceHelper::a($item['name'], $item['url'], $item['options'], $item['conditions']).($item['conditions'] ? $item['symbol'] : null);
-                    echo Html::a($item['name'], $item['url'], $item['options']).($item['conditions'] ? $item['symbol'] : null);
+                    echo ResourceHelper::a($item['name'], $item['url'], $item['options'], $item['conditions']).($item['conditions'] ? $item['symbol'] : null);
                 }
 
             ?>

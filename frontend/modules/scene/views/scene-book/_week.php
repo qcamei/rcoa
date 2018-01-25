@@ -1,10 +1,10 @@
 <?php
 
 use common\models\scene\SceneBook;
+use frontend\modules\scene\assets\SceneAsset;
 use yii\grid\GridView;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
-
+use yii\web\View;
 
 //date('d')+1 明天预约时间
 $dayTomorrow = date('Y-m-d H:i:s',strtotime("+1 days"));
@@ -246,7 +246,7 @@ $dayEnd = date('Y-m-d H:i:s',strtotime("+31 days"));
                 if(isset($sceneBookUser[$model->id])){
                     foreach ($sceneBookUser[$model->id] as $bookUser) {
                         if($bookUser['role'] == 1 && $bookUser['is_primary'])
-                            return $bookUser['nickname'];
+                            return $bookUser['nickname'].'<div class="star" data-score="'.$bookUser['score'].'"></div>';
                     }
                 }
             },
@@ -274,7 +274,7 @@ $dayEnd = date('Y-m-d H:i:s',strtotime("+31 days"));
                 if(isset($sceneBookUser[$model->id])){
                     foreach ($sceneBookUser[$model->id] as $bookUser) {
                         if($bookUser['role'] == 2 && $bookUser['is_primary'])
-                            return $bookUser['nickname'];
+                            return $bookUser['nickname'].'<div class="star" data-score="'.$bookUser['score'].'"></div>';
                     }
                 }
             },
@@ -298,7 +298,15 @@ $dayEnd = date('Y-m-d H:i:s',strtotime("+31 days"));
             'class' => 'yii\grid\ActionColumn',
             'header' => Yii::t('app', 'Operating'),
             'buttons' => [
-                'view' => function ($url, $model) use($dayTomorrow, $dayEnd) {
+                'view' => function ($url, $model) use($dayTomorrow, $dayEnd, $sceneBookUser) {
+//                    $bookUsers = [];
+//                    if(isset($sceneBookUser[$model->id])){
+//                        foreach ($sceneBookUser[$model->id] as $book_user) {
+//                            if($book_user['is_primary']){
+//                                $bookUsers[$book_user['book_id']][] = $book_user['user_id'];
+//                            }
+//                        }
+//                    }
                     /* @var $model SceneBook */
                     //预约时间
                     $bookTime = date('Y-m-d H:i:s', strtotime($model->date.SceneBook::$startTimeIndexMap[$model->time_index]));
@@ -307,7 +315,8 @@ $dayEnd = date('Y-m-d H:i:s',strtotime("+31 days"));
                     $isBooking = $model->getIsBooking();                //是否预约中
                     $isAssign = $model->getIsAssign();                  //是否在【待指派】任务
                     $isStausShootIng = $model->getIsStausShootIng();    //是否在【待评价】任务
-                    $isMe = $model->booker_id == Yii::$app->user->id;   //该预约是否为自己预约
+                    //|| (isset($bookUsers[$model->id]) && in_array(Yii::$app->user->id, $bookUsers[$model->id]))
+                    $isMe = $model->booker_id == Yii::$app->user->id ;  //该预约是否为自己的操作
                     $isTransfer = $model->is_transfer;                  //该预约是否为转让预约
                     //判断30天内的预约时段
                     if($dayTomorrow < $bookTime && $bookTime < $dayEnd){
@@ -341,4 +350,26 @@ $dayEnd = date('Y-m-d H:i:s',strtotime("+31 days"));
             'template' => '{view}',
         ],
     ],
-]); ?>    
+]); ?>
+
+<?php
+
+$js = 
+<<<JS
+    
+    $('.star').raty({
+        number: 3,
+        score: function() {
+            return Math.floor($(this).attr('data-score'));
+        },
+        path: '/filedata/scene/icons',
+        readOnly: true,
+    });
+        
+JS;
+    $this->registerJs($js,  View::POS_READY);
+?>
+
+<?php
+    SceneAsset::register($this);
+?>

@@ -55,6 +55,7 @@ use yii\helpers\Html;
                         for ($index = 0; $index < 3; $index++){
                             //预约时间
                             $bookTime = date('Y-m-d H:i:s', strtotime($allModels[$date][$index]->date.SceneBook::$startTimeIndexMap[$index]));
+                            $statusName = $allModels[$date][$index]->getStatusName();              //状态名称
                             $isNew = $allModels[$date][$index]->getIsNew();                        //新建任务
                             $isValid = $allModels[$date][$index]->getIsValid();                    //非新建及锁定任务
                             $isBooking = $allModels[$date][$index]->getIsBooking();                //是否预约中
@@ -62,13 +63,17 @@ use yii\helpers\Html;
                             $isStausShootIng = $allModels[$date][$index]->getIsStausShootIng();    //是否在【待评价】任务
                             $isMe = $allModels[$date][$index]->booker_id == Yii::$app->user->id;   //该预约是否为自己预约
                             $isTransfer = $allModels[$date][$index]->is_transfer;                  //该预约是否为转让预约
+                            $isDisable = $allModels[$date][$index]->is_disable;                    //场次是否禁用
                             //判断30天内的预约时段
                             if($dayTomorrow < $bookTime && $bookTime < $dayEnd){
-                                $buttonName = $isNew  ? '<i class="fa fa-video-camera"></i>&nbsp;预约' : (!$isValid ? '预约中' : ($isTransfer ? '<i class="fa fa-refresh"></i>&nbsp;转让' : ($isAssign ? $allModels[$date][$index]->getStatusName() : $allModels[$date][$index]->getStatusName())));
-                                $buttonClass = $isNew ? 'btn-primary' : (!$isValid ? 'btn-primary disabled' : ($isTransfer ? 'btn-primary' : ($isAssign ? 'btn-info' : 'btn-default')));
+                                $buttonName = $isDisable ? '<i class="fa fa-ban"></i>&nbsp;禁用' : ($isNew ? '<i class="fa fa-video-camera"></i>&nbsp;预约' : $statusName);
+                                $buttonClass = $isDisable ? 'btn-default disabled' : ($isNew ? 'btn-primary' : 'btn-default');
+                                
+                                //$buttonName = $isDisable ? '<i class="fa fa-ban"></i>&nbsp;禁用' : $isNew  ? '<i class="fa fa-video-camera"></i>&nbsp;预约' : (!$isValid ? '预约中' : ($isTransfer ? '<i class="fa fa-refresh"></i>&nbsp;转让' : ($isAssign ? $allModels[$date][$index]->getStatusName() : $allModels[$date][$index]->getStatusName())));
+                                //$buttonClass = $isDisable ? 'btn-default disabled' : $isNew ? 'btn-primary' : (!$isValid ? 'btn-primary disabled' : ($isTransfer ? 'btn-primary' : ($isAssign ? 'btn-info' : 'btn-default')));
                             }else{
-                                $buttonName = !$isNew ? ($isTransfer ? '<i class="fa fa-refresh"></i>&nbsp;转让' : $allModels[$date][$index]->getStatusName()) : '<i class="fa fa-ban"></i>&nbsp;禁用';
-                                $buttonClass = !$isNew ? ($isTransfer ? 'btn-primary' : 'btn-default') : 'btn-default disabled';
+                                $buttonName = $isDisable || !$isNew ?  ($isTransfer ? '<i class="fa fa-refresh"></i>&nbsp;转让' : $statusName) : '<i class="fa fa-ban"></i>&nbsp;禁用';
+                                $buttonClass = $isDisable || !$isNew ?  ($isTransfer ? 'btn-primary' : 'btn-default') : 'btn-default disabled';
                             }
                             $url = $isNew ? 
                                 ['create', 'id' => $allModels[$date][$index]->id, 'site_id' => $allModels[$date][$index]->site_id, 

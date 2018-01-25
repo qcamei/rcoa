@@ -66,7 +66,12 @@ class AppraiseController extends Controller
     public function actionCreate()
     {
         $model = new SceneAppraise(Yii::$app->request->queryParams);
+        
+        if(!($model->book->getIsStausShootIng() || $model->book->getIsAppraise()))
+            throw new NotAcceptableHttpException('该任务状态为'.$model->book->getStatusName ().'！');
+        
         $searchModel = new SceneAppraiseSearch();
+        $appraiseResult = $searchModel->search(Yii::$app->request->queryParams);
         
         if ($model->load(Yii::$app->request->post())) {
             SceneBookAction::getInstance()->CreateSceneAppraise(Yii::$app->request->post());

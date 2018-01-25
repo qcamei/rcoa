@@ -45,6 +45,16 @@ $html = str_replace(array("\r\n", "\r", "\n"),"",$this->renderFile('@frontend/mo
 $js = 
 <<<JS
         
+    //定时执行
+    setTimeout(function(){
+        $.get("/scene/scene-book/exit-create?id=$model->id",function(data){
+            if(data['code'] == '200'){
+                window.history.go(-1);
+            }
+        });
+    }, 2*60*1000); 
+    //window.clearTimeout(exit);    
+        
     $('#submit').click(function(){
         $(".myModal").html("");
         $('.myModal').modal("show").html('$html');

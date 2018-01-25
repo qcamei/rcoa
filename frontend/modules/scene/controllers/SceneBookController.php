@@ -4,6 +4,7 @@ namespace frontend\modules\scene\controllers;
 
 use common\models\expert\Expert;
 use common\models\scene\SceneActionLog;
+use common\models\scene\SceneAppraise;
 use common\models\scene\SceneBook;
 use common\models\scene\SceneBookUser;
 use common\models\scene\SceneMessage;
@@ -20,6 +21,7 @@ use wskeee\rbac\RbacManager;
 use wskeee\rbac\RbacName;
 use Yii;
 use yii\db\Query;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
@@ -44,6 +46,15 @@ class SceneBookController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ]
         ];
     }
 
@@ -111,6 +122,10 @@ class SceneBookController extends Controller
             $model->save();
             $model->loadDefaultValues();
         }
+        if($model->created_by != Yii::$app->user->id){
+            if($model->getIsAssign())
+                throw new NotAcceptableHttpException('正在预约中！');
+        }
         
         if ($model->load($post)) {
             SceneBookAction::getInstance()->CreateSceneBook($model, Yii::$app->request->post());
@@ -166,11 +181,19 @@ class SceneBookController extends Controller
     {
         $model = $this->findModel($id);
         
+        if($model->booker_id == Yii::$app->user->id){
+            if(!$model->getIsAssign())
+                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }else {
+            throw new NotAcceptableHttpException('无权限操作！');
+        }
+        
         $post = Yii::$app->request->post();
         if(isset($post['SceneBook']['lession_time']) 
           || isset($post['SceneBook']['camera_count'])){
             $post['SceneBook']['lession_time'] = (int)$post['SceneBook']['lession_time'];
             $post['SceneBook']['camera_count'] = (int)$post['SceneBook']['camera_count'];
+            $post['SceneBook']['is_photograph'] = (int)$post['SceneBook']['is_photograph'];
         }
         
         if ($model->load($post)) {
@@ -201,6 +224,9 @@ class SceneBookController extends Controller
     {
         $model = $this->findModel($id);
         
+        if(!($model->getIsAssign() || $model->getIsStausShootIng()))
+                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        
         if ($model->load(Yii::$app->request->post())) {
             SceneBookAction::getInstance()->AssignSceneBook($model, Yii::$app->request->post());
             return $this->redirect(['view', 'id' => $model->id]);
@@ -223,11 +249,45 @@ class SceneBookController extends Controller
     {
         $model = $this->findModel($id);
         
+        if($model->booker_id == Yii::$app->user->id && !$model->is_transfer){
+            if(!$model->getIsTransfer())
+                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }else {
+            throw new NotAcceptableHttpException('无权限操作！');
+        }
+        
         if ($model->load(Yii::$app->request->post())) {
             SceneBookAction::getInstance()->TransferSceneBook($model, Yii::$app->request->post());
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->renderAjax('transfer', [
+                'model' => $model,
+            ]);
+        }
+    }
+    
+    /**
+     * Receive an existing SceneBook model.
+     * If assign is successful, the browser will be redirected to the 'view' page.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionReceive($id)
+    {
+        $model = $this->findModel($id);
+        
+        if($model->is_transfer && $model->booker_id != Yii::$app->user->id){
+            if(!$model->getIsTransfer())
+                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }else{
+            throw new NotAcceptableHttpException('无权限操作！');
+        }
+        $oldBooker = User::findOne($model->booker_id);
+        if ($model->load(Yii::$app->request->post())) {
+            SceneBookAction::getInstance()->ReceiveSceneBook($model, $oldBooker);
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->renderAjax('receive', [
                 'model' => $model,
             ]);
         }
@@ -242,6 +302,13 @@ class SceneBookController extends Controller
     public function actionCancelTransfer($id)
     {
         $model = $this->findModel($id);
+        
+        if($model->booker_id == Yii::$app->user->id && $model->is_transfer){
+            if(!$model->getIsTransfer())
+                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }else {
+            throw new NotAcceptableHttpException('无权限操作！');
+        }
         
         if ($model->load(Yii::$app->request->post())) {
             SceneBookAction::getInstance()->CancelTransferSceneBook($model, Yii::$app->request->post());
@@ -274,7 +341,7 @@ class SceneBookController extends Controller
     {
         $searchModel = new SceneMessageSearch();
         
-        return $this->renderAjax('_msg_index', [
+        return $this->renderAjax('msg_index', [
             'dataProvider' => $searchModel->search(Yii::$app->request->queryParams)
         ]);
     }
@@ -548,20 +615,23 @@ class SceneBookController extends Controller
     protected function getExistSceneBookUserAll($book_id)
     {
         $results = [];
+        //查询预约用户信息
         $query = (new Query())->select([
-            'SceneBookUser.book_id', 'SceneBookUser.role', 'User.id', 'User.nickname','SceneBookUser.is_primary', 'User.phone'
+            'SceneBookUser.book_id', 'SceneBookUser.role', 'SceneBookUser.user_id',
+            'User.id', 'User.nickname','SceneBookUser.is_primary', 'User.phone',
+            'FORMAT((SUM(SceneAppraise.user_value)/SUM(SceneAppraise.q_value) * COUNT(SceneAppraise.q_value)), 2) AS score'
         ])->from(['SceneBookUser' => SceneBookUser::tableName()]);
-        $query->leftJoin(['User' => User::tableName()], 'User.id = SceneBookUser.user_id AND User.status = 10');
+        $query->leftJoin(['User' => User::tableName()], '(User.id = SceneBookUser.user_id AND User.status = 10)');
+        $query->leftJoin(['SceneAppraise' => SceneAppraise::tableName()], '(SceneAppraise.book_id = SceneBookUser.book_id AND SceneAppraise.user_id = SceneBookUser.user_id)');
         $query->where(['SceneBookUser.book_id' => $book_id, 'SceneBookUser.is_delete' => 0]);
         $query->groupBy('SceneBookUser.id');
         $query->orderBy(['SceneBookUser.sort_order' => SORT_ASC]);
         //组装返回的预约任务用户信息
         foreach ($query->all() as $value) {
-            $book_id = $value['book_id'];
-            unset($value['book_id']);
-            $results[$book_id][] = $value;
+            $results[$value['book_id']][] = $value;
+            unset($results[$value['book_id']]['book_id']);
         }
-       
+        
         return $results;
     }
     
@@ -641,5 +711,27 @@ class SceneBookController extends Controller
         } else {
             return false;
         }
+    }
+    
+    /**
+     * 
+     * @param array $params
+     * @return boolean
+     */
+    protected function getSceneSiteManage($params)
+    {
+        $site_id = ArrayHelper::getValue($params, 'site_id');
+        $date = ArrayHelper::getValue($params, 'date');
+        $time_index = ArrayHelper::getValue($params, 'time_index');
+        
+        $query = SceneSiteDisable::find();
+        $query->andFilterWhere(['site_id' => $site_id])
+            ->andFilterWhere(['date' => $date])
+            ->andFilterWhere(['time_index' => $time_index]);
+        
+        if(count($query->all()) > 0)
+            return true;
+        
+        return false;
     }
 }
