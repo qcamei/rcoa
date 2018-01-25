@@ -195,7 +195,7 @@ class SceneManageController extends Controller
         $query = (new Query())->select(['id', 'date', 'time_index'])
              ->from(SceneBook::tableName());
         $query->andFilterWhere(['site_id' => $site_id]);                //过滤场地
-        $query->andFilterWhere(['NOT IN', 'status', $notStatus]);       //过滤已取消和为预约的数据
+        $query->andFilterWhere(['NOT IN', 'status', $notStatus]);       //过滤已取消和未预约的数据
         $query->orderBy(['date' => SORT_ASC, 'time_index' => SORT_ASC]);
         
         $bookItems = [];
