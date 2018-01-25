@@ -3,6 +3,7 @@
 namespace common\models\scene\searchs;
 
 use common\models\scene\SceneBook;
+use common\models\scene\SceneSiteDisable;
 use wskeee\utils\DateUtil;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -25,8 +26,7 @@ class SceneBookSearch extends SceneBook
      * @var string 
      */
     private $date_end;
-
-
+    
     /**
      * @inheritdoc
      */
@@ -229,12 +229,13 @@ class SceneBookSearch extends SceneBook
         $notStatus = [SceneBook::STATUS_DEFAULT, SceneBook::STATUS_CANCEL];
         $query = SceneBookSearch::find();
         //添加查询条件
-        $query->andFilterWhere(['between', 'date', $this->date_start, $this->date_end]);
-        $query->andFilterWhere(['site_id' => $this->site_id]);
-        $query->andFilterWhere(['NOT IN', 'status', $notStatus]);
-        
+        $query->andFilterWhere(['between', 'SceneBook.date', $this->date_start, $this->date_end]);
+        $query->andFilterWhere(['SceneBook.site_id' => $this->site_id]);
+        $query->andFilterWhere(['NOT IN', 'SceneBook.status', $notStatus]);
+        $query->with('business', 'level', 'profession', 'course');
+        $query->with('sceneSite', 'booker', 'createdBy', 'teacher');
         //排序
-        $query->orderBy(['date' => SORT_ASC, 'time_index' => SORT_ASC]);
+        $query->orderBy(['SceneBook.date' => SORT_ASC, 'SceneBook.time_index' => SORT_ASC]);
         
         return $query->all();
     }

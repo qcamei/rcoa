@@ -51,7 +51,7 @@ class NotificationManager {
      * 用视图模板渲染send
      * @param string $view                  视图模板
      * @param string $params                转进视图模板参数
-     * @param string $receivers             接收者，以‘|’分隔，包含中文需使用URL编码
+     * @param string|array $receivers       接收者，以‘|’分隔，包含中文需使用URL编码
      * @param string $title                 消息标题
      * @param string $url                   访问链接
      * @return type

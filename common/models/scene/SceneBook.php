@@ -431,6 +431,14 @@ class SceneBook extends ActiveRecord
     {
         return $this->status == self::STATUS_CANCEL;
     }
+    
+    /**
+     * 获取是否在【已取消】状态
+     */
+    public function getIsTransfer()
+    {
+        return $this->status >= self::STATUS_ASSIGN && $this->status < self::STATUS_APPRAISE;
+    }
 
     /**
      * 获取是否是可以取消的状态

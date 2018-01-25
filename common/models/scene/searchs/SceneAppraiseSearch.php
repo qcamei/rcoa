@@ -46,6 +46,7 @@ class SceneAppraiseSearch extends SceneAppraise
         $this->user_id = ArrayHelper::getValue($params, 'user_id');
         
         $query = SceneAppraise::find();
+            //->addSelect(['COUNT(user_value) / COUNT(q_value) AS score']);
 
 //        // add conditions that should always apply here
 //
@@ -80,11 +81,18 @@ class SceneAppraiseSearch extends SceneAppraise
         $query->orderBy(['role' => SORT_DESC, 'index' => SORT_ASC]);
 
         $results = [];
+        $user_value = [];
+        $q_value = [];
         foreach ($query->all() as $value) {
             /* @var $value SceneAppraise */
             $results[$value->role][$value->q_id] = $value;
+            $user_value[$value->role][] = $results[$value->role][$value->q_id]['user_value'];
+            $q_value[$value->role][] = $results[$value->role][$value->q_id]['q_value'];
         }
-        
-        return $results;
+        return [
+            'user_value' => $user_value, 
+            'q_value' => $q_value, 
+            'results' => $results,
+        ];
     }
 }
