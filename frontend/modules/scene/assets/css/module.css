@@ -595,17 +595,51 @@
     background-color: #333333;
 }
 
-.scene-book .table-week img {
-    width: 12px;
-    height: 12px;
+.scene-book .table .holiday {
+    width: 20px;
+    height: 20px;
+    display: block;
+    color: #fff;
+    position: absolute;
+    text-align: center;
+    text-decoration: none;
 }
 
-.scene-book .table-month .days {
+.scene-book .table .holiday.red {
+    background-color: #ff3300;
+}
+
+.scene-book .table .holiday.orange {
+    background-color: #f37b53;
+}
+
+.scene-book .table .holiday.green {
+    background-color: #5cb85c;
+}
+
+.scene-book 
+.table-month .holiday {
+    left: 5px;
+}
+
+.scene-book 
+.table-month .days {
+    width: 20px;
+    height: 20px;
+    display: block;
     position: absolute;
     right: 5px;
+    text-align: center;
 }
 
-.scene-book .table-month .btn-group {
+.scene-book 
+.table-month .days.now {
+    color: #fff;
+    background-color: #666;
+}
+
+.scene-book 
+.table-month .btn-group {
     margin-top: 20px;
 }
 
@@ -632,7 +666,8 @@
     text-align: center;
 }
 
-.scene-book .table-month > tbody > tr > td {
+.scene-book 
+.table-month > tbody > tr > td {
     width: 162px;
     height: 106px;
 }
@@ -640,6 +675,24 @@
 .scene-book 
 .table-month > tbody > tr > td:nth-of-type(6n+1){
     background-color: #f9f9f9;
+}
+
+.scene-book 
+.table-week .holiday {
+    top: 15px;
+    right: 5px;
+}
+
+.scene-book 
+.table-week .popover {
+   width: 130px;
+   color: #000;
+}
+
+.scene-book 
+.table-week img {
+    width: 12px;
+    height: 12px;
 }
 
 .scene-book .table-month > thead > tr > th,

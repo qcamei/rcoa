@@ -1,5 +1,6 @@
 <?php
 
+use common\models\Holiday;
 use common\models\scene\SceneBook;
 use frontend\modules\scene\assets\SceneAsset;
 use yii\grid\GridView;
@@ -10,6 +11,8 @@ use yii\web\View;
 $dayTomorrow = date('Y-m-d H:i:s',strtotime("+1 days"));
 //30天后预约时间
 $dayEnd = date('Y-m-d H:i:s',strtotime("+31 days"));
+//节假日颜色
+$holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
 
 ?>
 <?= GridView::widget([
@@ -22,18 +25,29 @@ $dayEnd = date('Y-m-d H:i:s',strtotime("+31 days"));
             'format' => 'raw',
             'attribute' => 'date',
             'label' => '时间',
-            'value' => function($model) {
-                return date('m/d ', strtotime($model->date)).'</br>' .Yii::t('rcoa', 'Week ' . date('D', strtotime($model->date)));
+            'value' => function($model) use($holidays, $holidayColourMap){
+                $holiday= '';$content = '';
+                if(isset($holidays[$model->date])){
+                    $first = reset($holidays[$model->date]);
+                    foreach ($holidays[$model->date] as $holiday)
+                        $content .= "<p>{$holiday['name']}(".Holiday::TYPE_NAME_MAP[$holiday['type']].")</p>";
+                    $holiday = "<a class=\"holiday img-circle {$holidayColourMap[$first['type']]}\" role=\"button\" data-content=\"{$content}\">".Holiday::TYPE_NAME_MAP[$first['type']]."</a>";
+                }
+                $date = date('m/d ', strtotime($model->date)).'</br>' .Yii::t('rcoa', 'Week ' . date('D', strtotime($model->date)));
+                return $date.$holiday;
             },
             'headerOptions' => [
                 'style'=>[
                     'width' => '45px',
-                    'padding' => '4px'
+                    'padding' => '4px',
                 ]
             ],
             'contentOptions' =>[
                 'class' => 'date',
                 'rowspan' => 3, 
+                'style' => [
+                    'position' => 'relative',
+                ],
             ],
         ],
         [
@@ -142,7 +156,7 @@ $dayEnd = date('Y-m-d H:i:s',strtotime("+31 days"));
             'format' => 'raw',
             'attribute' => 'start_time',
             'value' => function($model) {
-                return !empty($model->start_time) ?  $model->start_time : '';
+                return $model->getIsValid() ?  $model->start_time : '';
             },
             'headerOptions'=>[
                 'class'=>[
@@ -195,7 +209,7 @@ $dayEnd = date('Y-m-d H:i:s',strtotime("+31 days"));
             'format' => 'raw',
             'attribute' => 'remark',
             'value' => function($model) {
-                return $model->remark;
+                return $model->getIsValid() ? $model->remark :  null;
             },
             'headerOptions'=>[
                 'class'=>[
@@ -298,7 +312,7 @@ $dayEnd = date('Y-m-d H:i:s',strtotime("+31 days"));
             'class' => 'yii\grid\ActionColumn',
             'header' => Yii::t('app', 'Operating'),
             'buttons' => [
-                'view' => function ($url, $model) use($dayTomorrow, $dayEnd, $sceneBookUser) {
+                'view' => function ($url, $model) use($dayTomorrow, $dayEnd, $sceneBookUser, $siteManage) {
 //                    $bookUsers = [];
 //                    if(isset($sceneBookUser[$model->id])){
 //                        foreach ($sceneBookUser[$model->id] as $book_user) {
@@ -318,10 +332,12 @@ $dayEnd = date('Y-m-d H:i:s',strtotime("+31 days"));
                     //|| (isset($bookUsers[$model->id]) && in_array(Yii::$app->user->id, $bookUsers[$model->id]))
                     $isMe = $model->booker_id == Yii::$app->user->id ;  //该预约是否为自己的操作
                     $isTransfer = $model->is_transfer;                  //该预约是否为转让预约
+                    //场次是否禁用
+                    $isDisable = isset($siteManage[$model->date][$model->time_index]) && $siteManage[$model->date][$model->time_index];
                     //判断30天内的预约时段
                     if($dayTomorrow < $bookTime && $bookTime < $dayEnd){
-                        $buttonName = $isNew  ? '<i class="fa fa-video-camera"></i>&nbsp;预约' : (!$isValid ? '预约中' : ($isTransfer ? '<i class="fa fa-refresh"></i>&nbsp;转让' : ($isAssign ? $model->getStatusName() : $model->getStatusName())));
-                        $buttonClass = $isNew ? 'btn-primary' : (!$isValid ? 'btn-primary disabled' : ($isTransfer ? 'btn-primary' : ($isAssign ? 'btn-info' : 'btn-default')));
+                        $buttonName = $isDisable ? '<i class="fa fa-ban"></i>&nbsp;禁用' : ($isNew  ? '<i class="fa fa-video-camera"></i>&nbsp;预约' : (!$isValid ? '<i class="fa fa-lock" aria-hidden="true"></i>&nbsp;&nbsp;预约' : ($isTransfer ? '<i class="fa fa-refresh"></i>&nbsp;转让' : ($isAssign ? $model->getStatusName() : $model->getStatusName()))));
+                        $buttonClass = $isDisable ? 'btn-default disabled' : ($isNew ? 'btn-primary' : (!$isValid ? 'btn-primary disabled' : ($isTransfer ? 'btn-primary' : ($isAssign ? 'btn-info' : 'btn-default'))));
                     }else{
                         $buttonName = !$isNew ? ($isTransfer ? '<i class="fa fa-refresh"></i>&nbsp;转让' : $model->getStatusName()) : '<i class="fa fa-ban"></i>&nbsp;禁用';
                         $buttonClass = !$isNew ? ($isTransfer ? 'btn-primary' : 'btn-default') : 'btn-default disabled';

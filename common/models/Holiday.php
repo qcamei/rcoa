@@ -32,6 +32,12 @@ class Holiday extends ActiveRecord {
         2 => "公众节日",
         3 => "自定义假日",
     ];
+    
+    const TYPE_NAME_MAP = [
+        1 => "假",
+        2 => "节",
+        3 => "补",
+    ];
 
     /* @var $cache Cache */
 

@@ -90,10 +90,20 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     
     <div id="month" class="dataProvider">
-        <?= $this->render('_month', ['dataProvider' => $dataProvider, 'sceneBookUser' => $sceneBookUser]) ?>
+        <?= $this->render('_month', [
+            'holidays' => $holidays,
+            'dataProvider' => $dataProvider, 
+            'sceneBookUser' => $sceneBookUser, 
+            'siteManage' => $siteManage
+        ]) ?>
     </div>
     <div id="week" class="dataProvider">
-        <?= $this->render('_week', ['dataProvider' => $dataProvider, 'sceneBookUser' => $sceneBookUser]) ?>
+        <?= $this->render('_week', [
+            'holidays' => $holidays,
+            'dataProvider' => $dataProvider, 
+            'sceneBookUser' => $sceneBookUser, 
+            'siteManage' => $siteManage
+        ]) ?>
     </div>
     
     
@@ -101,7 +111,6 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php
-
 $js = <<<JS
     var reflashUrl = "$reflashUrl",
         refsite = "{$refsite}",
@@ -128,6 +137,14 @@ $js = <<<JS
         value += '/01';
         location.href = reflashUrl+'?site_id='+refsite+'&date='+value+'&date_switch='+refswitch;
     }
+                                
+    $(".holiday").popover({
+        delay: "toggle",//{ "show": 500, "hide": 100 },
+        title: "节假日详情",
+        //toggle: "popover",
+        trigger: "hover ",
+        html: true,
+    });
 JS;
 $this->registerJs($js, View::POS_READY);
 ?>

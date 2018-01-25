@@ -96,7 +96,7 @@ $js =
         clearInterval();
         setTimeout(function(){
             $("#scene-book-form").submit();
-        }, 2000);
+        }, 300);
     };
     //组装选中的摄影师人数
     function selectLength(){

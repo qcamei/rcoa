@@ -9,6 +9,7 @@ use common\models\scene\SceneBook;
 use common\models\scene\SceneBookUser;
 use common\models\scene\SceneMessage;
 use common\models\scene\SceneSite;
+use common\models\scene\SceneSiteDisable;
 use common\models\scene\searchs\SceneActionLogSearch;
 use common\models\scene\searchs\SceneAppraiseSearch;
 use common\models\scene\searchs\SceneBookSearch;
@@ -73,10 +74,12 @@ class SceneBookController extends Controller
         return $this->render('index', [
             //'searchModel' => $searchModel,
             'filter' => $results['filters'],
+            'holidays' => $results['holidays'],
             'dataProvider' => $results['data'],
             'sceneSite' => $sceneSite,
             'firstSite' => $firstSite,
             'sceneBookUser' => $this->getExistSceneBookUserAll(ArrayHelper::getColumn($results['data']->allModels, 'id')),
+            'siteManage' => $this->getSceneSiteManage($results['filters'], $firstSite),
         ]);
     }
 
@@ -668,6 +671,28 @@ class SceneBookController extends Controller
     }
     
     /**
+     * 获取所有场次管理
+     * @param array $params
+     * @param array $firstSite                          第一个场地
+     * @return array
+     */
+    protected function getSceneSiteManage($params, $firstSite)
+    {
+        $siteManage = [];
+        $site_id = ArrayHelper::getValue($params, 'site_id', reset($firstSite));
+        
+        $query = (new Query())->from(SceneSiteDisable::tableName()); 
+        $query->andFilterWhere(['site_id' => $site_id]);
+        $query->orderBy(['date' => SORT_ASC, 'time_index' => SORT_ASC]);
+        
+        foreach ($query->all() as $site) {
+            $siteManage[$site['date']][$site['time_index']] = $site['is_disable'];
+        }
+        
+        return $siteManage;
+    }
+    
+    /**
      * 判断同一时间段是否存在相同的预约
      * @param array $param
      * @throws NotAcceptableHttpException
@@ -711,27 +736,5 @@ class SceneBookController extends Controller
         } else {
             return false;
         }
-    }
-    
-    /**
-     * 
-     * @param array $params
-     * @return boolean
-     */
-    protected function getSceneSiteManage($params)
-    {
-        $site_id = ArrayHelper::getValue($params, 'site_id');
-        $date = ArrayHelper::getValue($params, 'date');
-        $time_index = ArrayHelper::getValue($params, 'time_index');
-        
-        $query = SceneSiteDisable::find();
-        $query->andFilterWhere(['site_id' => $site_id])
-            ->andFilterWhere(['date' => $date])
-            ->andFilterWhere(['time_index' => $time_index]);
-        
-        if(count($query->all()) > 0)
-            return true;
-        
-        return false;
     }
 }

@@ -2,8 +2,8 @@
 
 namespace common\models\scene\searchs;
 
+use common\models\Holiday;
 use common\models\scene\SceneBook;
-use common\models\scene\SceneSiteDisable;
 use wskeee\utils\DateUtil;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -117,6 +117,7 @@ class SceneBookSearch extends SceneBook
     */
     public function searchModel($params, $firstSite)
     {
+        $holidays = [];
         $this->date = ArrayHelper::getValue($params, 'date', date('Y-m-d'));                         //日期
         $this->date_switch = ArrayHelper::getValue($params, 'date_switch', 'month');                 //月 or 周
         $hasDo = $this->date_switch == 'month';
@@ -129,7 +130,20 @@ class SceneBookSearch extends SceneBook
         $results = $this->searchSceneBook();
         //创建空的日期数据
         $dateDatas = $hasDo ? $this->searchMonth() : $this->searchWeek();
-       
+        //获取节假日
+        if($hasDo){
+            $date = date('Y-m', strtotime($this->date));
+            $firstSunday = date('Y-m-d', strtotime("first sunday of $date"));
+            //当前月最后一个星期日是几号
+            $lastSunday = date('Y-m-d', strtotime("last sunday of $date"));
+            //当前月第一个星期日是往前7天的日期
+            $this->date_start = date('Y-m-d', strtotime(date('Y-m-d', strtotime("$firstSunday -".(7).' days'))));
+            //当前月最后一个星期日是往后7天的日期
+            $this->date_end = date('Y-m-d', strtotime(date('Y-m-d', strtotime("$lastSunday +".(7).' days'))));
+        }
+        $holidayBetweens = Holiday::getHolidayBetween($this->date_start, $this->date_end);
+        
+        //预约数据组装
         $startIndex = 0;
         foreach ($results as $model) {
             for ($i = $startIndex, $len = count($dateDatas); $i < $len; $i++) {
@@ -140,7 +154,19 @@ class SceneBookSearch extends SceneBook
                 }
             }
         }
+        //重组组装节假日
+        ArrayHelper::multisort($holidayBetweens, 'type');
+        foreach($holidayBetweens as $holiday){
+            $date = date('Y-m-d', strtotime($holiday['date']));
+            $holidays[$date][$holiday['type']] = [
+                'name' => $holiday['name'],
+                'type' => $holiday['type'],
+                'des' => $holiday['des'],
+                'is_lunar' => $holiday['is_lunar'],
+            ];
+        }
         
+        //预约数据格式
         $dataProvider = new ArrayDataProvider([
             'allModels' => $dateDatas,
             'sort' => [
@@ -153,6 +179,7 @@ class SceneBookSearch extends SceneBook
         
         return [
             'filters' => $params,
+            'holidays' => $holidays,
             'data' => $dataProvider,
         ];
     }
@@ -229,13 +256,13 @@ class SceneBookSearch extends SceneBook
         $notStatus = [SceneBook::STATUS_DEFAULT, SceneBook::STATUS_CANCEL];
         $query = SceneBookSearch::find();
         //添加查询条件
-        $query->andFilterWhere(['between', 'SceneBook.date', $this->date_start, $this->date_end]);
-        $query->andFilterWhere(['SceneBook.site_id' => $this->site_id]);
-        $query->andFilterWhere(['NOT IN', 'SceneBook.status', $notStatus]);
+        $query->andFilterWhere(['between', 'date', $this->date_start, $this->date_end]);
+        $query->andFilterWhere(['site_id' => $this->site_id]);
+        $query->andFilterWhere(['NOT IN', 'status', $notStatus]);
         $query->with('business', 'level', 'profession', 'course');
         $query->with('sceneSite', 'booker', 'createdBy', 'teacher');
         //排序
-        $query->orderBy(['SceneBook.date' => SORT_ASC, 'SceneBook.time_index' => SORT_ASC]);
+        $query->orderBy(['date' => SORT_ASC, 'time_index' => SORT_ASC]);
         
         return $query->all();
     }

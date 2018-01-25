@@ -1,5 +1,6 @@
 <?php
 
+use common\models\Holiday;
 use common\models\scene\SceneBook;
 use yii\helpers\Html;
 
@@ -23,6 +24,7 @@ use yii\helpers\Html;
         <?php  
             $allModels = [];
             $timeIndexMap = ['上', '下', '晚'];
+            $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
             //重组预约数据模型
             foreach ($dataProvider->allModels as $model){
                 $allModels[$model->date][] = $model;
@@ -43,13 +45,25 @@ use yii\helpers\Html;
             $dayTomorrow = date('Y-m-d H:i:s',strtotime("+1 days"));
             //30天后预约时间
             $dayEnd = date('Y-m-d H:i:s',strtotime("+31 days"));
+            
             for ($i = 0; $i < ceil($dayNum / 7); $i++){
                 echo '<tr>';
                 for ($d = 0; $d < 7; $d++) {
                     $nowDay = 7 * $i + $d + 0;
                     $date = date('Y-m-d', strtotime($dateStart.'+'.$nowDay.'days'));
                     echo '<td>';
-                    echo "<span class=\"days\">".preg_replace('/^0+/','',date('d', strtotime($date)))."</span>";
+                    if(isset($holidays[$date])){
+                        $first = reset($holidays[$date]);
+                        $content = '';
+                        foreach ($holidays[$date] as $holiday) 
+                            $content .= "<p>{$holiday['name']}(".Holiday::TYPE_NAME_MAP[$holiday['type']].")</p>";
+                        echo "<a class=\"holiday img-circle {$holidayColourMap[$first['type']]}\" role=\"button\" data-content=\"{$content}\">".Holiday::TYPE_NAME_MAP[$first['type']]."</a>";
+                    }
+                    if($date != date('Y-m-d', time())){
+                        echo "<span class=\"days\">".preg_replace('/^0+/','',date('d', strtotime($date)))."</span>";
+                    }else{
+                        echo "<span class=\"days img-rounded now\">".preg_replace('/^0+/','',date('d', strtotime($date)))."</span>";
+                    }
                     echo "<div class=\"btn-group\">";
                     if(isset($allModels[$date])){
                         for ($index = 0; $index < 3; $index++){
@@ -63,17 +77,16 @@ use yii\helpers\Html;
                             $isStausShootIng = $allModels[$date][$index]->getIsStausShootIng();    //是否在【待评价】任务
                             $isMe = $allModels[$date][$index]->booker_id == Yii::$app->user->id;   //该预约是否为自己预约
                             $isTransfer = $allModels[$date][$index]->is_transfer;                  //该预约是否为转让预约
-                            $isDisable = $allModels[$date][$index]->is_disable;                    //场次是否禁用
+                            //场次是否禁用
+                            $isDisable = isset($siteManage[$date][$index]) && $siteManage[$date][$index];
+                            
                             //判断30天内的预约时段
                             if($dayTomorrow < $bookTime && $bookTime < $dayEnd){
-                                $buttonName = $isDisable ? '<i class="fa fa-ban"></i>&nbsp;禁用' : ($isNew ? '<i class="fa fa-video-camera"></i>&nbsp;预约' : $statusName);
-                                $buttonClass = $isDisable ? 'btn-default disabled' : ($isNew ? 'btn-primary' : 'btn-default');
-                                
-                                //$buttonName = $isDisable ? '<i class="fa fa-ban"></i>&nbsp;禁用' : $isNew  ? '<i class="fa fa-video-camera"></i>&nbsp;预约' : (!$isValid ? '预约中' : ($isTransfer ? '<i class="fa fa-refresh"></i>&nbsp;转让' : ($isAssign ? $allModels[$date][$index]->getStatusName() : $allModels[$date][$index]->getStatusName())));
-                                //$buttonClass = $isDisable ? 'btn-default disabled' : $isNew ? 'btn-primary' : (!$isValid ? 'btn-primary disabled' : ($isTransfer ? 'btn-primary' : ($isAssign ? 'btn-info' : 'btn-default')));
+                                $buttonName = $isDisable ? '<i class="fa fa-ban"></i>&nbsp;禁用' : ($isNew  ? '<i class="fa fa-video-camera"></i>&nbsp;预约' : (!$isValid ? '<i class="fa fa-lock" aria-hidden="true"></i>&nbsp;&nbsp;预约' : ($isTransfer ? '<i class="fa fa-refresh"></i>&nbsp;转让' : ($isAssign ? $allModels[$date][$index]->getStatusName() : $allModels[$date][$index]->getStatusName()))));
+                                $buttonClass = $isDisable ? 'btn-default disabled' : ($isNew ? 'btn-primary' : (!$isValid ? 'btn-primary disabled' : ($isTransfer ? 'btn-primary' : ($isAssign ? 'btn-info' : 'btn-default'))));
                             }else{
-                                $buttonName = $isDisable || !$isNew ?  ($isTransfer ? '<i class="fa fa-refresh"></i>&nbsp;转让' : $statusName) : '<i class="fa fa-ban"></i>&nbsp;禁用';
-                                $buttonClass = $isDisable || !$isNew ?  ($isTransfer ? 'btn-primary' : 'btn-default') : 'btn-default disabled';
+                                $buttonName = !$isNew ?  ($isTransfer ? '<i class="fa fa-refresh"></i>&nbsp;转让' : $statusName) : '<i class="fa fa-ban"></i>&nbsp;禁用';
+                                $buttonClass = !$isNew ?  ($isTransfer ? 'btn-primary' : 'btn-default') : 'btn-default disabled';
                             }
                             $url = $isNew ? 
                                 ['create', 'id' => $allModels[$date][$index]->id, 'site_id' => $allModels[$date][$index]->site_id, 
