@@ -56,7 +56,8 @@ class SceneBookSearch extends SceneBook
      */
     public function search($params)
     {
-        $this->date = ArrayHelper::getValue($params, 'date');                         //时间段
+        $this->date = ArrayHelper::getValue($params, 'date');                           //时间段
+        $notStatus = [SceneBook::STATUS_DEFAULT, SceneBook::STATUS_BOOKING];            //未预约和预约中
         $query = SceneBook::find();
 
         // add conditions that should always apply here
@@ -99,6 +100,8 @@ class SceneBookSearch extends SceneBook
             $this->date = explode(" - ", $this->date);
             $query->andFilterWhere(['between', 'date', $this->date[0], $this->date[1]]);
         }
+        //过滤未预约和预约中的数据
+        $query->andFilterWhere(['NOT IN', 'status', $notStatus]);
 
         $query->andFilterWhere(['like', 'start_time', $this->start_time])
             ->andFilterWhere(['like', 'remark', $this->remark])

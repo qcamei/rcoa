@@ -6,6 +6,7 @@ use common\models\expert\Expert;
 use common\models\scene\SceneBook;
 use common\models\scene\SceneBookUser;
 use common\models\scene\SceneSite;
+use common\models\scene\SceneSiteDisable;
 use common\models\scene\searchs\SceneBookSearch;
 use common\models\User;
 use frontend\modules\scene\utils\SceneBookAction;
@@ -19,6 +20,7 @@ use yii\db\Query;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
+use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -100,8 +102,9 @@ class BookController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $post = \Yii::$app->request->post();
+        if ($model->load($post)) {
+            $this->getIsUpdate($model, $post);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -182,6 +185,87 @@ class BookController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    
+    /**
+     * 判断是否能更新成功
+     * @param object $model     需要修改的预约模型
+     * @param array $post       post传的值
+     * @return boolean  true|false
+     * @throws NotAcceptableHttpException
+     */
+    public function getIsUpdate($model, $post)
+    {
+        $newAttr = $model->getDirtyAttributes();        //获取所有新属性值
+        $newSite_id = ArrayHelper::getValue($newAttr, 'site_id');               //修改后的场地ID
+        $newDate = ArrayHelper::getValue($newAttr, 'date');                     //修改后的日期
+        $newTime_index = ArrayHelper::getValue($newAttr, 'time_index');         //修改后的时段
+        
+        if($newSite_id != null || $newDate != null || $newTime_index != null) {
+            $postSite_id = ArrayHelper::getValue($post, 'SceneBook.site_id');           //post传过来的场地ID
+            $postDate = ArrayHelper::getValue($post, 'SceneBook.date');                 //post传过来的日期
+            $postTime_index = ArrayHelper::getValue($post, 'SceneBook.time_index');     //post传过来的时段
+            $dayTomorrow = date('Y-m-d H:i:s',strtotime("+1 days"));            //date('d')+1 明天预约时间
+            $dayEnd = date('Y-m-d H:i:s',strtotime("+31 days"));                //30天后预约时间
+            $date = date('Y-m-d H:i:s', strtotime($postDate.SceneBook::$startTimeIndexMap[$postTime_index]));//修改后的预约时间
+            if($dayTomorrow < $date && $date < $dayEnd){
+                $isBook = $this->getIsBook($postSite_id, $postDate, $postTime_index);           //是否已被预约
+                $isDisable = $this->getIsDisable($postSite_id, $postDate, $postTime_index);     //是否已被禁用
+                if ($isBook != null || $isDisable != null) {
+                    throw new NotAcceptableHttpException('该场地的场次已被预约或被禁用！！！');
+                }else{
+                    return $model->save();
+                }
+            }else{
+                throw new NotAcceptableHttpException('预约的时间必须是明天开始的31天以内！！！');
+            }
+        }
+        return $model->save();
+    }
+
+    /**
+     * 判断是否已被预约
+     * @param integer $site_id      场地ID
+     * @param integer $date         日期
+     * @param integer $time_index   时段
+     * @return boolean  true|false
+     */
+    public function getIsBook($site_id, $date, $time_index)
+    {
+        $notStatus = [SceneBook::STATUS_DEFAULT, SceneBook::STATUS_CANCEL];
+        $query = SceneBook::find();
+        $query->andFilterWhere(['site_id' => $site_id])
+                ->andFilterWhere(['date' => $date])
+                ->andFilterWhere(['time_index' => $time_index])
+                ->andFilterWhere(['NOT IN', 'status', $notStatus]);
+
+        if (count($query->all()) > 0) {
+            return true;
+        }
+        return false;
+        
+    }
+
+    /**
+     * 判断场地是否已被禁用
+     * @param integer $site_id      场地ID
+     * @param integer $date         日期
+     * @param integer $time_index   时段
+     * @return boolean  true|false
+     */
+    public function getIsDisable($site_id, $date, $time_index)
+    {
+        $query = SceneSiteDisable::find();
+        $query->andFilterWhere(['site_id' => $site_id])
+                ->andFilterWhere(['date' => $date])
+                ->andFilterWhere(['time_index' => $time_index])
+                ->andFilterWhere(['is_disable' => 1]);
+
+        if (count($query->all()) > 0) {
+            return true;
+        }
+        return false;
+        
     }
     
     /**
