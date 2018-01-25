@@ -408,6 +408,7 @@ class SceneBook extends ActiveRecord
     {
         return $this->status == self::STATUS_SHOOTING;
     }
+    
     /**
      * 获取是否在【已失约】状态
      */
@@ -447,7 +448,7 @@ class SceneBook extends ActiveRecord
     {
         return $this->status > self::STATUS_BOOKING && $this->status < self::STATUS_BREAK_PROMISE;
     }
-
+    
     /**
      * 获取预约锁定剩余时间
      * @return int 秒

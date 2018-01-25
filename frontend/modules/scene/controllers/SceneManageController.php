@@ -3,17 +3,16 @@
 namespace frontend\modules\scene\controllers;
 
 use common\models\scene\SceneBook;
-use common\models\scene\SceneBookUser;
 use common\models\scene\SceneSite;
 use common\models\scene\SceneSiteDisable;
 use common\models\scene\searchs\SceneSiteDisableSearch;
 use common\models\scene\searchs\SceneSiteSearch;
-use common\models\User;
 use Yii;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\ServerErrorHttpException;
 
 /**
  * SceneManage controller for the `scene` module
@@ -23,6 +22,7 @@ class SceneManageController extends Controller
     public $layout = 'scene';
     
     /**
+     * 场地列表
      * Renders View the index view for the module
      * @return string
      */
@@ -38,6 +38,7 @@ class SceneManageController extends Controller
     }
     
     /**
+     * 场地详情
      * Renders View the index view for the module
      * @return string
      */
@@ -50,6 +51,7 @@ class SceneManageController extends Controller
     }
     
     /**
+     * 禁用场地
      * Renders View the index view for the module
      * @return string
      */
@@ -61,18 +63,12 @@ class SceneManageController extends Controller
         $firstSite = array_keys(reset($sceneSite));       //获取场景的第一个场地
         $results = $searchModel->searchModel($params, $firstSite);
         
-        $site_id = ArrayHelper::getValue($params, 'site_id');       //场地ID
-        $date = ArrayHelper::getValue($params, 'date');             //日期
-        $time_index = ArrayHelper::getValue($params, 'time_index'); //时段
-//        var_dump($this->getSiteDisable($site_id, $date, $time_index));exit;
         return $this->render('disable',[
-            //'searchModel' => $searchModel,
-            'siteDisable' => $this->getSiteDisable($site_id, $date, $time_index),
             'filter' => $results['filters'],
             'dataProvider' => $results['data'],
+            'books' => $this->getBooksItem(ArrayHelper::getValue($params, 'site_id')),
             'sceneSite' => $sceneSite,
             'firstSite' => $firstSite,
-            'sceneBookUser' => $this->getExistSceneBookUserAll(ArrayHelper::getColumn($results['data']->allModels, 'id')),
         ]);
     }
 
@@ -83,56 +79,63 @@ class SceneManageController extends Controller
      * @param integer $time_index   时段
      * @return mixed
      */
-    public function actionSiteDiable($site_id, $date, $time_index)
+    public function actionSiteDisable()
     {
-//        $saveData = SceneSiteDisable::findOne(['site_id' => $site_id, 'date' => $date, 'time_index' => $time_index]);
-//        if($saveData == null) {
-            $saveData = new SceneSiteDisable(['site_id' => $site_id, 'date' => $date, 'time_index' => $time_index, 'is_disable' => 1]);
-            $saveData->save();
-            return $this->redirect(['disable']);
-//        }
+        $bookModel = $this->findBookModel();
+        if ($bookModel != null) {
+            throw new ServerErrorHttpException('禁用失败！该时段的场地已被预约！！');
+        }
         
+        $model = $this->findModel();
+        $model->is_disable = 1;
+        $model->save();
+        
+        return $this->redirect(['disable']);
     }
-
+    
     /**
-     * ExitCreate a new SceneBook model.
-     * 清除临时预约数据
+     * 启用该日期时段下的场地
+     * @param integer $site_id      场地ID
+     * @param type $date            日期
+     * @param integer $time_index   时段
      * @return mixed
      */
-    public function actionExitCreate($id, $date_switch = 'month')
+    public function actionSiteEnable()
     {
-        $model = $this->findModel($id);
-        if($model->created_by == Yii::$app->user->id){
-            $model->setScenario(SceneBook::SCENARIO_TEMP_CREATE);
-            $model->status = SceneBook::STATUS_DEFAULT;
-            $model->save();
-            if(Yii::$app->request->isAjax){
-                Yii::$app->getResponse()->format = 'json';
-                return [
-                    'code' => 200,
-                    'data' => [],
-                    'message' => '执行成功'
-                ];
-            }else{
-                return $this->redirect(array_merge(['index', 'date_switch' => $date_switch]));
-            }
-        }
-      
+        $model = $this->findModel();
+        $model->is_disable = 0;
+        $model->save();
+        
+        return $this->redirect(['disable']);
     }
     
     /**
      * Finds the SceneBook model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
      * @return SceneBook the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    protected function findModel()
     {
-        if (($model = SceneSiteDisable::findOne($id)) !== null) {
+        $model = SceneSiteDisable::findOne(Yii::$app->request->queryParams);
+        if ($model !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            return new SceneSiteDisable(Yii::$app->request->queryParams);
+        }
+    }
+    
+     /**
+     * Finds the SceneBook model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @return SceneBook the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findBookModel()
+    {
+        $model = SceneBook::findOne(Yii::$app->request->queryParams);
+        if ($model !== null) {
+            return $model;
         }
     }
     
@@ -152,19 +155,6 @@ class SceneManageController extends Controller
                 ->one();
 
         return $sceneData;
-    }
-    
-    public function getSiteDisable($site_id, $date, $time_index)
-    {
-        $query = (new Query())->select(['site_id', 'date', 'time_index', 'is_disable'])
-                ->from(SceneSiteDisable::tableName());
-        $query->filterWhere([
-            'site_id' => $site_id,
-            'date' => $date,
-            'time_index' => $time_index,]);
-        $result = $query->one();
-        var_dump($result);exit;
-        return $result;
     }
 
     /**
@@ -194,27 +184,25 @@ class SceneManageController extends Controller
     }
     
     /**
-     * 获取场景预约任务已存在的所有接洽人or摄影师
-     * @param string|array $book_id
+     * 查询该日期时段下的场地是否有预约
+     * @param integer $site_id
      * @return array
      */
-    protected function getExistSceneBookUserAll($book_id)
+    protected  function getBooksItem($site_id)
     {
-        $results = [];
-        $query = (new Query())->select([
-            'SceneBookUser.book_id', 'SceneBookUser.role', 'User.id', 'User.nickname','SceneBookUser.is_primary', 'User.phone'
-        ])->from(['SceneBookUser' => SceneBookUser::tableName()]);
-        $query->leftJoin(['User' => User::tableName()], 'User.id = SceneBookUser.user_id AND User.status = 10');
-        $query->where(['SceneBookUser.book_id' => $book_id, 'SceneBookUser.is_delete' => 0]);
-        $query->groupBy('SceneBookUser.id');
-        $query->orderBy(['SceneBookUser.sort_order' => SORT_ASC]);
-        //组装返回的预约任务用户信息
-        foreach ($query->all() as $value) {
-            $book_id = $value['book_id'];
-            unset($value['book_id']);
-            $results[$book_id][] = $value;
+        $notStatus = [SceneBook::STATUS_DEFAULT, SceneBook::STATUS_CANCEL];
+        
+        $query = (new Query())->select(['id', 'date', 'time_index'])
+             ->from(SceneBook::tableName());
+        $query->andFilterWhere(['site_id' => $site_id]);                //过滤场地
+        $query->andFilterWhere(['NOT IN', 'status', $notStatus]);       //过滤已取消和为预约的数据
+        $query->orderBy(['date' => SORT_ASC, 'time_index' => SORT_ASC]);
+        
+        $bookItems = [];
+        foreach ($query->all() as $book) {
+            $bookItems[$book['date']][$book['time_index']] = $book['id'];
         }
-       
-        return $results;
+        
+        return $bookItems;
     }
 }
