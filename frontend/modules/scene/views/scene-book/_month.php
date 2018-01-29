@@ -93,7 +93,7 @@ use yii\helpers\Html;
                                     'date' => $allModels[$date][$index]->date, 'time_index' => $allModels[$date][$index]->time_index, 
                                     'date_switch' => $allModels[$date][$index]->date_switch] : ['view', 'id' => $allModels[$date][$index]->id];
                             
-                            echo "<p><span class=\"month_time_index\">{$timeIndexMap[$index]}</span>";
+                            echo "<p><span class=\"month_time_index hidden-xs\">{$timeIndexMap[$index]}</span>";
                             echo  Html::a('<span class="'.($isMe ? 'isMe' : '').'"></span>'.$buttonName, $url, ['class' => "btn $buttonClass btn-sm btn-len"]);
                             echo "</p>";
                         }

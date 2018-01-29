@@ -38,8 +38,8 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
             },
             'headerOptions' => [
                 'style'=>[
-                    'width' => '45px',
-                    'padding' => '4px',
+                    'width' => '50px',
+                    'padding' => '4px 2px',
                 ]
             ],
             'contentOptions' =>[
@@ -47,6 +47,7 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
                 'rowspan' => 3, 
                 'style' => [
                     'position' => 'relative',
+                    'padding' => '4px 2px',
                 ],
             ],
         ],
@@ -56,13 +57,16 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
             'format' => 'raw',
             'label' => '',
             'headerOptions' => [
-                 'style'=>[
-                    'width' => '15px',
+                'style'=>[
+                    'width' => '20px',
                     'padding' => '4px 2px',
                 ]
             ],
             'contentOptions' =>[
                'class' => 'time_index',
+                'style'=>[
+                    'padding' => '4px 2px',
+                ]
             ],
         ],
         [
@@ -80,8 +84,8 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
                     //'th'=>'hidden-xs',
                 ],
                 'style' => [
-                    'width' => '30px',
-                    'padding' => '4px',
+                    'width' => '25px',
+                    'padding' => '4px 2px',
                 ],
             ],
             'contentOptions' =>[
@@ -91,7 +95,7 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
                     'co1or' => '#333333',
                     'text-align' => 'center',
                     'vertical-align' => 'middle',
-                    'padding' => '4px',
+                    'padding' => '4px 2px',
                 ],
             ],
         ],
@@ -111,8 +115,8 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
                     //'th'=>'hidden-xs',
                 ],
                 'style' => [
-                    'width' => '50px',
-                    'padding' => '4px',
+                    'width' => '45px',
+                    'padding' => '4px 2px',
                 ]
             ],
             'contentOptions' =>[
@@ -121,7 +125,7 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
                     'font-size' => '18px',
                     'text-align' => 'center',
                     'vertical-align' => 'middle',
-                    'padding' => '4px',
+                    'padding' => '4px 2px',
                 ],
             ], 
         ],
@@ -139,7 +143,7 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
                 ],
                 'style' => [
                     'width' => '35px',
-                    'padding' => '4px',
+                    'padding' => '4px 2px',
                 ]
             ],
             'contentOptions' =>[
@@ -147,7 +151,7 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
                 'style'=>[
                     'text-align' => 'center',
                     'vertical-align' => 'middle',
-                    'padding' => '4px',
+                    'padding' => '4px 2px',
                 ],
             ], 
         ],
@@ -160,7 +164,7 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
             },
             'headerOptions'=>[
                 'class'=>[
-                    //'th'=>'hidden-xs',
+                    'th'=>'hidden-xs',
                 ],
                 'style' => [
                     'width' => '75px',
@@ -168,7 +172,7 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
                 ]
             ],
             'contentOptions' =>[
-                //'class'=>'hidden-xs',
+                'class'=>'hidden-xs',
                 'style'=>[
                     'text-align' => 'center',
                     'vertical-align' => 'middle',
@@ -193,14 +197,14 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
                 ],
                 'style' => [
                     'min-width' => '100px',
-                    'padding' => '4px',
+                    'padding' => '4px 2px',
                 ]
             ],
             'contentOptions' =>[
                 'class' => 'course-name',
                 'style'=>[
                     'vertical-align' => 'middle',
-                    'padding' => '4px',
+                    'padding' => '4px 2px',
                 ],
             ], 
         ],
@@ -213,7 +217,7 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
             },
             'headerOptions'=>[
                 'class'=>[
-                    //'th'=>'hidden-xs',
+                    'th'=>'hidden-xs',
                 ],
                 'style' => [
                     'width' => '255px',
@@ -221,7 +225,7 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
                 ]
             ],
             'contentOptions' =>[
-                'class' => 'course-name',
+                'class' => 'hidden-xs',
                 'style'=>[
                     'vertical-align' => 'middle',
                     'padding' => '4px',
@@ -238,7 +242,7 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
             },
             'headerOptions'=>[
                 'class'=>[
-                    //'th'=>'hidden-xs',
+                    'th'=>'hidden-xs',
                 ],
                 'style' => [
                     'width' => '85px',
@@ -246,6 +250,7 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
                 ]
             ],
             'contentOptions' =>[
+                'class' => 'hidden-xs',
                 'style'=>[
                     'vertical-align' => 'middle',
                     'padding' => '4px',
@@ -266,7 +271,7 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
             },
             'headerOptions'=>[
                 'class'=>[
-                    //'th'=>'hidden-xs',
+                    'th'=>'hidden-xs',
                 ],
                 'style' => [
                     'width' => '85px',
@@ -274,6 +279,7 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
                 ]
             ],
             'contentOptions' =>[
+                'class' => 'hidden-xs',
                 'style'=>[
                     'vertical-align' => 'middle',
                     'padding' => '4px',
@@ -294,7 +300,7 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
             },
             'headerOptions'=>[
                 'class'=>[
-                    //'th'=>'hidden-xs',
+                    'th'=>'hidden-xs',
                 ],
                 'style' => [
                     'width' => '85px',
@@ -302,6 +308,7 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
                 ]
             ],
             'contentOptions' =>[
+                'class' => 'hidden-xs',
                 'style'=>[
                     'vertical-align' => 'middle',
                     'padding' => '4px',
@@ -354,7 +361,7 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
             ],
             'headerOptions' => [
                 'style' => [
-                    'width' => '60px',
+                    'width' => '65px',
                     'padding' => '4px',
                 ],
             ],

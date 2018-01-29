@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 
 </div>
 
-<?= $this->render('/layouts/_form_nav', ['model' => $model]) ?>
+<?= $this->render('/layouts/_form_nav', ['model' => $model, 'params' => ['view', 'id' => $model->id]]) ?>
 
 <?php
 

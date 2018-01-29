@@ -21,7 +21,7 @@ use yii\widgets\ActiveForm;
             <?= $this->render('msg_index', ['dataProvider' => $dataProvider]) ?>
         </div>
         <div class="msgform">
-            <div class="col-xs-11 msginput">
+            <div class="col-lg-11 col-md-11 col-xs-10 msginput">
 
                 <?php $form = ActiveForm::begin([
                     'options'=>[
@@ -37,7 +37,7 @@ use yii\widgets\ActiveForm;
                 <?php ActiveForm::end(); ?>
 
             </div>
-            <div class="col-xs-1 msgbtn">
+            <div class="col-lg-1 col-md-1 col-xs-2 msgbtn">
                 <?= Html::a(Yii::t('app', 'Message'), 'javascript:;', ['id'=>'submitsave', 'class'=>'btn btn-primary']) ?>
             </div>
         </div>

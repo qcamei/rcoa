@@ -45,7 +45,7 @@ class SceneBookNotice {
      * 访问链接
      * @return string
      */
-    private function createAbsoluteUrl($model)
+    private static function createAbsoluteUrl($model)
     {
         return Yii::$app->urlManager->createAbsoluteUrl(['/scene/scene-book/view','id' => $model->id]);
     }
@@ -74,7 +74,7 @@ class SceneBookNotice {
         $receivers_mail = array_filter(ArrayHelper::getColumn($users, 'email'));
         
         //发送消息 
-        NotificationManager::sendByView($views, $params, $receivers, $subject, $this->createAbsoluteUrl($model));
+        NotificationManager::sendByView($views, $params, $receivers, $subject, self::createAbsoluteUrl($model));
         //发送邮件消息 
         /*Yii::$app->mailer->compose($views, $params)
             ->setTo($receivers_email)
@@ -115,7 +115,7 @@ class SceneBookNotice {
                         ArrayHelper::getColumn($oldShootMan, 'email'))));
         
         //发送消息 
-        NotificationManager::sendByView($views, $params, $receivers, $subject, $this->createAbsoluteUrl($model));
+        NotificationManager::sendByView($views, $params, $receivers, $subject, self::createAbsoluteUrl($model));
         //发送邮件消息 
         /*Yii::$app->mailer->compose($views, $params)
             ->setTo($receivers_email)
@@ -155,7 +155,7 @@ class SceneBookNotice {
         $receivers_mail = array_filter(ArrayHelper::getColumn($users, 'email'));
         
         //发送消息 
-        NotificationManager::sendByView($views, $params, $receivers, $subject, $this->createAbsoluteUrl($model));
+        NotificationManager::sendByView($views, $params, $receivers, $subject, self::createAbsoluteUrl($model));
         //发送邮件消息 
         /*Yii::$app->mailer->compose($views, $params)
             ->setTo($receivers_email)
@@ -187,7 +187,7 @@ class SceneBookNotice {
         $receivers_mail = array_filter(ArrayHelper::getValue($users, 'email'));
         
         //发送消息 
-        NotificationManager::sendByView($views, $params, $receivers, $subject, $this->createAbsoluteUrl($model));
+        NotificationManager::sendByView($views, $params, $receivers, $subject, self::createAbsoluteUrl($model));
         //发送邮件消息 
         /*Yii::$app->mailer->compose($views, $params)
             ->setTo($receivers_email)
