@@ -126,7 +126,6 @@ class SceneBookSearch extends SceneBook
         $hasDo = $this->date_switch == 'month';
         $date = $hasDo ? DateUtil::getMonthSE($this->date) : DateUtil::getWeekSE($this->date);
         $this->site_id = ArrayHelper::getValue($params, 'site_id', reset($firstSite));              //场景id
-        $this->date_switch = ArrayHelper::getValue($params, 'date_switch', 'month');                //月 or 周
         $this->date_start = ArrayHelper::getValue($date, 'start');                                  //开始日期               
         $this->date_end = ArrayHelper::getValue($date, 'end');                                      //结束日期
         //查询预约任务数据

@@ -1,5 +1,6 @@
 <?php
 
+use common\models\Holiday;
 use common\models\scene\SceneBook;
 use yii\helpers\Html;
 
@@ -23,6 +24,7 @@ use yii\helpers\Html;
         <?php  
             $allModels = [];
             $timeIndexMap = ['上', '下', '晚'];
+            $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
             //重组禁用数据模型
             foreach ($dataProvider->allModels as $model){
                 $allModels[$model->date][] = $model;
@@ -41,13 +43,25 @@ use yii\helpers\Html;
             $dayNum = (strtotime($dateEnd) - strtotime($dateStart)) / 86400;
             //date('d')+1 明天禁用时间
             $dayTomorrow = date('Y-m-d H:i:s',strtotime("+1 days"));
+            
             for ($i = 0; $i < ceil($dayNum / 7); $i++){
                 echo '<tr>';
                 for ($d = 0; $d < 7; $d++) {
                     $nowDay = 7 * $i + $d + 0;
                     $date = date('Y-m-d', strtotime($dateStart.'+'.$nowDay.'days'));
                     echo '<td>';
-                    echo "<span class=\"days\">".preg_replace('/^0+/','',date('d', strtotime($date)))."</span>";
+                    if(isset($holidays[$date])){
+                        $first = reset($holidays[$date]);
+                        $content = '';
+                        foreach ($holidays[$date] as $holiday) 
+                            $content .= "<p>{$holiday['name']}(".Holiday::TYPE_NAME_MAP[$holiday['type']].")</p>";
+                        echo "<a class=\"holiday img-circle {$holidayColourMap[$first['type']]}\" role=\"button\" data-content=\"{$content}\">".Holiday::TYPE_NAME_MAP[$first['type']]."</a>";
+                    }
+                    if($date != date('Y-m-d', time())){
+                        echo "<span class=\"days\">".preg_replace('/^0+/','',date('d', strtotime($date)))."</span>";
+                    }else{
+                        echo "<span class=\"days img-rounded now\">".preg_replace('/^0+/','',date('d', strtotime($date)))."</span>";
+                    }
                     echo "<div class=\"btn-group\">";
                     if(isset($allModels[$date])){
                         for ($index = 0; $index < 3; $index++){
