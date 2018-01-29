@@ -47,16 +47,16 @@ $this->params['breadcrumbs'][] = $this->title;
     ?>
     
     <div class="col-xs-12 scene-book-navbar">
-        <div class="col-lg-1 col-md-1 col-xs-4 btn-group">
+        <div class="col-lg-1 col-md-1 col-xs-3 btn-group">
             <?php foreach ($menuItem AS $index => $menu) {
                 echo Html::a($menu['name'], $menu['url'], $menu['options']);
             } ?>
         </div>
-        <div class="col-lg-8 col-md-8 col-xs-8" style="padding:0">
+        <div class="col-lg-8 col-md-8 col-xs-9" style="padding:0">
             <?= Html::dropDownList('site_id', $refsite, 
                 $sceneSite, ['id' => 'sitChange', 'class' => 'form-control', 'prompt' => '请选择...'])?> 
         </div>
-        <div class="col-lg-2 col-md-2 col-xs-5" style="padding:0">
+        <div class="col-lg-2 col-md-2 col-xs-9" style="padding:0">
             <?= DatePicker::widget([
                     'id' => 'dateChange',
                     'name' => 'date',
@@ -75,7 +75,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]);
             ?>
         </div>
-        <div class="col-lg-1 col-md-1 col-xs-4" style="padding-right:0">
+        <div class="col-lg-1 col-md-1 col-xs-3 date-util" style="padding-right:0">
             <?= Html::a('<',Url::to(['index', 
                 'site_id'=> $refsite, 
                 'date' => $date_switch == 'month' ? DateUtil::getMonthSE($refdate,-1)['start'] : DateUtil::getWeekSE($refdate,-1)['start'], 

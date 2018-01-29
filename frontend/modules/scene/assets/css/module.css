@@ -421,7 +421,8 @@
     margin-bottom: 5px;
 }
 
-.scene-manage-index .list-content .content-content{
+.scene-manage-index 
+.list-content .content-content{
     border: 1px solid #cccccc;
     margin: 5px;
 }
@@ -510,6 +511,7 @@
 
 /*********************************scene-book***************************/
 .scene-book .table {
+    table-layout: fixed;
     border: 1px solid #ddd;
 }
 
@@ -617,9 +619,13 @@
     background-color: #5cb85c;
 }
 
+.scene-book .table .holiday.blue {
+    background-color: #5bc0de;
+}
+
 .scene-book 
 .table-month .holiday {
-    left: 5px;
+    left: 2px;
 }
 
 .scene-book 
@@ -628,7 +634,7 @@
     height: 20px;
     display: block;
     position: absolute;
-    right: 5px;
+    right: 2px;
     text-align: center;
 }
 
@@ -660,6 +666,13 @@
     padding: 0px 35px;
 }
 
+@media (max-width: 480px) {
+    .scene-book .table-month > tbody > tr > td,
+    .scene-book .table-month .btn-len {
+        padding: 2px;
+    }
+}
+
 .scene-book .table-month > thead > tr > th,
 .scene-book .table-month > tbody > tr > td {
     position: relative;
@@ -680,7 +693,7 @@
 .scene-book 
 .table-week .holiday {
     top: 15px;
-    right: 5px;
+    right: 2px;
 }
 
 .scene-book 

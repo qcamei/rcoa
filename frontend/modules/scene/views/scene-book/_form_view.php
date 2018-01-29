@@ -28,8 +28,8 @@ use wskeee\rbac\RbacManager;
                 $buttonHtml = [
                     [
                         'name' => Yii::t('rcoa', 'Back'),
-                        'url' => ['back'],
-                        'options' => ['class' => 'btn btn-default', 'onclick'=> 'history.go(-1);return false'],
+                        'url' => ['index'],
+                        'options' => ['class' => 'btn btn-default', /*'onclick'=> 'history.go(-1);return false'*/],
                         'symbol' => '&nbsp;',
                         'conditions' => true,
                         'adminOptions' => true,

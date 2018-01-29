@@ -10,8 +10,15 @@
  */
 @media (max-width: 480px) {
     .scene {
-        margin-left: -15px;
         margin-right: -15px;
+        margin-left: -15px;
+    }
+    .scene .form-horizontal .form-group {
+        margin-right: 0;
+        margin-left: 0;
+    }
+    .scene-book .date-util {
+        padding-left: 0;
     }
 }
 
@@ -112,6 +119,6 @@
 }
 
 .scene .breadcrumb .active {
-    min-width: 80px;
+    width: 90%;
     color: #ccc;
 }
