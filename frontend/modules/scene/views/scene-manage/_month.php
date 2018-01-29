@@ -83,7 +83,7 @@ use yii\helpers\Html;
                                 ['site-enable', 'site_id' => $allModels[$date][$index]->site_id, 
                                     'date' => $allModels[$date][$index]->date, 'time_index' => $allModels[$date][$index]->time_index];
                             
-                            echo "<p><span class=\"month_time_index\">{$timeIndexMap[$index]}</span>";
+                            echo "<p><span class=\"month_time_index hidden-xs\">{$timeIndexMap[$index]}</span>";
                             echo  Html::a($buttonName, $url, ['class' => "btn $buttonClass btn-sm btn-len"]);
                             echo "</p>";
                         }
