@@ -93,7 +93,11 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     
     <div id="month" class="dataProvider">
-        <?= $this->render('_month', ['dataProvider' => $dataProvider, 'books' => $books]) ?>
+        <?= $this->render('_month', [
+            'dataProvider' => $dataProvider,
+            'books' => $books,
+            'holidays' => $holidays
+        ]) ?>
     </div>
     
 </div>
@@ -126,6 +130,14 @@ $js = <<<JS
         value += '/01';
         location.href = reflashUrl+'?site_id='+refsite+'&date='+value+'&date_switch='+refswitch;
     }
+                
+    $(".holiday").popover({
+        delay: "toggle",//{ "show": 500, "hide": 100 },
+        title: "节假日详情",
+        //toggle: "popover",
+        trigger: "hover ",
+        html: true,
+    });
 JS;
 $this->registerJs($js, View::POS_READY);
 ?>

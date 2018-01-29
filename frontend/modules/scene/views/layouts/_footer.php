@@ -1,6 +1,6 @@
 <?php
 
-use frontend\modules\scene\assets\FooterAsset;
+use frontend\modules\scene\assets\SceneAsset;
 use wskeee\rbac\components\ResourceHelper;
 use yii\helpers\Html;
 
@@ -73,10 +73,8 @@ use yii\helpers\Html;
                 foreach ($menuItems AS $item){
                     $selected = is_array($item['controllerId']) ? in_array($controllerId, $item['controllerId']) : $controllerId == $item['controllerId'];
                     $item['options']['class'] .= $selected ? $selectClass : null;
-                    echo Html::a(Html::img([$item['icon']]).Html::tag('span', $item['name'], ['class'=>'menu-name hidden-xs']), $item['url'], 
+                    echo ResourceHelper::a(Html::img([$item['icon']]).Html::tag('span', $item['name'], ['class'=>'menu-name hidden-xs']), $item['url'], 
                             $item['options'], $item['conditions']);
-//                    echo ResourceHelper::a(Html::img([$item['icon']]).Html::tag('span', $item['name'], ['class'=>'menu-name hidden-xs']), $item['url'], 
-//                            $item['options'], $item['conditions']);
                 }
                 
             ?>
@@ -85,4 +83,4 @@ use yii\helpers\Html;
 </div>
 
 <?php
-    FooterAsset::register($this);
+    SceneAsset::register($this);

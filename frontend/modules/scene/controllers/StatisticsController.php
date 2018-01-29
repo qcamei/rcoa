@@ -10,6 +10,9 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 
+/**
+ * Statistics controller for the `scene` module
+ */
 class StatisticsController extends Controller
 {   
     public $layout = 'scene';

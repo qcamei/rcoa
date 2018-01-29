@@ -9,8 +9,11 @@ use common\models\scene\searchs\SceneSiteDisableSearch;
 use common\models\scene\searchs\SceneSiteSearch;
 use Yii;
 use yii\db\Query;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
+use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
@@ -20,6 +23,31 @@ use yii\web\ServerErrorHttpException;
 class SceneManageController extends Controller
 {
     public $layout = 'scene';
+    
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+            //access验证是否有登录
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ]
+        ];
+    }
     
     /**
      * 场地列表
@@ -51,7 +79,7 @@ class SceneManageController extends Controller
     }
     
     /**
-     * 禁用场地
+     * 跳转到禁用场地视图
      * Renders View the index view for the module
      * @return string
      */
@@ -62,11 +90,12 @@ class SceneManageController extends Controller
         $sceneSite = $this->getSceneSite();
         $firstSite = array_keys(reset($sceneSite));       //获取场景的第一个场地
         $results = $searchModel->searchModel($params, $firstSite);
-        
+
         return $this->render('disable',[
             'filter' => $results['filters'],
             'dataProvider' => $results['data'],
-            'books' => $this->getBooksItem(ArrayHelper::getValue($params, 'site_id')),
+            'holidays' => $results['holidays'],                                         //节假日标识
+            'books' => $this->getBooksItem(ArrayHelper::getValue($params, 'site_id')),  //已约场次
             'sceneSite' => $sceneSite,
             'firstSite' => $firstSite,
         ]);
@@ -81,16 +110,22 @@ class SceneManageController extends Controller
      */
     public function actionSiteDisable()
     {
-        $bookModel = $this->findBookModel();
-        if ($bookModel != null) {
-            throw new ServerErrorHttpException('禁用失败！该时段的场地已被预约！！');
+        $user_id = \Yii::$app->user->id;
+        $manager_id = $this->getSceneManager();
+        if($user_id == $manager_id){
+            $bookModel = $this->findBookModel();
+            if ($bookModel != null) {
+                throw new ServerErrorHttpException('禁用失败！该时段的场地已被预约！！');
+            }
+            
+            $model = $this->findModel();
+            $model->is_disable = 1;
+            $model->save();
+            
+            return $this->redirect(['disable']);
+        } else {
+            throw new NotAcceptableHttpException('无权限操作！');
         }
-        
-        $model = $this->findModel();
-        $model->is_disable = 1;
-        $model->save();
-        
-        return $this->redirect(['disable']);
     }
     
     /**
@@ -102,11 +137,17 @@ class SceneManageController extends Controller
      */
     public function actionSiteEnable()
     {
-        $model = $this->findModel();
-        $model->is_disable = 0;
-        $model->save();
-        
-        return $this->redirect(['disable']);
+        $user_id = \Yii::$app->user->id;
+        $manager_id = $this->getSceneManager();
+        if($user_id == $manager_id){
+            $model = $this->findModel();
+            $model->is_disable = 0;
+            $model->save();
+
+            return $this->redirect(['disable']);
+        } else {
+            throw new NotAcceptableHttpException('无权限操作！');
+        }
     }
     
     /**
@@ -139,6 +180,19 @@ class SceneManageController extends Controller
         }
     }
     
+    /**
+     * 获取场地的管理员
+     * @return string
+     */
+    public function getSceneManager()
+    {
+        $site_id = ArrayHelper::getValue(\Yii::$app->request->queryParams, 'site_id');
+        $query = SceneSite::find(['id' => $site_id])->one();
+        $manager = $query->manager_id;
+        
+        return $manager;
+    }
+
     /**
      * 查询场地信息
      * @param integer $id

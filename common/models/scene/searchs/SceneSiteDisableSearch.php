@@ -2,6 +2,7 @@
 
 namespace common\models\scene\searchs;
 
+use common\models\Holiday;
 use common\models\scene\SceneSiteDisable;
 use wskeee\utils\DateUtil;
 use yii\base\Model;
@@ -93,9 +94,11 @@ class SceneSiteDisableSearch extends SceneSiteDisable
     */
     public function searchModel($params, $firstSite)
     {
+        $holidays = [];
         $this->date = ArrayHelper::getValue($params, 'date', date('Y-m-d'));                         //日期
         $this->date_switch = ArrayHelper::getValue($params, 'date_switch', 'month');                 //月 or 周
-        $date = DateUtil::getMonthSE($this->date);
+        $hasDo = $this->date_switch == 'month';
+        $date = $hasDo ? DateUtil::getMonthSE($this->date) : DateUtil::getWeekSE($this->date);
         $this->site_id = ArrayHelper::getValue($params, 'site_id', reset($firstSite));              //场景id
         $this->date_start = ArrayHelper::getValue($date, 'start');                                  //开始日期               
         $this->date_end = ArrayHelper::getValue($date, 'end');                                      //结束日期
@@ -103,7 +106,20 @@ class SceneSiteDisableSearch extends SceneSiteDisable
         $results = $this->searchSceneDisable();
         //创建空的日期数据
         $dateDatas = $this->searchMonth();
-       
+        //获取节假日
+        if($hasDo){
+            $date = date('Y-m', strtotime($this->date));
+            $firstSunday = date('Y-m-d', strtotime("first sunday of $date"));
+            //当前月最后一个星期日是几号
+            $lastSunday = date('Y-m-d', strtotime("last sunday of $date"));
+            //当前月第一个星期日是往前7天的日期
+            $this->date_start = date('Y-m-d', strtotime(date('Y-m-d', strtotime("$firstSunday -".(7).' days'))));
+            //当前月最后一个星期日是往后7天的日期
+            $this->date_end = date('Y-m-d', strtotime(date('Y-m-d', strtotime("$lastSunday +".(7).' days'))));
+        }
+        $holidayBetweens = Holiday::getHolidayBetween($this->date_start, $this->date_end);
+        
+        //禁用数据组装
         $startIndex = 0;
         foreach ($results as $model) {
             for ($i = $startIndex, $len = count($dateDatas); $i < $len; $i++) {
@@ -114,7 +130,19 @@ class SceneSiteDisableSearch extends SceneSiteDisable
                 }
             }
         }
+        //重组组装节假日
+        ArrayHelper::multisort($holidayBetweens, 'type');
+        foreach($holidayBetweens as $holiday){
+            $date = date('Y-m-d', strtotime($holiday['date']));
+            $holidays[$date][$holiday['type']] = [
+                'name' => $holiday['name'],
+                'type' => $holiday['type'],
+                'des' => $holiday['des'],
+                'is_lunar' => $holiday['is_lunar'],
+            ];
+        }
         
+        //禁用数据格式
         $dataProvider = new ArrayDataProvider([
             'allModels' => $dateDatas,
             'sort' => [
@@ -127,6 +155,7 @@ class SceneSiteDisableSearch extends SceneSiteDisable
         
         return [
             'filters' => $params,
+            'holidays' => $holidays,
             'data' => $dataProvider,
         ];
     }
