@@ -28,6 +28,10 @@
     padding-right: 0px !important;
 }
 
+.scene-default-index .title{
+    font-weight: bold;
+}
+
 .scene-default-index .map,.select{
     margin-top: 7px;
     margin-bottom: 10px;
@@ -36,15 +40,17 @@
 
 .scene-default-index
 .map .map-content{
-    height: 845px;
-    margin-top: 3px;
+    height: 665px;
+    margin-top: 10px;
     background-color: #f0f0f0;
+    border: 1px solid #cccccc;
 }
 
 .scene-default-index
 .select .select-content{
     height: 100%;
-    margin-top: 3px;
+    margin-top: -3px;
+    margin-bottom: 10px;
 }
 
 /*********************************内容部分（面包屑）*****************************/
@@ -94,7 +100,7 @@
     width: 100%;
     list-style: none;
     padding: 0px;
-    margin-top: 10px;
+    margin-top: 15px;
     font-size: 14px;
     color: #666666;
     display: inline-block;
@@ -135,42 +141,43 @@
 }
 
 .scene-default-index .select-content .address{
-    margin-bottom: 10px;
-    border: solid #cccccc 1px; 
+    position: relative;
+    border-bottom: 1px dashed #cccccc; 
 } 
 
-.scene-default-index .select-content .address-name{
-    line-height: 30px;
-}
-
 .scene-default-index
-.select-content .address .address-top{
-    height: 40px;
-    padding: 5px;
+.select-content .address .address-info{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    text-align: center;
+    color: #000;
 }
 
-.scene-default-index .address .address-img, .address-right{
+.scene-default-index .address .address-left, .address-right{
     display: inline-block;
+    position: relative;
     height: 98px;
-    margin: 5px 5px 10px 5px;
+    margin: 10px 10px 10px 1px;
 }
 
 .scene-default-index
-.select-content .address .address-img img{
+.select-content .address .address-left img{
     width: 98px;
     height: 98px;
 } 
 
 .scene-default-index
-.select-content .address .address-right{
-    /*width: 72%;*/
+.select-content .address .address-left .address-mark{
     position: absolute;
+    top: 0px;
+    right: 0px;
 } 
 
-.scene-default-index .address-right .bg-color{
-    padding: 2px 5px;
+.scene-default-index .address-content .bg-color{
+    padding: 1px 2px;
     font-size: 12px;
-    border-radius: 3px;
+    border-radius: 2px;
     color: #fff;
     display: inline-block;
     margin-bottom: 0;
@@ -179,35 +186,47 @@
     text-align: center;
     white-space: nowrap;
     vertical-align: middle;
-    border: 1px solid transparent;
+    /*border: 1px solid transparent;*/
 }
 
-.scene-default-index .address-right .add-red{
+.scene-default-index .address-content .add-red{
     background-color: #ff3333;
     border-color: #d43f3a;
 }
 
-.scene-default-index .address-right .add-blue{
+.scene-default-index .address-content .add-blue{
     background-color: #6699ff;
     border-color: #46b8da;
+}
+
+.scene-default-index
+.select-content .address .address-right{
+    /*width: 72%;*/
+    position: absolute;
+} 
+
+.scene-default-index .select-content  .address-right .address-name{
+    color: #000;
+    margin-top: 1px;
+    margin-bottom: 8px;
 }
 
 .scene-default-index
 .address-right .address-area,.address-type,.address-price{
     padding: 2px 0px;
     color: #999999;
-    font-weight: bold;
+    /*font-weight: bold;*/
 }
 
 .scene-default-index
 .address-right .address-area span,.address-type span,.address-price span{
     color: #000;
-    font-weight: bold;
+    /*font-weight: bold;*/
 }
 
 .scene-default-index
 .address-right .address-area .font{
-    width: 160px;
+    width: 150px;
     float: right;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -405,6 +424,7 @@
 .scene-manage-view .scene-details .tabcontent .tabpane .allmap{
     width: 100%;
     height: 600px;
+    border: 1px solid #cccccc;
 }
 /**地图中的信息检索框样式**/
 .scene-manage-view .scene-details .tabcontent .tabpane .allmap td{
@@ -418,91 +438,101 @@
 
 .scene-manage-index .list-content{
     padding: 0px;
-    margin-bottom: 5px;
+    /*margin-bottom: 3px;*/
 }
 
 .scene-manage-index 
 .list-content .content-content{
+    position: relative;
     border: 1px solid #cccccc;
     margin: 5px;
 }
 
-.scene-manage-index
-.list-content .list-top{
-    height: 40px;
-    padding: 5px;
-}
-
-.scene-manage-index
-.list-content .list-top .list-name{
-    vertical-align: -webkit-baseline-middle;
-}
-
-.scene-manage-index .list .list-img, .list-right{
-    display: inline-block;
-    height: 105px;
-    margin: 5px 5px 10px 5px;
-}
-
-.scene-manage-index
-.list .list-content .list-img img{
-    width: 105px;
-    height: 105px;
-} 
-
-.scene-manage-index
-.list .list-content .list-right{
-    /*width: 72%;*/
+.scene-manage-index .list
+.list-content .content-content .list-cog{
     position: absolute;
+    top: 5px;
+    right: 10px;
+    text-align: center;
+    color: #000;
+}
+
+.scene-manage-index .list 
+.list-content .content-content .list-left, .list-right{
+    display: inline-block;
+    position: relative;
+    height: 98px;
+    margin: 5px;
+}
+
+.scene-manage-index .list 
+.list-content .content-content .list-left img{
+    width: 98px;
+    height: 98px;
 } 
 
-.scene-manage-index .list-right .bg-color{
-    padding: 2px 5px;
+.scene-manage-index
+.list-content .content-content .list-left .list-mark{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+.scene-manage-index .list 
+.list-content .content-content .list-left .bg-color{
+    padding: 1px 2px;
     font-size: 12px;
     border-radius: 3px;
     color: #fff;
     display: inline-block;
-    /*margin-bottom: 0;*/
     font-weight: normal;
     line-height: 1.42857143;
-    /*text-align: center;*/
     white-space: nowrap;
     vertical-align: middle;
-    border: 1px solid transparent;
+    /*border: 1px solid transparent;*/
 }
 
-.scene-manage-index .list-right .add-red{
+.scene-manage-index .list 
+.list-content .content-content .list-left .add-red{
     background-color: #ff3333;
     border-color: #d43f3a;
 }
 
-.scene-manage-index .list-right .add-blue{
+.scene-manage-index .list 
+.list-content .content-content .list-left .add-blue{
     background-color: #6699ff;
     border-color: #46b8da;
 }
 
-.scene-manage-index
-.list-right .list-nature{
-    margin-bottom: 5px;
+.scene-manage-index .list 
+.list-content .content-content .list-right{
+    position: absolute;
+} 
+
+.scene-manage-index .list 
+.list-content .content-content .list-right .list-name{
+    color: #000;
+    margin-top: 1px;
+    margin-bottom: 8px;
+    vertical-align: -webkit-baseline-middle;
 }
 
-.scene-manage-index
-.list-right .list-area,.list-type,.list-price{
+.scene-manage-index .list 
+.list-content .content-content .list-right .list-area, .list-type, .list-price{
     padding: 2px 0px;
     color: #999999;
-    font-weight: bold;
-    margin-bottom: 5px;
+    /*font-weight: bold;*/
 }
 
-.scene-manage-index
-.list-right .list-area span,.list-type span,.list-price span{
+.scene-manage-index .list 
+.list-content .content-content .list-right .list-area span, .list-type span, .list-price span{
     color: #000;
-    font-weight: bold;
+    /*font-weight: bold;*/
 }
 
-.scene-manage-index
-.list-right .list-area .font{
-    width: 169px;
+.scene-manage-index .list 
+.list-content .content-content .list-right .list-area .font{
+    width: 160px;
     float: right;
     overflow: hidden;
     text-overflow: ellipsis;

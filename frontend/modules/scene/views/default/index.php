@@ -21,7 +21,7 @@ $this->title = Yii::t('app', '{Scene}-{Bespeak}',[
 <div class="scene-default-index container">
     <!--地图-->
     <div class="map col-lg-8">
-        <span>全国分布图</span>
+        <i class="fa fa-pie-chart" aria-hidden="true"></i><span class="title">&nbsp;全国分布图</span>
         <div class="map-content" id="allmap">
             
         </div>
@@ -30,7 +30,7 @@ $this->title = Yii::t('app', '{Scene}-{Bespeak}',[
     <div class="select col-lg-4">
         <div class="crumb">
             <ul class="crumb-nav">
-                <li><span>场地选择:</span></li>
+                <li><i class="fa fa-list-ul" aria-hidden="true"></i><span class="title">&nbsp;选择场地</span></li>
                 <?php foreach ($filterItem as $filter_key => $item): ?>
                     <li>
                         <i class="arrow">&gt;</i>
@@ -90,27 +90,25 @@ $this->title = Yii::t('app', '{Scene}-{Bespeak}',[
         <div class="select-content">
             <?php foreach ($sceneItem['query'] as $index => $scenes):?>
             <div class="address">
-                <div class="address-top">
-                    <span class="address-name"><?= $scenes['name']?></span>
-                    <?= Html::a(Yii::t('app', 'Bespeak'), [
-                        'scene-book/index', 'site_id' => $scenes['id'], 'date' => date('Y-m-d'), 'date_switch' => 'week'], [
-                            'class' => 'btn btn-default btn-sm',
-                            'style' => ['float' => 'right']
-                    ])?>
-                </div>
                 <div class="address-content">
-                    <a href="<?= Url::to(['scene-manage/view', 'id' => $scenes['id']]) ?>" class="address-img" title="<?= $scenes['address']?>">
-                        <img src="<?= $scenes['img_path']?>">
+                    <a href="<?= Url::to(['scene-book/index', 'site_id' => $scenes['id'], 'date' => date('Y-m-d'), 'date_switch' => 'week'])?>">
+                        <div class="address-left">
+                            <img src="<?= $scenes['img_path']?>">
+                            <div class="address-mark bg-color <?= ($scenes['op_type'] == 1) ? 'add-red' : 'add-blue'?>">
+                                                        <?= ($scenes['op_type'] == 1) ? '自营' : '合作'?></div>
+                        </div>
+                        <div class="address-right">
+                            <div class="address-name"><?= $scenes['name']?></div>
+                            <div class="address-area">区域：<span><?= $scenes['area']?></span>&nbsp;
+                                                        <font class="font">(<?= $scenes['address']?>)</font></div>
+                            <div class="address-type">内容类型：<span><?= $scenes['content_type']?></span></div>
+                            <div class="address-price">价格：<span>￥<?= $scenes['price']?>/小时</span></div>
+                        </div>
                     </a>
-                    <div class="address-right">
-                        <div class="address-nature bg-color <?= ($scenes['op_type'] == 1) ? 'add-red' : 'add-blue'?>">
-                                                    <?= ($scenes['op_type'] == 1) ? '自营' : '合作'?></div>
-                        <div class="address-area">区域：<span><?= $scenes['area']?></span>&nbsp;
-                                                    <font class="font">(<?= $scenes['address']?>)</font></div>
-                        <div class="address-type">内容类型：<span><?= $scenes['content_type']?></span></div>
-                        <div class="address-price">价格：<span>￥<?= $scenes['price']?>/小时</span> （4小时起）</div>
-                    </div>
                 </div>
+                <a class="address-info" href="<?= Url::to(['scene-manage/view', 'id' => $scenes['id']])?>" title="<?= $scenes['address']?>">
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                </a>
             </div>
             <?php endforeach;?>
         </div>
@@ -122,10 +120,8 @@ $this->title = Yii::t('app', '{Scene}-{Bespeak}',[
 
 $map = [];
 foreach ($sceneItem['data'] as $key => $sceneInfo){
-    preg_match_all("/\((.*)\)/", $sceneInfo['AsText(location)'], $map_xy);        //获取括号里面的内容
-    $map_all = explode(' ', $map_xy['1']['0']);         //拆分转为数组
-    $map_x = $map_all[0];                               //经度
-    $map_y = $map_all[1];                               //纬度
+    $map_x = $sceneInfo['X(location)'];                 //经度
+    $map_y = $sceneInfo['Y(location)'];                 //纬度
     $map_address = $sceneInfo['address'];               //地址
     $map[] = [
         'x' => $map_x,
@@ -136,10 +132,10 @@ foreach ($sceneItem['data'] as $key => $sceneInfo){
 $maps = json_encode($map); 
 
 $js = <<<JS
-        
+       
     // 百度地图API功能	
     map = new BMap.Map("allmap");
-    map.centerAndZoom(new BMap.Point(105.880746, 31.95393), 5);
+    map.centerAndZoom(new BMap.Point(105.880746, 35.95393), 5);
     
     var data_info = $maps;
     var markers = [];

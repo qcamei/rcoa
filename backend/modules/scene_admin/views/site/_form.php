@@ -129,7 +129,7 @@ use yii\widgets\ActiveForm;
         <h5 style="font-weight: bold">位置</h5>
         <?= Html::label('','',[
             'id' => 'map',
-            'style' => 'width:100%; height:500px;',
+            'style' => 'width:100%; height:500px; border: 1px solid #d2d6de;',
         ])?>
         <?= Html::activeHiddenInput($model, 'location') ?>
         

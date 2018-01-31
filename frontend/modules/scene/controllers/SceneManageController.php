@@ -75,7 +75,7 @@ class SceneManageController extends Controller
     {
         return $this->render('view',[
             'sceneData' => $this->getSceneData($id),
-            'registerNum' => count(SceneBook::findAll(['site_id' => $id])),
+            'registerNum' => $this->getRegisterNum($id),
         ]);
     }
     
@@ -180,16 +180,20 @@ class SceneManageController extends Controller
     }
     
     /**
-     * 获取场地的管理员
+     * 获取场地的被预约次数
      * @return string
      */
-    public function getSceneManager()
+    public function getRegisterNum($id)
     {
-        $site_id = ArrayHelper::getValue(\Yii::$app->request->queryParams, 'site_id');
-        $query = SceneSite::find(['id' => $site_id])->one();
-        $manager = $query->manager_id;
-        
-        return $manager;
+        $notStatus = [SceneBook::STATUS_DEFAULT, SceneBook::STATUS_CANCEL];
+        $query = SceneBook::find();
+        //添加查询条件
+        $query->andFilterWhere(['NOT IN', 'status', $notStatus]);
+        $query->andFilterWhere(['site_id' => $id]);
+        //计算预约次数
+        $registerNum = count($query->all());
+
+        return $registerNum;
     }
 
     /**
@@ -219,7 +223,10 @@ class SceneManageController extends Controller
     {
         $query = (new Query())->select(['id', 'name', 'area', 'content_type'])
             ->from(SceneSite::tableName());
-        $query->filterWhere(['id' => $site_id]);
+        $query->filterWhere([
+            'id' => $site_id,
+            'is_publish' => 1,
+        ]);
         $results = $query->all();
         
         if($site_id == null){
