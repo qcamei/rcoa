@@ -10,6 +10,10 @@ namespace console\controllers;
 
 use common\models\Config;
 use common\models\mconline\McbsActivityFile;
+use common\models\scene\SceneAppraise;
+use common\models\scene\SceneAppraiseTemplate;
+use common\models\scene\SceneBook;
+use common\models\scene\SceneBookUser;
 use common\models\ScheduledTaskLog;
 use Exception;
 use wskeee\notification\NotificationManager;
@@ -18,8 +22,8 @@ use wskeee\webuploader\models\Uploadfile;
 use Yii;
 use yii\console\Controller;
 use yii\db\Query;
-use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
+use const MCONLINE_WEB_ROOT;
 
 /**
  * Description of MconlineController
@@ -34,6 +38,8 @@ class ScheduleController extends Controller {
      * 定时每天凌晨执行
      */
     public function actionEveryDay() {
+        $this->setSceneBookStatus();
+        return;
         //清理过期文件
         $this->clearExpireFile();
         //检查存储上限
@@ -233,4 +239,146 @@ class ScheduleController extends Controller {
         $taskLog->save();
     }
 
+    /**
+     * 设置预约 
+     */
+    private function setSceneBookStatus()
+    {
+        //记录
+        $taskLog = new ScheduledTaskLog();
+        $taskLog->type = ScheduledTaskLog::TYPE_SET_SCENEBOOK_STATUS;
+        $taskLog->action = $this->route;
+        $statusMap = [SceneBook::STATUS_ASSIGN, SceneBook::STATUS_SHOOTING, SceneBook::STATUS_APPRAISE];  //状态
+        
+        /**
+         * 1、查询在【待指派】、【待评价】和【评价中】的3天前预约任务数据
+         */
+        
+        $sceneBooks = (new Query())->select(['id'])->from(SceneBook::tableName())
+            ->where(['<', 'date', date('Y-m-d', strtotime("-3 day"))])
+            //->andWhere(['<', 'start_time', date('H:i', strtotime("-3 day"))])
+            ->andWhere(['status' => $statusMap])
+            ->orderBy(['date' => SORT_ASC, 'time_index' => SORT_ASC]);
+        /**
+         * 2、获取在【待指派】、【待评价】和【评价中】的3天前评价详细数据
+         */
+        $appTemplates = (new Query())->from(SceneAppraiseTemplate::tableName())->all();
+        $appraise = (new Query())->from(SceneAppraise::tableName())
+            ->where(['book_id' => $sceneBooks]);
+        $appraiseResults = ArrayHelper::map($appraise->all(), 'book_id', 'role');
+        
+        /**
+         * 3、获取在【待指派】、【待评价】和【评价中】的3天前预约用户数据
+         */
+        $sceneBookUsers = (new Query())->select(['book_id', 'role', 'user_id'])
+            ->from(SceneBookUser::tableName())
+            ->where(['book_id' => $sceneBooks])
+            ->andWhere(['is_primary' => 1, 'is_delete' => 0]);
+                
+        /*
+         * 1、预约任务评价角色默认为为评价
+         */
+        $result = [];
+        foreach ($appraiseResults as $book_id => $item) {
+            $result[$book_id] = [
+                SceneAppraise::ROLE_CONTACT => [
+                    'hasDo' => false,
+                ],
+                SceneAppraise::ROLE_SHOOT_MAN => [
+                    'hasDo' => false,
+                ],
+            ];
+        }
+        /**
+         * 2、判断哪个角色已经评价了
+         */
+        foreach ($appraise->all() as $item) {
+            if(isset($result[$item['book_id']])){
+                if(isset($result[$item['book_id']][$appraiseResults[$item['book_id']]]))
+                    $result[$item['book_id']][$item['role']]['hasDo'] = true;
+            }
+        }
+        
+        /**
+         * 3、获取未评价用户角色 和 用户id
+         */
+        $bookUsers = [];
+        foreach ($sceneBookUsers->all() as $user) {
+            $bookUsers[$user['book_id']][] = [
+                'role' => $user['role'],
+                'user_id' => $user['user_id'],
+            ];
+        }
+        $unUsers = [];
+        foreach ($bookUsers as $keys => $users) {
+            if(isset($result[$keys])){
+                foreach ($users as $item) {
+                    if($result[$keys][$item['role']]['hasDo'] == false)
+                        $unUsers[$keys] = [
+                            'role' => $item['role'],
+                            'user_id' => $item['user_id'],
+                        ];
+                }
+            }
+        }
+        
+        /**
+         * 4、设置只有一个人评价超过3天自动为另一个人评价
+         */
+        $values = [];
+        $bookNum = 0;
+        $appNum = 0;
+        $msg = [];
+        $sceneBooks->addSelect(['status']);
+        foreach ($sceneBooks->all() as $book) {
+            if($book['status'] == SceneBook::STATUS_APPRAISE){
+                foreach ($appTemplates as $value) {
+                    if(isset($unUsers[$book['id']])){
+                        if($value['role'] == $unUsers[$book['id']]['role']){
+                            $values[] = [
+                                $book['id'], $value['role'], $value['q_id'], 
+                                $value['value'], $unUsers[$book['id']]['user_id'],
+                                $value['value'], '无', time(), time()
+                            ];
+                        }
+                    }
+                }
+                
+                try{
+                    Yii::$app->db->createCommand()->batchInsert(SceneAppraise::tableName(), [
+                        'book_id','role','q_id','q_value','index', 'user_id', 'user_value', 'user_data', 'created_at', 'updated_at'
+                    ], $values)->execute();
+                    try{
+                        Yii::$app->db->createCommand()->update(SceneBook::tableName(), ['status' => SceneBook::STATUS_COMPLETED], ['id' => $book['id']])->execute();
+                    }catch (Exception $ex) {
+                        $msg += [$book['id'] => $ex->getMessage() . "\n" . $ex->getTraceAsString()];
+                    }
+                    
+                } catch (Exception $ex) {
+                    $msg += [$book['id'] => $ex->getMessage() . "\n" . $ex->getTraceAsString()];
+                }
+            }else{
+                try{
+                    Yii::$app->db->createCommand()->update(SceneBook::tableName(), ['status' => SceneBook::STATUS_BREAK_PROMISE], ['id' => $book['id']])->execute();
+                }catch (Exception $ex) {
+                    $msg += [$book['id'] => $ex->getMessage() . "\n" . $ex->getTraceAsString()];
+                }
+           }
+        }
+        
+        /**
+         * 5、执行保存
+         */
+        try{
+            if($msg == null){
+                $taskLog->result = 1;
+                $taskLog->feedback = '执行成功';
+            }
+        }catch (Exception $ex) {
+            $taskLog->result = 0;
+            $taskLog->feedback = json_encode($msg);
+        }
+        
+        $taskLog->save();
+    }
 }

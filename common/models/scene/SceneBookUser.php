@@ -24,6 +24,10 @@ use yii\db\ActiveRecord;
  */
 class SceneBookUser extends ActiveRecord
 {
+    /**
+     * 角色名
+     * @var array 
+     */
     public static $roleName = [
         1 => '接洽人',
         2 => '摄影师',

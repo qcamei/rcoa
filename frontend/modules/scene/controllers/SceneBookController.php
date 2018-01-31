@@ -279,12 +279,17 @@ class SceneBookController extends Controller
     {
         $model = $this->findModel($id);
         
-        if($model->is_transfer && $model->booker_id != Yii::$app->user->id){
-            if(!$model->getIsTransfer())
-                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        if(date('Y-m-d H:i:s', strtotime($model->date.$model->start_time)) > date('Y-m-d H:i:s', time())){
+            if($model->is_transfer && $model->booker_id != Yii::$app->user->id){
+                if(!$model->getIsTransfer())
+                    throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+            }else{
+                throw new NotAcceptableHttpException('无权限操作！');
+            }
         }else{
-            throw new NotAcceptableHttpException('无权限操作！');
-        }
+            throw new NotAcceptableHttpException('转让时间已经超过当前时间！');
+        }    
+            
         $oldBooker = User::findOne($model->booker_id);
         if ($model->load(Yii::$app->request->post())) {
             SceneBookAction::getInstance()->ReceiveSceneBook($model, $oldBooker);

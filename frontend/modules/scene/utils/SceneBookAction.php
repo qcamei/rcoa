@@ -217,7 +217,7 @@ class SceneBookAction
                 $this->saveSceneActionLog([
                     'action' => '转让','title'=> '转让申请', 'content'=> $content,'book_id'=> $model->id
                 ]);
-                $notice->sendBookerNotification($model, $content, '申请转让-'.$model->course->name, 'scene/_transfer_scene_book_html');
+                $notice->sendTransferBookerNotification($model, $content, '申请转让-'.$model->course->name, 'scene/_transfer_scene_book_html');
             }else
                 throw new Exception($model->getErrors());
             

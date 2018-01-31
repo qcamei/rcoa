@@ -343,11 +343,11 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
                     $isDisable = isset($siteManage[$model->date][$model->time_index]) && $siteManage[$model->date][$model->time_index];
                     //判断30天内的预约时段
                     if($dayTomorrow < $bookTime && $bookTime < $dayEnd){
-                        $buttonName = $isDisable ? '<i class="fa fa-ban"></i>&nbsp;禁用' : ($isNew  ? '<i class="fa fa-video-camera"></i>&nbsp;预约' : (!$isValid ? '<i class="fa fa-lock" aria-hidden="true"></i>&nbsp;&nbsp;预约' : ($isTransfer ? '<i class="fa fa-refresh"></i>&nbsp;转让' : ($isAssign ? $model->getStatusName() : $model->getStatusName()))));
-                        $buttonClass = $isDisable ? 'btn-default disabled' : ($isNew ? 'btn-primary' : (!$isValid ? 'btn-primary disabled' : ($isTransfer ? 'btn-primary' : ($isAssign ? 'btn-info' : 'btn-default'))));
+                        $buttonName = $isDisable ? '<i class="fa fa-ban"></i>&nbsp;禁用' : ($isNew  ? '<i class="fa fa-video-camera"></i>&nbsp;预约' : (!$isValid ? '<i class="fa fa-lock" aria-hidden="true"></i>&nbsp;&nbsp;预约' : ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? '<i class="fa fa-refresh"></i>&nbsp;转让' : ($isAssign ? $model->getStatusName() : $model->getStatusName()))));
+                        $buttonClass = $isDisable ? 'btn-default disabled' : ($isNew ? 'btn-primary' : (!$isValid ? 'btn-primary disabled' : ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? 'btn-primary' : ($isAssign ? 'btn-info' : 'btn-default'))));
                     }else{
-                        $buttonName = !$isNew ? ($isTransfer ? '<i class="fa fa-refresh"></i>&nbsp;转让' : $model->getStatusName()) : '<i class="fa fa-ban"></i>&nbsp;禁用';
-                        $buttonClass = !$isNew ? ($isTransfer ? 'btn-primary' : 'btn-default') : 'btn-default disabled';
+                        $buttonName = !$isNew ? ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? '<i class="fa fa-refresh"></i>&nbsp;转让' : $model->getStatusName()) : '<i class="fa fa-ban"></i>&nbsp;禁用';
+                        $buttonClass = !$isNew ? ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? 'btn-primary' : 'btn-default') : 'btn-default disabled';
                     }
                     $url = $isNew ? 
                         ['create', 'id' => $model->id, 'site_id' => $model->site_id, 

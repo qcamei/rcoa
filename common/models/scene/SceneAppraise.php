@@ -30,6 +30,11 @@ use yii\db\ActiveRecord;
  */
 class SceneAppraise extends ActiveRecord
 {
+    /** 角色-接洽人 */
+    const ROLE_CONTACT = 1;
+    /** 角色-摄影师 */
+    const ROLE_SHOOT_MAN = 2;
+
     /**
      * 用户id
      */

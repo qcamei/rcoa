@@ -30,6 +30,11 @@ class ScheduledTaskLog extends ActiveRecord
      */
     const TYPE_CHECK_MAX_FILE_LIMIT = 2;
     
+    /**
+     * 设置预约任务状态
+     */
+    const TYPE_SET_SCENEBOOK_STATUS = 3;
+    
     /** 失败 */
     const TYPE_NO_SUCCESS = 0;
     /** 成功 */
