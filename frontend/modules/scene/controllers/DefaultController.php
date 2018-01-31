@@ -52,8 +52,9 @@ class DefaultController extends Controller
         $search = new SceneSiteSearch();
         $sceneItem = $search->dataSearceh($params);             //场地搜索的结果
         $filterItem = $search->filterSearch($params);           //场地搜索的条件
-        
+
         return $this->render('index',[
+            'filter' => $params,
             'sceneItem' => $sceneItem,
             'filterItem' => $filterItem,
             'area' => $this->getArea(),

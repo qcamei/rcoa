@@ -114,22 +114,18 @@ class SceneManageController extends Controller
         $params = Yii::$app->request->queryParams;
         $site_id = ArrayHelper::getValue($params, 'site_id');
         $date = ArrayHelper::getValue($params, 'date');
-        $user_id = \Yii::$app->user->id;
-        $manager_id = $this->getSceneManager();
-        if($user_id == $manager_id || \Yii::$app->authManager->isAdmin(RbacName::ROLE_ADMIN)){
-            $bookModel = $this->findBookModel();
-            if ($bookModel != null) {
-                throw new ServerErrorHttpException('禁用失败！该时段的场地已被预约！！');
-            }
-            
-            $model = $this->findModel();
-            $model->is_disable = 1;
-            $model->save();
-            
-            return $this->redirect(['disable', 'site_id' => $site_id, 'date' => $date]);
-        } else {
-            throw new NotAcceptableHttpException('无权限操作！');
+
+        $bookModel = $this->findBookModel();
+        if ($bookModel != null) {
+            throw new ServerErrorHttpException('禁用失败！该时段的场地已被预约！！');
         }
+
+        $model = $this->findModel();
+        $model->is_disable = 1;
+        $model->save();
+
+        return $this->redirect(['disable', 'site_id' => $site_id, 'date' => $date]);
+
     }
     
     /**
@@ -144,17 +140,13 @@ class SceneManageController extends Controller
         $params = Yii::$app->request->queryParams;
         $site_id = ArrayHelper::getValue($params, 'site_id');
         $date = ArrayHelper::getValue($params, 'date');
-        $user_id = \Yii::$app->user->id;
-        $manager_id = $this->getSceneManager();
-        if($user_id == $manager_id || \Yii::$app->authManager->isAdmin(RbacName::ROLE_ADMIN)){
-            $model = $this->findModel();
-            $model->is_disable = 0;
-            $model->save();
 
-            return $this->redirect(['disable', 'site_id' => $site_id, 'date' => $date]);
-        } else {
-            throw new NotAcceptableHttpException('无权限操作！');
-        }
+        $model = $this->findModel();
+        $model->is_disable = 0;
+        $model->save();
+
+        return $this->redirect(['disable', 'site_id' => $site_id, 'date' => $date]);
+
     }
     
     /**

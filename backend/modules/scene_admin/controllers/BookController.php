@@ -10,6 +10,7 @@ use common\models\scene\SceneSiteDisable;
 use common\models\scene\searchs\SceneBookSearch;
 use common\models\User;
 use frontend\modules\scene\utils\SceneBookAction;
+use frontend\modules\scene\utils\SceneBookNotice;
 use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\Item;
 use wskeee\framework\models\ItemType;
@@ -59,6 +60,7 @@ class BookController extends Controller
             'dataProvider' => $dataProvider,
             'siteName' => $this->getSiteName(),
             'courseName' => $this->getCourseName(),
+            'booker' => $this->getBooker(),
         ]);
     }
 
@@ -129,11 +131,41 @@ class BookController extends Controller
      */
     public function actionCancel($id)
     {
+        $notice = SceneBookNotice::getInstance();
         $model = $this->findModel($id);
-        $model->status = 900;
-        $model->save(false, ['status']);
-        
-        return $this->redirect(['index']);
+        $status = $model->status;
+        $contacter = []; $shootMan = [];
+        //获取接洽人
+        $contacterUser = $this->getOldNewSceneUser($id, null);
+        //获取摄影师
+        $shootManUser = $this->getOldNewSceneUser($id, null, 2);
+        //组装接洽人用户
+        foreach ($contacterUser['oldBookUser'] as $items) {
+            $contacter[]= [
+                'nickname' => $items['nickname']."（{$items['phone']}）",
+                'guid' => $items['guid'],
+                'email' => $items['email']
+            ];
+        }
+        //组装摄影师用户
+        foreach ($shootManUser['oldBookUser'] as $items) {
+            $shootMan[] = [
+                'nickname' => $items['nickname']."（{$items['phone']}）",
+                'guid' => $items['guid'],
+                'email' => $items['email']
+            ];
+        }   
+
+        $model->status = SceneBook::STATUS_CANCEL;               //更改预约状态为取消
+        if($model->save(false, ['status'])){
+            //发送消息通知
+            $notice->sendAllManNotification($model, $status, '无', $contacter, $shootMan, '取消预约-'.$model->course->name, 'scene/_canel_scene_book_html');
+            Yii::$app->getSession()->setFlash('success','取消成功！');
+            
+            return $this->redirect(['index']);
+        } else {
+            throw new NotAcceptableHttpException('取消失败！');
+        }        
     }
 
     /**
@@ -214,15 +246,52 @@ class BookController extends Controller
                 if ($isBook != null || $isDisable != null) {
                     throw new NotAcceptableHttpException('该场地的场次已被预约或被禁用！！！');
                 }else{
+                    $this->getSendUpdateContent($model, $post);
                     return $model->save();
                 }
             }else{
                 throw new NotAcceptableHttpException('预约的时间必须是明天开始的31天以内！！！');
             }
         }
+        $this->getSendUpdateContent($model, $post);
         return $model->save();
     }
 
+    /**
+     * 预约更新后把需要发送的内容组装好
+     * @param type $model
+     * @param type $post
+     */
+    public function getSendUpdateContent($model, $post)
+    {
+        $notice = SceneBookNotice::getInstance();
+        $contacter = []; $shootMan = [];
+        $status = $model->status;
+        $content = $this->getUpdateContent($model, $post);
+        //获取接洽人
+        $contacterUser = $this->getOldNewSceneUser($model->id, null);
+        //获取摄影师
+        $shootManUser = $this->getOldNewSceneUser($model->id, null, 2);
+        //组装接洽人用户
+        foreach ($contacterUser['oldBookUser'] as $items) {
+            $contacter[]= [
+                'nickname' => $items['nickname']."（{$items['phone']}）",
+                'guid' => $items['guid'],
+                'email' => $items['email']
+            ];
+        }
+        //组装摄影师用户
+        foreach ($shootManUser['oldBookUser'] as $items) {
+            $shootMan[] = [
+                'nickname' => $items['nickname']."（{$items['phone']}）",
+                'guid' => $items['guid'],
+                'email' => $items['email']
+            ];
+        }   
+        
+        $notice->sendAllManNotification($model, $status, $content, $contacter, $shootMan, '更新预约-'.$model->course->name, 'scene/_update_scene_book_html'); 
+    }
+    
     /**
      * 判断是否已被预约
      * @param integer $site_id      场地ID
@@ -481,5 +550,94 @@ class BookController extends Controller
                 ->all();
         
         return ArrayHelper::map($query, 'id', 'course_name');
+    }
+    
+    /**
+     * 查询预约人
+     * @return array
+     */
+    public function getBooker()
+    {
+        $query = (new Query())
+                ->select(['SceneBook.booker_id AS id', 'User.nickname AS name'])
+                ->from(['SceneBook' => SceneBook::tableName()])
+                ->leftJoin(['User' => User::tableName()], 'User.id = SceneBook.booker_id')
+                ->all();
+        
+        return ArrayHelper::map($query, 'id', 'name');
+    }
+
+    /**
+     * 获取更改预约前后的内容
+     * @param SceneBook $model
+     * @param array $post
+     * @return type
+     */
+    public function getUpdateContent($model, $post)
+    {
+        $content = [];
+        //获取所有新属性值
+        $newAttr = $model->getDirtyAttributes();
+        //获取所有旧属性值
+        $oldAttr = $model->getOldAttributes();
+        //获取接洽人
+        $contacterUser = $this->getOldNewSceneUser($oldAttr['id'], ArrayHelper::getValue($post, 'SceneBookUser.user_id'));
+        $oldBookUser = implode('、', ArrayHelper::getColumn($contacterUser['oldBookUser'], 'nickname'));
+        $newBookUser = implode('、', ArrayHelper::getColumn($contacterUser['newBookUser'], 'nickname'));
+        
+        if($newAttr != null){
+            $oldModel = SceneBook::findOne(['id' => $oldAttr['id']]);
+            //修改内容
+            $content = [
+                'site_name' => (isset($newAttr['site_id']) ? "场地名称：【旧】{$oldModel->sceneSite->name}>>【新】{$model->sceneSite->name}，\n\r" : null),
+                'date' => (isset($newAttr['date']) ? "日期：【旧】{$oldModel->date}>>【新】{$model->date}，\n\r" : null),
+                'time_index' => (isset($newAttr['course_id']) ? "时段：【旧】{$oldModel->time_index}>>【新】{$model->time_index}，\n\r" : null),
+                'start_time' => (isset($newAttr['start_time']) ? "开始时间：【旧】{$oldAttr['start_time']}>>【新】{$newAttr['start_time']}，\n\r" : null),
+                'course_name' => (isset($newAttr['lession_time']) ? "课程名称：【旧】{$oldModel->course->name}>>【新】{$model->course->name}，\n\r" : null),
+                'lession_time' => (isset($newAttr['lession_time']) ? "课时：【旧】{$oldAttr['lession_time']}>>【新】{$newAttr['lession_time']}，\n\r" : null),
+                'content_type' => (isset($newAttr['content_type']) ? "内容类型：【旧】{$oldAttr['content_type']}>>【新】{$newAttr['content_type']}，\n\r" : null),
+                'is_photograph' => (isset($newAttr['is_photograph']) ? "是否拍照：【旧】".($oldAttr['is_photograph'] ? "需要" : "不需要").">>【新】".($newAttr['is_photograph'] ? "需要" : "不需要")."，\n\r" : null),
+                'camera_count' => (isset($newAttr['camera_count']) ? "机位数：【旧】{$oldAttr['camera_count']}>>【新】{$newAttr['camera_count']}，\n\r" : null),
+                'teacher_id' => (isset($newAttr['teacher_id']) ? "老师：【旧】{$oldModel->teacher->user->nickname}>>【新】{$model->teacher->user->nickname}，\n\r" : null),
+                'booker_id' => (isset($newAttr['booker_id']) ? "预约人：【旧】{$oldModel->booker->nickname}>>【新】{$model->booker->nickname}，\n\r" : null),
+                'contacter' => (($oldBookUser != $newBookUser) ? "接洽人：【旧】{$oldBookUser}>>【新】{$newBookUser}" : null),
+            ];
+        }
+        
+        return $content;
+    }
+    
+    /**
+     * 获取旧新预约用户
+     * @param string $old_book_id           
+     * @param array $post_user_id           
+     * @param integer $role             角色：1接洽人，2摄影师
+     * @return array
+     */
+    protected function getOldNewSceneUser($old_book_id, $post_user_id = null, $role = 1)
+    {
+        $oldBookUser = [];
+        $newBookUser = [];
+        //旧预约用户
+        $oldBookUser = (new Query())->select([
+                'SceneBookUser.user_id', 'SceneBookUser.is_primary',
+                'User.nickname', 'User.guid', 'User.phone', 'User.email'
+            ])->from(['SceneBookUser' => SceneBookUser::tableName()])
+            ->leftJoin(['User' => User::tableName()], 'User.id = SceneBookUser.user_id')
+            ->where(['SceneBookUser.book_id' => $old_book_id])
+            ->andWhere(['SceneBookUser.is_delete' => 0])
+            ->andFilterWhere(['SceneBookUser.role' => $role])
+            ->orderBy(['sort_order' => SORT_ASC])->all();
+        if($post_user_id != null){
+            //新预约用户
+            $newBookUser = (new Query())->select(['User.nickname', 'User.guid', 'User.phone', 'User.email'])
+                ->from(['User' => User::tableName()])
+                ->where(['User.id' => $post_user_id])->all();
+        }
+        
+        return [
+            'oldBookUser' => $oldBookUser,
+            'newBookUser' => $newBookUser
+        ];
     }
 }

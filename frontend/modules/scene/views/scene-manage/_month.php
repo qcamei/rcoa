@@ -71,10 +71,10 @@ use yii\helpers\Html;
                             $isBook = isset($books[$date][$index]) && $books[$date][$index] != null;//是否已预约                   
                             //判断可禁用日期
                             if($dayTomorrow < $disableTime){
-                                $buttonName =  $isBook ? '已约' : (!$isDisable ? '启用' : '<i class="fa fa-ban"></i>禁');
-                                $buttonClass = $isBook ? 'btn-default disabled' : (!$isDisable ? 'btn-info' : 'btn-default');
+                                $buttonName =  $isBook ? '已约' : (!$isDisable ? '<i class="fa fa-ban"></i>禁用' : '启用');
+                                $buttonClass = $isBook ? 'btn-default disabled' : (!$isDisable ? 'btn-info' : 'btn-danger');
                             } else {
-                                $buttonName = $isBook ? '已约' : (!$isDisable ? '启用' : '<i class="fa fa-ban"></i>禁');
+                                $buttonName = $isBook ? '已约' : (!$isDisable ? '<i class="fa fa-ban"></i>禁用' : '启用');
                                 $buttonClass = $isBook ? 'btn-default disabled' : (!$isDisable ? 'btn-default disabled' : 'btn-default disabled');
                             }
                             $url = !$isDisable ? 

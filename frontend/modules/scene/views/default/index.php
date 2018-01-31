@@ -12,7 +12,6 @@ $this->title = Yii::t('app', '{Scene}-{Bespeak}',[
     'Scene' => Yii::t('app', 'Scene'),
     'Bespeak' => Yii::t('app', 'Bespeak'),
 ]);
-$filter = Yii::$app->request->queryParams;
 
 ?>
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=r2OdCIhHY8ZEY4fZQG7DGjl1nAIVoH0a"></script>

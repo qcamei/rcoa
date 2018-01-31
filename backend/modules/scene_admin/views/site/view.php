@@ -85,7 +85,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'location',
                 'format' => 'raw',
-                'value' => $point['AsText(location)'],
+                'value' => '经度:' . $point['X(location)'] . ', ' . '纬度:' . $point['Y(location)'],
             ],
             [
                 'attribute' => 'content',

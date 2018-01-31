@@ -168,7 +168,7 @@ class SiteController extends BaseController
      */
     public function getPoint($id){
         $point = (new Query())
-                ->select(['AsText(location)'])
+                ->select(['X(location), Y(location)'])
                 ->from(['Site' => SceneSite::tableName()])
                 ->where(['id' => $id])
                 ->one();
