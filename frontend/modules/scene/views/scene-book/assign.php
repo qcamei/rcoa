@@ -16,7 +16,10 @@ use yii\widgets\ActiveForm;
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <h4 class="modal-title" id="myModalLabel"><?= Html::encode('指派摄影师') ?></h4>
+            <h4 class="modal-title" id="myModalLabel"><?= Html::encode('指派摄影师') ?>
+                <span style="font-size:14px;color:#999;">（只需机位：<?= Html::encode($model->camera_count) ?> 个）</span>
+            </h4>
+            
         </div>
         <div class="modal-body scene">
 
@@ -65,7 +68,7 @@ use yii\widgets\ActiveForm;
 
         </div>
         <div class="modal-footer">
-            <?= Html::button(Yii::t('app', 'Close'), ['id'=>'submitsave','class'=>'btn btn-danger',
+            <?= Html::button(Yii::t('app', 'Close'), ['id'=>'close','class'=>'btn btn-danger',
                 'data-dismiss'=>'modal','aria-label'=>'Close']) ?>
             <?= Html::button(Yii::t('app', 'Submit'), ['id'=>'submitsave','class'=>'btn btn-primary',
                 'onclick' => 'submitsave();']) ?>
@@ -78,12 +81,21 @@ use yii\widgets\ActiveForm;
 $camera_count = $model->camera_count;
 $js = 
 <<<JS
-    //设置第一个选择边框为蓝色
+    //摄影师 默认给第一个加边框
+    $("ul.select2-selection__rendered").find("li.select2-selection__choice").eq(0).css({border:"1px solid blue"});
+    //摄影师 设置第一个选择边框为蓝色
     window.select2Log = function(){
         $("ul.select2-selection__rendered").find("li.select2-selection__choice").eq(0).css({border:"1px solid blue"});
+        prompt();
     }
     //提交表单
     window.submitsave = function(){
+        $("#scene-book-form").submit();
+        //clearTimeout();
+        //setTimeout(function(){}, 300);
+    };
+    //提示摄影师是否符合几位数 
+    function prompt(){
         var cameraCount = $camera_count;    //机位数
         var str = selectLength();
         if(str.length < cameraCount){
@@ -92,12 +104,11 @@ $js =
         }else if(str.length > cameraCount){
             $(".field-scenebookuser-user_id").addClass("has-error");
             $(".field-scenebookuser-user_id .help-block").html("所选的【摄影师】大于【机位数】");
+        }else{
+            $(".field-scenebookuser-user_id").removeClass("has-error");
+            $(".field-scenebookuser-user_id .help-block").html("");
         }
-        clearInterval();
-        setTimeout(function(){
-            $("#scene-book-form").submit();
-        }, 300);
-    };
+    }
     //组装选中的摄影师人数
     function selectLength(){
         var select = document.getElementById("scenebookuser-user_id");
@@ -108,7 +119,7 @@ $js =
             }
         }
         return strLength;
-    }    
+    }
         
 JS;
     $this->registerJs($js,  View::POS_READY);

@@ -3,9 +3,9 @@
 namespace common\models\scene\searchs;
 
 use common\models\scene\SceneMessage;
-use common\models\User;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 
 /**
  * SceneMessageSearch represents the model behind the search form about `common\models\scene\SceneMessage`.
@@ -41,6 +41,8 @@ class SceneMessageSearch extends SceneMessage
      */
     public function search($params)
     {
+        $this->book_id = ArrayHelper::getValue($params, 'book_id');
+        
         $query = SceneMessage::find();
 
         // add conditions that should always apply here
@@ -62,13 +64,13 @@ class SceneMessageSearch extends SceneMessage
             'id' => $this->id,
             'book_id' => $this->book_id,
             'reply_id' => $this->reply_id,
+            'created_by' => $this->created_by,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);
 
         $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'content', $this->content])
-            ->andFilterWhere(['like', 'created_by', $this->created_by]);
+            ->andFilterWhere(['like', 'content', $this->content]);
 
         return $dataProvider;
     }

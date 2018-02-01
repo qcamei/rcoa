@@ -203,8 +203,8 @@ use yii\widgets\ActiveForm;
     
     <?= Html::hiddenInput('SceneBook[multi_period]', null, ['id' => 'multi-period']) ?>
     
-    <?= Html::hiddenInput('book_id', $model->id) ?>
-            
+    <?php // Html::hiddenInput('book_id', $model->id) ?>
+                
     <?php ActiveForm::end(); ?>
 
 </div>
@@ -213,11 +213,12 @@ use yii\widgets\ActiveForm;
 <?php
 
 $js = <<<JS
+    //接洽人 默认给第一个加边框
+    $("ul.select2-selection__rendered").find("li.select2-selection__choice").eq(0).css({border:"1px solid blue"});
+    //接洽人 设置第一个选择边框为蓝色
     window.select2Log = function(){
         $("ul.select2-selection__rendered").find("li.select2-selection__choice").eq(0).css({border:"1px solid blue"});
     }
-    //接洽人，默认给第一个加边框
-    $("ul.select2-selection__rendered").find("li.select2-selection__choice").eq(0).css({border:"1px solid blue"});
     //获取专业/工种
     $("#scenebook-level_id").change(function(){
 	$("#scenebook-profession_id").html("");

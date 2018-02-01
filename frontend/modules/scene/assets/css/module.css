@@ -510,11 +510,6 @@
 }
 
 /*********************************scene-book***************************/
-.scene-book .table {
-    table-layout: fixed;
-    border: 1px solid #ddd;
-}
-
 .scene-book .isMe {
     position: absolute;
     top: -1px;
@@ -527,19 +522,38 @@
     border-bottom-color: transparent;
 }
 
+.scene-book .table {
+    table-layout: fixed;
+    border: 1px solid #ddd;
+}
+
 .scene-book .table a {
      position: relative;
 }
 
-.scene-book
-.table > tbody > tr > td {
+.scene-book .table > tbody > tr > td {
+    border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
 }
 
-.scene-book 
-.table-striped > tbody > tr:nth-of-type(odd) {
+.scene-book .table-striped > tbody > tr:nth-of-type(odd) {
     background-color: #fff;
 }
+
+.scene-book .table .popover {
+    max-width: 450px;
+}
+
+.scene-book .table .popover-content>p {
+    white-space: nowrap;
+    color: #000;
+}
+
+/*@media (max-width: 480px) {
+    .scene-book .table .popover-content>p {
+        white-space: normal;
+    }
+}*/
 
 .scene-book .date,
 .scene-book .time_index {
@@ -563,7 +577,7 @@
 .scene-book .camera_count {
     position: relative;
     top: -5px;
-    left: 5px;
+    left: 1px;
     font-size: 12px;
 }
 
@@ -611,8 +625,8 @@
     background-color: #ff3300;
 }
 
-.scene-book .table .holiday.orange {
-    background-color: #f37b53;
+.scene-book .table .holiday.yellow {
+    background-color: #ff9800;
 }
 
 .scene-book .table .holiday.green {
@@ -623,46 +637,40 @@
     background-color: #5bc0de;
 }
 
-.scene-book 
-.table-month .holiday {
-    left: 2px;
+.scene-book .table-month .holiday {
+    left: -2px;
 }
 
-.scene-book 
-.table-month .days {
+.scene-book .table-month .days {
     width: 20px;
     height: 20px;
     display: block;
     position: absolute;
-    right: 2px;
+    right: -2px;
     text-align: center;
 }
 
-.scene-book 
-.table-month .days.now {
+.scene-book .table-month .days.now {
     color: #fff;
     background-color: #666;
 }
 
-.scene-book 
-.table-month .btn-group {
+.scene-book .table-month .btn-group {
     margin-top: 20px;
 }
 
-.scene-book 
-.table-month .btn-group > p {
+.scene-book .table-month .btn-group > p {
     margin-bottom: 2px;
 }
 
-.scene-book 
-.table-month .month_time_index {
+.scene-book .table-month .month_time_index {
     margin-right: 10px;
     margin-left: -10px;
+    font-size: 12px;
     color: rgb(204, 204, 204);
 }
 
-.scene-book 
-.table-month .btn-len {
+.scene-book .table-month .btn-len {
     padding: 0px 35px;
 }
 
@@ -674,36 +682,34 @@
 }
 
 .scene-book .table-month > thead > tr > th,
-.scene-book .table-month > tbody > tr > td {
+.scene-book .table-month > tbody > tr > td > div {
     position: relative;
     text-align: center;
 }
 
-.scene-book 
-.table-month > tbody > tr > td {
+.scene-book .table-month > tbody > tr > td {
     width: 162px;
     height: 106px;
 }
 
-.scene-book 
-.table-month > tbody > tr > td:nth-of-type(6n+1){
+.scene-book .table-month > tbody > tr > td:nth-of-type(6n+1){
     background-color: #f9f9f9;
 }
 
-.scene-book 
-.table-week .holiday {
-    top: 15px;
-    right: 2px;
+.scene-book .table-week .Yes {
+    color: #333;
 }
 
-.scene-book 
-.table-week .popover {
-   width: 130px;
-   color: #000;
+.scene-book .table-week .No {
+    color: #ddd;
 }
 
-.scene-book 
-.table-week img {
+.scene-book .table-week .holiday {
+    top: -30px;
+    right: -2px;
+}
+
+.scene-book .table-week img {
     width: 12px;
     height: 12px;
 }
@@ -712,8 +718,19 @@
 .scene-book .table-week > tbody > tr:nth-of-type(6n+1),
 .scene-book .table-week > tbody > tr:nth-of-type(6n+2),
 .scene-book .table-week > tbody > tr:nth-of-type(6n+3) {
-    background-color: #f9f9f9;
+    background-color: #f2f2f2;
 }
+
+.scene-book .table-week > tbody > tr:hover, 
+.scene-book .table-week > tbody > tr:hover i  {
+    color: #fff;
+    background-color: rgb(121, 121, 121);
+}
+
+.scene-book .table-week > tbody > tr:hover i.No {
+    color: rgba(153, 153, 153, 0.45098039215686275);
+}
+
 
 /**********************************scene-book-_form****************************/
 .scene .site, .scene .time {
@@ -736,8 +753,8 @@
 }
 
 .scene .frame .frame-title {
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     color: #ffffff;
     line-height: 20px;
     background-color: rgba(153, 153, 153, 1);
@@ -765,36 +782,34 @@
 
 /***************************************留言样式********************************/
 .scene .frame .msg {
-    height: 470px;
+    min-height: 280px;
     border: 1px #cccccc solid;
 }
 
 .scene .frame .msglist {
     width: 100%;
-    height: 388px;
+    min-height: 200px;
+    max-height: 388px;
     padding-left: 75px;
     padding-right: 15px;
     position: relative;
     overflow-y: auto;
 }
 
-.scene .frame
-.time-vertical {
+.scene .frame .time-vertical {
     list-style-type: none;
     border-left: 1px solid #eee;
     padding: 0px;
     margin-bottom: 0;
 }
 
-.scene .frame
-.time-vertical li {
+.scene .frame .time-vertical li {
     margin-top: 30px;
     margin-bottom: 30px;
     position: relative;
 }
 
-.scene .frame
-.time-vertical li b:before {
+.scene .frame .time-vertical li b:before {
     content: '';
     position: absolute;
     top: 20px;
@@ -806,8 +821,7 @@
     background: #cccccc;
 }
  
-.scene .frame
-.time-vertical li .img-circle {
+.scene .frame .time-vertical li .img-circle {
     width: 45px;
     height: 45px;
     position: absolute;
@@ -816,8 +830,7 @@
     background-color: #ccc;
 }
 
-.scene .frame
-.time-vertical li .msg-frame {
+.scene .frame .time-vertical li .msg-frame {
     display: inline-block;
     margin-left: 20px;
     padding: 10px;
@@ -826,13 +839,11 @@
     background-color: #ededed;
 }
 
-.scene .frame
-.time-vertical li .username {
+.scene .frame .time-vertical li .username {
     color: #cccccc;
 }
 
-.scene .frame
-.time-vertical li .time {
+.scene .frame .time-vertical li .time {
     color: #999999;
 }
 
@@ -847,8 +858,7 @@
    padding: 0;
 }
 
-.scene .frame
-.msginput textarea {
+.scene .frame .msginput textarea {
    width: 100%;
    height: 60px;
    padding: 10px;
@@ -869,14 +879,35 @@
 /*************************scene-appraise-_form*********************************/
 .scene-appraise {
     padding: 30px;
-    min-height:450px; 
+    min-height:100px; 
+}
+
+.scene-appraise .appraise-title {
+    width: 100%;
+    display: inline-block;
+}
+
+.scene-appraise .appraise-title > label {
+    font-weight: normal;
 }
 
 .scene-appraise .appraise {
+    margin-bottom: 25px;
     margin-left: 25px !important;
+    color: rgb(153, 153, 153);
 }
 
-.scene-appraise .appraise.add-color {
+.scene-appraise .appraise > p {
+    margin-bottom: 15px;
+}
+
+.scene-appraise .appraise > label {
+    margin-bottom: 10px;
+    color: rgb(153, 153, 153);
+    font-weight: normal;
+}
+
+.scene-appraise .appraise .add-color {
     color: #2E6DA4;
 }
 

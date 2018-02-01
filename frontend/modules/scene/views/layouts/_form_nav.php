@@ -11,7 +11,10 @@ use yii\web\View;
 
 <div class="controlbar">
     <div class="container">
-        <?= Html::a(Yii::t('rcoa', 'Back'), isset($params) ? $params : 'javascript:;', ['class' => 'btn btn-default'])?>
+        <?php
+            //if($model->getIsValid())
+                echo Html::a(Yii::t('rcoa', 'Back'), isset($params) ? $params : 'javascript:;', ['class' => 'btn btn-default'])
+        ?>
         
         <?= Html::a(
             !$model->getIsValid() ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), 'javascript:;', 

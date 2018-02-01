@@ -3,6 +3,7 @@
 use common\models\scene\SceneBook;
 use wskeee\rbac\components\ResourceHelper;
 use wskeee\rbac\RbacManager;
+use yii\helpers\ArrayHelper;
 
 /* @var $model SceneBook */
 /* @var $rbacManager RbacManager */  
@@ -26,14 +27,14 @@ use wskeee\rbac\RbacManager;
                  * ]
                  */
                 $buttonHtml = [
-                    [
-                        'name' => Yii::t('rcoa', 'Back'),
-                        'url' => ['index'],
-                        'options' => ['class' => 'btn btn-default', /*'onclick'=> 'history.go(-1);return false'*/],
-                        'symbol' => '&nbsp;',
-                        'conditions' => true,
-                        'adminOptions' => true,
-                    ],
+//                    [
+//                        'name' => Yii::t('rcoa', 'Back'),
+//                        'url' => ['index'],
+//                        'options' => ['class' => 'btn btn-default', /*'onclick'=> 'history.go(-1);return false'*/],
+//                        'symbol' => '&nbsp;',
+//                        'conditions' => true,
+//                        'adminOptions' => true,
+//                    ],
                     //预约人角色按钮组
                     [
                         'name' => '编辑',
@@ -48,7 +49,8 @@ use wskeee\rbac\RbacManager;
                         'url' => ['transfer', 'id' => $model->id],
                         'options' => ['id' => 'transfer', 'class' => 'btn btn-danger', 'onclick' => 'myModal($(this));return false;'],
                         'symbol' => '&nbsp;',
-                        'conditions' => $model->getIsTransfer() && !$model->is_transfer && $model->booker_id == Yii::$app->user->id,
+                        'conditions' => $model->getIsTransfer() && !$model->is_transfer && $model->booker_id == Yii::$app->user->id 
+                                        && date('Y-m-d H:i:s', strtotime($model->date.$model->start_time)) > date('Y-m-d H:i:s', time()),
                         'adminOptions' => true,
                     ],
                     [
@@ -72,18 +74,20 @@ use wskeee\rbac\RbacManager;
                     [
                         'name' => '指派',
                         'url' => ['assign', 'id' => $model->id],
-                        'options' => ['class' => 'btn btn-info', 'onclick' => 'myModal($(this));return false;'],
+                        'options' => ['class' => 'btn btn-success', 'onclick' => 'myModal($(this));return false;'],
                         'symbol' => '&nbsp;',
-                        'conditions' => $model->getIsAssign() || $model->getIsStausShootIng(),
+                        'conditions' => ($model->getIsAssign() || $model->getIsStausShootIng())
+                                        && date('Y-m-d H:i:s', strtotime($model->date.$model->start_time)) > date('Y-m-d H:i:s', time()),
                         'adminOptions' => true,
                     ],
                     //接洽人和摄影师角色按钮
                     [
                         'name' => '评价',
-                        'url' => ['appraise/create', 'book_id' => $model->id, 'role' => $isRole['role'], 'user_id' => $isRole['user_id']],
+                        'url' => ['appraise/create', 'book_id' => $model->id, 'role' => ArrayHelper::getValue($roleUsers, 'role'), 'user_id' => ArrayHelper::getValue($roleUsers, 'user_id')],
                         'options' => ['class' => 'btn btn-info', 'onclick' => 'myModal($(this));return false;'],
                         'symbol' => '&nbsp;',
-                        'conditions' => ($model->getIsStausShootIng() || $model->getIsAppraise()) && $isRole && $model->date < date('Y-m-d', strtotime('+1 days')),
+                        'conditions' => ($model->getIsStausShootIng() || $model->getIsAppraise()) && count($roleUsers) > 0 
+                                        && $model->date < date('Y-m-d', strtotime('+1 days')) && !$model->is_transfer,
                         'adminOptions' => true,
                     ],
                 ];

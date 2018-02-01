@@ -22,7 +22,7 @@ use yii\helpers\Html;
 
 <div class="normal">原因：因为 <?= Html::encode($oldShootMan) ?> 摄影师需要跟派另一重要任务</div>
 
-<div class="normal">地点时间：<?= Html::encode("【{$model->sceneSite->name}】".$model->date.SceneBook::$timeIndexMap[$model->time_index].$model->start_time."（".Yii::t('rcoa', 'Week ' . date('D', strtotime($model->date)))."）") ?></div>
+<div class="normal">地点时间：<?= Html::encode("【{$model->sceneSite->name}】".$model->date."　".$model->start_time."（".Yii::t('rcoa', 'Week ' . date('D', strtotime($model->date)))."）") ?></div>
 
 <div class="normal">旧摄影师：<?= Html::encode($oldShootMan) ?></div>
 

@@ -19,12 +19,12 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="scene-appraise-index">
     <div class="scene-appraise">
     <?php
-        if(count($appraiseResult['results']) <= 0)
+        if(count($appraiseResults['results']) <= 0)
             echo '<h5>没有评价数据。</h5>';
         else{
             $index = 1;
-            foreach($appraiseResult['results'] as $key => $allModels){
-                $score = array_sum($appraiseResult['user_value'][$key])/array_sum($appraiseResult['q_value'][$key]) * count($appraiseResult['q_value'][$key]);
+            foreach($appraiseResults['results'] as $key => $allModels){
+                $score = array_sum($appraiseResults['user_value'][$key])/array_sum($appraiseResults['q_value'][$key]) * count($appraiseResults['q_value'][$key]);
                 echo "<div class=\"role-name\">"
                         ."<h5><b>对".SceneBookUser::$roleName[$key]."评价</b></h5>"
                             .'<div id="star" class="star" data-score="'.$score.'"></div>'
@@ -32,16 +32,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 foreach ($allModels as $appraise) {
                     if($index > 3) $index = 1;
                     /* @var $appraise SceneAppraise */
-                    echo "<p>".Html::label(($index++).'、'.$appraise->question->title)."</p>";
-                    foreach ($appraise->question->ops as $questionOp) {
-                        /* @var $questionOp QuestionOp */
-                        echo "<p>";
-                        if($questionOp->value == $appraise->user_value)
-                            echo "<span class=\"appraise add-color\">{$questionOp->value}分（{$questionOp->title}）</span>";
-                        else 
-                            echo "<span class=\"appraise\">{$questionOp->value}分（{$questionOp->title}）</span>";
-                        echo "</p>";
-                    }
+                    echo "<div class=\"appraise-title\">".Html::label(($index++).'、'.$appraise->question->title)."</div>";
+                    echo '<div class="form-group appraise">';
+                        foreach ($appraise->question->ops as $questionOp) {
+                            /* @var $questionOp QuestionOp */
+                            echo "<p>";
+                            if($questionOp->value == $appraise->user_value)
+                                echo "<span class=\"add-color\">{$questionOp->value}分（{$questionOp->title}）</span>";
+                            else 
+                                echo "<span>{$questionOp->value}分（{$questionOp->title}）</span>";
+                            echo "</p>";
+                        }
+                    echo '</div>';
                 }
             }
         }
@@ -53,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 $js = 
 <<<JS
-    
+    //评价星星
     $('.star').raty({
         number: 3,
         score: function() {

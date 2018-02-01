@@ -29,7 +29,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php endforeach; ?>
     
 </ul>
-    
 
 <?php
 $js = 

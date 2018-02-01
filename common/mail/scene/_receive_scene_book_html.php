@@ -20,7 +20,7 @@ use yii\helpers\Html;
 ?>
 <div class="gray">您好！拍摄 预约转让成功，请及时查看。</div>
 
-<div class="normal">地点时间：<?= Html::encode("【{$model->sceneSite->name}】".$model->date.SceneBook::$timeIndexMap[$model->time_index].$model->start_time."（".Yii::t('rcoa', 'Week ' . date('D', strtotime($model->date)))."）") ?></div>
+<div class="normal">地点时间：<?= Html::encode("【{$model->sceneSite->name}】".$model->date."　".$model->start_time."（".Yii::t('rcoa', 'Week ' . date('D', strtotime($model->date)))."）") ?></div>
 
 <div class="normal">旧预约人：<?= Html::encode($oldBookerName) ?></div>
 

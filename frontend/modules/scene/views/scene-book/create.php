@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 
-<?= $this->render('/layouts/_form_nav', ['model' => $model, 'params' => ['exit-create', 'id' => $model->id, 'date_switch' => $model->date_switch]]) ?>
+<?= $this->render('/layouts/_form_nav', ['model' => $model, 'params' => array_merge(['exit-create'], $filters)]) ?>
 
 <?= $this->render('/layouts/_model') ?>
 
@@ -46,14 +46,15 @@ $js =
 <<<JS
         
     //定时执行
-    setTimeout(function(){
-        $.get("/scene/scene-book/exit-create?id=$model->id",function(data){
-            if(data['code'] == '200'){
-                window.history.go(-1);
-            }
-        });
-    }, 2*60*1000); 
-    //window.clearTimeout(exit);    
+//    setTimeout(function(){
+//        //var url = "/scene/scene-book/exit-create?id=$model->id&site_id=$model->site_id&date=$model->date&time_index=$model->time_index&date_switch=$model->date_switch"
+//        $.get("/scene/scene-book/exit-create?id=$model->id", function(data){
+//            if(data['code'] == '200'){
+//                window.history.go(-1);
+//            }
+//        });
+//    }, 2*60*1000); 
+//    window.clearTimeout(exit);    
         
     $('#submit').click(function(){
         $(".myModal").html("");

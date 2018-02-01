@@ -9,19 +9,23 @@ use yii\widgets\DetailView;
 /* @var $this View */
 /* @var $model SceneBook */
 
+//阶段
+$phases = $this->render('_phase', ['model' => $model]);
+//接洽人or摄影师
 $contacter = null;
 $shootMan = null;
 if(isset($sceneBookUser[$model->id])){
     foreach ($sceneBookUser[$model->id] as $userItem) {
-            if($userItem['role'] == 1){
-                $contacter .= $userItem['is_primary'] ? 
-                    "<span style=\"color:#0066ff\">{$userItem['nickname']}（{$userItem['phone']}）</span>" : "{$userItem['nickname']}\t";
-            }else if($userItem['role'] == 2){
-                $shootMan .= $userItem['is_primary'] ? 
-                    "<span style=\"color:#0066ff\">{$userItem['nickname']}（{$userItem['phone']}）</span>" : "{$userItem['nickname']}\t";
-            }
+        if($userItem['role'] == 1){
+            $contacter .= $userItem['is_primary'] ? 
+                "<span style=\"color:#0066ff\">{$userItem['nickname']}（{$userItem['phone']}）</span>" : "{$userItem['nickname']}\t";
+        }else if($userItem['role'] == 2){
+            $shootMan .= $userItem['is_primary'] ? 
+                "<span style=\"color:#0066ff\">{$userItem['nickname']}（{$userItem['phone']}）</span>" : "{$userItem['nickname']}\t";
+        }
     }
 }
+
 ?>
 
 <div class="scene-book-view scene-book">
@@ -30,7 +34,11 @@ if(isset($sceneBookUser[$model->id])){
         //'options' => ['class' => 'table table-bordered detail-view'],
         'template' => '<tr><th class="viewdetail-th">{label}</th><td class="viewdetail-td">{value}</td></tr>',
         'attributes' => [
-            ['label' => '<span class="btn-block viewdetail-th-head">基本信息</span>','value' => ''],
+            [
+                'label' => '<div class="viewdetail-head"><span class="btn-block viewdetail-th-head">基本信息</span></div>',
+                'format' => 'raw',
+                'value' => '<div class="viewdetail-head"></div>'
+            ],
             [
                 'attribute' => 'site_id',
                 'label' => Yii::t('app', 'Site'),
@@ -56,7 +64,7 @@ if(isset($sceneBookUser[$model->id])){
             [
                 'attribute' => 'status',
                 'format' => 'raw',
-                'value' => $model->status,
+                'value' => $phases,
             ],
             [
                 'attribute' => 'created_at',
@@ -68,7 +76,11 @@ if(isset($sceneBookUser[$model->id])){
                 'format' => 'raw',
                 'value' => date('Y-m-d H:i', $model->updated_at),
             ],
-            ['label' => '<span class="btn-block viewdetail-th-head">拍摄信息</span>','value' => ''],
+            [
+                'label' => '<div class="viewdetail-head"><span class="btn-block viewdetail-th-head">拍摄信息</span></div>',
+                'format' => 'raw',
+                'value' => '<div class="viewdetail-head"></div>'
+            ],
             [
                 'attribute' => 'content_type',
                 'format' => 'raw',
@@ -101,7 +113,11 @@ if(isset($sceneBookUser[$model->id])){
                 'format' => 'raw',
                 'value' => '<div style="height:65px; vertical-align:middle; display:table-cell">'.$model->remark.'</div>',
             ],
-            ['label' => '<span class="btn-block viewdetail-th-head">课程信息</span>','value' => ''],
+            [
+                'label' => '<div class="viewdetail-head"><span class="btn-block viewdetail-th-head">课程信息</span></div>',
+                'format' => 'raw',
+                'value' => '<div class="viewdetail-head"></div>'
+            ],
             [
                 'attribute' => 'business_id',
                 'format' => 'raw',
@@ -122,7 +138,11 @@ if(isset($sceneBookUser[$model->id])){
                 'format' => 'raw',
                 'value' => !empty($model->course_id) ? $model->course->name : null,
             ],
-            ['label' => '<span class="btn-block viewdetail-th-head">教师信息</span>','value' => ''],
+            [
+                'label' => '<div class="viewdetail-head"><span class="btn-block viewdetail-th-head">教师信息</span></div>',
+                'format' => 'raw',
+                'value' => '<div class="viewdetail-head"></div>'
+            ],
             [
                 'label' => Yii::t('app', 'Personal Image'),
                 'format' => 'raw',
