@@ -122,13 +122,12 @@ class SceneBookController extends Controller
                 throw new NotAcceptableHttpException('该场地未发布！');
             $model->scenario = SceneBook::SCENARIO_TEMP_CREATE;
             $model->save();
+            $model->scenario = SceneBook::SCENARIO_DEFAULT;
             $model->loadDefaultValues();
-        }else if($model->created_by != Yii::$app->user->id && $model->getIsBooking()){
-            throw new NotAcceptableHttpException('正在预约中！');
-        }else if($model->created_by == Yii::$app->user->id && !$model->getIsBooking()){
-            throw new NotAcceptableHttpException('预约超时！');
         }else {
             $model->scenario = SceneBook::SCENARIO_DEFAULT;
+            if($model->getIsNew())
+                $this->isExistNewSceneBook($params);    //判断同一时间段是否存在相同的预约
         }
         
         if ($model->load($post)) {
@@ -146,6 +145,7 @@ class SceneBookController extends Controller
                 'contentTypeMap' => $this->getSceneSite($model->site_id),
                 'createSceneBookUser' => $this->getCreateSceneBookUser($model),
                 'existSceneBookUser' => $this->getExistSceneBookUser($model),
+                'dayExistBook' => SceneBookAction::getInstance()->getIsDayExistSceneBook($model, $post),
             ]);
         }
     }
@@ -754,34 +754,13 @@ class SceneBookController extends Controller
         $site_id = ArrayHelper::getValue($param, 'site_id');
         $date = ArrayHelper::getValue($param, 'date');
         $time_index = ArrayHelper::getValue($param, 'time_index');
+        $statusMap = [SceneBook::STATUS_CANCEL];
         $query = SceneBook::find();
-        $query->where(['site_id' => $site_id, 'time_index' => $time_index,'status' => SceneBook::STATUS_BOOKING]);
-        $query->andWhere(['between', 'date', $date, date('Y-m-d',strtotime('+1 days'.$date))]);;  
+        $query->where(['site_id' => $site_id, 'date' => $date, 'time_index' => $time_index]);
+        $query->andWhere(['>', 'status', SceneBook::STATUS_DEFAULT]);
+        $query->andWhere(['!=', 'status', SceneBook::STATUS_CANCEL]);
+        //$query->andWhere(['between', 'date', $date, date('Y-m-d',strtotime('+1 days'.$date))]);
         if(count ($query->all()) > 0)  
             throw new NotAcceptableHttpException('正在预约中！');  
-    }
-
-    /**
-     * 判断是否有存在的评价角色
-     * @param string $book_id
-     * @param array $roleUser
-     * @return boolean
-     */
-    protected function isExistAppraiseRole($book_id, $roleUser)
-    {
-        $role = ArrayHelper::getValue($roleUser, 'role');
-        $user_id = ArrayHelper::getValue($roleUser, 'user_id');
-        
-        $query = (new Query())->from(SceneAppraise::tableName());
-        $query->where(['book_id' => $book_id])
-              ->andFilterWhere(['role' => $role])
-              ->andFilterWhere(['user_id' => $user_id]);
-        $query->orderBy(['index' => SORT_ASC]);
-        
-        if(count($query->all()) == 0){
-            return true;
-        }
-        
-        return false;
     }
 }

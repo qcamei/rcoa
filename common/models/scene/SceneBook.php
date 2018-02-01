@@ -139,6 +139,16 @@ class SceneBook extends ActiveRecord
     ];
     
     /**
+     * 时间段全名称
+     * @var array 
+     */
+    public static $timeIndexMaps = [
+        self::TIME_INDEX_MORNING => '上午',
+        self::TIME_INDEX_AFTERNOON => '下午',
+        self::TIME_INDEX_NIGHT => '晚上',
+    ];
+    
+    /**
      * 开始时间段
      * @var array 
      */

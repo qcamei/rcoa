@@ -327,14 +327,14 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
             'header' => Yii::t('app', 'Operating'),
             'buttons' => [
                 'view' => function ($url, $model) use($dayTomorrow, $dayEnd, $sceneBookUser, $siteManage) {
-//                    $bookUsers = [];
-//                    if(isset($sceneBookUser[$model->id])){
-//                        foreach ($sceneBookUser[$model->id] as $book_user) {
-//                            if($book_user['is_primary']){
-//                                $bookUsers[$book_user['book_id']][] = $book_user['user_id'];
-//                            }
-//                        }
-//                    }
+                    $bookUsers = [];
+                    if(isset($sceneBookUser[$model->id])){
+                        foreach ($sceneBookUser[$model->id] as $book_user) {
+                            if($book_user['is_primary']){
+                                $bookUsers[$book_user['book_id']][] = $book_user['user_id'];
+                            }
+                        }
+                    }
                     /* @var $model SceneBook */
                     //预约时间
                     $bookTime = date('Y-m-d H:i:s', strtotime($model->date.SceneBook::$startTimeIndexMap[$model->time_index]));
@@ -344,9 +344,9 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
                     $isAssign = $model->getIsAssign();                  //是否在【待指派】任务
                     $isStausShootIng = $model->getIsStausShootIng();    //是否在【待评价】任务
                     $isAppraise = $model->getIsAppraise();              //是否在【评价中】任务
-                    $isBreakPromise = $model->getIsStatusBreakPromise();//是否在【已失约】任务   
-                    //|| (isset($bookUsers[$model->id]) && in_array(Yii::$app->user->id, $bookUsers[$model->id]))
-                    $isMe = $model->booker_id == Yii::$app->user->id ;  //该预约是否为自己的操作
+                    $isBreakPromise = $model->getIsStatusBreakPromise();//是否在【已失约】任务
+                    //该预约是否为自己的操作
+                    $isMe = $model->booker_id == Yii::$app->user->id || (isset($bookUsers[$model->id]) && in_array(Yii::$app->user->id, $bookUsers[$model->id]));
                     $isTransfer = $model->is_transfer;                  //该预约是否为转让预约
                     $isPublishSite = $model->sceneSite->is_publish;     //是否发布该场地
                     //场次是否禁用
