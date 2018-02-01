@@ -29,10 +29,13 @@ use yii\widgets\ActiveForm;
         ], 
     ]); ?>
 
-    <?= $form->field($model, 'site_id')->widget(Select2::classname(),[
-        'data' => $siteName,
-        'hideSearch' => true,
-        'options' => ['placeholder' => Yii::t('app', 'Select Placeholder'),]
+    <?= $form->field($model, 'site_id')->dropDownList($siteName,[
+        'options' => ['placeholder' => Yii::t('app', 'Select Placeholder'),],
+        'onchange' => '
+            $(".form-group#scenebook-site_id").hide(); 
+            $.post("'.Yii::$app->urlManager->createUrl('scene_admin/book/scene-site').'?site_id="+$(this).val(),function(data){  
+                $("#scenebook-content_type").html(data);  
+        });',
     ])->label(Yii::t('app', 'Site')) ?>
 
     <?= $form->field($model, 'date')->widget(DatePicker::className(),[

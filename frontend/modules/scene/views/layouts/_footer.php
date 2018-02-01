@@ -62,7 +62,7 @@ use yii\helpers\Html;
                         'controllerId' => 'scene-manage',
                         'name' => '场地',
                         'url' => ['scene-manage/index'],
-                        'icon' => '/filedata/demand/image/telescope.png',
+                        'icon' => '/filedata/demand/image/castle.png',
                         'options' => ['class' => 'footer-menu-item'],
                         'symbol' => '&nbsp;',
                         'conditions' => true,

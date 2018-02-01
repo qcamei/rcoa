@@ -61,7 +61,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => $model->adds4->name,
             ],
             'address',
-            'price',
+            [
+                'attribute' => 'price',
+                'value' => $model->price . ' 元/小时',
+            ],
             [
                 'attribute' => 'contact',
                 'value' => $model->contact,
@@ -74,7 +77,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'img_path',
                 'format' => 'raw',
-                'value' => Html::img(WEB_ROOT.$model->img_path),
+                'value' => Html::img(WEB_ROOT . $model->img_path),
             ],
             [
                 'attribute' => 'is_publish',
@@ -85,7 +88,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'location',
                 'format' => 'raw',
-                'value' => '经度:' . $point['X(location)'] . ', ' . '纬度:' . $point['Y(location)'],
+                'value' => '经度：' . $point['X(location)'] . '， ' . '纬度：' . $point['Y(location)'],
             ],
             [
                 'attribute' => 'content',
