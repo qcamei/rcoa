@@ -129,7 +129,7 @@ use yii\widgets\ActiveForm;
         <h5 style="font-weight: bold">位置</h5>
         <?= Html::label('','',[
             'id' => 'map',
-            'style' => 'width:100%; height:500px;',
+            'style' => 'width:100%; height:500px; border: 1px solid #d2d6de;',
         ])?>
         <?= Html::activeHiddenInput($model, 'location') ?>
         
@@ -152,10 +152,8 @@ use yii\widgets\ActiveForm;
 <?php
 $isNewRecord = $model->isNewRecord ? 0 : 1;
 if($isNewRecord){
-    preg_match_all("/\((.*)\)/", $point['AsText(location)'], $map_xy);        //获取括号里面的内容
-    $map_all = explode(' ', $map_xy['1']['0']);         //拆分转为数组
-    $map_x = $map_all[0];                               //经度
-    $map_y = $map_all[1];                               //纬度
+    $map_x = $point['X(location)'];                               //经度
+    $map_y = $point['Y(location)'];                               //纬度
 }else{
     $map_x = 113.2759952545166;
     $map_y = 23.117055306224895;

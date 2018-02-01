@@ -72,6 +72,16 @@ class SceneSite extends ActiveRecord
         self::TYPE_FIVE => '书架',
     ];
     
+    /** 否 */
+    const TYPE_NO_PUBLISH = 0;
+    /** 是 */
+    const TYPE_YES_PUBLISH = 1;
+    
+    /** 类型 */
+    public static $PUBLISH_TYPES = [
+        self::TYPE_NO_PUBLISH => '否',
+        self::TYPE_YES_PUBLISH => '是',
+    ];
     
     /**
      * @inheritdoc
@@ -174,10 +184,14 @@ class SceneSite extends ActiveRecord
         if (parent::beforeSave($insert)){
             //把内容性质转为字符串保存
             $content_type = ArrayHelper::getValue(Yii::$app->request->post(), 'SceneSite.content_type', []);
-            $this->content_type = implode(",", $content_type);
+            if($content_type != null){
+                $this->content_type = implode(",", $content_type);
+            }
             //拿到经纬度并处理
             $location = ArrayHelper::getValue(Yii::$app->request->post(), 'SceneSite.location');
-            $this->location = new Expression("GeomFromText('POINT($location)')");
+            if($location != null){
+                $this->location = new Expression("GeomFromText('POINT($location)')");
+            }
             //图片上传
             $img_name = md5(time());
             $upload = UploadedFile::getInstance($this, 'img_path');

@@ -148,7 +148,16 @@ $this->params['breadcrumbs'][] = $this->title;
                         'min-width' => '100px',
                     ],
                 ],
-                'filter' => false,
+                 'filter' => Select2::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'booker_id',
+                    'data' => $booker,
+                    'hideSearch' => false,
+                    'options' => ['placeholder' => Yii::t('app', 'All')],
+                    'pluginOptions' => [
+                        'allowClear' => true,
+                    ],
+                ]),
                 'value' => function($model) {
                     /* @var $model SceneBook */
                     return !empty($model->booker_id) ? $model->booker->nickname : NULL;
@@ -210,7 +219,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'style' => ['margin-right' => '5px']
                     ]) .
                         Html::a(Yii::t('app', 'Edit'), ['update', 'id' => $model->id], [
-                            'class' => 'btn btn-primary btn-sm',
+                            'class' => ($model->getIsCancel()) ? 'btn btn-primary btn-sm' : 'btn btn-primary btn-sm disabled',
                     ]);
                 },
                  'contentOptions' => [

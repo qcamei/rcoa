@@ -106,7 +106,7 @@ class SceneBookSearch extends SceneBook
         $query->andFilterWhere(['like', 'start_time', $this->start_time])
             ->andFilterWhere(['like', 'remark', $this->remark])
             ->andFilterWhere(['like', 'teacher_id', $this->teacher_id])
-            ->andFilterWhere(['like', 'booker_id', $this->booker_id])
+            ->andFilterWhere(['booker_id' => $this->booker_id])
             ->andFilterWhere(['like', 'created_by', $this->created_by]);
 
         return $dataProvider;

@@ -3,12 +3,12 @@
 namespace frontend\modules\scene\utils;
 
 use common\models\scene\SceneBook;
-use wskeee\ee\EeManager;
 use wskeee\notification\NotificationManager;
 use wskeee\rbac\RbacManager;
 use wskeee\rbac\RbacName;
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
 
 /* 
@@ -47,7 +47,7 @@ class SceneBookNotice {
      */
     private static function createAbsoluteUrl($model)
     {
-        return Yii::$app->urlManager->createAbsoluteUrl(['/scene/scene-book/view','id' => $model->id]);
+        return Url::to(WEB_ROOT."/scene/scene-book/view?id=".$model->id);
     }
         
     /**
@@ -139,7 +139,7 @@ class SceneBookNotice {
             'model' => $model,
             'content' => $content,
         ];
-         
+
         //主题 
         $subject = self::$subjectModule.$title;
         //角色名
@@ -161,8 +161,8 @@ class SceneBookNotice {
             ->setTo($receivers_email)
             ->setSubject($subject)
             ->send();*/
-    }
-    
+    } 
+
     /**
      * 转让成功 给接洽人 and 摄影师 发送通知
      * @param SceneBook $model
@@ -186,6 +186,55 @@ class SceneBookNotice {
         //转让成功预约用户邮箱地址
         $receivers_mail = array_filter(ArrayHelper::getValue($users, 'email'));
         
+        //发送消息 
+        NotificationManager::sendByView($views, $params, $receivers, $subject, self::createAbsoluteUrl($model));
+        //发送邮件消息 
+        /*Yii::$app->mailer->compose($views, $params)
+            ->setTo($receivers_email)
+            ->setSubject($subject)
+            ->send();*/
+    }
+    
+    /**
+     * 给预约人、接洽人、所以摄影组长|摄影师 发送通知
+     * @param type $model
+     * @param type $status          状态
+     * @param type $content         取消原因
+     * @param type $contacter       接洽人
+     * @param type $shootMan        摄影师
+     * @param type $title           标题
+     * @param type $views           视图
+     */
+    public function sendAllManNotification($model, $status, $content, $contacter, $shootMan, $title, $views)
+    {
+        /* @var $authManager RbacManager */
+        $authManager = Yii::$app->authManager;
+        //传进view 模板参数 
+        $params = [
+            'model' => $model,
+            'content' => $content,
+        ];
+        //主题 
+        $subject = self::$subjectModule.$title;
+        
+        //查找所有摄影组长
+        $users = $authManager->getItemUsers(RbacName::ROLE_SHOOT_LEADER);
+        //该任务的预约人、接洽人的guid
+        $receivers = array_merge([$model->booker->guid], ArrayHelper::getColumn($contacter, 'guid'));
+        //该任务的预约人、接洽人的邮箱地址
+        $receivers_mail = array_merge([$model->booker->email],ArrayHelper::getColumn($contacter, 'email'));
+        if($status == SceneBook::STATUS_ASSIGN){
+            //该任务的预约人、接洽人、所有摄影师组长的guid
+            $receivers = array_merge($receivers, array_filter(ArrayHelper::getColumn($users, 'guid')));
+            //该任务的预约人、接洽人、所有摄影师组长的邮箱地址
+            $receivers_mail = array_merge($receivers_mail, array_filter(ArrayHelper::getColumn($users, 'email')));
+        }else{
+            //该任务的预约人、接洽人、摄影师的guid
+            $receivers = array_merge($receivers, ArrayHelper::getColumn($shootMan, 'guid'));
+            //该任务的预约人、接洽人、所有摄影师组长的邮箱地址
+            $receivers_mail = array_merge($receivers_mail, ArrayHelper::getColumn($shootMan, 'email'));
+        }
+
         //发送消息 
         NotificationManager::sendByView($views, $params, $receivers, $subject, self::createAbsoluteUrl($model));
         //发送邮件消息 

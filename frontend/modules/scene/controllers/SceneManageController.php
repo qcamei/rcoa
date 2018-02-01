@@ -75,7 +75,7 @@ class SceneManageController extends Controller
     {
         return $this->render('view',[
             'sceneData' => $this->getSceneData($id),
-            'registerNum' => count(SceneBook::findAll(['site_id' => $id])),
+            'registerNum' => $this->getRegisterNum($id),
         ]);
     }
     
@@ -114,22 +114,18 @@ class SceneManageController extends Controller
         $params = Yii::$app->request->queryParams;
         $site_id = ArrayHelper::getValue($params, 'site_id');
         $date = ArrayHelper::getValue($params, 'date');
-        $user_id = \Yii::$app->user->id;
-        $manager_id = $this->getSceneManager();
-        if($user_id == $manager_id || \Yii::$app->authManager->isAdmin(RbacName::ROLE_ADMIN)){
-            $bookModel = $this->findBookModel();
-            if ($bookModel != null) {
-                throw new ServerErrorHttpException('禁用失败！该时段的场地已被预约！！');
-            }
-            
-            $model = $this->findModel();
-            $model->is_disable = 1;
-            $model->save();
-            
-            return $this->redirect(['disable', 'site_id' => $site_id, 'date' => $date]);
-        } else {
-            throw new NotAcceptableHttpException('无权限操作！');
+
+        $bookModel = $this->findBookModel();
+        if ($bookModel != null) {
+            throw new ServerErrorHttpException('禁用失败！该时段的场地已被预约！！');
         }
+
+        $model = $this->findModel();
+        $model->is_disable = 1;
+        $model->save();
+
+        return $this->redirect(['disable', 'site_id' => $site_id, 'date' => $date]);
+
     }
     
     /**
@@ -144,17 +140,13 @@ class SceneManageController extends Controller
         $params = Yii::$app->request->queryParams;
         $site_id = ArrayHelper::getValue($params, 'site_id');
         $date = ArrayHelper::getValue($params, 'date');
-        $user_id = \Yii::$app->user->id;
-        $manager_id = $this->getSceneManager();
-        if($user_id == $manager_id || \Yii::$app->authManager->isAdmin(RbacName::ROLE_ADMIN)){
-            $model = $this->findModel();
-            $model->is_disable = 0;
-            $model->save();
 
-            return $this->redirect(['disable', 'site_id' => $site_id, 'date' => $date]);
-        } else {
-            throw new NotAcceptableHttpException('无权限操作！');
-        }
+        $model = $this->findModel();
+        $model->is_disable = 0;
+        $model->save();
+
+        return $this->redirect(['disable', 'site_id' => $site_id, 'date' => $date]);
+
     }
     
     /**
@@ -188,16 +180,20 @@ class SceneManageController extends Controller
     }
     
     /**
-     * 获取场地的管理员
+     * 获取场地的被预约次数
      * @return string
      */
-    public function getSceneManager()
+    public function getRegisterNum($id)
     {
-        $site_id = ArrayHelper::getValue(\Yii::$app->request->queryParams, 'site_id');
-        $query = SceneSite::find(['id' => $site_id])->one();
-        $manager = $query->manager_id;
-        
-        return $manager;
+        $notStatus = [SceneBook::STATUS_DEFAULT, SceneBook::STATUS_CANCEL];
+        $query = SceneBook::find();
+        //添加查询条件
+        $query->andFilterWhere(['NOT IN', 'status', $notStatus]);
+        $query->andFilterWhere(['site_id' => $id]);
+        //计算预约次数
+        $registerNum = count($query->all());
+
+        return $registerNum;
     }
 
     /**
@@ -227,7 +223,10 @@ class SceneManageController extends Controller
     {
         $query = (new Query())->select(['id', 'name', 'area', 'content_type'])
             ->from(SceneSite::tableName());
-        $query->filterWhere(['id' => $site_id]);
+        $query->filterWhere([
+            'id' => $site_id,
+            'is_publish' => 1,
+        ]);
         $results = $query->all();
         
         if($site_id == null){

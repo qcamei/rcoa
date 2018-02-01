@@ -178,7 +178,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => Select2::widget([
                     'model' => $searchModel,
                     'attribute' => 'is_publish',
-                    'data' => ['否','是'],
+                    'data' => SceneSite::$PUBLISH_TYPES,
                     'hideSearch' => true,
                     'options' => ['placeholder' => Yii::t('app', 'All')],
                     'pluginOptions' => [
