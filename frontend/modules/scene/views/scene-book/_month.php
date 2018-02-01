@@ -23,8 +23,7 @@ use yii\helpers\Html;
     <tbody>
         <?php  
             $allModels = [];
-            $timeIndexMap = ['上', '下', '晚'];
-            $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
+            $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
             //重组预约数据模型
             foreach ($dataProvider->allModels as $model){
                 $allModels[$model->date][] = $model;
@@ -51,54 +50,65 @@ use yii\helpers\Html;
                 for ($d = 0; $d < 7; $d++) {
                     $nowDay = 7 * $i + $d + 0;
                     $date = date('Y-m-d', strtotime($dateStart.'+'.$nowDay.'days'));
-                    echo '<td>';
-                    if(isset($holidays[$date])){
-                        $first = reset($holidays[$date]);
-                        $content = '';
-                        foreach ($holidays[$date] as $holiday) 
-                            $content .= "<p>{$holiday['name']}(".Holiday::TYPE_NAME_MAP[$holiday['type']].")</p>";
-                        echo "<a class=\"holiday img-circle {$holidayColourMap[$first['type']]}\" role=\"button\" data-content=\"{$content}\">".Holiday::TYPE_NAME_MAP[$first['type']]."</a>";
-                    }
                     if($date != date('Y-m-d', time())){
-                        echo "<span class=\"days\">".preg_replace('/^0+/','',date('d', strtotime($date)))."</span>";
+                        echo '<td>';
                     }else{
-                        echo "<span class=\"days img-rounded now\">".preg_replace('/^0+/','',date('d', strtotime($date)))."</span>";
+                        echo '<td style="background-color: rgba(30, 181, 176, 0.10196078431372549)">';
                     }
-                    echo "<div class=\"btn-group\">";
-                    if(isset($allModels[$date])){
-                        for ($index = 0; $index < 3; $index++){
-                            //预约时间
-                            $bookTime = date('Y-m-d H:i:s', strtotime($allModels[$date][$index]->date.SceneBook::$startTimeIndexMap[$index]));
-                            $statusName = $allModels[$date][$index]->getStatusName();              //状态名称
-                            $isNew = $allModels[$date][$index]->getIsNew();                        //新建任务
-                            $isValid = $allModels[$date][$index]->getIsValid();                    //非新建及锁定任务
-                            $isBooking = $allModels[$date][$index]->getIsBooking();                //是否预约中
-                            $isAssign = $allModels[$date][$index]->getIsAssign();                  //是否在【待指派】任务
-                            $isStausShootIng = $allModels[$date][$index]->getIsStausShootIng();    //是否在【待评价】任务
-                            $isMe = $allModels[$date][$index]->booker_id == Yii::$app->user->id;   //该预约是否为自己预约
-                            $isTransfer = $allModels[$date][$index]->is_transfer;                  //该预约是否为转让预约
-                            //场次是否禁用
-                            $isDisable = isset($siteManage[$date][$index]) && $siteManage[$date][$index];
-                            
-                            //判断30天内的预约时段
-                            if($dayTomorrow < $bookTime && $bookTime < $dayEnd){
-                                $buttonName = $isDisable ? '<i class="fa fa-ban"></i>&nbsp;禁用' : ($isNew  ? '<i class="fa fa-video-camera"></i>&nbsp;预约' : (!$isValid ? '<i class="fa fa-lock" aria-hidden="true"></i>&nbsp;&nbsp;预约' : ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? '<i class="fa fa-refresh"></i>&nbsp;转让' : ($isAssign ? $allModels[$date][$index]->getStatusName() : $allModels[$date][$index]->getStatusName()))));
-                                $buttonClass = $isDisable ? 'btn-default disabled' : ($isNew ? 'btn-primary' : (!$isValid ? 'btn-primary disabled' : ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? 'btn-primary' : ($isAssign ? 'btn-info' : 'btn-default'))));
-                            }else{
-                                $buttonName = !$isNew ?  ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? '<i class="fa fa-refresh"></i>&nbsp;转让' : $statusName) : '<i class="fa fa-ban"></i>&nbsp;禁用';
-                                $buttonClass = !$isNew ?  ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? 'btn-primary' : 'btn-default') : 'btn-default disabled';
+                        echo '<div>';
+                            if(isset($holidays[$date])){
+                                $first = reset($holidays[$date]);
+                                $content = '';
+                                foreach ($holidays[$date] as $holiday) 
+                                    $content .= "<p>{$holiday['name']}(".Holiday::TYPE_NAME_MAP[$holiday['type']].")</p>";
+                                echo "<a class=\"holiday img-circle {$holidayColourMap[$first['type']]}\" role=\"button\" data-content=\"{$content}\">".Holiday::TYPE_NAME_MAP[$first['type']]."</a>";
                             }
-                            $url = $isNew ? 
-                                ['create', 'id' => $allModels[$date][$index]->id, 'site_id' => $allModels[$date][$index]->site_id, 
-                                    'date' => $allModels[$date][$index]->date, 'time_index' => $allModels[$date][$index]->time_index, 
-                                    'date_switch' => $allModels[$date][$index]->date_switch] : ['view', 'id' => $allModels[$date][$index]->id];
-                            
-                            echo "<p><span class=\"month_time_index hidden-xs\">{$timeIndexMap[$index]}</span>";
-                            echo  Html::a('<span class="'.($isMe ? 'isMe' : '').'"></span>'.$buttonName, $url, ['class' => "btn $buttonClass btn-sm btn-len"]);
-                            echo "</p>";
-                        }
-                    }
-                    echo "</div>";
+                            if(!isset($allModels[$date])){
+                                echo "<span class=\"days\" style=\"color:#ddd;\">".preg_replace('/^0+/','',date('d', strtotime($date)))."</span>";
+                            }else if($date != date('Y-m-d', time())){
+                                echo "<span class=\"days\">".preg_replace('/^0+/','',date('d', strtotime($date)))."</span>";
+                            }else{
+                                echo "<span class=\"days img-rounded now\">".preg_replace('/^0+/','',date('d', strtotime($date)))."</span>";
+                            }
+                            echo "<div class=\"btn-group\">";
+                            if(isset($allModels[$date])){
+                                for ($index = 0; $index < 3; $index++){
+                                    //预约时间
+                                    $bookTime = date('Y-m-d H:i:s', strtotime($allModels[$date][$index]->date.SceneBook::$startTimeIndexMap[$index]));
+                                    $statusName = $allModels[$date][$index]->getStatusName();              //状态名称
+                                    $isNew = $allModels[$date][$index]->getIsNew();                        //新建任务
+                                    $isValid = $allModels[$date][$index]->getIsValid();                    //非新建及锁定任务
+                                    $isBooking = $allModels[$date][$index]->getIsBooking();                //是否预约中
+                                    $isAssign = $allModels[$date][$index]->getIsAssign();                  //是否在【待指派】任务
+                                    $isStausShootIng = $allModels[$date][$index]->getIsStausShootIng();    //是否在【待评价】任务
+                                    $isAppraise = $allModels[$date][$index]->getIsAppraise();              //是否在【评价中】任务
+                                    $isBreakPromise = $allModels[$date][$index]->getIsStatusBreakPromise();//是否在【已失约】任务          
+                                    $isMe = $allModels[$date][$index]->booker_id == Yii::$app->user->id;   //该预约是否为自己预约
+                                    $isTransfer = $allModels[$date][$index]->is_transfer;                  //该预约是否为转让预约
+                                    $isPublishSite = $allModels[$date][$index]->sceneSite->is_publish;     //是否发布该场地
+                                    //场次是否禁用
+                                    $isDisable = isset($siteManage[$date][$index]) && $siteManage[$date][$index];
+
+                                    //判断30天内的预约时段
+                                    if(($dayTomorrow < $bookTime && $bookTime < $dayEnd) && $isPublishSite){
+                                        $buttonName = $isDisable ? '<i class="fa fa-ban"></i>　禁' : ($isNew  ? '预　约' : (!$isValid ? '预约中' : ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? '<i class="fa fa-refresh"></i>转让' : ($isAssign ? $allModels[$date][$index]->getStatusName() : $allModels[$date][$index]->getStatusName()))));
+                                        $buttonClass = $isDisable ? 'btn-default disabled' : ($isNew ? 'btn-primary' : (!$isValid ? 'btn-primary disabled' : ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? 'btn-primary' : ($isAssign ? 'btn-success' : ($isStausShootIng || $isAppraise ? 'btn-info' : ($isBreakPromise ? 'btn-danger' : 'btn-default'))))));
+                                    }else{
+                                        $buttonName = !$isNew ?  ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? '<i class="fa fa-refresh"></i>转让' : $statusName) : '<i class="fa fa-ban"></i>　禁';
+                                        $buttonClass = !$isNew ?  ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? 'btn-primary' : ($isBreakPromise ? 'btn-danger' : ($isStausShootIng || $isAppraise ? 'btn-info' : 'btn-default'))) : 'btn-default disabled';
+                                    }
+                                    $url = $isNew ? 
+                                        ['create', 'id' => $allModels[$date][$index]->id, 'site_id' => $allModels[$date][$index]->site_id, 
+                                            'date' => $allModels[$date][$index]->date, 'time_index' => $allModels[$date][$index]->time_index, 
+                                            'date_switch' => $allModels[$date][$index]->date_switch] : ['view', 'id' => $allModels[$date][$index]->id];
+
+                                    echo "<p><span class=\"month_time_index hidden-xs\">".SceneBook::$timeIndexMap[$index]."</span>";
+                                    echo  Html::a('<span class="'.($isMe ? 'isMe' : '').'"></span>'.$buttonName, $url, ['class' => "btn $buttonClass btn-sm btn-len", 'target' => $isNew ? : '_blank']);
+                                    echo "</p>"; 
+                                }
+                            }
+                            echo "</div>";
+                        echo '</div>';
                     echo '</td>';
                 }
                 echo '</tr>';

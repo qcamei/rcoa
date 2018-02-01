@@ -52,11 +52,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 echo Html::a($menu['name'], $menu['url'], $menu['options']);
             } ?>
         </div>
-        <div class="col-lg-8 col-md-8 col-xs-9" style="padding:0">
+        <div class="col-lg-7 col-md-8 col-xs-9" style="padding-left:0">
             <?= Html::dropDownList('site_id', $refsite, 
                 $sceneSite, ['id' => 'sitChange', 'class' => 'form-control', 'prompt' => '请选择...'])?> 
         </div>
-        <div class="col-lg-2 col-md-2 col-xs-9" style="padding:0">
+        <div class="col-lg-3 col-md-2 col-xs-9" style="padding:0">
             <?= DatePicker::widget([
                     'id' => 'dateChange',
                     'name' => 'date',
@@ -140,9 +140,9 @@ $js = <<<JS
                                 
     $(".holiday").popover({
         delay: "toggle",//{ "show": 500, "hide": 100 },
-        title: "节假日详情",
+        //title: "节假日详情",
         //toggle: "popover",
-        trigger: "hover ",
+        trigger: /*"click",*/"hover ",
         html: true,
     });
 JS;

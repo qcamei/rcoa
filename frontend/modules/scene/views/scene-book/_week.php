@@ -12,7 +12,7 @@ $dayTomorrow = date('Y-m-d H:i:s',strtotime("+1 days"));
 //30天后预约时间
 $dayEnd = date('Y-m-d H:i:s',strtotime("+31 days"));
 //节假日颜色
-$holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
+$holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
 
 ?>
 <?= GridView::widget([
@@ -34,7 +34,7 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
                     $holiday = "<a class=\"holiday img-circle {$holidayColourMap[$first['type']]}\" role=\"button\" data-content=\"{$content}\">".Holiday::TYPE_NAME_MAP[$first['type']]."</a>";
                 }
                 $date = date('m/d ', strtotime($model->date)).'</br>' .Yii::t('rcoa', 'Week ' . date('D', strtotime($model->date)));
-                return $date.$holiday;
+                return '<div style="position: relative">'.$date.$holiday.'</div>';
             },
             'headerOptions' => [
                 'style'=>[
@@ -46,8 +46,7 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
                 'class' => 'date',
                 'rowspan' => 3, 
                 'style' => [
-                    'position' => 'relative',
-                    'padding' => '4px 2px',
+                    'padding' => '4px ',
                 ],
             ],
         ],
@@ -75,9 +74,9 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
             'attribute' => 'is_photograph',
             'label' => '',
             'value' => function($model) {
-                return $model->is_photograph ? 
-                        '<i class="fa fa-camera" style="color:#333"></i>':
-                        '<i class="fa fa-camera" style="color:#ddd"></i>';
+                return $model->getIsValid() ? ($model->is_photograph ? 
+                        '<i class="fa fa-camera Yes"></i>':
+                        '<i class="fa fa-camera No"></i>') : '';
             },
             'headerOptions'=>[
                 'class'=>[
@@ -105,17 +104,17 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
             'attribute' => 'camera_count',
             'label' => '',
             'value' => function($model) {
-                return $model->camera_count > 0 ? 
-                        "<i class=\"fa fa-video-camera\" style=\"color:#333\"></i>"
+                return $model->getIsValid() ? ($model->camera_count > 0 ? 
+                        "<i class=\"fa fa-video-camera Yes\"></i>"
                             ."<span class=\"camera_count\">×{$model->camera_count}</span>" : 
-                        "<i class=\"fa fa-video-camera\" style=\"color:#ddd\"></i>";
+                        "<i class=\"fa fa-video-camera No\"></i>") : '';
             },
             'headerOptions'=>[
                 'class'=>[
                     //'th'=>'hidden-xs',
                 ],
                 'style' => [
-                    'width' => '45px',
+                    'width' => '40px',
                     'padding' => '4px 2px',
                 ]
             ],
@@ -123,7 +122,7 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
                 //'class'=>'hidden-xs',
                 'style'=>[
                     'font-size' => '18px',
-                    'text-align' => 'center',
+                    'text-align' => 'left',
                     'vertical-align' => 'middle',
                     'padding' => '4px 2px',
                 ],
@@ -135,7 +134,7 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
             'attribute' => 'content_type',
             'label' => '',
             'value' => function($model) {
-                return "<span class=\"content_type\">{$model->content_type}</span>";
+                return $model->getIsValid() ? "<span class=\"content_type\">{$model->content_type}</span>" : '';
             },
             'headerOptions'=>[
                 'class'=>[
@@ -189,7 +188,7 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
                 'course_id' => Yii::t('app', 'Course ID'),
             ]),
             'value' => function($model) {
-                return !empty($model->course_id) ? "【{$model->lession_time} × {$model->course->name}】" : null;
+                return $model->getIsValid() ? (!empty($model->course_id) ? "【{$model->lession_time} × {$model->course->name}】" : null) : '';
             },
             'headerOptions'=>[
                 'class'=>[
@@ -213,7 +212,7 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
             'format' => 'raw',
             'attribute' => 'remark',
             'value' => function($model) {
-                return $model->getIsValid() ? $model->remark :  null;
+                return $model->getIsValid() ? $model->remark :  '';
             },
             'headerOptions'=>[
                 'class'=>[
@@ -238,7 +237,7 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
             'attribute' => 'teacher_id',
             'label' => Yii::t('app', 'Teacher'),
             'value' => function($model) {
-                return !empty($model->teacher_id) ? $model->teacher->user->nickname : null;
+                return $model->getIsValid() ? (!empty($model->teacher_id) ? $model->teacher->user->nickname : null) : '';
             },
             'headerOptions'=>[
                 'class'=>[
@@ -262,11 +261,15 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
             'format' => 'raw',
             'label' => Yii::t('app', 'Contacter'),
             'value' => function($model) use($sceneBookUser) {
-                if(isset($sceneBookUser[$model->id])){
-                    foreach ($sceneBookUser[$model->id] as $bookUser) {
-                        if($bookUser['role'] == 1 && $bookUser['is_primary'])
-                            return $bookUser['nickname'].'<div class="star" data-score="'.$bookUser['score'].'"></div>';
+                if($model->getIsValid()){
+                    if(isset($sceneBookUser[$model->id])){
+                        foreach ($sceneBookUser[$model->id] as $bookUser) {
+                            if($bookUser['role'] == 1 && $bookUser['is_primary'])
+                                return $bookUser['nickname'].'<div class="star" data-score="'.$bookUser['score'].'"></div>';
+                        }
                     }
+                }else {
+                    return '';
                 }
             },
             'headerOptions'=>[
@@ -291,11 +294,15 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
             'format' => 'raw',
             'label' => Yii::t('app', 'Shoot Man'),
             'value' => function($model) use($sceneBookUser) {
-                if(isset($sceneBookUser[$model->id])){
-                    foreach ($sceneBookUser[$model->id] as $bookUser) {
-                        if($bookUser['role'] == 2 && $bookUser['is_primary'])
-                            return $bookUser['nickname'].'<div class="star" data-score="'.$bookUser['score'].'"></div>';
+                if($model->getIsValid()){
+                    if(isset($sceneBookUser[$model->id])){
+                        foreach ($sceneBookUser[$model->id] as $bookUser) {
+                            if($bookUser['role'] == 2 && $bookUser['is_primary'])
+                                return $bookUser['nickname'].'<div class="star" data-score="'.$bookUser['score'].'"></div>';
+                        }
                     }
+                }else{
+                    return '';
                 }
             },
             'headerOptions'=>[
@@ -336,18 +343,21 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
                     $isBooking = $model->getIsBooking();                //是否预约中
                     $isAssign = $model->getIsAssign();                  //是否在【待指派】任务
                     $isStausShootIng = $model->getIsStausShootIng();    //是否在【待评价】任务
+                    $isAppraise = $model->getIsAppraise();              //是否在【评价中】任务
+                    $isBreakPromise = $model->getIsStatusBreakPromise();//是否在【已失约】任务   
                     //|| (isset($bookUsers[$model->id]) && in_array(Yii::$app->user->id, $bookUsers[$model->id]))
                     $isMe = $model->booker_id == Yii::$app->user->id ;  //该预约是否为自己的操作
                     $isTransfer = $model->is_transfer;                  //该预约是否为转让预约
+                    $isPublishSite = $model->sceneSite->is_publish;     //是否发布该场地
                     //场次是否禁用
                     $isDisable = isset($siteManage[$model->date][$model->time_index]) && $siteManage[$model->date][$model->time_index];
                     //判断30天内的预约时段
-                    if($dayTomorrow < $bookTime && $bookTime < $dayEnd){
-                        $buttonName = $isDisable ? '<i class="fa fa-ban"></i>&nbsp;禁用' : ($isNew  ? '<i class="fa fa-video-camera"></i>&nbsp;预约' : (!$isValid ? '<i class="fa fa-lock" aria-hidden="true"></i>&nbsp;&nbsp;预约' : ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? '<i class="fa fa-refresh"></i>&nbsp;转让' : ($isAssign ? $model->getStatusName() : $model->getStatusName()))));
-                        $buttonClass = $isDisable ? 'btn-default disabled' : ($isNew ? 'btn-primary' : (!$isValid ? 'btn-primary disabled' : ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? 'btn-primary' : ($isAssign ? 'btn-info' : 'btn-default'))));
+                    if(($dayTomorrow < $bookTime && $bookTime < $dayEnd) && $isPublishSite){
+                        $buttonName = $isDisable ? '<i class="fa fa-ban"></i>　禁' : ($isNew  ? '预　约' : (!$isValid ? '预约中' : ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? '<i class="fa fa-refresh"></i>转让' : ($isAssign ? $model->getStatusName() : $model->getStatusName()))));
+                        $buttonClass = $isDisable ? 'btn-default disabled' : ($isNew ? 'btn-primary' : (!$isValid ? 'btn-primary disabled' : ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? 'btn-primary' : ($isAssign ? 'btn-success' : ($isStausShootIng || $isAppraise ? 'btn-info' : ($isBreakPromise ? 'btn-danger' : 'btn-default'))))));
                     }else{
-                        $buttonName = !$isNew ? ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? '<i class="fa fa-refresh"></i>&nbsp;转让' : $model->getStatusName()) : '<i class="fa fa-ban"></i>&nbsp;禁用';
-                        $buttonClass = !$isNew ? ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? 'btn-primary' : 'btn-default') : 'btn-default disabled';
+                        $buttonName = !$isNew ? ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? '<i class="fa fa-refresh"></i>转让' : $model->getStatusName()) : '<i class="fa fa-ban"></i>　禁';
+                        $buttonClass = !$isNew ?  ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? 'btn-primary' : ($isBreakPromise ? 'btn-danger' : ($isStausShootIng || $isAppraise ? 'btn-info' : 'btn-default'))) : 'btn-default disabled';
                     }
                     $url = $isNew ? 
                         ['create', 'id' => $model->id, 'site_id' => $model->site_id, 
@@ -355,6 +365,7 @@ $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
                             'date_switch' => $model->date_switch] : ['view', 'id' => $model->id];
                     $options = [
                         'class' => "btn $buttonClass btn-sm",
+                        'target' => $isNew ? : '_blank'
                     ];
                     return Html::a('<span class="'.($isMe ? 'isMe' : '').'"></span>'.$buttonName, $url, $options);
                 },

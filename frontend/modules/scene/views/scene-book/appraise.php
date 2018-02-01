@@ -11,11 +11,11 @@ use yii\web\View;
 
 <div class="col-xs-12 frame">
     <div class="col-xs-12 frame-title">
-        <i class="icon fa fa-file-text-o"></i>
+        <i class="icon glyphicon glyphicon-check"></i>
         <span><?= Yii::t('app', '评价结果') ?></span>
     </div>
     <div class="col-xs-12 frame-table">
-        <?= $this->render('/appraise/index', ['appraiseResult' => $appraiseResult]) ?>
+        <?= $this->render('/appraise/index', ['appraiseResults' => $appraiseResults]) ?>
     </div>
     
 </div>

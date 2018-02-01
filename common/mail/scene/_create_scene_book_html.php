@@ -18,7 +18,7 @@ use yii\helpers\Html;
 ?>
 <div class="gray">您好！<?= Html::encode($model->booker->nickname) ?> （<?= Html::encode($model->booker->phone) ?>）已经申请了拍摄预约。</div>
 
-<div class="highlight">地点时间：<?= Html::encode("【{$model->sceneSite->name}】".$model->date.SceneBook::$timeIndexMap[$model->time_index].$model->start_time."（".Yii::t('rcoa', 'Week ' . date('D', strtotime($model->date)))."）") ?></div>
+<div class="highlight">地点时间：<?= Html::encode("【{$model->sceneSite->name}】".$model->date."　".$model->start_time."（".Yii::t('rcoa', 'Week ' . date('D', strtotime($model->date)))."）") ?></div>
 
 <div class="normal">课程名：<?= Html::encode($model->course->name) ?></div>
 

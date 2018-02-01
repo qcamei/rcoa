@@ -7,6 +7,14 @@ use yii\web\View;
 use yii\widgets\ActiveForm;
     
 /* @var $model SceneBook */
+
+//时间段名称
+$timeIndexMap = [
+    SceneBook::TIME_INDEX_MORNING => '上午',
+    SceneBook::TIME_INDEX_AFTERNOON => '下午',
+    SceneBook::TIME_INDEX_NIGHT => '晚上',
+];
+
 ?>
 
 <div class="modal-dialog modal-sm" role="document">
@@ -22,7 +30,7 @@ use yii\widgets\ActiveForm;
             <span class="time">时间：<?= $model->date ?> 当天预约的时段</span>
             <div class="time-index-map">
                 
-                <?= Html::checkboxList('multi_period', $model->time_index, SceneBook::$timeIndexMap, [
+                <?= Html::checkboxList('multi_period', $model->time_index, $timeIndexMap, [
                     'itemOptions'=>[
                         'labelOptions'=>[
                             'style'=>['margin-right' => '30px']

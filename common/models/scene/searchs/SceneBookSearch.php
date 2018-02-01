@@ -255,12 +255,12 @@ class SceneBookSearch extends SceneBook
      */
     private function searchSceneBook() 
     {
-        $notStatus = [SceneBook::STATUS_DEFAULT, SceneBook::STATUS_CANCEL];
+        $statusMap = [SceneBook::STATUS_DEFAULT, SceneBook::STATUS_CANCEL];
         $query = SceneBookSearch::find();
         //添加查询条件
         $query->andFilterWhere(['between', 'date', $this->date_start, $this->date_end]);
         $query->andFilterWhere(['site_id' => $this->site_id]);
-        $query->andFilterWhere(['NOT IN', 'status', $notStatus]);
+        $query->andFilterWhere(['NOT IN', 'status', $statusMap]);
         $query->with('business', 'level', 'profession', 'course');
         $query->with('sceneSite', 'booker', 'createdBy', 'teacher');
         //排序

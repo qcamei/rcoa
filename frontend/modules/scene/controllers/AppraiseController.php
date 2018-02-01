@@ -9,6 +9,7 @@ use frontend\modules\scene\utils\SceneBookAction;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
+use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -66,12 +67,14 @@ class AppraiseController extends Controller
     public function actionCreate()
     {
         $model = new SceneAppraise(Yii::$app->request->queryParams);
-        
-        if(!($model->book->getIsStausShootIng() || $model->book->getIsAppraise()))
-            throw new NotAcceptableHttpException('该任务状态为'.$model->book->getStatusName ().'！');
-        
         $searchModel = new SceneAppraiseSearch();
-        $appraiseResult = $searchModel->search(Yii::$app->request->queryParams);
+        
+        if(!$model->book->is_transfer){
+            if(!($model->book->getIsStausShootIng() || $model->book->getIsAppraise()))
+                throw new NotAcceptableHttpException('该任务状态为'.$model->book->getStatusName ().'！');
+        }else{
+            throw new NotAcceptableHttpException('该任务正在进行转让！');
+        }
         
         if ($model->load(Yii::$app->request->post())) {
             SceneBookAction::getInstance()->CreateSceneAppraise(Yii::$app->request->post());
@@ -80,7 +83,7 @@ class AppraiseController extends Controller
             return $this->renderAjax('create', [
                 'model' => $model,
                 'subjects' => SceneAppraiseTemplate::find()->all(),
-                'appraiseResult' => $searchModel->search(Yii::$app->request->queryParams),
+                'appraiseResults' => $searchModel->search(Yii::$app->request->queryParams),
             ]);
         }
     }

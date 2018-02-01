@@ -19,7 +19,7 @@ use yii\helpers\Html;
 ?>
 <div class="gray">【<?= Html::encode($model->course->name) ?>】拍摄预约任务已经安排了摄影师。</div>
 
-<div class="normal">地点时间：<?= Html::encode("【{$model->sceneSite->name}】".$model->date.SceneBook::$timeIndexMap[$model->time_index].$model->start_time."（".Yii::t('rcoa', 'Week ' . date('D', strtotime($model->date)))."）") ?></div>
+<div class="normal">地点时间：<?= Html::encode("【{$model->sceneSite->name}】".$model->date."　".$model->start_time."（".Yii::t('rcoa', 'Week ' . date('D', strtotime($model->date)))."）") ?></div>
 
 <div class="normal">摄影师：<?= Html::encode($newShootMan) ?></div>
 

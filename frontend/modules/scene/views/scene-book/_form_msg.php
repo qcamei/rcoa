@@ -17,8 +17,9 @@ use yii\widgets\ActiveForm;
         <span><?= Yii::t('app', 'Message')?>（<span id="number"><?= $msgNum ?></span>）</span>
     </div>
     <div class="col-xs-12 frame-table msg">
+        
         <div id="msg-list" class="msglist">
-            <?= $this->render('msg_index', ['dataProvider' => $dataProvider]) ?>
+            <?= $this->render('msg_index', ['dataProvider' => $dataProvider, 'msgNum' => $msgNum]) ?>
         </div>
         <div class="msgform">
             <div class="col-lg-11 col-md-11 col-xs-10 msginput">

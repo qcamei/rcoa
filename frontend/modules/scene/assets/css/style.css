@@ -40,6 +40,16 @@
 }
 
 /**
+ * table表格head样式 
+ */
+.scene .viewdetail-head {
+    height: 36px;
+    margin: -8px;
+    padding: 8px;
+    background-color: #f2f2f2;
+}
+
+/**
  * table表格th样式 
  */
 .scene .viewdetail-th {
@@ -121,4 +131,53 @@
 .scene .breadcrumb .active {
     width: 90%;
     color: #ccc;
+}
+
+/**
+ * 任务状态阶段
+ */
+.scene .phase{
+    width: 60px;
+    height: 60px;
+    float: left;
+    padding-top: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+/**
+ * 任务状态阶段文字
+ */
+.scene .phase-words{
+    margin-bottom: 0px; 
+    color: #fff;
+    line-height: 35px;
+}
+/**
+ * 任务状态阶段箭头
+ */
+.scene .arrow{
+    width: 32px;
+    height: 16px;
+    float: left;
+    margin: 20px 0px;
+    margin-right: 5px;
+}
+/**
+ * 任务状态已选阶段
+ */
+.scene .have-to{
+    background-color: #f37b53;
+}
+
+/**
+ * 任务状态已选阶段
+ */
+.scene .have-to.danger{
+    background-color: #d9534f
+}
+/**
+ * 任务状态未选阶段
+ */
+.scene .not-to {
+    background-color: #dddddd;
 }

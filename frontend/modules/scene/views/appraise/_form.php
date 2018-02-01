@@ -29,10 +29,10 @@ use yii\widgets\ActiveForm;
                     /* @var $op QuestionOp */
                     return $questionOp->value."分 ( $questionOp->title )";
                 });
-                echo Html::label(($index++).'、'.$appraise->question->title);              
+                echo '<div class="appraise-title">'.Html::label(($index++).'、'.$appraise->question->title).'</div>';              
                 echo Html::radioList("SceneAppraise[user_value][{$appraise->q_id}]", 
-                        (count($appraiseResult['results']) > 0 ? 
-                            $appraiseResult['results'][$appraise->role][$appraise->q_id]->user_value : $appraise->value),
+                        (count($appraiseResults['results']) > 0 ? 
+                            $appraiseResults['results'][$appraise->role][$appraise->q_id]->user_value : $appraise->value),
                         $items, 
                         [
                             'class'=>'form-group appraise',
@@ -40,7 +40,7 @@ use yii\widgets\ActiveForm;
                                 'labelOptions'=>[
                                     'class' =>'radio-group',
                                 ],
-                                'disabled' => count($appraiseResult['results']) > 0 ? true : false,
+                                'disabled' => count($appraiseResults['results']) > 0 ? true : false,
                             ],
                         ]);
                 
@@ -72,7 +72,7 @@ $js = <<<JS
     //设置radio选中改变颜色
     $(".appraise>label>input:radio:checked").parent().css("color","#2E6DA4");
     $(".appraise>label>input:radio").change(function (){
-        $('.appraise>label>input:radio[name="'+this.name+'"]').parent().css("color","#000000");
+        $('.appraise>label>input:radio[name="'+this.name+'"]').parent().css("color","rgb(153, 153, 153)");
         $('.appraise>label>input:radio:checked[name="'+this.name+'"]').parent().css("color","#2E6DA4");  
     });
         

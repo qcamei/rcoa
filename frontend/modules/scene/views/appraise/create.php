@@ -28,12 +28,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= $this->render('_form', [
                     'model' => $model,
                     'subjects' => $subjects,
-                    'appraiseResult' => $appraiseResult
+                    'appraiseResults' => $appraiseResults
                 ]) ?>
             </div>
             <div class="modal-footer">
-                <?= Html::button(Yii::t('app', 'Submit'), ['id'=>'submitsave','class'=>'btn btn-primary',
-                    'data-dismiss'=>'modal','aria-label'=>'Close','onclick' => 'submitsave();']) ?>
+                <?php
+                    if(count($appraiseResults['results']) > 0){
+                        echo Html::button(Yii::t('app', 'Close'), ['id'=>'close','class'=>'btn btn-danger',
+                                'data-dismiss'=>'modal','aria-label'=>'Close']);
+                    }else{
+                        echo Html::button(Yii::t('app', 'Submit'), ['id'=>'submitsave','class'=>'btn btn-primary',
+                            'data-dismiss'=>'modal','aria-label'=>'Close','onclick' => 'submitsave();']);
+                    }
+                ?>
             </div>
         </div>
     </div>

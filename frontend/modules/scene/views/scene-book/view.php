@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <?= $this->render('_form_msg', ['model' => $model, 'dataProvider' => $dataProvider, 'msgNum' => $msgNum]) ?>
     
-    <?= $this->render('appraise', ['appraiseResult' => $appraiseResult]) ?>
+    <?= $this->render('appraise', ['appraiseResults' => $appraiseResults]) ?>
     
     <div class="col-xs-12 frame">
         <div class="col-xs-12 frame-title">
@@ -50,8 +50,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?= $this->render('_form_view', [
     'model' => $model, 
-    'isRole' => $isRole,
-    'appraiseResult' => $appraiseResult,
+    'roleUsers' => $roleUsers,
+    'appraiseResults' => $appraiseResults,
 ]) ?>
 
 <?= $this->render('/layouts/_model', ['model' => $model]) ?>
