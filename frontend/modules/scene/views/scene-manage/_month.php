@@ -78,10 +78,10 @@ use yii\helpers\Html;
                                     $isPublishSite = $allModels[$date][$index]->site->is_publish;     //是否发布该场地                 
                                     //判断可禁用日期
                                     if($dayTomorrow < $disableTime && $isPublishSite){
-                                        $buttonName =  $isBook ? '已约' : (!$isDisable ? '<i class="fa fa-ban"></i>禁用' : '启用');
+                                        $buttonName =  $isBook ? '已约' : (!$isDisable ? '<i class="fa fa-ban"></i>&nbsp;禁用' : '启用');
                                         $buttonClass = $isBook ? 'btn-default disabled' : (!$isDisable ? 'btn-info' : 'btn-danger');
                                     } else {
-                                        $buttonName = $isBook ? '已约' : (!$isDisable ? '<i class="fa fa-ban"></i>禁用' : '启用');
+                                        $buttonName = $isBook ? '已约' : (!$isDisable ? '<i class="fa fa-ban"></i>&nbsp;禁用' : '启用');
                                         $buttonClass = $isBook ? 'btn-default disabled' : (!$isDisable ? 'btn-default disabled' : 'btn-default disabled');
                                     }
                                     $url = !$isDisable ? 
