@@ -23,8 +23,7 @@ use yii\helpers\Html;
     <tbody>
         <?php  
             $allModels = [];
-            $timeIndexMap = ['上', '下', '晚'];
-            $holidayColourMap = [1 => 'red', 2 => 'orange', 3 => 'green'];
+            $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
             //重组禁用数据模型
             foreach ($dataProvider->allModels as $model){
                 $allModels[$model->date][] = $model;
@@ -49,46 +48,54 @@ use yii\helpers\Html;
                 for ($d = 0; $d < 7; $d++) {
                     $nowDay = 7 * $i + $d + 0;
                     $date = date('Y-m-d', strtotime($dateStart.'+'.$nowDay.'days'));
-                    echo '<td>';
-                    if(isset($holidays[$date])){
-                        $first = reset($holidays[$date]);
-                        $content = '';
-                        foreach ($holidays[$date] as $holiday) 
-                            $content .= "<p>{$holiday['name']}(".Holiday::TYPE_NAME_MAP[$holiday['type']].")</p>";
-                        echo "<a class=\"holiday img-circle {$holidayColourMap[$first['type']]}\" role=\"button\" data-content=\"{$content}\">".Holiday::TYPE_NAME_MAP[$first['type']]."</a>";
-                    }
                     if($date != date('Y-m-d', time())){
-                        echo "<span class=\"days\">".preg_replace('/^0+/','',date('d', strtotime($date)))."</span>";
+                        echo '<td>';
                     }else{
-                        echo "<span class=\"days img-rounded now\">".preg_replace('/^0+/','',date('d', strtotime($date)))."</span>";
+                        echo '<td style="background-color: rgba(30, 181, 176, 0.10196078431372549)">';
                     }
-                    echo "<div class=\"btn-group\">";
-                    if(isset($allModels[$date])){
-                        for ($index = 0; $index < 3; $index++){
-                            //禁用时间
-                            $disableTime = date('Y-m-d H:i:s', strtotime($allModels[$date][$index]->date.SceneBook::$startTimeIndexMap[$index]));
-                            $isDisable = $allModels[$date][$index]->is_disable;                     //是否已禁用
-                            $isBook = isset($books[$date][$index]) && $books[$date][$index] != null;//是否已预约                   
-                            //判断可禁用日期
-                            if($dayTomorrow < $disableTime){
-                                $buttonName =  $isBook ? '已约' : (!$isDisable ? '<i class="fa fa-ban"></i>禁用' : '启用');
-                                $buttonClass = $isBook ? 'btn-default disabled' : (!$isDisable ? 'btn-info' : 'btn-danger');
-                            } else {
-                                $buttonName = $isBook ? '已约' : (!$isDisable ? '<i class="fa fa-ban"></i>禁用' : '启用');
-                                $buttonClass = $isBook ? 'btn-default disabled' : (!$isDisable ? 'btn-default disabled' : 'btn-default disabled');
+                        echo '<div>';
+                            if(isset($holidays[$date])){
+                                $first = reset($holidays[$date]);
+                                $content = '';
+                                foreach ($holidays[$date] as $holiday) 
+                                    $content .= "<p>{$holiday['name']}(".Holiday::TYPE_NAME_MAP[$holiday['type']].")</p>";
+                                echo "<a class=\"holiday img-circle {$holidayColourMap[$first['type']]}\" role=\"button\" data-content=\"{$content}\">".Holiday::TYPE_NAME_MAP[$first['type']]."</a>";
                             }
-                            $url = !$isDisable ? 
-                                ['site-disable', 'site_id' => $allModels[$date][$index]->site_id, 
-                                    'date' => $allModels[$date][$index]->date, 'time_index' => $allModels[$date][$index]->time_index] : 
-                                ['site-enable', 'site_id' => $allModels[$date][$index]->site_id, 
-                                    'date' => $allModels[$date][$index]->date, 'time_index' => $allModels[$date][$index]->time_index];
-                            
-                            echo "<p><span class=\"month_time_index hidden-xs\">{$timeIndexMap[$index]}</span>";
-                            echo  Html::a($buttonName, $url, ['class' => "btn $buttonClass btn-sm btn-len"]);
-                            echo "</p>";
-                        }
-                    }
-                    echo "</div>";
+                            if(!isset($allModels[$date])){
+                                echo "<span class=\"days\" style=\"color:#ddd;\">".preg_replace('/^0+/','',date('d', strtotime($date)))."</span>";
+                            }else if($date != date('Y-m-d', time())){
+                                echo "<span class=\"days\">".preg_replace('/^0+/','',date('d', strtotime($date)))."</span>";
+                            }else{
+                                echo "<span class=\"days img-rounded now\">".preg_replace('/^0+/','',date('d', strtotime($date)))."</span>";
+                            }
+                            echo "<div class=\"btn-group\">";
+                            if(isset($allModels[$date])){
+                                for ($index = 0; $index < 3; $index++){
+                                    //禁用时间
+                                    $disableTime = date('Y-m-d H:i:s', strtotime($allModels[$date][$index]->date.SceneBook::$startTimeIndexMap[$index]));
+                                    $isDisable = $allModels[$date][$index]->is_disable;                     //是否已禁用
+                                    $isBook = isset($books[$date][$index]) && $books[$date][$index] != null;//是否已预约                   
+                                    //判断可禁用日期
+                                    if($dayTomorrow < $disableTime){
+                                        $buttonName =  $isBook ? '已约' : (!$isDisable ? '<i class="fa fa-ban"></i>禁用' : '启用');
+                                        $buttonClass = $isBook ? 'btn-default disabled' : (!$isDisable ? 'btn-info' : 'btn-danger');
+                                    } else {
+                                        $buttonName = $isBook ? '已约' : (!$isDisable ? '<i class="fa fa-ban"></i>禁用' : '启用');
+                                        $buttonClass = $isBook ? 'btn-default disabled' : (!$isDisable ? 'btn-default disabled' : 'btn-default disabled');
+                                    }
+                                    $url = !$isDisable ? 
+                                        ['site-disable', 'site_id' => $allModels[$date][$index]->site_id, 
+                                            'date' => $allModels[$date][$index]->date, 'time_index' => $allModels[$date][$index]->time_index] : 
+                                        ['site-enable', 'site_id' => $allModels[$date][$index]->site_id, 
+                                            'date' => $allModels[$date][$index]->date, 'time_index' => $allModels[$date][$index]->time_index];
+
+                                    echo "<p><span class=\"month_time_index hidden-xs\">".SceneBook::$timeIndexMap[$index]."</span>";
+                                    echo  Html::a($buttonName, $url, ['class' => "btn $buttonClass btn-sm btn-len"]);
+                                    echo "</p>";
+                                }
+                            }
+                            echo "</div>";
+                        echo "</div>";
                     echo '</td>';
                 }
                 echo '</tr>';
