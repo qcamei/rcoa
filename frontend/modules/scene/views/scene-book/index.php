@@ -14,7 +14,10 @@ use yii\web\View;
 /* @var $searchModel SceneBookSearch */
 /* @var $dataProvider ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Scene Books');
+$this->title = Yii::t('app', '{Scene}-{Bespeak}',[
+    'Scene' => Yii::t('app', 'Scene'),
+    'Bespeak' => Yii::t('app', 'Bespeak'),
+]);
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container scene-book-index scene-book">

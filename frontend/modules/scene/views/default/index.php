@@ -8,9 +8,9 @@ use yii\web\View;
 
 /* @var $this View */
 
-$this->title = Yii::t('app', '{Scene}-{Bespeak}',[
+$this->title = Yii::t('app', '{Scene}-{Homepage}',[
     'Scene' => Yii::t('app', 'Scene'),
-    'Bespeak' => Yii::t('app', 'Bespeak'),
+    'Homepage' => Yii::t('app', 'Homepage'),
 ]);
 
 ?>
@@ -101,7 +101,7 @@ $this->title = Yii::t('app', '{Scene}-{Bespeak}',[
                             <div class="address-name"><?= $scenes['name']?></div>
                             <div class="address-area">区域：<span><?= $scenes['area']?></span>&nbsp;
                                                         <font class="font">(<?= $scenes['address']?>)</font></div>
-                            <div class="address-type">内容类型：<span><?= $scenes['content_type']?></span></div>
+                            <div class="address-type">内容：<span><?= $scenes['content_type']?></span></div>
                             <div class="address-price">价格：<span>￥<?= $scenes['price']?>/小时</span></div>
                         </div>
                     </a>

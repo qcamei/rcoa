@@ -74,9 +74,10 @@ use yii\helpers\Html;
                                     //禁用时间
                                     $disableTime = date('Y-m-d H:i:s', strtotime($allModels[$date][$index]->date.SceneBook::$startTimeIndexMap[$index]));
                                     $isDisable = $allModels[$date][$index]->is_disable;                     //是否已禁用
-                                    $isBook = isset($books[$date][$index]) && $books[$date][$index] != null;//是否已预约                   
+                                    $isBook = isset($books[$date][$index]) && $books[$date][$index] != null;//是否已预约  
+                                    $isPublishSite = $allModels[$date][$index]->site->is_publish;     //是否发布该场地                 
                                     //判断可禁用日期
-                                    if($dayTomorrow < $disableTime){
+                                    if($dayTomorrow < $disableTime && $isPublishSite){
                                         $buttonName =  $isBook ? '已约' : (!$isDisable ? '<i class="fa fa-ban"></i>禁用' : '启用');
                                         $buttonClass = $isBook ? 'btn-default disabled' : (!$isDisable ? 'btn-info' : 'btn-danger');
                                     } else {

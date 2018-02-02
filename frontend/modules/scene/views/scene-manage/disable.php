@@ -14,7 +14,7 @@ use yii\web\View;
 /* @var $searchModel SceneSiteDisableSearch */
 /* @var $dataProvider ActiveDataProvider */
 
-$this->title = Yii::t('app', '{Scene}{Disabled}',[
+$this->title = Yii::t('app', '{Scene}-{Disabled}',[
     'Scene' => Yii::t('app', 'Scene'),
     'Disabled' => Yii::t('app', 'Disabled'),
 ]);
