@@ -135,6 +135,11 @@ if(isset($sceneBookUser[$model->id])){
                     'format' => 'raw',
                     'value' => !empty($model->course_id) ? $model->course->name : null,
                 ],
+                [
+                    'attribute' => 'lession_time',
+                    'format' => 'raw',
+                    'value' => !empty($model->lession_time) ? $model->lession_time : null,
+                ],
                 ['label' => '<span class="btn-block viewdetail-th-head">教师信息</span>', 'value' => ''],
                 [
                     'label' => Yii::t('app', 'Personal Image'),
