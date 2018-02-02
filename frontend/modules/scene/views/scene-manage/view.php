@@ -5,7 +5,7 @@ use yii\web\View;
 
 /* @var $this View */
 
-$this->title = Yii::t('app', '{Scene}{Detail}', [
+$this->title = Yii::t('app', '{Scene}-{Detail}', [
             'Scene' => Yii::t('app', 'Scene'),
             'Detail' => Yii::t('app', 'Detail'),
         ]);

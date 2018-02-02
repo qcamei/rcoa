@@ -35,8 +35,8 @@ if(isset($sceneBookUser[$model->id])){
 <div class="scene-book-view has-title scene">
     <p>
         <?= Html::a(Yii::t('app', 'Assign'), ['assign', 'id' => $model->id], [
-            'class' => 'btn btn-success', 'onclick' => 'myModal($(this));return false;']) ?>
-        <?= Html::a(Yii::t('app', 'Edit'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary',]) ?>
+            'class' => ($model->getIsCancel()) ? 'btn btn-success' : 'btn btn-success disabled', 'onclick' => 'myModal($(this));return false;']) ?>
+        <?= Html::a(Yii::t('app', 'Edit'), ['update', 'id' => $model->id], ['class' => ($model->getIsCancel()) ? 'btn btn-primary' : 'btn btn-primary disabled',]) ?>
     </p>
     <div class="scene-book-view scene-book">
         <?= DetailView::widget([

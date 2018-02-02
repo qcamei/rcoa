@@ -20,6 +20,7 @@ use Yii;
 use yii\db\Query;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 use yii\web\Controller;
 use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
@@ -203,6 +204,37 @@ class BookController extends Controller
         return $this->redirect(['index']);
     }
 
+    /**
+     * 获取场景场地类型
+     * @param integer $site_id
+     * @return array
+     */
+    public function actionSceneSite($site_id = null)
+    {
+        $query = (new Query())->select(['id', 'name', 'area', 'content_type'])
+            ->from(SceneSite::tableName());
+        $query->filterWhere(['id' => $site_id]);
+        $results = $query->all();
+        
+        $contentTypeMap = [];
+        $content_type = isset($results[0]) ? ArrayHelper::getValue($results[0], 'content_type') : "";
+        $contents = explode(',', $content_type);
+        foreach ($contents as $value) {
+            $contentTypeMap[$value] = $value;
+        }
+           
+        echo Html::radioList('SceneBook[content_type]', null, $contentTypeMap, [
+            'separator'=>'',
+            'itemOptions'=>[
+                'labelOptions'=>[
+                    'style'=>[
+                         'margin-right'=>'30px'
+                    ]
+                ]
+            ],
+        ]);
+    }
+    
     /**
      * Finds the SceneBook model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
@@ -517,6 +549,7 @@ class BookController extends Controller
         $query = (new Query())
                 ->select(['id', 'name'])
                 ->from(['Book' => SceneSite::tableName()])
+                ->where(['is_publish' => 1])    //过滤未发布的场地
                 ->all();
         
         return ArrayHelper::map($query, 'id', 'name');
