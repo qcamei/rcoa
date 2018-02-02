@@ -73,6 +73,14 @@ use yii\helpers\Html;
                             echo "<div class=\"btn-group\">";
                             if(isset($allModels[$date])){
                                 for ($index = 0; $index < 3; $index++){
+                                    $bookUsers = [];
+                                    if(isset($sceneBookUser[$allModels[$date][$index]->id])){
+                                        foreach ($sceneBookUser[$allModels[$date][$index]->id] as $book_user) {
+                                            if($book_user['is_primary']){
+                                                $bookUsers[$book_user['book_id']][] = $book_user['user_id'];
+                                            }
+                                        }
+                                    }
                                     //预约时间
                                     $bookTime = date('Y-m-d H:i:s', strtotime($allModels[$date][$index]->date.SceneBook::$startTimeIndexMap[$index]));
                                     $statusName = $allModels[$date][$index]->getStatusName();              //状态名称
@@ -82,8 +90,9 @@ use yii\helpers\Html;
                                     $isAssign = $allModels[$date][$index]->getIsAssign();                  //是否在【待指派】任务
                                     $isStausShootIng = $allModels[$date][$index]->getIsStausShootIng();    //是否在【待评价】任务
                                     $isAppraise = $allModels[$date][$index]->getIsAppraise();              //是否在【评价中】任务
-                                    $isBreakPromise = $allModels[$date][$index]->getIsStatusBreakPromise();//是否在【已失约】任务          
-                                    $isMe = $allModels[$date][$index]->booker_id == Yii::$app->user->id;   //该预约是否为自己预约
+                                    $isBreakPromise = $allModels[$date][$index]->getIsStatusBreakPromise();//是否在【已失约】任务 
+                                    //该预约是否为自己预约
+                                    $isMe = $allModels[$date][$index]->booker_id == Yii::$app->user->id || (isset($bookUsers[$allModels[$date][$index]->id]) && in_array(Yii::$app->user->id, $bookUsers[$allModels[$date][$index]->id]));   
                                     $isTransfer = $allModels[$date][$index]->is_transfer;                  //该预约是否为转让预约
                                     $isPublishSite = $allModels[$date][$index]->sceneSite->is_publish;     //是否发布该场地
                                     //场次是否禁用

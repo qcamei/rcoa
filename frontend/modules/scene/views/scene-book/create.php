@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php
 
-$html = str_replace(array("\r\n", "\r", "\n"),"",$this->renderFile('@frontend/modules/scene/views/scene-book/_form_day.php', ['model' => $model]));
+$html = str_replace(array("\r\n", "\r", "\n"),"",$this->renderFile('@frontend/modules/scene/views/scene-book/_form_day.php', ['model' => $model, 'dayExistBook' => $dayExistBook]));
 $js = 
 <<<JS
         
