@@ -576,7 +576,7 @@ class SceneBookController extends Controller
                     $bookUser[$user['id']] = $user['nickname'];
             }
         }
-        
+        //9ca3903e3cd8bb2d33f53833c4255090
         $createUser = ArrayHelper::map($query->all(), 'id', 'nickname');
         $existUser = $this->getExistSceneBookUser($model);
         

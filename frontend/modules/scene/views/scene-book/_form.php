@@ -4,6 +4,7 @@ use common\models\scene\SceneBook;
 use kartik\widgets\Growl;
 use kartik\widgets\Select2;
 use kartik\widgets\TouchSpin;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
@@ -155,7 +156,7 @@ use yii\widgets\ActiveForm;
     
     <h5><b>其他信息</b></h5>
     <?= $form->field($model, 'booker_id')->widget(Select2::classname(), [
-        'data' => array_merge($createSceneBookUser, [Yii::$app->user->id => $model->createdBy->nickname]), 
+        'data' => ArrayHelper::merge($createSceneBookUser, [Yii::$app->user->id => $model->createdBy->nickname]), 
         'options' => [
             'value' => !$model->getIsValid() ? Yii::$app->user->id : $model->booker_id, 
             'placeholder' => '请选择...'
@@ -166,31 +167,36 @@ use yii\widgets\ActiveForm;
         <label class="col-lg-1 col-md-1 control-label form-label" for="scenebookuser-user_id"><?= Yii::t('app', 'Contacter') ?></label>
         <div class="col-lg-10 col-md-10">
             
-            <?= Select2::widget([
-                'name' => 'SceneBookUser[user_id][]',
-                'value' => !$model->getIsValid() ? Yii::$app->user->id : array_keys($existSceneBookUser),
-                'data' => $createSceneBookUser,
-                'maintainOrder' => true,    //无序排列
-                'hideSearch' => true,
-                'options' => [
-                    'placeholder' => '请选择...',
-                    'multiple' => true,     //设置多选
-                ],
-                'toggleAllSettings' => [
-                    'selectLabel' => '<i class="glyphicon glyphicon-ok-circle"></i> 添加全部',
-                    'unselectLabel' => '<i class="glyphicon glyphicon-remove-circle"></i> 取消全部',
-                    'selectOptions' => ['class' => 'text-success'],
-                    'unselectOptions' => ['class' => 'text-danger'],
-                ],
-                'pluginOptions' => [
-                    'tags' => false,
-                    'maximumInputLength' => 10,
-                    'allowClear' => true,
-                ],
-                'pluginEvents' => [
-                    'change' => 'function(){ select2Log();}'
-                ]
-            ]); ?>
+            <?php
+                $user_ids = [];
+                foreach ($existSceneBookUser as $key => $value)
+                    $user_ids[] = (string)$key;
+                echo Select2::widget([
+                    'name' => 'SceneBookUser[user_id][]',
+                    'value' => !$model->getIsValid() ? Yii::$app->user->id : $user_ids,
+                    'data' => $createSceneBookUser,
+                    'maintainOrder' => true,    //无序排列
+                    'hideSearch' => true,
+                    'options' => [
+                        'placeholder' => '请选择...',
+                        'multiple' => true,     //设置多选
+                    ],
+                    'toggleAllSettings' => [
+                        'selectLabel' => '<i class="glyphicon glyphicon-ok-circle"></i> 添加全部',
+                        'unselectLabel' => '<i class="glyphicon glyphicon-remove-circle"></i> 取消全部',
+                        'selectOptions' => ['class' => 'text-success'],
+                        'unselectOptions' => ['class' => 'text-danger'],
+                    ],
+                    'pluginOptions' => [
+                        'tags' => false,
+                        'maximumInputLength' => 10,
+                        'allowClear' => true,
+                    ],
+                    'pluginEvents' => [
+                        'change' => 'function(){ select2Log();}'
+                    ]
+                ]); 
+            ?>
             
         </div>
         

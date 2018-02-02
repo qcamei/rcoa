@@ -17,6 +17,10 @@
         margin-right: 0;
         margin-left: 0;
     }
+    .scene-book .site-util {
+        padding-right: 0;
+        padding-bottom: 5px;
+    }
     .scene-book .date-util {
         padding-left: 0;
     }

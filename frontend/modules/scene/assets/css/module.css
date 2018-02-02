@@ -641,14 +641,33 @@
     background-color: #333333;
 }
 
-.scene-book .table .holiday {
-    width: 20px;
-    height: 20px;
+
+.scene-book .book-transfer {
+    width: 100%;
+    display: inline-block;
+    position: relative;
+}
+
+.scene-book .book-transfer .is_transfer {
+    width: 79px;
+    height: 40px;
     display: block;
+    position: absolute;
+    top: -10px;
+    left: 0;
+    z-index: 1000;
+    background-image: url("/filedata/scene/icons/transfer.png");
+}
+
+.scene-book .table .holiday {
+    width: 16px;
+    display: block;
+    font-size: 12px;
     color: #fff;
     position: absolute;
     text-align: center;
     text-decoration: none;
+    font-weight: normal;
 }
 
 .scene-book .table .holiday.red {
@@ -686,33 +705,43 @@
 }
 
 .scene-book .table-month .btn-group {
-    margin-top: 20px;
+    width: 100%;
+    height: 100%;
+    top: 22px;
+    text-align: left;
 }
 
 .scene-book .table-month .btn-group > p {
+    height: 20px;
     margin-bottom: 2px;
 }
 
 .scene-book .table-month .month_time_index {
-    margin-right: 10px;
-    margin-left: -10px;
     font-size: 12px;
     color: rgb(204, 204, 204);
 }
 
 .scene-book .table-month .btn-len {
-    padding: 0px 35px;
+    height: 20px;
+    padding: 0px;
+    position: absolute;
+    right: 10px;
+    left: 20px;
 }
 
 @media (max-width: 480px) {
-    .scene-book .table-month > tbody > tr > td,
-    .scene-book .table-month .btn-len {
+    .scene-book .table-month > tbody > tr > td {
         padding: 2px;
+    }
+    .scene-book .table-month .btn-len {
+        right: 0;
+        left: 0;
     }
 }
 
 .scene-book .table-month > thead > tr > th,
 .scene-book .table-month > tbody > tr > td > div {
+    height: 100%;
     position: relative;
     text-align: center;
 }
@@ -742,6 +771,7 @@
 .scene-book .table-week img {
     width: 12px;
     height: 12px;
+    margin-top: -5px;
 }
 
 .scene-book .table-month > thead > tr > th,
