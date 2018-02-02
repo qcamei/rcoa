@@ -604,7 +604,7 @@ class SceneBookAction
         foreach ($query->all() as $value) {
             if(in_array($value['time_index'], $multiPperiod)){
                 $bookValues[$value['time_index']] = $value;
-                unset($bookValues[$model->time_index]);
+                //unset($bookValues[$model->time_index]);
             }
         }
         //返回已经被预约的场次信息

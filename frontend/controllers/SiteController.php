@@ -2,8 +2,8 @@
 namespace frontend\controllers;
 
 use common\models\demand\DemandTask;
-use common\models\expert\Expert;
 use common\models\LoginForm;
+use common\models\scene\SceneSite;
 use common\models\teamwork\CourseManage;
 use common\models\User;
 use Detection\MobileDetect;
@@ -79,12 +79,16 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $detect = new MobileDetect();
-        $total = $this->getDemandTaskNewCount(DemandTask::$defaultStatus);
-        $teamwork = $this->getTeamworkNewCount();
+        $demand = $this->getDemandTaskNewCount(DemandTask::$defaultStatus);
+        $showNewIcon = $this->getDemandTaskNewCount(DemandTask::STATUS_UNDERTAKE);
+        $develop = $this->getDevelopNewCount();
+        $sceneSite = $this->getSceneSiteCount();
+        
         return $this->render(!$detect->isMobile() ? 'index' : 'wap_index',[
-            'total' => $total <= 999 ? $total : 999  ,
-            'teamwork' => $teamwork <= 999 ? $teamwork : 999,
-            'undertakeCount' => $this->getDemandTaskNewCount(DemandTask::STATUS_UNDERTAKE),
+            'demand' => $demand <= 999 ? $demand : 999  ,
+            'develop' => $develop <= 999 ? $develop : 999,
+            'sceneSite' => $sceneSite <= 999 ? $sceneSite : 999,
+            'showNewIcon' => $showNewIcon,
         ]);
     }
 
@@ -264,14 +268,26 @@ class SiteController extends Controller
     }
    
     /**
-     * 获取所有进度总数
+     * 获取所有开发模块任务总数
      */
-    public function getTeamworkNewCount()
+    public function getDevelopNewCount()
     {
         return CourseManage::find()
                 ->select(['Course.id'])
                 ->from(['Course' => CourseManage::tableName()])
                 ->where(['!=', 'Course.status', CourseManage::STATUS_CARRY_OUT])
+                ->count();
+    }
+    
+    /**
+     * 获取所有预约模块场地总数
+     */
+    public function getSceneSiteCount($is_publish = 1)
+    {
+        return SceneSite::find()
+                ->select(['SceneSite.id'])
+                ->from(['SceneSite' => SceneSite::tableName()])
+                ->filterWhere(['SceneSite.is_publish' => $is_publish])
                 ->count();
     }
     

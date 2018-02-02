@@ -30,7 +30,7 @@ $this->title = '课程建设工作平台';
                         <div class="circle img-circle">
                             <?= Html::img(['/filedata/site/image/icon_1-1.png']) ?>
                             <div class="circle-bg img-circle">
-                                <span class="number"><span class="timer" data-to="<?= $total; ?>" data-speed="550">0</span><span class="unit">个</span></span>
+                                <span class="number"><span class="timer" data-to="<?= $demand; ?>" data-speed="550">0</span><span class="unit">个</span></span>
                                 <span class="icon">+</span>
                             </div>
                         </div>
@@ -47,7 +47,7 @@ $this->title = '课程建设工作平台';
                         <div class="circle img-circle">
                             <?= Html::img(['/filedata/site/image/icon_1-2.png']) ?>
                             <div class="circle-bg img-circle">
-                                <span class="number"><span class="timer" data-to="<?= $teamwork; ?>" data-speed="550">0</span><span class="unit">个</span></span>
+                                <span class="number"><span class="timer" data-to="<?= $develop; ?>" data-speed="550">0</span><span class="unit">个</span></span>
                                 <span class="icon">+</span>
                             </div>
                         </div>
@@ -75,11 +75,11 @@ $this->title = '课程建设工作平台';
                 </div>
                 <!--场地-->
                 <div class="col-lg-3 modules">
-                    <a href="/shoot/bookdetail">
+                    <a href="/scene/default">
                         <div class="circle img-circle">
                             <?= Html::img(['/filedata/site/image/icon_1-4.png']) ?>
                             <div class="circle-bg img-circle">
-                                <span class="number"><span class="timer" data-to="3" data-speed="550">0</span><span class="unit">场</span></span>
+                                <span class="number"><span class="timer" data-to="<?= $sceneSite ?>" data-speed="550">0</span><span class="unit">场</span></span>
                                 <span class="icon">+</span>
                             </div>
                         </div>
@@ -121,7 +121,7 @@ $this->title = '课程建设工作平台';
         $('.netbutton').empty().append(netbuttonContainer);
     }
     //new图标
-    if($undertakeCount > 0)
+    if($showNewIcon > 0)
         $('.words .new').animate({top: '-10px;',opacity: 1}, 500, 'linear');
       
     //图标出场动画
