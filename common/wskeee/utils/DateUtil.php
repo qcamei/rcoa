@@ -49,17 +49,19 @@ class DateUtil {
     {
         $y = date("Y", strtotime($date));
         $m = date("m", strtotime($date));
-        $m = sprintf("%02d", intval($m));
-        $y = str_pad(intval($y), 4, "0", STR_PAD_RIGHT);
-        $now_start = date("Y-m-d", strtotime($y . $m . "01000000"));
-        $now_end = date('Y-m-d', strtotime(date('Y-m-d 23:59:59', strtotime("$now_start +1 month -1 day"))));
+        $d = '01';
+        //$m = sprintf("%02d", intval($m));
+        //$y = str_pad(intval($y), 4, "0", STR_PAD_RIGHT);
+        $now_start = date("Y-m-d", strtotime($y . $m . $d));
+        $now_end = date('Y-m-d', strtotime(date('Y-m-d', strtotime("$now_start +1 month -1 day"))));
         
         if($offset != 0)
         {
+            $date = $y . $m . $d;
             $y = date('Y', strtotime("$date $offset month"));
             $m = date('m', strtotime("$date $offset month"));
-            $now_start = date("Y-m-d", strtotime($y . $m . "01000000"));
-            $now_end = date('Y-m-d', strtotime(date('Y-m-d 23:59:59', strtotime("$now_start +1 month -1 day"))));
+            $now_start = date("Y-m-d", strtotime($y . $m . $d));
+            $now_end = date('Y-m-d', strtotime(date('Y-m-d', strtotime("$now_start +1 month -1 day"))));
         }
         
         return [

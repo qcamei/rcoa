@@ -51,12 +51,12 @@ class SceneBookNotice {
     }
         
     /**
-     * 给所有摄影组长 发送通知
+     * 创建成功 给所有摄影组长 发送通知
      * @param SceneBook $model              
      * @param string $title                         标题
      * @param string $views                         视图
      */
-    public static function sendShootLeaderNotification($model, $title, $views)
+    public function sendShootLeaderNotification($model, $title, $views)
     {
         /* @var $authManager RbacManager */
         $authManager = Yii::$app->authManager;
@@ -83,7 +83,7 @@ class SceneBookNotice {
     }
     
     /** 
-     * 给指派预约用户 发送通知
+     * 指派成功 给预约人、接洽人 and 摄影师 发送通知
      * @param SceneBook $model              
      * @param array $contacter                      接洽人
      * @param array $oldShootMan                    旧摄影师
@@ -91,7 +91,7 @@ class SceneBookNotice {
      * @param string $title                         标题
      * @param string $views                         视图
      */
-    public  function sendAssignSceneBookUserNotification($model, $contacter, $oldShootMan, $newShootMan, $title, $views)
+    public function sendAssignSceneBookUserNotification($model, $contacter, $oldShootMan, $newShootMan, $title, $views)
     {
         //传进view 模板参数
         $params = [
@@ -124,13 +124,13 @@ class SceneBookNotice {
     }
     
     /**
-     * 给所有预约人 发送通知
+     * 申请转让 给所有预约人 发送通知
      * @param SceneBook $model
      * @param string $content                       原因
      * @param string $title                         标题
      * @param string $views                         视图
      */
-    public  function sendBookerNotification($model, $content, $title, $views)
+    public  function sendTransferBookerNotification($model, $content, $title, $views)
     {
         /* @var $authManager RbacManager */
         $authManager = Yii::$app->authManager;
@@ -164,7 +164,7 @@ class SceneBookNotice {
     }
     
     /**
-     * 给转让成功预约用户 发送通知
+     * 转让成功 给接洽人 and 摄影师 发送通知
      * @param SceneBook $model
      * @param string $oldBookerName                 旧预约人
      * @param array $users                          接洽人 and 摄影师

@@ -434,7 +434,7 @@ class SceneBook extends ActiveRecord
     }
     
     /**
-     * 获取是否在【已取消】状态
+     * 获取是否在【转让】状态
      */
     public function getIsTransfer()
     {
