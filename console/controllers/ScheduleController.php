@@ -261,7 +261,7 @@ class ScheduleController extends Controller {
          * 1、查询在【待指派】、【待评价】和【评价中】的3天前预约任务数据
          */
         $sceneBooks = (new Query())->select(['id'])->from(SceneBook::tableName())
-            ->where(['<', 'date', date('Y-m-d', strtotime("-3 day"))])
+            ->where(['<=', 'date', date('Y-m-d', strtotime("-3 day"))])
             //->andWhere(['<', 'start_time', date('H:i', strtotime("-3 day"))])
             ->andWhere(['status' => $statusMap])
             ->orderBy(['date' => SORT_ASC, 'time_index' => SORT_ASC]);
@@ -393,7 +393,7 @@ class ScheduleController extends Controller {
          * 1、查询在【待指派】、【待评价】和【评价中】的1天前预约任务数据
          */
         $sceneBooks = (new Query())->select(['SceneBook.id'])->from(['SceneBook' => SceneBook::tableName()])
-            ->where(['<', 'SceneBook.date', date('Y-m-d', strtotime("-1 day"))])
+            ->where(['<=', 'SceneBook.date', date('Y-m-d', strtotime("-1 day"))])
             ->andWhere(['SceneBook.status' => $statusMap])
             ->orderBy(['SceneBook.date' => SORT_ASC, 'SceneBook.time_index' => SORT_ASC]);
         /**

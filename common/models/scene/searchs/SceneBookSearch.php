@@ -205,7 +205,7 @@ class SceneBookSearch extends SceneBook
                 if($nowDay >= $weekStart && $mday <= $dayNum){
                     for ($index = 0; $index < 3; $index++){
                         $monthdatas[] = new SceneBookSearch([
-                            'id' => md5($this->site_id + date('Y-m-d', strtotime(date('Y-m', strtotime($this->date_start)).'-'.$mday)) + $index + rand(1,10000)),
+                            'id' => md5($this->site_id . date('Y-m-d', strtotime(date('Y-m', strtotime($this->date_start)).'-'.$mday)) . $index . rand(1,10000)),
                             'site_id' => $this->site_id,
                             'date' => date('Y-m-d', strtotime(date('Y-m', strtotime($this->date_start)).'-'.$mday)),
                             'time_index' => $index,
@@ -237,7 +237,7 @@ class SceneBookSearch extends SceneBook
         for ($i = 0, $len = 7; $i < $len; $i++) {
             for ($index = 0; $index < 3; $index++) {
                 $weekdatas[] = new SceneBookSearch([
-                    'id' => md5($this->site_id + date('Y-m-d', strtotime($this->date_start . ' +' . ($i) . 'days ')) + $index + rand(1,10000)),
+                    'id' => md5($this->site_id . date('Y-m-d', strtotime($this->date_start . ' +' . ($i) . 'days ')) . $index . rand(1,10000)),
                     'site_id' => $this->site_id,
                     'date' => date('Y-m-d', strtotime($this->date_start . ' +' . ($i) . 'days ')),
                     'time_index' => $index,

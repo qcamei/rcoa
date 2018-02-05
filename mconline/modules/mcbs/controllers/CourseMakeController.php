@@ -202,7 +202,7 @@ class CourseMakeController extends Controller
      */
     public function actionCreateCouphase($course_id)
     {        
-        $model = new McbsCoursePhase(['id' => md5(rand(1,10000) + time()), 'course_id' => $course_id]);
+        $model = new McbsCoursePhase(['id' => md5(rand(1,10000) . time()), 'course_id' => $course_id]);
         $model->loadDefaultValues();
         if(!self::IsPermission($model->course->id, $model->course->status, false))
             throw new NotAcceptableHttpException('无权限操作！');
@@ -306,7 +306,7 @@ class CourseMakeController extends Controller
      */
     public function actionCreateCoublock($phase_id)
     {
-        $model = new McbsCourseBlock(['id' => md5(rand(1,10000) + time()), 'phase_id' => $phase_id]);
+        $model = new McbsCourseBlock(['id' => md5(rand(1,10000) . time()), 'phase_id' => $phase_id]);
         $model->loadDefaultValues();
         if(!self::IsPermission($model->phase->course_id, $model->phase->course->status, false))
             throw new NotAcceptableHttpException('无权限操作！');
@@ -404,7 +404,7 @@ class CourseMakeController extends Controller
      */
     public function actionCreateCouchapter($block_id)
     {
-        $model = new McbsCourseChapter(['id' => md5(rand(1,10000) + time()), 'block_id' => $block_id]);
+        $model = new McbsCourseChapter(['id' => md5(rand(1,10000) . time()), 'block_id' => $block_id]);
         $model->loadDefaultValues();
         if(!self::IsPermission($model->block->phase->course_id, $model->block->phase->course->status, false))
             throw new NotAcceptableHttpException('无权限操作！');
@@ -504,7 +504,7 @@ class CourseMakeController extends Controller
      */
     public function actionCreateCousection($chapter_id)
     {
-        $model = new McbsCourseSection(['id' => md5(rand(1,10000) + time()), 'chapter_id' => $chapter_id]);
+        $model = new McbsCourseSection(['id' => md5(rand(1,10000) . time()), 'chapter_id' => $chapter_id]);
         $model->loadDefaultValues();
         if(!self::IsPermission($model->chapter->block->phase->course_id, $model->chapter->block->phase->course->status, false))
             throw new NotAcceptableHttpException('无权限操作！');
@@ -627,7 +627,7 @@ class CourseMakeController extends Controller
      */
     public function actionCreateCouactivity($section_id)
     {
-        $model = new McbsCourseActivity(['id' => md5(rand(1,10000) + time()), 'section_id' => $section_id]);
+        $model = new McbsCourseActivity(['id' => md5(rand(1,10000) . time()), 'section_id' => $section_id]);
         $model->loadDefaultValues();
         if(!self::IsPermission($model->section->chapter->block->phase->course_id, $model->section->chapter->block->phase->course->status, false))
             throw new NotAcceptableHttpException('无权限操作！');
