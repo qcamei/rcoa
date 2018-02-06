@@ -31,17 +31,6 @@ class WorkitemController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
-            //access验证是否有登录
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['create', 'update'],
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['index', 'view', 'create', 'update', 'delete'],
-                    ]
-                ],
-            ],
         ];
     }
 
