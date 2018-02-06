@@ -10,4 +10,4 @@ use yii\helpers\Html;
 
 ?>
 
-<?= Html::a('导入', ['index'], ['class' => 'btn btn-primary']); ?>
+<?= Html::a('导入', ['index', 'carry_out' => true], ['class' => 'btn btn-primary']); ?>
