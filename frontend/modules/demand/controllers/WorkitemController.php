@@ -34,12 +34,13 @@ class WorkitemController extends Controller
             //access验证是否有登录
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create', 'update'],
+                'only' => ['list'],
                 'rules' => [
                     [
+                        'actions' => ['list'],
                         'allow' => true,
-                        'roles' => ['index', 'view', 'create', 'update', 'delete'],
-                    ]
+                        'roles' => ['?'],
+                    ],
                 ],
             ],
         ];
