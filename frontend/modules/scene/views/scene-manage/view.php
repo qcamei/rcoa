@@ -5,7 +5,7 @@ use yii\web\View;
 
 /* @var $this View */
 
-$this->title = Yii::t('app', '{Scene}{Detail}', [
+$this->title = Yii::t('app', '{Scene}-{Detail}', [
             'Scene' => Yii::t('app', 'Scene'),
             'Detail' => Yii::t('app', 'Detail'),
         ]);
@@ -66,12 +66,8 @@ $this->title = Yii::t('app', '{Scene}{Detail}', [
 
 </div>
 <?php
-$map = $sceneData['AsText(location)'];
-preg_match_all("/\((.*)\)/", $map, $map_xy);        //获取括号里面的内容
-$map_all = explode(' ', $map_xy['1']['0']);         //拆分转为数组
-$map_x = $map_all['0'];                             //经度
-$map_y = $map_all['1'];                             //纬度
-
+$map_x = $sceneData['X(location)'];                 //经度
+$map_y = $sceneData['Y(location)'];                 //纬度
 $map_img = $sceneData['img_path'];                  //图片路径
 $map_contact = $sceneData['contact'];               //联系人
 $map_address = $sceneData['address'];               //地址
@@ -101,7 +97,7 @@ $js = <<<JS
     var searchInfoWindow = null;
     searchInfoWindow = new BMapLib.SearchInfoWindow(map, content, {
                     title  : "地址信息",         //标题
-                    width  : 300,               //宽度
+                    width  : 310,               //宽度
                     height : 105,               //高度
                     panel  : "panel",           //检索结果面板
                     enableAutoPan : true,       //自动平移

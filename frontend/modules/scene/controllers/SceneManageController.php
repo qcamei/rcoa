@@ -206,7 +206,7 @@ class SceneManageController extends Controller
         $sceneData = (new Query())
                 ->select(['SceneSite.id', 'SceneSite.name', 'SceneSite.op_type', 'SceneSite.area', 'SceneSite.price',
                         'SceneSite.contact', 'SceneSite.address', 'SceneSite.des', 'SceneSite.content',
-                        'SceneSite.content_type', 'SceneSite.img_path', 'AsText(location)'])
+                        'SceneSite.content_type', 'SceneSite.img_path', 'X(location)', 'Y(location)'])
                 ->from(['SceneSite' => SceneSite::tableName()])
                 ->where(['id' => $id])
                 ->one();

@@ -33,7 +33,7 @@
 }
 
 .scene-default-index .map,.select{
-    margin-top: 7px;
+    margin-top: 10px;
     margin-bottom: 10px;
     padding: 0 10px;
 }
@@ -145,6 +145,10 @@
     border-bottom: 1px dashed #cccccc; 
 } 
 
+.scene-default-index .select-content .address:hover{
+    background-color: #f9f9f9;
+}
+
 .scene-default-index
 .select-content .address .address-info{
     position: absolute;
@@ -209,6 +213,10 @@
     color: #000;
     margin-top: 1px;
     margin-bottom: 8px;
+/*    width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;*/
 }
 
 .scene-default-index
@@ -221,7 +229,15 @@
 .scene-default-index
 .address-right .address-area span,.address-type span,.address-price span{
     color: #000;
-    /*font-weight: bold;*/
+}
+
+.scene-default-index
+.address-right .address-type span{
+/*    width: 85%;
+    float: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;*/
 }
 
 .scene-default-index
@@ -355,7 +371,7 @@
     height: 48px;
     line-height: 48px;
     display: inline-block;
-    border-right: 1px #cbcbcb solid;
+    /*border-right: 1px #cbcbcb solid;*/
 }
 
 .scene-manage-view .scene-details .tablist ul li.none {
@@ -403,8 +419,15 @@
     column-gap: 1em;*/
 }
 
+/*小屏幕时给图片加宽度*/
+@media (max-width: 480px) {
+    .scene-manage-view .scene-details .tabcontent .tabpane .resource img{
+        width: 100%;
+    }
+}
+
 .scene-manage-view .scene-details .tabcontent .tabpane .resource img{
-    /*width: 564px;*/
+    /*width: 100%;*/
     padding: 1px;
     break-inside: avoid;
     border: 1px solid #ccc;
@@ -448,11 +471,16 @@
     margin: 5px;
 }
 
+.scene-manage-index 
+.list-content .content-content:hover{
+    background-color: #f9f9f9;
+}
+
 .scene-manage-index .list
 .list-content .content-content .list-cog{
     position: absolute;
     top: 5px;
-    right: 10px;
+    right: 5px;
     text-align: center;
     color: #000;
 }
@@ -521,18 +549,16 @@
 .list-content .content-content .list-right .list-area, .list-type, .list-price{
     padding: 2px 0px;
     color: #999999;
-    /*font-weight: bold;*/
 }
 
 .scene-manage-index .list 
 .list-content .content-content .list-right .list-area span, .list-type span, .list-price span{
     color: #000;
-    /*font-weight: bold;*/
 }
 
 .scene-manage-index .list 
 .list-content .content-content .list-right .list-area .font{
-    width: 160px;
+    width: 155px;
     float: right;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -641,14 +667,33 @@
     background-color: #333333;
 }
 
-.scene-book .table .holiday {
-    width: 20px;
-    height: 20px;
+
+.scene-book .book-transfer {
+    width: 100%;
+    display: inline-block;
+    position: relative;
+}
+
+.scene-book .book-transfer .is_transfer {
+    width: 79px;
+    height: 40px;
     display: block;
+    position: absolute;
+    top: -10px;
+    left: 0;
+    z-index: 1000;
+    background-image: url("/filedata/scene/icons/transfer.png");
+}
+
+.scene-book .table .holiday {
+    width: 16px;
+    display: block;
+    font-size: 12px;
     color: #fff;
     position: absolute;
     text-align: center;
     text-decoration: none;
+    font-weight: normal;
 }
 
 .scene-book .table .holiday.red {
@@ -686,33 +731,43 @@
 }
 
 .scene-book .table-month .btn-group {
-    margin-top: 20px;
+    width: 100%;
+    height: 100%;
+    top: 22px;
+    text-align: left;
 }
 
 .scene-book .table-month .btn-group > p {
+    height: 20px;
     margin-bottom: 2px;
 }
 
 .scene-book .table-month .month_time_index {
-    margin-right: 10px;
-    margin-left: -10px;
     font-size: 12px;
     color: rgb(204, 204, 204);
 }
 
 .scene-book .table-month .btn-len {
-    padding: 0px 35px;
+    height: 20px;
+    padding: 0px;
+    position: absolute;
+    right: 10px;
+    left: 20px;
 }
 
 @media (max-width: 480px) {
-    .scene-book .table-month > tbody > tr > td,
-    .scene-book .table-month .btn-len {
+    .scene-book .table-month > tbody > tr > td {
         padding: 2px;
+    }
+    .scene-book .table-month .btn-len {
+        right: 0;
+        left: 0;
     }
 }
 
 .scene-book .table-month > thead > tr > th,
 .scene-book .table-month > tbody > tr > td > div {
+    height: 100%;
     position: relative;
     text-align: center;
 }
@@ -742,6 +797,7 @@
 .scene-book .table-week img {
     width: 12px;
     height: 12px;
+    margin-top: -5px;
 }
 
 .scene-book .table-month > thead > tr > th,

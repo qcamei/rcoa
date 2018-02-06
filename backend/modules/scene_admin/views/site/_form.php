@@ -175,6 +175,7 @@ $js =
     var myGeo = new BMap.Geocoder();                    // 创建地址解析器实例
     if(isNewRecord){
         var point = new BMap.Point(map_x, map_y);   
+        $('#scenesite-location').val(map_x + " " + map_y);  //把经纬度传到form表单
         map.centerAndZoom(point, 16);
         var marker = new BMap.Marker(point);    // 创建标注
         map.addOverlay(marker);                 // 将标注添加到地图中

@@ -18,6 +18,19 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
 <?= GridView::widget([
     'dataProvider' => $dataProvider,
     'summary' => false,
+    'layout' => "{items}\n{summary}\n{pager}",
+    'summaryOptions' => [
+        //'class' => 'summary',
+        'class' => 'hidden',
+        //'style' => 'float: left'
+    ],
+    'pager' => [
+        'options' => [
+            //'class' => 'pagination',
+            'class' => 'hidden',
+            //'style' => 'float: right; margin: 0px;'
+        ]
+    ],
     'tableOptions' => ['class' => 'table table-striped table-week'],
     'columns' => [
         [
@@ -46,7 +59,7 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
                 'class' => 'date',
                 'rowspan' => 3, 
                 'style' => [
-                    'padding' => '4px ',
+                    'padding' => '2px 4px',
                 ],
             ],
         ],
@@ -64,7 +77,7 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
             'contentOptions' =>[
                'class' => 'time_index',
                 'style'=>[
-                    'padding' => '4px 2px',
+                    'padding' => '2px',
                 ]
             ],
         ],
@@ -94,7 +107,7 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
                     'co1or' => '#333333',
                     'text-align' => 'center',
                     'vertical-align' => 'middle',
-                    'padding' => '4px 2px',
+                    'padding' => '2px',
                 ],
             ],
         ],
@@ -124,7 +137,7 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
                     'font-size' => '18px',
                     'text-align' => 'left',
                     'vertical-align' => 'middle',
-                    'padding' => '4px 2px',
+                    'padding' => '2px',
                 ],
             ], 
         ],
@@ -150,7 +163,7 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
                 'style'=>[
                     'text-align' => 'center',
                     'vertical-align' => 'middle',
-                    'padding' => '4px 2px',
+                    'padding' => '2px',
                 ],
             ], 
         ],
@@ -159,7 +172,7 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
             'format' => 'raw',
             'attribute' => 'start_time',
             'value' => function($model) {
-                return $model->getIsValid() ?  $model->start_time : '';
+                return $model->getIsValid() ? ($model->is_transfer ? '<span style="color:rgb(204, 204, 204)">'.$model->start_time.'<span>' : $model->start_time) : '';
             },
             'headerOptions'=>[
                 'class'=>[
@@ -167,7 +180,8 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
                 ],
                 'style' => [
                     'width' => '75px',
-                    'padding' => '4px',
+                    'text-align' => 'center',
+                    'padding' => '4px 2px',
                 ]
             ],
             'contentOptions' =>[
@@ -175,7 +189,7 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
                 'style'=>[
                     'text-align' => 'center',
                     'vertical-align' => 'middle',
-                    'padding' => '4px',
+                    'padding' => '2px',
                 ],
             ], 
         ],
@@ -188,7 +202,19 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
                 'course_id' => Yii::t('app', 'Course ID'),
             ]),
             'value' => function($model) {
-                return $model->getIsValid() ? (!empty($model->course_id) ? "【{$model->lession_time} × {$model->course->name}】" : null) : '';
+                if($model->getIsValid()){
+                    if(!empty($model->course_id)){
+                        if($model->is_transfer){
+                            return '<div class="book-transfer"><i class="is_transfer"></i><span style="color:rgb(204, 204, 204)">【'.$model->lession_time .'×'. $model->course->name.'】<span></div>';
+                        }else{
+                            return "【{$model->lession_time} × {$model->course->name}】";
+                        }
+                    } else {
+                        return null;
+                    }
+                }else{
+                    return '';
+                };
             },
             'headerOptions'=>[
                 'class'=>[
@@ -203,7 +229,7 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
                 'class' => 'course-name',
                 'style'=>[
                     'vertical-align' => 'middle',
-                    'padding' => '4px 2px',
+                    'padding' => '2px',
                 ],
             ], 
         ],
@@ -212,7 +238,7 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
             'format' => 'raw',
             'attribute' => 'remark',
             'value' => function($model) {
-                return $model->getIsValid() ? $model->remark :  '';
+                return $model->getIsValid() ? ($model->is_transfer ? '<span style="color:rgb(204, 204, 204)">'.$model->remark.'<span>' : $model->remark) :  '';
             },
             'headerOptions'=>[
                 'class'=>[
@@ -220,14 +246,14 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
                 ],
                 'style' => [
                     'width' => '255px',
-                    'padding' => '4px',
+                    'padding' => '4px 2px',
                 ]
             ],
             'contentOptions' =>[
                 'class' => 'hidden-xs',
                 'style'=>[
                     'vertical-align' => 'middle',
-                    'padding' => '4px',
+                    'padding' => '2px',
                 ],
             ], 
         ],
@@ -237,7 +263,19 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
             'attribute' => 'teacher_id',
             'label' => Yii::t('app', 'Teacher'),
             'value' => function($model) {
-                return $model->getIsValid() ? (!empty($model->teacher_id) ? $model->teacher->user->nickname : null) : '';
+                if($model->getIsValid()){
+                    if(!empty($model->teacher_id)){
+                        if($model->is_transfer){
+                            return '<span style="color:rgb(204, 204, 204)">'.$model->teacher->user->nickname.'<span>';
+                        }else{
+                            return $model->teacher->user->nickname;
+                        }
+                    } else {
+                        return null;
+                    }
+                }else{
+                    return '';
+                };
             },
             'headerOptions'=>[
                 'class'=>[
@@ -245,14 +283,14 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
                 ],
                 'style' => [
                     'width' => '85px',
-                    'padding' => '4px',
+                    'padding' => '4px 2px',
                 ]
             ],
             'contentOptions' =>[
                 'class' => 'hidden-xs',
                 'style'=>[
                     'vertical-align' => 'middle',
-                    'padding' => '4px',
+                    'padding' => '2px',
                 ],
             ], 
         ],
@@ -264,8 +302,13 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
                 if($model->getIsValid()){
                     if(isset($sceneBookUser[$model->id])){
                         foreach ($sceneBookUser[$model->id] as $bookUser) {
-                            if($bookUser['role'] == 1 && $bookUser['is_primary'])
-                                return $bookUser['nickname'].'<div class="star" data-score="'.$bookUser['score'].'"></div>';
+                            if($bookUser['role'] == 1 && $bookUser['is_primary']){
+                                if($model->is_transfer){
+                                    return '<span style="color:rgb(204, 204, 204)">'.$bookUser['nickname'].'</span><div class="star" data-score="'.$bookUser['score'].'" style="display: inline-block;line-height:12px"></div>';
+                                }else{
+                                    return $bookUser['nickname'].'<div class="star" data-score="'.$bookUser['score'].'" style="display: inline-block;line-height:12px"></div>';
+                                }
+                            }
                         }
                     }
                 }else {
@@ -278,14 +321,15 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
                 ],
                 'style' => [
                     'width' => '85px',
-                    'padding' => '4px',
+                    'padding' => '4px 2px',
                 ]
             ],
             'contentOptions' =>[
                 'class' => 'hidden-xs',
                 'style'=>[
                     'vertical-align' => 'middle',
-                    'padding' => '4px',
+                    'padding' => '2px',
+                    'font-size' => '13px',
                 ],
             ], 
         ],
@@ -297,8 +341,13 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
                 if($model->getIsValid()){
                     if(isset($sceneBookUser[$model->id])){
                         foreach ($sceneBookUser[$model->id] as $bookUser) {
-                            if($bookUser['role'] == 2 && $bookUser['is_primary'])
-                                return $bookUser['nickname'].'<div class="star" data-score="'.$bookUser['score'].'"></div>';
+                            if($bookUser['role'] == 2 && $bookUser['is_primary']){
+                                if($model->is_transfer){
+                                    return '<span style="color:rgb(204, 204, 204)">'.$bookUser['nickname'].'</span><div class="star" data-score="'.$bookUser['score'].'" style="display: inline-block;line-height:12px"></div>';
+                                }else{
+                                    return $bookUser['nickname'].'<div class="star" data-score="'.$bookUser['score'].'" style="display: inline-block;line-height:12px"></div>';
+                                }
+                            }
                         }
                     }
                 }else{
@@ -311,14 +360,15 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
                 ],
                 'style' => [
                     'width' => '85px',
-                    'padding' => '4px',
+                    'padding' => '4px 2px',
                 ]
             ],
             'contentOptions' =>[
                 'class' => 'hidden-xs',
                 'style'=>[
                     'vertical-align' => 'middle',
-                    'padding' => '4px',
+                    'padding' => '2px',
+                    'font-size' => '13px;'
                 ],
             ], 
         ],
@@ -353,10 +403,10 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
                     $isDisable = isset($siteManage[$model->date][$model->time_index]) && $siteManage[$model->date][$model->time_index];
                     //判断30天内的预约时段
                     if(($dayTomorrow < $bookTime && $bookTime < $dayEnd) && $isPublishSite){
-                        $buttonName = $isDisable ? '<i class="fa fa-ban"></i>　禁' : ($isNew  ? '预　约' : (!$isValid ? '预约中' : ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? '<i class="fa fa-refresh"></i>转让' : ($isAssign ? $model->getStatusName() : $model->getStatusName()))));
+                        $buttonName = $isDisable ? '<i class="fa fa-ban"></i>&nbsp;禁' : ($isNew  ? '预约' : (!$isValid ? '预约中' : ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? '<i class="fa fa-refresh"></i>&nbsp;转让' : ($isAssign ? $model->getStatusName() : $model->getStatusName()))));
                         $buttonClass = $isDisable ? 'btn-default disabled' : ($isNew ? 'btn-primary' : (!$isValid ? 'btn-primary disabled' : ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? 'btn-primary' : ($isAssign ? 'btn-success' : ($isStausShootIng || $isAppraise ? 'btn-info' : ($isBreakPromise ? 'btn-danger' : 'btn-default'))))));
                     }else{
-                        $buttonName = !$isNew ? ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? '<i class="fa fa-refresh"></i>转让' : $model->getStatusName()) : '<i class="fa fa-ban"></i>　禁';
+                        $buttonName = !$isNew ? ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? '<i class="fa fa-refresh"></i>&nbsp;转让' : $model->getStatusName()) : '<i class="fa fa-ban"></i>&nbsp;禁';
                         $buttonClass = !$isNew ?  ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? 'btn-primary' : ($isBreakPromise ? 'btn-danger' : ($isStausShootIng || $isAppraise ? 'btn-info' : 'btn-default'))) : 'btn-default disabled';
                     }
                     $url = $isNew ? 
@@ -365,7 +415,8 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
                             'date_switch' => $model->date_switch] : ['view', 'id' => $model->id];
                     $options = [
                         'class' => "btn $buttonClass btn-sm",
-                        'target' => $isNew ? : '_blank'
+                        'target' => $isNew ? : '_blank',
+                        'style' => 'width: 58px; height: 30px;'
                     ];
                     return Html::a('<span class="'.($isMe ? 'isMe' : '').'"></span>'.$buttonName, $url, $options);
                 },
@@ -373,12 +424,12 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
             'headerOptions' => [
                 'style' => [
                     'width' => '65px',
-                    'padding' => '4px',
+                    'padding' => '4px 2px',
                 ],
             ],
             'contentOptions' =>[
                 'style' => [
-                    'padding' => '10px 2px;',
+                    'padding' => '7px 2px',
                 ],
             ],
             'template' => '{view}',

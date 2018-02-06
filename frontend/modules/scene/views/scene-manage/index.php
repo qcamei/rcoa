@@ -7,7 +7,7 @@ use yii\web\View;
 
 /* @var $this View */
 
-$this->title = Yii::t('app', '{Scene}{List}',[
+$this->title = Yii::t('app', '{Scene}-{List}',[
     'Scene' => Yii::t('app', 'Scene'),
     'List' => Yii::t('app', 'List'),
 ]);
@@ -17,7 +17,7 @@ $filter = Yii::$app->request->queryParams;
     <div class="list col-lg-12">
         <!--场地列表-->
         <?php foreach ($sceneItem['querylist'] as $key => $scenes) :?>
-        <div class="list-content col-lg-4 col-xs-12">
+        <div class="list-content col-lg-4 col-sm-6 col-xs-12">
             <div class="content-content">
                 <div class="info-content">
                     <a href="<?= Url::to(['view', 'id' => $scenes['id']]) ?>" class="list-img" title="<?= $scenes['address']?>">
@@ -30,7 +30,7 @@ $filter = Yii::$app->request->queryParams;
                             <div class="list-name"><?= $scenes['name']?></div>
                             <div class="list-area">区域：<span><?= $scenes['area']?></span>&nbsp;
                                                         <font class="font">(<?= $scenes['address']?>)</font></div>
-                            <div class="list-type">内容类型：<span><?= $scenes['content_type']?></span></div>
+                            <div class="list-type">内容：<span><?= $scenes['content_type']?></span></div>
                             <div class="list-price">价格：<span>￥<?= $scenes['price']?>/小时</span></div>
                         </div>
                     </a>

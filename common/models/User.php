@@ -292,7 +292,7 @@ class User extends ActiveRecord implements IdentityInterface
         if(parent::beforeSave($insert))
         {
             if(!$this->id)
-                $this->id = md5(rand(1,10000) + time());    //自动生成用户ID
+                $this->id = md5(rand(1,10000) . time());    //自动生成用户ID
             $upload = UploadedFile::getInstance($this, 'avatar');
             if($upload != null)
             {

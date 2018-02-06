@@ -14,7 +14,10 @@ use yii\web\View;
 /* @var $searchModel SceneBookSearch */
 /* @var $dataProvider ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Scene Books');
+$this->title = Yii::t('app', '{Scene}-{Bespeak}',[
+    'Scene' => Yii::t('app', 'Scene'),
+    'Bespeak' => Yii::t('app', 'Bespeak'),
+]);
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container scene-book-index scene-book">
@@ -24,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
         $reflashUrl =Yii::$app->urlManager->createAbsoluteUrl(['/scene/scene-book/index']);
         $refsite = ArrayHelper::getValue($filter, 'site_id', reset($firstSite));
         $refdate = ArrayHelper::getValue($filter, 'date', date('Y-m-d'));
-        $date_switch = ArrayHelper::getValue(Yii::$app->request->queryParams, 'date_switch', 'month');
+        $date_switch = ArrayHelper::getValue(Yii::$app->request->queryParams, 'date_switch', 'week');
         $menuItem = [
             [
                 'name'=>  Yii::t('app', 'Month'),
@@ -52,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 echo Html::a($menu['name'], $menu['url'], $menu['options']);
             } ?>
         </div>
-        <div class="col-lg-7 col-md-8 col-xs-9" style="padding-left:0">
+        <div class="col-lg-7 col-md-8 col-xs-9 site-util" style="padding-left:0;">
             <?= Html::dropDownList('site_id', $refsite, 
                 $sceneSite, ['id' => 'sitChange', 'class' => 'form-control', 'prompt' => '请选择...'])?> 
         </div>
@@ -75,7 +78,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]);
             ?>
         </div>
-        <div class="col-lg-1 col-md-1 col-xs-3 date-util" style="padding-right:0">
+        <div class="col-lg-1 col-md-1 col-xs-3" style="padding-right:0">
             <?= Html::a('<',Url::to(['index', 
                 'site_id'=> $refsite, 
                 'date' => $date_switch == 'month' ? DateUtil::getMonthSE($refdate,-1)['start'] : DateUtil::getWeekSE($refdate,-1)['start'], 

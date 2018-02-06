@@ -84,16 +84,18 @@ class BookController extends Controller
      * @return mixed
      */
     public function actionCreate()
-    {
-        $model = new SceneBook();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
+    {        
+        return $this->redirect('index');
+        
+//        $model = new SceneBook();
+//        
+//        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+//            return $this->redirect(['view', 'id' => $model->id]);
+//        } else {
+//            return $this->render('create', [
+//                'model' => $model,
+//            ]);
+//        }
     }
 
     /**

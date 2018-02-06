@@ -16,11 +16,11 @@ use yii\widgets\ActiveForm;
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <h4 class="modal-title" id="myModalLabel"><?= Html::encode('选择时段预约') ?></h4>
+            <h4 class="modal-title" id="myModalLabel"><?= Html::encode('选择其它时段一并预约') ?></h4>
         </div>
         <div class="modal-body scene">
             <p><span class="site">场地：【<?= $model->sceneSite->name ?>】</span></p>
-            <span class="time">时间：<?= $model->date ?> 当天预约的时段</span>
+            <span class="time">时间：<?= $model->date ?> 当天可预约的时段</span>
             <div class="time-index-map">
                 <div class="checkboxList">
                 <?php

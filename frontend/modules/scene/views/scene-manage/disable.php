@@ -14,7 +14,7 @@ use yii\web\View;
 /* @var $searchModel SceneSiteDisableSearch */
 /* @var $dataProvider ActiveDataProvider */
 
-$this->title = Yii::t('app', '{Scene}{Disabled}',[
+$this->title = Yii::t('app', '{Scene}-{Disabled}',[
     'Scene' => Yii::t('app', 'Scene'),
     'Disabled' => Yii::t('app', 'Disabled'),
 ]);
@@ -55,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 echo Html::a($menu['name'], $menu['url'], $menu['options']);
             } ?>
         </div>
-        <div class="col-lg-7 col-md-8 col-xs-9" style="padding-left:0">
+        <div class="col-lg-7 col-md-8 col-xs-9 site-util" style="padding-left:0">
             <?= Html::dropDownList('site_id', $refsite, 
                 $sceneSite, ['id' => 'sitChange', 'class' => 'form-control', 'prompt' => '请选择...'])?> 
         </div>
@@ -78,7 +78,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]);
             ?>
         </div>
-        <div class="col-lg-1 col-md-1 col-xs-3 date-util" style="padding-right:0">
+        <div class="col-lg-1 col-md-1 col-xs-3" style="padding-right:0">
             <?= Html::a('<',Url::to(['disable', 
                 'site_id'=> $refsite, 
                 'date' => $date_switch == 'month' ? DateUtil::getMonthSE($refdate,-1)['start'] : DateUtil::getWeekSE($refdate,-1)['start'], 
