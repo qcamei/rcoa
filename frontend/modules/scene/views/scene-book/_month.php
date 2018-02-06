@@ -57,11 +57,14 @@ use yii\helpers\Html;
                     }
                         echo '<div>';
                             if(isset($holidays[$date])){
-                                $first = reset($holidays[$date]);
+                                $first = reset($holidays[$date])[0]['type'];
                                 $content = '';
-                                foreach ($holidays[$date] as $holiday) 
-                                    $content .= "<p>{$holiday['name']}(".Holiday::TYPE_NAME_MAP[$holiday['type']].")</p>";
-                                echo "<a class=\"holiday img-circle {$holidayColourMap[$first['type']]}\" role=\"button\" data-content=\"{$content}\">".Holiday::TYPE_NAME_MAP[$first['type']]."</a>";
+                                foreach ($holidays[$date] as $holiday){
+                                    foreach ($holiday as $value) {
+                                        $content .= "<p>{$value['name']}(".Holiday::TYPE_NAME_MAP[$value['type']].")</p>";
+                                    }
+                                }
+                                echo "<a class=\"holiday img-circle {$holidayColourMap[$first]}\" role=\"button\" data-content=\"{$content}\">".Holiday::TYPE_NAME_MAP[$first]."</a>";
                             }
                             if(!isset($allModels[$date])){
                                 echo "<span class=\"days\" style=\"color:#ddd;\">".preg_replace('/^0+/','',date('d', strtotime($date)))."</span>";

@@ -4,6 +4,7 @@ namespace common\models;
 
 use common\utils\Lunar;
 use Yii;
+use yii\behaviors\TimestampBehavior;
 use yii\caching\Cache;
 use yii\db\ActiveRecord;
 use yii\db\Query;
@@ -56,6 +57,16 @@ class Holiday extends ActiveRecord {
         return '{{%holiday}}';
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() 
+    {
+        return [
+            TimestampBehavior::className()
+        ];
+    }
+    
     /**
      * @inheritdoc
      */

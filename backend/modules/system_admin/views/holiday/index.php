@@ -27,6 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'layout' => "{items}\n{summary}\n{pager}",
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
@@ -34,6 +35,9 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'type',
                 'filter' => Holiday::TYPE_MAP,
+                'value' => function ($model){
+                    return !empty($model->type) ? Holiday::TYPE_MAP[$model->type] : null;
+                }
             ],
             'year',
             [
@@ -52,6 +56,9 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'is_lunar',
                 'filter' => ['1'=>'是','0'=>'否'],
+                'value' => function ($model){
+                    return ($model->is_lunar == 1) ? '是' : '否';
+                }
             ],
             [
                 'attribute' => 'is_publish',
@@ -61,7 +68,14 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'created_at',
             // 'updated_at',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'contentOptions' => [
+                    'style' => [
+                        'min-width' => '70px',
+                    ],
+                ]
+            ],
         ],
     ]); ?>
 </div>
