@@ -90,7 +90,13 @@ $js =
     }
     //提交表单
     window.submitsave = function(){
-        $("#scene-book-form").submit();
+        var str = selectLength();
+        if(str.length > 0){
+            $("#scene-book-form").submit();
+        }else{
+            $(".field-scenebookuser-user_id").addClass("has-error");
+            $(".field-scenebookuser-user_id .help-block").html("摄影师不能为空。");
+        }
         //clearTimeout();
         //setTimeout(function(){}, 300);
     };

@@ -55,12 +55,29 @@ $js =
 //        });
 //    }, 2*60*1000); 
 //    window.clearTimeout(exit);    
-        
+    //点击创建弹出    
     $('#submit').click(function(){
-        $(".myModal").html("");
-        $('.myModal').modal("show").html('$html');
+        var str = selectLength();
+        if(str.length > 0){
+            $(".myModal").html("");
+            $('.myModal').modal("show").html('$html');
+        }else{
+            $(".field-scenebookuser-user_id").addClass("has-error");
+            $(".field-scenebookuser-user_id .help-block").html("接洽人不能为空。");
+        }
     });
     
+    //组装选中的接洽人人数
+    function selectLength(){
+        var select = document.getElementById("scenebookuser-user_id");
+        var strLength = [];
+        for(i=0;i<select.length;i++){
+            if(select.options[i].selected){
+                strLength.push(select[i].value);
+            }
+        }
+        return strLength;
+    }
 JS;
     $this->registerJs($js,  View::POS_READY);
 ?>

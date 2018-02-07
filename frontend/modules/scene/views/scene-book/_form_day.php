@@ -48,7 +48,7 @@ use yii\widgets\ActiveForm;
 <?php
 $js = 
 <<<JS
-    
+    //提交表单
     window.submitsave = function(){
         var chk_value = []; 
         $('.time-index-map input:checked').each(function(){ 

@@ -42,9 +42,26 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 $js = <<<JS
     
     $('#submit').click(function(){
-        $("#scene-book-form").submit();
+        var str = selectLength();
+        if(str.length > 0){
+            $("#scene-book-form").submit();
+        }else{
+            $(".field-scenebookuser-user_id").addClass("has-error");
+            $(".field-scenebookuser-user_id .help-block").html("接洽人不能为空。");
+        }
     });    
-        
+    
+    //组装选中的接洽人人数
+    function selectLength(){
+        var select = document.getElementById("scenebookuser-user_id");
+        var strLength = [];
+        for(i=0;i<select.length;i++){
+            if(select.options[i].selected){
+                strLength.push(select[i].value);
+            }
+        }
+        return strLength;
+    }
 JS;
     $this->registerJs($js, View::POS_READY);
 ?>
