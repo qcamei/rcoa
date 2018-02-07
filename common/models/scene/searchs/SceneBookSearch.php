@@ -79,7 +79,7 @@ class SceneBookSearch extends SceneBook
             'id' => $this->id,
             'site_id' => $this->site_id,
             'time_index' => $this->time_index,
-            'status' => $this->status,
+            //'status' => $this->status,
             'business_id' => $this->business_id,
             'level_id' => $this->level_id,
             'profession_id' => $this->profession_id,
@@ -103,12 +103,13 @@ class SceneBookSearch extends SceneBook
         //过滤未预约和预约中的数据
         $query->andFilterWhere(['NOT IN', 'status', $notStatus]);
 
-        $query->andFilterWhere(['like', 'start_time', $this->start_time])
-            ->andFilterWhere(['like', 'remark', $this->remark])
-            ->andFilterWhere(['like', 'teacher_id', $this->teacher_id])
+        $query->andFilterWhere(['start_time' => $this->start_time])
+            ->andFilterWhere(['teacher_id' => $this->teacher_id])
             ->andFilterWhere(['booker_id' => $this->booker_id])
-            ->andFilterWhere(['like', 'created_by', $this->created_by]);
-
+            ->andFilterWhere(['created_by' => $this->created_by]);
+        
+        $query->andFilterWhere(['like', 'remark', $this->remark]);
+        
         return $dataProvider;
     }
     
@@ -157,10 +158,10 @@ class SceneBookSearch extends SceneBook
             }
         }
         //重组组装节假日
-        ArrayHelper::multisort($holidayBetweens, 'type');
+        ArrayHelper::multisort($holidayBetweens, 'type');   //按照节假日类型升序排列
         foreach($holidayBetweens as $holiday){
             $date = date('Y-m-d', strtotime($holiday['date']));
-            $holidays[$date][$holiday['type']] = [
+            $holidays[$date][$holiday['type']][] = [
                 'name' => $holiday['name'],
                 'type' => $holiday['type'],
                 'des' => $holiday['des'],

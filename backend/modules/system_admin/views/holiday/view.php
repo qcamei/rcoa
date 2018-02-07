@@ -51,9 +51,19 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->date;
                 }
             ],
-            'is_lunar',
+            [
+                'attribute' => 'is_lunar',
+                'value' => function ($model){
+                    return ($model->is_lunar == 1) ? '是' : '否';
+                }
+            ],
             'des',
-            'is_publish',
+            [
+                'attribute' => 'is_publish',
+                'value' => function ($model){
+                    return ($model->is_publish == 1) ? '是' : '否';
+                }
+            ],
             'created_at:datetime',
             'updated_at:datetime',
         ],

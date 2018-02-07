@@ -39,12 +39,16 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
             'attribute' => 'date',
             'label' => '时间',
             'value' => function($model) use($holidays, $holidayColourMap){
-                $holiday= '';$content = '';
+                $holiday= '';
+                $content = '';
                 if(isset($holidays[$model->date])){
-                    $first = reset($holidays[$model->date]);
-                    foreach ($holidays[$model->date] as $holiday)
-                        $content .= "<p>{$holiday['name']}(".Holiday::TYPE_NAME_MAP[$holiday['type']].")</p>";
-                    $holiday = "<a class=\"holiday img-circle {$holidayColourMap[$first['type']]}\" role=\"button\" data-content=\"{$content}\">".Holiday::TYPE_NAME_MAP[$first['type']]."</a>";
+                    $first = reset($holidays[$model->date])[0]['type'];
+                    foreach ($holidays[$model->date] as $holiday){
+                        foreach ($holiday as $value) {
+                            $content .= "<p>{$value['name']}(".Holiday::TYPE_NAME_MAP[$value['type']].")</p>";
+                        }
+                    }
+                    $holiday = "<a class=\"holiday img-circle {$holidayColourMap[$first]}\" role=\"button\" data-content=\"{$content}\">".Holiday::TYPE_NAME_MAP[$first]."</a>";
                 }
                 $date = date('m/d ', strtotime($model->date)).'</br>' .Yii::t('rcoa', 'Week ' . date('D', strtotime($model->date)));
                 return '<div style="position: relative">'.$date.$holiday.'</div>';

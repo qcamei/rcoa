@@ -2,8 +2,9 @@
 
 namespace backend\modules\scene_admin\controllers;
 
-use common\models\demand\DemandWeight;
+use common\models\scene\SceneAppraise;
 use common\models\scene\SceneBook;
+use common\models\scene\SceneBookUser;
 use common\models\shoot\ShootAppraise;
 use common\models\shoot\ShootAppraiseResult;
 use common\models\shoot\ShootBookdetail;
@@ -13,6 +14,7 @@ use yii\db\Exception;
 use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 
 /**
@@ -51,9 +53,25 @@ class ImportController extends Controller
      * Lists all DemandWorkitemTemplate models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($carry_out = false)
     {
-        $this->saveSceneBook();
+        if($carry_out){
+            $code = 0;
+            $msg = '';
+            try {
+                //保存预约
+                $this->saveSceneBook();
+                //保存预约接洽人和摄影师
+                $this->saveSceneBookUser();
+                //保存预约评价
+                $this->saveSceneAppraise();
+            } catch (Exception $ex) {
+                $code = 1;
+                $msg = $ex->getMessage();
+            }
+                
+            return $this->render('index_result',['code' => $code,'msg' => $msg,'logs' => $this->logs]);    
+        }
         return $this->render('index');
     }
     
@@ -61,13 +79,16 @@ class ImportController extends Controller
      * 保存旧预约数据到新表里
      * @return message
      */
-    public function saveSceneBook()
+    private function saveSceneBook()
     {
         $shootBooks = $this->findShootBookdetail()->addSelect(['ShootBookdetail.*'])->all();
+        $cameraNumber = $this->countCameraNumber();
+        $existSceneBooks = array_keys($this->findSceneBook());
         $sceneBooks = [];
         $content = [];
+        //组装预约数据
         foreach ($shootBooks as $shoot) {
-            $sceneBooks = [
+            $sceneBooks[$shoot['id']] = [
                 'id' => md5($shoot['site_id'] . date('Y-m-d', $shoot['book_time']) . $shoot['index'] . $shoot['id']),
                 'site_id' => $shoot['site_id'],
                 'date' => date('Y-m-d', $shoot['book_time']),
@@ -81,7 +102,7 @@ class ImportController extends Controller
                 'content_type' => ShootBookdetail::$contentTypeMap[$shoot['content_type']],
                 'shoot_mode' => $shoot['shoot_mode'],
                 'is_photograph' => $shoot['photograph'],
-                'camera_count' => 1,
+                'camera_count' => isset($cameraNumber[$shoot['id']]) ? count($cameraNumber[$shoot['id']]) : 1,
                 'start_time' => $shoot['start_time'],
                 'remark' => $shoot['remark'],
                 'is_transfer' => 0,
@@ -92,42 +113,168 @@ class ImportController extends Controller
                 'updated_at' => $shoot['updated_at'],
                 'ver' => $shoot['ver'],
             ];
-            $msg = $this->createCommand(SceneBook::tableName(), $sceneBooks);
-            $content += [$shoot['id'] => $msg];
         }
+        //保存预约数据到表里
+        foreach ($sceneBooks as $key => $value) {
+            if(!in_array($value['id'], $existSceneBooks)){
+                $msg = $this->createCommand(SceneBook::tableName(), $value);
+                $content += [$key => $msg.'('.$value['id'].')'];
+            }else{
+                $content += [$key => '已经迁移成功('.$value['id'].')'];
+            }
+        }
+        
         $this->addLog('迁移预约数据', $content);
     }
     
     /**
-     * 保存数据到需求权重表
+     * 保存接洽人和摄影师
      * @return message
      */
-    public function saveDemandWeight()
+    private function saveSceneBookUser()
     {
-        $tasks = $this->findDemandTask();
-        $weight_template = $this->findDemandWeightTemplate();
-        $weights = [];
-        foreach ($tasks as $data) {
-            if($data['is_new'] == true){
-                foreach ($weight_template as $weight) {
-                    $weight += [
-                        'demand_task_id' => $data['id'], 
-                        'created_at' => (int)$data['created_at'],
-                        'updated_at' => time(),
-                    ];
-                    $weights[] = $weight;
-                }
+        $shootBooks = $this->findShootBookdetail()
+            ->addSelect(['ShootBookdetail.id', 'ShootBookdetail.site_id', 
+                'ShootBookdetail.book_time', 'ShootBookdetail.index'])->all();
+        $roleNames = $this->findShootBookdetailRoleName();
+        $sceneBooks = $this->findSceneBook();
+        $existSceneBookUsers = $this->findSceneBookUser();
+        $bookUsers = [];
+        $roleIds = [];
+        $content = [];
+        //获取id
+        foreach ($shootBooks as $shoot){
+            $boo_id = md5($shoot['site_id'] . date('Y-m-d', $shoot['book_time']) . $shoot['index'] . $shoot['id']);
+            if(isset($sceneBooks[$boo_id]))
+                $roleIds[$shoot['id']] = $sceneBooks[$boo_id];
+        }
+        //组装接洽人和摄影师
+        foreach($roleNames as $role){
+            if(isset($roleIds[$role['b_id']])){
+                $bookUsers[$role['b_id']][] = [
+                    'book_id' => $roleIds[$role['b_id']],
+                    'role' => $role['role_name'] == 'r_contact' ? 1 : 2,
+                    'user_id' => $role['u_id'],
+                    'is_primary' => (int)$role['primary_foreign'],
+                    'sort_order' =>  0,
+                    'is_delete' => $role['iscancel'] == 'N' ? 0 : 1,
+                    'created_at' => time(),
+                    'updated_at' => time(),
+                ];
+            }
+        }
+        //保存接洽人和摄影师数据到表里
+        foreach ($bookUsers as $key => $value) {
+            if(!in_array($roleIds[$key], $existSceneBookUsers)){
+                $columns = array_keys($value[0]);
+                $msg = $this->createBatchInsert(SceneBookUser::tableName(), $columns, $value);
+                $content += [$key => $msg.'('.$roleIds[$key].')'];
+            }else{
+                $content += [$key => '已经迁移成功('.$roleIds[$key].')'];
+            }
+        }
+       
+        $this->addLog('迁移接洽人和摄影师数据', $content);
+    }
+    
+    /**
+     * 保存预约评价
+     * @return message
+     */
+    private function saveSceneAppraise()
+    {
+        $shootBooks = $this->findShootBookdetail()
+            ->addSelect(['ShootBookdetail.id', 'ShootBookdetail.site_id', 
+                'ShootBookdetail.book_time', 'ShootBookdetail.index'])->all();
+        $shootAppraises = $this->findShootAppraise();
+        $appraiseResults = $this->findShootAppraiseResult();
+        $sceneBooks = $this->findSceneBook();
+        $existSceneAppraise = $this->findSceneAppraise();
+        $shootApps = [];
+        $shootAppResults = [];
+        $sceneApps = [];
+        $appIds = [];
+        $content = [];
+        //获取id
+        //获取id
+        foreach ($shootBooks as $shoot){
+            $boo_id = md5($shoot['site_id'] . date('Y-m-d', $shoot['book_time']) . $shoot['index'] . $shoot['id']);
+            if(isset($sceneBooks[$boo_id]))
+                $appIds[$shoot['id']] = $sceneBooks[$boo_id];
+        }
+        //组装获取评价题目分数和排序
+        foreach ($shootAppraises as $appraise){
+            $shootApps[$appraise['b_id']][$appraise['role_name']][$appraise['q_id']] = [
+                'value' => $appraise['value'],
+                'index' => $appraise['index'],
+            ];
+        }
+        //组装场景评价数据
+        foreach($appraiseResults as $result){
+            if(isset($shootApps[$result['b_id']]) && isset($appIds[$result['b_id']])){
+                $sceneApps[$result['b_id']][] = [
+                    'book_id' => $appIds[$result['b_id']],
+                    'role' => $result['role_name'] == 'r_contact' ? 1 : 2,
+                    'q_id' => $result['q_id'],
+                    'q_value' => $shootApps[$result['b_id']][$result['role_name']][$result['q_id']]['value'],
+                    'index' => $shootApps[$result['b_id']][$result['role_name']][$result['q_id']]['index'] * -1,
+                    'user_id' => $result['u_id'],
+                    'user_value' => $result['value'],
+                    'user_data' =>  $result['data'],
+                    'created_at' => time(),
+                    'updated_at' => time(),
+                ];
+            }
+        }
+        //保存场景评价数据到表里
+        foreach ($sceneApps as $key => $value) {
+            if(!in_array($appIds[$key], $existSceneAppraise)){
+                $columns = array_keys($value[0]);
+                $msg = $this->createBatchInsert(SceneAppraise::tableName(), $columns, $value);
+                $content += [$key => $msg.'('.$appIds[$key].')'];
+            }else{
+                $content += [$key => '已经迁移成功('.$appIds[$key].')'];
             }
         }
         
-        $result = $this->batchInsert(DemandWeight::tableName(), [
-            'workitem_type_id',  'weight', 'sl_weight',  
-            'zl_weight', 'demand_task_id', 'created_at', 'updated_at'
-        ], $weights);
-
-        return $result;
+        $this->addLog('迁移评价题目和评价结果', $content);
     }
 
+    /**
+     * 查询 SceneBook 数据
+     * @return array
+     */
+    private function findSceneBook()
+    {
+        $query = (new Query())->select(['SceneBook.id'])
+            ->from(['SceneBook' => SceneBook::tableName()]);
+        
+       return ArrayHelper::map($query->all(), 'id', 'id');
+    }
+    
+    /**
+     * 查询 SceneBookUser 数据
+     * @return array
+     */
+    private function findSceneBookUser()
+    {
+        $query = (new Query())->select(['SceneBookUser.book_id'])
+            ->from(['SceneBookUser' => SceneBookUser::tableName()]);
+        
+       return ArrayHelper::getColumn($query->all(), 'book_id');
+    }
+    
+    /**
+     * 查询 SceneAppraise 数据
+     * @return array
+     */
+    private function findSceneAppraise()
+    {
+        $query = (new Query())->select(['SceneAppraise.book_id'])
+            ->from(['SceneAppraise' => SceneAppraise::tableName()]);
+        
+       return ArrayHelper::getColumn($query->all(), 'book_id');
+    }
 
     /**
      * 查询 ShootBookdetail 数据
@@ -151,7 +298,8 @@ class ImportController extends Controller
     {
         $query = (new Query())
             ->from(['RoleName' => ShootBookdetailRoleName::tableName()])
-            ->where(['RoleName.b_id' => $this->findShootBookdetail()]);
+            ->where(['RoleName.b_id' => $this->findShootBookdetail()])
+            ->andWhere(['iscancel' => 'N']);
         
         return $query->all();
             
@@ -174,7 +322,7 @@ class ImportController extends Controller
      * 查询 ShootAppraiseResult 数据
      * @return array
      */
-    public function findShootAppraiseResult()
+    private function findShootAppraiseResult()
     {
         $query = (new Query)
            ->from(['AppraiseResult' => ShootAppraiseResult::tableName()])
@@ -182,9 +330,26 @@ class ImportController extends Controller
        
         return $query->all();
     }
-        
+    
     /**
-     * 插入数据
+     * 根据摄影师计算机位数
+     * @return array
+     */
+    private function countCameraNumber()
+    {
+        $shootMans = [];
+        $roleUsers = $this->findShootBookdetailRoleName();
+       
+        foreach ($roleUsers as $user) {
+            if($user['role_name'] == 'r_shoot_man')
+                $shootMans[$user['b_id']][] = $user['u_id'];
+        }
+        
+        return $shootMans;
+    }
+
+    /**
+     * 插入单条数据
      * @param string $tableName         数据表
      * @param array $columns            插入字段
      * @param string $msg               消息
@@ -207,6 +372,30 @@ class ImportController extends Controller
     }
     
     /**
+     * 插入多条数据
+     * @param string $tableName         数据表
+     * @param array $columns            插入字段
+     * @param array $rows               插入数据
+     * @param string $msg               消息
+     * @return string                   插入数据情况
+     */
+    private function createBatchInsert($tableName, $columns, $rows, $msg = '')
+    {
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try{  
+            Yii::$app->db->createCommand()->batchInsert($tableName, $columns, $rows)->execute();
+            $trans->commit();  //提交事务
+            $msg = '迁移成功';
+        }catch (Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            $msg = $ex->getMessage();
+        }
+        
+        return $msg;
+    }
+    
+    /**
      * 添加记录
      * @param type $stepName    步骤名
      * @param type $content     内容
@@ -214,6 +403,5 @@ class ImportController extends Controller
     private function addLog($stepName, $content = '')
     {
         $this->logs[] = ['stepName' => $stepName,'content' => $content];
-        var_dump($this->logs);exit;
     }
 }

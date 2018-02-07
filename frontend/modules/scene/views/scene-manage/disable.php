@@ -133,6 +133,7 @@ $js = <<<JS
                 
     $(".holiday").popover({
         delay: "toggle",//{ "show": 500, "hide": 100 },
+        placement: $(window).width() <= 480 ? "top" : "right",
         //title: "节假日详情",
         //toggle: "popover",
         trigger: /*"click",*/"hover ",

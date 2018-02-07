@@ -131,10 +131,10 @@ class SceneSiteDisableSearch extends SceneSiteDisable
             }
         }
         //重组组装节假日
-        ArrayHelper::multisort($holidayBetweens, 'type');
+        ArrayHelper::multisort($holidayBetweens, 'type');   //按照节假日类型升序排列
         foreach($holidayBetweens as $holiday){
             $date = date('Y-m-d', strtotime($holiday['date']));
-            $holidays[$date][$holiday['type']] = [
+            $holidays[$date][$holiday['type']][] = [
                 'name' => $holiday['name'],
                 'type' => $holiday['type'],
                 'des' => $holiday['des'],
