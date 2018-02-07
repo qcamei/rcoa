@@ -93,7 +93,7 @@ $this->title = Yii::t('app', '{Scene}-{Homepage}',[
                 <div class="address-content">
                     <a href="<?= Url::to(['scene-book/index', 'site_id' => $scenes['id'], 'date' => date('Y-m-d'), 'date_switch' => 'week'])?>">
                         <div class="address-left">
-                            <img src="<?= $scenes['img_path']?>">
+                            <div class="scene-img"><img src="<?= $scenes['img_path']?>"></div>
                             <div class="address-mark bg-color <?= ($scenes['op_type'] == 1) ? 'add-red' : 'add-blue'?>">
                                                         <?= ($scenes['op_type'] == 1) ? '自营' : '合作'?></div>
                         </div>

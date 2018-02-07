@@ -22,7 +22,7 @@ $filter = Yii::$app->request->queryParams;
                 <div class="info-content">
                     <a href="<?= Url::to(['view', 'id' => $scenes['id']]) ?>" class="list-img" title="<?= $scenes['address']?>">
                         <div class="list-left">
-                            <img src="<?= $scenes['img_path']?>">
+                            <div class="scene-img"><img src="<?= $scenes['img_path']?>"></div>
                             <div class="list-mark bg-color <?= ($scenes['op_type'] == 1) ? 'add-red' : 'add-blue'?>">
                                                         <?= ($scenes['op_type'] == 1) ? '自营' : '合作'?></div>
                         </div>
