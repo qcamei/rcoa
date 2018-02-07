@@ -467,7 +467,8 @@ class SceneBookAction
     public function saveSceneBookUser($bookModel, $post, $role = 1)
     {
         $values = [];
-        $bookIds = ArrayHelper::getColumn($bookModel, 'id');
+        $bookModels  = !is_array($bookModel) ? [$bookModel] : $bookModel;
+        $bookIds = ArrayHelper::getColumn($bookModels, 'id');
         $user_ids = ArrayHelper::getValue($post, 'SceneBookUser.user_id');      //用户id
         //组装保存场景预约任务用户数据
         if($user_ids !== null){

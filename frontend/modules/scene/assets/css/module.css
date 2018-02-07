@@ -935,11 +935,11 @@
 }
 
 .scene .frame .time-vertical li .username {
-    color: #cccccc;
+    color: #999999;
 }
 
 .scene .frame .time-vertical li .time {
-    color: #999999;
+    color: #cccccc;
 }
 
 .scene .frame .msgform {

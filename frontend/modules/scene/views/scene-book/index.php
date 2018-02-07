@@ -157,8 +157,13 @@ $js = <<<JS
         html: true,
     });
     //当前页面得到焦点刷新
-    window.onfocus = function(){
-        window.location.reload();
+    window.onblur = function(){
+        reload();
+    }
+    function reload(){
+        window.onfocus = function(){
+            window.location.href=window.location.href; 
+        }
     }
 JS;
 $this->registerJs($js, View::POS_READY);
