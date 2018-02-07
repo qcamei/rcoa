@@ -162,7 +162,7 @@ $js = <<<JS
     }
     function reload(){
         window.onfocus = function(){
-            window.location.href=window.location.href; 
+            $("body").load(window.location.href); 
         }
     }
 JS;
