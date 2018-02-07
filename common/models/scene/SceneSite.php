@@ -63,6 +63,8 @@ class SceneSite extends ActiveRecord
     const TYPE_FOUR = '白布';
     /** 书架 */
     const TYPE_FIVE = '书架';
+    /** 录音 */
+    const TYPE_SIX = '录音';
     /** 类型 */
     public static $CONTENT_TYPES = [
         self::TYPE_ONE => '板书',
@@ -70,6 +72,7 @@ class SceneSite extends ActiveRecord
         self::TYPE_THREE => '外拍',
         self::TYPE_FOUR => '白布',
         self::TYPE_FIVE => '书架',
+        self::TYPE_SIX => '录音',
     ];
     
     /** 否 */
