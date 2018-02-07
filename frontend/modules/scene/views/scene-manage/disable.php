@@ -109,28 +109,27 @@ $js = <<<JS
         refsite = "{$refsite}",
         refdate = "{$refdate}",
         refswitch = "{$date_switch}";
-    
-        
+    //选中是月 or 周    
     $("a.date-switch[id=$date_switch]").addClass("active");
     $("div.dataProvider[id=$date_switch]").addClass("in");
-    
+    //场地
     $('#sitChange').change(function() {
         siteDropDownListChange($(this).val());
     });
-        
+    //日期   
     $('#dateChange').change(function() {
         dateChange($(this).val());
     });
-        
+    //生成添加场地id链接    
     function siteDropDownListChange(value) {  
         location.href = reflashUrl+'?site_id='+value+'&date='+refdate+'&date_switch='+refswitch;
     }
-        
+    //生成添加日期链接    
     function dateChange(value) {
         value += '/01';
         location.href = reflashUrl+'?site_id='+refsite+'&date='+value+'&date_switch='+refswitch;
     }
-                
+    //显示节假日            
     $(".holiday").popover({
         delay: "toggle",//{ "show": 500, "hide": 100 },
         placement: $(window).width() <= 480 ? "top" : "right",
