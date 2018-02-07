@@ -56,7 +56,18 @@ $this->title = Yii::t('app', '{Scene}-{Detail}', [
         </div>
         <div class="tabcontent">
             <div id="details" class="tabpane show">
-                <div class="resource"><?= $sceneData['content'] ?></div>
+                <div class="resource">
+                    <?php
+                        $content = $sceneData['content'];
+                        //设置img中src的前缀(常量-后台网址)
+                        $imgPrefix = WEB_ADMIN_ROOT;
+                        //用正则查找内容中的所有img标签的规则
+                        $imgRule = "/<[img|IMG].*?src=[\'|\"](.*?(?:[\.jpg|\.jpeg|\.png|\.gif|\.bmp]))[\'|\"].*?[\/]?>/";
+                        //批量给img标签中src增加前缀
+                        $content_img = preg_replace($imgRule, '<img src="'.$imgPrefix.'${1}" style="max-width:100%">', $content);
+                        echo $content_img;
+                    ?>
+                </div>
             </div>
             <div id="scene-map" class="tabpane">
                 <div id="allmap" class="allmap"></div>
