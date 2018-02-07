@@ -624,7 +624,7 @@
 .scene-book .date,
 .scene-book .time_index {
     border: 1px solid #ddd;
-    background-color: rgb(121, 121, 121);
+    background-color: rgb(111, 153, 173);
 }
 
 .scene-book .date {
@@ -817,14 +817,13 @@
     background-color: #f2f2f2;
 }
 
-.scene-book .table-week > tbody > tr:hover, 
-.scene-book .table-week > tbody > tr:hover i  {
+.scene-book .table-week > tbody > tr:hover  {
     color: #fff;
-    background-color: rgb(121, 121, 121);
+    background-color: rgb(111, 153, 173);
 }
 
 .scene-book .table-week > tbody > tr:hover i.No {
-    color: rgba(153, 153, 153, 0.45098039215686275);
+    color: #aaa;
 }
 
 

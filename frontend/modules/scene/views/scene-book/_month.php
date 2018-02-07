@@ -2,6 +2,7 @@
 
 use common\models\Holiday;
 use common\models\scene\SceneBook;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
 ?>

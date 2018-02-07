@@ -174,7 +174,7 @@ class SceneBookAction
         {  
             if($model->save()){
                 $this->isExistSceneBookUser($model, $post, 2);
-                $this->saveSceneBookUser($model->id, $post, 2);
+                $this->saveSceneBookUser($model, $post, 2);
                 $this->saveSceneActionLog([
                     'action' => '指派','title'=> $oldBookUser == '' ? '新增指派' : '修改指派', 
                     'content'=> $content,'book_id'=> $model->id

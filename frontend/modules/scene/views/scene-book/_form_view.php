@@ -29,7 +29,7 @@ use yii\helpers\ArrayHelper;
                 $buttonHtml = [
 //                    [
 //                        'name' => Yii::t('rcoa', 'Back'),
-//                        'url' => ['index'],
+//                        'url' => ['index', 'site_id' => $model->site_id, 'date' => $model->date, 'date_switch' => $model->date_switch],
 //                        'options' => ['class' => 'btn btn-default', /*'onclick'=> 'history.go(-1);return false'*/],
 //                        'symbol' => '&nbsp;',
 //                        'conditions' => true,
@@ -76,7 +76,7 @@ use yii\helpers\ArrayHelper;
                         'url' => ['assign', 'id' => $model->id],
                         'options' => ['class' => 'btn btn-success', 'onclick' => 'myModal($(this));return false;'],
                         'symbol' => '&nbsp;',
-                        'conditions' => ($model->getIsAssign() || $model->getIsStausShootIng())
+                        'conditions' => $model->getIsAssign()
                                         && date('Y-m-d H:i:s', strtotime($model->date.$model->start_time)) > date('Y-m-d H:i:s', time()),
                         'adminOptions' => true,
                     ],

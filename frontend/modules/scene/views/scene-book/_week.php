@@ -5,6 +5,7 @@ use common\models\scene\SceneBook;
 use frontend\modules\scene\assets\SceneAsset;
 use wskeee\utils\DateUtil;
 use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
 
