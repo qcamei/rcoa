@@ -47,6 +47,7 @@ $config = [
     'as access' => [
         'class' => 'wskeee\rbac\components\AccessControl',
         'allowActions' => [
+            'shoot/*',
             'framework/*',
             'demand/workitem/list',
             // The actions listed here will be allowed to everyone including guests.
