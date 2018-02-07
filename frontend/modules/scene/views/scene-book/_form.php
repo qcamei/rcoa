@@ -209,7 +209,7 @@ use yii\widgets\ActiveForm;
     
     <?= Html::hiddenInput('SceneBook[multi_period]', null, ['id' => 'multi-period']) ?>
     
-    <?php // Html::hiddenInput('book_id', $model->id) ?>
+    <?= Html::hiddenInput('book_id', $model->id) ?>
                 
     <?php ActiveForm::end(); ?>
 

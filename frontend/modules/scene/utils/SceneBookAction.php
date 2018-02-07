@@ -51,15 +51,13 @@ class SceneBookAction
         try
         {  
             if($post != null){
-                $results = $this->saveDayMultiPeriodSceneBook($model, $post);
+                $allModels = $this->saveDayMultiPeriodSceneBook($model, $post);
                 $this->isExistSceneBookUser($model, $post);
-                $this->saveSceneBookUser($results, $post);
-                foreach ($results as $book_id) {
-                    $this->saveSceneActionLog([
-                        'action' => '创建','title'=>'创建预约','content'=>'无','book_id'=> $book_id
-                    ]);
+                $this->saveSceneBookUser($allModels, $post);
+                foreach ($allModels as $model) {
+                    $this->saveSceneActionLog(['action' => '创建','title'=>'创建预约', 'book_id'=> $model->id]);
+                    $notice->sendShootLeaderNotification($model, '新增-'.$model->course->name, 'scene/_create_scene_book_html');
                 }
-                $notice->sendShootLeaderNotification($model, '新增-'.$model->course->name, 'scene/_create_scene_book_html');
             }else
                 throw new Exception($model->getErrors());
             
@@ -275,7 +273,7 @@ class SceneBookAction
         try
         {  
             if($model->save()){
-                
+                $this->saveSceneActionLog(['action' => '转让','title' => '取消转让', 'book_id' => $model->id]);
             }else
                 throw new Exception($model->getErrors());
             
@@ -405,32 +403,17 @@ class SceneBookAction
     {
         $values = [];
         $msg = '以下所选的时段：';
+        //$book_id = ArrayHelper::getValue($post, 'book_id');
+        $statusMap = [SceneBook::STATUS_DEFAULT, SceneBook::STATUS_CANCEL];  //状态
         $multi_period = json_decode(ArrayHelper::getValue($post, 'SceneBook.multi_period'));
         $sceneBooks = ArrayHelper::getValue($post, 'SceneBook');
         if(!isset($sceneBooks['is_photograph'])){
             $sceneBooks['is_photograph'] = 0;
         }
-        if(count($multi_period) > 1){
-            //$model->status = SceneBook::STATUS_DEFAULT;
-            $model->delete();
-            $results = $this->getIsDayExistSceneBook($model, $post);
-            foreach ($multi_period as $timeIndex) {
-                $initial  = [
-                    'id' => md5($model->site_id + $model->date + $timeIndex + rand(1,10000)),
-                    'site_id' => $model->site_id,
-                    'date' => $model->date,
-                    'time_index' => $timeIndex,
-                    'start_time' => SceneBook::$startTimeIndexMap[$timeIndex]
-                ];
-                unset($sceneBooks['multi_period']);
-                unset($sceneBooks['start_time']);
-                $values[] = array_merge($initial, array_merge($sceneBooks, [
-                    'created_by' => \Yii::$app->user->id, 'created_at' => time(), 'updated_at' => time()
-                ]));
-            }
-            
+        if($model->save()){
             //如果存在已被预约的信息，返回被预约的信息
-            if($results != null){
+            $results = $this->getIsDayExistSceneBook($model, $post);
+            if(!empty($results)){
                 $timeIndexMap = SceneBook::$timeIndexMaps;
                 $startTimeIndexMap = SceneBook::$startTimeIndexMap;
                 //date('d')+1 明天预约时间
@@ -443,36 +426,48 @@ class SceneBookAction
                         .($dayTomorrow < $bookTime && $bookTime < $dayEnd ? (isset($value['is_disable']) && $value['is_disable'] ? '已被禁用！' : (!empty($value['nickname']) ? "预约人：{$value['nickname']}（{$value['phone']}）已被预约" : '正在预约中！')) : '已超出规定的预约时间！');
                 }
                 throw new NotFoundHttpException("操作失败！".$msg);
+            }else{
+                if(count($multi_period) > 1){
+                    foreach ($multi_period as $timeIndex) {
+                        if($model->time_index != $timeIndex){
+                            $initial  = [
+                                'id' => md5($model->site_id . $model->date . $timeIndex . rand(1,10000)),
+                                'site_id' => $model->site_id,
+                                'date' => $model->date,
+                                'time_index' => $timeIndex,
+                                'start_time' => SceneBook::$startTimeIndexMap[$timeIndex]
+                            ];
+                            unset($sceneBooks['multi_period']);
+                            unset($sceneBooks['start_time']);
+                            $values[] = array_merge($initial, array_merge($sceneBooks, [
+                                'created_by' => $model->created_by, 'created_at' => time(), 'updated_at' => time()
+                            ]));
+                        }
+                    }
+                    //添加$values数组到表里
+                    Yii::$app->db->createCommand()
+                        ->batchInsert(SceneBook::tableName(), array_keys($values[0]), $values)->execute();
+                }
             }
-            //添加$values数组到表里
-            Yii::$app->db->createCommand()
-                ->batchInsert(SceneBook::tableName(), array_keys($values[0]), $values)->execute();
-                        
-            //查询保存后的id
-            $query = (new Query())->select(['SceneBook.id'])->from(['SceneBook' => SceneBook::tableName()]);
-            $query->where([
-                'SceneBook.site_id' => $model->site_id,
-                'SceneBook.date' => $model->date,
-                'SceneBook.time_index' => $multi_period
-            ]);
-            
-            return ArrayHelper::getColumn($query->all(), 'id');
-        } else {
-            $model->save();
-            return [$model->id];
+            //查询保存后的数据
+            $query = SceneBook::find();
+            $query->where(['site_id' => $model->site_id, 'date' => $model->date, 'time_index' => $multi_period]);
+            $query->andWhere(['NOT IN', 'status', $statusMap]);
+
+            return $query->all();
         }
     }
     
     /**
      * 保存场景接洽人or摄影师用户
-     * @param integer|array $book_id
+     * @param integer|array $bookModel
      * @param array $post
      * @param integer $role                 角色：1接洽人，2摄影师
      */
-    public function saveSceneBookUser($book_id, $post, $role = 1)
+    public function saveSceneBookUser($bookModel, $post, $role = 1)
     {
         $values = [];
-        $bookIds = !is_array($book_id) ? [$book_id] : $book_id;
+        $bookIds = ArrayHelper::getColumn($bookModel, 'id');
         $user_ids = ArrayHelper::getValue($post, 'SceneBookUser.user_id');      //用户id
         //组装保存场景预约任务用户数据
         if($user_ids !== null){
@@ -555,7 +550,7 @@ class SceneBookAction
          
         $action = ArrayHelper::getValue($params, 'action');                                 //动作
         $title = ArrayHelper::getValue($params, 'title');                                   //标题  
-        $content = ArrayHelper::getValue($params, 'content');                               //内容
+        $content = ArrayHelper::getValue($params, 'content', '无');                         //内容
         $created_by = ArrayHelper::getValue($params, 'created_by', Yii::$app->user->id);    //创建者
         $course_id = ArrayHelper::getValue($params, 'book_id');                             //课程id
         
@@ -584,6 +579,7 @@ class SceneBookAction
         $dayTomorrow = date('Y-m-d H:i:s',strtotime("+1 days"));
         //30天后预约时间
         $dayEnd = date('Y-m-d H:i:s',strtotime("+31 days"));
+        $book_id = ArrayHelper::getValue($post, 'book_id');
         $postMultiPperiod = ArrayHelper::getValue($post, 'SceneBook.multi_period');
         $multiPperiod = !empty($postMultiPperiod) ? json_decode($postMultiPperiod) : array_keys(SceneBook::$timeIndexMap);
         $statusMap = [SceneBook::STATUS_DEFAULT, SceneBook::STATUS_CANCEL];  //状态
@@ -604,7 +600,9 @@ class SceneBookAction
         foreach ($query->all() as $value) {
             if(in_array($value['time_index'], $multiPperiod)){
                 $bookValues[$value['time_index']] = $value;
-                //unset($bookValues[$model->time_index]);
+                if(isset($book_id)){
+                    unset($bookValues[$model->time_index]);
+                }
             }
         }
         //返回已经被预约的场次信息
