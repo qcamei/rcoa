@@ -57,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <div class="col-lg-7 col-md-8 col-xs-9 site-util" style="padding-left:0">
             <?= Html::dropDownList('site_id', $refsite, 
-                $sceneSite, ['id' => 'sitChange', 'class' => 'form-control', 'prompt' => '请选择...'])?> 
+                $sceneSite, ['id' => 'sitChange', 'class' => 'form-control'])?> 
         </div>
         <div class="col-lg-3 col-md-2 col-xs-9" style="padding:0">
             <?= DatePicker::widget([

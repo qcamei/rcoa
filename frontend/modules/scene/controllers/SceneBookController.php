@@ -20,6 +20,7 @@ use wskeee\framework\FrameworkManager;
 use wskeee\framework\models\ItemType;
 use wskeee\rbac\RbacManager;
 use wskeee\rbac\RbacName;
+use wskeee\utils\DateUtil;
 use Yii;
 use yii\db\Query;
 use yii\filters\AccessControl;
@@ -118,16 +119,20 @@ class SceneBookController extends Controller
             $this->isExistNewSceneBook($params);    //判断同一时间段是否存在相同的预约
             $model = new SceneBook(array_merge($params, 
                 ['created_by' => \Yii::$app->user->id, 'status' => SceneBook::STATUS_BOOKING]));
-            if(!$model->sceneSite->is_publish)
+            if(!$model->sceneSite->is_publish){
                 throw new NotAcceptableHttpException('该场地未发布！');
+            }
             $model->scenario = SceneBook::SCENARIO_TEMP_CREATE;
             $model->save();
             $model->scenario = SceneBook::SCENARIO_DEFAULT;
             $model->loadDefaultValues();
-        }else {
+        }else{
             $model->scenario = SceneBook::SCENARIO_DEFAULT;
-            if($model->getIsNew())
+            if($model->getIsNew()){
                 $this->isExistNewSceneBook($params);    //判断同一时间段是否存在相同的预约
+            }else if($model->created_by != \Yii::$app->user->id && $model->getIsBooking()){
+                throw new NotAcceptableHttpException('【'. DateUtil::intToTime($model->getBookTimeRemaining(),2).'】后解锁');
+            }
         }
         
         if ($model->load($post)) {
@@ -760,7 +765,8 @@ class SceneBookController extends Controller
         $query->andWhere(['>', 'status', SceneBook::STATUS_DEFAULT]);
         $query->andWhere(['!=', 'status', SceneBook::STATUS_CANCEL]);
         //$query->andWhere(['between', 'date', $date, date('Y-m-d',strtotime('+1 days'.$date))]);
-        if(count ($query->all()) > 0)  
-            throw new NotAcceptableHttpException('正在预约中！');  
+        if(count ($query->all()) > 0){ 
+            throw new NotAcceptableHttpException('正在预约中！');
+        }
     }
 }

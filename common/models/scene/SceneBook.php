@@ -247,10 +247,10 @@ class SceneBook extends ActiveRecord
     }
     
     public function afterFind() {
-        if($this->getIsBooking() && (time() - $this->updated_at > self::BOOKING_TIMEOUT))
+        if($this->getIsBooking() && (time() - $this->updated_at > self::BOOKING_TIMEOUT)){
             $this->status = self::STATUS_DEFAULT;
             $this->save(false,['status']);
-        
+        }
         parent::afterFind();
     }
 
