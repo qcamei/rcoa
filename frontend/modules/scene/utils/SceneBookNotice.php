@@ -97,8 +97,8 @@ class SceneBookNotice {
         $params = [
             'model' => $model,
             'contacter' => implode('、', ArrayHelper::getColumn($contacter, 'nickname')),
-            'oldShootMan' => implode('、', array_diff(ArrayHelper::getColumn($oldShootMan, 'nickname'), ArrayHelper::getColumn($newShootMan, 'nickname'))),
-            'newShootMan' => implode('、', array_diff(ArrayHelper::getColumn($newShootMan, 'nickname'), ArrayHelper::getColumn($oldShootMan, 'nickname'))),
+            'oldShootMan' => implode('、', ArrayHelper::getColumn($oldShootMan, 'nickname')),
+            'newShootMan' => implode('、', ArrayHelper::getColumn($newShootMan, 'nickname')),
         ];
         
         //主题 

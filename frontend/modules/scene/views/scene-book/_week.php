@@ -406,7 +406,9 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
                     $isAppraise = $model->getIsAppraise();              //是否在【评价中】任务
                     $isBreakPromise = $model->getIsStatusBreakPromise();//是否在【已失约】任务
                     //该预约是否为自己的操作
-                    $isMe = $model->booker_id == Yii::$app->user->id || (isset($bookUsers[$model->id]) && in_array(Yii::$app->user->id, $bookUsers[$model->id]));
+                    $isMe = $model->booker_id == Yii::$app->user->id 
+                        || ($model->created_by == Yii::$app->user->id && !$isValid)
+                        || (isset($bookUsers[$model->id]) && in_array(Yii::$app->user->id, $bookUsers[$model->id]));
                     $isTransfer = $model->is_transfer;                  //该预约是否为转让预约
                     //场次是否禁用
                     $isDisable = isset($siteManage[$model->date][$model->time_index]) && $siteManage[$model->date][$model->time_index];
@@ -418,13 +420,13 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
                         $buttonName = !$isNew ? ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? '<i class="fa fa-refresh"></i>&nbsp;转让' : $model->getStatusName()) : '<i class="fa fa-ban"></i>&nbsp;禁';
                         $buttonClass = !$isNew ?  ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? 'btn-primary' : ($isBreakPromise ? 'btn-danger' : ($isStausShootIng || $isAppraise ? 'btn-info' : 'btn-default'))) : 'btn-default disabled';
                     }
-                    $url = $isNew ? 
+                    $url = $isNew || ($model->created_by == Yii::$app->user->id && !$isValid) ? 
                         ['create', 'id' => $model->id, 'site_id' => $model->site_id, 
                             'date' => $model->date, 'time_index' => $model->time_index, 
                             'date_switch' => $model->date_switch] : ['view', 'id' => $model->id];
                     $options = [
                         'class' => "btn $buttonClass btn-sm",
-                        'target' => $isNew ? : '_blank',
+                        'target' => $isNew || ($model->created_by == Yii::$app->user->id && !$isValid) ? : '_blank',
                         'style' => 'width: 58px; height: 30px;'
                     ];
                     return Html::a('<span class="'.($isMe ? 'isMe' : '').'"></span>'.$buttonName, $url, $options);

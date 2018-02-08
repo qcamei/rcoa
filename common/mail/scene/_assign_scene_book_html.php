@@ -17,7 +17,7 @@ use yii\helpers\Html;
  /* @var $model SceneBook */
 
 ?>
-<div class="gray">【<?= Html::encode($model->course->name) ?>】拍摄预约任务已经安排了摄影师。</div>
+<div class="gray">您好！【<?= Html::encode($model->course->name) ?>】拍摄预约任务已经安排了摄影师。</div>
 
 <div class="normal">地点时间：<?= Html::encode("【{$model->sceneSite->name}】".$model->date."　".$model->start_time."（".Yii::t('rcoa', 'Week ' . date('D', strtotime($model->date)))."）") ?></div>
 
