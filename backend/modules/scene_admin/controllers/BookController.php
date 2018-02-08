@@ -3,6 +3,7 @@
 namespace backend\modules\scene_admin\controllers;
 
 use common\models\expert\Expert;
+use common\models\scene\SceneAppraise;
 use common\models\scene\SceneBook;
 use common\models\scene\SceneBookUser;
 use common\models\scene\SceneSite;
@@ -381,6 +382,7 @@ class BookController extends Controller
         $query = (new Query())->select(['id', 'name', 'area', 'content_type'])
             ->from(SceneSite::tableName());
         $query->filterWhere(['id' => $site_id]);
+        $query->andFilterWhere(['is_publish' => 1]);
         $results = $query->all();
         
         if($site_id == null){
@@ -525,20 +527,23 @@ class BookController extends Controller
     protected function getSceneBookUser($book_id)
     {
         $results = [];
+        //查询预约用户信息
         $query = (new Query())->select([
-            'SceneBookUser.book_id', 'SceneBookUser.role', 'User.id', 'User.nickname','SceneBookUser.is_primary', 'User.phone'
+            'SceneBookUser.book_id', 'SceneBookUser.role', 'SceneBookUser.user_id',
+            'User.id', 'User.nickname','SceneBookUser.is_primary', 'User.phone',
+            'FORMAT((SUM(SceneAppraise.user_value)/SUM(SceneAppraise.q_value) * COUNT(SceneAppraise.q_value)), 2) AS score'
         ])->from(['SceneBookUser' => SceneBookUser::tableName()]);
-        $query->leftJoin(['User' => User::tableName()], 'User.id = SceneBookUser.user_id AND User.status = 10');
+        $query->leftJoin(['User' => User::tableName()], '(User.id = SceneBookUser.user_id AND User.status = 10)');
+        $query->leftJoin(['SceneAppraise' => SceneAppraise::tableName()], '(SceneAppraise.book_id = SceneBookUser.book_id AND SceneAppraise.user_id = SceneBookUser.user_id)');
         $query->where(['SceneBookUser.book_id' => $book_id, 'SceneBookUser.is_delete' => 0]);
         $query->groupBy('SceneBookUser.id');
         $query->orderBy(['SceneBookUser.sort_order' => SORT_ASC]);
         //组装返回的预约任务用户信息
         foreach ($query->all() as $value) {
-            $book_id = $value['book_id'];
-            unset($value['book_id']);
-            $results[$book_id][] = $value;
+            $results[$value['book_id']][] = $value;
+            unset($results[$value['book_id']]['book_id']);
         }
-       
+        
         return $results;
     }
     

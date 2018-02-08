@@ -5,6 +5,7 @@ use kartik\widgets\DatePicker;
 use kartik\widgets\Select2;
 use kartik\widgets\SwitchInput;
 use kartik\widgets\TouchSpin;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
@@ -29,6 +30,7 @@ use yii\widgets\ActiveForm;
         ], 
     ]); ?>
 
+    <h4><b>拍摄信息</b></h4>
     <?= $form->field($model, 'site_id')->dropDownList($siteName,[
         'options' => ['placeholder' => Yii::t('app', 'Select Placeholder'),],
         'onchange' => '
@@ -87,6 +89,7 @@ use yii\widgets\ActiveForm;
         ],
     ]) ?>
     
+    <h4><b>课程信息</b></h4>
     <?= $form->field($model, 'business_id')->widget(Select2::classname(),[
         'data' => $business, 'options' => ['prompt' => Yii::t('app', 'Select Placeholder')]
      ]) ?>
@@ -116,42 +119,50 @@ use yii\widgets\ActiveForm;
         'data' => $teachers, 'options' => ['placeholder' => Yii::t('app', 'Select Placeholder')]
     ])?>
 
+    <h4><b>其他信息</b></h4>
     <?= $form->field($model, 'booker_id')->widget(Select2::classname(), [
-        'data' => $createSceneBookUser, 
+        'data' => ArrayHelper::merge($createSceneBookUser, [Yii::$app->user->id => Yii::$app->user->identity->nickname]), 
         'options' => [
-            'value' => $model->isNewRecord ? Yii::$app->user->id : $model->booker_id, 
-            'placeholder' => '请选择...'
+            'value' => !$model->getIsValid() ? Yii::$app->user->id : $model->booker_id, 
+            'placeholder' => Yii::t('app', 'Select Placeholder'),
         ]
     ])?>
 
     <div class="form-group field-scenebookuser-user_id">
         <label class="col-lg-1 col-md-1 control-label form-label" for="scenebookuser-user_id"><?= Yii::t('app', 'Contacter') ?></label>
         <div class="col-lg-10 col-md-10">
-            <?= Select2::widget([
-                'name' => 'SceneBookUser[user_id][]',
-                'value' => $model->isNewRecord ? Yii::$app->user->id : array_keys($existSceneBookUser),
-                'data' => $createSceneBookUser,
-                'maintainOrder' => true,    //无序排列
-                'hideSearch' => true,
-                'options' => [
-                    'placeholder' => Yii::t('app', 'Select Placeholder'),
-                    'multiple' => true,     //设置多选
-                ],
-                'toggleAllSettings' => [
-                    'selectLabel' => '<i class="glyphicon glyphicon-ok-circle"></i> 添加全部',
-                    'unselectLabel' => '<i class="glyphicon glyphicon-remove-circle"></i> 取消全部',
-                    'selectOptions' => ['class' => 'text-success'],
-                    'unselectOptions' => ['class' => 'text-danger'],
-                ],
-                'pluginOptions' => [
-                    'tags' => false,
-                    'maximumInputLength' => 10,
-                    'allowClear' => true,
-                ],
-                'pluginEvents' => [
-                    'change' => 'function(){ select2Log();}'
-                ]
-            ]); ?>
+            <?php
+                $user_ids = [];
+                foreach ($existSceneBookUser as $key => $value) {
+                    $user_ids[] = (string) $key;
+                }
+                echo Select2::widget([
+                    'id' => 'scenebookuser-user_id',
+                    'name' => 'SceneBookUser[user_id][]',
+                    'value' => !$model->getIsValid() ? Yii::$app->user->id : $user_ids,
+                    'data' => $createSceneBookUser,
+                    'maintainOrder' => true,    //无序排列
+                    'hideSearch' => true,
+                    'options' => [
+                        'placeholder' => Yii::t('app', 'Select Placeholder'),
+                        'multiple' => true,     //设置多选
+                    ],
+                    'toggleAllSettings' => [
+                        'selectLabel' => '<i class="glyphicon glyphicon-ok-circle"></i> 添加全部',
+                        'unselectLabel' => '<i class="glyphicon glyphicon-remove-circle"></i> 取消全部',
+                        'selectOptions' => ['class' => 'text-success'],
+                        'unselectOptions' => ['class' => 'text-danger'],
+                    ],
+                    'pluginOptions' => [
+                        'tags' => false,
+                        'maximumInputLength' => 10,
+                        'allowClear' => true,
+                    ],
+                    'pluginEvents' => [
+                        'change' => 'function(){ select2Log();}'
+                    ]
+                ]); 
+            ?>
         </div>
         <div class="col-lg-10 col-md-10"><div class="help-block"></div></div>
     </div>
@@ -166,7 +177,10 @@ use yii\widgets\ActiveForm;
 <?php
 
 $js = <<<JS
+    //接洽人 设置第一个选择边框为蓝色
     window.select2Log = function(){
+        $(".field-scenebookuser-user_id").removeClass("has-error");
+        $(".field-scenebookuser-user_id .help-block").html("");
         $("ul.select2-selection__rendered").find("li.select2-selection__choice").eq(0).css({border:"1px solid blue"});
     }
     //接洽人，默认给第一个加边框

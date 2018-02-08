@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', '{Bespeak}{List}', [
         'Bespeak' => Yii::t('app', 'Bespeak'),
         'List' => Yii::t('app', 'List'),
     ]), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'][] = '预约详情';
 
 $contacter = null;
 $shootMan = null;

@@ -110,6 +110,13 @@ class SceneBookSearch extends SceneBook
         
         $query->andFilterWhere(['like', 'remark', $this->remark]);
         
+        //按照场地->时间->时段排序
+        $query->orderBy([
+            'site_id' => SORT_ASC,
+            'date' => SORT_ASC,
+            'time_index' => SORT_ASC
+        ]);
+        
         return $dataProvider;
     }
     
