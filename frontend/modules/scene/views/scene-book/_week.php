@@ -386,7 +386,7 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
             'class' => 'yii\grid\ActionColumn',
             'header' => Yii::t('app', 'Operating'),
             'buttons' => [
-                'view' => function ($url, $model) use($dayTomorrow, $dayEnd, $sceneBookUser, $siteManage) {
+                'view' => function ($url, $model) use($dayTomorrow, $dayEnd, $sceneBookUser, $siteManage, $isPublishSite) {
                     $bookUsers = [];
                     if(isset($sceneBookUser[$model->id])){
                         foreach ($sceneBookUser[$model->id] as $book_user) {
@@ -408,7 +408,6 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
                     //该预约是否为自己的操作
                     $isMe = $model->booker_id == Yii::$app->user->id || (isset($bookUsers[$model->id]) && in_array(Yii::$app->user->id, $bookUsers[$model->id]));
                     $isTransfer = $model->is_transfer;                  //该预约是否为转让预约
-                    $isPublishSite = $model->sceneSite->is_publish;     //是否发布该场地
                     //场次是否禁用
                     $isDisable = isset($siteManage[$model->date][$model->time_index]) && $siteManage[$model->date][$model->time_index];
                     //判断30天内的预约时段

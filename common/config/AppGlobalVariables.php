@@ -28,7 +28,10 @@ class AppGlobalVariables{
      */
     public static function getSystems()
     {   
-        return System::find()->where(['is_delete' => 'N'])->orderBy('index asc')->all();
+        return System::find()
+            ->where(['is_delete' => 'N'])
+            ->orderBy('index asc')
+            ->all();
     }
     
     /**

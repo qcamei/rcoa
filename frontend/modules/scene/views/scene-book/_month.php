@@ -98,7 +98,6 @@ use yii\helpers\Html;
                                     //该预约是否为自己预约
                                     $isMe = $allModels[$date][$index]->booker_id == Yii::$app->user->id || (isset($bookUsers[$allModels[$date][$index]->id]) && in_array(Yii::$app->user->id, $bookUsers[$allModels[$date][$index]->id]));   
                                     $isTransfer = $allModels[$date][$index]->is_transfer;                  //该预约是否为转让预约
-                                    $isPublishSite = $allModels[$date][$index]->sceneSite->is_publish;     //是否发布该场地
                                     //场次是否禁用
                                     $isDisable = isset($siteManage[$date][$index]) && $siteManage[$date][$index];
 

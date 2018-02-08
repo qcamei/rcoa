@@ -13,24 +13,24 @@ and open the template in the editor.
  */
 
 
-.demand .footer-navbar{
+.demand .footer-navbar {
     height: 50px;
     margin-top: -10px;
 }
 /** 小屏不显示文字 */
 @media (max-width: 768px) {
-    .demand .footer-navbar .footer-menu-item{
+    .demand .footer-navbar .footer-menu-item {
         width: 50px;
     }
 }
 /** 大屏显示文字 */
 @media (min-width: 768px) {
-    .demand .footer-navbar .footer-menu-item{
+    .demand .footer-navbar .footer-menu-item {
         width: 100px;
     }
 }
 /** 导航菜单 */
-.demand .footer-navbar .footer-menu-item{
+.demand .footer-navbar .footer-menu-item {
     display: inline-block;
     height: 50px;
     text-align: center;
@@ -38,7 +38,7 @@ and open the template in the editor.
     color: #000;
 }
 /** 导航菜单下img */
-.demand .footer-navbar .footer-menu-item img{
+.demand .footer-navbar .footer-menu-item > img{
     width: 24px;
     height: 24px;
     margin-top: -5px;
@@ -48,24 +48,25 @@ and open the template in the editor.
     margin-left: 5px;
 }
 /** 导航菜单选中 */
-.demand .footer-navbar .footer-menu-bg{
+.demand .footer-navbar .container > .footer-menu-bg {
     background-color: #fff;
-    color: #000 !important;
+    color: #000;
 }
 /** 导航菜单子菜单--靠右菜单 */
-.demand .footer-navbar .submenu-right{
+.demand .footer-navbar .footer-menu-item.submenu-right {
     float: right;
     font-weight: initial;
     color: #fff !important;
-    background-color: #2e6da4;
+    background-color: #2e6da4 !important;
 }
 /** 导航菜单a标签鼠标移上样式 */
-.demand .footer-navbar a:hover, a:focus, a:active {
-    color: #000 !important;
+.demand .footer-navbar .container > a:hover, a:focus, a:active {
+    color: #000;
     background-color: rgba(255, 255, 255, 0.46);;
     text-decoration: blink;
 }
-.demand .footer-navbar a{
-    color: #fff !important;
+
+.demand .footer-navbar .container > a {
+    color: #fff;
 }
 

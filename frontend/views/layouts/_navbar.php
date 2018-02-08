@@ -16,7 +16,7 @@ use yii\helpers\Html;
  */
 AppAsset::register($this);
 $moduleId = Yii::$app->controller->module->id;   //模块ID
-$system = AppGlobalVariables::getSystems();
+//$system = AppGlobalVariables::getSystems();
 
 NavBar::begin([
         //'brandLabel' => '课程中心工作平台',

@@ -263,7 +263,7 @@ class SceneBookSearch extends SceneBook
         $query->andFilterWhere(['site_id' => $this->site_id]);
         $query->andFilterWhere(['NOT IN', 'status', $statusMap]);
         $query->with('business', 'level', 'profession', 'course');
-        $query->with('sceneSite', 'booker', 'createdBy', 'teacher');
+        $query->with('sceneSite', 'booker', 'createdBy', 'teacher', 'teacher.user');
         //排序
         $query->orderBy(['date' => SORT_ASC, 'time_index' => SORT_ASC]);
         

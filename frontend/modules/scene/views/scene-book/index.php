@@ -1,5 +1,6 @@
 <?php
 
+use common\models\scene\SceneSite;
 use common\models\scene\searchs\SceneBookSearch;
 use frontend\modules\scene\assets\SceneAsset;
 use kartik\widgets\DatePicker;
@@ -26,6 +27,8 @@ $this->params['breadcrumbs'][] = $this->title;
         
         $reflashUrl =Yii::$app->urlManager->createAbsoluteUrl(['/scene/scene-book/index']);
         $refsite = ArrayHelper::getValue($filter, 'site_id', reset($firstSite));
+        //是否发布该场地
+        $isPublishSite = SceneSite::findOne(['id' => $refsite])->is_publish;
         $refdate = ArrayHelper::getValue($filter, 'date', date('Y-m-d'));
         $date_switch = ArrayHelper::getValue(Yii::$app->request->queryParams, 'date_switch', 'week');
         $menuItem = [
@@ -99,7 +102,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     'holidays' => $holidays,
                     'dataProvider' => $dataProvider, 
                     'sceneBookUser' => $sceneBookUser, 
-                    'siteManage' => $siteManage
+                    'siteManage' => $siteManage,
+                    'isPublishSite' => $isPublishSite,
                 ]);
             }
         ?>
@@ -111,7 +115,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     'holidays' => $holidays,
                     'dataProvider' => $dataProvider, 
                     'sceneBookUser' => $sceneBookUser, 
-                    'siteManage' => $siteManage
+                    'siteManage' => $siteManage,
+                    'isPublishSite' => $isPublishSite,
                 ]);
             }
         ?>
