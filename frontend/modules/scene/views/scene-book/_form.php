@@ -172,6 +172,7 @@ use yii\widgets\ActiveForm;
                 foreach ($existSceneBookUser as $key => $value)
                     $user_ids[] = (string)$key;
                 echo Select2::widget([
+                    'id' => 'scenebookuser-user_id',
                     'name' => 'SceneBookUser[user_id][]',
                     'value' => !$model->getIsValid() ? Yii::$app->user->id : $user_ids,
                     'data' => $createSceneBookUser,
@@ -223,6 +224,8 @@ $js = <<<JS
     $("ul.select2-selection__rendered").find("li.select2-selection__choice").eq(0).css({border:"1px solid blue"});
     //接洽人 设置第一个选择边框为蓝色
     window.select2Log = function(){
+        $(".field-scenebookuser-user_id").removeClass("has-error");
+        $(".field-scenebookuser-user_id .help-block").html("");
         $("ul.select2-selection__rendered").find("li.select2-selection__choice").eq(0).css({border:"1px solid blue"});
     }
     //获取专业/工种
