@@ -74,7 +74,7 @@ use yii\web\View;
             'url' => ['assign', 'id' => $model->id],
             'options' => ['class' => 'btn btn-success', 'onclick' => 'myModal($(this));return false;'],
             'symbol' => '&nbsp;',
-            'conditions' => $model->getIsAssign()
+            'conditions' => ($model->getIsAssign() || $model->getIsStausShootIng())
                             && date('Y-m-d H:i:s', strtotime($model->date.$model->start_time)) > date('Y-m-d H:i:s', time()),
             'adminOptions' => true,
         ],
@@ -94,10 +94,9 @@ use yii\web\View;
     foreach ($buttonHtml as $item){
         $btnGroup .= ResourceHelper::a($item['name'], $item['url'], $item['options'], $item['conditions']).($item['conditions'] ? $item['symbol'] : null);
     }
-
 ?>
 
-<?php if($btnGroup != null): ?>
+<?php if(str_replace('&nbsp;', '', $btnGroup) != null): ?>
 
 <div class="controlbar">
     <div class="container">
