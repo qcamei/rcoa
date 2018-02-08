@@ -3,8 +3,8 @@
 namespace common\models\scene;
 
 use common\models\question\Question;
+use wskeee\rbac\models\AuthItem;
 use Yii;
-use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
@@ -28,16 +28,6 @@ class SceneAppraiseTemplate extends ActiveRecord
     public static function tableName()
     {
         return '{{%scene_appraise_template}}';
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function behaviors() 
-    {
-        return [
-            TimestampBehavior::className()
-        ];
     }
     
     /**
@@ -78,5 +68,13 @@ class SceneAppraiseTemplate extends ActiveRecord
     public function getAppraises()
     {
         return $this->hasMany(SceneAppraise::className(), ['q_id' => 'q_id']);
+    }
+    
+    /**
+     * @return AuthItem
+     */
+    public function getRole()
+    {
+        return \Yii::$app->authManager->getRole($this->role);
     }
 }

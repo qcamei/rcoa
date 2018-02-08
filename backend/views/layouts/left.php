@@ -98,18 +98,19 @@ use common\widgets\Menu;
                         'url' => '#',
                         'items' => [
                             ['label' => '场地列表', 'icon' => 'circle-o', 'url' => ['/scene_admin/site']],
+                            ['label' => '评价题目列表', 'icon' => 'circle-o', 'url' => ['/scene_admin/appraise']],
                             ['label' => '预约列表', 'icon' => 'circle-o', 'url' => ['/scene_admin/book']],
                         ],
                     ],
-                    [
-                        'label' => '拍摄模块',
-                        'icon' => 'bars',
-                        'url' => '#',
-                        'items' => [
-                            ['label' => '评价题目列表', 'icon' => 'circle-o', 'url' => ['/shoot_admin/appraise']],
-                            ['label' => '场地列表', 'icon' => 'circle-o', 'url' => ['/shoot_admin/site']],
-                        ],
-                    ],
+//                    [
+//                        'label' => '拍摄模块',
+//                        'icon' => 'bars',
+//                        'url' => '#',
+//                        'items' => [
+//                            ['label' => '评价题目列表', 'icon' => 'circle-o', 'url' => ['/shoot_admin/appraise']],
+//                            ['label' => '场地列表', 'icon' => 'circle-o', 'url' => ['/shoot_admin/site']],
+//                        ],
+//                    ],
                     [
                         'label' => '需求模块',
                         'icon' => 'bars',
