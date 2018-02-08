@@ -180,7 +180,6 @@
     text-align: center;
     line-height: 50px;
     color: #000;
-    font-weight: bold;
 }
 /** 导航菜单下img */
 .scene .footer-navbar .footer-menu-item img{
@@ -195,15 +194,21 @@
 /** 导航菜单选中 */
 .scene .footer-navbar .footer-menu-bg{
     background-color: #fff;
+    color: #000 !important;
 }
 /** 导航菜单子菜单--靠右菜单 */
 .scene .footer-navbar .submenu-right{
     float: right;
     font-weight: initial;
-    background-color: #2e6da4 !important;
+    color: #fff !important;
+    background-color: #2e6da4;
 }
 /** 导航菜单a标签鼠标移上样式 */
-.scene .footer-navbar a:hover, a:focus {
+.scene .footer-navbar a:hover, a:focus, a:active {
+    color: #000 !important;
     background-color: rgba(255, 255, 255, 0.46);;
     text-decoration: blink;
+}
+.scene .footer-navbar a{
+    color: #fff !important;
 }

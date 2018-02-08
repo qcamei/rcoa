@@ -38,7 +38,8 @@ $team_id = !is_array($twTool->getHotelTeam(Yii::$app->user->id)) ? $twTool->getH
                         'controllerId' => 'default',
                         'name' => '主页',
                         'url' => ['default/index'],
-                        'icon' => '/filedata/demand/image/home.png',
+                        //'icon' => '/filedata/demand/image/home.png',
+                        'icon' => '<i class="glyphicon glyphicon-home"></i>',
                         'options' => ['class' => 'footer-menu-item'],
                         'symbol' => '&nbsp;',
                         'conditions' => true,
@@ -48,7 +49,8 @@ $team_id = !is_array($twTool->getHotelTeam(Yii::$app->user->id)) ? $twTool->getH
                         'controllerId' => 'course',
                         'name' => '课程',
                         'url' => ['course/index'],
-                        'icon' => '/filedata/demand/image/list-check.png',
+                        //'icon' => '/filedata/demand/image/list-check.png',
+                        'icon' => '<i class="glyphicon glyphicon-list"></i>',
                         'options' => ['class' => 'footer-menu-item'],
                         'symbol' => '&nbsp;',
                         'conditions' => true,
@@ -58,7 +60,8 @@ $team_id = !is_array($twTool->getHotelTeam(Yii::$app->user->id)) ? $twTool->getH
                         'controllerId' => 'statistics',
                         'name' => '统计',
                         'url' => ['statistics/index'],
-                        'icon' => '/filedata/demand/image/statistics.png',
+                        //'icon' => '/filedata/demand/image/statistics.png',
+                        'icon' => '<i class="glyphicon glyphicon-stats"></i>',
                         'options' => ['class' => 'footer-menu-item'],
                         'symbol' => '&nbsp;',
                         'conditions' => true,
@@ -69,7 +72,7 @@ $team_id = !is_array($twTool->getHotelTeam(Yii::$app->user->id)) ? $twTool->getH
                 foreach ($menuItems AS $item){
                     $selected = is_array($item['controllerId']) ? in_array($controllerId, $item['controllerId']) : $controllerId == $item['controllerId'];
                     $item['options']['class'] .= $selected ? $selectClass : null;
-                    echo ResourceHelper::a(Html::img([$item['icon']]).Html::tag('span', $item['name'], ['class'=>'menu-name hidden-xs']), $item['url'], 
+                    echo ResourceHelper::a($item['icon'].Html::tag('span', $item['name'], ['class'=>'menu-name hidden-xs']), $item['url'], 
                             $item['options'], $item['conditions']);
                 }
                 

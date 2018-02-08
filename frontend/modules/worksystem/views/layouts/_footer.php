@@ -33,7 +33,8 @@ use yii\helpers\Html;
                         'controllerId' => 'default',
                         'name' => '主页',
                         'url' => ['default/index'],
-                        'icon' => '/filedata/demand/image/home.png',
+                        //'icon' => '/filedata/demand/image/home.png',
+                        'icon' => '<i class="glyphicon glyphicon-home"></i>',
                         'options' => ['class' => 'footer-menu-item'],
                         'symbol' => '&nbsp;',
                         'conditions' => true,
@@ -43,7 +44,8 @@ use yii\helpers\Html;
                         'controllerId' => 'task',
                         'name' => '任务',
                         'url' => ['task/index'],
-                        'icon' => '/filedata/demand/image/list-check.png',
+                        //'icon' => '/filedata/demand/image/list-check.png',
+                        'icon' => '<i class="glyphicon glyphicon-list"></i>',
                         'options' => ['class' => 'footer-menu-item'],
                         'symbol' => '&nbsp;',
                         'conditions' => true,
@@ -53,7 +55,8 @@ use yii\helpers\Html;
                         'controllerId' => 'statistics',
                         'name' => '统计',
                         'url' => ['statistics/index'],
-                        'icon' => '/filedata/demand/image/statistics.png',
+                        //'icon' => '/filedata/demand/image/statistics.png',
+                        'icon' => '<i class="glyphicon glyphicon-stats"></i>',
                         'options' => ['class' => 'footer-menu-item'],
                         'symbol' => '&nbsp;',
                         'conditions' => true,
@@ -63,7 +66,8 @@ use yii\helpers\Html;
                         'controllerId' => 'task',
                         'name' => '创建任务',
                         'url' => ['task/create'],
-                        'icon' => '/filedata/demand/image/create.png',
+                        //'icon' => '/filedata/demand/image/create.png',
+                        'icon' => '<i class="glyphicon glyphicon-edit"></i>',
                         'options' => ['class' => 'footer-menu-item submenu-right'],
                         'symbol' => '&nbsp;',
                         'conditions' => $controllerId == 'task' ? true : false,
@@ -74,7 +78,7 @@ use yii\helpers\Html;
                 foreach ($menuItems AS $item){
                     $selected = is_array($item['controllerId']) ? in_array($controllerId, $item['controllerId']) : $controllerId == $item['controllerId'];
                     $item['options']['class'] .= $selected ? $selectClass : null;
-                    echo ResourceHelper::a(Html::img([$item['icon']]).Html::tag('span', $item['name'], ['class'=>'menu-name hidden-xs']), $item['url'], 
+                    echo ResourceHelper::a($item['icon'].Html::tag('span', $item['name'], ['class'=>'menu-name hidden-xs']), $item['url'], 
                             $item['options'], $item['conditions']);
                 }
                 

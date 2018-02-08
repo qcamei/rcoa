@@ -166,3 +166,10 @@ a.desc:after {
     -webkit-box-orient: vertical;
 }
 
+/**设置全平台 glyphicony字体图标样式**/
+@media (max-width: 480px) {
+    .glyphicon{
+        font-size: 16px !important;
+        /*color: #fff;*/
+    }
+}

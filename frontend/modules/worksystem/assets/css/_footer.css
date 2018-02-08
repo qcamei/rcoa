@@ -35,7 +35,6 @@ and open the template in the editor.
     text-align: center;
     line-height: 50px;
     color: #000;
-    font-weight: bold;
 }
 /** 导航菜单下img */
 .worksystem .footer-navbar .footer-menu-item img{
@@ -50,15 +49,21 @@ and open the template in the editor.
 /** 导航菜单选中 */
 .worksystem .footer-navbar .footer-menu-bg{
     background-color: #fff;
+    color: #000 !important;
 }
 /** 导航菜单子菜单--靠右菜单 */
 .worksystem .footer-navbar .submenu-right{
     float: right;
     font-weight: initial;
-    background-color: #2e6da4 !important;
+    color: #fff !important;
+    background-color: #2e6da4;
 }
 /** 导航菜单a标签鼠标移上样式 */
-.worksystem .footer-navbar a:hover, a:focus {
+.worksystem .footer-navbar a:hover, a:focus, a:active {
+    color: #000 !important;
     background-color: rgba(255, 255, 255, 0.46);;
     text-decoration: blink;
+}
+.worksystem .footer-navbar a{
+    color: #fff !important;
 }
