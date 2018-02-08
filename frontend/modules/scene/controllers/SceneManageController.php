@@ -7,14 +7,12 @@ use common\models\scene\SceneSite;
 use common\models\scene\SceneSiteDisable;
 use common\models\scene\searchs\SceneSiteDisableSearch;
 use common\models\scene\searchs\SceneSiteSearch;
-use wskeee\rbac\RbacName;
 use Yii;
 use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
-use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
@@ -155,27 +153,32 @@ class SceneManageController extends Controller
      * @return SceneBook the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
+    protected function findBookModel()
+    {
+        $notStatus = [SceneBook::STATUS_DEFAULT, SceneBook::STATUS_CANCEL];
+        $model = SceneBook::find()
+            ->where(Yii::$app->request->queryParams)        //过滤场地时间时段
+            ->andWhere(['NOT IN', 'status', $notStatus])    //过滤已取消和未预约的数据
+            ->one();
+        
+        if ($model !== null) {
+            return $model;
+        }
+    }
+    
+     /**
+     * Finds the SceneSiteDisable model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @return SceneSiteDisable the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
     protected function findModel()
     {
         $model = SceneSiteDisable::findOne(Yii::$app->request->queryParams);
         if ($model !== null) {
             return $model;
-        } else {
+        }else{
             return new SceneSiteDisable(Yii::$app->request->queryParams);
-        }
-    }
-    
-     /**
-     * Finds the SceneBook model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @return SceneBook the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findBookModel()
-    {
-        $model = SceneBook::findOne(Yii::$app->request->queryParams);
-        if ($model !== null) {
-            return $model;
         }
     }
     
