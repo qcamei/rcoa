@@ -158,6 +158,12 @@
     color: #000;
 }
 
+.scene-default-index
+.select-content .address .address-info .fa{
+    font-size: 18px;
+    color: #00BCD4;
+}
+
 .scene-default-index 
 .select-content .address .address-left, .address-right{
     display: inline-block;
@@ -476,10 +482,15 @@
 .scene-manage-index .list
 .list-content .content-content .list-cog{
     position: absolute;
-    top: 5px;
+    top: 0px;
     right: 5px;
     text-align: center;
     color: #000;
+}
+
+.scene-manage-index .list
+.list-content .content-content .list-cog{
+    font-size: 18px;
 }
 
 .scene-manage-index .list 

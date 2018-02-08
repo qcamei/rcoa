@@ -139,7 +139,7 @@ $js = <<<JS
     setTimeout(function(){
         map.centerAndZoom(point_first, 5);
     },2000);
-    map.centerAndZoom(point_first, 1);
+    map.centerAndZoom(point_first, 4);
     
     var data_info = $maps;
     var markers = [];
