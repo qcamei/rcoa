@@ -74,7 +74,7 @@ use yii\web\View;
             'url' => ['assign', 'id' => $model->id],
             'options' => ['class' => 'btn btn-success', 'onclick' => 'myModal($(this));return false;'],
             'symbol' => '&nbsp;',
-            'conditions' => $model->getIsAssign()
+            'conditions' => ($model->getIsAssign() || $model->getIsStausShootIng())
                             && date('Y-m-d H:i:s', strtotime($model->date.$model->start_time)) > date('Y-m-d H:i:s', time()),
             'adminOptions' => true,
         ],

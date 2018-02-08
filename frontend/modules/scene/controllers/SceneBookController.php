@@ -238,7 +238,7 @@ class SceneBookController extends Controller
         $model = $this->findModel($id);
         
         if(date('Y-m-d H:i:s', strtotime($model->date.$model->start_time)) > date('Y-m-d H:i:s', time())){
-            if(!$model->getIsAssign())
+            if(!($model->getIsAssign() || $model->getIsStausShootIng()))
                 throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
         }else{
             throw new NotAcceptableHttpException('该任务已超过预约的时段！');
