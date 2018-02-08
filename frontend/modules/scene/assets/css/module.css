@@ -482,14 +482,14 @@
 .scene-manage-index .list
 .list-content .content-content .list-cog{
     position: absolute;
-    top: 0px;
+    top: 5px;
     right: 5px;
     text-align: center;
     color: #000;
 }
 
 .scene-manage-index .list
-.list-content .content-content .list-cog{
+.list-content .content-content .list-cog .fa{
     font-size: 18px;
 }
 
