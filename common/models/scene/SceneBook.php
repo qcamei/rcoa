@@ -253,7 +253,7 @@ class SceneBook extends ActiveRecord
         }
         parent::afterFind();
     }
-
+    
     /**
      * 获取基础行业
      * @return ActiveQuery

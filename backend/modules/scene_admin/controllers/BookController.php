@@ -3,6 +3,7 @@
 namespace backend\modules\scene_admin\controllers;
 
 use common\models\expert\Expert;
+use common\models\scene\SceneAppraise;
 use common\models\scene\SceneBook;
 use common\models\scene\SceneBookUser;
 use common\models\scene\SceneSite;
@@ -108,6 +109,12 @@ class BookController extends Controller
     {
         $model = $this->findModel($id);
         $post = \Yii::$app->request->post();
+        //把字符串类型改为int整形
+        if(isset($post['SceneBook'])){
+            $post['SceneBook']['is_photograph'] = intval($post['SceneBook']['is_photograph']);
+            $post['SceneBook']['lession_time'] = intval($post['SceneBook']['lession_time']);
+            $post['SceneBook']['camera_count'] = intval($post['SceneBook']['camera_count']);
+        }
         if ($model->load($post)) {
             $this->getIsUpdate($model, $post);
             return $this->redirect(['view', 'id' => $model->id]);
@@ -181,6 +188,13 @@ class BookController extends Controller
     {
         $model = $this->findModel($id);
         
+        if(date('Y-m-d H:i:s', strtotime($model->date.$model->start_time)) > date('Y-m-d H:i:s', time())){
+            if(!($model->getIsAssign() || $model->getIsStausShootIng()))
+                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        }else{
+            throw new NotAcceptableHttpException('该任务已超过预约的时段！');
+        }
+        
         if ($model->load(Yii::$app->request->post())) {
             SceneBookAction::getInstance()->AssignSceneBook($model, Yii::$app->request->post());
             return $this->redirect(['view', 'id' => $model->id]);
@@ -246,7 +260,10 @@ class BookController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = SceneBook::findOne($id)) !== null) {
+        $statusMap = [SceneBook::STATUS_DEFAULT, SceneBook::STATUS_CANCEL];
+        $model = SceneBook::find()->where(['id' => $id])
+            ->andWhere(['NOT IN', 'status', $statusMap])->one();
+        if ($model !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
@@ -301,7 +318,7 @@ class BookController extends Controller
         $notice = SceneBookNotice::getInstance();
         $contacter = []; $shootMan = [];
         $status = $model->status;
-        $content = $this->getUpdateContent($model, $post);
+        $content = $this->getUpdateContent($model, $post);      //修改预约后的内容
         //获取接洽人
         $contacterUser = $this->getOldNewSceneUser($model->id, null);
         //获取摄影师
@@ -323,7 +340,10 @@ class BookController extends Controller
             ];
         }   
         
-        $notice->sendAllManNotification($model, $status, $content, $contacter, $shootMan, '更新预约-'.$model->course->name, 'scene/_update_scene_book_html'); 
+        //修改的内容不为空时发送通知
+        if($content != null){
+            $notice->sendAllManNotification($model, $status, $content, $contacter, $shootMan, '更新预约-'.$model->course->name, 'scene/_update_scene_book_html'); 
+        }
     }
     
     /**
@@ -381,6 +401,7 @@ class BookController extends Controller
         $query = (new Query())->select(['id', 'name', 'area', 'content_type'])
             ->from(SceneSite::tableName());
         $query->filterWhere(['id' => $site_id]);
+        $query->andFilterWhere(['is_publish' => 1]);
         $results = $query->all();
         
         if($site_id == null){
@@ -525,20 +546,23 @@ class BookController extends Controller
     protected function getSceneBookUser($book_id)
     {
         $results = [];
+        //查询预约用户信息
         $query = (new Query())->select([
-            'SceneBookUser.book_id', 'SceneBookUser.role', 'User.id', 'User.nickname','SceneBookUser.is_primary', 'User.phone'
+            'SceneBookUser.book_id', 'SceneBookUser.role', 'SceneBookUser.user_id',
+            'User.id', 'User.nickname','SceneBookUser.is_primary', 'User.phone',
+            'FORMAT((SUM(SceneAppraise.user_value)/SUM(SceneAppraise.q_value) * COUNT(SceneAppraise.q_value)), 2) AS score'
         ])->from(['SceneBookUser' => SceneBookUser::tableName()]);
-        $query->leftJoin(['User' => User::tableName()], 'User.id = SceneBookUser.user_id AND User.status = 10');
+        $query->leftJoin(['User' => User::tableName()], '(User.id = SceneBookUser.user_id AND User.status = 10)');
+        $query->leftJoin(['SceneAppraise' => SceneAppraise::tableName()], '(SceneAppraise.book_id = SceneBookUser.book_id AND SceneAppraise.user_id = SceneBookUser.user_id)');
         $query->where(['SceneBookUser.book_id' => $book_id, 'SceneBookUser.is_delete' => 0]);
         $query->groupBy('SceneBookUser.id');
         $query->orderBy(['SceneBookUser.sort_order' => SORT_ASC]);
         //组装返回的预约任务用户信息
         foreach ($query->all() as $value) {
-            $book_id = $value['book_id'];
-            unset($value['book_id']);
-            $results[$book_id][] = $value;
+            $results[$value['book_id']][] = $value;
+            unset($results[$value['book_id']]['book_id']);
         }
-       
+        
         return $results;
     }
     
@@ -626,9 +650,9 @@ class BookController extends Controller
             $content = [
                 'site_name' => (isset($newAttr['site_id']) ? "场地名称：【旧】{$oldModel->sceneSite->name}>>【新】{$model->sceneSite->name}，\n\r" : null),
                 'date' => (isset($newAttr['date']) ? "日期：【旧】{$oldModel->date}>>【新】{$model->date}，\n\r" : null),
-                'time_index' => (isset($newAttr['course_id']) ? "时段：【旧】{$oldModel->time_index}>>【新】{$model->time_index}，\n\r" : null),
+                'time_index' => (isset($newAttr['time_index']) ? "时段：【旧】{$oldModel->time_index}>>【新】{$model->time_index}，\n\r" : null),
                 'start_time' => (isset($newAttr['start_time']) ? "开始时间：【旧】{$oldAttr['start_time']}>>【新】{$newAttr['start_time']}，\n\r" : null),
-                'course_name' => (isset($newAttr['lession_time']) ? "课程名称：【旧】{$oldModel->course->name}>>【新】{$model->course->name}，\n\r" : null),
+                'course_name' => (isset($newAttr['course_id']) ? "课程名称：【旧】{$oldModel->course->name}>>【新】{$model->course->name}，\n\r" : null),
                 'lession_time' => (isset($newAttr['lession_time']) ? "课时：【旧】{$oldAttr['lession_time']}>>【新】{$newAttr['lession_time']}，\n\r" : null),
                 'content_type' => (isset($newAttr['content_type']) ? "内容类型：【旧】{$oldAttr['content_type']}>>【新】{$newAttr['content_type']}，\n\r" : null),
                 'is_photograph' => (isset($newAttr['is_photograph']) ? "是否拍照：【旧】".($oldAttr['is_photograph'] ? "需要" : "不需要").">>【新】".($newAttr['is_photograph'] ? "需要" : "不需要")."，\n\r" : null),
