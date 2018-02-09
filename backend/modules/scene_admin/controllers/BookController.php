@@ -523,11 +523,13 @@ class BookController extends Controller
      */
     protected function getExistSceneBookUser($model, $role = 1)
     {
+        $statusMap = [SceneBook::STATUS_DEFAULT, SceneBook::STATUS_CANCEL];
         //查询同一时间段所有数据
         $sceneBook = (new Query())->select(['SceneBook.id'])
             ->from(['SceneBook' => SceneBook::tableName()]);
         $sceneBook->where(['between', 'SceneBook.date', $model->date, date('Y-m-d',strtotime('+1 days'.$model->date))]);
         $sceneBook->andWhere(['SceneBook.time_index' => $model->time_index]);
+        $sceneBook->andWhere(['NOT IN', 'SceneBook.status', $statusMap]);
         //查询同一时间段是否已存在指派用户数据
         $query = (new Query())->select(['User.id AS user_id', 'User.nickname'])
             ->from(['SceneBookUser' => SceneBookUser::tableName()]);
