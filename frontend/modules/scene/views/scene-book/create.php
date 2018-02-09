@@ -9,7 +9,11 @@ use yii\web\View;
 /* @var $this View */
 /* @var $model SceneBook */
 
-$this->title = Yii::t('app', 'Create Scene Book');
+$this->title = Yii::t(null, '{create}{modelClass}', [
+    'create' => Yii::t('app', 'Create'),
+    'modelClass' => Yii::t('app', 'Scene Book'),
+]);
+
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Scene Books'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

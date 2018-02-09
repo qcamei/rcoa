@@ -7,9 +7,11 @@ use yii\web\View;
 /* @var $this View */
 /* @var $model SceneBook */
 
-$this->title = Yii::t('app', 'Update {modelClass}: ', [
-    'modelClass' => 'Scene Book',
-]) . $model->id;
+$this->title = Yii::t(null, '{update}{modelClass}', [
+    'update' => Yii::t('app', 'Update'),
+    'modelClass' => Yii::t('app', 'Scene Book'),
+]);
+
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Scene Books'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');

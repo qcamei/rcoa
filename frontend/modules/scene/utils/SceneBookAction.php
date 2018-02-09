@@ -107,7 +107,7 @@ class SceneBookAction
         {  
             if($model->save()){
                 $this->isExistSceneBookUser($model, $post);
-                $this->saveSceneBookUser($model->id, $post);
+                $this->saveSceneBookUser($model, $post);
                 $this->saveSceneActionLog([
                     'action' => '修改','title'=>'修改预约','content'=> $content == null ? '无' : $content,
                     'book_id'=> $model->id
@@ -513,15 +513,16 @@ class SceneBookAction
         try
         {  
             if(isset($appraise['q_id'])){
-                foreach ($appraise['q_id'] as $value) {
+                foreach ($appraise['q_id'] as $key => $value) {
                     $values[] = [
-                        'book_id' => $appraise['book_id'],'role' => $appraise['role'],
+                        'book_id' => $appraise['book_id'],'role' => $appraise['role'][$key],
                         'q_id' => $value,'q_value' => $appraise['q_value'][$value],
                         'index' => $appraise['index'][$value],'user_id' => $appraise['user_id'],
                         'user_value' => $appraise['user_value'][$value],
                         'created_at' => time(),'updated_at' => time(),
                     ];
                 }
+                
                 Yii::$app->db->createCommand()
                     ->batchInsert(SceneAppraise::tableName(), array_keys($values[0]), $values)->execute();
             }

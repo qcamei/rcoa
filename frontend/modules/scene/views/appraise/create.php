@@ -22,24 +22,34 @@ $this->params['breadcrumbs'][] = $this->title;
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel"><?= Html::encode('对'.SceneBookUser::$roleName[$model->role].'评价') ?></h4>
+                <?php
+                    $roleName = '';
+                    foreach($roleSubjects['role'] as $role){
+                        $roleName .= '【'.SceneBookUser::$roleName[$role].'】';
+                    }
+                ?>
+                <h4 class="modal-title" id="myModalLabel"><?= Html::encode("对{$roleName}评价") ?></h4>
             </div>
             <div class="modal-body scene" style="max-height: 500px; overflow-y: auto">
                 <?= $this->render('_form', [
                     'model' => $model,
-                    'subjects' => $subjects,
+                    'roleSubjects' => $roleSubjects,
                     'appraiseResults' => $appraiseResults
                 ]) ?>
             </div>
             <div class="modal-footer">
                 <?php
-                    if(count($appraiseResults['results']) > 0){
-                        echo Html::button(Yii::t('app', 'Close'), ['id'=>'close','class'=>'btn btn-danger',
-                                'data-dismiss'=>'modal','aria-label'=>'Close']);
-                    }else{
-                        echo Html::button(Yii::t('app', 'Submit'), ['id'=>'submitsave','class'=>'btn btn-primary',
-                            'data-dismiss'=>'modal','aria-label'=>'Close','onclick' => 'submitsave();']);
-                    }
+                
+                    foreach($roleSubjects['role'] as $role){
+                        if(count($appraiseResults['results']) > 0 && isset($appraiseResults['results'][$role])){
+                            echo Html::button(Yii::t('app', 'Close'), ['id'=>'close','class'=>'btn btn-danger',
+                                    'data-dismiss'=>'modal','aria-label'=>'Close']);
+                        }else{
+                            echo Html::button(Yii::t('app', 'Submit'), ['id'=>'submitsave','class'=>'btn btn-primary',
+                                'data-dismiss'=>'modal','aria-label'=>'Close','onclick' => 'submitsave();']);
+                        }
+                    }   
+                    
                 ?>
             </div>
         </div>

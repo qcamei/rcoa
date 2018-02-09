@@ -96,7 +96,7 @@ class SceneBookController extends Controller
         
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'roleUsers' => $this->getSceneBookRoleUser($id),
+            'roleUsers' => $this->getSceneBookUserRole($id),
             'dataProvider' => $msgSearch->search(['book_id' => $id]),
             'sceneBookUser' => $this->getExistSceneBookUserAll($id),
             'msgNum' => count($this->getSceneMessage($id)),
@@ -137,11 +137,12 @@ class SceneBookController extends Controller
         
         if ($model->load($post)) {
             SceneBookAction::getInstance()->CreateSceneBook($model, $post);
-            return $this->redirect(array_merge(['index'], Yii::$app->request->queryParams));
+            unset($params['id']);
+            return $this->redirect(array_merge(['index'], $params));
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'filters' => Yii::$app->request->queryParams,
+                'filters' => $params,
                 'business' => $this->getBasicDataBusiness(),
                 'levels' => $this->getBasicDataLevel(),
                 'professions' => !$model->level_id ? $this->getBasicDataItem($model->level_id) : [],
@@ -194,9 +195,12 @@ class SceneBookController extends Controller
     {
         $model = $this->findModel($id);
         
-        if($model->booker_id == Yii::$app->user->id){
-            if(!$model->getIsAssign())
-                throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+        if($model->booker_id == Yii::$app->user->id && !$model->is_transfer){
+            if($model->getIsAssign() || $model->getIsStausShootIng()){
+                if(date('Y-m-d H:i:s', strtotime($model->date.$model->start_time)) < date('Y-m-d H:i:s', time())){
+                    throw new NotAcceptableHttpException('该任务状态为'.$model->getStatusName ().'！');
+                }
+            }
         }else {
             throw new NotAcceptableHttpException('无权限操作！');
         }
@@ -311,7 +315,7 @@ class SceneBookController extends Controller
         $oldBooker = User::findOne($model->booker_id);
         if ($model->load(Yii::$app->request->post())) {
             SceneBookAction::getInstance()->ReceiveSceneBook($model, $oldBooker);
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['update', 'id' => $model->id]);
         } else {
             return $this->renderAjax('receive', [
                 'model' => $model,
@@ -581,7 +585,7 @@ class SceneBookController extends Controller
                     $bookUser[$user['id']] = $user['nickname'];
             }
         }
-        //9ca3903e3cd8bb2d33f53833c4255090
+        
         $createUser = ArrayHelper::map($query->all(), 'id', 'nickname');
         $existUser = $this->getExistSceneBookUser($model);
         
@@ -622,11 +626,13 @@ class SceneBookController extends Controller
      */
     protected function getExistSceneBookUser($model, $role = 1)
     {
+        $statusMap = [SceneBook::STATUS_DEFAULT, SceneBook::STATUS_CANCEL];
         //查询同一时间段所有数据
         $sceneBook = (new Query())->select(['SceneBook.id'])
             ->from(['SceneBook' => SceneBook::tableName()]);
         $sceneBook->where(['between', 'SceneBook.date', $model->date, date('Y-m-d',strtotime('+1 days'.$model->date))]);
         $sceneBook->andWhere(['SceneBook.time_index' => $model->time_index]);
+        $sceneBook->andWhere(['NOT IN', 'SceneBook.status', $statusMap]);
         //查询同一时间段是否已存在指派用户数据
         $query = (new Query())->select(['User.id AS user_id', 'User.nickname'])
             ->from(['SceneBookUser' => SceneBookUser::tableName()]);
@@ -635,6 +641,30 @@ class SceneBookController extends Controller
         $query->orderBy(['SceneBookUser.sort_order' => SORT_ASC]);
         
         return ArrayHelper::map($query->all(), 'user_id', 'nickname');
+    }
+    
+    /**
+     * 获取当前与自己匹配的评价预约角色
+     * @param string $book_id
+     * @return array
+     */
+    protected function getSceneBookUserRole($book_id)
+    {
+        $roles = [];
+        $userRoles = $this->getExistSceneBookUserAll($book_id);
+        //返回该任务的预约用户角色
+        if(isset($userRoles[$book_id])){
+            $userIds = ArrayHelper::getColumn($userRoles[$book_id], 'user_id');
+            if(in_array(\Yii::$app->user->id, $userIds)){
+                foreach ($userRoles[$book_id] as $roel){
+                    if($roel['is_primary'] == 1){
+                        $roles[$roel['user_id']][] = $roel['role'];
+                    }
+                }
+            }
+        }
+
+        return $roles;
     }
     
     /**
@@ -663,36 +693,6 @@ class SceneBookController extends Controller
         }
         
         return $results;
-    }
-    
-    /**
-     * 获取当前与自己匹配的对应评价预约角色
-     * @param string $book_id
-     * @return array
-     */
-    protected function getSceneBookRoleUser($book_id)
-    {
-        $roleUsers = [];
-        $query = (new Query())->select(['SceneBookUser.role', 'SceneBookUser.user_id'])
-            ->from(['SceneBookUser' => SceneBookUser::tableName()]);
-        $query->where([
-            'SceneBookUser.book_id' => $book_id, 
-            'SceneBookUser.is_primary' => 1,
-            'SceneBookUser.is_delete' => 0,
-        ]);
-        $query->orderBy(['SceneBookUser.sort_order' => SORT_ASC]);
-        $results = $query->all();
-        $user_ids = ArrayHelper::getColumn($results, 'user_id');
-        //判断当前用户是否存在数组里
-        if(in_array(Yii::$app->user->id, $user_ids)){
-            foreach ($results as $value) {
-                if($value['user_id'] != Yii::$app->user->id){
-                    return $roleUsers = $value;
-                }
-            }
-        }
-        
-        return $roleUsers;
     }
     
     /**

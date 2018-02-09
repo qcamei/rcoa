@@ -19,46 +19,42 @@ use yii\widgets\ActiveForm;
     
     <?php $form = ActiveForm::begin(['options'=>['id' => 'scene-book-form','class'=>'form-horizontal']]); ?>
     
-    
     <?php
         $index = 1;
-        foreach($subjects as $appraise){
+        foreach($roleSubjects['subject'] as $appraise){
             /* @var $appraise SceneAppraiseTemplate */
-            if($model->role == $appraise->role){
-                $items = ArrayHelper::map($appraise->question->ops, 'value', function($questionOp){
-                    /* @var $op QuestionOp */
-                    return $questionOp->value."分 ( $questionOp->title )";
-                });
-                echo '<div class="appraise-title">'.Html::label(($index++).'、'.$appraise->question->title).'</div>';              
-                echo Html::radioList("SceneAppraise[user_value][{$appraise->q_id}]", 
-                        (count($appraiseResults['results']) > 0 ? 
-                            $appraiseResults['results'][$appraise->role][$appraise->q_id]->user_value : $appraise->value),
-                        $items, 
-                        [
-                            'class'=>'form-group appraise',
-                            'itemOptions' => [
-                                'labelOptions'=>[
-                                    'class' =>'radio-group',
-                                ],
-                                'disabled' => count($appraiseResults['results']) > 0 ? true : false,
+            $items = ArrayHelper::map($appraise->question->ops, 'value', function($questionOp){
+                /* @var $op QuestionOp */
+                return $questionOp->value."分 ( $questionOp->title )";
+            });
+            echo '<div class="appraise-title">'.Html::label(($index++).'、'.$appraise->question->title).'</div>';              
+            echo Html::radioList("SceneAppraise[user_value][{$appraise->q_id}]", 
+                    (count($appraiseResults['results']) > 0 && isset($appraiseResults['results'][$appraise->role]) ? 
+                        $appraiseResults['results'][$appraise->role][$appraise->q_id]->user_value : $appraise->value),
+                    $items, 
+                    [
+                        'class'=>'form-group appraise',
+                        'itemOptions' => [
+                            'labelOptions'=>[
+                                'class' =>'radio-group',
                             ],
-                        ]);
-                
-                echo Html::hiddenInput("SceneAppraise[q_id][{$appraise->q_id}]", $appraise->q_id);
-                
-                echo Html::hiddenInput("SceneAppraise[q_value][{$appraise->q_id}]", $appraise->value);
-                
-                echo Html::hiddenInput("SceneAppraise[index][{$appraise->q_id}]", $appraise->index);
-            }
+                            'disabled' => count($appraiseResults['results']) > 0 && isset($appraiseResults['results'][$appraise->role])? true : false,
+                        ],
+                    ]);
 
+            echo Html::hiddenInput("SceneAppraise[q_id][{$appraise->q_id}]", $appraise->q_id);
+
+            echo Html::hiddenInput("SceneAppraise[q_value][{$appraise->q_id}]", $appraise->value);
+
+            echo Html::hiddenInput("SceneAppraise[index][{$appraise->q_id}]", $appraise->index);
+            
+            echo Html::hiddenInput("SceneAppraise[role][{$appraise->q_id}]", $appraise->role);
         }
     ?>
                 
     <?= Html::activeHiddenInput($model, 'book_id') ?>
-    
-    <?= Html::activeHiddenInput($model, 'role') ?>
-    
-    <?= Html::activeHiddenInput($model, 'user_id') ?>
+        
+    <?= Html::activeHiddenInput($model, 'user_id', ['value' => Yii::$app->user->id]) ?>
     
     <?php ActiveForm::end(); ?>
 

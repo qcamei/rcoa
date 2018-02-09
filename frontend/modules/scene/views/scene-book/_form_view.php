@@ -39,7 +39,8 @@ use yii\web\View;
             'url' => ['update', 'id' => $model->id],
             'options' => ['class' => 'btn btn-primary'],
             'symbol' => '&nbsp;',
-            'conditions' => $model->getIsAssign() && $model->booker_id == Yii::$app->user->id,
+            'conditions' => ($model->getIsAssign() || $model->getIsStausShootIng()) && $model->booker_id == Yii::$app->user->id
+                            && date('Y-m-d H:i:s', strtotime($model->date.$model->start_time)) > date('Y-m-d H:i:s', time()) && !$model->is_transfer,
             'adminOptions' => true,
         ],
         [
@@ -81,15 +82,14 @@ use yii\web\View;
         //接洽人和摄影师角色按钮
         [
             'name' => '评价',
-            'url' => ['appraise/create', 'book_id' => $model->id, 'role' => ArrayHelper::getValue($roleUsers, 'role'), 'user_id' => ArrayHelper::getValue($roleUsers, 'user_id')],
+            'url' => ['appraise/create', 'book_id' => $model->id, 'role' => isset($roleUsers[Yii::$app->user->id]) ? $roleUsers[Yii::$app->user->id] : null],
             'options' => ['class' => 'btn btn-info', 'onclick' => 'myModal($(this));return false;'],
             'symbol' => '&nbsp;',
-            'conditions' => ($model->getIsStausShootIng() || $model->getIsAppraise()) && count($roleUsers) > 0 
+            'conditions' => ($model->getIsStausShootIng() || $model->getIsAppraise()) && count($roleUsers) >= 0 
                             && $model->date < date('Y-m-d', strtotime('+1 days')) && !$model->is_transfer,
             'adminOptions' => true,
         ],
     ];
-
     $btnGroup = '';
     foreach ($buttonHtml as $item){
         $btnGroup .= ResourceHelper::a($item['name'], $item['url'], $item['options'], $item['conditions']).($item['conditions'] ? $item['symbol'] : null);

@@ -4,10 +4,13 @@ namespace frontend\modules\scene\controllers;
 
 use common\models\scene\SceneAppraise;
 use common\models\scene\SceneAppraiseTemplate;
+use common\models\scene\SceneBookUser;
 use common\models\scene\searchs\SceneAppraiseSearch;
 use frontend\modules\scene\utils\SceneBookAction;
 use Yii;
+use yii\db\Query;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
@@ -66,14 +69,19 @@ class AppraiseController extends Controller
      */
     public function actionCreate()
     {
-        $model = new SceneAppraise(Yii::$app->request->queryParams);
+        $book_id = ArrayHelper::getValue(Yii::$app->request->queryParams, 'book_id');
+        $model = new SceneAppraise(['book_id' => $book_id]);
         $searchModel = new SceneAppraiseSearch();
         
-        if(!$model->book->is_transfer){
-            if(!($model->book->getIsStausShootIng() || $model->book->getIsAppraise()))
-                throw new NotAcceptableHttpException('该任务状态为'.$model->book->getStatusName ().'！');
-        }else{
-            throw new NotAcceptableHttpException('该任务正在进行转让！');
+        if($this->getIsSceneBookUserRole($book_id)){
+            if(!$model->book->is_transfer){
+                if(!($model->book->getIsStausShootIng() || $model->book->getIsAppraise()))
+                    throw new NotAcceptableHttpException('该任务状态为'.$model->book->getStatusName ().'！');
+            }else{
+                throw new NotAcceptableHttpException('该任务正在进行转让！');
+            }
+        } else {
+            throw new NotAcceptableHttpException('无权限操作！');
         }
         
         if ($model->load(Yii::$app->request->post())) {
@@ -82,8 +90,8 @@ class AppraiseController extends Controller
         } else {
             return $this->renderAjax('create', [
                 'model' => $model,
-                'subjects' => SceneAppraiseTemplate::find()->all(),
-                'appraiseResults' => $searchModel->search(Yii::$app->request->queryParams),
+                'roleSubjects' => $this->getRoleSceneAppraiseTemplate(Yii::$app->request->queryParams),
+                'appraiseResults' => $searchModel->search(['book_id' => $book_id]),
             ]);
         }
     }
@@ -123,7 +131,7 @@ class AppraiseController extends Controller
     /**
      * Finds the SceneAppraise model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
+     * @param integer $id
      * @return SceneAppraise the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -136,5 +144,50 @@ class AppraiseController extends Controller
         }
     }
     
+    /**
+     * 获取被评价角色和评价题目模版
+     * @param array $params              
+     * @return array
+     */
+    protected function getRoleSceneAppraiseTemplate($params)
+    {
+        $role = ArrayHelper::getValue($params, 'role');
+        $bookRole = array_keys(SceneBookUser::$roleName);
+        $diffRole = array_diff($bookRole, $role);
+        if($diffRole == null){
+            $userRole = $role;
+        }else{
+            $userRole = $diffRole;
+        }
+        //评价题目
+        $subjects = SceneAppraiseTemplate::find()->where(['role' => $userRole])->all();
+        
+        return [
+            'role' => $userRole,
+            'subject' => $subjects
+        ];
+    }
     
+    /**
+     * 获取当前用户是否为该任务的主预约用户
+     * @param string $book_id
+     * @return boolean
+     */
+    protected function getIsSceneBookUserRole($book_id)
+    {
+        $query = (new Query())->select(['SceneBookUser.user_id'])
+            ->from(['SceneBookUser' => SceneBookUser::tableName()]);
+        $query->where([
+            'SceneBookUser.book_id' => $book_id, 
+            'SceneBookUser.is_primary' => 1, 
+            'SceneBookUser.is_delete' => 0
+        ]);
+        $userIds = ArrayHelper::getColumn($query->all(), 'user_id');
+        
+        if(in_array(\Yii::$app->user->id, $userIds)){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

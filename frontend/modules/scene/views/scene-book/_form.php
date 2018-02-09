@@ -156,7 +156,7 @@ use yii\widgets\ActiveForm;
     
     <h5><b>其他信息</b></h5>
     <?= $form->field($model, 'booker_id')->widget(Select2::classname(), [
-        'data' => ArrayHelper::merge($createSceneBookUser, [Yii::$app->user->id => $model->createdBy->nickname]), 
+        'data' => ArrayHelper::merge($createSceneBookUser, [Yii::$app->user->id => Yii::$app->user->identity->nickname]), 
         'options' => [
             'value' => !$model->getIsValid() ? Yii::$app->user->id : $model->booker_id, 
             'placeholder' => '请选择...'

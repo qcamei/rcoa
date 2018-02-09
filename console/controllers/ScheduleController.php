@@ -284,12 +284,8 @@ class ScheduleController extends Controller {
         $result = [];
         foreach ($appraiseResults as $book_id => $item) {
             $result[$book_id] = [
-                SceneAppraise::ROLE_CONTACT => [
-                    'hasDo' => false,
-                ],
-                SceneAppraise::ROLE_SHOOT_MAN => [
-                    'hasDo' => false,
-                ],
+                SceneAppraise::ROLE_CONTACT => ['hasDo' => false],
+                SceneAppraise::ROLE_SHOOT_MAN => ['hasDo' => false]
             ];
         }
         /**
@@ -315,14 +311,16 @@ class ScheduleController extends Controller {
         foreach ($bookUsers as $keys => $users) {
             if(isset($result[$keys])){
                 foreach ($users as $item) {
-                    if($result[$keys][$item['role']]['hasDo'] == false)
-                        $unUsers[$keys] = [
-                            'role' => $item['role'],
-                            'user_id' => $item['user_id'],
-                        ];
+                    if($result[$keys][$item['role']]['hasDo'] == false){
+                        $unUsers[$keys]['role'] = $item['role'];
+                    }
+                    if($result[$keys][$item['role']]['hasDo'] == true){
+                        $unUsers[$keys]['user_id'] = $item['user_id'];
+                    }
                 }
             }
         }
+        
         /**
          * 4、设置只有一个人评价超过3天自动为另一个人评价
          */
@@ -370,7 +368,7 @@ class ScheduleController extends Controller {
          */
         if($msg == null){
             $taskLog->result = 1;
-            $taskLog->feedback = '执行成功';
+            $taskLog->feedback = '执行超时自动完成和失约的预约任务成功';
         }else{
             $taskLog->result = 0;
             $taskLog->feedback = json_encode($msg);
@@ -415,12 +413,8 @@ class ScheduleController extends Controller {
         $result = [];
         foreach ($appraiseResults as $book_id => $item) {
             $result[$book_id] = [
-                SceneAppraise::ROLE_CONTACT => [
-                    'hasDo' => false,
-                ],
-                SceneAppraise::ROLE_SHOOT_MAN => [
-                    'hasDo' => false,
-                ],
+                SceneAppraise::ROLE_CONTACT => ['hasDo' => false],
+                SceneAppraise::ROLE_SHOOT_MAN => ['hasDo' => false]
             ];
         }
         /**
@@ -449,8 +443,10 @@ class ScheduleController extends Controller {
             if(isset($result[$keys])){
                 foreach ($users as $item) {
                     if($result[$keys][$item['role']]['hasDo'] == false){
+                        $unUsers[$keys]['role'] = $item['role'];
+                    }
+                    if($result[$keys][$item['role']]['hasDo'] == true){
                         $unUsers[$keys] = [
-                            'role' => $item['role'],
                             'user_id' => $item['user_id'],
                             'guid' => $item['guid'],
                         ];
@@ -494,7 +490,7 @@ class ScheduleController extends Controller {
          */
         if($msg == null){
             $taskLog->result = 1;
-            $taskLog->feedback = '执行成功';
+            $taskLog->feedback = '执行发送即将超时任务的通知成功';
         }else{
             $taskLog->result = 0;
             $taskLog->feedback = json_encode($msg);
