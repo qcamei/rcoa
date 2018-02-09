@@ -121,9 +121,9 @@ use yii\widgets\ActiveForm;
 
     <h4><b>其他信息</b></h4>
     <?= $form->field($model, 'booker_id')->widget(Select2::classname(), [
-        'data' => ArrayHelper::merge($createSceneBookUser, [Yii::$app->user->id => Yii::$app->user->identity->nickname]), 
+        'data' => $createSceneBookUser, 
         'options' => [
-            'value' => !$model->getIsValid() ? Yii::$app->user->id : $model->booker_id, 
+            'value' => $model->booker_id, 
             'placeholder' => Yii::t('app', 'Select Placeholder'),
         ]
     ])?>
