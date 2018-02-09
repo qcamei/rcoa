@@ -10,6 +10,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%scene_book}}".
@@ -253,7 +254,7 @@ class SceneBook extends ActiveRecord
         }
         parent::afterFind();
     }
-
+    
     /**
      * 获取基础行业
      * @return ActiveQuery
