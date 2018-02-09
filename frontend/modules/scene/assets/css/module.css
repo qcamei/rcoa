@@ -950,6 +950,7 @@
 }
 
 .scene .frame .time-vertical li .time {
+    margin-left: 5px;
     color: #9d9b9b;
 }
 
