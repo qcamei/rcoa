@@ -306,6 +306,10 @@ class SceneBookAction
                     $bookModel->status = SceneBook::STATUS_COMPLETED;
                     if($bookModel->save()){
                         $this->saveSceneActionLog([
+                            'action' => '评价','title'=> '新增评价', 'content'=> '无',
+                            'book_id'=> $book_id
+                        ]);
+                        $this->saveSceneActionLog([
                             'action' => '结束','title'=> '任务完成', 'content'=> '无',
                             'book_id'=> $bookModel->id
                         ]);
