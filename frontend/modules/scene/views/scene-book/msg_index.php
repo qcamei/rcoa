@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="msg-frame">
             <p>
                 <span class="username"><?= Html::encode($item->createdBy->nickname) ?></span>
-                <span class="time">发于<?= date('Y-m-d H:i:s', $item->created_at) ?></span>
+                <span class="time"><?= date('Y-m-d H:i:s', $item->created_at) ?></span>
             </p>
             <span>
                 <?= $item->content ?>

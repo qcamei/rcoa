@@ -689,9 +689,4 @@ class SceneBookAction
             throw new NotFoundHttpException("操作失败！".$message);
         }
     }
-
-    public function getDayExistSceneBook()
-    {
-        
-    }
 }

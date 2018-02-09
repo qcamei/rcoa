@@ -206,8 +206,6 @@ use yii\widgets\ActiveForm;
     
     <?= $form->field($model, 'remark')->textarea(['rows' => 6]) ?>
     
-    <?= Html::activeHiddenInput($model, 'status', ['value' => SceneBook::STATUS_ASSIGN]) ?>
-    
     <?= Html::hiddenInput('SceneBook[multi_period]', null, ['id' => 'multi-period']) ?>
     
     <?= Html::hiddenInput('book_id', $model->id) ?>
