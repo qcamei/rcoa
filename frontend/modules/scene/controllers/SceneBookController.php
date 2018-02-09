@@ -630,7 +630,7 @@ class SceneBookController extends Controller
         //查询同一时间段所有数据
         $sceneBook = (new Query())->select(['SceneBook.id'])
             ->from(['SceneBook' => SceneBook::tableName()]);
-        $sceneBook->where(['between', 'SceneBook.date', $model->date, date('Y-m-d',strtotime('+1 days'.$model->date))]);
+        $sceneBook->where(['SceneBook.date' => $model->date]);
         $sceneBook->andWhere(['SceneBook.time_index' => $model->time_index]);
         $sceneBook->andWhere(['NOT IN', 'SceneBook.status', $statusMap]);
         //查询同一时间段是否已存在指派用户数据

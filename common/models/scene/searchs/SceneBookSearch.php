@@ -130,7 +130,7 @@ class SceneBookSearch extends SceneBook
     {
         $holidays = [];
         $this->date = ArrayHelper::getValue($params, 'date', date('Y-m-d'));                         //日期
-        $this->date_switch = ArrayHelper::getValue($params, 'date_switch', 'month');                 //月 or 周
+        $this->date_switch = ArrayHelper::getValue($params, 'date_switch', 'week');                 //月 or 周
         $hasDo = $this->date_switch == 'month';
         $date = $hasDo ? DateUtil::getMonthSE($this->date) : DateUtil::getWeekSE($this->date);
         $this->site_id = ArrayHelper::getValue($params, 'site_id', reset($firstSite));              //场景id
