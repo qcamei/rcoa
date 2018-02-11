@@ -1,7 +1,7 @@
 <?php
 
-use common\models\demand\DemandTask;
 use common\models\scene\SceneBook;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\DetailView;
@@ -15,7 +15,8 @@ $phases = $this->render('_phase', ['model' => $model]);
 $contacter = null;
 $shootMan = null;
 if(isset($sceneBookUser[$model->id])){
-    foreach ($sceneBookUser[$model->id] as $userItem) {
+    ArrayHelper::multisort($sceneBookUser[$model->id], 'is_primary', SORT_DESC);
+    foreach ($sceneBookUser[$model->id] as $userItem){
         if($userItem['role'] == 1){
             $contacter .= $userItem['is_primary'] ? 
                 "<span style=\"color:#0066ff\">{$userItem['nickname']}（{$userItem['phone']}）</span>" : "{$userItem['nickname']}\t";
