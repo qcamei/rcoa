@@ -439,7 +439,8 @@ class SceneBookAction
                                 'site_id' => $model->site_id,
                                 'date' => $model->date,
                                 'time_index' => $timeIndex,
-                                'start_time' => SceneBook::$startTimeIndexMap[$timeIndex]
+                                'start_time' => SceneBook::$startTimeIndexMap[$timeIndex],
+                                'status' => SceneBook::STATUS_ASSIGN,
                             ];
                             unset($sceneBooks['multi_period']);
                             unset($sceneBooks['start_time']);
@@ -451,13 +452,14 @@ class SceneBookAction
                     //添加$values数组到表里
                     Yii::$app->db->createCommand()
                         ->batchInsert(SceneBook::tableName(), array_keys($values[0]), $values)->execute();
+                    
                 }
             }
             //查询保存后的数据
             $query = SceneBook::find();
             $query->where(['site_id' => $model->site_id, 'date' => $model->date, 'time_index' => $multi_period]);
             $query->andWhere(['NOT IN', 'status', $statusMap]);
-
+            
             return $query->all();
         }
     }
