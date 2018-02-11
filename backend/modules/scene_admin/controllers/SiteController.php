@@ -185,6 +185,7 @@ class SiteController extends BaseController
         $manager = (new Query())
                 ->select(['area'])
                 ->from(['Site' => SceneSite::tableName()])
+                ->groupBy('area')
                 ->all();
         
         return ArrayHelper::map($manager, 'area', 'area');

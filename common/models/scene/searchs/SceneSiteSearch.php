@@ -60,6 +60,9 @@ class SceneSiteSearch extends SceneSite
      */
     public function search($params)
     {
+        $this->op_type = ArrayHelper::getValue($params, 'SceneSiteSearch.op_type', []);             //性质
+        $this->area = ArrayHelper::getValue($params, 'SceneSiteSearch.area', []);                   //区域
+
         $query = (new Query())
                 ->select(['Site.id','Site.op_type','Site.area','Site.name','Site.manager_id','Site.content_type',
                     'Site.is_publish','Site.sort_order','User.nickname AS created_by'])
@@ -100,10 +103,10 @@ class SceneSiteSearch extends SceneSite
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'area', $this->area])
+            ->andFilterWhere(['area' => $this->area])
             ->andFilterWhere(['like', 'address', $this->address])
             ->andFilterWhere(['like', 'contact', $this->contact])
-            ->andFilterWhere(['like', 'manager_id', $this->manager_id])
+            ->andFilterWhere(['manager_id' => $this->manager_id])
             ->andFilterWhere(['like', 'content_type', $this->content_type])
             ->andFilterWhere(['like', 'img_path', $this->img_path])
             ->andFilterWhere(['like', 'des', $this->des])

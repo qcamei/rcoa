@@ -68,11 +68,13 @@ class DefaultController extends Controller
     public function getArea() 
     {
         $manager = (new Query())
-                ->select(['area'])
+                ->select(['id', 'area'])
                 ->from(['Site' => SceneSite::tableName()])
+                ->where(['is_publish' => 1])            //过滤未发布的场地
+                ->groupBy('area')
                 ->all();
         
-        return ArrayHelper::map($manager, 'area', 'area');
+        return ArrayHelper::map($manager, 'id', 'area');
     }
         
 }

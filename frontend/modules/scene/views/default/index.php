@@ -133,6 +133,18 @@ $maps = json_encode($map);
 
 $js = <<<JS
        
+    /** 鼠标经过显示进入场地详情的图标按钮 */
+    window.mouseOver = function (elem) {
+        $(elem).each(function () {
+            $(this).hover(function () {
+                $(this).children('.address-info').stop().fadeTo(200, 1, 'linear');
+            }, function () {
+                $(this).children('.address-info').stop().fadeTo(200, 0, 'linear');
+            });
+        });
+    };
+    mouseOver(".scene-default-index .select-content .address");
+        
     // 百度地图API功能	
     map = new BMap.Map("allmap");
     var point_first = new BMap.Point(105.880746, 35.95393);   //地图初始位置

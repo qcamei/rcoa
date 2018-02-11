@@ -156,6 +156,7 @@
     right: 10px;
     text-align: center;
     color: #000;
+    opacity: 0;
 }
 
 .scene-default-index
@@ -180,6 +181,7 @@
 
 .scene-default-index
 .select-content .address .address-left .scene-img{
+    width: 98px;
     height: 98px;
     display: table-cell;
     vertical-align: middle;
@@ -509,6 +511,7 @@
 
 .scene-manage-index .list 
 .list-content .content-content .list-left .scene-img{
+    width: 98px;
     height: 98px;
     display: table-cell;
     vertical-align: middle;
