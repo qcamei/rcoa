@@ -105,11 +105,11 @@ use yii\helpers\Html;
 
                                     //判断30天内的预约时段
                                     if(($dayTomorrow < $bookTime && $bookTime < $dayEnd) && $isPublishSite){
-                                        $buttonName = $isDisable ? '<i class="fa fa-ban"></i>&nbsp;禁' : ($isNew  ? '预约' : (!$isValid ? '预约中' : ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? '<i class="fa fa-refresh"></i>&nbsp;转让' : ($isAssign ? $allModels[$date][$index]->getStatusName() : $allModels[$date][$index]->getStatusName()))));
-                                        $buttonClass = $isDisable ? 'btn-default disabled' : ($isNew ? 'btn-primary' : (!$isValid && $allModels[$date][$index]->created_by != Yii::$app->user->id ? 'btn-primary disabled' : ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? 'btn-primary' : ($isAssign ? 'btn-success' : ($isStausShootIng || $isAppraise ? 'btn-info' : ($isBreakPromise ? 'btn-danger' : 'btn-default'))))));
+                                        $buttonName = $isDisable ? '<i class="fa fa-ban"></i>&nbsp;禁' : ($isNew  ? '预约' : (!$isValid ? '预约中' : ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) && !$isBreakPromise ? '<i class="fa fa-refresh"></i>&nbsp;转让' : ($isAssign ? $allModels[$date][$index]->getStatusName() : $allModels[$date][$index]->getStatusName()))));
+                                        $buttonClass = $isDisable ? 'btn-default disabled' : ($isNew ? 'btn-primary' : (!$isValid && $allModels[$date][$index]->created_by != Yii::$app->user->id ? 'btn-primary disabled' : ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) && !$isBreakPromise ? 'btn-primary' : ($isAssign ? 'btn-success' : ($isStausShootIng || $isAppraise ? 'btn-info' : ($isBreakPromise ? 'btn-danger' : 'btn-default'))))));
                                     }else{
-                                        $buttonName = !$isNew ?  ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? '<i class="fa fa-refresh"></i>&nbsp;转让' : $statusName) : '<i class="fa fa-ban"></i>&nbsp;禁';
-                                        $buttonClass = !$isNew ?  ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) ? 'btn-primary' : ($isBreakPromise ? 'btn-danger' : ($isStausShootIng || $isAppraise ? 'btn-info' : 'btn-default'))) : 'btn-default disabled';
+                                        $buttonName = !$isNew ?  ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) && !$isBreakPromise ? '<i class="fa fa-refresh"></i>&nbsp;转让' : $statusName) : '<i class="fa fa-ban"></i>&nbsp;禁';
+                                        $buttonClass = !$isNew ?  ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) && !$isBreakPromise ? 'btn-primary' : ($isBreakPromise ? 'btn-danger' : ($isStausShootIng || $isAppraise ? 'btn-info' : 'btn-default'))) : 'btn-default disabled';
                                     }
                                     $url = $isNew || ($allModels[$date][$index]->created_by == Yii::$app->user->id && !$isValid) ? 
                                         ['create', 'id' => $allModels[$date][$index]->id, 'site_id' => $allModels[$date][$index]->site_id, 
