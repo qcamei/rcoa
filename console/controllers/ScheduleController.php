@@ -473,18 +473,20 @@ class ScheduleController extends Controller {
         foreach ($sceneBooks->all() as $book){
             $url = Url::to(WEB_ROOT.'/scene/scene-book/view?id='.$book['id']);
             try{
-                if(isset($unUsers[$book['id']]) && $book['status'] == SceneBook::STATUS_APPRAISE){
-                    $unAppUsers = ArrayHelper::getValue($unUsers[$book['id']], 'guid');
-                    NotificationManager::sendByView('schedule/_book_will_overtime_task_html', ['book' => $book], $unAppUsers, '拍摄-即将失约', $url);
-                }else{
-                    $stayAppUsers = ArrayHelper::getColumn($stayUsers[$book['id']], 'guid');
-                    NotificationManager::sendByView('schedule/_book_will_overtime_task_html', ['book' => $book], $stayAppUsers, '拍摄-即将失约', $url);
+                if(isset($unUsers[$book['id']]) || $stayUsers[$book['id']]){
+                    if($book['status'] == SceneBook::STATUS_APPRAISE){
+                        $unAppUsers = ArrayHelper::getValue($unUsers[$book['id']], 'guid');
+                        NotificationManager::sendByView('schedule/_book_will_overtime_task_html', ['book' => $book], $unAppUsers, '拍摄-即将失约', $url);
+                    }else{
+                        $stayAppUsers = ArrayHelper::getColumn($stayUsers[$book['id']], 'guid');
+                        NotificationManager::sendByView('schedule/_book_will_overtime_task_html', ['book' => $book], $stayAppUsers, '拍摄-即将失约', $url);
+                    }
                 }
             }catch (Exception $ex) {
                 $msg += [$book['id'] => $ex->getMessage() . "\n" . $ex->getTraceAsString()];
             }
         }
-       
+       exit;
         /**
          * 5、执行保存
          */

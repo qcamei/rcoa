@@ -17,6 +17,7 @@ class CacheController extends Controller {
             Yii::getAlias('@frontend') . '/runtime/cache',
             Yii::getAlias('@frontend') . '/web/assets',
             Yii::getAlias('@mconline') . '/runtime/cache',
+            Yii::getAlias('@console') . '/runtime/cache',
             Yii::getAlias('@mconline') . '/web/assets',
         ];
         foreach ($dirs as $path) {
