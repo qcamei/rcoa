@@ -486,7 +486,6 @@ class ScheduleController extends Controller {
                 $msg += [$book['id'] => $ex->getMessage() . "\n" . $ex->getTraceAsString()];
             }
         }
-       exit;
         /**
          * 5、执行保存
          */
