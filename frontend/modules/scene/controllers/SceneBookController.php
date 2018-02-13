@@ -683,7 +683,7 @@ class SceneBookController extends Controller
             'FORMAT((SUM(SceneAppraise.user_value)/SUM(SceneAppraise.q_value) * COUNT(SceneAppraise.q_value)), 2) AS score'
         ])->from(['SceneBookUser' => SceneBookUser::tableName()]);
         $query->leftJoin(['User' => User::tableName()], '(User.id = SceneBookUser.user_id AND User.status = 10)');
-        $query->leftJoin(['SceneAppraise' => SceneAppraise::tableName()], '(SceneAppraise.book_id = SceneBookUser.book_id AND SceneAppraise.user_id = SceneBookUser.user_id)');
+        $query->leftJoin(['SceneAppraise' => SceneAppraise::tableName()], '(SceneAppraise.book_id = SceneBookUser.book_id AND SceneAppraise.role = SceneBookUser.role)');
         $query->where(['SceneBookUser.book_id' => $book_id, 'SceneBookUser.is_delete' => 0]);
         $query->groupBy('SceneBookUser.id');
         $query->orderBy(['SceneBookUser.sort_order' => SORT_ASC]);

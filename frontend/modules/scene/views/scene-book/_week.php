@@ -314,7 +314,7 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
                         foreach ($sceneBookUser[$model->id] as $bookUser) {
                             if($bookUser['role'] == 1 && $bookUser['is_primary']){
                                 if($model->is_transfer){
-                                    return '<span style="color:rgb(204, 204, 204)">'.$bookUser['nickname'].'</span><div class="star" data-score="'.$bookUser['score'].'" style="display: inline-block;line-height:12px"></div>';
+                                    return '<span style="color:rgb(204, 204, 204)">'.$bookUser['nickname'].'</span><div class="star" data-score="0" style="display: inline-block;line-height:12px"></div>';
                                 }else{
                                     return $bookUser['nickname'].'<div class="star" data-score="'.$bookUser['score'].'" style="display: inline-block;line-height:12px"></div>';
                                 }
@@ -353,7 +353,7 @@ $holidayColourMap = [1 => 'red', 2 => 'yellow', 3 => 'green'];
                         foreach ($sceneBookUser[$model->id] as $bookUser) {
                             if($bookUser['role'] == 2 && $bookUser['is_primary']){
                                 if($model->is_transfer){
-                                    return '<span style="color:rgb(204, 204, 204)">'.$bookUser['nickname'].'</span><div class="star" data-score="'.$bookUser['score'].'" style="display: inline-block;line-height:12px"></div>';
+                                    return '<span style="color:rgb(204, 204, 204)">'.$bookUser['nickname'].'</span><div class="star" data-score="0" style="display: inline-block;line-height:12px"></div>';
                                 }else{
                                     return $bookUser['nickname'].'<div class="star" data-score="'.$bookUser['score'].'" style="display: inline-block;line-height:12px"></div>';
                                 }

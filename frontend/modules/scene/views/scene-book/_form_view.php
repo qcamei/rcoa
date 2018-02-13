@@ -55,7 +55,7 @@ use yii\web\View;
         [
             'name' => '预约',
             'url' => ['receive', 'id' => $model->id],
-            'options' => ['id' => 'receive', 'class' => 'btn btn-success', 'onclick' => 'myModal($(this));return false;'],
+            'options' => ['id' => 'receive', 'class' => 'btn btn-primary', 'onclick' => 'myModal($(this));return false;'],
             'symbol' => '&nbsp;',
             'conditions' => $model->getIsTransfer() && $model->is_transfer && $model->booker_id != Yii::$app->user->id 
                             && date('Y-m-d H:i:s', strtotime($model->date.$model->start_time)) > date('Y-m-d H:i:s', time()),
