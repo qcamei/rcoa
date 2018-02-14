@@ -85,7 +85,7 @@ use yii\web\View;
             'url' => ['appraise/create', 'book_id' => $model->id, 'role' => isset($roleUsers[Yii::$app->user->id]) ? $roleUsers[Yii::$app->user->id] : null],
             'options' => ['class' => 'btn btn-info', 'onclick' => 'myModal($(this));return false;'],
             'symbol' => '&nbsp;',
-            'conditions' => ($model->getIsStausShootIng() || $model->getIsAppraise()) && count($roleUsers) >= 0 
+            'conditions' => ($model->getIsStausShootIng() || $model->getIsAppraise()) && count($roleUsers) > 0 
                             && $model->date < date('Y-m-d', strtotime('+1 days')) && !$model->is_transfer,
             'adminOptions' => true,
         ],

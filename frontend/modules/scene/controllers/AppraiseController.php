@@ -157,7 +157,7 @@ class AppraiseController extends Controller
         if($diffRole == null){
             $userRole = $role;
         }else{
-            $userRole = $diffRole;
+            $userRole = array_values($diffRole);
         }
         //评价题目
         $subjects = SceneAppraiseTemplate::find()->where(['role' => $userRole])->all();

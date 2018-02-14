@@ -39,8 +39,9 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div class="modal-footer">
                 <?php
-                
-                    foreach($roleSubjects['role'] as $role){
+                 
+                    foreach($roleSubjects['role'] as $key => $role){
+                        if($key > 0) continue;
                         if(count($appraiseResults['results']) > 0 && isset($appraiseResults['results'][$role])){
                             echo Html::button(Yii::t('app', 'Close'), ['id'=>'close','class'=>'btn btn-danger',
                                     'data-dismiss'=>'modal','aria-label'=>'Close']);
