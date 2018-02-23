@@ -22,7 +22,7 @@ use yii\web\Controller;
  */
 class ImportController extends Controller
 {
-    private  $logs;
+    private  $logs = [];
     
     /**
      * @inheritdoc
