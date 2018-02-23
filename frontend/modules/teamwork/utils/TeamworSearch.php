@@ -28,7 +28,7 @@ class TeamworSearch
         $nowTeam = is_array($nowTeam) ? array_keys($nowTeam) : $nowTeam;
         $mark = ArrayHelper::getValue($params, 'mark');                             //标记
         $demand_task_id = ArrayHelper::getValue($params, 'demand_task_id');         //需求任务id
-        $status = ArrayHelper::getValue($params, 'status');                         //状态
+        $status = ArrayHelper::getValue($params, 'status' , CourseManage::STATUS_NORMAL);                         //状态
         $teamId = ArrayHelper::getValue($params, 'team_id', $nowTeam);              //团队id
         $itemTypeId = ArrayHelper::getValue($params, 'item_type_id');               //行业
         $itemId = ArrayHelper::getValue($params, 'item_id');                        //层次/类型
