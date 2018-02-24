@@ -258,8 +258,7 @@ class Holiday extends ActiveRecord {
         $leapMonth = Lunar::getLeapMonth($year);
         $month = (integer) substr($holiday["date"], 0, 2);
         $day = (integer) substr($holiday["date"], 2, 2);
-
-        if ($month < $leapMonth) {
+        if ($month < $leapMonth || $leapMonth == 0) {
             //农历转公历
             $date = Lunar::convertLunarToSolar($year, $month, $day);
             $holiday['date'] = $date[0] . $date[1] . $date[2];
