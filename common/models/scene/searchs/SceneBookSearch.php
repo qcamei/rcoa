@@ -100,9 +100,13 @@ class SceneBookSearch extends SceneBook
             $this->date = explode(" - ", $this->date);
             $query->andFilterWhere(['between', 'date', $this->date[0], $this->date[1]]);
         }
-        //过滤未预约和预约中的数据
-        $query->andFilterWhere(['NOT IN', 'status', $notStatus]);
-
+        
+        if($this->status == null){
+            $query->andFilterWhere(['NOT IN', 'status', $notStatus]);   //过滤未预约和预约中的数据
+        } else {
+            $query->andFilterWhere(['status' => $this->status]);
+        }
+        
         $query->andFilterWhere(['start_time' => $this->start_time])
             ->andFilterWhere(['teacher_id' => $this->teacher_id])
             ->andFilterWhere(['booker_id' => $this->booker_id])
