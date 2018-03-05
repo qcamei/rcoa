@@ -122,7 +122,7 @@ class StatisticsController extends Controller
                 'earliest_time' => min(ArrayHelper::getColumn($allCount, 'earliest_time')),
             ]];
         }
-        
+
         return array_merge($allCount, $allTotal);
     }
     
@@ -136,7 +136,8 @@ class StatisticsController extends Controller
         $notStatus = [SceneBook::STATUS_DEFAULT, SceneBook::STATUS_BOOKING];            //未预约和预约中
         
         $bookerQuery->select(['User.nickname', 'COUNT(SceneBook.booker_id) AS booker_number',
-                                'SUM(SceneBook.status=400) AS miss_number',])
+                                'SUM(SceneBook.status=400) AS miss_number',
+                                'FORMAT((SUM(SceneBook.status=400)/COUNT(SceneBook.booker_id)) * 100, 2) AS miss_rate'])
                 ->from(['SceneBook' => SceneBook::tableName()])
                 ->leftJoin(['User' => User::tableName()], 'User.id = SceneBook.booker_id')
                 ->andFilterWhere(['NOT IN', 'SceneBook.status', $notStatus])             //过滤未预约和预约中的数据
@@ -160,13 +161,13 @@ class StatisticsController extends Controller
             ->from(['SceneBook' => SceneBook::tableName()]);
         $sceneBookQuery->andWhere(['NOT IN', 'SceneBook.status', $notStatus]);          //过滤未预约和预约中的数据
         
-        $directorQuery->select(['User.nickname', 'COUNT(DISTINCT SceneBookUser.book_id) AS contact_number',
+        $directorQuery->select(['User.nickname AS name', 'COUNT(DISTINCT SceneBookUser.book_id) AS contact_number',
                                 'FORMAT((SUM(SceneAppraise.user_value)/SUM(SceneAppraise.q_value) * 100), 1) AS score'])
                 ->from(['SceneBookUser' => SceneBookUser::tableName()])
                 ->leftJoin(['User' => User::tableName()], 'User.id = SceneBookUser.user_id AND User.status = 10')
                 ->leftJoin(['SceneAppraise' => SceneAppraise::tableName()], 
                         '(SceneAppraise.book_id = SceneBookUser.book_id AND SceneAppraise.role = SceneBookUser.role)')
-                ->andFilterWhere(['SceneBookUser.book_id' => $sceneBookQuery, 'SceneBookUser.role' => $role])
+                ->where(['SceneBookUser.book_id' => $sceneBookQuery, 'SceneBookUser.role' => $role])
                 ->andFilterWhere(['SceneBookUser.is_delete' => 0])
                 ->groupBy(['SceneBookUser.user_id']);
 

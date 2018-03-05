@@ -50,7 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         
         <div class="form-group">
-          <label for="dateRange" class="col-sm-2 control-label"><?php echo Yii::t('app', 'Time-Slot') ?></label>
+          <label for="dateRange" class="col-sm-2 control-label"><?php echo Yii::t('app', 'Time Slot') ?></label>
           <div class="col-sm-10">
               <?php
                 echo DateRangePicker::widget([
@@ -116,7 +116,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ],
                             ],
                             [
-                                'label' => Yii::t('app', 'Bespeak-Number'),
+                                'label' => Yii::t('app', 'Bespeak Number'),
                                 'value'=> function($data){
                                     return $data['book_number'];
                                 },
@@ -133,7 +133,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ],
                             ],
                             [
-                                'label' => Yii::t('app', 'Missed-Bespeak-Number'),
+                                'label' => Yii::t('app', 'Missed Bespeak Number'),
                                 'format' => 'raw',
                                 'value'=> function($data){
                                     return !empty($data['miss_number']) ? $data['miss_number'] . '<span style="color:' .
@@ -154,7 +154,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ],
                             ],
                             [
-                                'label' => Yii::t('app', 'Utilization-Ratio'),
+                                'label' => Yii::t('app', 'Utilization Ratio'),
                                 'format' => 'raw',
                                 'value'=> function($data){
                                     $date = Yii::$app->getRequest()->getQueryParam("dateRange");        //时间段
@@ -191,7 +191,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </center>
             </div>
         </div>
-        
+        <!--根据接洽人来统计-->
         <div class="col-lg-12">
             <div class="title"><?= Yii::t('app', 'Booker')?>：</div>
             <div class="lists">
@@ -200,13 +200,14 @@ $this->params['breadcrumbs'][] = $this->title;
                         'dataProvider' => new ArrayDataProvider([
                             'allModels' => $booker,
                             'pagination' => FALSE,
-    //                        'sort' => [
-    //                            'attributes' => ['booker_number', 'miss_number', 'score'],
-    //                        ],
+                            'sort' => [
+                                'attributes' => ['nickname', 'booker_number', 'miss_number', 'miss_rate'],
+                            ],
                         ]),
                         'layout' => "{items}\n{summary}\n{pager}",
                         'columns' => [
                             [
+                                'attribute' => 'nickname',
                                 'label' => Yii::t('app', 'Name'),
                                 'value'=> function($data){
                                     return $data['nickname'];
@@ -225,7 +226,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             ],
                             [
                                 'attribute' => 'booker_number',
-                                'label' => Yii::t('app', 'Bespeak-Number'),
+                                'label' => Yii::t('app', 'Bespeak Number'),
                                 'value'=> function($data){
                                     return $data['booker_number'];
                                 },
@@ -243,13 +244,32 @@ $this->params['breadcrumbs'][] = $this->title;
                             ],
                             [
                                 'attribute' => 'miss_number',
-                                'label' => Yii::t('app', 'Missed-Bespeak-Number'),
+                                'label' => Yii::t('app', 'Missed Bespeak Number'),
                                 'format' => 'raw',
                                 'value'=> function($data){
-                                    return !empty($data['miss_number']) ? $data['miss_number'] . '<span style="color:' .
-                                            (round($data['miss_number'] / $data['booker_number'] * 100, 2) < 50 ? '#43c584' : '#ff0000') . '">（' .
-                                                round($data['miss_number'] / $data['booker_number'] * 100, 2) . '%）</span>' :
-                                                    '无<span style="color:#43c584">（0%）';
+                                    return !empty($data['miss_number']) ? $data['miss_number'] : '无';
+                                },
+                                'headerOptions' => [
+                                    'style' => [
+                                        'text-align' => 'center',
+                                    ],
+                                ],
+                                'contentOptions' => [
+                                    'style' => [
+                                        'text-align' => 'center',
+                                        'vertical-align' => 'middle',
+                                    ],
+                                ],
+                            ],
+                            [
+                                'attribute' => 'miss_rate',
+                                'label' => Yii::t('app', 'Missed Bespeak Rate'),
+                                'format' => 'raw',
+                                'value'=> function($data){
+                                    return !empty($data['miss_rate']) ? '<span style="color:' .
+                                                    ($data['miss_rate'] < 50 ? '#43c584' : '#ff0000') . '">' .
+                                                $data['miss_rate'] .'%</span>' :
+                                            '<span style="color:#43c584">0%</span>';
                                 },
                                 'headerOptions' => [
                                     'style' => [
@@ -268,6 +288,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ?>
             </div>
         </div>
+        <!--根据编导来统计-->
         <div class="col-lg-12">
             <div class="title"><?= Yii::t('app', 'Director')?>：</div>
             <div class="lists">
@@ -276,16 +297,17 @@ $this->params['breadcrumbs'][] = $this->title;
                         'dataProvider' => new ArrayDataProvider([
                             'allModels' => $director,
                             'pagination' => FALSE,
-    //                        'sort' => [
-    //                            'attributes' => ['contact_number', 'miss_number', 'score'],
-    //                        ],
+                            'sort' => [
+                                'attributes' => ['name', 'contact_number', 'score'],
+                            ],
                         ]),
                         'layout' => "{items}\n{summary}\n{pager}",
                         'columns' => [
                             [
+                                'attribute' => 'name',
                                 'label' => Yii::t('app', 'Name'),
                                 'value'=> function($data){
-                                    return $data['nickname'];
+                                    return $data['name'];
                                 },
                                 'headerOptions' => [
                                     'style' => [
@@ -301,7 +323,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             ],
                             [
                                 'attribute' => 'contact_number',
-                                'label' => Yii::t('app', 'Contact-Number'),
+                                'label' => Yii::t('app', 'Contact Number'),
                                 'value'=> function($data){
                                     return $data['contact_number'];
                                 },
@@ -340,7 +362,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ?>
             </div>
         </div>
-        
+        <!--根据摄影师来统计-->
         <div class="col-lg-12">
             <div class="title"><?= Yii::t('app', 'Photographer')?>：</div>
             <div class="lists">
@@ -349,16 +371,17 @@ $this->params['breadcrumbs'][] = $this->title;
                         'dataProvider' => new ArrayDataProvider([
                             'allModels' => $photographer,
                             'pagination' => FALSE,
-    //                        'sort' => [
-    //                            'attributes' => ['shoot_number', 'score'],
-    //                        ],
+                            'sort' => [
+                                'attributes' => ['name', 'contact_number', 'score'],
+                            ],
                         ]),
                         'layout' => "{items}\n{summary}\n{pager}",
                         'columns' => [
                             [
+                                'attribute' => 'name',
                                 'label' => Yii::t('app', 'Name'),
                                 'value'=> function($data){
-                                    return $data['nickname'];
+                                    return $data['name'];
                                 },
                                 'headerOptions' => [
                                     'style' => [
@@ -373,8 +396,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ],
                             ],
                             [
-                                'attribute' => 'shoot_number',
-                                'label' => Yii::t('app', 'Shoot-Number'),
+                                'attribute' => 'contact_number',
+                                'label' => Yii::t('app', 'Shoot Number'),
                                 'value'=> function($data){
                                     return $data['contact_number'];
                                 },
