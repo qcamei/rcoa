@@ -93,7 +93,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php 
                     echo GridView::widget([
                         'dataProvider' => new ArrayDataProvider([
-                            'allModels' => $sites,
+                            'allModels' => $books,
                             'pagination' => FALSE,
                         ]),
                         'layout' => "{items}\n{pager}",
@@ -185,8 +185,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     ])
                 ?>
                 <center>
-                    <?php if(count($sites) > 0): ?>
-                        <div class="summary">总计<b><?= count($sites) - 1 ?></b>条数据。</div>
+                    <?php if(count($books) > 0): ?>
+                        <div class="summary">总计<b><?= count($books) - 1 ?></b>条数据。</div>
                     <?php endif; ?>
                 </center>
             </div>
@@ -376,7 +376,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'attribute' => 'shoot_number',
                                 'label' => Yii::t('app', 'Shoot-Number'),
                                 'value'=> function($data){
-                                    return $data['shoot_number'];
+                                    return $data['contact_number'];
                                 },
                                 'headerOptions' => [
                                     'style' => [

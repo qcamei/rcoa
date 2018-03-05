@@ -75,10 +75,10 @@ class StatisticsController extends Controller
             'dateRange' => $date,
             
             'siteName' => $this->getSiteName(),
-            'sites' => $this->getStatisticsBySite($query),
+            'books' => $this->getStatisticsBySite($query),
             'booker' => $this->getStatisticsByBooker($query),
             'director' => $this->getStatisticsByDirector($query),
-            'photographer' => $this->getStatisticsByPhotographer($query),
+            'photographer' => $this->getStatisticsByDirector($query, 2),
         ]);
     }
 
@@ -146,11 +146,12 @@ class StatisticsController extends Controller
     }
     
     /**
-     * 按照编导统计
+     * 按照编导统计/按照摄影师统计
      * @param Query $query
+     * @param integer $role     1为编导，2为摄影师
      * @return array
      */
-    private function getStatisticsByDirector($query) {
+    private function getStatisticsByDirector($query, $role = 1) {
         $directorQuery = clone $query;
         $sceneBookQuery = clone $query;
         $notStatus = [SceneBook::STATUS_DEFAULT, SceneBook::STATUS_BOOKING];            //未预约和预约中
@@ -165,37 +166,11 @@ class StatisticsController extends Controller
                 ->leftJoin(['User' => User::tableName()], 'User.id = SceneBookUser.user_id AND User.status = 10')
                 ->leftJoin(['SceneAppraise' => SceneAppraise::tableName()], 
                         '(SceneAppraise.book_id = SceneBookUser.book_id AND SceneAppraise.role = SceneBookUser.role)')
-                ->where(['SceneBookUser.book_id' => $sceneBookQuery, 'SceneBookUser.role' => 1])
+                ->andFilterWhere(['SceneBookUser.book_id' => $sceneBookQuery, 'SceneBookUser.role' => $role])
                 ->andFilterWhere(['SceneBookUser.is_delete' => 0])
                 ->groupBy(['SceneBookUser.user_id']);
 
         return $directorQuery->all(\Yii::$app->db);
     }
 
-    /**
-     * 按照摄影师统计
-     * @param Query $query
-     * @return array
-     */
-    private function getStatisticsByPhotographer($query) {
-        $photographerQuery = clone $query;
-        $sceneBookQuery = clone $query;
-        $notStatus = [SceneBook::STATUS_DEFAULT, SceneBook::STATUS_BOOKING];            //未预约和预约中
-        
-        $sceneBookQuery->select(['SceneBook.id'])
-            ->from(['SceneBook' => SceneBook::tableName()]);
-        $sceneBookQuery->andWhere(['NOT IN', 'SceneBook.status', $notStatus]);          //过滤未预约和预约中的数据
-        
-        $photographerQuery->select(['User.nickname', 'COUNT(DISTINCT SceneBookUser.book_id) AS shoot_number',
-                                'FORMAT((SUM(SceneAppraise.user_value)/SUM(SceneAppraise.q_value) * 100), 1) AS score'])
-                ->from(['SceneBookUser' => SceneBookUser::tableName()])
-                ->leftJoin(['User' => User::tableName()], 'User.id = SceneBookUser.user_id AND User.status = 10')
-                ->leftJoin(['SceneAppraise' => SceneAppraise::tableName()],
-                        '(SceneAppraise.book_id = SceneBookUser.book_id AND SceneAppraise.role = SceneBookUser.role)')
-                ->where(['SceneBookUser.book_id' => $sceneBookQuery, 'SceneBookUser.role' => 2])
-                ->andFilterWhere(['SceneBookUser.is_delete' => 0])
-                ->groupBy(['SceneBookUser.user_id']);
-
-        return $photographerQuery->all(\Yii::$app->db);
-    }
 }
