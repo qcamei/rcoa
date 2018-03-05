@@ -59,14 +59,14 @@ class StatisticsController extends Controller
         $date = $request->getQueryParam("dateRange");
         /** 场地名称 */
         $site = $request->getQueryParam("siteName");
-        
+        //分割时间段
+        $date_Arr = $date != null ? explode(" - ", $date) : null;
         /* @var $query Query */
         $query = (new Query())
                 ->andFilterWhere(['SceneBook.site_id' => $site]);
         
         //按时间段搜索
         if($date != null){
-            $date_Arr = explode(" - ", $date);
             $query->andFilterWhere(['between', 'SceneBook.date', $date_Arr[0], $date_Arr[1]]);
         }
         
@@ -75,7 +75,7 @@ class StatisticsController extends Controller
             'dateRange' => $date,
             
             'siteName' => $this->getSiteName(),
-            'books' => $this->getStatisticsBySite($query),
+            'books' => $this->getStatisticsBySite($query, $date_Arr),
             'booker' => $this->getStatisticsByBooker($query),
             'director' => $this->getStatisticsByDirector($query),
             'photographer' => $this->getStatisticsByDirector($query, 2),
@@ -100,7 +100,8 @@ class StatisticsController extends Controller
      * @param Query $query
      * @return array
      */
-    private function getStatisticsBySite($query) {
+    private function getStatisticsBySite($query, $date_Arr) {
+        $allTotal = [];
         $siteQuery = clone $query;
         $notStatus = [SceneBook::STATUS_DEFAULT, SceneBook::STATUS_BOOKING];            //未预约和预约中
         
@@ -111,15 +112,22 @@ class StatisticsController extends Controller
                 ->andFilterWhere(['NOT IN', 'SceneBook.status', $notStatus])             //过滤未预约和预约中的数据
                 ->groupBy(['SceneBook.site_id']);
         $allCount = $siteQuery->all(\Yii::$app->db);
-
+        
+        foreach ($allCount as $key => $value) {
+            //计算时间段的所有场次
+            $all_date = $date_Arr == null ? (strtotime(date("Y-m-d")) - strtotime($value['earliest_time']))/3600/24 + 1 : 
+                (strtotime($date_Arr[1])-strtotime($date_Arr[0]))/3600/24 + 1;
+            $allCount[$key] += ['ratio' => round($value['book_number'] / ($all_date * 3), 2) * 100];
+            unset($allCount[$key]['earliest_time']);
+        }
+        
         //计算总数
-        $allTotal = [];
-        if($allCount != null){
+        if(count($allCount) > 0){
             $allTotal = [[
                 'name' => '合计',
                 'book_number' => array_sum(ArrayHelper::getColumn($allCount, 'book_number')),
                 'miss_number' => array_sum(ArrayHelper::getColumn($allCount, 'miss_number')),
-                'earliest_time' => min(ArrayHelper::getColumn($allCount, 'earliest_time')),
+                'ratio' => array_sum(ArrayHelper::getColumn($allCount, 'ratio')) / count($allCount),
             ]];
         }
 

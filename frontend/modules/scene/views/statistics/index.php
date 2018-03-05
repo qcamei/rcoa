@@ -87,6 +87,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <hr/>
     
     <div class="content">
+        <!--根据场地统计-->
         <div class="col-lg-12">
             <div class="title"><?= Yii::t('app', 'Site')?>：</div>
             <div class="lists">
@@ -157,15 +158,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'label' => Yii::t('app', 'Utilization Ratio'),
                                 'format' => 'raw',
                                 'value'=> function($data){
-                                    $date = Yii::$app->getRequest()->getQueryParam("dateRange");        //时间段
-                                    $date_Arr = explode(" - ", $date);
-                                    $all_date = (strtotime(date("Y-m-d")) - strtotime($data['earliest_time']))/3600/24 + 1; //总的时间段
-                                    //计算利用率
-                                    $num = !empty($date) ? 
-                                        round($data['book_number'] / (((strtotime($date_Arr[1])-strtotime($date_Arr[0]))/3600/24 + 1) * 3) * 100, 2) :
-                                            round($data['book_number'] / ($all_date * 3) * 100, 2);
-                                    $num <= 50 ? $color = '#ff0000' : $color = '#43c584';   //选择颜色
-                                    return '<span class="chart" data-percent="'.$num.'" data-bar-color="'.$color.'">'.
+                                    $data['ratio'] <= 50 ? $color = '#ff0000' : $color = '#43c584';   //选择颜色
+                                    return '<span class="chart" data-percent="'.$data['ratio'].'" data-bar-color="'.$color.'">'.
                                                 '<span class="percent" style="color: '. $color.'"></span>'.
                                             '</span>';
                                 },
