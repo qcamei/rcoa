@@ -128,7 +128,6 @@ class SceneBookController extends Controller
             $model->loadDefaultValues();
         }else{
             $model->scenario = SceneBook::SCENARIO_DEFAULT;
-            $model->status = SceneBook::STATUS_ASSIGN;
             if($model->getIsNew()){
                 $this->isExistNewSceneBook($params);    //判断同一时间段是否存在相同的预约
             }else if($model->created_by != \Yii::$app->user->id && $model->getIsBooking()){
@@ -137,6 +136,7 @@ class SceneBookController extends Controller
         }
         
         if ($model->load($post)) {
+            $model->status = SceneBook::STATUS_ASSIGN;
             SceneBookAction::getInstance()->CreateSceneBook($model, $post);
             unset($params['id']);
             return $this->redirect(array_merge(['index'], $params));

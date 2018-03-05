@@ -97,7 +97,7 @@ use yii\widgets\ActiveForm;
             <?= Yii::t('app', 'Personal Image') ?>
         </label>
         <div class="col-lg-10 col-md-10">
-            <?= Html::img(!$model->isNewRecord && !$model->getIsNew() && $model->getIsValid() ? [$model->teacher->personal_image] : null, [
+            <?= Html::img(!$model->getIsValid() ? null : [$model->teacher->personal_image], [
                 'id' => 'scenebook-teacher_personal_image',
                 'width' => '128', 'height' => '125'
             ])?>
@@ -106,12 +106,12 @@ use yii\widgets\ActiveForm;
     </div>
     
     <?= $form->field($model, 'teacher_phone')->textInput([
-        'value' => $model->getIsValid() ? $model->teacher->user->phone : null, 
+        'value' => !$model->getIsValid() ?  null : $model->teacher->user->phone, 
         'disabled' => 'disabled'
     ]) ?>
     
     <?= $form->field($model, 'teacher_email')->textInput([
-        'value' => $model->getIsValid() ? $model->teacher->user->email : null, 
+        'value' => !$model->getIsValid() ? null : $model->teacher->user->email, 
         'disabled' => 'disabled'
     ]) ?>
 
@@ -146,7 +146,7 @@ use yii\widgets\ActiveForm;
         <div class="col-lg-10 col-md-10" style="margin-top: 5px;">
             <?= Html::hiddenInput('SceneBook[is_photograph]', 0) ?>
             <label>
-                <?= Html::checkbox('SceneBook[is_photograph]', $model->getIsValid()? $model->is_photograph : null) ?> 需要
+                <?= Html::checkbox('SceneBook[is_photograph]', !$model->getIsValid() ? null : $model->is_photograph) ?> 需要
             </label>
         </div>
         <div class="col-lg-10 col-md-10"><div class="help-block"></div></div>
