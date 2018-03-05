@@ -1,0 +1,23 @@
+.wrap >.content {
+    padding: 50px 0px 20px !important;
+}
+
+.statistics-content{
+    padding-top: 20px;
+}
+
+@media (max-width: 480px) {
+    .statistics-content{
+        padding-top: 0px;
+    }
+}
+
+.statistics-content .content .title {
+    font-weight: bold;
+}
+
+.statistics-content .content .lists{
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+}

@@ -20,9 +20,11 @@ class SceneAsset extends AssetBundle
        'css/style.css',
        'css/layout.css',
        'css/module.css',
+       'css/statistics.css',
     ];
     public $js = [
         'js/jquery.raty.min.js',
+        'js/jquery.easypiechart.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',

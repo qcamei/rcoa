@@ -298,4 +298,13 @@ return [
     'Assign' => '指派',
     'Camera Count' => '机位',
     'Disabled' => '禁用',
+    'Time-Slot' => '时间段',
+    'Bespeak-Number' => '预约数',
+    'Contact-Number' => '接洽数',
+    'Shoot-Number' => '拍摄数',
+    'Missed-Bespeak-Number' => '失约数',
+    'Utilization-Ratio' => '利用率',
+    'Director' => '编导',
+    'Score' => '评分',
+    'Photographer' => '摄影师',
 ];
