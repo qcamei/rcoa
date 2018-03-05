@@ -52,7 +52,7 @@ class SceneBookAction
         {  
             if($post != null){
                 $allModels = $this->saveDayMultiPeriodSceneBook($model, $post);
-                $this->isExistSceneBookUser($model, $post);
+//                $this->isExistSceneBookUser($model, $post);
                 $this->saveSceneBookUser($allModels, $post);
                 foreach ($allModels as $model) {
                     $this->saveSceneActionLog(['action' => '创建','title'=>'创建预约', 'book_id'=> $model->id]);
@@ -106,7 +106,7 @@ class SceneBookAction
         try
         {  
             if($model->save()){
-                $this->isExistSceneBookUser($model, $post);
+//                $this->isExistSceneBookUser($model, $post);
                 $this->saveSceneBookUser($model, $post);
                 $this->saveSceneActionLog([
                     'action' => '修改','title'=>'修改预约','content'=> $content == null ? '无' : $content,
@@ -173,7 +173,7 @@ class SceneBookAction
         try
         {  
             if($model->save()){
-                $this->isExistSceneBookUser($model, $post, 2);
+//                $this->isExistSceneBookUser($model, $post, 2);
                 $this->saveSceneBookUser($model, $post, 2);
                 $this->saveSceneActionLog([
                     'action' => '指派','title'=> $oldBookUser == '' ? '新增指派' : '修改指派', 

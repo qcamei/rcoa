@@ -484,9 +484,10 @@ class BookController extends Controller
         }
         
         $createUser = ArrayHelper::map($query->all(), 'id', 'nickname');
-        $existUser = $this->getExistSceneBookUser($model);
+//        $existUser = $this->getExistSceneBookUser($model);      //获取同一时间段已存在的预约人和接洽人
         
-        return ArrayHelper::merge($bookUser, array_diff($createUser, $existUser));
+//        return ArrayHelper::merge($bookUser, array_diff($createUser, $existUser));
+        return ArrayHelper::merge($bookUser, $createUser);
     }
     
     /**
@@ -510,9 +511,10 @@ class BookController extends Controller
             }
         }
         $createUser = ArrayHelper::map($roleUser, 'id', 'nickname');
-        $existUser = $this->getExistSceneBookUser($model, 2);
+//        $existUser = $this->getExistSceneBookUser($model, 2);      //获取同一时间段已存在的摄影师
         
-        return ArrayHelper::merge($bookUser, array_diff($createUser, $existUser));
+//        return ArrayHelper::merge($bookUser, array_diff($createUser, $existUser));
+        return ArrayHelper::merge($bookUser, $createUser);
     }
     
     /**
@@ -528,6 +530,7 @@ class BookController extends Controller
         $sceneBook = (new Query())->select(['SceneBook.id'])
             ->from(['SceneBook' => SceneBook::tableName()]);
         $sceneBook->where(['SceneBook.date' => $model->date]);
+        $sceneBook->andWhere(['site_id' => $model->site_id]);
         $sceneBook->andWhere(['SceneBook.time_index' => $model->time_index]);
         $sceneBook->andWhere(['NOT IN', 'SceneBook.status', $statusMap]);
         //查询同一时间段是否已存在指派用户数据
