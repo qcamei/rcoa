@@ -6,6 +6,7 @@ use kartik\daterange\DateRangePicker;
 use kartik\widgets\Select2;
 use yii\data\ArrayDataProvider;
 use yii\grid\GridView;
+use yii\helpers\Url;
 use yii\web\View;
 
 /* @var $this View */
@@ -93,6 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="lists">
                 <?php 
                     echo GridView::widget([
+                        'id' => 'site_id',
                         'dataProvider' => new ArrayDataProvider([
                             'allModels' => $books,
                             'pagination' => FALSE,
@@ -191,6 +193,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="lists">
                 <?php 
                     echo GridView::widget([
+                        'id' => 'booker_id',
                         'dataProvider' => new ArrayDataProvider([
                             'allModels' => $booker,
                             'pagination' => FALSE,
@@ -288,6 +291,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="lists">
                 <?php 
                     echo GridView::widget([
+                        'id' => 'director_id',
                         'dataProvider' => new ArrayDataProvider([
                             'allModels' => $director,
                             'pagination' => FALSE,
@@ -362,6 +366,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="lists">
                 <?php 
                     echo GridView::widget([
+                        'id' => 'photographer_id',
                         'dataProvider' => new ArrayDataProvider([
                             'allModels' => $photographer,
                             'pagination' => FALSE,
@@ -436,14 +441,31 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 $js =   
 <<<JS
-   $(function() {
+    //加载easyPieChart插件
+    $(function() {
         $('.chart').easyPieChart({  
             size: 70,
             onStep: function(from, to, percent) {  
                 $(this.el).find('.percent').text(Math.round(percent));  
             }  
         }); 
-    });  
+    }); 
+        
+    //点击排序时加载预约人列表
+    $("#booker_id > table > thead > tr > th > a").click(function(event){
+        event.preventDefault();                 //禁止a标签的跳转事件
+        $("body").load($(this).attr("href"));
+    });
+    //点击排序时加载接洽人列表
+    $("#director_id > table > thead > tr > th > a").click(function(event){
+        event.preventDefault();                 //禁止a标签的跳转事件
+        $("body").load($(this).attr("href"));
+    });
+    //点击排序时加载摄影师列表
+    $("#photographer_id > table > thead > tr > th > a").click(function(event){
+        event.preventDefault();                 //禁止a标签的跳转事件
+        $("body").load($(this).attr("href"));
+    });
     
 JS;
     $this->registerJs($js,  View::POS_READY);
