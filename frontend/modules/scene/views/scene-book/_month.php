@@ -97,7 +97,7 @@ use yii\helpers\Html;
                                     $isBreakPromise = $allModels[$date][$index]->getIsStatusBreakPromise();//是否在【已失约】任务 
                                     //该预约是否为自己预约
                                     $isMe = $allModels[$date][$index]->booker_id == Yii::$app->user->id 
-                                            || ($allModels[$date][$index]->created_by == Yii::$app->user->id && !$isValid)
+                                            || ($allModels[$date][$index]->created_by == Yii::$app->user->id && !$isNew)
                                             || (isset($bookUsers[$allModels[$date][$index]->id]) && in_array(Yii::$app->user->id, $bookUsers[$allModels[$date][$index]->id]));   
                                     $isTransfer = $allModels[$date][$index]->is_transfer;                  //该预约是否为转让预约
                                     //场次是否禁用
@@ -111,13 +111,14 @@ use yii\helpers\Html;
                                         $buttonName = !$isNew ?  ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) && !$isBreakPromise ? '<i class="fa fa-refresh"></i>&nbsp;转让' : $statusName) : '<i class="fa fa-ban"></i>&nbsp;禁';
                                         $buttonClass = !$isNew ?  ($isTransfer && $bookTime > date('Y-m-d H:i:s', time()) && !$isBreakPromise ? 'btn-primary' : ($isBreakPromise ? 'btn-danger' : ($isStausShootIng || $isAppraise ? 'btn-info' : 'btn-default'))) : 'btn-default disabled';
                                     }
+                                    $isMeIcon = '<span class="'.($isMe ? 'isMe' : null).'"></span>';
                                     $url = $isNew || ($allModels[$date][$index]->created_by == Yii::$app->user->id && !$isValid) ? 
                                         ['create', 'id' => $allModels[$date][$index]->id, 'site_id' => $allModels[$date][$index]->site_id, 
                                             'date' => $allModels[$date][$index]->date, 'time_index' => $allModels[$date][$index]->time_index, 
                                             'date_switch' => $allModels[$date][$index]->date_switch] : ['view', 'id' => $allModels[$date][$index]->id];
 
                                     echo "<p><span class=\"month_time_index hidden-xs\">".SceneBook::$timeIndexMap[$index]."</span>";
-                                    echo  Html::a('<span class="'.($isMe ? 'isMe' : '').'"></span>'.$buttonName, $url, ['class' => "btn $buttonClass btn-sm btn-len", 'target' => $isNew || ($allModels[$date][$index]->created_by == Yii::$app->user->id && !$isValid) ? : '_blank']);
+                                    echo  Html::a($isMeIcon.$buttonName, $url, ['class' => "btn $buttonClass btn-sm btn-len", 'target' => $isNew || ($allModels[$date][$index]->created_by == Yii::$app->user->id && !$isValid) ? : '_blank']);
                                     echo "</p>"; 
                                 }
                             }
