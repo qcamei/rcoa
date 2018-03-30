@@ -43,6 +43,9 @@ $config = [
         'scene' => [
             'class' => 'frontend\modules\scene\Module',
         ],
+        'helpcenter' => [
+            'class' => 'common\modules\helpcenter\Module',
+        ]
     ],
     'as access' => [
         'class' => 'wskeee\rbac\components\AccessControl',
@@ -50,6 +53,7 @@ $config = [
             'shoot/*',
             'framework/*',
             'demand/workitem/list',
+            'helpcenter/*',
             // The actions listed here will be allowed to everyone including guests.
             // So, 'admin/*' should not appear here in the production, of course.
             // But in the earlier stages of your development, you may probably want to

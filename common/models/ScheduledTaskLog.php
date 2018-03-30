@@ -43,6 +43,7 @@ class ScheduledTaskLog extends ActiveRecord
     public static $type = [
         self::TYPE_MCONLINE_CHECK_EXPIRE_FILE => '检查过期文件',
         self::TYPE_CHECK_MAX_FILE_LIMIT => '检查文件大小上限',
+        self::TYPE_SET_SCENEBOOK_STATUS => '设置预约任务状态',
     ];
     
     public static $IsSuccess = [

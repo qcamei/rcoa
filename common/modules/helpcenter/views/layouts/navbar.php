@@ -23,18 +23,22 @@ $app_id = ArrayHelper::getValue($app_id, 'app_id')
         </a>
         <div class="navbar-custom-menu" style="float: left">
             <ul class="nav navbar-nav">
-                <li id="app-frontend" class="post-menu">
-                    <a href="/helpcenter/default/index?app_id=app-frontend">课程建设</a>
-                </li>
-                <li id="app-mconline" class="post-menu">
-                    <a href="/helpcenter/default/index?app_id=app-mconline">课程制作</a>
-                </li>
+                <?php if($app_id != 'app-mconline'):?>
+                    <li id="app-frontend" class="post-menu">
+                        <a href="/helpcenter/default/index?app_id=app-frontend">课程建设</a>
+                    </li>
+                <?php endif;?>
+                <?php if($app_id != 'app-frontend'):?>
+                    <li id="app-mconline" class="post-menu">
+                        <a href="/helpcenter/default/index?app_id=app-mconline">课程制作</a>
+                    </li>
+                <?php endif;?>
             </ul>
         </div>
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
                 <!-- User Account: style can be found in dropdown.less -->
-                <li class="dropdown user user-menu" style="margin-right: 5px">
+                <li class="dropdown user user-menu" style="margin-right: 35px">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="<?= WEB_ROOT . $user->avatar ?>" class="user-image" alt="User Image"/>
                         <span class="hidden-xs"><?= $user->nickname ?></span>

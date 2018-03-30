@@ -73,7 +73,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
                 'value' => function($data) {
-                    return $data['type'] == 1 ? '检查过期文件' : '检查文件大小上限';
+                    return ScheduledTaskLog::$type[$data['type']];
                 },
                 'contentOptions' => [
                     'class' => 'list-td',
