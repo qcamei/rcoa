@@ -93,6 +93,7 @@ return [
     'Teacher' => '老师',
     'Contact Mode' => '联系方式',
     'Homepage' => '主页',
+    'My Info' => '我的属性',
     
     //场景预约
     'Booker' => '预约人',

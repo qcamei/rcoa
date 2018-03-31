@@ -173,3 +173,20 @@ a.desc:after {
         /*color: #fff;*/
     }
 }
+
+/** 设置导航栏下拉框的样式 **/
+.nav .dropdown-menu > .active > a,
+.nav .dropdown-menu > .active > a:hover,
+.nav .dropdown-menu > .active > a:focus {
+    color: #262626;
+    background-color: #f5f5f5;
+}
+
+@media (max-width: 480px) {
+    .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a,
+    .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a:hover,
+    .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a:focus {
+        color: #9d9d9d;
+        background-color: #222222;
+    }
+}
