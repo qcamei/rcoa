@@ -83,10 +83,10 @@ use wskeee\rbac\components\ResourceHelper;
                 ],
                 [
                     'name' => '查看开发',
-                    'url' => ['/teamwork/course/view', 'demand_task_id' => $model->id],
+                    'url' => ['check-dev', 'id' => $model->id],
                     'options' => ['class' =>'btn btn-primary', 'target' => '_blank'],
                     'symbol' => '&nbsp;',
-                    'conditions' => $model->create_by == Yii::$app->user->id && ($model->getIsStatusAcceptance() || $model->getIsStatusAcceptanceing()),
+                    'conditions' => !empty($model->undertake_person),//承接人不为空时显示
                     'adminOptions' => true,
                 ],
                 //审核人角色按钮组

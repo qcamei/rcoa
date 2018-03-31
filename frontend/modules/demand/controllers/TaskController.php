@@ -273,6 +273,25 @@ class TaskController extends Controller
     }
     
     /**
+     * 查看开发
+     * 根据demand_task_id查找对应的开发任务，再跳转到开发任务详情页
+     * @param integer $id   任务ID
+     */
+    public function actionCheckDev($id){
+        $model = $this->findModel($id);
+        if($model){
+            //查找对应【开发】任务ID
+            $course_task_model = \common\models\teamwork\CourseManage::find()
+                    ->where(['demand_task_id' => $id])
+                    ->one();
+            if($course_task_model){
+                return $this->redirect(['/teamwork/course/view','id'=>$course_task_model->id]);
+            }
+        }
+        throw new NotFoundHttpException(Yii::t('rcoa', 'The requested page does not exist.'));
+    }
+    
+    /**
      * 获取课程
      * @param integer $id                       专业/工种ID
      * @return type JSON
