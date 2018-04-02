@@ -79,7 +79,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'model' => $searchModel,
                     'attribute' => 'category_id',
                     'data' => $belongCategory,
-                    'hideSearch' => true,
+                    'hideSearch' => false,
                     'options' => ['placeholder' => Yii::t('app', 'All')],
                     'pluginOptions' => [
                         'allowClear' => true,
