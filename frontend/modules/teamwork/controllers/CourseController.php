@@ -104,7 +104,7 @@ class CourseController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id = null, $demand_task_id = null)
+    public function actionView($id = null)
     {
         /* @var $twTool TeamworkTool */
         $twTool = TeamworkTool::getInstance();
