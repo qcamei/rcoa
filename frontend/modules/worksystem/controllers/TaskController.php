@@ -634,6 +634,7 @@ class TaskController extends Controller
                 $message = '该课程不是在开发中。';
             }*/else if(!in_array($demandTask->team_id, $teamIds)){
                 $type = 0;
+                $isAdd = 1;
                 $message = '该课程不是本团队承接。';
             }else{
                 $items = ['item_type_id' => $demandTask->item_type_id, 'team_id' => $demandTask->team_id];
