@@ -3,7 +3,7 @@
 namespace common\modules\preview\controllers;
 
 use common\models\mconline\McbsActivityFile;
-use wskeee\webuploader\models\Uploadfile;
+use common\modules\webuploader\models\Uploadfile;
 use Yii;
 use yii\db\Query;
 use yii\web\Controller;

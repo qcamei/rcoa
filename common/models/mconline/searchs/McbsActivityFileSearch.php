@@ -12,7 +12,7 @@ use common\models\mconline\McbsCourseSection;
 use common\models\mconline\McbsFileActionResult;
 use common\models\User;
 use wskeee\framework\models\Item;
-use wskeee\webuploader\models\Uploadfile;
+use common\modules\webuploader\models\Uploadfile;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;

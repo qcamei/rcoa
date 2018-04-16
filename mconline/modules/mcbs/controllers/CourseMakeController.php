@@ -25,7 +25,7 @@ use common\models\mconline\searchs\McbsCourseUserSearch;
 use common\models\mconline\searchs\McbsMessageSearch;
 use common\models\User;
 use mconline\modules\mcbs\utils\McbsAction;
-use wskeee\webuploader\models\Uploadfile;
+use common\modules\webuploader\models\Uploadfile;
 use Yii;
 use yii\data\ArrayDataProvider;
 use yii\db\Query;

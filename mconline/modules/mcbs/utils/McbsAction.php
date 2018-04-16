@@ -10,7 +10,7 @@ use common\models\mconline\McbsCourseUser;
 use common\models\mconline\McbsFileActionResult;
 use common\models\mconline\McbsRecentContacts;
 use common\models\User;
-use wskeee\webuploader\models\Uploadfile;
+use common\modules\webuploader\models\Uploadfile;
 use Yii;
 use yii\db\Exception;
 use yii\db\Query;

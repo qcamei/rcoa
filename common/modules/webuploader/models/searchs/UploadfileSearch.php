@@ -1,16 +1,16 @@
 <?php
 
-namespace wskeee\webuploader\models\searchs;
+namespace common\modules\webuploader\models\searchs;
 
 use common\models\User;
-use wskeee\webuploader\models\Uploadfile;
+use common\modules\webuploader\models\Uploadfile;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
- * UploadfileSearch represents the model behind the search form about `common\models\Uploadfile`.
+ * UploadfileSearch represents the model behind the search form of `common\modules\webuploader\models\Uploadfile`.
  */
 class UploadfileSearch extends Uploadfile {
 
@@ -19,8 +19,8 @@ class UploadfileSearch extends Uploadfile {
      */
     public function rules() {
         return [
-            [['id', 'name', 'path', 'thumb_path', 'created_by'], 'safe'],
-            [['download_count', 'del_mark', 'is_del', 'is_fixed', 'created_at', 'updated_at', 'size'], 'integer'],
+            [['id', 'name', 'path', 'thumb_path', 'app_id', 'del_mark', 'is_del', 'is_fixed', 'created_by', 'deleted_by'], 'safe'],
+            [['download_count', 'deleted_at', 'created_at', 'updated_at'], 'integer'],
         ];
     }
 
@@ -41,9 +41,9 @@ class UploadfileSearch extends Uploadfile {
      */
     public function search($params) {
         $time = ArrayHelper::getValue($params, 'time');                                                         //时间段
-        $query = $query = (new Query())
-                ->select(['Uploadfile.id', 'Uploadfile.name AS filename', 'Uploadfile.del_mark', 'Uploadfile.is_del',
-                    'CreateBy.nickname AS created_by', 'Uploadfile.path', 'Uploadfile.created_at'])
+        $query = (new Query())
+                ->select(['Uploadfile.id', 'Uploadfile.name', 'Uploadfile.del_mark', 'Uploadfile.is_del',
+                    'User.nickname AS created_by', 'Uploadfile.path', 'Uploadfile.created_at'])
                 ->from(['Uploadfile' => Uploadfile::tableName()]);
 
         // add conditions that should always apply here
@@ -61,7 +61,7 @@ class UploadfileSearch extends Uploadfile {
             return $dataProvider;
         }
         //关联查询创建者
-        $query->leftJoin(['CreateBy' => User::tableName()], 'CreateBy.id = Uploadfile.created_by');
+        $query->leftJoin(['User' => User::tableName()], 'User.id = Uploadfile.created_by');
         
         //按时间段搜索
         if($time != null){

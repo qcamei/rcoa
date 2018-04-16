@@ -1,6 +1,6 @@
 <?php
 
-namespace wskeee\webuploader\models;
+namespace common\modules\webuploader\models;
 
 use Yii;
 

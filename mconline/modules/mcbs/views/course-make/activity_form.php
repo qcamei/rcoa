@@ -98,10 +98,9 @@ $js =
             formData: {
                 _csrf: "$csrfToken",
                 //指定文件上传到的应用
-                app_path: 'mconline',
                 app_id: "$app_id",
                 //同时创建缩略图
-                makeThumb: 0,
+                makeThumb: 1,
             }
 
         };

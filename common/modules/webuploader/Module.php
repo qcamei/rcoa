@@ -1,6 +1,6 @@
 <?php
 
-namespace wskeee\webuploader;
+namespace common\modules\webuploader;
 
 /**
  * webuploader module definition class
@@ -10,7 +10,7 @@ class Module extends \yii\base\Module
     /**
      * @inheritdoc
      */
-    public $controllerNamespace = 'wskeee\webuploader\controllers';
+    public $controllerNamespace = 'common\modules\webuploader\controllers';
 
     /**
      * @inheritdoc

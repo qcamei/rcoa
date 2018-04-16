@@ -98,7 +98,7 @@ return [
             'class' => 'common\wskeee\filemanage\Module',
         ],
         'webuploader' => [
-            'class' => 'wskeee\webuploader\Module',
+            'class' => 'common\modules\webuploader\Module',
         ],
         'preview' => [
             'class' => 'common\modules\preview\Module',

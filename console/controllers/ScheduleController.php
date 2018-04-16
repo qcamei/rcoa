@@ -21,7 +21,7 @@ use Exception;
 use wskeee\framework\models\Item;
 use wskeee\notification\NotificationManager;
 use wskeee\rbac\RbacManager;
-use wskeee\webuploader\models\Uploadfile;
+use common\modules\webuploader\models\Uploadfile;
 use Yii;
 use yii\console\Controller;
 use yii\db\Query;

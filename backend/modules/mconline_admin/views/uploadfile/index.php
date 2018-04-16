@@ -2,8 +2,8 @@
 
 use kartik\daterange\DateRangePicker;
 use kartik\widgets\Select2;
-use wskeee\webuploader\models\searchs\UploadfileSearch;
-use wskeee\webuploader\models\Uploadfile;
+use common\modules\webuploader\models\searchs\UploadfileSearch;
+use common\modules\webuploader\models\Uploadfile;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\ArrayHelper;

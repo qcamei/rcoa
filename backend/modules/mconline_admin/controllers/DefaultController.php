@@ -8,7 +8,7 @@ use common\models\mconline\McbsCourseBlock;
 use common\models\mconline\McbsCourseChapter;
 use common\models\mconline\McbsCoursePhase;
 use common\models\mconline\McbsCourseSection;
-use wskeee\webuploader\models\Uploadfile;
+use common\modules\webuploader\models\Uploadfile;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;

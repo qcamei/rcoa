@@ -4,8 +4,8 @@ namespace backend\modules\mconline_admin\controllers;
 
 use backend\components\BaseController;
 use common\models\User;
-use wskeee\webuploader\models\searchs\UploadfileSearch;
-use wskeee\webuploader\models\Uploadfile;
+use common\modules\webuploader\models\searchs\UploadfileSearch;
+use common\modules\webuploader\models\Uploadfile;
 use Yii;
 use yii\db\Query;
 use yii\filters\AccessControl;
