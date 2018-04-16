@@ -82,38 +82,40 @@ $js =
     });
     //加载文件上传  
     var uploader;
-    uploader = new Wskeee.Uploader({
-        // 文件接收服务端。
-        server: '/webuploader/default/upload',
-        //检查文件是否存在
-        checkFile: '/webuploader/default/check-file',
-        //分片合并
-        mergeChunks: '/webuploader/default/merge-chunks',
-        //flash上传组件
-        swf: '$swfpath' + '/Uploader.swf',
-        // 上传容器
-        container: '#uploader-container',
-        //自动上传
-        auto: false,
-        //每次上传都会传到服务器的固定参数
-        formData: {
-            _csrf: "$csrfToken",
-            //指定文件上传到的应用
-            dir_path: 'mcoline',
-            app_id: "$app_id",
-            //debug: 1,
-        }
+    require(['euploader'], function (euploader) {
+        var config = {
+            name: 'files',
+            swf: '<?= $swfpath ?>' + '/Uploader.swf',
+            // 文件接收服务端。
+            server: '/webuploader/default/upload',
+            //检查文件是否存在
+            checkFile: '/webuploader/default/check-file',
+            //分片合并
+            mergeChunks: '/webuploader/default/merge-chunks',
+            // 选择文件的按钮。可选。
+            // 上传容器
+            container: '#uploader-container',
+            formData: {
+                _csrf: "$csrfToken",
+                //指定文件上传到的应用
+                app_path: 'mconline',
+                app_id: "$app_id",
+                //同时创建缩略图
+                makeThumb: 0,
+            }
+
+        };
+
+        uploader = new euploader.Uploader(config, euploader.FilelistView);
+        uploader.addCompleteFiles($files);
     });
-    uploader.addCompleteFiles($files);
+    
     /**
      * 上传文件完成才可以提交
      * @returns {Wskeee.Uploader.isFinish}
      */
     function tijiao(){
-        //uploader,isFinish 是否已经完成所有上传
-        //uploader.hasError 是否有上传错误的文件
-        //console.log(uploader.isFinish);
-        return uploader.isFinish;
+        return uploader.isFinish();
     } 
     
     /**
