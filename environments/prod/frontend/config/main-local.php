@@ -43,6 +43,9 @@ $config = [
         'scene' => [
             'class' => 'frontend\modules\scene\Module',
         ],
+        'need' => [
+            'class' => 'frontend\modules\need\Module',
+        ],
         'helpcenter' => [
             'class' => 'common\modules\helpcenter\Module',
         ]
