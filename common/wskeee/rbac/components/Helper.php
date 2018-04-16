@@ -3,9 +3,10 @@
 namespace wskeee\rbac\components;
 
 use Yii;
-use yii\web\User;
-use yii\helpers\ArrayHelper;
 use yii\caching\TagDependency;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
+use yii\web\User;
 
 /**
  * Description of Helper
@@ -138,6 +139,14 @@ class Helper
             }
             return isset($routes['/*']);
         }
+    }
+    /**
+     * 检查是否有访问权限
+     * @param string|array $url
+     */
+    public static function checkUrl($url){
+        $_url = Url::to($url);
+        return self::checkRoute(parse_url($_url)['path']);
     }
 
     protected static function normalizeRoute($route)
