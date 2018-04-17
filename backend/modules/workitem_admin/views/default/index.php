@@ -12,9 +12,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="workitem-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
     <p>
         <?= Html::a(Yii::t('rcoa/workitem', 'Create Workitem'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
@@ -24,11 +21,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
             'name',
             'index',
             'unit',
-            'des',
+            // 'des',
             // 'created_at',
             // 'updated_at',
 
