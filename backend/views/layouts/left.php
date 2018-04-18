@@ -55,13 +55,14 @@ use common\widgets\Menu;
                         'icon' => 'bars',
                         'url' => '#',
                         'items' => [
-                            ['label' => '用户列表', 'icon' => 'circle-o', 'url' => ['/user_admin'],],
+                            ['label' => '用户列表', 'icon' => 'circle-o', 'url' => ['/user_admin/default'],],
                             ['label' => '职位列表', 'icon' => 'circle-o', 'url' => ['/position_admin'],],
                             ['label' => '用户角色', 'icon' => 'circle-o', 'url' => ['/rbac/user-role'],],
                             ['label' => '角色列表', 'icon' => 'circle-o', 'url' => ['/rbac/role'],],
                             ['label' => '权限列表', 'icon' => 'circle-o', 'url' => ['/rbac/permission'],],
                             ['label' => '路由列表', 'icon' => 'circle-o', 'url' => ['/rbac/route'],],
                             ['label' => '分组列表', 'icon' => 'circle-o', 'url' => ['/rbac/auth-group'],],
+                            ['label' => '公司列表', 'icon' => 'circle-o', 'url' => ['/user_admin/company'],],
                         ],
                     ],
                     [
@@ -100,6 +101,16 @@ use common\widgets\Menu;
                             ['label' => '场地列表', 'icon' => 'circle-o', 'url' => ['/scene_admin/site']],
                             ['label' => '评价题目列表', 'icon' => 'circle-o', 'url' => ['/scene_admin/appraise']],
                             ['label' => '预约列表', 'icon' => 'circle-o', 'url' => ['/scene_admin/book']],
+                        ],
+                    ],
+                    [
+                        'label' => '需求任务',
+                        'icon' => 'bars',
+                        'url' => '#',
+                        'items' => [
+                            ['label' => '内容模板', 'icon' => 'circle-o', 'url' => ['/need_admin/content-psd']],
+                            ['label' => '工作项','icon' => 'circle-o', 'url' => ['/need_admin/default']],
+                            ['label' => '类别','icon' => 'circle-o', 'url' => ['/need_admin/type']],
                         ],
                     ],
 //                    [

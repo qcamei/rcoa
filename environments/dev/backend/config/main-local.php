@@ -73,6 +73,9 @@ $config = [
         'scene_admin' => [
             'class' => 'backend\modules\scene_admin\Module',
         ],
+        'need_admin' => [
+            'class' => 'backend\modules\need_admin\Module',
+        ],
     ],
     'as access' => [
         'allowActions' => [

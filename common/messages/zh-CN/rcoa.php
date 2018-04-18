@@ -309,4 +309,13 @@ return [
     'Director' => '编导',
     'Score' => '评分',
     'Photographer' => '摄影师',
+    
+    //需求任务后台
+    'Template' => '模板',
+    'Workitem' => '工作项',
+    'New Built' => '新建',
+    'Unit Price' => '单价',
+    'Reform' => '改造',
+    'Enable' => '启用',
+    'Company' => '公司',
 ];
