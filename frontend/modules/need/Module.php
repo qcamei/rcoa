@@ -7,6 +7,9 @@ namespace frontend\modules\need;
  */
 class Module extends \yii\base\Module
 {
+    
+    public $layout = 'main';
+    
     /**
      * @inheritdoc
      */
