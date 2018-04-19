@@ -74,6 +74,11 @@ class Item extends ActiveRecord
         ];
     }
     
+    public function beforeSave($insert) {
+        $this->name = trim($this->name);
+        return parent::beforeSave($insert);
+    }
+    
     /**
      * 获取父级ID信息
      * @return \yii\db\ActiveQuery
