@@ -97,6 +97,7 @@ return [
     'Contact Mode' => '联系方式',
     'Homepage' => '主页',
     'My Info' => '我的属性',
+    'Personal' => '个人',
     
     //场景预约
     'Booker' => '预约人',
@@ -321,4 +322,15 @@ return [
     'Reform' => '改造',
     'Enable' => '启用',
     'Company' => '公司',
+    
+    //需求任务前台
+    'Need' => '需求',
+    'Expert' => '师资',
+    'Cost' => '成本',
+    'Bonus' => '绩效',
+    'Course Details' => '课程明细',
+    'Personal Details' => '个人明细',
+    'Personal Name' => '个人名称',
+    'Mode' => '方式',
+    'Finish' => '完成',
 ];

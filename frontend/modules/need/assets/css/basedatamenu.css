@@ -1,0 +1,152 @@
+/******************基础数据的左侧导航**********************/
+.basedata-content {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    margin-top: 20px;
+    font-size: 0px;
+}
+
+.basedata-content > .subnav {
+    display: inline-block;
+    float: left;
+    background-color: rgba(242, 242, 242, 1);
+}
+
+/** 小屏样式 */
+@media (max-width: 768px) {
+    .basedata-content > .subnav {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
+/** 大屏样式 */
+@media (min-width: 768px) {
+    .basedata-content > .subnav > .menu {
+        width: 200px;
+        height: auto;
+    }
+}
+
+.basedata-content > .subnav .title {
+    padding: 12px 8px;
+    background-color: rgba(102, 102, 102, 1);
+}
+
+.basedata-content > .subnav .title > i {
+    margin-right: 3px;
+}
+
+.basedata-content > .subnav .title > i,
+.basedata-content > .subnav .title > span {
+    font-size: 16px;
+    color: #fff;
+    text-align: left;
+}
+
+.basedata-content > .subnav ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.basedata-content > .subnav ul > li {
+    padding: 14px 15px;
+    border-bottom: 1px dotted #d2d2d2;
+}
+
+.basedata-content > .subnav ul > li.active  {
+    background-color: #d2d2d2;
+    border-bottom: none;
+}
+
+.basedata-content > .subnav ul > li.remove {
+    border-bottom: none;
+}
+
+.basedata-content > .subnav ul > li > a.links,
+.basedata-content > .subnav ul > li > a.links > i {
+    font-size: 14px;
+    color: rgb(153, 153, 153);
+    text-align: left;
+}
+
+.basedata-content > .subnav ul > li > a.links > i, 
+.basedata-content > .subnav ul > li > a.links > img {
+    margin-right: 10px;
+}
+
+.basedata-content > .subnav ul > li > a.links:focus,
+.basedata-content > .subnav ul > li > a.links:hover {
+    text-decoration: none;
+}
+
+.basedata-content > .subnav ul > li.active > a.links,
+.basedata-content > .subnav ul > li.active > a.links > i {
+    color: #333;
+    font-weight: 700;
+}
+
+.basedata-content > .subnav ul > li > a.disabled,
+.basedata-content > .subnav ul > li > a.disabled > i,
+.basedata-content > .subnav ul > li > a.disabled > img {
+    /*color: rgb(204, 204, 204);*/
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.main {
+    display: inline-block;
+    float: right;  
+    height: auto;
+    font-size: 14px;
+}
+
+/** 小屏样式 */
+@media (max-width: 768px) {
+    .main {
+        width: 100%;
+    }
+}
+/** 大屏样式 */
+@media (min-width: 768px) {
+    .main {
+        width: 930px;
+        padding-left: 30px;
+    }
+}
+
+.main .frame {
+    color: #ccc;
+    margin-bottom: 20px;
+    background-color: rgb(245, 245, 245);
+    padding: 8px 15px;
+    list-style: none;
+    border-radius: 4px;
+}
+
+/**
+ * 详细页样式 
+ */
+.viewdetail-th
+{
+    color: #666666;
+    width: 150px;
+    font-weight: normal;
+    text-align: right;
+    min-width: 73px;
+}
+
+.viewdetail-th-head
+{
+    color: #000000;
+    width: 150px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.viewdetail td
+{
+    width: 150px;
+    min-width: 100px;
+}
