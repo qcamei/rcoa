@@ -39,17 +39,17 @@ $radioType = [
                         'locale'=>['format' => 'Y-m-d'],
                         'allowClear' => true,
                         'ranges' => [
-                            Yii::t('rcoa/teamwork', "Statistics-Prev-Week") => ["moment().startOf('week').subtract(1,'week')", "moment().endOf('week').subtract(1,'week')"],
-                            Yii::t('rcoa/teamwork', "Statistics-This-Week") => ["moment().startOf('week')", "moment().endOf('week')"],
-                            Yii::t('rcoa/teamwork', "Statistics-Prev-Month") => ["moment().startOf('month').subtract(1,'month')", "moment().endOf('month').subtract(1,'month')"],
-                            Yii::t('rcoa/teamwork', "Statistics-This-Month") => ["moment().startOf('month')", "moment().endOf('month')"],
-                                                                    '第一季' => ["moment().startOf('Q').quarter(1,'quarter')","moment().endOf('Q').quarter(1,'quarter')"],
-                                                                    '第二季' => ["moment().startOf('Q').quarter(2,'quarter')","moment().endOf('Q').quarter(2,'quarter')"],
-                                                                    '第三季' => ["moment().startOf('Q').quarter(3,'quarter')","moment().endOf('Q').quarter(3,'quarter')"],
-                                                                    '第四季' => ["moment().startOf('Q').quarter(4,'quarter')","moment().endOf('Q').quarter(4,'quarter')"],
-                            Yii::t('rcoa/teamwork', "Statistics-First-Half-Year") => ["moment().startOf('year')", "moment().startOf('year').add(5,'month').endOf('month')"],
-                            Yii::t('rcoa/teamwork', "Statistics-Next-Half-Year") => ["moment().startOf('year').add(6,'month')", "moment().endOf('year')"],
-                            Yii::t('rcoa/teamwork', "Statistics-Full-Year") => ["moment().startOf('year')", "moment().endOf('year')"],
+                            Yii::t('app', "Statistics-Prev-Week") => ["moment().startOf('week').subtract(1,'week')", "moment().endOf('week').subtract(1,'week')"],
+                            Yii::t('app', "Statistics-This-Week") => ["moment().startOf('week')", "moment().endOf('week')"],
+                            Yii::t('app', "Statistics-Prev-Month") => ["moment().startOf('month').subtract(1,'month')", "moment().endOf('month').subtract(1,'month')"],
+                            Yii::t('app', "Statistics-This-Month") => ["moment().startOf('month')", "moment().endOf('month')"],
+                            Yii::t('app', "First Season") => ["moment().startOf('Q').quarter(1,'quarter')","moment().endOf('Q').quarter(1,'quarter')"],
+                            Yii::t('app', "Second Season") => ["moment().startOf('Q').quarter(2,'quarter')","moment().endOf('Q').quarter(2,'quarter')"],
+                            Yii::t('app', "Third Season") => ["moment().startOf('Q').quarter(3,'quarter')","moment().endOf('Q').quarter(3,'quarter')"],
+                            Yii::t('app', "Fourth Season") => ["moment().startOf('Q').quarter(4,'quarter')","moment().endOf('Q').quarter(4,'quarter')"],
+                            Yii::t('app', "Statistics-First-Half-Year") => ["moment().startOf('year')", "moment().startOf('year').add(5,'month').endOf('month')"],
+                            Yii::t('app', "Statistics-Next-Half-Year") => ["moment().startOf('year').add(6,'month')", "moment().endOf('year')"],
+                            Yii::t('app', "Statistics-Full-Year") => ["moment().startOf('year')", "moment().endOf('year')"],
                         ]
                     ],
                     
@@ -126,25 +126,49 @@ $radioType = [
                             'label' => Yii::t('app', 'Business'),
                             'value' => function ($data){
                                 return $data['business_name'];
-                            }
+                            },
+                            'headerOptions' => [
+                                'class' => 'hidden-xs'
+                            ],
+                            'contentOptions' => [
+                                'class' => 'hidden-xs'
+                            ],       
                         ],
                         [
                             'label' => Yii::t('app', 'Layer ID'),
                             'value' => function ($data){
                                 return $data['layer_name'];
-                            }
+                            },
+                            'headerOptions' => [
+                                'class' => 'hidden-xs'
+                            ],
+                            'contentOptions' => [
+                                'class' => 'hidden-xs'
+                            ],
                         ],
                         [
                             'label' => Yii::t('app', 'Profession ID'),
                             'value' => function ($data){
                                 return $data['Profession_name'];
-                            }
+                            },
+                            'headerOptions' => [
+                                'class' => 'hidden-xs'
+                            ],
+                            'contentOptions' => [
+                                'class' => 'hidden-xs'
+                            ],
                         ],
                         [
                             'label' => Yii::t('app', 'Courses'),
                             'value' => function ($data){
                                 return $data['course_name'];
-                            }
+                            },
+                            'headerOptions' => [
+                                'class' => 'hidden-xs'
+                            ],
+                            'contentOptions' => [
+                                'class' => 'hidden-xs'
+                            ],
                         ],
                         [
                             'label' => Yii::t('app', '{Need}{Name}',['Need' => Yii::t('app', 'Need'), 'Name' => Yii::t('app', 'Name')]),
@@ -206,19 +230,37 @@ $radioType = [
                             'label' => Yii::t('app', 'Layer ID'),
                             'value' => function ($data){
                                 return $data['layer_name'];
-                            }
+                            },
+                            'headerOptions' => [
+                                'class' => 'hidden-xs'
+                            ],
+                            'contentOptions' => [
+                                'class' => 'hidden-xs'
+                            ],
                         ],
                         [
                             'label' => Yii::t('app', 'Profession ID'),
                             'value' => function ($data){
                                 return $data['Profession_name'];
-                            }
+                            },
+                            'headerOptions' => [
+                                'class' => 'hidden-xs'
+                            ],
+                            'contentOptions' => [
+                                'class' => 'hidden-xs'
+                            ],
                         ],
                         [
                             'label' => Yii::t('app', 'Courses'),
                             'value' => function ($data){
                                 return $data['course_name'];
-                            }
+                            },
+                            'headerOptions' => [
+                                'class' => 'hidden-xs'
+                            ],
+                            'contentOptions' => [
+                                'class' => 'hidden-xs'
+                            ],
                         ],
                         [
                             'label' => Yii::t('app', '{Need}{Name}',['Need' => Yii::t('app', 'Need'), 'Name' => Yii::t('app', 'Name')]),
@@ -230,7 +272,13 @@ $radioType = [
                             'label' => Yii::t('app', '{Finish}{Time}',['Finish' => Yii::t('app', 'Finish'), 'Time' => Yii::t('app', 'Time')]),
                             'value' => function ($data){
                                 return !empty($data['finish_time']) ? date('Y-m-d H:i',$data['finish_time']) : null;
-                            }
+                            },
+                            'headerOptions' => [
+                                'class' => 'hidden-xs'
+                            ],
+                            'contentOptions' => [
+                                'class' => 'hidden-xs'
+                            ],
                         ],
                         [
                             'label' => Yii::t('app', 'Receive By'),
@@ -242,7 +290,13 @@ $radioType = [
                             'label' => Yii::t('app', '{Actual}{Cost}',['Actual' => Yii::t('app', 'Actual'), 'Cost' => Yii::t('app', 'Cost')]),
                             'value' => function ($data){
                                 return !empty($data['reality_cost']) ? '￥' . $data['reality_cost'] : null;
-                            }
+                            },
+                            'headerOptions' => [
+                                'class' => 'hidden-xs'
+                            ],
+                            'contentOptions' => [
+                                'class' => 'hidden-xs'
+                            ],
                         ],
                         [
                             'label' => Yii::t('app', '{Actual}{Bonus}',['Actual' => Yii::t('app', 'Actual'), 'Bonus' => Yii::t('app', 'Bonus')]),
@@ -251,7 +305,7 @@ $radioType = [
                             }
                         ],
                         [
-                            'label' => Yii::t('app', 'Bonus'),
+                            'label' => Yii::t('app', 'Bonus Ratio'),
                             'value' => function ($data){
                                 return !empty($data['performance_percent']) ? $data['performance_percent'] * 100 . '%' : null;
                             }

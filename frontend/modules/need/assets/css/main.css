@@ -68,7 +68,6 @@
     color: #fff;
 }
 
-
 /**
  * 公共样式
  */
@@ -89,4 +88,8 @@
  */
 .statistics-navbar{
     margin: 20px 0px 20px 0px;
+}
+
+.btn {
+    width: 85px;
 }

@@ -59,15 +59,13 @@ class StatisticsController extends Controller
         $type = $request->getQueryParam('type');
         $dateRange = $request->getQueryParam('dateRange');
              
-        $filter = [NeedTask::STATUS_DEFAULT, NeedTask::STATUS_FINISHED];
         /* @var $query Query */
-        $query = (new Query())->where(['NeedTask.is_del' => 0])
-                ->andFilterWhere(['NOT IN', 'NeedTask.status', $filter]);             //过滤创建中和已完成的数据
+        $query = (new Query())->where(['NeedTask.status' => NeedTask::STATUS_FINISHED]);  //已完成的数据
         
         /* 当时间段参数不为空时 */
         if($dateRange != null){
             $dateRange_Arr = explode(" - ",$dateRange);
-            $query->andFilterWhere(['between', 'NeedTask.created_at', strtotime($dateRange_Arr[0]), strtotime($dateRange_Arr[1])]);
+            $query->andFilterWhere(['between', 'NeedTask.finish_time', strtotime($dateRange_Arr[0]), strtotime($dateRange_Arr[1])]);
         }
 
         return $this->render('cost', [
@@ -93,15 +91,13 @@ class StatisticsController extends Controller
         $request = Yii::$app->getRequest();
         $dateRange = $request->getQueryParam('dateRange');
                 
-        $filter = [NeedTask::STATUS_DEFAULT, NeedTask::STATUS_FINISHED];
         /* @var $query Query */
-        $query = (new Query())->where(['NeedTask.is_del' => 0])
-                ->andFilterWhere(['NOT IN', 'NeedTask.status', $filter]);             //过滤创建中和已完成的数据
+        $query = (new Query())->where(['NeedTask.status' => NeedTask::STATUS_FINISHED]);    //已完成的数据
         
         /* 当时间段参数不为空时 */
         if($dateRange != null){
             $dateRange_Arr = explode(" - ",$dateRange);
-            $query->andFilterWhere(['between', 'NeedTask.created_at', strtotime($dateRange_Arr[0]), strtotime($dateRange_Arr[1])]);
+            $query->andFilterWhere(['between', 'NeedTask.finish_time', strtotime($dateRange_Arr[0]), strtotime($dateRange_Arr[1])]);
         }
         
         return $this->render('bonus', [
@@ -127,32 +123,36 @@ class StatisticsController extends Controller
         /** 专业/工种 */
         $profession = $request->getQueryParam('profession');
         /** 课程 */
-        $courses = $request->getQueryParam('courses');
+        $course = $request->getQueryParam('course');
               
-        $filter = [NeedTask::STATUS_DEFAULT, NeedTask::STATUS_FINISHED];
         /* @var $query Query */
-        $query = (new Query())->where(['NeedTask.is_del' => 0])
+        $query = (new Query())->where(['NeedTask.status' => NeedTask::STATUS_FINISHED]) //已完成的数据
                 ->andFilterWhere(['NeedTask.`business_id`' => $business])
                 ->andFilterWhere(['NeedTask.`layer_id`' => $layer])
                 ->andFilterWhere(['NeedTask.`profession_id`' => $profession])
-                ->andFilterWhere(['NeedTask.`courses_id`' => $courses])
-                ->andFilterWhere(['NOT IN', 'NeedTask.status', $filter]);             //过滤创建中和已完成的数据
+                ->andFilterWhere(['NeedTask.`course_id`' => $course]);             
         
         return $this->render('course-details', [
             'type' => empty($type) ? '0' : $type,
             'business' => $business,    //行业
             'layer' => $layer,          //层次/类型
             'profession' => $profession,//专业/工种
-            'courses' => $courses,      //课程
+            'course' => $course,        //课程
             'totalCost' => $this->getTotalCost($query),                 //总成本
             'workitems' => $this->getStatisticsByWorkitem($query),      //按工作项统计
             'presonal' => $this->getTotalCostByPresonal($query),        //按人统计成本
             'businesss' => $this->getItemTyps(),    //行业
             'layers' => $this->getItems(),          //层次/类型
+            'professions' => $this->getChildrens($layer),
+            'courses' => $this->getChildrens($profession),
             'items' => ['0' => '新建', '1' => '改造'],
         ]);
     } 
     
+    /**
+     * 统计-个人明细页面
+     * @return array
+     */
     public function actionPersonalDetails()
     {
         /* @var $request Request */
@@ -162,16 +162,14 @@ class StatisticsController extends Controller
         /** 个人名称 */
         $username = $request->getQueryParam('username');
         
-        $filter = [NeedTask::STATUS_DEFAULT, NeedTask::STATUS_FINISHED];
         /* @var $query Query */
-        $query = (new Query())->where(['NeedTask.is_del' => 0])
-                ->andFilterWhere(['NeedTask.receive_by' => $username])
-                ->andFilterWhere(['NOT IN', 'NeedTask.status', $filter]);             //过滤创建中和已完成的数据
+        $query = (new Query())->where(['NeedTask.status' => NeedTask::STATUS_FINISHED]) //已完成的数据
+                ->andFilterWhere(['NeedTask.receive_by' => $username]);             
         
         /* 当时间段参数不为空时 */
         if($dateRange != null){
             $dateRange_Arr = explode(" - ",$dateRange);
-            $query->andFilterWhere(['between', 'NeedTask.created_at', strtotime($dateRange_Arr[0]), strtotime($dateRange_Arr[1])]);
+            $query->andFilterWhere(['between', 'NeedTask.finish_time', strtotime($dateRange_Arr[0]), strtotime($dateRange_Arr[1])]);
         }
         
         return $this->render('personal-details', [
@@ -181,14 +179,14 @@ class StatisticsController extends Controller
             'receive' => $this->getAllReceive(),            //承接人
             'totalCost' => $this->getTotalCost($query),     //总成本
             'totalBonus' => $this->getTotalBonus($query),   //总绩效
-            'taskCost' => $this->getTaskCost($query),
-            'taskBonus' => $this->getTaskBonus($query),
+            'taskCost' => $this->getTaskCost($query),       //根据成本统计
+            'taskBonus' => $this->getTaskBonus($query),     //根据绩效统计
         ]);
     }
 
     //--------------------------------------------------------------------------
     //
-    // 统计-成本页面
+    // 统计-公共方法
     //
     //--------------------------------------------------------------------------
     /**
@@ -206,61 +204,22 @@ class StatisticsController extends Controller
 
         return $totalCostQuery->one(Yii::$app->db);
     }
-
-    /**
-     * 按行业统计
-     * @param Query $sourceQuery
-     * @return Array
-     */
-    private function getStatisticsByBusiness($sourceQuery)
-    {
-        $selectName = 'SUM(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0) + '
-                . '(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
-        $businessQuery = clone $sourceQuery;
-        $businessQuery->select(['ItemType.name',"{$selectName} AS value"])
-                    ->from(['NeedTask' => NeedTask::tableName()])
-                    ->leftJoin(['ItemType' => ItemType::tableName()], 'NeedTask.business_id = ItemType.id')
-                    ->groupBy('NeedTask.business_id');
-        
-        return $businessQuery->all(Yii::$app->db);
-    }
     
     /**
-     * 按层次类型统计
+     * 获取总绩效
      * @param Query $sourceQuery
-     * @return Array
+     * @return array
      */
-    private function getStatisticsByLayer($sourceQuery)
+    private function getTotalBonus($sourceQuery)
     {
-        $selectName = 'SUM(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0) + '
-                . '(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
-        $layerQuery = clone $sourceQuery;
-        $layerQuery->select(['FwItem.name',"{$selectName} AS value"])
-                ->from(['NeedTask' => NeedTask::tableName()])
-                ->leftJoin(['FwItem' => Item::tableName()], 'NeedTask.layer_id = FwItem.id')
-                ->groupBy('NeedTask.layer_id');
-        
-        return $layerQuery->all(Yii::$app->db);
+        $selectName = 'SUM((COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
+        $totalBonusQuery = clone $sourceQuery;
+        $totalBonusQuery->select(["{$selectName} AS total_bonus"])
+                ->from(['NeedTask' => NeedTask::tableName()]);
+
+        return $totalBonusQuery->one(Yii::$app->db);
     }
     
-     /**
-     * 按专业工种统计
-     * @param Query $sourceQuery
-     * @return Array
-     */
-    private function getStatisticsByProfession($sourceQuery)
-    {
-        $selectName = 'SUM(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0) + '
-                . '(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
-        $professionQuery = clone $sourceQuery;
-        $professionQuery->select(['FwItem.name',"{$selectName} AS value"])
-                    ->from(['NeedTask' => NeedTask::tableName()])
-                    ->leftJoin(['FwItem' => Item::tableName()], 'NeedTask.profession_id = FwItem.id')
-                    ->groupBy('NeedTask.profession_id');
-        
-        return $professionQuery->all(Yii::$app->db);
-    }
-
     /**
      * 根据人统计成本
      * @param Query $sourceQuery
@@ -321,24 +280,68 @@ class StatisticsController extends Controller
     
     //--------------------------------------------------------------------------
     //
-    // 统计-绩效页面
+    // 统计-成本页面
     //
     //--------------------------------------------------------------------------
     /**
-     * 获取总绩效
+     * 按行业统计
      * @param Query $sourceQuery
-     * @return array
+     * @return Array
      */
-    private function getTotalBonus($sourceQuery)
+    private function getStatisticsByBusiness($sourceQuery)
     {
-        $selectName = 'SUM((COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
-        $totalBonusQuery = clone $sourceQuery;
-        $totalBonusQuery->select(["{$selectName} AS total_bonus"])
-                ->from(['NeedTask' => NeedTask::tableName()]);
-
-        return $totalBonusQuery->one(Yii::$app->db);
+        $selectName = 'SUM(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0) + '
+                . '(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
+        $businessQuery = clone $sourceQuery;
+        $businessQuery->select(['ItemType.name',"{$selectName} AS value"])
+                    ->from(['NeedTask' => NeedTask::tableName()])
+                    ->leftJoin(['ItemType' => ItemType::tableName()], 'NeedTask.business_id = ItemType.id')
+                    ->groupBy('NeedTask.business_id');
+        
+        return $businessQuery->all(Yii::$app->db);
     }
     
+    /**
+     * 按层次类型统计
+     * @param Query $sourceQuery
+     * @return Array
+     */
+    private function getStatisticsByLayer($sourceQuery)
+    {
+        $selectName = 'SUM(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0) + '
+                . '(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
+        $layerQuery = clone $sourceQuery;
+        $layerQuery->select(['FwItem.name',"{$selectName} AS value"])
+                ->from(['NeedTask' => NeedTask::tableName()])
+                ->leftJoin(['FwItem' => Item::tableName()], 'NeedTask.layer_id = FwItem.id')
+                ->groupBy('NeedTask.layer_id');
+        
+        return $layerQuery->all(Yii::$app->db);
+    }
+    
+     /**
+     * 按专业工种统计
+     * @param Query $sourceQuery
+     * @return Array
+     */
+    private function getStatisticsByProfession($sourceQuery)
+    {
+        $selectName = 'SUM(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0) + '
+                . '(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
+        $professionQuery = clone $sourceQuery;
+        $professionQuery->select(['FwItem.name',"{$selectName} AS value"])
+                    ->from(['NeedTask' => NeedTask::tableName()])
+                    ->leftJoin(['FwItem' => Item::tableName()], 'NeedTask.profession_id = FwItem.id')
+                    ->groupBy('NeedTask.profession_id');
+        
+        return $professionQuery->all(Yii::$app->db);
+    }
+
+    //--------------------------------------------------------------------------
+    //
+    // 统计-绩效页面
+    //
+    //--------------------------------------------------------------------------
     /**
      * 根据人统计绩效
      * @param Query $sourceQuery
@@ -381,6 +384,23 @@ class StatisticsController extends Controller
         return ArrayHelper::map($items, 'id', 'name');
     }
     
+    /**
+     * 获取所有专业/工种 or 课程
+     * @param type $itemId              层次/类型ID
+     * @return type
+     */
+    protected function getChildrens($itemId)
+    {
+        /* @var $fwManager FrameworkManager */
+        $fwManager = Yii::$app->get('fwManager');
+        return ArrayHelper::map($fwManager->getChildren($itemId), 'id', 'name');
+    }
+    
+    //--------------------------------------------------------------------------
+    //
+    // 统计-个人明细页
+    //
+    //--------------------------------------------------------------------------
     /**
      * 获取所有承接人
      * @return Array [id=>name]
@@ -443,7 +463,7 @@ class StatisticsController extends Controller
                 ->leftJoin(['User' => User::tableName()], 'User.id = NeedTask.receive_by')
                 ->leftJoin(['NeedTaskUser' => NeedTaskUser::tableName()], '(NeedTaskUser.need_task_id = NeedTask.id AND NeedTaskUser.user_id = NeedTask.receive_by)')
                 ->groupBy('NeedTask.id');
-//        var_dump($businessQuery->all(Yii::$app->db));exit;
+
         return $businessQuery->all(Yii::$app->db);
     }
 }

@@ -22,26 +22,26 @@ $this->title = Yii::t('app', '{Statistics}-{Bonus}',[
           <div class="col-sm-11">
             <?php
                 echo DateRangePicker::widget([
-                    'value'=>$dateRange,
+                    'value' => $dateRange,
                     'name' => 'dateRange',
                     //'presetDropdown' => true,
                     'hideInput' => true,
-                    'convertFormat'=>true,
-                    'pluginOptions'=>[
-                        'locale'=>['format' => 'Y-m-d'],
+                    'convertFormat' => true,
+                    'pluginOptions' => [
+                        'locale' => ['format' => 'Y-m-d'],
                         'allowClear' => true,
                         'ranges' => [
-                            Yii::t('rcoa/teamwork', "Statistics-Prev-Week") => ["moment().startOf('week').subtract(1,'week')", "moment().endOf('week').subtract(1,'week')"],
-                            Yii::t('rcoa/teamwork', "Statistics-This-Week") => ["moment().startOf('week')", "moment().endOf('week')"],
-                            Yii::t('rcoa/teamwork', "Statistics-Prev-Month") => ["moment().startOf('month').subtract(1,'month')", "moment().endOf('month').subtract(1,'month')"],
-                            Yii::t('rcoa/teamwork', "Statistics-This-Month") => ["moment().startOf('month')", "moment().endOf('month')"],
-                                                                    '第一季' => ["moment().startOf('Q').quarter(1,'quarter')","moment().endOf('Q').quarter(1,'quarter')"],
-                                                                    '第二季' => ["moment().startOf('Q').quarter(2,'quarter')","moment().endOf('Q').quarter(2,'quarter')"],
-                                                                    '第三季' => ["moment().startOf('Q').quarter(3,'quarter')","moment().endOf('Q').quarter(3,'quarter')"],
-                                                                    '第四季' => ["moment().startOf('Q').quarter(4,'quarter')","moment().endOf('Q').quarter(4,'quarter')"],
-                            Yii::t('rcoa/teamwork', "Statistics-First-Half-Year") => ["moment().startOf('year')", "moment().startOf('year').add(5,'month').endOf('month')"],
-                            Yii::t('rcoa/teamwork', "Statistics-Next-Half-Year") => ["moment().startOf('year').add(6,'month')", "moment().endOf('year')"],
-                            Yii::t('rcoa/teamwork', "Statistics-Full-Year") => ["moment().startOf('year')", "moment().endOf('year')"],
+                            Yii::t('app', "Statistics-Prev-Week") => ["moment().startOf('week').subtract(1,'week')", "moment().endOf('week').subtract(1,'week')"],
+                            Yii::t('app', "Statistics-This-Week") => ["moment().startOf('week')", "moment().endOf('week')"],
+                            Yii::t('app', "Statistics-Prev-Month") => ["moment().startOf('month').subtract(1,'month')", "moment().endOf('month').subtract(1,'month')"],
+                            Yii::t('app', "Statistics-This-Month") => ["moment().startOf('month')", "moment().endOf('month')"],
+                            Yii::t('app', "First Season") => ["moment().startOf('Q').quarter(1,'quarter')","moment().endOf('Q').quarter(1,'quarter')"],
+                            Yii::t('app', "Second Season") => ["moment().startOf('Q').quarter(2,'quarter')","moment().endOf('Q').quarter(2,'quarter')"],
+                            Yii::t('app', "Third Season") => ["moment().startOf('Q').quarter(3,'quarter')","moment().endOf('Q').quarter(3,'quarter')"],
+                            Yii::t('app', "Fourth Season") => ["moment().startOf('Q').quarter(4,'quarter')","moment().endOf('Q').quarter(4,'quarter')"],
+                            Yii::t('app', "Statistics-First-Half-Year") => ["moment().startOf('year')", "moment().startOf('year').add(5,'month').endOf('month')"],
+                            Yii::t('app', "Statistics-Next-Half-Year") => ["moment().startOf('year').add(6,'month')", "moment().endOf('year')"],
+                            Yii::t('app', "Statistics-Full-Year") => ["moment().startOf('year')", "moment().endOf('year')"],
                         ]
                     ],
                     

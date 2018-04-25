@@ -33,22 +33,29 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             [
                 'attribute' => 'workitem_type_id',
-                'value' => $model->workitemType->name
+                'value' => $model->workitemType->name,
             ],
             [
                 'attribute' => 'workitem_id',
-                'value' => $model->workitem->name
+                'value' => $model->workitem->name,
             ],
             [
                 'attribute' => 'price_new',
-                'value' => '￥' . $model->price_new
+                'value' => '￥' . $model->price_new,
             ],
             [
                 'attribute' => 'price_remould',
-                'value' => '￥' . $model->price_remould
+                'value' => '￥' . $model->price_remould,
+            ],
+            [
+                'label' => Yii::t('app', 'Employer'),
+                'value' => $model->workitem->unit,
+            ],
+            [
+                'attribute' => 'is_del',
+                'value' => $model->is_del == 0 ? '否' : '是',
             ],
             'sort_order',
-            'is_del',
             'created_at:datetime',
             'updated_at:datetime',
         ],

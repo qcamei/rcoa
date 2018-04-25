@@ -69,6 +69,7 @@ $radioType = [
                       <?php 
                       echo Select2::widget([
                           'value'=> $profession,
+                          'data' => $professions,
                           'name' => 'profession',
                           'id' => 'profession',
                           'options' => [
@@ -82,16 +83,17 @@ $radioType = [
                 </div>
             </div>
         </div>
-        <!--课程 courses-->
+        <!--课程 course-->
         <div class="form-group">
             <div class="filter col-sm-4">
-                <label for="courses" class="col-sm-3 control-label filter-title"><?php echo Yii::t('app', 'Courses') ?></label>
+                <label for="course" class="col-sm-3 control-label filter-title"><?php echo Yii::t('app', 'Courses') ?></label>
                 <div class="col-sm-9">
                       <?php 
                       echo Select2::widget([
-                          'value'=> $courses,
-                          'name' => 'courses',
-                          'id' => 'courses',
+                          'value'=> $course,
+                          'data' => $courses,
+                          'name' => 'course',
+                          'id' => 'course',
                           'options' => [
                               'placeholder' => Yii::t('rcoa/teamwork', 'Statistics-Team-prompt'),
                           ],
@@ -153,7 +155,7 @@ $radioType = [
             $.each(data['data'],function()
             {
                 $('<option>').val(this['id']).text(this['name']).appendTo($("#profession"));
-                if(select && select == this['id'])
+                if(select && select === this['id'])
                     selectedName = this['name'];
             });
             if(select)
@@ -165,22 +167,22 @@ $radioType = [
     };
     //动态获取课程
     function wx_two(e,select){
-	$("#courses").html("");
-	$("#select2-courses-container").html("全部");
+	$("#course").html("");
+	$("#select2-course-container").html("全部");
 	$.post("/framework/api/search?id="+$(e).val(),function(data)
         {
             var selectedName = "";
-            $('<option/>').appendTo($("#courses"));
+            $('<option/>').appendTo($("#course"));
             $.each(data['data'],function()
             {
-                $('<option>').val(this['id']).text(this['name']).appendTo($("#courses"));
-                if(select && select == this['id'])
+                $('<option>').val(this['id']).text(this['name']).appendTo($("#course"));
+                if(select && select === this['id'])
                     selectedName = this['name'];
             });
             if(select)
             {
-                $("#courses").val(select);
-                $("#select2-courses-container").html(selectedName);
+                $("#course").val(select);
+                $("#select2-course-container").html(selectedName);
             }
 	});
     }
@@ -196,19 +198,7 @@ $js = <<<JS
         }else if($type === 1){
             var presonalChart = new ccoacharts.BarChart({title:"",itemLabelFormatter:'{c} 元'},document.getElementById('presonalCanvas'),$presonal);
         }
-        
-        //动态获取专业/工种
-        var layer = Number("$layer") == "" ? -1 : Number("$layer");
-        if(layer!=-1)
-        {
-            wx_one($('#layer'),Number("$profession"));
-        };
-        //动态获取课程
-        var profession = Number("$profession") == "" ? -1 : Number("$profession");
-        if(profession!=-1)
-        {
-            wx_two($('#profession'),Number("$courses"));
-        }
+      
 JS;
 
     $this->registerJs($js, View::POS_READY);

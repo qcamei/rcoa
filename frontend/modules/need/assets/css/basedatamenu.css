@@ -14,14 +14,14 @@
 }
 
 /** 小屏样式 */
-@media (max-width: 768px) {
+@media (max-width: 1199px) {
     .basedata-content > .subnav {
         width: 100%;
         margin-bottom: 20px;
     }
 }
 /** 大屏样式 */
-@media (min-width: 768px) {
+@media (min-width: 1199px) {
     .basedata-content > .subnav > .menu {
         width: 200px;
         height: auto;
@@ -103,13 +103,13 @@
 }
 
 /** 小屏样式 */
-@media (max-width: 768px) {
+@media (max-width: 1199px) {
     .main {
         width: 100%;
     }
 }
 /** 大屏样式 */
-@media (min-width: 768px) {
+@media (min-width: 1199px) {
     .main {
         width: 930px;
         padding-left: 30px;
