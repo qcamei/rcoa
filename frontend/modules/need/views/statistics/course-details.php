@@ -34,7 +34,7 @@ $radioType = [
                           'name' => 'business',
                           'data' => $businesss,
                           'options' => [
-                              'placeholder' => Yii::t('rcoa/teamwork', 'Statistics-Team-prompt'),
+                              'placeholder' => Yii::t('app', 'All'),
                           ],
                           'pluginOptions' => [
                               'allowClear' => true
@@ -53,7 +53,7 @@ $radioType = [
                           'id' => 'layer',
                           'data' => $layers,
                           'options' => [
-                              'placeholder' => Yii::t('rcoa/teamwork', 'Statistics-Team-prompt'),
+                              'placeholder' => Yii::t('app', 'All'),
                               'onchange'=>'wx_one(this)',
                           ],
                           'pluginOptions' => [
@@ -73,7 +73,7 @@ $radioType = [
                           'name' => 'profession',
                           'id' => 'profession',
                           'options' => [
-                              'placeholder' => Yii::t('rcoa/teamwork', 'Statistics-Team-prompt'),
+                              'placeholder' => Yii::t('app', 'All'),
                               'onchange'=>'wx_two(this)',
                           ],
                           'pluginOptions' => [
@@ -95,7 +95,7 @@ $radioType = [
                           'name' => 'course',
                           'id' => 'course',
                           'options' => [
-                              'placeholder' => Yii::t('rcoa/teamwork', 'Statistics-Team-prompt'),
+                              'placeholder' => Yii::t('app', 'All'),
                           ],
                           'pluginOptions' => [
                               'allowClear' => true
@@ -198,7 +198,7 @@ $js = <<<JS
         }else if($type === 1){
             var presonalChart = new ccoacharts.BarChart({title:"",itemLabelFormatter:'{c} 元'},document.getElementById('presonalCanvas'),$presonal);
         }
-      
+        
 JS;
 
     $this->registerJs($js, View::POS_READY);

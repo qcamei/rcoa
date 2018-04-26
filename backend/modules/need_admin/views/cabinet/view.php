@@ -25,6 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= DetailView::widget([
         'model' => $model,
+        'template' => '<tr><th class="viewdetail-th">{label}</th><td class="viewdetail-td">{value}</td></tr>',
         'attributes' => [
             'id',
             'workitem_id',
@@ -51,7 +52,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             'content',
-            'is_delete',
+            [
+                'attribute' => 'is_delete',
+                'label' => Yii::t('app', 'Is Deleted'),
+                'value' => $model->is_delete == 'N' ? '否' : '是',
+            ],
         ],
     ]) ?>
 

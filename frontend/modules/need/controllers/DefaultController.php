@@ -49,14 +49,24 @@ class DefaultController extends Controller
         $seasonStart = strtotime(date('Y-m-01 H:i:s', mktime(0, 0, 0, ($season - 1) * 3 + 1, 1, date('Y')))); //当前季度的开始时间
         $seasonEnd = strtotime(date('Y-m-t H:i:s', mktime(23, 59, 59, $season * 3, 1, date('Y'))));           //当前季度的结束时间
 
+        switch ($season){
+            case 1: $season = '一';
+                break;
+            case 2: $season = '二';
+                break;
+            case 3: $season = '三';
+                break;
+            default : $season = '四';
+        }
         return $this->render('index',[
-            'needCosts' => $this->getUserNeedCostBySeason($seasonStart, $seasonEnd),      //当前季度用户的需求成本
-            'demands' => $this->getUserDemandBySeason($seasonStart, $seasonEnd),          //当前季度用户的绩效
+            'season' => $season,        //当前季度
+            'needCosts' => $this->getUserNeedCostBySeason($seasonStart, $seasonEnd),      //当前季度在建用户需求成本统计
+            'demands' => $this->getUserDemandBySeason($seasonStart, $seasonEnd),          //当前季度在建用户绩效统计
         ]);
     }
     
     /**
-     * 获取当前季度用户的需求成本
+     * 当前季度在建用户需求成本统计
      * @param int $seasonStart  当前季度的开始时间
      * @param int $seasonEnd    当前季度的结束时间
      * @return array
@@ -79,7 +89,7 @@ class DefaultController extends Controller
     }
     
     /**
-     * 获取当前季度用户的绩效
+     * 当前季度在建用户绩效统计
      * @param int $seasonStart  当前季度的开始时间
      * @param int $seasonEnd    当前季度的结束时间
      * @return array

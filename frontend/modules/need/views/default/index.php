@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <div class="container content">
         <div class="content-title">
-            <i class="glyphicon glyphicon-stats">&nbsp;<?= date('Y')?>第<?= ceil((date('n'))/3)?>季在建统计</i>
+            <i class="fa fa-bar-chart">&nbsp;&nbsp;<?= date('Y')?>第<?= $season; ?>季在建统计</i>
         </div>
         <div class="need-cost">
             <div class="need-cost-title">

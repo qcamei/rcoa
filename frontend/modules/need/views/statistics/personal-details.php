@@ -67,7 +67,7 @@ $radioType = [
                     'name' => 'username',
                     'data' => $receive,
                     'options' => [
-                        'placeholder' => Yii::t('rcoa/teamwork', 'Statistics-Team-prompt'),
+                        'placeholder' => Yii::t('app', 'All'),
                     ],
                     'pluginOptions' => [
                         'allowClear' => true

@@ -52,6 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?=GridView::widget([
         'dataProvider' => new ArrayDataProvider(['models'=>$model->cabinets]),
         'tableOptions' => ['class' => 'table table-striped table-bordered','style' => ['table-layout' => 'fixed']],
+        'layout' => "{items}\n{summary}\n{pager}",
         'columns' => [
             [
                 'class' => 'yii\grid\SerialColumn',
