@@ -23,7 +23,7 @@ $radioType = [
 ?>
 
 <div class="statistics statistics-personal-details">
-    <form class="form-horizontal">
+    <form class="form-horizontal"  id="personal-details-form">
         <!--时间段-->
         <div class="form-group">
           <label for="dateRange" class="col-sm-1 control-label"><?php echo Yii::t('app', 'Time Slot') ?>：</label>
@@ -97,6 +97,7 @@ $radioType = [
         <div class="form-group">
             <div class="col-sm-offset-1 col-sm-11">
                 <button type="submit" class="btn btn-success"><?php echo Yii::t('app', 'Statistics') ?></button>
+                <a id="export" role="button" class="btn btn-default"><?php echo Yii::t('app', 'Export') ?></a>
             </div>
         </div>
     </form>
@@ -348,6 +349,11 @@ $radioType = [
 <?php
 
 $js = <<<JS
+        
+        /** 导出数据 */    
+        $('#export').click(function(){
+            location.href = "/need/export/personal-run?" + $('#personal-details-form').serialize();
+        });
         
 JS;
     $this->registerJs($js, View::POS_READY);

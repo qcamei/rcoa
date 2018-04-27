@@ -72,6 +72,7 @@ class StatisticsController extends Controller
             'type' => empty($type) ? '0' : $type,
             'dateRange' => $dateRange,
             'totalCost' => $this->getTotalCost($query),                 //总成本
+            'totalWorikitemCost' => $this->getWorikitemCost($query),    //内容总成本（不含绩效）
             'business' => $this->getStatisticsByBusiness($query),       //按行业统计成本
             'layer' => $this->getStatisticsByLayer($query),             //按层次类型统计成本
             'profession' => $this->getStatisticsByProfession($query),   //按专业工种统计成本
@@ -139,6 +140,7 @@ class StatisticsController extends Controller
             'profession' => $profession,//专业/工种
             'course' => $course,        //课程
             'totalCost' => $this->getTotalCost($query),                 //总成本
+            'totalWorikitemCost' => $this->getWorikitemCost($query),    //内容总成本（不含绩效）
             'workitems' => $this->getStatisticsByWorkitem($query),      //按工作项统计
             'presonal' => $this->getTotalCostByPresonal($query),        //按人统计成本
             'businesss' => $this->getItemTyps(),    //行业
@@ -194,7 +196,7 @@ class StatisticsController extends Controller
      * @param Query $sourceQuery
      * @return array
      */
-    private function getTotalCost($sourceQuery)
+    public static function getTotalCost($sourceQuery)
     {
         $selectName = 'SUM(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0) + '
                 . '(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
@@ -210,7 +212,7 @@ class StatisticsController extends Controller
      * @param Query $sourceQuery
      * @return array
      */
-    private function getTotalBonus($sourceQuery)
+    public static function getTotalBonus($sourceQuery)
     {
         $selectName = 'SUM((COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
         $totalBonusQuery = clone $sourceQuery;
@@ -225,7 +227,7 @@ class StatisticsController extends Controller
      * @param Query $sourceQuery
      * @return array
      */
-    private function getTotalCostByPresonal($sourceQuery)
+    public static function getTotalCostByPresonal($sourceQuery)
     {
         $selectName = 'SUM(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0) + '
                 . '(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
@@ -243,22 +245,21 @@ class StatisticsController extends Controller
      * @param Query $sourceQuery
      * @return array
      */
-    private function getStatisticsByWorkitem($sourceQuery)
+    public static function getStatisticsByWorkitem($sourceQuery)
     {
-        $selectName = 'SUM(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0) + '
-                . '(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
+        $selectName = 'SUM(NeedContent.price * NeedContent.reality_num)';
         $workitemQuery = clone $sourceQuery;
         $workitemQuery->select(['Workitem.name', "$selectName AS value"])
                 ->from(['NeedTask' => NeedTask::tableName()])
                 ->leftJoin(['NeedContent' => NeedContent::tableName()], '(NeedContent.need_task_id = NeedTask.id AND NeedContent.is_del = 0)')
                 ->leftJoin(['Workitem' => Workitem::tableName()], 'Workitem.id = NeedContent.workitem_id')
                 ->groupBy('Workitem.id');
-        
+
         //新建
         $workitemNewQuery = clone $workitemQuery;
         $workitemNews = $workitemNewQuery
                 ->andFilterWhere(['NeedContent.is_new' => 0])->all();
-        
+
         //改造
         $workitemRemouldQuery = clone $workitemQuery;
         $workitemRemoulds = $workitemRemouldQuery
@@ -288,7 +289,7 @@ class StatisticsController extends Controller
      * @param Query $sourceQuery
      * @return Array
      */
-    private function getStatisticsByBusiness($sourceQuery)
+    public static function getStatisticsByBusiness($sourceQuery)
     {
         $selectName = 'SUM(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0) + '
                 . '(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
@@ -306,7 +307,7 @@ class StatisticsController extends Controller
      * @param Query $sourceQuery
      * @return Array
      */
-    private function getStatisticsByLayer($sourceQuery)
+    public static function getStatisticsByLayer($sourceQuery)
     {
         $selectName = 'SUM(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0) + '
                 . '(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
@@ -324,7 +325,7 @@ class StatisticsController extends Controller
      * @param Query $sourceQuery
      * @return Array
      */
-    private function getStatisticsByProfession($sourceQuery)
+    public static function getStatisticsByProfession($sourceQuery)
     {
         $selectName = 'SUM(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0) + '
                 . '(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
@@ -335,6 +336,22 @@ class StatisticsController extends Controller
                     ->groupBy('NeedTask.profession_id');
         
         return $professionQuery->all(Yii::$app->db);
+    }
+    
+    /**
+     * 内容总成本（不含绩效）
+     * @param Query $sourceQuery
+     * @return array
+     */
+    public static function getWorikitemCost($sourceQuery)
+    {
+        $selectName = 'SUM(NeedContent.price * NeedContent.reality_num)';
+        $workitemQuery = clone $sourceQuery;
+        $workitemQuery->select(["$selectName AS value"])
+                ->from(['NeedTask' => NeedTask::tableName()])
+                ->leftJoin(['NeedContent' => NeedContent::tableName()], '(NeedContent.need_task_id = NeedTask.id AND NeedContent.is_del = 0)');
+        
+        return $workitemQuery->one(Yii::$app->db);
     }
 
     //--------------------------------------------------------------------------
@@ -347,7 +364,7 @@ class StatisticsController extends Controller
      * @param Query $sourceQuery
      * @return array
      */
-    private function getBonusByPresonal($sourceQuery)
+    public static function getBonusByPresonal($sourceQuery)
     {
         $selectName = 'SUM((COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
         $presonalQuery = clone $sourceQuery;
@@ -411,7 +428,7 @@ class StatisticsController extends Controller
                 ->select(['User.id', 'User.nickname AS name'])
                 ->from(['NeedTask' => NeedTask::tableName()])
                 ->leftJoin(['User' => User::tableName()], 'User.id = NeedTask.receive_by')
-                ->where(['NeedTask.is_del' => 0])
+                ->where(['NeedTask.status' => NeedTask::STATUS_FINISHED])
                 ->all();
         
         return ArrayHelper::map($allReceive, 'id', 'name');
@@ -422,7 +439,7 @@ class StatisticsController extends Controller
      * @param Query $sourceQuery
      * @return array
      */
-    private function getTaskCost($sourceQuery)
+    public static function getTaskCost($sourceQuery)
     {
         $selectName = 'SUM(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0) + '
                 . '(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
@@ -446,7 +463,7 @@ class StatisticsController extends Controller
      * @param Query $sourceQuery
      * @return array
      */
-    private function getTaskBonus($sourceQuery)
+    public static function getTaskBonus($sourceQuery)
     {
         $selectCost = 'SUM(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0) + '
                 . '(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';

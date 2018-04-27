@@ -15,7 +15,7 @@ $this->title = Yii::t('app', '{Statistics}-{Bonus}',[
 ?>
 
 <div class="statistics statistics-bonus">
-    <form class="form-horizontal">
+    <form class="form-horizontal" id="bonus-form">
         <!--时间段-->
         <div class="form-group">
           <label for="dateRange" class="col-sm-1 control-label"><?php echo Yii::t('app', 'Time Slot') ?>：</label>
@@ -53,6 +53,7 @@ $this->title = Yii::t('app', '{Statistics}-{Bonus}',[
         <div class="form-group">
             <div class="col-sm-offset-1 col-sm-11">
                 <button type="submit" class="btn btn-success"><?php echo Yii::t('app', 'Statistics') ?></button>
+                <a id="export" role="button" class="btn btn-default"><?php echo Yii::t('app', 'Export') ?></a>
             </div>
         </div>
     </form>
@@ -73,6 +74,11 @@ $bonus = json_encode($bonus);
 
 $js = <<<JS
         var presonalChart = new ccoacharts.BarChart({title:"",itemLabelFormatter:'{c} 元'},document.getElementById('bonusCanvas'),$bonus);
+        
+        /** 导出数据 */    
+        $('#export').click(function(){
+            location.href = "/need/export/bonus-run?" + $('#bonus-form').serialize();
+        });
 JS;
     $this->registerJs($js, View::POS_READY);
     ChartAsset::register($this);

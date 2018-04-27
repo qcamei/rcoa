@@ -22,7 +22,7 @@ $radioType = [
 ?>
 
 <div class="statistics statistics-cost">
-    <form class="form-horizontal">
+    <form class="form-horizontal" id="cost-form">
         <!--时间段-->
         <div class="form-group">
           <label for="dateRange" class="col-sm-1 control-label"><?php echo Yii::t('app', 'Time Slot') ?>：</label>
@@ -78,6 +78,7 @@ $radioType = [
         <div class="form-group">
             <div class="col-sm-offset-1 col-sm-11">
                 <button type="submit" class="btn btn-success"><?php echo Yii::t('app', 'Statistics') ?></button>
+                <a id="export" role="button" class="btn btn-default"><?php echo Yii::t('app', 'Export') ?></a>
             </div>
         </div>
     </form>
@@ -86,7 +87,11 @@ $radioType = [
     <div>
         <div class="summar-title">
             <i class="fa fa-bar-chart"></i>&nbsp;总成本：
-            <span class="num">￥<?= empty($totalCost['total_cost']) ? '0.00' : $totalCost['total_cost']; ?></span>
+            <?php if($type == 2): ?>
+                 <span class="num">￥<?= empty($totalWorikitemCost['value']) ? '0.00' : $totalWorikitemCost['value']; ?></span>
+            <?php else: ?>
+                <span class="num">￥<?= empty($totalCost['total_cost']) ? '0.00' : $totalCost['total_cost']; ?></span>
+            <?php endif;?>
         </div>
         <br/>
         <?php if($type == 0): ?>
@@ -119,6 +124,12 @@ $js = <<<JS
     }else if($type === 2){
         var workitemCanvas = new ccoacharts.MultiBarChart({title:"",itemLabelFormatter:'{c}元'},document.getElementById('workitemCanvas'),$workitems,$items);
     }
+
+    /** 导出数据 */    
+    $('#export').click(function(){
+        location.href = "/need/export/run?" + $('#cost-form').serialize();
+    });
+        
 JS;
     $this->registerJs($js, View::POS_READY);
     ChartAsset::register($this);

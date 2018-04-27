@@ -109,6 +109,7 @@ return [
     'Second Season' => '第二季',
     'Third Season' => '第三季',
     'Fourth Season' => '第四季',
+    'Export' => '导出',
     
     //场景预约
     'Booker' => '预约人',
