@@ -59,11 +59,37 @@
     margin-left: 5px;
 }
 /** 导航菜单a标签鼠标移上样式 */
-.submenu .container > a:hover, a:focus, a:active {
+.submenu .container > a.menu:hover, a.menu:focus, a.menu:active {
     color: #000;
     text-decoration: blink;
     background-color: rgba(255, 255, 255, 0.46);;
 }
 .submenu .container > a {
     color: #fff;
+}
+
+/**
+ * 公共样式
+ */
+/** 小屏不显示文字 */
+@media (max-width: 767px) {
+    .statistics-navbar a{
+        font-size: 12px;
+    }
+}
+/** 大屏显示文字 */
+@media (min-width: 768px) {
+    .statistics-navbar a{
+        font-size: 14px;
+    }
+}
+/** 
+ *  navbar
+ */
+.statistics-navbar{
+    margin: 20px 0px 20px 0px;
+}
+
+.btn {
+    width: 85px;
 }

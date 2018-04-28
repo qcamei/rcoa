@@ -1,7 +1,11 @@
 <?php
 
+use frontend\modules\need\assets\MainAssets;
 use yii\helpers\Html;
 
+/* @var $this View */
+
+MainAssets::register($this);
 ?>
 
 <div class="controlbar">
@@ -48,7 +52,7 @@ use yii\helpers\Html;
                     [
                         'controllerId' => 'statistics',
                         'name' => '统计',
-                        'url' => ['statistics/index'],
+                        'url' => ['statistics/cost'],
                         'icon' => '<i class="glyphicon glyphicon-stats"></i>',
                         'options' => ['class' => 'menu'],
                         'symbol' => '&nbsp;',
@@ -68,7 +72,7 @@ use yii\helpers\Html;
                     [
                         'controllerId'=> 'workitem',
                         'name' => '样例',
-                        'url' => ['workitem/list'],
+                        'url' => ['workitem/index'],
                         'icon' => '<i class="glyphicon glyphicon-tasks"></i>',
                         'options' => ['class' => 'menu'],
                         'symbol' => '&nbsp;',

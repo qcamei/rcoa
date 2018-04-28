@@ -94,3 +94,20 @@ a.desc:after {
 .content-wrapper{
     background-color: #ffffff !important;
 }
+
+/** table表格th样式 */
+.viewdetail-th {
+    color: #666666;
+    width: 23%;
+    font-weight: normal;
+    text-align: right;
+    min-width: 73px;
+    vertical-align: middle;
+}
+
+/** table表格th-head样式 */
+.viewdetail-th-head {
+    color: #000000;
+    float: left;
+    font-weight: bold;
+}
