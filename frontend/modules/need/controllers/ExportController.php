@@ -120,16 +120,14 @@ class ExportController extends Controller
             $username = User::findOne(['id' => $username])->nickname;
         }
 
-        $totalCost = StatisticsController::getTotalCost($query);                //总成本
-        $totalBonus = StatisticsController::getTotalBonus($query);              //总绩效
         $taskCost = StatisticsController::getTaskCost($query);       //根据成本统计
         $taskBonus = StatisticsController::getTaskBonus($query);     //根据绩效统计
-        
-        if($totalBonus['total_bonus'] != null){
+
+        if(!empty($taskCost)){
             if($type == 0){
-                $this->savePresonalDetailsCost($totalCost, $taskCost, $dateRange, $username);
+                $this->savePresonalDetailsCost($taskCost, $dateRange, $username);
             } else {
-                $this->savePresonalDetailsBonus($totalBonus, $taskBonus, $dateRange, $username);
+                $this->savePresonalDetailsBonus($taskBonus, $dateRange, $username);
             }
         } else {
             throw new NotFoundHttpException('数据为空！不能导出');
@@ -445,9 +443,9 @@ class ExportController extends Controller
 
     /**
      * 导出绩效统计
-     * @param array $totalBonus
-     * @param array $bonuss
-     * @param string $dateRange
+     * @param array $totalBonus 总绩效
+     * @param array $bonuss     绩效
+     * @param string $dateRange 时段
      */
     private function saveBonus($totalBonus, $bonuss, $dateRange)
     {
@@ -518,12 +516,11 @@ class ExportController extends Controller
     
     /**
      * 导出个人成本详情统计
-     * @param array $totalCost
-     * @param array $taskCost
-     * @param string $dateRange
-     * @param string $username
+     * @param array $taskCost   成本
+     * @param string $dateRange 时段
+     * @param string $username  用户名
      */
-    private function savePresonalDetailsCost($totalCost, $taskCost, $dateRange, $username)
+    private function savePresonalDetailsCost($taskCost, $dateRange, $username)
     {
         // Create new Spreadsheet object
         $spreadsheet = new Spreadsheet();
@@ -562,11 +559,13 @@ class ExportController extends Controller
                     ->setCellValueByColumnAndRow(++$columnIndex, $key+$startRow, $data['task_name'])
                     ->setCellValueByColumnAndRow(++$columnIndex, $key+$startRow, date('Y/m/d H:i',$data['finish_time']))
                     ->setCellValueByColumnAndRow(++$columnIndex, $key+$startRow, $data['nickname'])
-                    ->setCellValueByColumnAndRow(++$columnIndex, $key+$startRow, ('￥'.$data['reality_cost']));
+                    ->setCellValueByColumnAndRow(++$columnIndex, $key+$startRow, $data['reality_cost']);
         }
+        $listRow = $key+$startRow+1;
         $endRow = $key+$startRow+2;
         $spreadsheet->setActiveSheetIndex(0)
-                    ->setCellValue("A$endRow", '总')->setCellValue("H$endRow", ('￥'.$totalCost['total_cost']));
+                    ->setCellValue("A$endRow", '总')
+                    ->setCellValue("H$endRow", "=SUM(H$startRow:H$listRow)");
 
         //设置列宽
         $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(25);
@@ -612,12 +611,11 @@ class ExportController extends Controller
     
     /**
      * 导出个人绩效详情统计
-     * @param array $totalBonus
-     * @param array $taskBonus
-     * @param string $dateRange
-     * @param string $username
+     * @param array $taskBonus      绩效
+     * @param string $dateRange     时间段
+     * @param string $username      用户名
      */
-    private function savePresonalDetailsBonus($totalBonus, $taskBonus, $dateRange, $username)
+    private function savePresonalDetailsBonus($taskBonus, $dateRange, $username)
     {
         // Create new Spreadsheet object
         $spreadsheet = new Spreadsheet();
@@ -643,7 +641,7 @@ class ExportController extends Controller
         $spreadsheet->setActiveSheetIndex(0)
             ->setCellValue('A3', '层次/类型')->setCellValue('B3', '专业/工种')->setCellValue('C3', '课程名称')
                 ->setCellValue('D3', '需求名称')->setCellValue('E3', '完成时间')->setCellValue('F3', '承接人')
-                ->setCellValue('G3', '实际成本（元）')->setCellValue('H3', '实际绩效（元）')->setCellValue('I3', '绩效比值（%）')
+                ->setCellValue('G3', '实际内容成本（元）')->setCellValue('H3', '实际绩效（元）')->setCellValue('I3', '绩效比值（%）')
                 ->setCellValue('J3', '个人绩效（元）');
 
         $startRow = 4;
@@ -656,14 +654,18 @@ class ExportController extends Controller
                     ->setCellValueByColumnAndRow(++$columnIndex, $key+$startRow, $data['task_name'])
                     ->setCellValueByColumnAndRow(++$columnIndex, $key+$startRow, date('Y/m/d H:i',$data['finish_time']))
                     ->setCellValueByColumnAndRow(++$columnIndex, $key+$startRow, $data['nickname'])
-                    ->setCellValueByColumnAndRow(++$columnIndex, $key+$startRow, ('￥'.$data['reality_cost']))
-                    ->setCellValueByColumnAndRow(++$columnIndex, $key+$startRow, ('￥'.$data['reality_bonus']))
+                    ->setCellValueByColumnAndRow(++$columnIndex, $key+$startRow, $data['reality_cost'])
+                    ->setCellValueByColumnAndRow(++$columnIndex, $key+$startRow, $data['reality_bonus'])
                     ->setCellValueByColumnAndRow(++$columnIndex, $key+$startRow, (($data['performance_percent']*100).'%'))
-                    ->setCellValueByColumnAndRow(++$columnIndex, $key+$startRow, ('￥'.$data['personal_bonus']));
+                    ->setCellValueByColumnAndRow(++$columnIndex, $key+$startRow, $data['personal_bonus']);
         }
+        $listRow = $key+$startRow+1;
         $endRow = $key+$startRow+2;
         $spreadsheet->setActiveSheetIndex(0)
-                    ->setCellValue("A$endRow", '总')->setCellValue("J$endRow", ('￥'.$totalBonus['total_bonus']));
+                    ->setCellValue("A$endRow", '总')
+                    ->setCellValue("G$endRow", "=SUM(G$startRow:G$listRow)")
+                    ->setCellValue("H$endRow", "=SUM(H$startRow:H$listRow)")
+                    ->setCellValue("J$endRow", "=SUM(J$startRow:J$listRow)");
 
         //设置列宽
         $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(25);

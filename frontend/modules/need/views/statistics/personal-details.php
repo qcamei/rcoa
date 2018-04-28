@@ -288,7 +288,7 @@ $radioType = [
                             }
                         ],
                         [
-                            'label' => Yii::t('app', '{Actual}{Cost}',['Actual' => Yii::t('app', 'Actual'), 'Cost' => Yii::t('app', 'Cost')]),
+                            'label' => Yii::t('app', '{Actual}{Content}{Cost}',['Actual' => Yii::t('app', 'Actual'),'Content' => Yii::t('app', 'Content'),  'Cost' => Yii::t('app', 'Cost')]),
                             'value' => function ($data){
                                 return !empty($data['reality_cost']) ? '￥' . $data['reality_cost'] : null;
                             },
