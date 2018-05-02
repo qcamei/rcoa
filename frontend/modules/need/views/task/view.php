@@ -1,58 +1,97 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\DetailView;
+use common\models\need\NeedTask;
+use common\models\need\NeedTaskUser;
+use frontend\modules\need\assets\ModuleAssets;
+use yii\data\ArrayDataProvider;
+use yii\grid\GridView;
+use yii\web\View;
 
-/* @var $this yii\web\View */
-/* @var $model common\models\need\NeedTask */
+/* @var $this View */
+/* @var $model NeedTask */
 
-$this->title = $model->id;
+
+ModuleAssets::register($this);
+
+$this->title = $model->task_name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Need Tasks'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
-<div class="need-task-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-
-    <?= DetailView::widget([
+<div class="container need-task-view has-title">
+    <!--基本信息-->
+    <?= $this->render('_details', [
         'model' => $model,
-        'attributes' => [
-            'id',
-            'company_id',
-            'business_id',
-            'layer_id',
-            'profession_id',
-            'course_id',
-            'task_name',
-            'level',
-            'performance_percent',
-            'need_time',
-            'finish_time',
-            'status',
-            'is_del',
-            'save_path',
-            'plan_content_cost',
-            'plan_outsourcing_cost',
-            'reality_content_cost',
-            'reality_outsourcing_cost',
-            'des',
-            'receive_by',
-            'audit_by',
-            'created_by',
-            'created_at',
-            'updated_at',
-        ],
     ]) ?>
-
+    <!--开发内容-->
+    <?= $this->render('/content/view', [
+        'dataProvider' => new ArrayDataProvider([
+            'allModels' => $model->contents,
+        ]),
+    ]) ?>
+    <!--开发人员-->
+    <div id="developer">
+        <?= $this->render('/user/index', [
+            'model' => $model,
+            'dataProvider' => new ArrayDataProvider([
+                'allModels' => $model->taskUsers,
+            ]),
+        ]) ?>
+    </div>
+    <!--开发成本-->
+    <?= $this->render('_table', [
+        'model' => $model,
+    ]) ?>
+    <!--需求附件-->
+    <?= $this->render('/attachments/index', [
+        'dataProvider' => new ArrayDataProvider([
+            'allModels' => $model->attachments,
+        ]),
+    ]) ?>
+    <!--操作记录-->
+    <div id="needtasklog"></div>
 </div>
+
+<?= $this->render('_btngroup', [
+    'model' => $model,
+    'isHasReceive' => $isHasReceive,
+    'params' => ['index']
+]) ?>
+
+<?= $this->render('/layouts/model') ?>
+
+<?php
+$js = 
+<<<JS
+   
+    $("#needtasklog").load("../log/index?need_task_id=$model->id");    
+        
+    //显示模态框
+    window.showModal = function(elem){
+        $(".myModal").html("");
+        $('.myModal').modal("show").load(elem.attr("href"));
+        return false;
+    }    
+    //修改对象
+    window.updataObject = function(elem){
+        var performancePercent = elem.val();
+        $.post('../user/update?id=' + elem.attr("id"), {'performance_percent': performancePercent}, function(rel){
+            if(rel['code'] == '200'){
+                elem.parent().next().children().text(number_format(costNumber, 2, '.', ''));
+            }
+        });
+        return false;
+    }
+    //删除对象
+    window.delObject = function(elem){
+        $.post(elem.attr("href"), function(rel){
+            if(rel['code'] == '200'){
+                elem.parent('td').parent('tr').remove();
+            }
+        });
+        return false;
+    }
+JS;
+    $this->registerJs($js,  View::POS_READY);
+?>

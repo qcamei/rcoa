@@ -4,8 +4,11 @@ use common\models\need\NeedTask;
 use common\models\need\searchs\NeedTaskSearch;
 use frontend\modules\need\assets\ModuleAssets;
 use yii\data\ActiveDataProvider;
+use yii\data\Pagination;
 use yii\grid\GridView;
+use yii\helpers\Html;
 use yii\web\View;
+use yii\widgets\LinkPager;
 
 
 /* @var $this View */
@@ -16,11 +19,18 @@ ModuleAssets::register($this);
 
 $this->title = Yii::t('app', 'Need Tasks');
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="container need-task-index">
    
     <?= $this->render('_search', [
         'model' => $searchModel,
+        'allBusiness' => $allBusiness,
+        'allLayer' => $allLayer,
+        'allProfession' => $allProfession,
+        'allCourse' => $allCourse,
+        'allCreatedBy' => $allCreatedBy,
+        'allReceiveBy' => $allReceiveBy
     ]) ?>
     
     <?= GridView::widget([
@@ -38,14 +48,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value'=> function($model){
                     /* @var $model NeedTask */
-                    return $model->level ? '<i class="fa fa-bolt">' : '';
+                    return $model->level ? '<i class="fa fa-bolt danger">' : '';
                 },
                 'headerOptions' => [
                     'class'=>[
                         //'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '16px',
+                        'width' => '10px',
                         'padding' => '8px 4px',
                     ],
                 ],
@@ -63,22 +73,22 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'attribute' => 'business_id',
                 'label' => Yii::t('app', 'Business ID'),
                 'format' => 'raw',
-//                'value'=> function($model){
-//                    /* @var $model NeedTask */
-//                    return $model->level ? '<i class="fa fa-bolt">' : '';
-//                },
+                'value'=> function($model){
+                    /* @var $model NeedTask */
+                    return !empty($model->business_id) ? $model->business->name : null;
+                },
                 'headerOptions' => [
                     'class'=>[
-                        //'th'=>'hidden-xs',
+                        'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '16px',
+                        'width' => '95px',
                         'padding' => '8px 4px',
                     ],
                 ],
                 'contentOptions' =>[
                     'class' => [
-                        //'td' => 'hidden-xs'
+                        'td' => 'course-name hidden-xs'
                     ],
                     'style' => [
                         'padding' => '8px 4px',
@@ -90,22 +100,22 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'attribute' => 'layer_id',
                 'label' => Yii::t('app', 'Layer ID'),
                 'format' => 'raw',
-//                'value'=> function($model){
-//                    /* @var $model NeedTask */
-//                    return $model->level ? '<i class="fa fa-bolt">' : '';
-//                },
+                'value'=> function($model){
+                    /* @var $model NeedTask */
+                    return !empty($model->layer_id) ? $model->layer->name : null;
+                },
                 'headerOptions' => [
                     'class'=>[
-                        //'th'=>'hidden-xs',
+                        'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '16px',
+                        'width' => '75px',
                         'padding' => '8px 4px',
                     ],
                 ],
                 'contentOptions' =>[
                     'class' => [
-                        //'td' => 'hidden-xs'
+                        'td' => 'course-name hidden-xs'
                     ],
                     'style' => [
                         'padding' => '8px 4px',
@@ -117,22 +127,22 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'attribute' => 'profession_id',
                 'label' => Yii::t('app', 'Profession ID'),
                 'format' => 'raw',
-//                'value'=> function($model){
-//                    /* @var $model NeedTask */
-//                    return $model->level ? '<i class="fa fa-bolt">' : '';
-//                },
+                'value'=> function($model){
+                    /* @var $model NeedTask */
+                    return !empty($model->profession_id) ? $model->profession->name : null;
+                },
                 'headerOptions' => [
                     'class'=>[
-                        //'th'=>'hidden-xs',
+                        'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '16px',
+                        'width' => '115px',
                         'padding' => '8px 4px',
                     ],
                 ],
                 'contentOptions' =>[
                     'class' => [
-                        //'td' => 'hidden-xs'
+                        'td' => 'course-name hidden-xs'
                     ],
                     'style' => [
                         'padding' => '8px 4px',
@@ -144,22 +154,22 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'attribute' => 'course_id',
                 'label' => Yii::t('app', 'Course ID'),
                 'format' => 'raw',
-//                'value'=> function($model){
-//                    /* @var $model NeedTask */
-//                    return $model->level ? '<i class="fa fa-bolt">' : '';
-//                },
+                'value'=> function($model){
+                    /* @var $model NeedTask */
+                    return !empty($model->course_id) ? $model->course->name : null;
+                },
                 'headerOptions' => [
                     'class'=>[
-                        //'th'=>'hidden-xs',
+                        'th' => 'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '16px',
+                        'width' => '130px',
                         'padding' => '8px 4px',
                     ],
                 ],
                 'contentOptions' =>[
                     'class' => [
-                        //'td' => 'hidden-xs'
+                        'td' => 'course-name hidden-xs'
                     ],
                     'style' => [
                         'padding' => '8px 4px',
@@ -171,25 +181,30 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'attribute' => 'task_name',
                 'label' => Yii::t('app', 'Task Name'),
                 'format' => 'raw',
-//                'value'=> function($model){
-//                    /* @var $model NeedTask */
-//                    return $model->level ? '<i class="fa fa-bolt">' : '';
-//                },
+                'value'=> function($model){
+                    /* @var $model NeedTask */
+                    return $model->task_name . 
+                        '<div class="progress table-list-progress" style="height: 12px; margin: 2px 0; border-radius:0px;">' .
+                            '<div class="progress-bar" style="width: ' . NeedTask::$progressMap[$model->status] . '%; line-height: 12px; font-size: 10px;">' .
+                                NeedTask::$progressMap[$model->status] . '%' .
+                            '</div>' . 
+                        '</div>';
+                },
                 'headerOptions' => [
                     'class'=>[
                         //'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '16px',
+                        'min-width' => '80px',
                         'padding' => '8px 4px',
                     ],
                 ],
                 'contentOptions' =>[
                     'class' => [
-                        //'td' => 'hidden-xs'
+                        'td' => 'course-name',
                     ],
                     'style' => [
-                        'padding' => '8px 4px',
+                        'padding' => '2px 4px',
                         'white-space' => 'nowrap',
                     ],
                 ],
@@ -198,16 +213,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'attribute' => 'need_time',
                 'label' => Yii::t('app', 'Need Time'),
                 'format' => 'raw',
-//                'value'=> function($model){
-//                    /* @var $model NeedTask */
-//                    return $model->level ? '<i class="fa fa-bolt">' : '';
-//                },
+                'value'=> function($model){
+                    /* @var $model NeedTask */
+                    return '<span class="danger">' . date('Y-m-d H:i', $model->need_time) . '</span>';
+                },
                 'headerOptions' => [
                     'class'=>[
                         //'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '16px',
+                        'width' => '80px',
                         'padding' => '8px 4px',
                     ],
                 ],
@@ -216,8 +231,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         //'td' => 'hidden-xs'
                     ],
                     'style' => [
-                        'padding' => '8px 4px',
-                        'white-space' => 'nowrap',
+                        'padding' => '4px',
+                        'font-size' => '10px',
                     ],
                 ],
             ],
@@ -225,16 +240,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'attribute' => 'finish_time',
                 'label' => Yii::t('app', 'Finish Time'),
                 'format' => 'raw',
-//                'value'=> function($model){
-//                    /* @var $model NeedTask */
-//                    return $model->level ? '<i class="fa fa-bolt">' : '';
-//                },
+                'value'=> function($model){
+                    /* @var $model NeedTask */
+                    return !empty($model->finish_time) ? date('Y-m-d H:i', $model->finish_time) : null;
+                },
                 'headerOptions' => [
                     'class'=>[
                         //'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '16px',
+                        'width' => '80px',
                         'padding' => '8px 4px',
                     ],
                 ],
@@ -243,8 +258,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         //'td' => 'hidden-xs'
                     ],
                     'style' => [
-                        'padding' => '8px 4px',
-                        'white-space' => 'nowrap',
+                        'padding' => '4px',
+                        'font-size' => '10px',
                     ],
                 ],
             ],
@@ -252,16 +267,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'attribute' => 'created_by',
                 'label' => Yii::t('app', 'Created By'),
                 'format' => 'raw',
-//                'value'=> function($model){
-//                    /* @var $model NeedTask */
-//                    return $model->level ? '<i class="fa fa-bolt">' : '';
-//                },
+                'value'=> function($model){
+                    /* @var $model NeedTask */
+                    return !empty($model->created_by) ? $model->createdBy->nickname : null;
+                },
                 'headerOptions' => [
                     'class'=>[
                         //'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '16px',
+                        'width' => '60px',
                         'padding' => '8px 4px',
                     ],
                 ],
@@ -279,16 +294,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'attribute' => 'receive_by',
                 'label' => Yii::t('app', 'Receive By'),
                 'format' => 'raw',
-//                'value'=> function($model){
-//                    /* @var $model NeedTask */
-//                    return $model->level ? '<i class="fa fa-bolt">' : '';
-//                },
+                'value'=> function($model){
+                    /* @var $model NeedTask */
+                    return !empty($model->receive_by) ? $model->receiveBy->nickname : null;
+                },
                 'headerOptions' => [
                     'class'=>[
                         //'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '16px',
+                        'width' => '60px',
                         'padding' => '8px 4px',
                     ],
                 ],
@@ -306,22 +321,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'attribute' => 'plan_content_cost',
                 'label' => Yii::t('app', 'Plan Content Cost'),
                 'format' => 'raw',
-//                'value'=> function($model){
-//                    /* @var $model NeedTask */
-//                    return $model->level ? '<i class="fa fa-bolt">' : '';
-//                },
+                'value'=> function($model){
+                    /* @var $model NeedTask */
+                    $planCost = $model->plan_content_cost + $model->plan_content_cost * $model->performance_percent;
+                    return '￥' . number_format($planCost / 10000, 2, '.', '') . '万';
+                },
                 'headerOptions' => [
                     'class'=>[
-                        //'th'=>'hidden-xs',
+                        'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '16px',
+                        'width' => '75px',
                         'padding' => '8px 4px',
                     ],
                 ],
                 'contentOptions' =>[
                     'class' => [
-                        //'td' => 'hidden-xs'
+                        'td' => 'hidden-xs'
                     ],
                     'style' => [
                         'padding' => '8px 4px',
@@ -333,22 +349,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'attribute' => 'reality_content_cost',
                 'label' => Yii::t('app', 'Reality Content Cost'),
                 'format' => 'raw',
-//                'value'=> function($model){
-//                    /* @var $model NeedTask */
-//                    return $model->level ? '<i class="fa fa-bolt">' : '';
-//                },
+                'value'=> function($model){
+                    /* @var $model NeedTask */
+                    $realityCost = $model->reality_content_cost + $model->reality_content_cost * $model->performance_percent;
+                    return '￥' . number_format($realityCost / 10000, 2, '.', '') . '万';
+                },
                 'headerOptions' => [
                     'class'=>[
-                        //'th'=>'hidden-xs',
+                        'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '16px',
+                        'width' => '75px',
                         'padding' => '8px 4px',
                     ],
                 ],
                 'contentOptions' =>[
                     'class' => [
-                        //'td' => 'hidden-xs'
+                        'td' => 'hidden-xs'
                     ],
                     'style' => [
                         'padding' => '8px 4px',
@@ -356,8 +373,52 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
             ],
-           
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                //'header' => Yii::t('rcoa', 'Operating'),
+                'buttons' => [
+                    'view' => function ($url, $model) use($isHasReceive){
+                        /* @var $model NeedTask */
+                        $colour = $model->getIsAuditing() && $model->audit_by == Yii::$app->user->id ? 'btn-info' : (
+                                $model->getIsWaitReceive() && $isHasReceive ? 'btn-primary' : 
+                                ($model->getIsChecking() && $model->created_by == Yii::$app->user->id ? 'btn-success' : 'btn-default'));
+                        $options = [
+                            'class' => 'btn ' . $colour . ' btn-sm',
+                        ];
+                        return Html::a($model->getStatusName(), ['view', 'id' => $model->id], $options);
+                    },
+                ],
+                'headerOptions' => [
+                    'style' => [
+                        'width' => '65px',
+                        'padding' => '8px 4px;',
+                    ],
+                ],
+                'contentOptions' =>[
+                    'style' => [
+                        'width' => '65px',
+                        'padding' => '6px 4px;',
+                    ],
+                ],
+                'template' => '{view}',
+            ],
         ],
     ]); ?>
+    
+     <?php
+        $page = !isset($param['page']) ? 1 :$param['page'];
+        $pageCount = ceil($totalCount / 20);
+        if($pageCount > 0){
+            echo '<div class="summary">' . 
+                    '第<b>' . (($page * 20 - 20) + 1) . '</b>-<b>' . ($page != $pageCount ? $page * 20 : $totalCount) .'</b>条，总共<b>' . $totalCount . '</b>条数据。' .
+                '</div>';
+        }
+        
+        echo LinkPager::widget([  
+            'pagination' => new Pagination([
+                'totalCount' => $totalCount,  
+            ]),  
+        ])
+    ?>
+    
 </div>
