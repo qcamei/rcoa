@@ -1,0 +1,199 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2016-1-7, 10:39:02
+    Author     : Kiwi°
+*/
+
+.wrap{
+    background: url("/filedata/expert/image/in_construction.jpg");
+    background-size:cover;
+    background-position: center 0;
+}
+
+.expert .personal-image{
+    float: left;
+}
+.expert .nickname{
+    margin-top:0.5%; 
+    display: block;
+}
+
+/**
+ * 专家库首页样式
+ */
+.expert-index a{
+    width:30%; 
+    line-height:60px; 
+    font-size:14px ;
+    margin:0 0 2% 2.5%; 
+    padding-left:5%
+}
+@media (min-width: 320px) {
+  #img{
+    height: 200px !important;
+  }
+}
+@media (min-width: 480px) {
+  #img{
+    height: 200px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  #img{
+    height: 360px !important;
+  }
+}
+
+@media (min-width: 992px) {
+  #img{
+    height: 360px;
+  }
+}
+@media (min-width: 1200px) {
+  #img{
+    height: 360px;
+  }
+}
+
+/**
+ * 专家库列表描述列
+ */
+.content .expert-type {
+    padding: 0px;
+}
+.expert-type .course-name
+{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.expert-type a {
+    color: #000 !important;
+    display: block !important; 
+}
+
+ .expert-type a:hover{
+    text-decoration: none !important;
+    background-color:  #eee !important;
+}
+.expert-type .expert{
+    height: 74px;
+    border:1px solid #CCC;
+}
+
+
+
+
+.ees{
+    table-layout: fixed;
+}
+.ees > tbody > tr:nth-of-type(odd){
+    background-color: #ffffff !important;
+}
+.ees > tbody > tr >th{
+    width: 100px;
+    min-width: 100px;
+}
+.ees > tbody > tr >td{
+   
+    min-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ees > tbody > tr:nth-of-type(1){
+    background-color: #f9f9f9 !important;
+}
+
+/**
+ * 专家库搜索表单的样式
+ */
+.controlbar .expert-form {
+    padding: 0px;
+}
+.expert-form .row {
+    margin: 0px;
+}
+.row .glyphicon {
+    top: 0px;
+}
+.dropdowns {
+    width:100px;
+    padding:6px 5px;
+    border:solid 1px #ddd;
+    background:#efefef;
+    position:absolute  !important;
+    left:0px;
+    top:-225px;
+}
+.dropdowns li {
+    float:left;
+    width:175px;
+    padding:0 0 0 5px;
+    font-size:14px;
+    line-height:32px;
+    height:32px;
+    list-style: none;
+}
+.dropdowns li label {
+    color: #000;
+    cursor:pointer;
+}
+.clearfix:after {
+    content:".";
+    display:block;
+    height:0;
+    clear:both;
+    visibility:hidden;
+}
+.clearfix {
+    display:inline-table;
+    padding: 0px;
+}/* Hides from IE-mac */
+* html .clearfix {
+    height:1%;
+}
+.clearfix {
+	display:block;
+}/* End hide from IE-mac */
+* +html .clearfix {
+    min-height:1%;
+}
+
+/**
+ *  专家库详情页样式
+ */
+.content .expert-view {
+    padding: 0px;
+}
+
+/**
+ * 专家库搜索页样式
+ */
+.content .expert-searchs {
+    padding: 0px;
+}
+.expert-searchs .course-name
+{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.expert-searchs a {
+    color: #000;
+    display: block; 
+}
+
+ .expert-searchs a:hover{
+    text-decoration: none !important;
+    background-color:  #eee !important;
+}
+.expert-searchs .expert{
+    height: 74px;
+    border:1px solid #CCC;
+}

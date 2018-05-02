@@ -1,0 +1,1044 @@
+/* 
+    模块的样式
+    例如：.default-index .样式名 {
+            样式...
+        }
+*/
+
+/**********************************scene-book-index*****************************/
+.scene-book .scene-book-navbar {
+    width: 100%;
+    padding: 5px 0; 
+}
+
+.scene-book .btn-group {
+    padding:0; 
+}
+
+.scene-book .dataProvider {
+    display: none;
+}
+
+.scene-book .dataProvider.in {
+    display: block;
+}
+/*********************************scene-default-index***************************/
+.scene-default-index {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+.scene-default-index .title{
+    font-weight: bold;
+}
+
+.scene-default-index .map,.select{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 0 10px;
+}
+
+.scene-default-index
+.map .map-content{
+    height: 665px;
+    margin-top: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #cccccc;
+}
+
+.scene-default-index
+.select .select-content{
+    height: 100%;
+    margin-top: -3px;
+    margin-bottom: 10px;
+}
+
+/*********************************内容部分（面包屑）*****************************/
+.scene-default-index .select .crumb {
+    width: 100%;
+    display: inline-block;
+}
+
+.scene-default-index .select .crumb-nav {
+    list-style: none;
+    padding: 0px;
+}
+
+.scene-default-index .select .crumb ul li {
+    height: 22px;
+    float: left;
+    display: block;
+}
+
+.scene-default-index .select .crumb ul li>.arrow {
+    float: left;
+    margin: 0px 5px;
+}
+
+.scene-default-index .select .crumb ul li>a {
+    color: #666666;
+    padding: 0px 4px;
+    float: left;
+    display: block;
+    border: 1px solid #ddd;
+    line-height: 18px;
+    text-decoration: none;
+}
+
+.scene-default-index .select .crumb ul li a > em, 
+.scene-default-index .select .crumb ul li a > i {
+    margin-left: 5px;
+    font-style: normal;
+}
+/*********************************内容部分（属性）*******************************/
+.scene-default-index .select .select-choice {
+    width: 100%;
+    display: inline-block;
+}
+
+.scene-default-index .select .select-choice .attr-nav {
+    width: 100%;
+    list-style: none;
+    padding: 0px;
+    margin-top: 15px;
+    font-size: 14px;
+    color: #666666;
+    display: inline-block;
+}
+
+.scene-default-index .select .select-choice .attr-nav>li {
+    width: 100%;
+    height: 16px;
+    line-height: 16px;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+.scene-default-index .select .select-choice .attr-key {
+    width: 22%;
+    float: left;
+    display: inline-block;
+    text-align: right;
+}
+
+.scene-default-index .select .select-choice .attr-value {
+    width: 78%;
+    display: inline-block;
+    text-align: left;
+    list-style: none;
+    padding-left: 0px;
+    margin-bottom: 0;
+}
+
+.scene-default-index .select .select-choice .attr-value>li {
+    float: left;
+    margin: 0 10px;
+    display: inline-block;
+}
+
+.scene-default-index .select .select-choice .attr-value>li a {
+    color: #333333
+}
+
+.scene-default-index .select-content .address{
+    position: relative;
+    border-bottom: 1px dashed #cccccc; 
+} 
+
+.scene-default-index .select-content .address:hover{
+    background-color: #f9f9f9;
+}
+
+.scene-default-index
+.select-content .address .address-info{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    text-align: center;
+    color: #000;
+    opacity: 0;
+}
+
+.scene-default-index
+.select-content .address .address-info .fa{
+    font-size: 18px;
+    color: #00BCD4;
+}
+
+.scene-default-index 
+.select-content .address .address-left, .address-right{
+    display: inline-block;
+    position: relative;
+    height: 98px;
+    margin: 10px 10px 5px 1px;
+}
+
+.scene-default-index 
+.select-content .address .address-left{
+    background-color: #f2f2f2;
+    border: 1px solid #cccccc;
+}
+
+.scene-default-index
+.select-content .address .address-left .scene-img{
+    width: 98px;
+    height: 98px;
+    display: table-cell;
+    vertical-align: middle;
+} 
+
+.scene-default-index
+.select-content .address .address-left .scene-img img{
+    width: 98px;
+    /*height: 98px;*/
+} 
+
+.scene-default-index
+.select-content .address .address-left .address-mark{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+} 
+
+.scene-default-index .address-content .bg-color{
+    padding: 1px 2px;
+    font-size: 12px;
+    border-radius: 2px;
+    color: #fff;
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    /*border: 1px solid transparent;*/
+}
+
+.scene-default-index .address-content .add-red{
+    background-color: #ff3333;
+    border-color: #d43f3a;
+}
+
+.scene-default-index .address-content .add-blue{
+    background-color: #6699ff;
+    border-color: #46b8da;
+}
+
+.scene-default-index
+.select-content .address .address-right{
+    position: absolute;
+} 
+
+.scene-default-index .select-content  .address-right .address-name{
+    color: #000;
+    margin-top: 1px;
+    margin-bottom: 8px;
+}
+
+.scene-default-index
+.address-right .address-area,.address-type,.address-price{
+    padding: 2px 0px;
+    color: #999999;
+}
+
+.scene-default-index
+.address-right .address-area span,.address-type span,.address-price span{
+    color: #000;
+}
+
+.scene-default-index
+.address-right .address-area .font{
+    width: 148px;
+    float: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+/*********************************scene-manage-view***************************/
+.scene-manage-view{
+    margin: 7px auto;
+}
+
+.scene-manage-view
+.introduce{
+    width: 100%;
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+.scene-manage-view
+.introduce .scene-img{
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+.scene-manage-view
+.introduce .scene-img img{
+    width: 100%;
+    padding: 5px;
+    border: #cccccc 1px solid;  
+}
+
+.scene-manage-view
+.introduce .scene-info{
+    padding-left: 0px;
+    /*border: #cccccc 1px solid;*/
+}
+
+.scene-manage-view
+.introduce .scene-info .info-content{
+    padding-left: 20px;
+    /*border: #cccccc 1px solid;*/
+}
+
+.scene-manage-view
+.introduce .scene-info .scene-name{
+    font-size: 16px;
+    margin-top: 5px;
+    margin-bottom: 25px;
+    font-weight: bold;
+}
+
+.scene-manage-view
+.introduce .scene-info .scene-nature,.scene-area,.scene-type,.scene-price,
+.scene-num,.scene-contact,.scene-address,.scene-des{
+    color: #000;
+    font-weight: normal;
+    font-size: 14px;
+    padding: 2px 0px;
+    margin-bottom: 10px;
+}
+
+.scene-manage-view
+.introduce .scene-info .info-content span{
+    min-width: 15%;
+    vertical-align: top;
+    color: #999999;
+    display: inline-block;
+    text-align: right;
+    margin-right: 5px;
+    font-weight: bold;
+}
+
+.scene-manage-view
+.introduce .scene-info .info-content font{
+    max-width: 83%;
+    display: inline-block;
+}
+
+.scene-manage-view
+.introduce .scene-info .scene-nature .bg-color{
+    padding: 2px 5px;
+    font-size: 12px;
+    border-radius: 3px;
+    color: #fff;
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    line-height: 1.42857143;
+    white-space: nowrap;
+    border: 1px solid transparent;
+}
+
+.scene-manage-view
+.introduce .scene-info .scene-nature .add-red{
+    background-color: #ff3333;
+    border-color: #d43f3a;
+}
+
+.scene-manage-view
+.introduce .scene-info .scene-nature .add-blue{
+    background-color: #6699ff;
+    border-color: #46b8da;
+}
+
+.scene-manage-view .scene-details {
+    height: 100%;
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+.scene-manage-view .scene-details .tablist {
+    width: 100%;
+    margin-top: 50px;
+    display: inline-block;
+    background-color: #f0f0f0; 
+}
+
+.scene-manage-view .scene-details .tablist ul {
+    margin-bottom: 0;
+    padding-left: 0;
+}
+
+.scene-manage-view .scene-details .tablist ul li {
+    width: 110px;
+    height: 48px;
+    line-height: 48px;
+    display: inline-block;
+    /*border-right: 1px #cbcbcb solid;*/
+}
+
+.scene-manage-view .scene-details .tablist ul li.none {
+    border-right: none;
+}
+
+.scene-manage-view .scene-details .tablist ul li a {
+    height: 48px;
+    display: block;
+    color: #666666;
+    text-decoration: none;
+}
+
+.scene-manage-view .scene-details .tablist ul li a>i {
+    width: 34px;
+    height: 48px;
+    float: left;
+    display: block;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.scene-manage-view .scene-details .tablist ul li a>em {
+    font-size: 18px;
+    font-style: normal;
+}
+
+.scene-manage-view .scene-details .tablist ul li.active>a,
+.scene-manage-view .scene-details .tablist ul li>a:hover {
+    color: #1b80d5;
+    border-bottom: 2px #1b80d5 solid;
+}
+
+.scene-manage-view .scene-details .tabcontent {
+    width: 100%;
+}
+
+/*瀑布流布局*/
+.scene-manage-view .scene-details .tabcontent .tabpane .resource{
+/*    -moz-column-count:2;  Firefox 
+    -webkit-column-count:2;  Safari 和 Chrome 
+    column-count:2;
+    -moz-column-gap: 1em;
+    -webkit-column-gap: 1em;
+    column-gap: 1em;*/
+}
+
+/*小屏幕时给图片加宽度*/
+@media (max-width: 480px) {
+    .scene-manage-view .scene-details .tabcontent .tabpane .resource img{
+        width: 100%;
+    }
+}
+
+.scene-manage-view .scene-details .tabcontent .tabpane .resource img{
+    /*width: 100%;*/
+    padding: 1px;
+    break-inside: avoid;
+    border: 1px solid #ccc;
+}
+
+.scene-manage-view .scene-details .tabcontent .tabpane {
+    margin: 15px 0;
+    display: none;
+    opacity: 0;
+}
+
+.scene-manage-view .scene-details .tabcontent .tabpane.show {
+    display: block;
+    opacity: 1;
+}
+
+.scene-manage-view .scene-details .tabcontent .tabpane .allmap{
+    width: 100%;
+    height: 600px;
+    border: 1px solid #cccccc;
+}
+/**地图中的信息检索框样式**/
+.scene-manage-view .scene-details .tabcontent .tabpane .allmap td{
+    padding-left: 4px !important;
+}
+/*********************************scene-manage-index***************************/
+.scene-manage-index .list{
+    margin-top: 10px;
+    padding: 0px;
+}
+
+.scene-manage-index .list-content{
+    padding: 0px;
+    /*margin-bottom: 3px;*/
+}
+
+.scene-manage-index 
+.list-content .content-content{
+    position: relative;
+    border: 1px solid #cccccc;
+    margin: 5px;
+}
+
+.scene-manage-index 
+.list-content .content-content:hover{
+    background-color: #f9f9f9;
+}
+
+.scene-manage-index .list
+.list-content .content-content .list-cog{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    text-align: center;
+    color: #000;
+}
+
+.scene-manage-index .list
+.list-content .content-content .list-cog .fa{
+    font-size: 18px;
+}
+
+.scene-manage-index .list 
+.list-content .content-content .list-left, .list-right{
+    display: inline-block;
+    position: relative;
+    height: 98px;
+    margin: 5px 5px 0 5px;
+}
+
+.scene-manage-index .list 
+.list-content .content-content .list-left{
+    background-color: #f2f2f2;
+    border: 1px solid #cccccc;
+}
+
+.scene-manage-index .list 
+.list-content .content-content .list-left .scene-img{
+    width: 98px;
+    height: 98px;
+    display: table-cell;
+    vertical-align: middle;
+} 
+
+.scene-manage-index .list 
+.list-content .content-content .list-left img{
+    width: 98px;
+    /*height: 98px;*/
+} 
+
+.scene-manage-index
+.list-content .content-content .list-left .list-mark{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+.scene-manage-index .list 
+.list-content .content-content .list-left .bg-color{
+    padding: 1px 2px;
+    font-size: 12px;
+    border-radius: 3px;
+    color: #fff;
+    display: inline-block;
+    font-weight: normal;
+    line-height: 1.42857143;
+    white-space: nowrap;
+    vertical-align: middle;
+    /*border: 1px solid transparent;*/
+}
+
+.scene-manage-index .list 
+.list-content .content-content .list-left .add-red{
+    background-color: #ff3333;
+    border-color: #d43f3a;
+}
+
+.scene-manage-index .list 
+.list-content .content-content .list-left .add-blue{
+    background-color: #6699ff;
+    border-color: #46b8da;
+}
+
+.scene-manage-index .list 
+.list-content .content-content .list-right{
+    position: absolute;
+} 
+
+.scene-manage-index .list 
+.list-content .content-content .list-right .list-name{
+    color: #000;
+    margin-top: 1px;
+    margin-bottom: 8px;
+    vertical-align: -webkit-baseline-middle;
+}
+
+.scene-manage-index .list 
+.list-content .content-content .list-right .list-area, .list-type, .list-price{
+    padding: 2px 0px;
+    color: #999999;
+}
+
+.scene-manage-index .list 
+.list-content .content-content .list-right .list-area span, .list-type span, .list-price span{
+    color: #000;
+}
+
+.scene-manage-index .list 
+.list-content .content-content .list-right .list-area .font{
+    width: 155px;
+    float: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/*********************************scene-book***************************/
+.scene-book .isMe {
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    display: block;
+    border-width: 8px;
+    border-color: #F00;
+    border-style: solid;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+}
+
+.scene-book .table {
+    table-layout: fixed;
+    border: 1px solid #ddd;
+}
+
+.scene-book .table a {
+     position: relative;
+}
+
+.scene-book .table > tbody > tr > td {
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+.scene-book .table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #fff;
+}
+
+.scene-book .table .popover {
+    max-width: 450px;
+}
+
+.scene-book .table .popover-content>p {
+    white-space: nowrap;
+    color: #000;
+}
+
+/*@media (max-width: 480px) {
+    .scene-book .table .popover-content>p {
+        white-space: normal;
+    }
+}*/
+
+.scene-book .date,
+.scene-book .time_index {
+    border: 1px solid #ddd;
+    background-color: rgb(111, 153, 173);
+}
+
+.scene-book .date {
+    padding: 4px;
+    color: #fff;
+    font-weight: 700;
+    vertical-align: middle;
+}
+
+.scene-book .time_index {
+    padding: 4px 2px;
+    color: #fff;
+    vertical-align: middle;
+}
+
+.scene-book .camera_count {
+    position: relative;
+    top: -5px;
+    left: 1px;
+    font-size: 12px;
+}
+
+.scene-book .content_type {
+    width: 30px;
+    height: 21px;
+    padding: 2px;
+    display: block;
+    font-size: 12px;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    background-color: rgba(243, 123, 83, 1);
+}
+
+.scene-book .photograph {
+    width: 30px;
+    padding: 2px;
+    display: block;
+    font-size: 12px;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.scene-book .photograph.Yes {
+    background-color: #5cb85c;
+}
+
+.scene-book .photograph.No {
+    background-color: #333333;
+}
+
+
+.scene-book .book-transfer {
+    width: 100%;
+    display: inline-block;
+    position: relative;
+}
+
+.scene-book .book-transfer .is_transfer {
+    width: 79px;
+    height: 40px;
+    display: block;
+    position: absolute;
+    top: -10px;
+    left: 0;
+    z-index: 1000;
+    background-image: url("/filedata/scene/icons/transfer.png");
+}
+
+.scene-book .table .holiday {
+    width: 16px;
+    display: block;
+    font-size: 12px;
+    color: #fff;
+    position: absolute;
+    text-align: center;
+    text-decoration: none;
+    font-weight: normal;
+}
+
+.scene-book .table .holiday.red {
+    background-color: #ff3300;
+}
+
+.scene-book .table .holiday.yellow {
+    background-color: #ff9800;
+}
+
+.scene-book .table .holiday.green {
+    background-color: #5cb85c;
+}
+
+.scene-book .table .holiday.blue {
+    background-color: #5bc0de;
+}
+
+.scene-book .table-month .holiday {
+    left: -2px;
+}
+
+.scene-book .table-month .days {
+    width: 20px;
+    height: 20px;
+    display: block;
+    position: absolute;
+    right: -2px;
+    text-align: center;
+}
+
+.scene-book .table-month .days.now {
+    color: #fff;
+    background-color: #666;
+}
+
+.scene-book .table-month .btn-group {
+    width: 100%;
+    height: 100%;
+    top: 22px;
+    text-align: left;
+}
+
+.scene-book .table-month .btn-group > p {
+    height: 20px;
+    margin-bottom: 2px;
+}
+
+.scene-book .table-month .month_time_index {
+    font-size: 12px;
+    color: rgb(204, 204, 204);
+}
+
+.scene-book .table-month .btn-len {
+    height: 20px;
+    padding: 0px;
+    position: absolute;
+    right: 10px;
+    left: 20px;
+}
+
+@media (max-width: 480px) {
+    .scene-book .table-month > tbody > tr > td {
+        padding: 2px;
+    }
+    .scene-book .table-month .btn-len {
+        right: 0;
+        left: 0;
+    }
+}
+
+.scene-book .table-month > thead > tr > th,
+.scene-book .table-month > tbody > tr > td > div {
+    height: 100%;
+    position: relative;
+    text-align: center;
+}
+
+.scene-book .table-month > tbody > tr > td {
+    width: 162px;
+    height: 106px;
+}
+
+.scene-book .table-month > tbody > tr > td:nth-of-type(6n+1){
+    background-color: #f9f9f9;
+}
+
+.scene-book .table-week .Yes {
+    color: #333;
+}
+
+.scene-book .table-week .No {
+    color: #ddd;
+}
+
+.scene-book .table-week .holiday {
+    top: -30px;
+    right: -2px;
+}
+
+.scene-book .table-week img {
+    width: 12px;
+    height: 12px;
+    margin-top: -5px;
+}
+
+.scene-book .table-month > thead > tr > th,
+.scene-book .table-week > tbody > tr:nth-of-type(6n+1),
+.scene-book .table-week > tbody > tr:nth-of-type(6n+2),
+.scene-book .table-week > tbody > tr:nth-of-type(6n+3) {
+    background-color: #f2f2f2;
+}
+
+.scene-book .table-week > tbody > tr:hover  {
+    color: #fff;
+    background-color: rgb(111, 153, 173);
+}
+
+.scene-book .table-week > tbody > tr:hover i.No {
+    color: #aaa;
+}
+
+
+/**********************************scene-book-_form****************************/
+.scene .site, .scene .time {
+    font-size: 12px;
+    color: rgb(153, 153, 153);
+}
+
+.scene .time-index-map {
+    width: 100%;
+    margin-top: 25px;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+/**********************************scene-book-view****************************/
+.scene .frame {
+    padding-left: 0;
+    padding-right: 0;
+    display: inline-block
+}
+
+.scene .frame .frame-title {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: #ffffff;
+    line-height: 20px;
+    background-color: rgba(153, 153, 153, 1);
+}
+
+.scene .frame .frame-table {
+    margin-bottom: 20px;
+    padding-right: 0;
+    padding-left: 0;
+    border: 1px #ddd solid;
+}
+
+.scene .frame
+.frame-title .icon {
+    float: left; 
+    margin-top: 3px;
+    margin-right: 5px;
+}
+
+.scene .frame
+.frame-title>span {
+    display: block;
+    float: left;
+}
+
+/***************************************留言样式********************************/
+.scene .frame .msg {
+    min-height: 280px;
+    border: 1px #cccccc solid;
+}
+
+.scene .frame .msglist {
+    width: 100%;
+    min-height: 200px;
+    max-height: 388px;
+    padding-left: 75px;
+    padding-right: 15px;
+    position: relative;
+    overflow-y: auto;
+}
+
+.scene .frame .time-vertical {
+    list-style-type: none;
+    border-left: 1px solid #eee;
+    padding: 0px;
+    margin-bottom: 0;
+}
+
+.scene .frame .time-vertical li {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.scene .frame .time-vertical li b:before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: -5px;
+    width: 10px;
+    height: 10px;
+    border: 2px solid #cccccc;
+    border-radius: 10px;
+    background: #cccccc;
+}
+ 
+.scene .frame .time-vertical li .img-circle {
+    width: 45px;
+    height: 45px;
+    position: absolute;
+    top: 5px;
+    left: -65px;
+    background-color: #ccc;
+}
+
+.scene .frame .time-vertical li .msg-frame {
+    display: inline-block;
+    margin-left: 20px;
+    padding: 10px;
+    color: #666666;
+    border-radius: 6px;
+    background-color: #ededed;
+}
+
+.scene .frame .time-vertical li .username {
+    color: #999999;
+}
+
+.scene .frame .time-vertical li .time {
+    margin-left: 5px;
+    color: #9d9b9b;
+}
+
+.scene .frame .msgform {
+    height: 80px;
+    padding: 10px;
+    position: relative;
+    background-color: #ddd;
+}
+
+.scene .frame .msginput {
+   padding: 0;
+}
+
+.scene .frame .msginput textarea {
+   width: 100%;
+   height: 60px;
+   padding: 10px;
+}
+
+.scene .frame .msgbtn {
+   padding-right: 0;
+   padding-left: 10px;
+}
+
+.scene .frame .msgbtn>a {
+   width: 100%;
+   height: 60px;
+   padding-top: 20px;
+   padding-bottom: 20px;
+}
+
+/*************************scene-appraise-_form*********************************/
+.scene-appraise {
+    padding: 30px;
+    min-height:100px; 
+}
+
+.scene-appraise .appraise-title {
+    width: 100%;
+    display: inline-block;
+}
+
+.scene-appraise .appraise-title > label {
+    font-weight: normal;
+}
+
+.scene-appraise .appraise {
+    margin-bottom: 25px;
+    margin-left: 25px !important;
+    color: rgb(153, 153, 153);
+}
+
+.scene-appraise .appraise > p {
+    margin-bottom: 15px;
+}
+
+.scene-appraise .appraise > label {
+    margin-bottom: 10px;
+    color: rgb(153, 153, 153);
+    font-weight: normal;
+}
+
+.scene-appraise .appraise .add-color {
+    color: #2E6DA4;
+}
+
+.scene-appraise .appraise:hover label {
+    cursor:pointer;
+}
+
+/*************************scene-appraise-index*********************************/
+.scene-appraise .role-name {
+    width: 255px;
+    padding: 5px 10px;
+    margin: 0 -30px 15px;
+    display: inline-block;
+    background-color: #eeeeee;
+}
+
+.scene-appraise .role-name > h5 {
+    width: 175px;
+    display: inline-table;
+}
+
+.scene-appraise .role-name .star {
+    display: inline-table;
+}

@@ -1,0 +1,262 @@
+/************************************首页样式***********************************/
+body .wrap > .content,
+.site-index {
+   width: 100%;
+   margin: 0;
+   padding: 0;
+}
+
+.site-index .course {
+    width: 100%;
+    min-height: 924px;
+    background-image: url("/filedata/site/image/site_homebg.jpg");
+    background-size: cover;
+    background-position: center 0;
+    background-repeat: no-repeat;
+    background-color: #ebebeb;
+}
+
+
+.course .container {
+    position: relative;
+}
+
+.course .CHS {
+    margin-bottom: -15px;
+    display: block;
+}
+
+.course .EN {
+    margin-top: -15px;
+    display: block;
+    opacity: 0.5
+}
+
+.course .platform {
+    width: 750px;
+    position: relative;
+    top: 280px;
+    font-size: 0px;
+}
+
+.course .platform .logo {
+    width: 220px;
+    display: inline-block;
+}
+
+.course .platform .name {
+    height: 238px;
+    text-align: left;
+    margin-left: 15px;
+    display: inline-block;
+}
+
+.course .platform .CHS {
+    font-size: 45px;
+    color: #58646b;
+}
+
+.course .platform .EN {
+    font-size: 20px;
+    color: #65727a;
+}
+
+.course .menu {
+    width: 100%;
+    position: relative;
+    top: 248px;
+    font-size: 0px;
+}
+
+.course .menu .modules {
+    position: relative;
+    top: 172px;
+    opacity: 0;
+}
+
+.course .menu .netbutton{
+    height: 172px;
+    position:relative;
+    top: 172px;
+    opacity: 0;
+    text-align: center;
+}
+
+@media (min-width: 1200px){
+    .course .menu .netbutton canvas {
+        left: -45px;
+    }
+}
+
+.course .menu .netbutton canvas{
+    position: relative;
+    top: -85px;
+}
+
+.course .menu .circle {
+    width: 127px;
+    height: 127px;
+    margin: 0px auto;
+    position: relative;
+    text-align: center;
+    background-color: #aab5bb;
+}
+
+.course .menu .circle-bg {
+    width: 127px;
+    height: 127px;
+    margin: 0px auto;
+    padding: 25px 0;
+    position: absolute;
+    top: 0px;
+    z-index: 400;
+    font-family: 'FZLTCXHJW';
+    color: #fff;
+    text-align: center;
+    letter-spacing: -7px;
+    background-color: #3f99ce;
+    opacity: 0;
+}
+
+.course .menu .number {
+    margin-left: -10px;
+    font-size: 65px;
+}
+
+.course .menu .unit {
+    margin-left: 5px; 
+    font-size: 15px;
+}
+
+.course .menu .icon{
+    position: absolute;
+    top: 25px;
+    right: 15px;
+    font-size: 20px;
+    opacity: 0;
+}
+
+.course .menu .words {
+    width: 150px;
+    margin: 0px auto;
+    position: relative;
+    color: #707070;
+    font-weight: 500;
+    text-align: center;
+}
+
+.course .menu .words.replace {
+    color: #3f98ce;
+}
+
+.course .menu .words .CHS {
+    font-size: 20px;
+    color: 93bcda!important;
+}
+
+.course .menu .words .EN {
+    font-size: 16px;
+}
+
+.course .menu .words .new{
+    width: 29px;
+    height: 14px;
+    display: block;
+    position: absolute;
+    top: 0px;
+    right: 25px;
+    background: url("/filedata/site/image/icon_1-5.png");
+    opacity: 0;
+}
+/************************************登录页样式*********************************/
+.site-login .course {
+    width: 100%;
+    min-height: 924px;
+    background-image: url("/filedata/site/image/site_loginbg.jpg");
+    background-size: cover;
+    background-position: center 0;
+    background-repeat: no-repeat;
+    background-color: #ebebeb;
+}
+
+.site-login .course .platform {
+    width: 422px;
+    height: 450px;
+    padding: 40px;
+    background-image: url("/filedata/site/image/site_loginboxbg.png");
+    border-radius: 23px;
+    background-size: cover;
+    background-position: center 0;
+    background-repeat: no-repeat;
+    position: relative;
+    top: 170px;
+    font-size: 0px;
+}
+
+.site-login .course .platform .logo {
+    width: 70px;
+    height: 80px;
+    float: left;
+    display: inline-block;
+}
+
+.site-login .course .platform .name {
+    height: auto;
+    text-align: left;
+    margin-left: 15px;
+    float: left;
+    display: inline-block;
+    position: relative;
+    top: 10px;
+}
+
+.site-login .course .platform .CHS {
+    font-size: 30px;
+    color: #58646b;
+}
+
+.site-login .course .platform .EN {
+    font-size: 12px;
+    color: #65727a;
+}
+
+.site-login .course .platform .frame {
+    width: 100%;
+    position: relative;
+    font-size: 14px;
+}
+
+.site-login .course .platform .frame .attribute{
+     margin-top: 21px;
+     padding-left: 10px !important;
+     padding-right: 10px !important;
+}
+
+.site-login .course .platform .frame .icon{
+    width:40px !important;
+    padding:0px !important;
+    left: 7px;
+    z-index: 100
+}
+
+.site-login .course .platform .frame .button{
+    margin-top: 55px;
+    margin-left: 35px;
+    margin-right: 35px;
+}
+
+/************************************公共样式***********************************/
+@font-face{
+    font-family: '方正细倩_GBK';
+    src: url('/filedata/site/font/fangzhengxiqian.woff') format('woff'),
+         url('/filedata/site/font/fangzhengxiqian.ttf') format('ttf'),  
+         url('/filedata/site/font/fangzhengxiqian.eot') format('eot'),  
+         url('/filedata/site/font/fangzhengxiqian.svg') format('svg');
+}
+@font-face{
+    font-family: 'FZLTCXHJW';
+    src: url('/filedata/site/font/FZLTCXHJW.ttf') format('ttf'),
+         url('/filedata/site/font/FZLTCXHJW.svg') format('svg'),
+         url('/filedata/site/font/FZLTCXHJW.woff') format('woff'),
+         url('/filedata/site/font/FZLTCXHJW.eot') format('eot');
+}

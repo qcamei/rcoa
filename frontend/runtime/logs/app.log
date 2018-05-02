@@ -1,0 +1,270 @@
+2018-05-02 11:29:28 [127.0.0.1][a900761e88f648763ea19f80b0d41563][ce15a2mufnakn46dg0v5dnq6s3][error][yii\base\InvalidConfigException] exception 'yii\base\InvalidConfigException' with message 'The directory does not exist: D:/wamp64/www/rcoa/frontend/web/assets' in D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\AssetManager.php:213
+Stack trace:
+#0 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\BaseObject.php(109): yii\web\AssetManager->init()
+#1 [internal function]: yii\base\BaseObject->__construct(Array)
+#2 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\di\Container.php(375): ReflectionClass->newInstanceArgs(Array)
+#3 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\di\Container.php(156): yii\di\Container->build('yii\\web\\AssetMa...', Array, Array)
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\BaseYii.php(349): yii\di\Container->get('yii\\web\\AssetMa...', Array, Array)
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\di\ServiceLocator.php(137): yii\BaseYii::createObject(Array)
+#6 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(742): yii\di\ServiceLocator->get('assetManager', true)
+#7 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(608): yii\base\Module->get('assetManager')
+#8 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\View.php(225): yii\base\Application->getAssetManager()
+#9 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\View.php(285): yii\web\View->getAssetManager()
+#10 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\AssetBundle.php(125): yii\web\View->registerAssetBundle('frontend\\module...')
+#11 D:\wamp64\www\rcoa\frontend\modules\need\views\task\_form.php(18): yii\web\AssetBundle::register(Object(yii\web\View))
+#12 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(336): require('D:\\wamp64\\www\\r...')
+#13 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(254): yii\base\View->renderPhpFile('D:\\wamp64\\www\\r...', Array)
+#14 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(156): yii\base\View->renderFile('D:\\wamp64\\www\\r...', Array, NULL)
+#15 D:\wamp64\www\rcoa\frontend\modules\need\views\task\create.php(18): yii\base\View->render('_form', Array)
+#16 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(336): require('D:\\wamp64\\www\\r...')
+#17 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(254): yii\base\View->renderPhpFile('D:\\wamp64\\www\\r...', Array)
+#18 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(156): yii\base\View->renderFile('D:\\wamp64\\www\\r...', Array, Object(frontend\modules\need\controllers\TaskController))
+#19 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(384): yii\base\View->render('create', Array, Object(frontend\modules\need\controllers\TaskController))
+#20 D:\wamp64\www\rcoa\frontend\modules\need\controllers\TaskController.php(89): yii\base\Controller->render('create', Array)
+#21 [internal function]: frontend\modules\need\controllers\TaskController->actionCreate()
+#22 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(57): call_user_func_array(Array, Array)
+#23 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(157): yii\base\InlineAction->runWithParams(Array)
+#24 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(528): yii\base\Controller->runAction('create', Array)
+#25 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('need/task/creat...', Array)
+#26 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(386): yii\web\Application->handleRequest(Object(yii\web\Request))
+#27 D:\wamp64\www\rcoa\frontend\web\index.php(20): yii\base\Application->run()
+#28 {main}
+2018-05-02 11:29:28 [127.0.0.1][a900761e88f648763ea19f80b0d41563][ce15a2mufnakn46dg0v5dnq6s3][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_identity' => '97e4f098ec8ff106899243aa9788c54953e2d2de0d58e05cf0356a77661077b4a:2:{i:0;s:9:\"_identity\";i:1;s:79:\"[\"a900761e88f648763ea19f80b0d41563\",\"znjj-PYcqk5Eauqn5tJsJWEiz0U-BR2T\",2592000]\";}'
+    'PHPSESSID' => 'ce15a2mufnakn46dg0v5dnq6s3'
+    '_csrf' => 'f74cc03f0b1b21bb81539874f8f65b2f19ce429e2998aad9eef41d7ce123c6bba:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"3HZ6EHLo5wV4WWYhYobUsn0TCuBt_frc\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 'a900761e88f648763ea19f80b0d41563'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoa.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoa.gzedu.net/need/task/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.9'
+    'HTTP_COOKIE' => '_identity=97e4f098ec8ff106899243aa9788c54953e2d2de0d58e05cf0356a77661077b4a%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A79%3A%22%5B%22a900761e88f648763ea19f80b0d41563%22%2C%22znjj-PYcqk5Eauqn5tJsJWEiz0U-BR2T%22%2C2592000%5D%22%3B%7D; PHPSESSID=ce15a2mufnakn46dg0v5dnq6s3; _csrf=f74cc03f0b1b21bb81539874f8f65b2f19ce429e2998aad9eef41d7ce123c6bba%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%223HZ6EHLo5wV4WWYhYobUsn0TCuBt_frc%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoa.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoa.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/frontend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/frontend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/frontend/web/index.php'
+    'REMOTE_PORT' => '54807'
+    'REDIRECT_URL' => 'http://tt.ccoa.gzedu.net/need/task/create'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/need/task/create'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1525231768.092
+    'REQUEST_TIME' => 1525231768
+]
+2018-05-02 11:29:32 [127.0.0.1][a900761e88f648763ea19f80b0d41563][ce15a2mufnakn46dg0v5dnq6s3][error][yii\base\InvalidConfigException] exception 'yii\base\InvalidConfigException' with message 'The directory does not exist: D:/wamp64/www/rcoa/frontend/web/assets' in D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\AssetManager.php:213
+Stack trace:
+#0 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\BaseObject.php(109): yii\web\AssetManager->init()
+#1 [internal function]: yii\base\BaseObject->__construct(Array)
+#2 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\di\Container.php(375): ReflectionClass->newInstanceArgs(Array)
+#3 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\di\Container.php(156): yii\di\Container->build('yii\\web\\AssetMa...', Array, Array)
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\BaseYii.php(349): yii\di\Container->get('yii\\web\\AssetMa...', Array, Array)
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\di\ServiceLocator.php(137): yii\BaseYii::createObject(Array)
+#6 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(742): yii\di\ServiceLocator->get('assetManager', true)
+#7 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(608): yii\base\Module->get('assetManager')
+#8 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\View.php(225): yii\base\Application->getAssetManager()
+#9 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\View.php(285): yii\web\View->getAssetManager()
+#10 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\AssetBundle.php(125): yii\web\View->registerAssetBundle('frontend\\module...')
+#11 D:\wamp64\www\rcoa\frontend\modules\need\views\task\_form.php(18): yii\web\AssetBundle::register(Object(yii\web\View))
+#12 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(336): require('D:\\wamp64\\www\\r...')
+#13 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(254): yii\base\View->renderPhpFile('D:\\wamp64\\www\\r...', Array)
+#14 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(156): yii\base\View->renderFile('D:\\wamp64\\www\\r...', Array, NULL)
+#15 D:\wamp64\www\rcoa\frontend\modules\need\views\task\create.php(18): yii\base\View->render('_form', Array)
+#16 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(336): require('D:\\wamp64\\www\\r...')
+#17 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(254): yii\base\View->renderPhpFile('D:\\wamp64\\www\\r...', Array)
+#18 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(156): yii\base\View->renderFile('D:\\wamp64\\www\\r...', Array, Object(frontend\modules\need\controllers\TaskController))
+#19 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(384): yii\base\View->render('create', Array, Object(frontend\modules\need\controllers\TaskController))
+#20 D:\wamp64\www\rcoa\frontend\modules\need\controllers\TaskController.php(89): yii\base\Controller->render('create', Array)
+#21 [internal function]: frontend\modules\need\controllers\TaskController->actionCreate()
+#22 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(57): call_user_func_array(Array, Array)
+#23 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(157): yii\base\InlineAction->runWithParams(Array)
+#24 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(528): yii\base\Controller->runAction('create', Array)
+#25 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('need/task/creat...', Array)
+#26 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(386): yii\web\Application->handleRequest(Object(yii\web\Request))
+#27 D:\wamp64\www\rcoa\frontend\web\index.php(20): yii\base\Application->run()
+#28 {main}
+2018-05-02 11:29:32 [127.0.0.1][a900761e88f648763ea19f80b0d41563][ce15a2mufnakn46dg0v5dnq6s3][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_identity' => '97e4f098ec8ff106899243aa9788c54953e2d2de0d58e05cf0356a77661077b4a:2:{i:0;s:9:\"_identity\";i:1;s:79:\"[\"a900761e88f648763ea19f80b0d41563\",\"znjj-PYcqk5Eauqn5tJsJWEiz0U-BR2T\",2592000]\";}'
+    'PHPSESSID' => 'ce15a2mufnakn46dg0v5dnq6s3'
+    '_csrf' => 'f74cc03f0b1b21bb81539874f8f65b2f19ce429e2998aad9eef41d7ce123c6bba:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"3HZ6EHLo5wV4WWYhYobUsn0TCuBt_frc\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 'a900761e88f648763ea19f80b0d41563'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoa.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoa.gzedu.net/need/task/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.9'
+    'HTTP_COOKIE' => '_identity=97e4f098ec8ff106899243aa9788c54953e2d2de0d58e05cf0356a77661077b4a%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A79%3A%22%5B%22a900761e88f648763ea19f80b0d41563%22%2C%22znjj-PYcqk5Eauqn5tJsJWEiz0U-BR2T%22%2C2592000%5D%22%3B%7D; PHPSESSID=ce15a2mufnakn46dg0v5dnq6s3; _csrf=f74cc03f0b1b21bb81539874f8f65b2f19ce429e2998aad9eef41d7ce123c6bba%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%223HZ6EHLo5wV4WWYhYobUsn0TCuBt_frc%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoa.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoa.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/frontend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/frontend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/frontend/web/index.php'
+    'REMOTE_PORT' => '54812'
+    'REDIRECT_URL' => 'http://tt.ccoa.gzedu.net/need/task/create'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/need/task/create'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1525231772.524
+    'REQUEST_TIME' => 1525231772
+]
+2018-05-02 11:32:52 [127.0.0.1][a900761e88f648763ea19f80b0d41563][ce15a2mufnakn46dg0v5dnq6s3][error][yii\base\InvalidConfigException] exception 'yii\base\InvalidConfigException' with message 'The directory does not exist: D:/wamp64/www/rcoa/frontend/web/assets' in D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\AssetManager.php:213
+Stack trace:
+#0 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\BaseObject.php(109): yii\web\AssetManager->init()
+#1 [internal function]: yii\base\BaseObject->__construct(Array)
+#2 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\di\Container.php(375): ReflectionClass->newInstanceArgs(Array)
+#3 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\di\Container.php(156): yii\di\Container->build('yii\\web\\AssetMa...', Array, Array)
+#4 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\BaseYii.php(349): yii\di\Container->get('yii\\web\\AssetMa...', Array, Array)
+#5 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\di\ServiceLocator.php(137): yii\BaseYii::createObject(Array)
+#6 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(742): yii\di\ServiceLocator->get('assetManager', true)
+#7 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(608): yii\base\Module->get('assetManager')
+#8 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\View.php(225): yii\base\Application->getAssetManager()
+#9 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\View.php(285): yii\web\View->getAssetManager()
+#10 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\AssetBundle.php(125): yii\web\View->registerAssetBundle('frontend\\module...')
+#11 D:\wamp64\www\rcoa\frontend\modules\need\views\task\_form.php(18): yii\web\AssetBundle::register(Object(yii\web\View))
+#12 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(336): require('D:\\wamp64\\www\\r...')
+#13 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(254): yii\base\View->renderPhpFile('D:\\wamp64\\www\\r...', Array)
+#14 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(156): yii\base\View->renderFile('D:\\wamp64\\www\\r...', Array, NULL)
+#15 D:\wamp64\www\rcoa\frontend\modules\need\views\task\create.php(18): yii\base\View->render('_form', Array)
+#16 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(336): require('D:\\wamp64\\www\\r...')
+#17 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(254): yii\base\View->renderPhpFile('D:\\wamp64\\www\\r...', Array)
+#18 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\View.php(156): yii\base\View->renderFile('D:\\wamp64\\www\\r...', Array, Object(frontend\modules\need\controllers\TaskController))
+#19 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(384): yii\base\View->render('create', Array, Object(frontend\modules\need\controllers\TaskController))
+#20 D:\wamp64\www\rcoa\frontend\modules\need\controllers\TaskController.php(89): yii\base\Controller->render('create', Array)
+#21 [internal function]: frontend\modules\need\controllers\TaskController->actionCreate()
+#22 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\InlineAction.php(57): call_user_func_array(Array, Array)
+#23 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Controller.php(157): yii\base\InlineAction->runWithParams(Array)
+#24 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Module.php(528): yii\base\Controller->runAction('create', Array)
+#25 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('need/task/creat...', Array)
+#26 D:\wamp64\www\rcoa\vendor\yiisoft\yii2\base\Application.php(386): yii\web\Application->handleRequest(Object(yii\web\Request))
+#27 D:\wamp64\www\rcoa\frontend\web\index.php(20): yii\base\Application->run()
+#28 {main}
+2018-05-02 11:32:52 [127.0.0.1][a900761e88f648763ea19f80b0d41563][ce15a2mufnakn46dg0v5dnq6s3][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_identity' => '97e4f098ec8ff106899243aa9788c54953e2d2de0d58e05cf0356a77661077b4a:2:{i:0;s:9:\"_identity\";i:1;s:79:\"[\"a900761e88f648763ea19f80b0d41563\",\"znjj-PYcqk5Eauqn5tJsJWEiz0U-BR2T\",2592000]\";}'
+    'PHPSESSID' => 'ce15a2mufnakn46dg0v5dnq6s3'
+    '_csrf' => 'f74cc03f0b1b21bb81539874f8f65b2f19ce429e2998aad9eef41d7ce123c6bba:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"3HZ6EHLo5wV4WWYhYobUsn0TCuBt_frc\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 'a900761e88f648763ea19f80b0d41563'
+]
+
+$_SERVER = [
+    'REDIRECT_STATUS' => '200'
+    'HTTP_HOST' => 'tt.ccoa.gzedu.net'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8'
+    'HTTP_REFERER' => 'http://tt.ccoa.gzedu.net/need/task/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'zh-CN,zh;q=0.9'
+    'HTTP_COOKIE' => '_identity=97e4f098ec8ff106899243aa9788c54953e2d2de0d58e05cf0356a77661077b4a%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A79%3A%22%5B%22a900761e88f648763ea19f80b0d41563%22%2C%22znjj-PYcqk5Eauqn5tJsJWEiz0U-BR2T%22%2C2592000%5D%22%3B%7D; PHPSESSID=ce15a2mufnakn46dg0v5dnq6s3; _csrf=f74cc03f0b1b21bb81539874f8f65b2f19ce429e2998aad9eef41d7ce123c6bba%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%223HZ6EHLo5wV4WWYhYobUsn0TCuBt_frc%22%3B%7D'
+    'PATH' => 'C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;D:\\wamp64\\bin\\php\\php5.6.16;D:\\ee教育\\p2p\\;C;\\ProgramData\\Oracle\\Java\\javapath;C:\\ProgramData\\ComposerSetup\\bin;D:\\Yii\\Git\\cmd;'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.17 (Win64) PHP/5.6.16 Server at tt.ccoa.gzedu.net Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.17 (Win64) PHP/5.6.16'
+    'SERVER_NAME' => 'tt.ccoa.gzedu.net'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/frontend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'D:/wamp64/www/rcoa/frontend/web'
+    'SERVER_ADMIN' => 'wskeee@163.com'
+    'SCRIPT_FILENAME' => 'D:/wamp64/www/rcoa/frontend/web/index.php'
+    'REMOTE_PORT' => '54893'
+    'REDIRECT_URL' => 'http://tt.ccoa.gzedu.net/need/task/create'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/need/task/create'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1525231972.224
+    'REQUEST_TIME' => 1525231972
+]

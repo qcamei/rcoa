@@ -1,0 +1,95 @@
+/************************************面包屑*************************************/
+.title .breadcrumb {
+    padding: 0px;
+    margin: 0 0 20px;
+    list-style: none;
+    background-color: #2e6da4;
+    border-radius: 4px;
+}
+.title .breadcrumb > a {
+    color: #fff;
+}
+.title .breadcrumb > a:hover {
+    color: #fff;
+    text-decoration:none;
+}
+.title .breadcrumb .active {
+    color: #ccc !important;
+}
+
+/************************************子菜单*************************************/
+.submenu {
+    height: 50px;
+    margin-top: -10px;
+}
+/** 小屏不显示文字 */
+@media (max-width: 768px) {
+    .submenu .menu {
+        width: 50px;
+    }
+}
+/** 大屏显示文字 */
+@media (min-width: 768px) {
+    .submenu .menu {
+        width: 100px;
+    }
+}
+/** 导航菜单 */
+.submenu .menu {
+    display: inline-block;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    color: #000;
+}
+/** 导航菜单选中 */
+.submenu .menu.active {
+    color: #000;
+    background-color: #fff;
+}
+/** 导航菜单子菜单--靠右菜单 */
+.submenu .menu.right {
+    float: right;
+    font-weight: initial;
+    color: #fff !important;
+    background-color: #2e6da4 !important;
+}
+/** 导航菜单名称 */
+.submenu .menu > .name {
+    margin-left: 5px;
+}
+/** 导航菜单a标签鼠标移上样式 */
+.submenu .container > a.menu:hover, a.menu:focus, a.menu:active {
+    color: #000;
+    text-decoration: blink;
+    background-color: rgba(255, 255, 255, 0.46);;
+}
+.submenu .container > a {
+    color: #fff;
+}
+
+/**
+ * 公共样式
+ */
+/** 小屏不显示文字 */
+@media (max-width: 767px) {
+    .statistics-navbar a{
+        font-size: 12px;
+    }
+}
+/** 大屏显示文字 */
+@media (min-width: 768px) {
+    .statistics-navbar a{
+        font-size: 14px;
+    }
+}
+/** 
+ *  navbar
+ */
+.statistics-navbar{
+    margin: 20px 0px 20px 0px;
+}
+
+.btn {
+    width: 85px;
+}

@@ -1,0 +1,187 @@
+/* 
+    主要的样式 （对应的样式层级，顶级前面统一加【模块名】）
+    例如：.scene .style {
+            样式...
+        }
+*/
+
+/**
+ * 小屏幕时去掉左右padding边距
+ */
+@media (max-width: 480px) {
+    .scene {
+        margin-right: -15px;
+        margin-left: -15px;
+    }
+    .scene .form-horizontal .form-group {
+        margin-right: 0;
+        margin-left: 0;
+    }
+    .scene-book .site-util {
+        padding-right: 0;
+        padding-bottom: 5px;
+    }
+    .scene-book .date-util {
+        padding-left: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .content > .container {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+}
+
+/**
+ * 设置表单label样式
+ */
+.scene .form-label {
+    color: #999999;
+    font-weight: normal;
+    padding-right: 0px;
+}
+
+/**
+ * table表格head样式 
+ */
+.scene .viewdetail-head {
+    height: 36px;
+    margin: -8px;
+    padding: 8px;
+    background-color: #f2f2f2;
+}
+
+/**
+ * table表格th样式 
+ */
+.scene .viewdetail-th {
+    color: #666666;
+    width: 23%;
+    font-weight: normal;
+    text-align: right;
+    min-width: 73px;
+    vertical-align: middle;
+}
+
+/**
+ * table表格th-head样式 
+ */
+.scene .viewdetail-th-head {
+    color: #000000;
+    text-align: left;
+    font-weight: bold;
+}
+
+/**
+ * table表格td-head样式 
+ */
+.scene .viewdetail-td-head {
+    color: #000000;
+    text-align: right;
+    font-weight: bold;
+}
+
+/**
+ * table表格td样式 
+ */
+.scene .viewdetail-td {
+    min-width: 100px;
+    vertical-align: middle;
+}
+
+/**
+ * table表格td-des样式 
+ */
+.scene .viewdetail-td-des {
+    height: 65px;
+    display:table-cell;
+    vertical-align:middle; 
+}
+
+/**
+ * 设置表格内容中部对齐
+ */
+.scene .table > tbody > tr > td{
+    vertical-align: middle;
+}
+
+.scene .has-title {
+    padding-top: 0px;
+}
+
+.scene .new {
+    position: absolute;
+    top: -5px;
+}
+
+/**
+ * 面包屑样式 
+ */
+.scene .breadcrumb-title {
+    padding: 0px;
+    margin-bottom: 20px;
+    margin-top: 0px;
+    list-style: none;
+    background-color: #2e6da4;
+    border-radius: 4px;
+}
+
+.scene .breadcrumb a {
+    color: #fff;
+}
+
+.scene .breadcrumb .active {
+    width: 90%;
+    color: #ccc;
+}
+
+/**
+ * 任务状态阶段
+ */
+.scene .phase{
+    width: 60px;
+    height: 60px;
+    float: left;
+    padding-top: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+/**
+ * 任务状态阶段文字
+ */
+.scene .phase-words{
+    margin-bottom: 0px; 
+    color: #fff;
+    line-height: 35px;
+}
+/**
+ * 任务状态阶段箭头
+ */
+.scene .arrow{
+    width: 32px;
+    height: 16px;
+    float: left;
+    margin: 20px 0px;
+    margin-right: 5px;
+}
+/**
+ * 任务状态已选阶段
+ */
+.scene .have-to{
+    background-color: #f37b53;
+}
+
+/**
+ * 任务状态已选阶段
+ */
+.scene .have-to.danger{
+    background-color: #d9534f
+}
+/**
+ * 任务状态未选阶段
+ */
+.scene .not-to {
+    background-color: #dddddd;
+}

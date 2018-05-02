@@ -1,0 +1,48 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2017-7-25, 9:12:27
+    Author     : Kiwi°
+*/
+
+.worksystem .head-top {
+    width: 100%;
+    height: 166px;
+    background: url("../imgs/head_image.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.worksystem .content{
+    margin-top: 10px;
+}
+.worksystem .main-title{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 10px 0px 30px;
+}
+.worksystem .content .title{
+    font-size: 14px;
+    font-weight: bold;
+    margin: 40px 0px 5px;
+    color: #555;
+}
+.worksystem .content .title-number{
+    font-family: 'Arial';  
+    font-weight: 500;
+    font-size: 35px;  
+    color: #333;
+}
+.worksystem .content .main-title .icon{
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.worksystem .content .main-title .statistics-disable-icon{
+    background: url('../imgs/statistics_disable_24x24.png');
+}

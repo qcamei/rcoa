@@ -1,0 +1,464 @@
+/* 
+    模块的样式
+    例如：.default-index .样式名 {
+            样式...
+        }
+*/
+
+
+/********* default-_search样式 ***********/
+.default-search .search {
+    margin-top: 5px;
+    margin-bottom: -1px;
+    border-radius: 5px;
+    padding: 0px;
+}
+
+.default-search .search-input{
+    width: 100%;
+    height: 40px;
+    padding-right: 52px;
+    float: left;
+    border: 1px #ccc solid;
+    border-radius: 4px;
+}
+
+.default-search .search-text-input {
+    height: 38px;
+    padding: 6px 12px;
+    font-size: 14px;
+    border: none;
+}
+
+.default-search .search-text-input:focus {
+    border-color: none;
+    outline: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.default-search .search-btn-bg {
+    position: absolute;
+    width: 52px;
+    height: 40px;
+    padding:0px;
+    float: right;
+    right: 0px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    background-color: #00cc99;
+}
+
+.default-search .search-btn-bg a {
+    font-size: 20px;
+    color: #fff;
+    padding: 5px 15px;
+    border-radius: 0px;
+}
+
+.default-search .search-btn-bg .btn:hover{
+    color: #fff;
+    text-decoration: none;
+    background-image: none; 
+    outline: 0;
+    -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+}
+
+.default-search .search-btn-bg .btn:focus {
+    color: #fff;
+    text-decoration: none;
+    background-color: rgba(0, 0, 0, .125);
+}
+
+.default-search .condition {
+    padding: 10px 0px;
+    left: -10px;
+}
+
+.default-search .control {
+    padding: 5px 0px;
+}
+
+.default-search .control-widget {
+    padding: 0px 10px;
+}
+
+
+/********* default-view样式 ***********/
+.default-view .frame {
+    padding-left: 0;
+    padding-right: 0;
+    display: inline-block
+}
+
+.default-view
+.frame-left {
+    float: left;
+    padding-left: 0;
+    padding-right: 15px;
+}
+
+.default-view
+.frame-right {
+    float: right;
+    padding-right: 0;
+    padding-left: 15px;
+}
+
+.default-view
+.frame-title {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    color: #ffffff;
+    line-height: 20px;
+    background-color: rgba(153, 153, 153, 1);
+}
+.default-view
+.frame-title .icon {
+    float: left; 
+    margin-top: 3px;
+    margin-right: 5px;
+}
+
+.default-view
+.frame-title>span {
+    display: block;
+    float: left;
+}
+
+.default-view
+.frame-title>.framebtn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+}
+
+.default-view
+.frame-table {
+    margin-bottom: 20px;
+    padding-right: 0;
+    padding-left: 0;
+    border: 1px #ddd solid;
+}
+
+.default-view
+.frame-right-table {
+    height: 341px;
+    border: 1px #ddd solid;
+    overflow-y: auto;
+}
+
+/**
+ * 小屏幕时去掉左右padding边距
+ */
+@media (max-width: 480px) {
+    .default-view .frame-left,
+    .default-view .frame-right {
+        padding-left:  0px;
+        padding-right: 0px;
+    }
+}
+
+/********* course-make-couframe样式 ***********/
+.course-make-couframe
+.sortable {
+    padding:0;
+    margin: 0;
+}
+
+.course-make-couframe
+.sortable a {
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.course-make-couframe
+.sortable a>i {
+    font-size: 16px;
+    margin-right: 5px;
+}
+
+.course-make-couframe
+.sortable .cou-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.course-make-couframe
+.sortable li {
+    list-style: none outside none;
+    cursor: normal;
+}
+
+.course-make-couframe
+.sortable .handle:hover{
+    cursor: move;
+}
+
+.course-make-couframe
+.sortable li.disabled:hover {
+    cursor: default;
+}
+
+.course-make-couframe
+.sortable .cou-default {
+    position: relative;
+    padding: 8px;
+    margin: 1px 2px 0;
+}
+
+.course-make-couframe
+.sortable .cou-phase {
+    margin-top: 5px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin-left: 2px;
+    margin-right: 2px;
+    line-height: 28px;
+    font-size: 20px;
+    background-color: #333333;
+}
+
+.course-make-couframe
+.sortable .add-cou-phase {
+    margin-top: 20px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin-left: 0px;
+    margin-right: 0px;
+    line-height: 28px;
+    background-color: #3f97cf;
+}
+
+.course-make-couframe
+.sortable .cou-phase a>i {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.course-make-couframe
+.sortable .cou-phase .value_percent {
+    font-size: 14px;
+    color: #ccc;
+    font-weight: normal;
+    margin-left: 15px;
+}
+
+.course-make-couframe
+.sortable .cou-block {
+    font-size: 16px;
+    line-height: 32px;
+    background-color: #3f97cf;
+}
+
+.course-make-couframe
+.sortable .cou-chapter {
+    font-size: 14px;
+    line-height: 22px;
+    background-color: #89cbf5;
+}
+
+.course-make-couframe
+.sortable .cou-chapter a {
+    color: #0f4967;
+}
+
+.course-make-couframe
+.sortable .cou-chapter a>span{
+    font-weight: normal;
+}
+
+.course-make-couframe
+.sortable .chapter-des {
+    padding: 30px 40px;
+    background-color: #f2f2f3;
+}
+
+.course-make-couframe
+.sortable .chapter-des>p>b {
+    color: #f39700;
+}
+
+.course-make-couframe
+.sortable .chapter-des>.des {
+    color: #888888;
+}
+
+.course-make-couframe
+.sortable .cou-section {
+    line-height: 10px;
+    background-color: #d0d5d8;
+}
+
+.course-make-couframe
+.sortable .cou-section a {
+    color: #879196;
+}
+
+#mcbs_course_activity {
+    padding: 20px 0px;
+}
+
+.course-make-couframe
+.sortable .cou-activity {
+    margin: 5px 20px;
+    padding: 3px 15px; 
+    line-height: 10px;
+    border: 1px #bdc9cf solid;
+    background-color: #e2e8ed;
+}
+
+.course-make-couframe
+.sortable .cou-activity a {
+    color: #879196;
+}
+
+.course-make-couframe
+.sortable .cou-icon a>i {
+    font-size: 12px;
+    margin-left: 0px;
+    margin-right: 3px;
+}
+
+.course-make-actlog .actlog {
+    max-height: 555px;
+    overflow-y: auto;
+    padding-bottom: 15px;
+}
+
+/********************课程框架-创建活动***************************/
+.mcbs-activity .actitype {
+    width:60px;
+    height:60px;
+    margin: 0 0 5px;
+    display: inline-block; 
+    text-align: center;
+    border: 1px #ccc solid;
+    background-color:#fff;
+}
+
+.mcbs-activity
+.actitype:hover {
+    cursor:pointer;
+}
+
+.mcbs-activity
+.actitype.active {
+    border-color: #666;
+    background-color:#ddd;
+}
+
+.mcbs-activity .acticon {
+    width: 40px;
+    height: 37px;
+}
+
+.mcbs-activity .actname {
+    font-size: 12px;
+}
+
+.mcbs-activity .message {
+    height: 470px;
+    border: 1px #cccccc solid;
+}
+
+.mcbs-activity .meslist {
+    width: 100%;
+    height: 388px;
+    padding-left: 75px;
+    padding-right: 15px;
+    position: relative;
+    overflow-y: auto;
+}
+
+.mcbs-activity
+.time-vertical {
+    list-style-type: none;
+    border-left: 1px solid #eee;
+    padding: 0px;
+    margin-bottom: 0;
+}
+
+.mcbs-activity
+.time-vertical li {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.mcbs-activity
+.time-vertical li b:before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: -5px;
+    width: 10px;
+    height: 10px;
+    border: 2px solid #cccccc;
+    border-radius: 10px;
+    background: #cccccc;
+}
+ 
+.mcbs-activity
+.time-vertical li .img-circle {
+    width: 45px;
+    height: 45px;
+    position: absolute;
+    top: 5px;
+    left: -65px;
+    background-color: #ccc;
+}
+
+.mcbs-activity
+.time-vertical li .mes-frame {
+    display: inline-block;
+    margin-left: 20px;
+    padding: 10px;
+    color: #666666;
+    border-radius: 6px;
+    background-color: #ededed;
+}
+
+.mcbs-activity
+.time-vertical li .username {
+    color: #cccccc;
+}
+
+.mcbs-activity
+.time-vertical li .time {
+    color: #999999;
+}
+
+.mcbs-activity .mesform {
+    height: 80px;
+    padding: 10px;
+    position: relative;
+    background-color: #ddd;
+}
+
+.mcbs-activity .mesinput {
+   padding: 0;
+}
+
+.mcbs-activity
+.mesinput textarea {
+   width: 100%;
+   height: 60px;
+   padding: 10px;
+}
+
+.mcbs-activity .mesbtn {
+   padding-right: 0;
+   padding-left: 10px;
+}
+
+.mcbs-activity .mesbtn>a {
+   width: 100%;
+   height: 60px;
+   padding-top: 20px;
+   padding-bottom: 20px;
+}
+

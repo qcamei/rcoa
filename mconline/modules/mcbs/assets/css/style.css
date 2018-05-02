@@ -1,0 +1,88 @@
+/* 
+    主要的样式 （对应的样式层级，顶级前面统一加【模块名】）
+    例如：.mcbs .style {
+            样式...
+        }
+*/
+
+/**
+ * 小屏幕时去掉左右padding边距
+ */
+@media (max-width: 480px) {
+    .mcbs {
+        margin-left: -15px;
+        margin-right: -15px;
+    }
+}
+
+/**
+ * 设置表单label样式
+ */
+.mcbs .form-label {
+    color: #999999;
+    font-weight: normal;
+    padding-right: 0px;
+}
+
+/**
+ * table表格th样式 
+ */
+.mcbs .viewdetail-th {
+    color: #666666;
+    width: 23%;
+    font-weight: normal;
+    text-align: right;
+    min-width: 73px;
+    vertical-align: middle;
+}
+
+/**
+ * table表格th-head样式 
+ */
+.mcbs .viewdetail-th-head {
+    color: #000000;
+    float: left;
+    font-weight: bold;
+}
+
+/**
+ * table表格td-head样式 
+ */
+.mcbs .viewdetail-td-head {
+    color: #000000;
+    float: right;
+    font-weight: bold;
+}
+
+/**
+ * table表格td样式 
+ */
+.mcbs .viewdetail-td {
+    min-width: 100px;
+    vertical-align: middle;
+}
+
+/**
+ * table表格td-des样式 
+ */
+.mcbs .viewdetail-td-des {
+    height: 65px;
+    display:table-cell;
+    vertical-align:middle; 
+}
+
+/**
+ * 设置表格内容中部对齐
+ */
+.mcbs .table > tbody > tr > td{
+    vertical-align: middle;
+}
+
+.mcbs .has-title {
+    padding-top: 0px;
+}
+
+.mcbs .new {
+    position: absolute;
+    top: -5px;
+}

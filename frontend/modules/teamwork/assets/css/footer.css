@@ -1,0 +1,74 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2017-6-27, 10:34:07
+    Author     : Kiwi°
+*/
+
+/** 
+ *  footer 导航样式
+ */
+
+.teamwork .footer-navbar{
+    height: 50px;
+    margin-top: -10px;
+}
+/** 小屏不显示文字 */
+@media (max-width: 768px) {
+    .teamwork .footer-navbar .footer-menu-item{
+        width: 50px;
+    }
+}
+/** 大屏显示文字 */
+@media (min-width: 768px) {
+    .teamwork .footer-navbar .footer-menu-item{
+        width: 100px;
+    }
+}
+/** 导航菜单 */
+.teamwork .footer-navbar .footer-menu-item{
+    display: inline-block;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    color: #000;
+}
+/** 导航菜单下img */
+.teamwork .footer-navbar .footer-menu-item > img{
+    width: 24px;
+    height: 24px;
+    margin-top: -5px;
+}
+/** 导航菜单名称 */
+.teamwork .footer-navbar .footer-menu-item .menu-name{
+    margin-left: 5px;
+}
+/** 导航菜单选中 */
+.teamwork .footer-navbar .container > .footer-menu-bg {
+    background-color: #fff;
+    color: #000;
+}
+/** 导航菜单子菜单--靠右菜单 */
+.teamwork .footer-navbar .footer-menu-item.submenu-right{
+    float: right;
+    font-weight: initial;
+    color: #fff !important;
+    background-color: #2e6da4 !important;
+}
+/** 导航菜单a标签鼠标移上样式 */
+.teamwork .footer-navbar .container > a:hover, a:focus, a:active {
+    color: #000;
+    background-color: rgba(255, 255, 255, 0.46);;
+    text-decoration: blink;
+}
+.teamwork .footer-navbar .container > a {
+    color: #fff;
+}
+
+.teamwork .footer-navbar{
+    height: 50px;
+    margin-top: -10px;
+}

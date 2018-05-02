@@ -1,0 +1,147 @@
+
+.bookdetail-list
+{
+     padding: 0px;
+}
+
+/*
+ * 任务列表相间颜色
+ */
+.bookdetail-list .bgcolor-zebra
+{
+    background-color: rgba(210, 210, 210, 0.35);
+}
+
+.bookdetail-list .table
+{
+    table-layout: fixed;
+}
+/**
+ * 任务列表课程名列
+ * 为不同屏幕设置不同宽度
+ */
+.bookdetail-list .course-name
+{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.table .btn
+{
+    padding: 5px;
+}
+.content-type {
+    background-color: rgba(243, 123, 83, 1);
+    display: block;
+    width: 30px;
+    font-size: 12px;
+    padding: 2px;
+    text-align: center;
+    color: #fff;
+    border-radius: 5px;
+}
+
+/*
+@media (min-width: 480px) {
+  .bookdetail-list .course-name{
+    width: 100%;
+  }
+}
+@media (min-width: 768px) {
+  .bookdetail-list .course-name{
+    width: 200px;
+  }
+}
+@media (min-width: 992px) {
+  .bookdetail-list .course-name{
+    width: 350px;
+  }
+}
+@media (min-width: 1200px) {
+  .bookdetail-list .course-name{
+    width: 300px;
+  }
+}
+*/
+/**
+ * 任务详细页面样式 
+ */
+.shoot-bookdetail .viewdetail-th
+{
+    color: #666666;
+    width: 23%;
+    font-weight: normal;
+    text-align: right;
+    min-width: 73px;
+    vertical-align: middle;
+}
+.viewdetail-th-head
+{
+    color: #000000;
+    text-align: left;
+    font-weight: bold;
+}
+.shoot-bookdetail .viewdetail-td
+{
+    min-width: 100px;
+    vertical-align: middle;
+}
+
+.edithistory-table
+{
+    padding: 0px !important;
+}
+
+.edithistory-table>tbody>tr>th
+{
+    padding: 8px;
+}
+.edithistory-table>tbody>tr>td
+{
+    padding: 8px;
+}
+.status-progress-div {
+    width: 60px;
+    height: 60px;
+    float: left;
+    padding-top: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+.status-have-to {
+    background-color: #f37b53;
+    line-height: 35px;
+}
+.have-to-status {
+    margin-bottom: 0px; 
+    color: #fff;
+}
+.shoot-bookdetail .photograph{
+    width: 30px;
+    padding:2px 8px;
+    display: block;
+    font-size: 12px;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+}
+.shoot-bookdetail .photograph-success{
+    background-color: #5cb85c;
+}
+.shoot-bookdetail .photograph-danger{
+    background-color: #d9534f;
+}
+
+/**
+ * 评价题目样式
+ */
+.appraise-form{}
+
+.appraise-form .radio-group
+{
+    position: relative;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: normal;
+}

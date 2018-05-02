@@ -1,0 +1,400 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2016-6-27, 11:00:01
+    Author     : KiwiUser
+*/
+
+/**
+ * 公共部分样式
+ */
+.container.item-manage{
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.item-manage .row {
+    margin: 0px;
+}
+.container .table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #fff !important;
+}
+
+.container .table-striped > tbody > tr:nth-of-type(even) {
+    background-color: #f9f9f9 !important;
+}
+.controlbar .disabled{
+    pointer-events: none;
+}
+.table-list .table-list-progress{
+    height:20px;
+    margin:5px 0px;
+    border-radius:5px;
+}
+.table-list .progress {
+    background-image: linear-gradient(to bottom, #ddd, #ccc);
+}
+.course-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.team-span {
+    background-color: #333;
+    display: block;
+    width: 40px;
+    padding: 2px;
+    font-size: 12px;
+    text-align: center;
+    color: #fff;
+    border-radius: 5px;
+}
+
+/** 
+ * 项目列表页样式 
+ */
+.footer-item-list .footer-item{
+    display: block;
+    width: 100px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    float: left;
+    font-weight: bold;
+    color: #000;
+}
+.footer-item-list .footer-item-xs{
+    display: block;
+    width: 50px;
+    height: 50px;
+    float: left;
+    text-align: center;
+    line-height: 50px;
+}
+.footer-item-list .footer-item-bg{
+    background-color: #fff;
+}
+.footer-item-list .footer-item-right{
+    float: right;
+    font-weight: initial;
+    background-color: #2e6da4 !important;
+}
+.footer-item-list .footer-item img{
+    width: 24px;
+    height: 24px;
+    margin-top: -5px;
+    margin-right: 5px;
+}
+.footer-item-list .footer-item-xs img{
+    width: 24px;
+    height: 24px;
+    margin-top: 2px;
+}
+.footer-item-list a:hover, a:focus {
+    background-color: rgba(255, 255, 255, 0.46);;
+    text-decoration: blink;
+}
+
+/**
+ * 面包屑样式
+ */
+.container .breadcrumb {
+    padding: 0px;
+    margin-bottom: 20px;
+    margin-top: 0px;
+    list-style: none;
+    background-color: #2e6da4;
+    border-radius: 4px;
+}
+.breadcrumb a {
+    color: #fff;
+}
+.breadcrumb a:hover {
+    color: #fff;
+    text-decoration:none;
+}
+.breadcrumb .active {
+    color: #ccc !important;
+}
+
+/**
+ * 课程表单页样式
+ */
+.form-img {
+    margin: 10px 0px;
+    float: left;
+}
+@media (min-width: 320px){
+    #courseannex .col-xs-9 {
+        width: 94%;
+        float: left;
+    }
+}
+@media (min-width: 768px){
+    #courseannex .col-sm-10 {
+        width: 96.33333333%;
+        float: left;
+    }
+}
+@media (min-width: 992px){
+    #courseannex .col-md-11 {
+        width: 97.66666667%;
+        float: left;
+    }
+}
+@media (min-width: 1200px){
+    #courseannex .col-lg-12 {
+        width: 98%;
+        float: left;
+    }
+}
+
+
+/**
+ * 搜索框样式
+ */
+.item-manage .search-box {
+    margin-top: 5px;
+    margin-bottom: -1px;
+    border-radius: 5px;
+    padding: 0px;
+}
+.search-box .search-text-input{
+    width: 100%;
+    height: 40px;
+    padding-right: 85px;
+    float: left;
+    border: 1px #ccc solid;
+    border-radius: 4px;
+}
+.search-box .search-input {
+    padding: 6px 12px;
+    font-size: 14px;
+    border: none;
+}
+.search-box .search-input:focus {
+    border-color: none;
+    outline: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+.search-box .search-btn-bg {
+    position: absolute;
+    width: 85px;
+    height: 40px;
+    padding:0px;
+    float: right;
+    right: 0px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    background-color: #00cc99;
+}
+.search-btn-bg a {
+    font-size: 15px;
+    color: #fff;
+    padding: 8px 10px;
+    border-radius: 0px;
+}
+.search-btn-bg .btn:hover{
+    color: #fff;
+    text-decoration: none;
+    background-image: none; 
+    outline: 0;
+    -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+}
+.search-btn-bg .btn:focus {
+    color: #fff;
+    text-decoration: none;
+    background-color: rgba(0, 0, 0, .125);
+}
+.search-btn-bg .search-arrow-box {
+    height: 30px;
+    float: left;
+    border-left: 1px solid #ccc;
+    margin: 5px 0px;
+    padding: 5px 8px;
+}
+.search-arrow-box:hover {
+    cursor: pointer;
+}
+.down {
+    display: none !important;
+}
+.up {
+    display: block !important;
+}
+.search-list {
+    padding: 10px 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+.control-label {
+    color: #999;
+    padding: 7px 15px; 
+    margin: 0px
+}
+
+/**
+ * 任务详细页样式 
+ */
+.item-manage .viewdetail-th
+{
+    color: #666666;
+    width: 23%;
+    font-weight: normal;
+    text-align: right;
+    min-width: 73px;
+    vertical-align: middle;
+}
+.viewdetail-th-head
+{
+    color: #000000;
+    text-align: left;
+    font-weight: bold;
+}
+.item-manage .viewdetail-td
+{
+    min-width: 100px;
+    vertical-align: middle;
+}
+.team-leader {
+    color: blue;
+}
+.developer {
+  margin: 5px 10px 5px 0;
+  display: inline-block;
+}
+/**
+ * 当前状态进度样式
+ */
+.status-progress-div {
+    width: 60px;
+    height: 60px;
+    float: left;
+    padding-top: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+.status-have-to {
+    background-color: #f37b53;
+    line-height: 20px;
+}
+.status-not-to {
+    background-color: #dddddd;
+    line-height: 35px;
+}
+.have-to-status {
+    margin-bottom: 0px; 
+    color: #fff;
+}
+.progress-strip {
+    margin-bottom: 0px; 
+    color: #ccc;
+}
+
+
+/**
+ *  周报页面样式
+ */
+.row .weekinfo{
+    margin: 5px 5px 5px 0px;
+}
+.row .active {
+    color: #fff;
+    background-color: #269abc;
+    border-color: #1b6d85;
+}
+.summar{
+    width:100%;
+    height:auto;
+    border:1px #ccc solid;
+    padding:10px;
+    overflow-x: auto;
+}
+.summar .time {
+    color:#ccc;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.state-icon {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    margin: -3px 5px;
+}
+.not-to {
+    background: url('/filedata/teamwork/image/not_to_black.png') no-repeat;
+}
+.already-write {
+    background: url('/filedata/teamwork/image/already_write.png') no-repeat;
+}
+.this-week {
+    background: url('/filedata/teamwork/image/this_week.png') no-repeat;
+}
+.leak-write {
+    background: url('/filedata/teamwork/image/leak_write.png') no-repeat;
+}
+@media (min-width: 1200px) {
+    .row  .col-lg-2 {
+        width: 15.66666667%;
+    }
+}
+
+/*
+ * 课程添加页面样式
+ */
+.producer{
+    display: block;
+    float: left;
+    width: 100%;
+    height: 35px;
+    border: 1px #000 solid;
+    line-height: 35px;
+    text-align: center;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+.producer .delete-icon{
+    position: absolute;
+    background: url("/filedata/image/delete.png") no-repeat;
+    top: -6px;
+    right: 10px;
+    height: 16px;
+    display: block;
+    width: 16px;
+}
+
+/**
+ * 课程进度录入页面样式
+ */
+.myModal {
+    padding-right: 0px !important;
+}
+.myModal .modal-md {
+    margin-top: 150px;
+}
+
+.entry-link-form {
+    margin: 20px;
+    padding: 0px;
+}
+#ex1Slider .slider-selection {
+    background: #BABABA;
+}
+
+/**
+ * 课程附件详情页样式
+ */
+.course-annex-view iframe {
+    border: none;
+    height: 550px;
+    padding: 0px;
+   
+}
+.course-annex-view iframe::-webkit-scrollbar { 
+    width:0px;
+    height:0px;
+}

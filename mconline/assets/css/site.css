@@ -1,0 +1,209 @@
+.wrap > .container,
+.site-index {
+   width: 100%;
+   margin: 0;
+   padding: 0;
+}
+
+.site-index .mconline {
+    width: 100%;
+    min-height: 914px;
+    background-size: cover;
+    background-position: center 0;
+    background-repeat: no-repeat;
+    background-color: #ebebeb;
+}
+
+.mconline .container {
+    width: 750px;
+    position: relative;
+}
+
+.mconline .CHS {
+    margin-bottom: -15px;
+    display: block;
+}
+
+.mconline .EN {
+    margin-top: -15px;
+    display: block;
+    opacity: 0.5
+}
+
+.mconline .platform {
+    position: relative;
+    top: 280px;
+    font-size: 0px;
+}
+
+.mconline .platform .logo {
+    width: 220px;
+    display: inline-block;
+}
+
+.mconline .platform .name {
+    height: 238px;
+    text-align: left;
+    margin-left: 15px;
+    display: inline-block;
+}
+
+.mconline .platform .CHS {
+    font-size: 45px;
+    color: #58646b;
+}
+
+.mconline .platform .EN {
+    font-size: 20px;
+    color: #65727a;
+}
+
+.mconline .menu {
+    width: 100%;
+    position: relative;
+    top: 248px;
+    font-size: 0px;
+    border-bottom: 2px #ffffff solid;
+}
+
+.mconline .menu .modules {
+    margin-left: 115px;
+    position: relative;
+    display: inline-block;
+}
+
+.mconline .menu .classroom {
+    height: 105px;
+    padding: 20px 0;
+    font-size: 0px;
+}
+
+.mconline .menu .line-y {
+    width: 2px;
+    height: 45px;
+    position: absolute;
+    top: 15px;
+    right: -57.5px;
+    margin: 20px 0;
+    background-color: #a9b4bb;
+}
+
+.mconline .menu .modules .icon {
+    width: 67px;
+    float: left;
+}
+
+.mconline .menu .modules .name {
+    height: 60px;
+    margin: 10px 0 10px 20px;
+    display: inline-block;
+}
+
+.mconline .menu .modules .CHS {
+    font-size: 25px;
+    color: #65727a;
+}
+
+.mconline .menu .modules .EN {
+    font-size: 14px;
+    color: #a9b4bb;
+}
+
+.mconline .menu .line-x {
+    width: 220px;
+    height: 2px;
+    position: relative;
+    bottom: -2px;
+    left: 0px;
+    overflow: hidden;
+    background-color: #a9b4bb;
+}
+
+.mconline .menu .line-x div {
+    width: 110px;
+    height: 2px;
+    position: absolute;
+    background-color: #ffffff;
+}
+
+.mconline .menu .line-left {
+    left: 0;
+}
+
+.mconline .menu .line-right {
+    right: 0;
+}
+
+/************************************登录页样式*********************************/
+.site-login .mconline {
+    width: 100%;
+    min-height: 914px;
+    background-size: cover;
+    background-position: center 0;
+    background-repeat: no-repeat;
+    background-color: #ebebeb;
+}
+
+.site-login .mconline .platform {
+    width: 422px;
+    height: 450px;
+    padding: 40px;
+    border-radius: 23px;
+    background-size: cover;
+    background-position: center 0;
+    background-repeat: no-repeat;
+    position: relative;
+    top: 170px;
+    font-size: 0px;
+}
+
+.site-login .mconline .platform .logo {
+    width: 70px;
+    height: 80px;
+    float: left;
+    display: inline-block;
+}
+
+.site-login .mconline .platform .name {
+    height: auto;
+    text-align: left;
+    margin-left: 15px;
+    float: left;
+    display: inline-block;
+    position: relative;
+    top: 10px;
+}
+
+.site-login .mconline .platform .CHS {
+    font-size: 30px;
+    color: #58646b;
+}
+
+.site-login .mconline .platform .EN {
+    font-size: 15px;
+    color: #65727a;
+}
+
+.site-login .mconline .platform .frame {
+    width: 100%;
+    position: relative;
+    font-size: 14px;
+}
+
+.platform .frame .attribute{
+     margin-top: 21px;
+     padding-left: 10px !important;
+     padding-right: 10px !important;
+}
+
+.platform .frame .icon{
+    width:40px !important;
+    padding:0px !important;
+    left: 7px;
+    z-index: 100
+}
+.platform .frame .button{
+    margin-top: 55px;
+    margin-left: 35px;
+    margin-right: 35px;
+}

@@ -1,0 +1,207 @@
+/************************************首页样式***********************************/
+body .wrap > .content,
+.site-index {
+   width: 100%;
+}
+
+.site-index .course {
+    width: 100%;
+    padding: 60px 0px;
+    text-align: center;
+    background: url("/filedata/site/image/wap_site_homebg.jpg");
+    background-repeat: no-repeat;
+    background-size:cover;
+    background-position: center 0;
+}
+
+.course .CHS {
+    font-size: 30px;
+    color: #58646b;
+    margin-bottom: -15px;
+    display: block;
+}
+
+.course .EN {
+    font-size: 12px;
+    color: #65727a;
+    margin-top: -15px;
+    display: block;
+    opacity: 0.5
+}
+
+ .site-home-jumbotron{
+    width: 100%;
+    padding: 20px 0px;
+}
+.site-home-circlebox{
+    opacity: 1;
+}
+.site-home-introduction{
+    width: 210px;
+    height: 70px;
+    margin: 0px auto;
+}
+.site-home-circlebox a{
+    display: block;
+    padding: 0px 15px;
+    float: left;
+}
+.site-home-circlebox a:hover, a:focus{
+    color: #fff;
+    text-decoration: none;
+}
+.site-home-circle{
+    width: 70px;
+    height: 70px;
+    margin: 0px auto;
+    font-family: 'FZLTCXHJW';
+    color: #fff;
+    text-align: center;
+    line-height: 70px;
+    letter-spacing: 0px;
+    background-color: #3f99ce;
+}
+.ciricle-num{
+    width: 100%;
+    font-size: 25px;
+    display: block
+}
+.num-words{
+    font-size: 12px;
+}
+.icon{
+    position: relative;
+    top: -85px;
+    right: -25px;
+    font-size: 15px;
+    opacity: 0;
+}
+.new-icon{
+    width: 29px;
+    height: 14px;
+    display: block;
+    position: relative;
+    top: -55px;
+    right: 25px;
+    background: url("/filedata/site/image/icon_1-5.png");
+    opacity: 0;
+}
+.site-home-words{
+    height: 70px;
+    padding: 15px 0px;
+    float: left;
+    color: #3f98ce;
+    font-weight: 500;
+    text-align: left;
+}
+/*.color-replace{
+    color: #3f98ce;
+}*/
+.site-home-words-ch{
+    font-size: 16px;
+}
+.site-home-words-en{
+    font-size: 14px;
+    opacity: 0.5;
+}
+.line-box{
+    margin: 5px 0;
+}
+.line{
+    border-left-style: solid;  
+    border-left-color: #bdd8e9;  
+    border-left-width: 1px;  
+    height: 20px;  
+    margin-left: 50px;  
+}
+.subset-circle{
+    width: 50px;
+    height: 50px;
+    margin: 0 auto;
+    font-family: 'FZLTCXHJW';
+    color: #fff;
+    text-align: center;
+    line-height: 50px;
+    letter-spacing: 0px;
+    background-color: #3f99ce;
+}
+.subset-line{
+    height: 10px;
+}
+
+/*************************************登录页样式*********************************/
+.site-login .course {
+    width: 100%;
+    min-height: 567px;
+    background-image: url("/filedata/site/image/site_loginbg.jpg");
+    background-size: cover;
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    background-color: #ebebeb;
+}
+
+.site-login .course .platform {
+    width: 100%;
+    position: relative;
+    top: 120px;
+    font-size: 0px;
+}
+
+.site-login .course .platform .name {
+    height: auto;
+    text-align: center;
+    position: relative;
+}
+
+.site-login .course .platform .CHS {
+    font-size: 30px;
+    color: #58646b;
+}
+
+.site-login .course .platform .EN {
+    font-size: 12px;
+    color: #65727a;
+}
+
+.site-login .course .platform .frame {
+    width: 100%;
+    position: relative;
+    font-size: 14px;
+}
+
+.site-login .course .platform .frame .attribute {
+     margin-top: 21px;
+     padding-left: 10px !important;
+     padding-right: 10px !important;
+}
+
+.site-login .course .platform .frame .icon {
+    width:40px !important;
+    padding:0px !important;
+    top: 0;
+    left: 7px;
+    opacity: 1;
+    z-index: 100;
+}
+
+.site-login .course .platform .frame .button {
+    margin-top: 55px;
+    margin-left: 35px;
+    margin-right: 35px;
+}
+
+/*************************************公共部分**********************************/
+@font-face{
+    font-family: '方正细倩_GBK';
+    src: url('/filedata/site/font/fangzhengxiqian.woff') format('woff'),
+         url('/filedata/site/font/fangzhengxiqian.ttf') format('ttf'),  
+         url('/filedata/site/font/fangzhengxiqian.eot') format('eot'),  
+         url('/filedata/site/font/fangzhengxiqian.svg') format('svg');
+}
+@font-face{
+    font-family: 'FZLTCXHJW';
+    src: url('/filedata/site/font/FZLTCXHJW.ttf') format('ttf'),
+         url('/filedata/site/font/FZLTCXHJW.svg') format('svg'),
+         url('/filedata/site/font/FZLTCXHJW.woff') format('woff'),
+         url('/filedata/site/font/FZLTCXHJW.eot') format('eot');
+}

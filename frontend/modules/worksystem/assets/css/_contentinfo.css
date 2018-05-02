@@ -1,0 +1,46 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2017-6-28, 14:13:55
+    Author     : Kiwi°
+*/
+
+.worksystem .contentinfo-table{
+    width: 80%;
+    margin: 0 auto;
+}
+@media (max-width: 480px) {
+    .worksystem .contentinfo-table{
+        width: 100%;
+        margin: 0 auto;
+    }
+}
+.worksystem .price {
+    width: 55px;
+}
+
+.worksystem .number {
+    width: 55px;
+}
+.worksystem .prompt {
+    float: left;
+}
+.worksystem .budget-cost {
+    float: right;
+    font-size: 16px;
+    font-weight: bold;
+}
+.worksystem .cost {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: right;
+}
+.worksystem .contentinfo .control-label {
+    color: #999;
+    padding: 15px 10px !important; 
+    margin: 0px;
+    font-weight: normal;
+}

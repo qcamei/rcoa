@@ -1,0 +1,76 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2017-6-27, 10:34:07
+    Author     : Kiwi°
+*/
+
+/** 
+ *  footer 导航样式
+ */
+
+
+.mcbs-view .footer-navbar{
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    background: #2e6da4;
+    color: #ffffff;
+    z-index: 1010;
+    height: 50px;
+    margin-top: -10px;
+}
+/** 小屏不显示文字 */
+@media (max-width: 768px) {
+    .mcbs-view .footer-navbar .footer-menu-item{
+        width: 50px;
+    }
+}
+/** 大屏显示文字 */
+@media (min-width: 768px) {
+    .mcbs-view .footer-navbar .footer-menu-item{
+        width: 100px;
+    }
+}
+/** 导航菜单 */
+.mcbs-view .footer-navbar .footer-menu-item{
+    display: inline-block;
+    height: 50px;
+    width: 200px;
+    text-align: center;
+    line-height: 50px;
+    color: #000;
+    float: right;
+    font-size: 18px;
+}
+/** 导航菜单下img */
+.mcbs-view .footer-navbar .footer-menu-item img{
+    margin-right: 15px;
+}
+/** 导航菜单名称 */
+.mcbs-view .footer-navbar .footer-menu-item .menu-name{
+    margin-left: 5px;
+}
+/** 导航菜单选中 */
+.mcbs-view .footer-navbar .footer-menu-bg{
+    background-color: #fff;
+}
+/** 导航菜单子菜单--靠右菜单 */
+.mcbs-view .footer-navbar .submenu-right{
+    float: right;
+    font-weight: initial;
+    background-color: #2e6da4 !important;
+}
+
+/** 水平分隔线 */
+.mcbs-view .footer-navbar .footer-h-rule{
+    display: inline-block;
+    float: right;
+    border-left: 1px #b1acac solid;
+    margin: 10px 1px;
+    height: 30px;
+}

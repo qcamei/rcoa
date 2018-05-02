@@ -1,0 +1,214 @@
+/* 
+    布局，版面的样式 （对应的样式层级，顶级前面统一加【模块名】）
+    例如：.mcqj .布局的样式名 {
+            样式...
+        }
+*/
+/*********************************filter页面**********************************/
+.filter {
+    width: 100%;
+    display: inline-block;
+    background-color: #f0f0f0; 
+}
+
+.filter .sort-order {
+    width: 110px;
+    float: left;
+    text-align: center;
+    line-height: 41px;
+}
+
+.filter .sort-order a{
+    width: 100px;
+    height: 41px;
+    display: block;
+    color: #666;
+    position: relative;
+}
+
+.filter .sort-order a:hover {
+    color: #3aa9db;
+    text-decoration: none;
+    border-bottom: 2px solid;
+    border-bottom-color: #3aa9db;
+}
+
+.filter .sort-order .active {
+    color: #3aa9db;
+    border-bottom: 2px solid;
+    border-bottom-color: #3aa9db;
+}
+
+.filter .sort-order .icon {
+    width: 23px;
+    height: 23px;
+    position: absolute;
+    top: 10px;
+    left:5px;
+    display: inline-block;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.filter .sort-order .icon-4 {
+    background-image: url("/filedata/study/icon/icon_4.png");
+}
+
+.filter .filter-choice {
+    float: right;
+    position: relative;
+    line-height: 43px;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.filter .filter-choice>input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    top: 13px;
+    left: -13px;
+    margin-top: 0;
+}
+
+.filter .filter-choice>label {
+    margin-right: 20px;
+    margin-bottom: 0px;
+    font-weight: normal;
+}
+
+/*********************************page页面**********************************/
+.page {
+    width: 100%;
+}
+
+.page-wrap {
+    width: 390px;
+    margin: 0px auto;
+    display: flex;
+}
+
+.page .page-wrap .page-num {
+    float: left;
+}
+
+.page .page-wrap .page-num span{
+    padding: 6px 4px;
+}
+
+.page .page-num .page-prev.disabled,
+.page .page-num .page-next.disabled {
+    background: #fff;
+    cursor: default;
+}
+
+.page .page-num a {
+    color: #666;
+    padding: 0 7px;
+    border: 1px solid #ddd;
+}
+
+.page .page-num .pagination > .active > a {
+    color: #fff;
+    border-color: #3aa9db;
+    background-color: #3aa9db;
+}
+
+.page .page-skip {
+    float: right;
+    margin-left: 5px;
+    line-height: 30px;
+}
+
+.page .page-skip .input-txt {
+    width: 36px;
+    height: 28px;
+    margin: 0 3px;
+    text-align: center;
+}
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden
+}
+
+.clearfix {
+    *zoom: 1
+}
+
+.page .page-wrap .page-num, 
+.page .page-wrap .page-skip {
+    font-size: 10px;
+}
+
+.page .page-num a, 
+.page .page-skip b {
+    height: 30px;
+    margin: 0px 1.5px;
+    line-height: 30px;
+}
+
+.page .page-skip
+.btn-sm, .btn-group-sm > .btn{
+    line-height: 1.45;
+    margin-top: -2px;
+}
+
+/*********************************_footer页面**********************************/
+.scene .footer-navbar{
+    height: 50px;
+    margin-top: -10px;
+}
+/** 小屏不显示文字 */
+@media (max-width: 768px) {
+    .scene .footer-navbar .footer-menu-item{
+        width: 50px;
+    }
+}
+/** 大屏显示文字 */
+@media (min-width: 768px) {
+    .scene .footer-navbar .footer-menu-item{
+        width: 100px;
+    }
+}
+/** 导航菜单 */
+.scene .footer-navbar .footer-menu-item{
+    display: inline-block;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    color: #000;
+}
+/** 导航菜单下img */
+.scene .footer-navbar .footer-menu-item > img{
+    width: 24px;
+    height: 24px;
+    margin-top: -5px;
+}
+/** 导航菜单名称 */
+.scene .footer-navbar .footer-menu-item .menu-name{
+    margin-left: 5px;
+}
+/** 导航菜单选中 */
+.scene .footer-navbar .container > .footer-menu-bg {
+    background-color: #fff;
+    color: #000;
+}
+/** 导航菜单子菜单--靠右菜单 */
+.scene .footer-navbar .footer-menu-item.submenu-right {
+    float: right;
+    font-weight: initial;
+    color: #fff !important;
+    background-color: #2e6da4 !important;
+}
+/** 导航菜单a标签鼠标移上样式 */
+.scene .footer-navbar .container > a:hover, a:focus, a:active {
+    color: #000;
+    background-color: rgba(255, 255, 255, 0.46);;
+    text-decoration: blink;
+}
+.scene .footer-navbar .container > a {
+    color: #fff;
+}

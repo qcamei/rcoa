@@ -1,0 +1,163 @@
+/* 
+    布局，版面的样式 （对应的样式层级，顶级前面统一加【模块名】）
+    例如：.mcbs .布局的样式名 {
+            样式...
+        }
+*/
+
+/********* left-nav样式 ***********/
+.left-nav {
+    padding-top: 5px;
+}
+.left-nav .navigation {
+    width: 100%;
+    padding: 0;
+    margin-bottom: 0;
+    display: inline-block;
+    list-style: none;
+    text-align: center;
+}
+.left-nav .navigation>li>a {
+    padding: 15px;
+    font-size: 16px;
+    color: #999999;
+    display: inline-block;
+    line-height: 30px;
+    margin-left: -40px;
+}
+
+.left-nav .navigation li .fa {
+    width: 18px;
+    height: 20px;
+    float: left;
+    font-size: 18px;
+    margin-top: 5px;
+    margin-right: 3px;
+    display: inline-block;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.left-nav .navigation>.active>a,
+.left-nav .navigation>li>a:hover {
+    color: #666666;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.left-nav .navigation>.active>a,
+.left-nav .navigation>li>a:focus {
+    color: #666666;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+/********* footer-nav样式 ***********/
+.footer-nav{
+    width: 100%;
+    background-color: #222;
+    height: 50px;
+    z-index: 1010;
+    left: 0;
+    bottom: 0;
+    position: fixed;
+}
+
+.footer-nav .fa {
+    width: 57px;
+    height: 50px;
+    line-height: 56px;
+    float: left;
+    font-size: 32px;
+    display: inline-block;
+}
+
+.footer-nav .create,.footer-nav .navigation{
+    display: inline-block;
+}
+
+.footer-nav .create{
+    padding-left: 8%;
+}
+
+.footer-nav .navigation {
+    text-align: center;
+    /*padding-left: 8%;*/
+}
+
+.footer-nav .footer-menu-item{
+    display: table-cell;
+}
+
+.footer-nav .navigation .footer-menu-item a{
+    color: #fff;
+}
+
+.footer-nav .navigation .active>a,
+.footer-nav .navigation .footer-menu-item>a:hover{
+    color: #222;
+    text-decoration: none;
+}
+.footer-nav .navigation .active>a,
+.footer-nav .navigation .footer-menu-item>a:focus{
+    color: #222;
+    text-decoration: none;
+}
+
+.footer-nav .navigation .active,
+.footer-nav .navigation .footer-menu-item:hover{
+    background-color: #dddddd;
+}
+.footer-nav .navigation .active,
+.footer-nav .navigation .footer-menu-item:focus{
+    background-color: #dddddd;
+}
+
+/********* title样式 ***********/
+.wrap .title {
+    position: fixed;
+    top: 50px;
+    left: 0px;
+    right: 0px;
+    height: 40px;
+    background: #2e6da4;
+    color: #ffffff;
+    padding-top: 10px;
+    z-index: 1000;
+}
+
+.create_title .course-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.create_title .breadcrumb-title {
+    padding: 0px;
+    margin-bottom: 20px;
+    margin-top: 0px;
+    list-style: none;
+    background-color: #2e6da4;
+    border-radius: 4px;
+}
+
+.create_title .breadcrumb a{
+    color: #fff;
+}
+
+.create_title .breadcrumb .active {
+    min-width: 80px;
+    color: #ccc;
+}
+
+/********* footer样式 ***********/
+.wrap .controlbar {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    height: 60px;
+    background: #2e6da4;
+    color: #ffffff;
+    padding-top: 15px;
+    z-index: 1010;
+}
