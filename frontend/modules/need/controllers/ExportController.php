@@ -22,7 +22,7 @@ class ExportController extends Controller
     }
     
     /**
-     * 成本导出
+     * 成本数据导出
      * @return mix
      */
     public function actionRun()
@@ -68,7 +68,7 @@ class ExportController extends Controller
     }
     
     /**
-     * 绩效导出
+     * 绩效数据导出
      * @return mix
      */
     public function actionBonusRun()
@@ -94,7 +94,7 @@ class ExportController extends Controller
     }
 
     /**
-     * 个人明细导出
+     * 个人明细数据导出
      * @return mix
      */
     public function actionPersonalRun()
