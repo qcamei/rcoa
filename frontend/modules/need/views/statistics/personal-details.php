@@ -122,7 +122,12 @@ $radioType = [
                     ]),
                     'layout' => "{items}\n{summary}\n{pager}",
                     'columns' => [
-                        ['class' => 'yii\grid\SerialColumn'],
+                        [
+                            'class' => 'yii\grid\SerialColumn',
+                            'headerOptions' => [
+                                'width' => '40px'
+                            ],
+                        ],
                         [
                             'label' => Yii::t('app', 'Business'),
                             'value' => function ($data){
@@ -181,10 +186,19 @@ $radioType = [
                             'label' => Yii::t('app', '{Finish}{Time}',['Finish' => Yii::t('app', 'Finish'), 'Time' => Yii::t('app', 'Time')]),
                             'value' => function ($data){
                                 return !empty($data['finish_time']) ? date('Y-m-d H:i',$data['finish_time']) : null;
-                            }
+                            },
+                            'headerOptions' => [
+                                'class' => 'hidden-xs'
+                            ],
+                            'contentOptions' => [
+                                'class' => 'hidden-xs'
+                            ],
                         ],
                         [
                             'label' => Yii::t('app', 'Receive By'),
+                            'headerOptions' => [
+                                'width' => '80px'
+                            ],
                             'value' => function ($data){
                                 return $data['nickname'];
                             }
@@ -197,6 +211,9 @@ $radioType = [
                         ],
                         [
                             'class' => 'yii\grid\ActionColumn',
+                            'headerOptions' => [
+                                'width' => '30px'
+                            ],
                             'template' => '{view}',
                             'buttons' => [
                                 'view' => function ($url, $data, $key) {
@@ -226,7 +243,12 @@ $radioType = [
                     ]),
                     'layout' => "{items}\n{summary}\n{pager}",
                     'columns' => [
-                        ['class' => 'yii\grid\SerialColumn'],
+                        [
+                            'class' => 'yii\grid\SerialColumn',
+                            'headerOptions' => [
+                                'width' => '40px'
+                            ],
+                        ],
                         [
                             'label' => Yii::t('app', 'Layer ID'),
                             'value' => function ($data){
@@ -319,6 +341,9 @@ $radioType = [
                         ],
                         [
                             'class' => 'yii\grid\ActionColumn',
+                            'headerOptions' => [
+                                'width' => '30px'
+                            ],
                             'template' => '{view}',
                             'buttons' => [
                                 'view' => function ($url, $data, $key) {
