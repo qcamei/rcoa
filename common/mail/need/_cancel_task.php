@@ -30,5 +30,5 @@ use yii\helpers\Html;
 <div class="normal">取消人：<?= Html::encode(Yii::$app->user->identity->nickname) ?></div>
 
 <div class="normal">取消时间：<?= Html::encode(date('Y-m-d H:i')) ?></div>
-s
+
 <div class="highlight">备注：<?= Html::encode($results['remarks']) ?></div>

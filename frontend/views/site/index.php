@@ -26,11 +26,11 @@ $this->title = '课程建设工作平台';
             <div class="container">
                 <!--需求-->
                 <div class="col-lg-3 modules">
-                    <a href="/demand/default">
+                    <a href="/need/default">
                         <div class="circle img-circle">
                             <?= Html::img(['/filedata/site/image/icon_1-1.png']) ?>
                             <div class="circle-bg img-circle">
-                                <span class="number"><span class="timer" data-to="<?= $demand; ?>" data-speed="550">0</span><span class="unit">个</span></span>
+                                <span class="number"><span class="timer" data-to="<?= $need; ?>" data-speed="550">0</span><span class="unit">个</span></span>
                                 <span class="icon">+</span>
                             </div>
                         </div>
@@ -42,7 +42,7 @@ $this->title = '课程建设工作平台';
                     </div>
                 </div>
                 <!--开发-->
-                <div class="col-lg-3 modules">
+<!--                <div class="col-lg-3 modules">
                     <a href="/teamwork/default">
                         <div class="circle img-circle">
                             <?= Html::img(['/filedata/site/image/icon_1-2.png']) ?>
@@ -56,7 +56,7 @@ $this->title = '课程建设工作平台';
                         <p><span class="CHS">开发</span></p>
                         <span class="EN">Development</span>
                     </div>
-                </div>
+                </div>-->
                 <!--任务-->
                 <div class="col-lg-3 netbutton">
                     <a href="javascript:;">

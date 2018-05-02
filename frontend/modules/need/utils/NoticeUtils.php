@@ -30,12 +30,14 @@ class NoticeUtils {
      * @param NeedTask $model
      * @param string $mode                    标题
      * @param string $views                   视图
+     * @param array $results                  结果
      */
-    public static function sendAuditByNotification($model, $title, $views)
+    public static function sendAuditByNotification($model, $title, $views, $results = [])
     {
         //传进view 模板参数
         $params = [
             'model' => $model,
+            'results' => $results,
         ];
         //主题 
         $subject = self::$subjectModule. $title;

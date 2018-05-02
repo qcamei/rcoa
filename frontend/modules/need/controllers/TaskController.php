@@ -226,16 +226,16 @@ class TaskController extends Controller
     {
         $model = $this->findModel($id);
         
-        if($this->getIsHasReceiveToDeveloper()){
+//        if($this->getIsHasReceiveToDeveloper()){
             if(!$model->getIsWaitReceive()){
                 throw new NotFoundHttpException('该任务为' . $model->getStatusName());
             }
             if($model->is_del){
                 throw new NotFoundHttpException('该任务已取消');
             }
-        }else{
-            throw new NotFoundHttpException('无权限访问');
-        }
+//        }else{
+//            throw new NotFoundHttpException('无权限访问');
+//        }
         
         ActionUtils::getInstance()->ReceiveNeedTask($model);
         return $this->redirect(['view', 'id' => $model->id]);
@@ -347,7 +347,7 @@ class TaskController extends Controller
                     throw new NotFoundHttpException('无权限访问');
                 }
             }
-            if($model->status > NeedTask::STATUS_WAITRECEIVE ){
+            if($model->status > NeedTask::STATUS_WAITRECEIVE){
                 if($model->receive_by != \Yii::$app->user->id){
                     throw new NotFoundHttpException('无权限访问');
                 }

@@ -361,6 +361,12 @@ class ActionUtils
             if($model->save(false, ['is_del'])){
                 $this->saveNeedTaskLog(['action' => '删除', 'title'=> '任务管理', 
                     'content' => $post['remarks'], 'need_task_id' => $model->id]);
+                if($model->status < NeedTask::STATUS_WAITRECEIVE && !empty($model->audit_by)){
+                    NoticeUtils::sendAuditByNotification($model, '需求取消', 'need/_cancel_task', $post);
+                }
+                if($model->status > NeedTask::STATUS_WAITRECEIVE){
+                    NoticeUtils::sendCreateByNotification($model, '需求取消', 'need/_cancel_task', $post);
+                }
             }else{
                 throw new Exception($model->getErrors());
             }
@@ -635,22 +641,16 @@ class ActionUtils
      */
     private function saveNeedAttachments($needTaskId, $files)
     {
-        //获取已经存在的需求附件
-        $needAttrs = NeedAttachments::findAll(['is_del' => 0, 'need_task_id' => $needTaskId]);
-        $upload_file_ids = ArrayHelper::getColumn($needAttrs, 'upload_file_id');
-        
+        //删除所有已存在的附件
+        Yii::$app->db->createCommand()->update(NeedAttachments::tableName(), ['is_del' => 1], [
+            'need_task_id' => $needTaskId])->execute();
         //循环组装保存新的附件
         $attrFiles = [];
-        if(!empty($files) && !empty(array_filter($files))){
+        if(!empty($files)){
             foreach ($files as $index => $file_id) {
-                if(!in_array($file_id, $upload_file_ids) && $file_id != null){
-                    $attrFiles[] = [
-                        'need_task_id' => $needTaskId,  'upload_file_id' => $file_id,
-                    ];
-                }else{
-                    Yii::$app->db->createCommand()->update(NeedAttachments::tableName(), ['is_del' => 1], [
-                        'need_task_id' => $needTaskId, 'upload_file_id' => $file_id])->execute();
-                }
+                $attrFiles[] = [
+                    'need_task_id' => $needTaskId,  'upload_file_id' => $file_id,
+                ];
             }
         }
         //添加

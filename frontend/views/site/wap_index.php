@@ -22,9 +22,9 @@ $this->title = '课程建设工作平台';
         </div>
         <div class="col-xs-12 site-home-circlebox">
             <div class="site-home-introduction">
-                <a href="/demand/default">
+                <a href="/need/default">
                     <div class="site-home-circle img-circle">
-                        <span class="ciricle-num" id="count-number" ><span class="timer" data-to="<?= $demand; ?>" data-speed="550">0</span><span class="num-words">个</span></span>
+                        <span class="ciricle-num" id="count-number" ><span class="timer" data-to="<?= $need; ?>" data-speed="550">0</span><span class="num-words">个</span></span>
                         <span class="icon">+</span>
                     </div>
                 </a>
@@ -40,7 +40,7 @@ $this->title = '课程建设工作平台';
             </div>  
         </div>
         
-        <div class="col-xs-12 site-home-circlebox">
+<!--        <div class="col-xs-12 site-home-circlebox">
             <div class="site-home-introduction">
                 <a href="/teamwork/default">
                     <div class="site-home-circle img-circle">
@@ -57,7 +57,7 @@ $this->title = '课程建设工作平台';
             <div class="site-home-introduction" style="height: auto;">  
                 <div class="line"></div>
             </div>  
-        </div>
+        </div>-->
         
         <div class="col-xs-12 site-home-circlebox">
             <div class="site-home-introduction">

@@ -379,9 +379,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'buttons' => [
                     'view' => function ($url, $model) use($isHasReceive){
                         /* @var $model NeedTask */
-                        $colour = $model->getIsAuditing() && $model->audit_by == Yii::$app->user->id ? 'btn-info' : (
-                                $model->getIsWaitReceive() && $isHasReceive ? 'btn-primary' : 
-                                ($model->getIsChecking() && $model->created_by == Yii::$app->user->id ? 'btn-success' : 'btn-default'));
+                        $colour = (($model->getIsAuditing()) && $model->audit_by == Yii::$app->user->id) || ($model->getIsChangeAudit() && $model->created_by == Yii::$app->user->id) ? 'btn-info' : (
+                                $model->getIsWaitReceive() && $isHasReceive  ? 'btn-primary' : 
+                                (($model->getIsChecking() && $model->created_by == Yii::$app->user->id) || ($model->getIsChangeCheck() && $model->receive_by == Yii::$app->user->id) ? 'btn-success' : 'btn-default'));
                         $options = [
                             'class' => 'btn ' . $colour . ' btn-sm',
                         ];

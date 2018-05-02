@@ -3,6 +3,7 @@ namespace frontend\controllers;
 
 use common\models\demand\DemandTask;
 use common\models\LoginForm;
+use common\models\need\NeedTask;
 use common\models\scene\SceneSite;
 use common\models\teamwork\CourseManage;
 use common\models\User;
@@ -79,13 +80,13 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $detect = new MobileDetect();
-        $demand = $this->getDemandTaskNewCount(DemandTask::$defaultStatus);
-        $showNewIcon = $this->getDemandTaskNewCount(DemandTask::STATUS_UNDERTAKE);
+        $need = $this->getNeedTaskNewCount(DemandTask::$defaultStatus);
+        $showNewIcon = $this->getNeedTaskNewCount(DemandTask::STATUS_UNDERTAKE);
         $develop = $this->getDevelopNewCount();
         $sceneSite = $this->getSceneSiteCount();
         
         return $this->render(!$detect->isMobile() ? 'index' : 'wap_index',[
-            'demand' => $demand <= 999 ? $demand : 999  ,
+            'need' => $need <= 999 ? $need : 999  ,
             'develop' => $develop <= 999 ? $develop : 999,
             'sceneSite' => $sceneSite <= 999 ? $sceneSite : 999,
             'showNewIcon' => $showNewIcon,
@@ -258,12 +259,12 @@ class SiteController extends Controller
     /**
      * 获取所有新的需求任务总数
      */
-    public function getDemandTaskNewCount($status)
+    public function getNeedTaskNewCount($status)
     {
         return  DemandTask::find()
-                ->select(['Demand_task.id'])
-                ->from(['Demand_task' => DemandTask::tableName()])
-                ->where(['Demand_task.status' => $status])
+                ->select(['NeedTask.id'])
+                ->from(['NeedTask' => NeedTask::tableName()])
+                ->where(['NeedTask.status' => $status])
                 ->count();
     }
    
