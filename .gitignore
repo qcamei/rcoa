@@ -1,4 +1,42 @@
+# yii console command
+/yii
+
+# phpstorm project files
+.idea
+
+# netbeans project files
+nbproject
+
+# zend studio for eclipse project files
+.buildpath
+.project
+.settings
+
+# windows thumbnail cache
+Thumbs.db
+
+# composer vendor dir
+/vendor
+
+# composer itself is not needed
+composer.phar
+
+# Mac DS_Store Files
+.DS_Store
+
+# phpunit itself is not needed
+phpunit.phar
+# local phpunit config
+/phpunit.xml
 /frontend/web/assets/
-/frontend/runtime/
+/frontend/modules/teamwork/components/EditItem[[]暂时保留].php
+/frontend/modules/teamwork/components/ItemListGridView[[]暂时保留].php
 /backend/web/assets/
 /backend/runtime/
+/frontend/runtime/
+/backend/modules/runtime/
+/frontend/web/frontend/
+/web/assets/
+/common/wskeee/notification/cache/
+/mconline/runtime/
+/mconline/web/assets/
