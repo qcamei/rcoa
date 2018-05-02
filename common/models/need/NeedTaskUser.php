@@ -2,8 +2,10 @@
 
 namespace common\models\need;
 
+use common\models\User;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
@@ -17,9 +19,29 @@ use yii\db\ActiveRecord;
  * @property int $is_del                是否删除：0否 1是
  * @property string $created_at         创建时间
  * @property string $updated_at         更新时间
+ * 
+ * @property NeedTask $needTask         获取需求任务
+ * @property User $user                 获取用户
  */
 class NeedTaskUser extends ActiveRecord
 {
+    /** 只读权限 */
+    const READONLY = 0;
+    /** 编辑权限 */
+    const EDIT = 1;
+    /** 全部权限 */
+    const ALL = 5;
+    
+    /**
+     * 权限名称
+     * @var  array
+     */
+    public static $privilegeMap = [
+        self::READONLY => '只读',
+        self::EDIT => '编辑',
+        self::ALL => '全部',
+    ];
+    
     /**
      * @inheritdoc
      */
@@ -47,9 +69,9 @@ class NeedTaskUser extends ActiveRecord
             [['need_task_id'], 'required'],
             [['performance_percent'], 'number'],
             [['privilege', 'is_del', 'created_at', 'updated_at'], 'integer'],
-            [['user_id'], 'string', 'max' => 36],
+            //[['user_id'], 'string', 'max' => 36],
             [['need_task_id'], 'string', 'max' => 32],
-            [['user_id', 'need_task_id'], 'unique', 'targetAttribute' => ['user_id', 'need_task_id']],
+            //[['user_id', 'need_task_id'], 'unique', 'targetAttribute' => ['user_id', 'need_task_id']],
         ];
     }
 
@@ -68,5 +90,23 @@ class NeedTaskUser extends ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+    
+    /**
+     * 
+     * @return ActiveQuery
+     */
+    public function getNeedTask()
+    {
+        return $this->hasOne(NeedTask::class, ['id' => 'need_task_id']);
+    }
+    
+    /**
+     * 
+     * @return ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 }

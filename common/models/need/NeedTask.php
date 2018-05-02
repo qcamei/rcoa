@@ -23,10 +23,10 @@ use yii\db\ActiveRecord;
  * @property string $task_name      需求名称
  * @property int $level             等级：0普通 1加急
  * @property double $performance_percent 绩效比值
- * @property string $need_time      需求时间
- * @property string $finish_time    完成时间
- * @property int $status        状态：100创建中 200审核中 201审改中 300待承接 301待开始 302开发中 400验收中 401验改中 500已完成
- * @property int $is_del        是否取消：0否 1是
+ * @property integer $need_time      需求时间
+ * @property integer $finish_time    完成时间
+ * @property integer $status        状态：100创建中 200审核中 201审改中 300待承接 301待开始 302开发中 400验收中 401验改中 500已完成
+ * @property integer $is_del        是否取消：0否 1是
  * @property string $save_path          成品路径
  * @property string $plan_content_cost  预计内容费用
  * @property string $plan_outsourcing_cost  预计外包费用
@@ -48,9 +48,13 @@ use yii\db\ActiveRecord;
  * @property User $auditBy    获取审核人
  * @property User $createdBy    获取创建者
  * @property NeedContent[] $contents    获取开发内容
+ * @property NeedTaskUser[] $taskUsers    获取开发人员
+ * @property NeedAttachments[] $attachments    获取需求附件
  */
 class NeedTask extends ActiveRecord
 {
+    /* 临时创建场景 */
+    const SCENARIO_TEMP_CREATE = 'tempCreate';
     /** 普通等级 */
     const LEVEL_ORDINARY = 0;
     /** 加急等级 */
@@ -102,6 +106,21 @@ class NeedTask extends ActiveRecord
     ];
     
     /**
+     * 默认状态
+     * @var array 
+     */
+    public static $defaultMap = [
+        self::STATUS_CREATEING,
+        self::STATUS_AUDITING,
+        self::STATUS_CHANGEAUDIT,
+        self::STATUS_WAITRECEIVE,
+        self::STATUS_WAITSTART,
+        self::STATUS_DEVELOPING,
+        self::STATUS_CHECKING,
+        self::STATUS_CHANGECHECK,
+    ];
+    
+    /**
      * 进度
      * @var array 
      */
@@ -125,6 +144,19 @@ class NeedTask extends ActiveRecord
         return '{{%need_task}}';
     }
 
+    public function scenarios() {
+        return [
+            self::SCENARIO_DEFAULT => [
+                'business_id', 'layer_id', 'profession_id', 'course_id', 'task_name', 'level', 'performance_percent', 'need_time', 'content_type', 'booker_id',
+                'finish_time', 'status', 'is_del', 'save_path', 'plan_content_cost', 'plan_outsourcing_cost', 'reality_content_cost', 'reality_outsourcing_cost',
+                'des', 'receive_by', 'audit_by', 'created_by'
+            ],
+            self::SCENARIO_TEMP_CREATE => [
+                'id', 'company_id', 'created_by',
+            ],
+        ];
+    }
+    
     /**
      * @inheritdoc
      */
@@ -141,8 +173,9 @@ class NeedTask extends ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required'],
-            [['company_id', 'business_id', 'layer_id', 'profession_id', 'course_id', 'level', 'need_time', 'finish_time', 'status', 'is_del', 'created_at', 'updated_at'], 'integer'],
+            //[['id'], 'required'],
+            [['business_id', 'layer_id', 'profession_id', 'course_id', 'task_name', 'need_time'], 'required'],
+            [['company_id', 'business_id', 'layer_id', 'profession_id', 'course_id', 'level', 'finish_time', 'status', 'is_del', 'created_at', 'updated_at'], 'integer'],
             [['performance_percent', 'plan_content_cost', 'plan_outsourcing_cost', 'reality_content_cost', 'reality_outsourcing_cost'], 'number'],
             [['id'], 'string', 'max' => 32],
             [['task_name'], 'string', 'max' => 50],
@@ -183,6 +216,20 @@ class NeedTask extends ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+    
+    public function beforeSave($insert) 
+    {
+        if (parent::beforeSave($insert)) {
+            if($this->scenario != self::SCENARIO_TEMP_CREATE){
+                if(!is_numeric($this->need_time)){
+                    $this->need_time = strtotime($this->need_time);
+                }
+            }
+            return true;
+        }
+        
+        return false;
     }
     
     /**
@@ -263,7 +310,28 @@ class NeedTask extends ActiveRecord
      */
     public function getContents()
     {
-        return $this->hasMany(NeedContent::class, ['need_task_id' => 'id']);
+        return $this->hasMany(NeedContent::class, ['need_task_id' => 'id'])
+            ->where(['is_del' => 0])->orderBy(['sort_order' => SORT_ASC, 'is_new' => SORT_ASC]);
+    }
+    
+    /**
+     * 
+     * @return ActiveQuery
+     */
+    public function getTaskUsers()
+    {
+        return $this->hasMany(NeedTaskUser::class, ['need_task_id' => 'id'])
+            ->where(['is_del' => 0])->orderBy(['privilege' => SORT_DESC]);
+    }
+    
+    /**
+     * 
+     * @return ActiveQuery
+     */
+    public function getAttachments()
+    {
+        return $this->hasMany(NeedAttachments::class, ['need_task_id' => 'id'])
+            ->where(['is_del' => 0]);
     }
     
     /**
@@ -272,7 +340,7 @@ class NeedTask extends ActiveRecord
      */
     public function getIsDefault()
     {
-        return $this->status === self::STATUS_DEFAULT;
+        return $this->status == self::STATUS_DEFAULT;
     }
     
     /**
@@ -281,7 +349,7 @@ class NeedTask extends ActiveRecord
      */
     public function getIsCreateing()
     {
-        return $this->status === self::STATUS_CREATEING;
+        return $this->status == self::STATUS_CREATEING;
     }
     
     /**
@@ -290,7 +358,7 @@ class NeedTask extends ActiveRecord
      */
     public function getIsAuditing()
     {
-        return $this->status === self::STATUS_AUDITING;
+        return $this->status == self::STATUS_AUDITING;
     }
     
     /**
@@ -299,7 +367,7 @@ class NeedTask extends ActiveRecord
      */
     public function getIsChangeAudit()
     {
-        return $this->status === self::STATUS_CHANGEAUDIT;
+        return $this->status == self::STATUS_CHANGEAUDIT;
     }
     
     /**
@@ -308,7 +376,7 @@ class NeedTask extends ActiveRecord
      */
     public function getIsWaitReceive()
     {
-        return $this->status === self::STATUS_WAITRECEIVE;
+        return $this->status == self::STATUS_WAITRECEIVE;
     }
     
     /**
@@ -317,7 +385,7 @@ class NeedTask extends ActiveRecord
      */
     public function getIsWaitStart()
     {
-        return $this->status === self::STATUS_WAITSTART;
+        return $this->status == self::STATUS_WAITSTART;
     }
     
     /**
@@ -326,7 +394,7 @@ class NeedTask extends ActiveRecord
      */
     public function getIsDeveloping()
     {
-        return $this->status === self::STATUS_DEVELOPING;
+        return $this->status == self::STATUS_DEVELOPING;
     }
     
     /**
@@ -335,7 +403,7 @@ class NeedTask extends ActiveRecord
      */
     public function getIsChecking()
     {
-        return $this->status === self::STATUS_CHECKING;
+        return $this->status == self::STATUS_CHECKING;
     }
     
     /**
@@ -344,7 +412,7 @@ class NeedTask extends ActiveRecord
      */
     public function getIsChangeCheck()
     {
-        return $this->status === self::STATUS_CHANGECHECK;
+        return $this->status == self::STATUS_CHANGECHECK;
     }
     
     /**
@@ -353,7 +421,7 @@ class NeedTask extends ActiveRecord
      */
     public function getIsFinished()
     {
-        return $this->status === self::STATUS_FINISHED;
+        return $this->status == self::STATUS_FINISHED;
     }
   
     /**

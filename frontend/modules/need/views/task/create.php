@@ -1,12 +1,13 @@
 <?php
 
-use yii\helpers\Html;
+use common\models\need\NeedTask;
+use yii\web\View;
 
 
-/* @var $this yii\web\View */
-/* @var $model common\models\need\NeedTask */
+/* @var $this View */
+/* @var $model NeedTask */
 
-$this->title = Yii::t('app', 'Create Need Task');
+$this->title = Yii::t('app', 'Create');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Need Tasks'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -15,10 +16,17 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
+        'allBusiness' => $allBusiness,
+        'allLayer' => $allLayer,
+        'allProfession' => $allProfession,
+        'allCourse' => $allCourse,
+        'allAuditBy' => $allAuditBy,
+        'attFiles' => $attFiles,
     ]) ?>
 
 </div>
 
 <?= $this->render('_btngroup', [
-    'model' => $model
+    'model' => $model,
+    'params' => ['index'],
 ]) ?>

@@ -9,6 +9,56 @@
     padding: 7px 0 !important;
 }
 
+.table {
+    table-layout: fixed;
+}
+
+.table th {
+    vertical-align: middle !important;
+}
+
+.table td {
+    font-size: 13px;
+    vertical-align: middle !important;
+}
+
+div.des {
+    height:65px; 
+    vertical-align: middle; 
+    display:table-cell
+}
+
+div.tip {
+    padding: 8px;
+    color: #333;
+    background-color: #f2f2f2;
+}
+
+span.stamp {
+    font-size: 12px; 
+    color: #ccc; 
+    font-weight: normal;
+}
+
+.danger {
+    color: #c55;
+}
+.success {
+    color: #5cb85c;
+}
+.warning {
+    color: #f0ad4e;
+}
+.primary {
+    color: #3333ff;
+}
+
+.save-path {
+    padding: 0 0 15px; 
+    margin-bottom: 15px; 
+    border-bottom: 1px solid #ccc;
+}
+
 /***********************************搜索框样式***********************************/
 .search {
     padding: 0 !important;
@@ -23,7 +73,7 @@
     border: 1px #ccc solid;
     border-radius: 4px;
 }
-.search .input > .keyword {
+.search .input .keyword {
     height: auto;
     padding: 9px 12px;
     font-size: 14px;
@@ -69,6 +119,7 @@
 }
 .search .btngroup > a.arrow {
     float: left;
+    width: auto;
     height: 30px;
     margin: 5px 0px;
     padding: 5px 10px;
@@ -88,7 +139,7 @@
 }
 
 .collapse .search-frame .frame {
-    padding: 5px 0;
+    padding: 5px 0 !important;
 }
 .collapse .search-frame .form-group {
     margin: 0;
@@ -140,12 +191,12 @@
     right: 15px;
 }
 
-.frame .table {
+/*.frame .table {
     padding: 0;
     margin-bottom: 20px;
     font-size: 14px;
     border: 1px #ddd solid;
-}
+}*/
 
 .frame .table.right {
     min-height: 268px;
@@ -157,6 +208,66 @@
     max-height: 555px;
     overflow-y: auto;
     padding-bottom: 15px;
+}
+
+/**
+ * 状态阶段
+ */
+.phase{
+    float: left;
+    width: 60px;
+    padding: 11px 0;
+    border-radius: 5px;
+    text-align: center;
+}
+/**
+ * 状态阶段文字
+ */
+.phase .words {
+    margin-bottom: 0px; 
+    font-size: 14px;
+    color: #fff;
+}
+/**
+ * 状态阶段进度
+ */
+.phase .percent {
+    margin-bottom: 0px; 
+    font-size: 12px;
+    color: #fff;
+}
+/**
+ * 状态阶段箭头
+ */
+.arrow {
+    float: left;
+    width: 50px;
+    padding: 10px 5px 10px 2px
+}
+/**
+ * 状态阶段箭头大小
+ */
+.arrow > i {
+    font-size: 37px;
+}
+/**
+ * 状态已选阶段
+ */
+.has-to{
+    background-color: #f37b53;
+}
+
+/**
+ * 状态已选阶段【特殊情况下的样式】
+ */
+.has-to.danger{
+    background-color: #d9534f
+}
+/**
+ * 状态未选阶段
+ */
+.not-to {
+    background-color: #dddddd;
 }
 
 /*************************************首页 default-index**********************************/
@@ -292,4 +403,105 @@
     text-align: center;
     background-color: #ffffff;
     color: #666666;
+}
+
+.table .viewdetail-th {
+    color: #666666;
+    width: 10%;
+    font-weight: normal;
+    text-align: right;
+    min-width: 73px;
+    vertical-align: middle;
+}
+.table .viewdetail-th-head {
+    color: #000000;
+    text-align: left;
+    font-weight: bold;
+}
+.table .viewdetail-td {
+    min-width: 100px;
+    vertical-align: middle;
+}
+
+/***********************************内容首页************************************/
+.table-content {
+    margin: -10px 0 5px !important
+}
+.table-content td {
+    vertical-align: middle !important;
+}
+.table-content td > input {
+    width: 60px;
+    text-align: center;
+}
+.total-cost {
+    font-size: 14px;
+    text-align: right;
+}
+
+/***********************************内容表单************************************/
+.table-frame {
+    width: 100%;
+}
+.table-frame .rows,
+.table-frame .cols {
+    background-color: #f9f9f9;
+}
+.table-frame th {
+    text-align: center;
+}
+.table-frame td {
+    text-align: center;
+}
+
+.table-frame td > input {
+    float: left;
+    text-align: center;
+}
+
+.table-frame td > span {
+    float: right;
+    font-size: 13px;
+}
+
+/***********************************内容详情************************************/
+.table-view td {
+    color: #999;
+}
+
+.table-view td > span {
+    float: none;
+}
+
+.frame > div.tip {
+    margin: -20px 0 20px;
+}
+
+.frame > div.tip > span {
+    margin-right: 20px;
+}
+
+.frame > div.tip > span > i {
+    margin-right: 5px;
+    font-style: normal;
+}
+/**************************************最近联系*****************************************/
+.recent {
+    display: inline-block; 
+    width:60px;
+    height:60px;
+    margin: 0 0 5px;
+    font-size: 12px;
+    text-align: center;
+    border: 1px #ccc solid;
+    background-color:#fff;
+}
+
+.recent:hover {
+    cursor:pointer;
+}
+
+.recent.active {
+    border-color: #666;
+    background-color:#ddd;
 }

@@ -17,6 +17,9 @@ use yii\db\ActiveRecord;
  * @property string $created_by     创建者
  * @property string $created_at     创建时间
  * @property string $updated_at     更新时间
+ * 
+ * @property NeedTask $needTask     获取需求任务
+ * @property User $createdBy        获取创建者
  */
 class NeedTaskLog extends ActiveRecord
 {
@@ -67,5 +70,23 @@ class NeedTaskLog extends ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+    
+    /**
+     * 
+     * @return ActiveQuery
+     */
+    public function getNeedTask()
+    {
+        return $this->hasOne(NeedTask::class, ['id' => 'need_tsk_id']);
+    }
+    
+    /**
+     * 
+     * @return ActiveQuery
+     */
+    public function getCreatedBy()
+    {
+        return $this->hasOne(\common\models\User::class, ['id' => 'created_by']);
     }
 }

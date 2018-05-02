@@ -6,6 +6,7 @@ use common\models\workitem\Workitem;
 use common\models\workitem\WorkitemType;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
@@ -20,6 +21,9 @@ use yii\db\ActiveRecord;
  * @property int $is_del                是否显示:0不启用，1启用
  * @property string $created_at         创建时间
  * @property string $updated_at         更新时间
+ * 
+ * @property WorkitemType $workType     获取工作项类型
+ * @property Workitem $workitem         获取工作项
  */
 class NeedContentPsd extends ActiveRecord
 {
@@ -97,6 +101,17 @@ class NeedContentPsd extends ActiveRecord
     /**
      * 获取工作项
      * @return array
+     * 
+     * @return ActiveQuery
+     */
+    public function getWorkType()
+    {
+        return $this->hasOne(WorkitemType::class, ['id' => 'workitem_type_id']);
+    }
+    
+    /**
+     * 
+     * @return ActiveQuery
      */
     public function getWorkitem()
     {

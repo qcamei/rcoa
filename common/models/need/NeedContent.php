@@ -2,8 +2,11 @@
 
 namespace common\models\need;
 
+use common\models\workitem\Workitem;
+use common\models\workitem\WorkitemType;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
@@ -22,6 +25,10 @@ use yii\db\ActiveRecord;
  * @property string $created_by         创建人
  * @property string $created_at         创建时间
  * @property string $updated_at         更新时间
+ * 
+ * @property NeedTask $needTask         获取需求任务
+ * @property WorkitemType $workType     获取工作项类型
+ * @property Workitem $workitem         获取工作项
  */
 class NeedContent extends ActiveRecord
 {
@@ -76,5 +83,32 @@ class NeedContent extends ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+    
+    /**
+     * 
+     * @return ActiveQuery
+     */
+    public function getNeedTask()
+    {
+        return $this->hasOne(NeedTask::class, ['id' => 'need_tsk_id']);
+    }
+    
+    /**
+     * 
+     * @return ActiveQuery
+     */
+    public function getWorkType()
+    {
+        return $this->hasOne(WorkitemType::class, ['id' => 'workitem_type_id']);
+    }
+    
+    /**
+     * 
+     * @return ActiveQuery
+     */
+    public function getWorkitem()
+    {
+        return $this->hasOne(Workitem::class, ['id' => 'workitem_id']);
     }
 }

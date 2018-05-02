@@ -110,6 +110,10 @@ return [
     'Third Season' => '第三季',
     'Fourth Season' => '第四季',
     'Export' => '导出',
+    'Is New' => '新/改',
+    'Price' => '单价',
+    'Cost' => '成本',
+    'Plan Num' => '预计数量',
     
     //场景预约
     'Booker' => '预约人',
@@ -184,7 +188,7 @@ return [
     'Level' => '等级',
     'Employer' => '单位',
     'Attainment' => '成就',
-    'Cost' => '费用报酬',
+    //'Cost' => '费用报酬',
     'Compatibility' => '合作融洽度',
     'ProjectName' => '项目名称',
     
@@ -295,7 +299,7 @@ return [
     'Area' => '区域',
     'Manager' => '管理员',
     'Address' => '详细地址',
-    'Price' => '价格',
+    //'Price' => '价格',
     'Contact' => '联系人',
     'Picture' => '主图片',
     'Location' => '位置',
@@ -326,6 +330,25 @@ return [
     'Score' => '评分',
     'Photographer' => '摄影师',
     
+    //需求任务前端
+    'Basic' => '基本',
+    'Task Name' => '需求名称',
+    'Need Time' => '需求时间',
+    'Finish Time' => '完成时间',
+    'Performance Percent' => '绩效比值',
+    'Save Path' => '成品路径',
+    'Plan Content Cost' => '预算成本',
+    'Plan Outsourcing Cost' => '预算外包费用',
+    'Reality Content Cost' => '实际成本',
+    'Reality Outsourcing Cost' => '实际外包费用',
+    
+    //需求开发内容前端
+    'Need Tasks' => '需求任务',
+    'Reality Num' => '实际数量',
+    'Plan Cost' => '预计成本',
+    'Reality Cost' => '实际成本',
+    'D Value' => '差值',
+    'Contrast' => '对比',
     //需求任务后台
     'Template' => '模板',
     'Workitem' => '工作项',

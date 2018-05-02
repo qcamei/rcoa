@@ -2,10 +2,10 @@
 
 namespace common\models\need\searchs;
 
-use Yii;
+use common\models\need\NeedContent;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\need\NeedContent;
+use yii\helpers\ArrayHelper;
 
 /**
  * NeedContentSearch represents the model behind the search form of `common\models\need\NeedContent`.
@@ -42,6 +42,8 @@ class NeedContentSearch extends NeedContent
      */
     public function search($params)
     {
+        $this->need_task_id = ArrayHelper::getValue($params, 'need_task_id');
+        
         $query = NeedContent::find();
 
         // add conditions that should always apply here
@@ -61,20 +63,20 @@ class NeedContentSearch extends NeedContent
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
+            'need_task_id' => $this->need_task_id,
             'workitem_type_id' => $this->workitem_type_id,
             'workitem_id' => $this->workitem_id,
+            'is_new' => $this->is_new,
             'price' => $this->price,
             'plan_num' => $this->plan_num,
             'reality_num' => $this->reality_num,
+            'is_del' => 0,
+            'created_by' => $this->created_by,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'need_task_id', $this->need_task_id])
-            ->andFilterWhere(['like', 'is_new', $this->is_new])
-            ->andFilterWhere(['like', 'sort_order', $this->sort_order])
-            ->andFilterWhere(['like', 'is_del', $this->is_del])
-            ->andFilterWhere(['like', 'created_by', $this->created_by]);
+        $query->orderBy(['sort_order' => SORT_ASC, 'is_new' => SORT_ASC]);
 
         return $dataProvider;
     }
