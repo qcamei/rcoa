@@ -125,6 +125,10 @@
     border-radius: 4px;
 }
 
+.btn-margin-bottom{
+    margin-bottom: 8px !important;
+}
+
 /**
  * 详细页样式 
  */

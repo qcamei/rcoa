@@ -16,10 +16,9 @@ $this->title = Yii::t('rcoa', 'Layer ID');
 
 <div class="main college-index">
     
-    <p>
-        <?= ResourceHelper::a(Yii::t('app', '{Create}{Item ID}', 
-                ['Create' => Yii::t('app', 'Create'), 'Item ID' => Yii::t('app', 'Item ID')]), ['create'], ['class' => 'btn btn-success']); ?>
-    </p>
+    <?= ResourceHelper::a(Yii::t('app', '{Create}{Item ID}', 
+            ['Create' => Yii::t('app', 'Create'), 'Item ID' => Yii::t('app', 'Item ID')]), ['create'], ['class' => 'btn btn-success btn-margin-bottom']); ?>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,

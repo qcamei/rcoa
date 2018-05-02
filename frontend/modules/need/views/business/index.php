@@ -16,10 +16,9 @@ $this->title = '基础数据';//Yii::t('rcoa/basedata', 'Item Types');
 
 <div class="main item-type-index">
     
-    <p>
-        <?= ResourceHelper::a(Yii::t('app', '{Create}{Item Type ID}', 
-                ['Create' => Yii::t('app', 'Create'), 'Item Type ID' => Yii::t('app', 'Item Type ID')]), ['create'], ['class' => 'btn btn-success']); ?>
-    </p>
+    <?= ResourceHelper::a(Yii::t('app', '{Create}{Item Type ID}', 
+            ['Create' => Yii::t('app', 'Create'), 'Item Type ID' => Yii::t('app', 'Item Type ID')]), ['create'], ['class' => 'btn btn-success btn-margin-bottom']); ?>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,

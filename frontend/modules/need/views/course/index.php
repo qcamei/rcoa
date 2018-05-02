@@ -14,10 +14,9 @@ $this->title = Yii::t('app', 'Courses');
 ?>
 <div class="main course-index">
 
-    <p>
-        <?= ResourceHelper::a(Yii::t('app', '{Create}{Courses}', 
-                ['Create' => Yii::t('app', 'Create'), 'Courses' => Yii::t('app', 'Courses')]), ['create'], ['class' => 'btn btn-success']); ?>
-    </p>
+    <?= ResourceHelper::a(Yii::t('app', '{Create}{Courses}', 
+            ['Create' => Yii::t('app', 'Create'), 'Courses' => Yii::t('app', 'Courses')]), ['create'], ['class' => 'btn btn-success btn-margin-bottom']); ?>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,

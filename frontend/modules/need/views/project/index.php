@@ -14,10 +14,8 @@ $this->title = Yii::t('rcoa', 'Profession ID');
 ?>
 <div class="main project-index">
 
-    <p>
-        <?= ResourceHelper::a(Yii::t('app', '{Create}{Item Child ID}', 
-                ['Create' => Yii::t('app', 'Create'), 'Item Child ID' => Yii::t('app', 'Item Child ID')]), ['create'], ['class' => 'btn btn-success']); ?>
-    </p>
+    <?= ResourceHelper::a(Yii::t('app', '{Create}{Item Child ID}', 
+            ['Create' => Yii::t('app', 'Create'), 'Item Child ID' => Yii::t('app', 'Item Child ID')]), ['create'], ['class' => 'btn btn-success btn-margin-bottom']); ?>
     
     <?= GridView::widget([
         'dataProvider' => $dataProvider,

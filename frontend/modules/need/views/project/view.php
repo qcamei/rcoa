@@ -54,9 +54,9 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <h4><b><?= Yii::t('app', 'Courses') ?></b></h4>
     <p>
-        <?= ResourceHelper::a(Yii::t('app', '{Create} {Courses}',[
+        <?= ResourceHelper::a(Yii::t('app', '{Create}{Courses}',[
                 'Create' => Yii::t('app', 'Create'), 
-                'Course' => Yii::t('app', 'Courses')
+                'Courses' => Yii::t('app', 'Courses')
             ]), ['course/create', 'parent_id' => $model->id], ['class' => 'btn btn-success']);
         ?>
     </p>
