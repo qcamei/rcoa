@@ -145,8 +145,8 @@ class StatisticsController extends Controller
             'presonal' => $this->getTotalCostByPresonal($query),        //按人统计成本
             'businesss' => $this->getItemTyps(),    //行业
             'layers' => $this->getItems(),          //层次/类型
-            'professions' => $this->getChildrens($layer),
-            'courses' => $this->getChildrens($profession),
+            'professions' => $this->getChildrens($layer),   //专业/工种
+            'courses' => $this->getChildrens($profession),  //课程
             'items' => ['0' => '新建', '1' => '改造'],
         ]);
     } 
@@ -199,7 +199,7 @@ class StatisticsController extends Controller
     public static function getTotalCost($sourceQuery)
     {
         $selectName = 'SUM(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0) + '
-                . '(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
+                . '(COALESCE(NeedTask.reality_content_cost,0)) * NeedTask.performance_percent)';
         $totalCostQuery = clone $sourceQuery;
         $totalCostQuery->select(["{$selectName} AS total_cost"])
                 ->from(['NeedTask' => NeedTask::tableName()]);
@@ -214,7 +214,7 @@ class StatisticsController extends Controller
      */
     public static function getTotalBonus($sourceQuery)
     {
-        $selectName = 'SUM((COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
+        $selectName = 'SUM((COALESCE(NeedTask.reality_content_cost,0)) * NeedTask.performance_percent)';
         $totalBonusQuery = clone $sourceQuery;
         $totalBonusQuery->select(["{$selectName} AS total_bonus"])
                 ->from(['NeedTask' => NeedTask::tableName()]);
@@ -230,7 +230,7 @@ class StatisticsController extends Controller
     public static function getTotalCostByPresonal($sourceQuery)
     {
         $selectName = 'SUM(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0) + '
-                . '(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
+                . '(COALESCE(NeedTask.reality_content_cost,0)) * NeedTask.performance_percent)';
         $presonalQuery = clone $sourceQuery;
         $presonalQuery->select(['User.nickname AS name', "{$selectName} AS value"])
                 ->from(['NeedTask' => NeedTask::tableName()])
@@ -292,7 +292,7 @@ class StatisticsController extends Controller
     public static function getStatisticsByBusiness($sourceQuery)
     {
         $selectName = 'SUM(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0) + '
-                . '(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
+                . '(COALESCE(NeedTask.reality_content_cost,0)) * NeedTask.performance_percent)';
         $businessQuery = clone $sourceQuery;
         $businessQuery->select(['ItemType.name',"{$selectName} AS value"])
                     ->from(['NeedTask' => NeedTask::tableName()])
@@ -310,7 +310,7 @@ class StatisticsController extends Controller
     public static function getStatisticsByLayer($sourceQuery)
     {
         $selectName = 'SUM(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0) + '
-                . '(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
+                . '(COALESCE(NeedTask.reality_content_cost,0)) * NeedTask.performance_percent)';
         $layerQuery = clone $sourceQuery;
         $layerQuery->select(['FwItem.name',"{$selectName} AS value"])
                 ->from(['NeedTask' => NeedTask::tableName()])
@@ -328,7 +328,7 @@ class StatisticsController extends Controller
     public static function getStatisticsByProfession($sourceQuery)
     {
         $selectName = 'SUM(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0) + '
-                . '(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
+                . '(COALESCE(NeedTask.reality_content_cost,0)) * NeedTask.performance_percent)';
         $professionQuery = clone $sourceQuery;
         $professionQuery->select(['FwItem.name',"{$selectName} AS value"])
                     ->from(['NeedTask' => NeedTask::tableName()])
@@ -366,7 +366,7 @@ class StatisticsController extends Controller
      */
     public static function getBonusByPresonal($sourceQuery)
     {
-        $selectName = 'SUM((COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
+        $selectName = 'SUM((COALESCE(NeedTask.reality_content_cost,0)) * NeedTask.performance_percent)';
         $presonalQuery = clone $sourceQuery;
         $presonalQuery->select(['User.nickname AS name', "{$selectName} AS value"])
                 ->from(['NeedTask' => NeedTask::tableName()])
@@ -442,7 +442,7 @@ class StatisticsController extends Controller
     public static function getTaskCost($sourceQuery)
     {
         $selectName = 'SUM(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0) + '
-                . '(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
+                . '(COALESCE(NeedTask.reality_content_cost,0)) * NeedTask.performance_percent)';
         $businessQuery = clone $sourceQuery;
         $businessQuery->select(['NeedTask.id', 'ItemType.name AS business_name', 'Layer.name AS layer_name', 
                     'Profession.name AS Profession_name', 'Course.name AS course_name', 'NeedTask.task_name', 
@@ -465,9 +465,8 @@ class StatisticsController extends Controller
      */
     public static function getTaskBonus($sourceQuery)
     {
-        $selectCost = 'SUM(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0) + '
-                . '(COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
-        $selectBonus = 'SUM((COALESCE(NeedTask.reality_content_cost,0) + COALESCE(NeedTask.reality_outsourcing_cost,0)) * NeedTask.performance_percent)';
+        $selectCost = 'SUM(COALESCE(NeedTask.reality_content_cost,0))';
+        $selectBonus = 'SUM((COALESCE(NeedTask.reality_content_cost,0)) * NeedTask.performance_percent)';
         $businessQuery = clone $sourceQuery;
         $businessQuery->select(['NeedTask.id', 'Layer.name AS layer_name', 'Profession.name AS Profession_name', 
                     'Course.name AS course_name', 'NeedTask.task_name', 'NeedTask.finish_time', 'User.nickname',

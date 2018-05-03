@@ -132,10 +132,11 @@ $radioType = [
     <!--统计结果-->
     <div>
         <div class="summar-title">
-            <i class="fa fa-bar-chart"></i>&nbsp;总成本：
             <?php if($type == 0): ?>
-                 <span class="num">￥<?= empty($totalWorikitemCost['value']) ? '0.00' : $totalWorikitemCost['value']; ?></span>
+                <i class="fa fa-bar-chart"></i>&nbsp;总内容成本：
+                <span class="num">￥<?= empty($totalWorikitemCost['value']) ? '0.00' : $totalWorikitemCost['value']; ?></span>
             <?php else: ?>
+                <i class="fa fa-bar-chart"></i>&nbsp;总成本：
                 <span class="num">￥<?= empty($totalCost['total_cost']) ? '0.00' : $totalCost['total_cost']; ?></span>
             <?php endif;?>
         </div>
