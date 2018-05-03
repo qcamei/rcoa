@@ -22,7 +22,7 @@ return [
         'url' => 'http://ow365.cn/',
         'i' => [
             'http://tt.mconline.gzedu.net' => '14578',      //指向在线课程制作平台，测试机
-            'http://ccoa.gzedu.net' => '145??',             //指向课程建设平台
+            'http://ccoa.gzedu.net' => '15618',             //指向课程建设平台
             'http://mconline.gzedu.net' => '14825',         //指向在线课程制作平台，生产机
         ]
     ]
