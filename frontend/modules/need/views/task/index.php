@@ -247,7 +247,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'headerOptions' => [
                     'class'=>[
-                        //'th'=>'hidden-xs',
+                        'th'=>'hidden-xs',
                     ],
                     'style' => [
                         'width' => '80px',
@@ -256,7 +256,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'contentOptions' =>[
                     'class' => [
-                        //'td' => 'hidden-xs'
+                        'td' => 'hidden-xs'
                     ],
                     'style' => [
                         'padding' => '4px',
@@ -274,7 +274,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'headerOptions' => [
                     'class'=>[
-                        //'th'=>'hidden-xs',
+                        'th'=>'hidden-xs',
                     ],
                     'style' => [
                         'width' => '50px',
@@ -283,7 +283,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'contentOptions' =>[
                     'class' => [
-                        //'td' => 'hidden-xs'
+                        'td' => 'hidden-xs'
                     ],
                     'style' => [
                         'padding' => '8px 4px',

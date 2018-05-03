@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             //'th' => 'hidden',
                         ],
                         'style' => [
-                            'width' => '900px',
+                            'width' => '100%',
                             'padding' => '8px 4px',
                         ],
                     ],

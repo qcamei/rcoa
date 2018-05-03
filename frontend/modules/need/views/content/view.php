@@ -43,7 +43,7 @@ use yii\web\View;
                             //'th'=>'hidden-xs',
                         ],
                         'style' => [
-                            'width' => '90px',
+                            'width' => '65px',
                             'padding' => '8px 4px',
                         ],
                     ],
@@ -70,7 +70,7 @@ use yii\web\View;
                             //'th'=>'hidden-xs',
                         ],
                         'style' => [
-                            'width' => '60px',
+                            'width' => '50px',
                             'padding' => '8px 4px',
                         ],
                     ],
@@ -124,7 +124,7 @@ use yii\web\View;
                             //'th'=>'hidden-xs',
                         ],
                         'style' => [
-                            'width' => '100px',
+                            'width' => '90px',
                             'padding' => '8px 4px',
                         ],
                     ],
@@ -151,7 +151,7 @@ use yii\web\View;
                             //'th'=>'hidden-xs',
                         ],
                         'style' => [
-                            'width' => '100px',
+                            'width' => '90px',
                             'padding' => '8px 4px',
                         ],
                     ],
@@ -176,7 +176,7 @@ use yii\web\View;
                     },
                     'headerOptions' => [
                         'class'=>[
-                            //'th'=>'hidden-xs',
+                            'th'=>'hidden-xs',
                         ],
                         'style' => [
                             'width' => '115px',
@@ -185,7 +185,7 @@ use yii\web\View;
                     ],
                     'contentOptions' =>[
                         'class' => [
-                            //'td' => 'hidden-xs'
+                            'td' => 'hidden-xs'
                         ],
                         'style' => [
                             'padding' => '8px 4px',
@@ -208,7 +208,7 @@ use yii\web\View;
                     },
                     'headerOptions' => [
                         'class'=>[
-                            //'th'=>'hidden-xs',
+                            'th'=>'hidden-xs',
                         ],
                         'style' => [
                             'width' => '115px',
@@ -217,7 +217,7 @@ use yii\web\View;
                     ],
                     'contentOptions' =>[
                         'class' => [
-                            //'td' => 'hidden-xs'
+                            'td' => 'hidden-xs'
                         ],
                         'style' => [
                             'padding' => '8px 4px',
@@ -238,7 +238,7 @@ use yii\web\View;
                     },
                     'headerOptions' => [
                         'class'=>[
-                            //'th'=>'hidden-xs',
+                            'th'=>'hidden-xs',
                         ],
                         'style' => [
                             'width' => '115px',
@@ -247,7 +247,7 @@ use yii\web\View;
                     ],
                     'contentOptions' =>[
                         'class' => [
-                            //'td' => 'hidden-xs'
+                            'td' => 'hidden-xs'
                         ],
                         'style' => [
                             'padding' => '8px 4px',
@@ -268,7 +268,7 @@ use yii\web\View;
                     },
                     'headerOptions' => [
                         'class'=>[
-                            //'th'=>'hidden-xs',
+                            'th'=>'hidden-xs',
                         ],
                         'style' => [
                             'width' => '115px',
@@ -277,7 +277,7 @@ use yii\web\View;
                     ],
                     'contentOptions' =>[
                         'class' => [
-                            //'td' => 'hidden-xs'
+                            'td' => 'hidden-xs'
                         ],
                         'style' => [
                             'padding' => '8px 4px',
@@ -288,7 +288,7 @@ use yii\web\View;
             ],
         ]); ?>
         
-        <div class="tip">
+        <div class="tip hidden-xs">
             注意： 
             <span><i class="fa fa-check-circle success"></i>与预计一致</span> 
             <span><i class="fa fa-info-circle warning"></i>与预计不一致</span>

@@ -4,9 +4,9 @@ use common\models\need\NeedTask;
 use common\models\need\NeedTaskUser;
 use common\models\need\searchs\NeedTaskUserSearch;
 use kartik\slider\Slider;
+use wskeee\rbac\components\ResourceHelper;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
-use yii\helpers\Html;
 use yii\web\JsExpression;
 use yii\web\View;
 
@@ -25,12 +25,13 @@ use yii\web\View;
             <i class="fa fa-users"></i>
             <span><?= Yii::t('app', '开发人员') ?></span>
             <div class="btngroup">
-                <?php if($model->receive_by == Yii::$app->user->id && !($model->getIsFinished() || $model->is_del)){
-                    echo Html::a(Yii::t('app', 'Add'), ['user/create', 'need_task_id' => $model->id], [
+                <?php
+                    $conditions = $model->receive_by == Yii::$app->user->id && !($model->getIsFinished() || $model->is_del);
+                    echo ResourceHelper::a(Yii::t('app', 'Add'), ['user/create', 'need_task_id' => $model->id], [
                         'class' => 'btn btn-sm btn-success',
                         'onclick' => 'showModal($(this)); return false;',
-                    ]);
-                }?>
+                    ], $conditions);
+                ?>
             </div>
         </div>
         
@@ -109,7 +110,7 @@ use yii\web\View;
                             'th' => 'rows',
                         ],
                         'style' => [
-                            'width' => '800px',
+                            'width' => '100%',
                             'padding' => '8px 4px',
                         ],
                     ],
@@ -129,14 +130,14 @@ use yii\web\View;
                     'buttons' => [
                         'delete' => function ($url, $model){
                             /* @var $model NeedTaskUser */
-                            if($model->user_id != $model->needTask->receive_by 
+                            $conditions = $model->user_id != $model->needTask->receive_by 
                                 && !($model->needTask->getIsFinished() || $model->needTask->is_del) 
-                                && $model->needTask->receive_by == Yii::$app->user->id){
-                                return Html::a('<i class="glyphicon glyphicon-trash"></i>', ['user/delete', 'id' => $model->id], [
-                                    'class' => 'btn btn-danger btn-sm',
-                                    'onclick' => 'deleteDeveloper($(this)); return false;'
-                                ]);
-                            }
+                                && $model->needTask->receive_by == Yii::$app->user->id;
+                            return ResourceHelper::a('<i class="glyphicon glyphicon-trash"></i>', ['user/delete', 'id' => $model->id], [
+                                'class' => 'btn btn-danger btn-sm',
+                                'onclick' => 'deleteDeveloper($(this)); return false;'
+                            ], $conditions);
+                            
                         },
                     ],
                     'headerOptions' => [

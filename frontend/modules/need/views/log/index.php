@@ -27,20 +27,14 @@ use yii\web\View;
             'id' => 'gv1',
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
-            //'filterUrl' => array_merge (['course-make/log-index'], $filter),
-            //'filterSelector'=>'',
             'tableOptions' => ['class' => 'table table-striped table-list'],
             'layout' => "{items}\n{summary}\n{pager}",
             'summaryOptions' => [
-                //'class' => 'summary',
                 'class' => 'hidden',
-                //'style' => 'float: left'
             ],
             'pager' => [
                 'options' => [
-                    //'class' => 'pagination',
                     'class' => 'hidden',
-                    //'style' => 'float: right; margin: 0px;'
                 ]
             ],
             'columns' => [
@@ -57,18 +51,31 @@ use yii\web\View;
                         'attribute' => 'action',
                         'data' => $action,
                         'hideSearch'=>true,
-                        'options' => ['placeholder' => Yii::t('app', 'Select Placeholder')],
+                        'options' => [
+                            'placeholder' => Yii::t('app', 'Select Placeholder')
+                        ],
                         'pluginOptions' => [
                             'allowClear' => true
                         ],
                     ]),
+                    'filterOptions' => [
+                        'class' => [
+                            'td' => 'hidden-xs',
+                        ],
+                    ],
                     'headerOptions' => [
+                        'class' => [
+                            'th' => 'hidden-xs',
+                        ],
                         'style' => [
                             'width' => '85px',
                             'padding' => '8px',
                         ],
                     ],
                     'contentOptions' =>[
+                        'class' => [
+                            'td' => 'hidden-xs',
+                        ],
                         'style' => [
                             'padding' => '8px',
                         ]
@@ -117,7 +124,6 @@ use yii\web\View;
                     ]),
                     'headerOptions' => [
                         'style' => [
-                            'max-width' => '300px;',
                             'min-width' => '100px',
                             'padding' => '8px',
                         ],
@@ -144,18 +150,31 @@ use yii\web\View;
                         'attribute' => 'created_by',
                         'data' => $createdBy,
                         'hideSearch'=>true,
-                        'options' => ['placeholder' => Yii::t('app', 'Select Placeholder')],
+                        'options' => [
+                            'placeholder' => Yii::t('app', 'Select Placeholder')
+                        ],
                         'pluginOptions' => [
                             'allowClear' => true
                         ],
                     ]),
+                    'filterOptions' => [
+                        'class' => [
+                            'td' => 'hidden-xs',
+                        ],
+                    ],
                     'headerOptions' => [
+                        'class' => [
+                            'th' => 'hidden-xs',
+                        ],
                         'style' => [
                             'width' => '85px',
                             'padding' => '8px',
                         ],
                     ],
                     'contentOptions' =>[
+                        'class' => [
+                            'td' => 'hidden-xs',
+                        ],
                         'style' => [
                             'padding' => '8px',
                         ]
@@ -168,13 +187,24 @@ use yii\web\View;
                         /* @var $model NeedTaskLog */
                         return date('Y-m-d H:i', $model->created_at);
                     },
+                    'filterOptions' => [
+                        'class' => [
+                            'td' => 'hidden-xs',
+                        ],
+                    ],
                     'headerOptions' => [
+                        'class' => [
+                            'th' => 'hidden-xs',
+                        ],
                         'style' => [
                             'width' => '95px',
                             'padding' => '8px',
                         ],
                     ],
                     'contentOptions' =>[
+                        'class' => [
+                            'td' => 'hidden-xs',
+                        ],
                         'style' => [
                             'font-size'=>'10px',
                             'padding' => '2px 8px',

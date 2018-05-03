@@ -413,6 +413,12 @@ span.stamp {
     min-width: 73px;
     vertical-align: middle;
 }
+@media (max-width: 480px){
+    .table .viewdetail-th {
+        width: 25%;
+
+    }
+}
 .table .viewdetail-th-head {
     color: #000000;
     text-align: left;

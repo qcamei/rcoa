@@ -138,7 +138,7 @@ class TaskController extends Controller
         $model = $this->findModel($id);
 
         if($model->created_by == \Yii::$app->user->id){
-            if(!($model->getIsCreateing() || $model->getIsChangeAudit() || $model->getIsWaitReceive())){
+            if(!($model->getIsCreateing() || $model->getIsChangeAudit())){
                 throw new NotFoundHttpException('该任务为' . $model->getStatusName());
             }
             if($model->is_del){
@@ -174,7 +174,7 @@ class TaskController extends Controller
     {
         $model = $this->findModel($id);
         
-        if($model->created_by == \Yii::$app->user->id){
+        if($model->created_by == \Yii::$app->user->id && !empty($model->audit_by)){
             if(!($model->getIsCreateing() || $model->getIsChangeAudit())){
                 throw new NotFoundHttpException('该任务为' . $model->getStatusName());
             }
@@ -198,7 +198,7 @@ class TaskController extends Controller
     {
         $model = $this->findModel($id);
         
-        if($model->created_by == \Yii::$app->user->id){
+        if($model->created_by == \Yii::$app->user->id && !empty($model->audit_by)){
             if(!$model->getIsAuditing()){
                 throw new NotFoundHttpException('该任务为' . $model->getStatusName());
             }
@@ -210,6 +210,54 @@ class TaskController extends Controller
         }
         
         ActionUtils::getInstance()->CancelAuditNeedTask($model);
+        return $this->redirect(['view', 'id' => $model->id]);
+    }
+    
+    /**
+     * 发布任务
+     * @param string $id
+     * @return mixed
+     */
+    public function actionPublish($id)
+    {
+        $model = $this->findModel($id);
+        
+        if($model->created_by == \Yii::$app->user->id && empty($model->audit_by)){
+            if(!($model->getIsCreateing() || $model->getIsChangeAudit())){
+                throw new NotFoundHttpException('该任务为' . $model->getStatusName());
+            }
+            if($model->is_del){
+                throw new NotFoundHttpException('该任务已取消');
+            }
+        }else{
+            throw new NotFoundHttpException('无权限访问');
+        }
+        
+        ActionUtils::getInstance()->PublishNeedTask($model);
+        return $this->redirect(['view', 'id' => $model->id]);
+    }
+    
+    /**
+     * 取消发布
+     * @param string $id
+     * @return mixed
+     */
+    public function actionCancelPublish($id)
+    {
+        $model = $this->findModel($id);
+        
+        if($model->created_by == \Yii::$app->user->id && empty($model->audit_by)){
+            if(!$model->getIsWaitReceive()){
+                throw new NotFoundHttpException('该任务为' . $model->getStatusName());
+            }
+            if($model->is_del){
+                throw new NotFoundHttpException('该任务已取消');
+            }
+        }else{
+            throw new NotFoundHttpException('无权限访问');
+        }
+        
+        ActionUtils::getInstance()->CancelPublishNeedTask($model);
         return $this->redirect(['view', 'id' => $model->id]);
     }
     
@@ -299,7 +347,7 @@ class TaskController extends Controller
         $model = $this->findModel($id);
         
         if($model->receive_by == \Yii::$app->user->id){
-            if(!$model->getIsWaitStart()){
+            if(!($model->getIsWaitStart() || $model->getIsDeveloping() || $model->getIsChangeCheck())){
                 throw new NotFoundHttpException('该任务为' . $model->getStatusName());
             }
             if($model->is_del){
