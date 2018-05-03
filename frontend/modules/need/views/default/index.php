@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             <img class="img-circle" src="<?= $needCost['avatar']; ?>"/>
                         </div>
                         <div class="user-name"><?= $needCost['nickname']; ?></div>
-                        <div class="user-cost">￥<?= $needCost['need_cost']; ?></div>
+                        <div class="user-cost">￥<?= number_format($needCost['need_cost'], 2); ?></div>
                     </div>
                 <?php endforeach;?>
             </div>
@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             <img class="img-circle" src="<?= $demand['avatar']; ?>"/>
                         </div>
                         <div class="user-name"><?= $demand['nickname']; ?></div>
-                        <div class="user-cost">￥<?= $demand['demand']; ?></div>
+                        <div class="user-cost">￥<?= number_format($demand['demand'], 2); ?></div>
                     </div>
                 <?php endforeach;?>
             </div>
