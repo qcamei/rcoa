@@ -55,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         //'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '10px',
+                        'width' => '16px',
                         'padding' => '8px 4px',
                     ],
                 ],
@@ -65,6 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                     'style' => [
                         'padding' => '8px 4px',
+                        'font-size' => '18px;',
                         'white-space' => 'nowrap',
                     ],
                 ],
@@ -82,7 +83,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '95px',
+                        'width' => '100px',
                         'padding' => '8px 4px',
                     ],
                 ],
@@ -109,7 +110,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '75px',
+                        'width' => '80px',
                         'padding' => '8px 4px',
                     ],
                 ],
@@ -136,7 +137,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '115px',
+                        'width' => '130px',
                         'padding' => '8px 4px',
                     ],
                 ],
@@ -163,7 +164,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th' => 'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '130px',
+                        'width' => '140px',
                         'padding' => '8px 4px',
                     ],
                 ],
@@ -276,7 +277,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         //'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '60px',
+                        'width' => '50px',
                         'padding' => '8px 4px',
                     ],
                 ],
@@ -303,7 +304,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         //'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '60px',
+                        'width' => '50px',
                         'padding' => '8px 4px',
                     ],
                 ],
@@ -331,7 +332,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '75px',
+                        'width' => '70px',
                         'padding' => '8px 4px',
                     ],
                 ],
@@ -359,7 +360,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '75px',
+                        'width' => '70px',
                         'padding' => '8px 4px',
                     ],
                 ],

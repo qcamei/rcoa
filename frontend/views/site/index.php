@@ -25,7 +25,7 @@ $this->title = '课程建设工作平台';
         <div class="menu">
             <div class="container">
                 <!--需求-->
-                <div class="col-lg-3 modules">
+                <div class="col-lg-4 modules">
                     <a href="/need/default">
                         <div class="circle img-circle">
                             <?= Html::img(['/filedata/site/image/icon_1-1.png']) ?>
@@ -58,7 +58,7 @@ $this->title = '课程建设工作平台';
                     </div>
                 </div>-->
                 <!--任务-->
-                <div class="col-lg-3 netbutton">
+                <div class="col-lg-4 netbutton">
                     <a href="javascript:;">
                         <div class="circle img-circle">
                             <?= Html::img(['/filedata/site/image/icon_1-3.png']) ?>
@@ -74,7 +74,7 @@ $this->title = '课程建设工作平台';
                     </div>
                 </div>
                 <!--场地-->
-                <div class="col-lg-3 modules">
+                <div class="col-lg-4 modules">
                     <a href="/scene/default">
                         <div class="circle img-circle">
                             <?= Html::img(['/filedata/site/image/icon_1-4.png']) ?>
