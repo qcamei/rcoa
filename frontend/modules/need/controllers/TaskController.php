@@ -138,7 +138,7 @@ class TaskController extends Controller
         $model = $this->findModel($id);
 
         if($model->created_by == \Yii::$app->user->id){
-            if(!($model->getIsCreateing() || $model->getIsWaitReceive())){
+            if(!($model->getIsCreateing() || $model->getIsChangeAudit() || $model->getIsWaitReceive())){
                 throw new NotFoundHttpException('该任务为' . $model->getStatusName());
             }
             if($model->is_del){

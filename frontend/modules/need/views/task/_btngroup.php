@@ -58,7 +58,7 @@ use yii\web\View;
                     'url' => ['update'],
                     'options' => ['class' => 'btn btn-primary', 'onclick' => 'submitForm(); return false'],
                     'symbol' => '&nbsp;',
-                    'conditions' => $model->getIsCreateing() || $model->getIsWaitReceive(),
+                    'conditions' => $model->getIsCreateing() || $model->getIsChangeAudit() || $model->getIsWaitReceive(),
                     'adminOptions' => true,
                 ],
                 /** 
@@ -72,7 +72,7 @@ use yii\web\View;
                     'url' => ['update', 'id' => $model->id],
                     'options' => ['class' => 'btn btn-primary'],
                     'symbol' => '&nbsp;',
-                    'conditions' => !$model->is_del && ($model->getIsCreateing() || $model->getIsWaitReceive()) && $model->created_by == Yii::$app->user->id,
+                    'conditions' => !$model->is_del && ($model->getIsCreateing() || $model->getIsChangeAudit() || $model->getIsWaitReceive()) && $model->created_by == Yii::$app->user->id,
                     'adminOptions' => true,
                 ],
                 //提交审核按钮
