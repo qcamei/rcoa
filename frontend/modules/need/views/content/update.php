@@ -96,6 +96,7 @@ $js =
     $('#submitcheck').click(function(){
         $.post('../content/create?need_task_id=$need_task_id&isNewRecord=0', $('#need-content-form').serialize());
         $.post('../content/submit?id=$need_task_id', $('#need-task-form').serialize());
+        window.location.href = "../task/view?id=$need_task_id";
     });
     
 JS;

@@ -190,10 +190,34 @@ class ContentController extends Controller
             throw new NotFoundHttpException('无权限访问');
         }
         
-        if($model->load(Yii::$app->request->post())){
+        if(\Yii::$app->request->isPost){
             ActionUtils::getInstance()->SubmitCheckNeedTask($model);
         }
         
+        return $this->redirect(['task/view', 'id' => $model->id]);
+    }
+    
+    /**
+     * 取消验收
+     * @param string $id
+     * @return mixed
+     */
+    public function actionCancel($id)
+    {
+        $model = NeedTask::findOne($id);
+        
+        if($model->receive_by == \Yii::$app->user->id){
+            if(!$model->getIsChecking()){
+                throw new NotFoundHttpException('该任务为' . $model->getStatusName());
+            }
+            if($model->is_del){
+                throw new NotFoundHttpException('该任务已取消');
+            }
+        }else{
+            throw new NotFoundHttpException('无权限访问');
+        }
+        
+        ActionUtils::getInstance()->CancelCheckNeedTask($model);
         return $this->redirect(['task/view', 'id' => $model->id]);
     }
     

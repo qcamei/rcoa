@@ -190,6 +190,30 @@ class TaskController extends Controller
     }
     
     /**
+     * 取消审核
+     * @param string $id
+     * @return mixed
+     */
+    public function actionCancel($id)
+    {
+        $model = $this->findModel($id);
+        
+        if($model->created_by == \Yii::$app->user->id){
+            if(!$model->getIsAuditing()){
+                throw new NotFoundHttpException('该任务为' . $model->getStatusName());
+            }
+            if($model->is_del){
+                throw new NotFoundHttpException('该任务已取消');
+            }
+        }else{
+            throw new NotFoundHttpException('无权限访问');
+        }
+        
+        ActionUtils::getInstance()->CancelAuditNeedTask($model);
+        return $this->redirect(['view', 'id' => $model->id]);
+    }
+    
+    /**
      * 审核任务
      * @param string $id
      * @return mixed

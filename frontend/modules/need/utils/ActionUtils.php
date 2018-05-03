@@ -81,6 +81,7 @@ class ActionUtils
      */
     public function UpdateNeedTask($model, $post)
     {
+        $model->status = $model->audit_by != null ? NeedTask::STATUS_CREATEING : NeedTask::STATUS_WAITRECEIVE;
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
@@ -88,6 +89,9 @@ class ActionUtils
             if($model->save()){
                 $this->saveNeedAttachments($model->id, ArrayHelper::getValue($post, 'files'));
                 $this->saveNeedTaskLog(['action'=>'修改', 'title'=> '任务管理', 'need_task_id' => $model->id]);
+                if($model->getIsWaitReceive()){
+                    NoticeUtils::sendReceiveByNotification($model, self::getHasReceiveToDeveloper(), '需求发布', 'need/_receive_request');
+                }
             }else{
                 throw new Exception($model->getErrors());
             }
@@ -117,6 +121,34 @@ class ActionUtils
                 $this->saveNeedTaskLog(['action'=>'审核', 'title'=> '审核管理', 
                     'content' => '提交审核', 'need_task_id' => $model->id]);
                 NoticeUtils::sendAuditByNotification($model, '审核申请', 'need/_audit_request');
+            }else{
+                throw new Exception($model->getErrors());
+            }
+            
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        }catch (Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            Yii::$app->getSession()->setFlash('error', '操作失败！' . $ex->getMessage());
+        }
+    }
+    
+    /**
+     * 取消审核需求任务
+     * @param NeedTask $model
+     * @throws Exception
+     */
+    public function CancelAuditNeedTask($model)
+    {
+        $model->status = NeedTask::STATUS_CREATEING;
+        
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {  
+            if($model->save(false, ['status'])){
+                $this->saveNeedTaskLog(['action'=>'审核', 'title'=> '审核管理', 
+                    'content' => '取消审核', 'need_task_id' => $model->id]);
             }else{
                 throw new Exception($model->getErrors());
             }
@@ -282,6 +314,7 @@ class ActionUtils
      */
     public function SubmitCheckNeedTask($model)
     {
+        $model->load(Yii::$app->request->post());
         $model->status = NeedTask::STATUS_CHECKING;
         
         /** 开启事务 */
@@ -292,6 +325,34 @@ class ActionUtils
                 $this->saveNeedTaskLog(['action'=>'验收', 'title'=> '验收管理', 
                     'content' => '提交验收', 'need_task_id' => $model->id]);
                 NoticeUtils::sendCreateByNotification($model, '验收申请', 'need/_check_request');
+            }else{
+                throw new Exception($model->getErrors());
+            }
+            
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        }catch (Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            Yii::$app->getSession()->setFlash('error', '操作失败！' . $ex->getMessage());
+        }
+    }
+    
+    /**
+     * 取消验收需求任务
+     * @param NeedTask $model
+     * @throws Exception
+     */
+    public function CancelCheckNeedTask($model)
+    {
+        $model->status = NeedTask::STATUS_DEVELOPING;
+        
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {  
+            if($model->save(false, ['status'])){
+                $this->saveNeedTaskLog(['action'=>'验收', 'title'=> '验收管理', 
+                    'content' => '取消验收', 'need_task_id' => $model->id]);
             }else{
                 throw new Exception($model->getErrors());
             }
