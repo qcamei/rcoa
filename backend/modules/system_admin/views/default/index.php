@@ -1,5 +1,6 @@
 <?php
 
+use common\components\GridViewChangeSelfColumn;
 use common\models\searchs\SystemSearch;
 use common\models\System;
 use yii\data\ActiveDataProvider;
@@ -11,23 +12,24 @@ use yii\web\View;
 /* @var $searchModel SystemSearch */
 /* @var $dataProvider ActiveDataProvider */
 
-$this->title = Yii::t('rcoa', 'Systems');
+$this->title = Yii::t('app', 'Systems');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="system-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
     <p>
-        <?= Html::a(Yii::t('rcoa', 'Create System'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', '{Create}{Systems}',[
+            'Create' => Yii::t('app', 'Create'),
+            'Systems' => Yii::t('app', 'Systems'),
+        ]), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'layout' => "{items}\n{summary}\n{pager}",
         'columns' => [
-            //['class' => 'yii\grid\SerialColumn'],
+            ['class' => 'yii\grid\SerialColumn'],
 
             //'id',
             'name',
@@ -44,7 +46,19 @@ $this->params['breadcrumbs'][] = $this->title;
                     return !empty($model->parent_id) ? $model->parent->name : null;
                 },
             ],
-
+            [
+                'attribute' => 'is_delete',
+                'label' => Yii::t('app', 'Is Deleted'),
+                'class' => GridViewChangeSelfColumn::class,
+                'plugOptions'=>[
+                    'values' => ['N','Y'],
+                ],
+                'contentOptions' => [
+                    'style' => [
+                        'text-align' => 'center',
+                    ],
+                ]
+            ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

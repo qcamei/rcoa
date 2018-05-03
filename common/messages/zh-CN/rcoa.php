@@ -212,6 +212,7 @@ return [
     'Config' => '配置',
     'Config Name' => '配置名称',
     'Config Value' => '配置值',
+    'Systems' => '模块',
     
     //在线制作课程平台mcbs字段属性名称(前台)
     'Mcbs' => '板书',

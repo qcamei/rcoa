@@ -40,7 +40,7 @@ class SystemSearch extends System
      */
     public function search($params)
     {
-        $query = System::find()->where(['is_delete' => 'N'])->orderBy('index asc');
+        $query = System::find()->orderBy('is_delete asc');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

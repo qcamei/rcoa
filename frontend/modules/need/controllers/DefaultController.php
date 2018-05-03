@@ -3,6 +3,7 @@
 namespace frontend\modules\need\controllers;
 
 use common\models\need\NeedTask;
+use common\models\need\NeedTaskUser;
 use common\models\User;
 use yii\db\Query;
 use yii\filters\AccessControl;
@@ -74,15 +75,16 @@ class DefaultController extends Controller
     public function getUserNeedCostBySeason($seasonStart, $seasonEnd) 
     {
         $filter = [NeedTask::STATUS_DEFAULT, NeedTask::STATUS_FINISHED];
+        $selectCost = 'SUM(COALESCE(plan_content_cost,0) + COALESCE(plan_outsourcing_cost,0) + COALESCE(plan_content_cost,0) * performance_percent)';
         $needCost = (new Query())
-                ->select(['User.nickname', 'User.avatar', 'SUM(COALESCE(plan_content_cost,0) + '
-                    . 'COALESCE(plan_outsourcing_cost,0) + (COALESCE(plan_content_cost,0) + COALESCE(plan_outsourcing_cost,0)) * performance_percent) AS need_cost'])
+                ->select(['User.nickname', 'User.avatar', "$selectCost AS need_cost"])
                 ->from(['NeedTask' => NeedTask::tableName()])
                 ->leftJoin(['User' => User::tableName()], 'User.id = NeedTask.created_by')
                 ->where(['NeedTask.is_del' => 0])
                 ->andFilterWhere(['between', 'NeedTask.created_at', $seasonStart, $seasonEnd])
                 ->andFilterWhere(['NOT IN', 'NeedTask.status', $filter])             //过滤创建中和已完成的数据
                 ->groupBy('NeedTask.created_by')
+                ->orderBy([$selectCost => SORT_DESC])
                 ->all();
 
         return $needCost;
@@ -96,18 +98,22 @@ class DefaultController extends Controller
      */
     public function getUserDemandBySeason($seasonStart, $seasonEnd) 
     {
-        $filter = [NeedTask::STATUS_DEFAULT, NeedTask::STATUS_FINISHED];
+        $selectDemand = 'SUM(COALESCE(plan_content_cost,0) * NeedTask.performance_percent * NeedTaskUser.performance_percent)';
         $demand = (new Query())
                 ->select(['User.nickname', 'User.avatar',
-                    'SUM((COALESCE(plan_content_cost,0) + COALESCE(plan_outsourcing_cost,0)) * performance_percent) AS demand'])
+                    "$selectDemand AS demand"])
                 ->from(['NeedTask' => NeedTask::tableName()])
-                ->leftJoin(['User' => User::tableName()], 'User.id = NeedTask.receive_by')
-                ->where(['NeedTask.is_del' => 0])
+                ->leftJoin(['NeedTaskUser' => NeedTaskUser::tableName()], 'NeedTaskUser.need_task_id = NeedTask.id')
+                ->leftJoin(['User' => User::tableName()], 'User.id = NeedTaskUser.user_id')
+                ->where(['NeedTask.is_del' => 0, 'NeedTaskUser.is_del' => 0])
                 ->andFilterWhere(['between', 'NeedTask.created_at', $seasonStart, $seasonEnd])
-                ->andFilterWhere(['NOT IN', 'NeedTask.status', $filter])             //过滤创建中和已完成的数据
-                ->groupBy('NeedTask.receive_by')
+                ->andFilterWhere(['>', 'NeedTask.status', 300])             //过滤未承接的数据
+                ->andFilterWhere(['<', 'NeedTask.status', 500])             
+                ->groupBy('NeedTaskUser.user_id')
+                ->orderBy([$selectDemand => SORT_DESC])
                 ->all();
 
         return $demand;
-    }
+    } 
+
 }
