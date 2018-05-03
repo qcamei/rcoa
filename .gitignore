@@ -40,3 +40,4 @@ phpunit.phar
 /common/wskeee/notification/cache/
 /mconline/runtime/
 /mconline/web/assets/
+/frontend/web/upload/
