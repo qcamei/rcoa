@@ -72,7 +72,7 @@ use yii\web\View;
                     'url' => ['update', 'id' => $model->id],
                     'options' => ['class' => 'btn btn-primary'],
                     'symbol' => '&nbsp;',
-                    'conditions' => !$model->is_del && ($model->getIsCreateing() || $model->getIsChangeAudit() || $model->getIsWaitReceive()) && $model->created_by == Yii::$app->user->id,
+                    'conditions' => !$model->is_del && ($model->getIsCreateing() || $model->getIsChangeAudit()) && $model->created_by == Yii::$app->user->id,
                     'adminOptions' => true,
                 ],
                 //提交审核按钮
@@ -83,7 +83,7 @@ use yii\web\View;
                     'url' => ['submit', 'id' => $model->id],
                     'options' => ['class' => 'btn btn-info'],
                     'symbol' => '&nbsp;',
-                    'conditions' => !$model->is_del && ($model->getIsCreateing() || $model->getIsChangeAudit()) && $model->created_by == Yii::$app->user->id,
+                    'conditions' => !$model->is_del && !empty($model->audit_by) && ($model->getIsCreateing() || $model->getIsChangeAudit()) && $model->created_by == Yii::$app->user->id,
                     'adminOptions' => true,
                 ],
                 //取消审核按钮
@@ -94,7 +94,29 @@ use yii\web\View;
                     'url' => ['cancel', 'id' => $model->id],
                     'options' => ['class' => 'btn btn-danger'],
                     'symbol' => '&nbsp;',
-                    'conditions' => !$model->is_del && $model->getIsAuditing() && $model->created_by == Yii::$app->user->id,
+                    'conditions' =>  !$model->is_del && !empty($model->audit_by) && $model->getIsAuditing() && $model->created_by == Yii::$app->user->id,
+                    'adminOptions' => true,
+                ],
+                //发布按钮
+                [
+                    'controller' => 'task',
+                    'action' => 'view',
+                    'name' => '发布',
+                    'url' => ['publish', 'id' => $model->id],
+                    'options' => ['class' => 'btn btn-info'],
+                    'symbol' => '&nbsp;',
+                    'conditions' => !$model->is_del && $model->audit_by == null && ($model->getIsCreateing() || $model->getIsChangeAudit()) && $model->created_by == Yii::$app->user->id,
+                    'adminOptions' => true,
+                ],
+                //取消发布按钮
+                [
+                    'controller' => 'task',
+                    'action' => 'view',
+                    'name' => '取消发布',
+                    'url' => ['cancel-publish', 'id' => $model->id],
+                    'options' => ['class' => 'btn btn-danger'],
+                    'symbol' => '&nbsp;',
+                    'conditions' => !$model->is_del && $model->audit_by == null && $model->getIsWaitReceive() && $model->created_by == Yii::$app->user->id,
                     'adminOptions' => true,
                 ],
                 //验收按钮
@@ -155,7 +177,7 @@ use yii\web\View;
                     'url' => ['transfer', 'id' => $model->id],
                     'options' => ['class' => 'btn btn-info', 'onclick' => 'showModal($(this)); return false'],
                     'symbol' => '&nbsp;',
-                    'conditions' => !$model->is_del && $model->getIsWaitStart() && $model->receive_by == Yii::$app->user->id,
+                    'conditions' => !$model->is_del && ($model->getIsWaitStart() || $model->getIsDeveloping() || $model->getIsChangeCheck()) && $model->receive_by == Yii::$app->user->id,
                     'adminOptions' => true,
                 ],
                 //进度按钮

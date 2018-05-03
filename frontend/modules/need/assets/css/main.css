@@ -1,3 +1,9 @@
+/** 小屏不显示文字 */
+@media (max-width: 768px) {
+    .wrap > .content > .container {
+        padding: 0;
+    }
+}
 /************************************面包屑*************************************/
 .title .breadcrumb {
     padding: 0px;

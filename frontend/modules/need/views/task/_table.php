@@ -16,9 +16,9 @@ use yii\web\View;
         <thead>
             <tr>
                 <th style="width: 100px;"></th>
-                <th style="width: 300px;">预计</th>
-                <th style="width: 300px;">实际</th>
-                <th style="width: 300px;">差值</th>
+                <th style="width: 100%">预计</th>
+                <th style="width: 100%;">实际</th>
+                <th style="width: 100%">差值</th>
             </tr>
         </thead>
         <tbody>

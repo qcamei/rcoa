@@ -48,7 +48,7 @@ class ActionUtils
      */
     public function CreateNeedTask($model, $post)
     {
-        $model->status = $model->audit_by != null ? NeedTask::STATUS_CREATEING : NeedTask::STATUS_WAITRECEIVE;
+        $model->status = NeedTask::STATUS_CREATEING;
         
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
@@ -58,9 +58,6 @@ class ActionUtils
                 $model->updateAll(['is_del' => 1], ['status' => NeedTask::STATUS_DEFAULT]);
                 $this->saveNeedAttachments($model->id, ArrayHelper::getValue($post, 'files'));
                 $this->saveNeedTaskLog(['action'=>'增加', 'title'=> '任务管理', 'need_task_id' => $model->id]);
-                if($model->getIsWaitReceive()){
-                    NoticeUtils::sendReceiveByNotification($model, self::getHasReceiveToDeveloper(), '需求发布', 'need/_receive_request');
-                }
             }else{
                 throw new Exception($model->getErrors());
             }
@@ -81,7 +78,6 @@ class ActionUtils
      */
     public function UpdateNeedTask($model, $post)
     {
-        $model->status = $model->audit_by != null ? NeedTask::STATUS_CREATEING : NeedTask::STATUS_WAITRECEIVE;
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
         try
@@ -89,9 +85,6 @@ class ActionUtils
             if($model->save()){
                 $this->saveNeedAttachments($model->id, ArrayHelper::getValue($post, 'files'));
                 $this->saveNeedTaskLog(['action'=>'修改', 'title'=> '任务管理', 'need_task_id' => $model->id]);
-                if($model->getIsWaitReceive()){
-                    NoticeUtils::sendReceiveByNotification($model, self::getHasReceiveToDeveloper(), '需求发布', 'need/_receive_request');
-                }
             }else{
                 throw new Exception($model->getErrors());
             }
@@ -149,6 +142,63 @@ class ActionUtils
             if($model->save(false, ['status'])){
                 $this->saveNeedTaskLog(['action'=>'审核', 'title'=> '审核管理', 
                     'content' => '取消审核', 'need_task_id' => $model->id]);
+            }else{
+                throw new Exception($model->getErrors());
+            }
+            
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        }catch (Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            Yii::$app->getSession()->setFlash('error', '操作失败！' . $ex->getMessage());
+        }
+    }
+    
+    /**
+     * 发布需求任务
+     * @param NeedTask $model
+     * @throws Exception
+     */
+    public function PublishNeedTask($model)
+    {
+        $model->status = NeedTask::STATUS_WAITRECEIVE;
+        
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {  
+            if($model->save(false, ['status'])){
+                $this->saveNeedTaskLog(['action'=>'发布', 'title'=> '任务管理', 
+                    'content' => '发布任务', 'need_task_id' => $model->id]);
+                NoticeUtils::sendReceiveByNotification($model, self::getHasReceiveToDeveloper(), '需求发布', 'need/_receive_request');
+            }else{
+                throw new Exception($model->getErrors());
+            }
+            
+            $trans->commit();  //提交事务
+            Yii::$app->getSession()->setFlash('success','操作成功！');
+        }catch (Exception $ex) {
+            $trans ->rollBack(); //回滚事务
+            Yii::$app->getSession()->setFlash('error', '操作失败！' . $ex->getMessage());
+        }
+    }
+    
+    /**
+     * 取消发布需求任务
+     * @param NeedTask $model
+     * @throws Exception
+     */
+    public function CancelPublishNeedTask($model)
+    {
+        $model->status = NeedTask::STATUS_CREATEING;
+        
+        /** 开启事务 */
+        $trans = Yii::$app->db->beginTransaction();
+        try
+        {  
+            if($model->save(false, ['status'])){
+                $this->saveNeedTaskLog(['action'=>'发布', 'title'=> '任务管理', 
+                    'content' => '取消发布', 'need_task_id' => $model->id]);
             }else{
                 throw new Exception($model->getErrors());
             }
