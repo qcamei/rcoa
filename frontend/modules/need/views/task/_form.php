@@ -99,7 +99,7 @@ ModuleAssets::register($this);
     <?= $form->field($model, 'audit_by', [
         'template' => "{label}\n<div class=\"col-lg-4 col-md-4\">{input}</div>\n<div class=\"col-lg-4 col-md-4\">{error}</div>"
     ])->widget(Select2::class, [
-        'data' => $allAuditBy, 'options' => ['placeholder' => '请选择...']
+        'data' => $allAuditBy, 'options' => ['placeholder' => '请选择...'], 'pluginOptions' => ['allowClear' => true]
     ]) ?>
     
     <?= $form->field($model, 'plan_outsourcing_cost', [
@@ -112,7 +112,7 @@ ModuleAssets::register($this);
         <div class="col-xs-12 title prompt"><i class="glyphicon glyphicon-tasks"></i><span>开发内容</span></div>
     </div>
     
-    <div class="form-group field-need-content-plan_num">
+    <div class="form-group field-need-content-plan_num required">
         <div id="need-content" class="col-lg-12 col-md-12">
             <?= $this->render('/content/index', [
                 'need_task_id' => $model->id,
@@ -122,6 +122,9 @@ ModuleAssets::register($this);
                                 ->orderBy(['sort_order' => SORT_ASC, 'is_new' => SORT_ASC])->all(),
                 ]),
             ]) ?>
+        </div>
+        <div class="col-lg-12 col-md-12">
+            <div class="help-block"></div>
         </div>
     </div>
     

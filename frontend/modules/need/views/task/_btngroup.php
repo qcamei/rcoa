@@ -86,6 +86,17 @@ use yii\web\View;
                     'conditions' => !$model->is_del && ($model->getIsCreateing() || $model->getIsChangeAudit()) && $model->created_by == Yii::$app->user->id,
                     'adminOptions' => true,
                 ],
+                //取消审核按钮
+                [
+                    'controller' => 'task',
+                    'action' => 'view',
+                    'name' => '取消审核',
+                    'url' => ['cancel', 'id' => $model->id],
+                    'options' => ['class' => 'btn btn-danger'],
+                    'symbol' => '&nbsp;',
+                    'conditions' => !$model->is_del && $model->getIsAuditing() && $model->created_by == Yii::$app->user->id,
+                    'adminOptions' => true,
+                ],
                 //验收按钮
                 [
                     'controller' => 'task',
@@ -158,6 +169,17 @@ use yii\web\View;
                     'conditions' => !$model->is_del && ($model->getIsDeveloping() || $model->getIsChangeCheck()) && $model->receive_by == Yii::$app->user->id,
                     'adminOptions' => true,
                 ],
+                //取消验收按钮
+                [
+                    'controller' => 'task',
+                    'action' => 'view',
+                    'name' => '取消验收',
+                    'url' => ['content/cancel', 'id' => $model->id],
+                    'options' => ['class' => 'btn btn-danger'],
+                    'symbol' => '&nbsp;',
+                    'conditions' => !$model->is_del && $model->getIsChecking() && $model->receive_by == Yii::$app->user->id,
+                    'adminOptions' => true,
+                ],
                 /**
                  * 发布人和承接人 角色按钮组
                  */
@@ -169,7 +191,7 @@ use yii\web\View;
                     'url' => ['delete', 'id' => $model->id],
                     'options' => ['class' => 'btn btn-danger', 'onclick' => 'showModal($(this)); return false'],
                     'symbol' => '&nbsp;',
-                    'conditions' => !$model->is_del ? ($model->status < NeedTask::STATUS_WAITSTART && $model->created_by == Yii::$app->user->id ? true : (
+                    'conditions' => !$model->is_del && !$model->getIsFinished() ? ($model->status < NeedTask::STATUS_WAITSTART && $model->created_by == Yii::$app->user->id ? true : (
                             $model->status > NeedTask::STATUS_WAITRECEIVE && $model->receive_by == Yii::$app->user->id ? true : false)) : false,
                     'adminOptions' => true,
                 ],
@@ -193,7 +215,14 @@ $js =
     }
     //提交表单
     window.submitForm = function(){
-        $('#need-task-form').submit();
+        var tablelen = $('#need-content .table > tbody > tr').length;
+        var hasClass = $('#need-content .table > tbody > tr div').hasClass('empty');
+        if(tablelen > 0 && !hasClass){
+            $('#need-task-form').submit();
+        }else{
+            $('.field-need-content-plan_num').addClass('has-error');
+            $('.field-need-content-plan_num .help-block').html('开发内容不能为空。');
+        }
     }
    
     //显示模态框
