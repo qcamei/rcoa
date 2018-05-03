@@ -114,6 +114,8 @@ class NeedTaskSearch extends NeedTask
             ->andFilterWhere(['like', 'save_path', $this->save_path])
             ->andFilterWhere(['like', 'des', $this->des]);
 
+        $query->orderBy(['level' => SORT_DESC]);
+        
         $query->with('business', 'layer', 'profession', 'course', 'receiveBy', 'createdBy');
         
         return [

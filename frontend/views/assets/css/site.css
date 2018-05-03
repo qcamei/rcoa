@@ -84,7 +84,7 @@ body .wrap > .content,
 
 @media (min-width: 1200px){
     .course .menu .netbutton canvas {
-        left: -45px;
+/*        left: -45px;*/
     }
 }
 
