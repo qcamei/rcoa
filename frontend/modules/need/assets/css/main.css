@@ -42,6 +42,7 @@
 }
 /** 导航菜单 */
 .submenu .menu {
+    position: relative;
     display: inline-block;
     height: 50px;
     text-align: center;
@@ -63,6 +64,21 @@
 /** 导航菜单名称 */
 .submenu .menu > .name {
     margin-left: 5px;
+}
+/** 导航菜单显示数量提醒 */
+.submenu .menu > .number {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    font-size: 12px;
+    color: #fff;
+    text-align: center;
+    line-height: 15px;
+    border-radius: 50%;
+    background-color: #ff0000;
 }
 /** 导航菜单a标签鼠标移上样式 */
 .submenu .container > a.menu:hover, a.menu:focus, a.menu:active {
