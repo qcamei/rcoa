@@ -12,9 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="need-default-index">
     
-    <div class="head-top">
-        <img src="/filedata/need/images/u5303.png">
-    </div>
+    <div class="head-top" style="background-image: url(/filedata/need/images/need_head.png)"></div>
     
     <div class="container content">
         <div class="content-title">
