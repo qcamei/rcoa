@@ -21,18 +21,8 @@ $this->title = Yii::t('app', 'Need Tasks');
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
-<div class="container need-task-index">
+<div class="container need-task-list">
    
-    <?= $this->render('_search', [
-        'model' => $searchModel,
-        'allBusiness' => $allBusiness,
-        'allLayer' => $allLayer,
-        'allProfession' => $allProfession,
-        'allCourse' => $allCourse,
-        'allCreatedBy' => $allCreatedBy,
-        'allReceiveBy' => $allReceiveBy
-    ]) ?>
-    
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'layout' => "{items}\n{summary}\n{pager}",

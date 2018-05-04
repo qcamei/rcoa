@@ -132,10 +132,11 @@ ModuleAssets::register($this);
         <div class="col-xs-12 title prompt"><i class="fa fa-paperclip"></i><span>附件</span></div>
     </div>
 
-    <div class="form-group field-need-attachments-upload_file_id">
+    <div class="form-group field-need-attachments-upload_file_id required">
         <div id="need-attachments" class="col-lg-12 col-md-12">
             <div id="need-attachments-container" class="col-lg-12 col-md-12 frame"></div>
         </div>
+        <div class="col-lg-12 col-md-12"><div class="help-block"></div></div>
     </div>
     
     <?= Html::activeHiddenInput($model, 'id', ['value' => $model->id]) ?>
@@ -202,7 +203,7 @@ $js =
     */
     function tijiao() {
        //uploader,isFinish() 是否已经完成所有上传
-       return window.attachmentUploader.isFinish();
+       return !window.attachmentUploader.isFinish();
     }
     /**
     * 侦听模态框关闭事件，销毁 uploader 实例
