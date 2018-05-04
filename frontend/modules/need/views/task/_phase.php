@@ -27,11 +27,12 @@ $percentArray = [
 
 $phaseArray = [];
 foreach ($statusArray as $status => $name) {
-    $phaseArray[$name] = $status;
+    if($status < NeedTask::STATUS_FINISHED){
+        $phaseArray[$name] = $status;
+    }
 }
-
 foreach ($phaseArray as $name => $number){
-    $is_present =  $number <= $model->status;
+    $is_present =  $number < $model->status;
     $is_hidden = $name != $statusArray[$model->status] ? ' hidden-xs' : '';
     $phase .= '<div class="phase ' . ($is_present ? 'has-to' : 'not-to') . $is_hidden . '"><span class="words">' . $name . '</span><span class="percent">(' . $percentArray[$name] . ')</span></div>';
     $phase .= $name == $statusArray[NeedTask::STATUS_FINISHED]  ?  null : '<div class="arrow hidden-xs"><i class="glyphicon glyphicon-arrow-right"></i></div>';

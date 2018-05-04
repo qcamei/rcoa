@@ -124,7 +124,7 @@ MainAssets::register($this);
                 foreach ($menuItems AS $item){
                     $selected = is_array($item['controller']) ? in_array($controllerId, $item['controller']) : $controllerId == $item['controller'] && (is_array($item['action']) ? in_array($actionId, $item['action']) : $actionId == $item['action']);
                     $item['options']['class'] .= $selected ? ' active' : null;
-                    echo ResourceHelper::a($item['icon'].Html::tag('span', $item['name'], ['class'=>'name hidden-xs']).Html::tag('span', $item['number'], ['class'=>'number'.(empty($item['number']) ? 'hidden' : '')]), $item['url'], 
+                    echo ResourceHelper::a($item['icon'].Html::tag('span', $item['name'], ['class'=>'name hidden-xs']).Html::tag('span', $item['number'], ['class'=>'number'.(empty($item['number']) ? ' hidden' : '')]), $item['url'], 
                             $item['options'], $item['conditions']);
                 }
             ?>
