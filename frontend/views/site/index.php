@@ -37,7 +37,7 @@ $this->title = '课程建设工作平台';
                     </a>
                     <div class="words">
                         <p><span class="CHS">需求</span></p>
-                        <span class="EN">Demand</span>
+                        <span class="EN">Need</span>
                         <i class="new"></i>
                     </div>
                 </div>
