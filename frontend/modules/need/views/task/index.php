@@ -23,15 +23,17 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container need-task-index">
    
-    <?= $this->render('_search', [
-        'model' => $searchModel,
-        'allBusiness' => $allBusiness,
-        'allLayer' => $allLayer,
-        'allProfession' => $allProfession,
-        'allCourse' => $allCourse,
-        'allCreatedBy' => $allCreatedBy,
-        'allReceiveBy' => $allReceiveBy
-    ]) ?>
+    <?php if(Yii::$app->controller->action->id != 'list'){
+        echo $this->render('_search', [
+            'model' => $searchModel,
+            'allBusiness' => $allBusiness,
+            'allLayer' => $allLayer,
+            'allProfession' => $allProfession,
+            'allCourse' => $allCourse,
+            'allCreatedBy' => $allCreatedBy,
+            'allReceiveBy' => $allReceiveBy
+        ]);
+    }?>
     
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
