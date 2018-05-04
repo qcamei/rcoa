@@ -225,7 +225,7 @@ use yii\web\View;
     }
 ?>
 
-<?php if(str_replace('&nbsp;', '', $btnGroups) != null): ?>
+<?php if(str_replace('&nbsp;', '', $btnHtml) != null): ?>
 
 <div class="controlbar">
     <div class="container">
