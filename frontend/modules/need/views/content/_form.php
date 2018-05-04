@@ -94,12 +94,21 @@ $js =
     }
         
     window.blurObject = function(elem){
+        var workIdVal = 0;
         elem.addClass('danger');
         if(elem.val() == '' || elem.val() == 0){
             elem.val(0);
             elem.removeClass('danger');
         }
-        $('#' + elem.attr('data-workid') + '> span').addClass('danger');
+        if(elem.val() > 0){
+            $('#' + elem.attr('data-workid') + '> span').addClass('danger');
+        }
+        $("input[data-workid='"+elem.attr("data-workid")+"']").each(function(){
+            workIdVal += Number($(this).val());
+        });
+        if(workIdVal <= 0){
+            $('#' + elem.attr('data-workid') + '> span').removeClass('danger');
+        }
         //计算内容成本
         var total = $('#needtask-reality_content_cost').val();
         var cost = elem.val() * elem.attr('data-price');
