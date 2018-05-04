@@ -110,7 +110,7 @@ $js =
 <<<JS
     //如果是附加了条件的搜索的情况下默认显示高级搜索
     if($is_search){
-        $('.collapse').addClass('in');
+        $('#collapse').addClass('in');
         $('.search .btngroup > a.arrow > i').removeClass('fa-caret-down').addClass('fa-caret-up');
     }
     //单击切换图标
