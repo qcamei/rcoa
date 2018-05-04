@@ -47,7 +47,7 @@
     height: 50px;
     text-align: center;
     line-height: 50px;
-    color: #000;
+    color: #fff;
 }
 /** 导航菜单选中 */
 .submenu .menu.active {
@@ -70,14 +70,15 @@
     position: absolute;
     top: 2px;
     right: 2px;
-    display: inline-block;
-    width: 15px;
+    display: block;
     height: 15px;
+    margin: 0;
+    padding: 0 3px;
     font-size: 12px;
     color: #fff;
     text-align: center;
     line-height: 15px;
-    border-radius: 50%;
+    border-radius: 10px;
     background-color: #ff0000;
 }
 /** 导航菜单a标签鼠标移上样式 */
@@ -86,10 +87,6 @@
     text-decoration: blink;
     background-color: rgba(255, 255, 255, 0.46);;
 }
-.submenu .container > a {
-    color: #fff;
-}
-
 /**
  * 公共样式
  */

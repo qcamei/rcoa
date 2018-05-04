@@ -26,6 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
     <!--开发内容-->
     <?= $this->render('/content/view', [
+        'model' => $model,
         'dataProvider' => new ArrayDataProvider([
             'allModels' => $model->contents,
         ]),

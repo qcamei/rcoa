@@ -49,9 +49,7 @@ $js =
     //提交表单    
     $('#submitsave').click(function(){
         //$('#need-content-form').submit();
-        $('#need-attachments-container').html('');
         $.post('../content/create?need_task_id=$need_task_id', $('#need-content-form').serialize(), function(rel){
-            window.onloadUploader();    //加载文件上传
             if(rel['code'] == '200'){
                 $('#need-content').load('../content/index?need_task_id=$need_task_id');
                 $('.field-need-content-plan_num .help-block').html('');

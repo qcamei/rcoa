@@ -23,7 +23,7 @@ use yii\web\View;
         </thead>
         <tbody>
             <tr>
-                <td style="text-align: right">内容</td>
+                <td style="text-align: right; color: #666;">内容</td>
                 <td>￥<?= $model->plan_content_cost ?></td>
                 <td>
                     <?= $model->reality_content_cost > $model->plan_content_cost ? 
@@ -39,7 +39,7 @@ use yii\web\View;
                 </td>
             </tr>
             <tr>
-                <td style="text-align: right">外包</td>
+                <td style="text-align: right; color: #666;">外包</td>
                 <td>￥<?= $model->plan_outsourcing_cost ?></td>
                 <td>
                     <?= $model->reality_outsourcing_cost > $model->plan_outsourcing_cost ? 
@@ -55,7 +55,7 @@ use yii\web\View;
                 </td>
             </tr>
             <tr>
-                <td style="text-align: right">绩效</td>
+                <td style="text-align: right; color: #666;">绩效</td>
                 <td>
                     ￥<?= $model->plan_content_cost * $model->performance_percent ?>
                 </td>
@@ -73,7 +73,7 @@ use yii\web\View;
                 </td>
             </tr>
             <tr>
-                <td style="text-align: right">总</td>
+                <td style="text-align: right; color: #666;">总</td>
                 <td>
                     <?php $plan_total = $model->plan_content_cost + $plan_score + $model->plan_outsourcing_cost; 
                         echo '￥' . $plan_total;

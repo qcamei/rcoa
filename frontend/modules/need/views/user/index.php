@@ -67,6 +67,7 @@ use yii\web\View;
                         ],
                         'style' => [
                             'padding' => '8px 4px',
+                            'color' => '#666',
                             'white-space' => 'nowrap',
                         ],
                     ],
