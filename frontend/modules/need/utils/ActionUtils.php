@@ -274,7 +274,7 @@ class ActionUtils
             }
             
             $trans->commit();  //提交事务
-            Yii::$app->getSession()->setFlash('success','操作成功！');
+            Yii::$app->getSession()->setFlash('success','操作成功！请到【列表】页查看！');
         }catch (Exception $ex) {
             $trans ->rollBack(); //回滚事务
             Yii::$app->getSession()->setFlash('error', '操作失败！' . $ex->getMessage());
@@ -343,7 +343,7 @@ class ActionUtils
                 }
                 $this->saveRecentContacts($post);
                 $this->saveNeedTaskLog(['action'=>'转让', 'title'=> '开发管理', 
-                    'content' => '承接人：【旧】'. $userModel->nickname .' >>【新】' . $model->receiveBy->nickname . '\n\r' .
+                    'content' => "承接人：【旧】". $userModel->nickname ." >>【新】" . $model->receiveBy->nickname . "\n\r" .
                         $post['remarks'], 'need_task_id' => $model->id]);
             }else{
                 throw new Exception($model->getErrors());

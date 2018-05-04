@@ -3,6 +3,7 @@
 use common\models\need\NeedTaskUser;
 use kartik\widgets\Select2;
 use yii\helpers\Html;
+use yii\web\JsExpression;
 use yii\web\View;
 use yii\widgets\ActiveForm;
 
@@ -49,8 +50,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 
                 <?= $form->field($model, 'receive_by')->widget(Select2::class, [
                     'data' => $receiveBys, 
-                    'hideSearch' => true,
-                    'options' => ['placeholder' => '请选择...',]
+                    'hideSearch' => false,
+                    'pluginOptions' => [
+                        'placeholder' => '请选择...',
+                        'allowClear' => true,
+                    ],
                 ]) ?>
 
                 <div class="form-group field-needtask-remarks">

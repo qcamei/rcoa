@@ -381,7 +381,7 @@ class TaskController extends Controller
         
         return $this->renderAjax('transfer', [
             'model' => $model,
-            'receiveBys' => $this->getUsersGroup(),
+            'receiveBys' => array_diff($this->getUsersGroup(), [$model->receive_by => $model->receiveBy->nickname]),
             'userRecentContacts' => $this->getUserRecentContacts(),
         ]);
     }

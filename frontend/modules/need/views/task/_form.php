@@ -133,9 +133,7 @@ ModuleAssets::register($this);
     </div>
 
     <div class="form-group field-need-attachments-upload_file_id required">
-        <div id="need-attachments" class="col-lg-12 col-md-12">
-            <div id="need-attachments-container" class="col-lg-12 col-md-12 frame"></div>
-        </div>
+        <div id="need-attachments-container" class="col-lg-12 col-md-12"></div>
         <div class="col-lg-12 col-md-12"><div class="help-block"></div></div>
     </div>
     
@@ -174,6 +172,8 @@ $js =
                 auto: false,
                 //开起分片上传
                 chunked: true,
+                // 上传容器
+                container: '#need-attachments-container',
                 formData: {
                     _csrf: "$csrfToken",
                     //指定文件上传到的应用
@@ -183,17 +183,8 @@ $js =
                 }
 
             };
-            //附件配置
-            var config2 = $.extend({
-                // 上传容器
-                container: '#need-attachments-container',
-                //指定选择文件的按钮容器
-                pick: {
-                    id:  '#need-attachments .euploader-btns > div',
-                },
-            }, config);
             //附件
-            window.attachmentUploader = new euploader.Uploader(config2, euploader.FilelistView);
+            window.attachmentUploader = new euploader.Uploader(config, euploader.FilelistView);
             window.attachmentUploader.addCompleteFiles($attFiles);
         });
     }
@@ -208,11 +199,11 @@ $js =
     /**
     * 侦听模态框关闭事件，销毁 uploader 实例
     *
-    */
+    
     $('.myModal').on('hidden.bs.modal',function(){
         $('.myModal').off('hidden.bs.modal');
         window.attachmentUploader.destroy();
-    });
+    });*/
         
     /** 下拉选择【专业/工种】 */
     $('#needtask-layer_id').change(function(){

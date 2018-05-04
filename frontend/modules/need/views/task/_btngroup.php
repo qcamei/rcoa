@@ -239,7 +239,7 @@ use yii\web\View;
 <?php
 $js = 
 <<<JS
-    if("$actionId" !== "view"){
+    if("$actionId" != "view"){
         window.onloadUploader();    //加载文件上传
     }
     //提交表单
