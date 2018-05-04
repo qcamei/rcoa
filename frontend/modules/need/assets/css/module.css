@@ -494,10 +494,10 @@ span.stamp {
 }
 /**************************************最近联系*****************************************/
 .recent {
-    display: inline-block; 
-    width:60px;
-    height:60px;
-    margin: 0 0 5px;
+    float: left;
+    width: 60px;
+    height: 60px;
+    margin: 0 5px 5px 0;
     font-size: 12px;
     text-align: center;
     border: 1px #ccc solid;
