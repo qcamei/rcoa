@@ -10,7 +10,7 @@ use yii\web\View;
 /* @var $searchModel ItemTypeSearch */
 /* @var $dataProvider ActiveDataProvider */
 
-$this->title = '基础数据';//Yii::t('rcoa/basedata', 'Item Types');
+$this->title = Yii::t('app', 'Basedata');
 
 ?>
 
