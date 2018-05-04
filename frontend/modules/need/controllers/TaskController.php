@@ -83,7 +83,7 @@ class TaskController extends Controller
         $searchModel = new NeedTaskSearch();
         $results = $searchModel->search(['NeedTaskSearch' => ['status' => NeedTask::STATUS_WAITRECEIVE], 'is_receive' => 1]);
         
-        return $this->render('list', [
+        return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $results['dataProvider'],
             'totalCount' => $results['dataProvider']->totalCount,
