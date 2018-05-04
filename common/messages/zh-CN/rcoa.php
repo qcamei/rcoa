@@ -114,6 +114,8 @@ return [
     'Price' => '单价',
     'Cost' => '成本',
     'Plan Num' => '预计数量',
+    'Import' => '导入',
+    'Basedata' => '基础数据',
     
     //场景预约
     'Booker' => '预约人',

@@ -9,7 +9,7 @@ use yii\web\View;
 
 BasedatamenuAssets::register($this);
 
-$this->title = '基础数据';
+$this->title = Yii::t('app', 'Basedata');
 
 ?>
 
@@ -46,6 +46,13 @@ $menuItems = [
         'label' => Yii::t('app', 'Expert'),
         'url' => ['expert/index'],
         'icons' => '<i class="fa fa-users"></i>', 
+        'options' => ['class' => 'links']
+    ],
+    [
+        'label' => Yii::t('app', '{Import}{Basedata}',[
+                'Import' => Yii::t('app', 'Import'),'Basedata' => Yii::t('app', 'Basedata'),]),
+        'url' => ['basedata-import/upload'],
+        'icons' => '<i class="fa fa-cloud-upload"></i>', 
         'options' => ['class' => 'links']
     ],
 ];

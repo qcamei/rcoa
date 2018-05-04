@@ -84,8 +84,8 @@ MainAssets::register($this);
                         'adminOptions' => null,
                     ],
                     [
-                        'controller'=> ['business','college','project','course','expert'],
-                        'action' => 'index',
+                        'controller'=> ['business','college','project','course','expert', 'basedata-import'],
+                        'action' => ['index', 'upload'],
                         'name' => '数据',
                         'number' => null,
                         'url' => ['business/index'],
