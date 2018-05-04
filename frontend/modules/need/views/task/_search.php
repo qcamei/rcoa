@@ -45,49 +45,49 @@ use yii\widgets\ActiveForm;
     <div id="collapse" class="collapse" aria-expanded="false">
         <div class="col-xs-12 search-frame">
             
-            <div class="col-lg-4 col-md-4 frame">
+            <div class="col-lg-4 col-md-4 col-xs-12 frame">
             <?= $form->field($model, 'business_id')->widget(Select2::class, [
                 'data' => $allBusiness,  'hideSearch' => true,
                 'options' => ['placeholder' => '全部'], 'pluginOptions' => ['allowClear' => true]
             ]) ?>
             </div>
             
-            <div class="col-lg-4 col-md-4 frame">
+            <div class="col-lg-4 col-md-4 col-xs-12 frame">
             <?= $form->field($model, 'layer_id')->widget(Select2::class, [
                 'data' => $allLayer, 'hideSearch' => true,
                 'options' => ['placeholder' => '全部'], 'pluginOptions' => ['allowClear' => true]
             ]) ?>
             </div>
             
-            <div class="col-lg-4 col-md-4 frame">
+            <div class="col-lg-4 col-md-4 col-xs-12 frame">
             <?= $form->field($model, 'profession_id')->widget(Select2::class, [
                 'data' => $allProfession, 'hideSearch' => true,
                 'options' => ['placeholder' => '全部'], 'pluginOptions' => ['allowClear' => true]
             ]) ?>
             </div>
             
-            <div class="col-lg-4 col-md-4 frame">
+            <div class="col-lg-4 col-md-4 col-xs-12 frame">
             <?= $form->field($model, 'course_id')->widget(Select2::class, [
                 'data' => $allCourse, 'hideSearch' => true,
                 'options' => ['placeholder' => '全部'], 'pluginOptions' => ['allowClear' => true]
             ]) ?>
             </div>
             
-            <div class="col-lg-4 col-md-4 frame">
+            <div class="col-lg-4 col-md-4 col-xs-12 frame">
             <?= $form->field($model, 'created_by')->widget(Select2::class, [
                 'data' => $allCreatedBy, 'hideSearch' => true,
                 'options' => ['placeholder' => '全部'], 'pluginOptions' => ['allowClear' => true]
             ]) ?>
             </div>
             
-            <div class="col-lg-4 col-md-4 frame">
+            <div class="col-lg-4 col-md-4 col-xs-12 frame">
             <?= $form->field($model, 'receive_by')->widget(Select2::class, [
                 'data' => $allReceiveBy, 'hideSearch' => true,
                 'options' => ['placeholder' => '全部'], 'pluginOptions' => ['allowClear' => true]
             ]) ?>
             </div>
             
-            <div class="col-lg-4 col-md-4 frame">
+            <div class="col-lg-4 col-md-4 col-xs-12 frame">
             <?= $form->field($model, 'status')->widget(Select2::class, [
                 'data' => [0 => '未完成', NeedTask::STATUS_FINISHED => '已完成'],
                 'hideSearch' => true,
