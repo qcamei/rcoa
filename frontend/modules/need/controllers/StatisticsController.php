@@ -373,7 +373,7 @@ class StatisticsController extends Controller
                 ->from(['NeedTask' => NeedTask::tableName()])
                 ->leftJoin(['NeedTaskUser' => NeedTaskUser::tableName()], 'NeedTaskUser.need_task_id = NeedTask.id')
                 ->leftJoin(['User' => User::tableName()], 'User.id = NeedTaskUser.user_id')
-                ->where(['NeedTaskUser.is_del' => 0])
+                ->andFilterWhere(['NeedTaskUser.is_del' => 0])
                 ->groupBy('NeedTaskUser.user_id')
                 ->orderBy([$selectName => SORT_ASC]);
 
