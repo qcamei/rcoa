@@ -378,10 +378,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'yii\grid\ActionColumn',
                 //'header' => Yii::t('rcoa', 'Operating'),
                 'buttons' => [
-                    'view' => function ($url, $model) use($isHasReceive){
+                    'view' => function ($url, $model){
                         /* @var $model NeedTask */
                         $colour = (($model->getIsAuditing()) && $model->audit_by == Yii::$app->user->id) || ($model->getIsChangeAudit() && $model->created_by == Yii::$app->user->id) ? 'btn-info' : (
-                                $model->getIsWaitReceive() && $isHasReceive  ? 'btn-primary' : 
                                 (($model->getIsChecking() && $model->created_by == Yii::$app->user->id) || ($model->getIsChangeCheck() && $model->receive_by == Yii::$app->user->id) ? 'btn-success' : 'btn-default'));
                         $options = [
                             'class' => 'btn ' . $colour . ' btn-sm',

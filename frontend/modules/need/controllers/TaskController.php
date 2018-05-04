@@ -63,7 +63,6 @@ class TaskController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $results['dataProvider'],
             'totalCount' => $results['dataProvider']->totalCount,
-            'isHasReceive' => $this->getIsHasReceiveToDeveloper(),                                                                                                                                                                                                                                                                               
             //下拉选择
             'allBusiness' => $this->getBusiness(),
             'allLayer' => $this->getCollegesForSelect(),
@@ -87,7 +86,6 @@ class TaskController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $results['dataProvider'],
             'totalCount' => $results['dataProvider']->totalCount,
-            'isHasReceive' => $this->getIsHasReceiveToDeveloper(),                                                                                                                                                                                                                                                                               
         ]);
     }
 
