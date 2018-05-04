@@ -47,5 +47,8 @@ BasedataAssets::register($this);
         }
         ?>
     </div>
+    <?= Html::a('导入基础数据', Url::to(['/demand/basedata-import/upload']), [
+        'class' => 'btn btn-primary'
+    ]) ?>
 </div>
 
