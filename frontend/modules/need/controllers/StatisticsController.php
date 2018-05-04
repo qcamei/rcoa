@@ -235,7 +235,8 @@ class StatisticsController extends Controller
         $presonalQuery->select(['User.nickname AS name', "{$selectName} AS value"])
                 ->from(['NeedTask' => NeedTask::tableName()])
                 ->leftJoin(['User' => User::tableName()], 'User.id = NeedTask.created_by')
-                ->groupBy('NeedTask.created_by');
+                ->groupBy('NeedTask.created_by')
+                ->orderBy([$selectName => SORT_ASC]);;
         
         return $presonalQuery->all(Yii::$app->db);
     }
@@ -370,8 +371,11 @@ class StatisticsController extends Controller
         $presonalQuery = clone $sourceQuery;
         $presonalQuery->select(['User.nickname AS name', "{$selectName} AS value"])
                 ->from(['NeedTask' => NeedTask::tableName()])
-                ->leftJoin(['User' => User::tableName()], 'User.id = NeedTask.created_by')
-                ->groupBy('NeedTask.created_by');
+                ->leftJoin(['NeedTaskUser' => NeedTaskUser::tableName()], 'NeedTaskUser.need_task_id = NeedTask.id')
+                ->leftJoin(['User' => User::tableName()], 'User.id = NeedTaskUser.user_id')
+                ->where(['NeedTaskUser.is_del' => 0])
+                ->groupBy('NeedTaskUser.user_id')
+                ->orderBy([$selectName => SORT_ASC]);
 
         return $presonalQuery->all(Yii::$app->db);
     }
