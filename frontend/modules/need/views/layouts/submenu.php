@@ -33,6 +33,7 @@ MainAssets::register($this);
                 $menuItems = [
                     [
                         'controllerId' => 'default',
+                        'actionId' => 'index',
                         'name' => '主页',
                         'url' => ['default/index'],
                         'icon' => '<i class="glyphicon glyphicon-home"></i>',
@@ -43,6 +44,7 @@ MainAssets::register($this);
                     ],
                     [
                         'controllerId' => 'task',
+                        'actionId' => 'index',
                         'name' => '课程',
                         'url' => ['task/index'],
                         'icon' => '<i class="glyphicon glyphicon-list"></i>',
@@ -52,7 +54,19 @@ MainAssets::register($this);
                         'adminOptions' => null,
                     ],
                     [
+                        'controllerId' => 'task',
+                        'actionId' => 'list',
+                        'name' => '承接',
+                        'url' => ['task/list'],
+                        'icon' => '<i class="glyphicon glyphicon-list"></i>',
+                        'options' => ['class' => 'menu'],
+                        'symbol' => '&nbsp;',
+                        'conditions' => true,
+                        'adminOptions' => null,
+                    ],
+                    [
                         'controllerId' => 'statistics',
+                        'actionId' => ['cost', 'bonus', 'course-details', 'personal-details'],
                         'name' => '统计',
                         'url' => ['statistics/cost'],
                         'icon' => '<i class="glyphicon glyphicon-stats"></i>',
@@ -63,6 +77,7 @@ MainAssets::register($this);
                     ],
                     [
                         'controllerId'=> ['business','college','project','course','expert'],
+                        'actionId' => 'index',
                         'name' => '数据',
                         'url' => ['business/index'],
                         'icon' => '<i class="glyphicon glyphicon-briefcase"></i>',
@@ -73,6 +88,7 @@ MainAssets::register($this);
                     ],
                     [
                         'controllerId'=> 'workitem',
+                        'actionId' => 'index',
                         'name' => '样例',
                         'url' => ['workitem/index'],
                         'icon' => '<i class="glyphicon glyphicon-tasks"></i>',
@@ -83,6 +99,7 @@ MainAssets::register($this);
                     ],
                     [
                         'controllerId' => 'task',
+                        'actionId' => 'create',
                         'name' => '创建任务',
                         'url' => ['task/create'],
                         'icon' => '<i class="glyphicon glyphicon-edit"></i>',
@@ -94,7 +111,7 @@ MainAssets::register($this);
                 ];
 
                 foreach ($menuItems AS $item){
-                    $selected = is_array($item['controllerId']) ? in_array($controllerId, $item['controllerId']) : $controllerId === $item['controllerId'];
+                    $selected = is_array($item['controllerId']) ? in_array($controllerId, $item['controllerId']) : $controllerId == $item['controllerId'] && (is_array($item['actionId']) ? in_array($actionId, $item['actionId']) : $actionId == $item['actionId']);
                     $item['options']['class'] .= $selected ? ' active' : null;
                     echo ResourceHelper::a($item['icon'].Html::tag('span', $item['name'], ['class'=>'name hidden-xs']), $item['url'], 
                             $item['options'], $item['conditions']);

@@ -12,7 +12,7 @@ use yii\web\View;
 MainAssets::register($this);
 
 // 添加面包屑 or 子菜单
-if(Yii::$app->controller->action->id === 'index'){
+if(in_array(Yii::$app->controller->action->id, ['index', 'list'])){
     $content = $content . $this->render('submenu');
 }else{
     $content = $this->render('crumbs') . $content;

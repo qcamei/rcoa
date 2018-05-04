@@ -73,6 +73,23 @@ class TaskController extends Controller
             'allReceiveBy' => $this->getUsersGroup($results['receive_by']),
         ]);
     }
+    
+    /**
+     * 承接列表
+     * @return mixed
+     */
+    public function actionList()
+    {
+        $searchModel = new NeedTaskSearch();
+        $results = $searchModel->search(['NeedTaskSearch' => ['status' => NeedTask::STATUS_WAITRECEIVE], 'is_receive' => 1]);
+        
+        return $this->render('list', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $results['dataProvider'],
+            'totalCount' => $results['dataProvider']->totalCount,
+            'isHasReceive' => $this->getIsHasReceiveToDeveloper(),                                                                                                                                                                                                                                                                               
+        ]);
+    }
 
     /**
      * Displays a single NeedTask model.

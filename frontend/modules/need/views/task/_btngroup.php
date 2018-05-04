@@ -238,13 +238,21 @@ $js =
     //提交表单
     window.submitForm = function(){
         var tablelen = $('#need-content .table > tbody > tr').length;
+        var attlen = $('#need-attachments .table > tbody > tr').length;
         var hasClass = $('#need-content .table > tbody > tr div').hasClass('empty');
-        if(tablelen > 0 && !hasClass){
-            $('#need-task-form').submit();
-        }else{
+        //判断开发内容是否为空
+        if(tablelen <= 0 || hasClass){
             $('.field-need-content-plan_num').addClass('has-error');
             $('.field-need-content-plan_num .help-block').html('开发内容不能为空。');
+            return;
         }
+        //判断是否有未上传的附件
+        if(attlen > 0 && tijiao()){
+            $('.field-need-attachments-upload_file_id').addClass('has-error');
+            $('.field-need-attachments-upload_file_id .help-block').html('附件文件还未上传。');
+            return;
+        }
+        $('#need-task-form').submit();
     }
    
     //显示模态框

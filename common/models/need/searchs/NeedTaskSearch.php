@@ -49,6 +49,7 @@ class NeedTaskSearch extends NeedTask
     public function search($params)
     {
         $is_search = ArrayHelper::getValue($params, 'is_search', 0);    //是否为搜索
+        $is_receive = ArrayHelper::getValue($params, 'is_receive', 0);    //是否为承接
         $this->keyword = ArrayHelper::getValue($params, 'NeedTaskSearch.keyword');   //关键字
         $this->audit_by = ArrayHelper::getValue($params, 'NeedTaskSearch.audit_by', \Yii::$app->user->id);   //审核人
         $this->receive_by = ArrayHelper::getValue($params, 'NeedTaskSearch.receive_by', \Yii::$app->user->id);   //承接人
@@ -101,13 +102,16 @@ class NeedTaskSearch extends NeedTask
         }else{
             $query->andFilterWhere(['status' => $this->status]);
         }
-        //判断是否为搜索下的条件过滤
-        if($is_search){
-            $query->andFilterWhere(['receive_by' => $this->receive_by, 'created_by' => $this->created_by]);
-        }else{
-            $query->andFilterWhere(['or', ['receive_by' => $this->receive_by],
-                ['audit_by' => $this->audit_by], ['created_by' => $this->created_by],
-            ]);
+        //如果是承接列表就不加载该条件
+        if(!$is_receive){
+            //判断是否为搜索下的条件过滤
+            if($is_search){
+                $query->andFilterWhere(['receive_by' => $this->receive_by, 'created_by' => $this->created_by]);
+            }else{
+                $query->andFilterWhere(['or', ['receive_by' => $this->receive_by],
+                    ['audit_by' => $this->audit_by], ['created_by' => $this->created_by],
+                ]);
+            }
         }
         //模糊查询
         $query->andFilterWhere(['like', 'task_name', $this->keyword])
