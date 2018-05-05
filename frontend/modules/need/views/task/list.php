@@ -22,17 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 <div class="container need-task-index">
-   
-    <?= $this->render('_search', [
-        'model' => $searchModel,
-        'allBusiness' => $allBusiness,
-        'allLayer' => $allLayer,
-        'allProfession' => $allProfession,
-        'allCourse' => $allCourse,
-        'allCreatedBy' => $allCreatedBy,
-        'allReceiveBy' => $allReceiveBy
-    ])?>
-    
+  
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'layout' => "{items}\n{summary}\n{pager}",
@@ -274,7 +264,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'headerOptions' => [
                     'class'=>[
-                        'th'=>'hidden-xs',
+                        //'th'=>'hidden-xs',
                     ],
                     'style' => [
                         'width' => '50px',
@@ -283,7 +273,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'contentOptions' =>[
                     'class' => [
-                        'td' => 'hidden-xs'
+                        //'td' => 'hidden-xs'
                     ],
                     'style' => [
                         'padding' => '8px 4px',
@@ -301,7 +291,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'headerOptions' => [
                     'class'=>[
-                        //'th'=>'hidden-xs',
+                        'th'=>'hidden-xs',
                     ],
                     'style' => [
                         'width' => '50px',
@@ -310,7 +300,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'contentOptions' =>[
                     'class' => [
-                        //'td' => 'hidden-xs'
+                        'td' => 'hidden-xs'
                     ],
                     'style' => [
                         'padding' => '8px 4px',
@@ -380,8 +370,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'buttons' => [
                     'view' => function ($url, $model){
                         /* @var $model NeedTask */
-                        $colour = (($model->getIsAuditing()) && $model->audit_by == Yii::$app->user->id) || ($model->getIsChangeAudit() && $model->created_by == Yii::$app->user->id) ? 'btn-info' : (
-                                (($model->getIsChecking() && $model->created_by == Yii::$app->user->id) || ($model->getIsChangeCheck() && $model->receive_by == Yii::$app->user->id) ? 'btn-success' : 'btn-default'));
+                        $colour = $model->getIsWaitReceive() ? 'btn-primary' : 'btn-default';
                         $options = [
                             'class' => 'btn ' . $colour . ' btn-sm',
                             'target' => '_blank',

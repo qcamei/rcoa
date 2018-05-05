@@ -63,7 +63,6 @@ class TaskController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $results['dataProvider'],
             'totalCount' => $results['dataProvider']->totalCount,
-            'isHasReceive' => $this->getIsHasReceiveToDeveloper(),                                                                                                                                                                                                                                                                               
             //下拉选择
             'allBusiness' => $this->getBusiness(),
             'allLayer' => $this->getCollegesForSelect(),
@@ -83,11 +82,10 @@ class TaskController extends Controller
         $searchModel = new NeedTaskSearch();
         $results = $searchModel->search(['NeedTaskSearch' => ['status' => NeedTask::STATUS_WAITRECEIVE], 'is_receive' => 1]);
         
-        return $this->render('index', [
+        return $this->render('list', [
             'searchModel' => $searchModel,
             'dataProvider' => $results['dataProvider'],
             'totalCount' => $results['dataProvider']->totalCount,
-            'isHasReceive' => $this->getIsHasReceiveToDeveloper(),                                                                                                                                                                                                                                                                               
         ]);
     }
 
