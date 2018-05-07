@@ -229,9 +229,8 @@ class ActionUtils
                     'content' => $post['remarks'], 'need_task_id' => $model->id]);
                 if(!$post['result']){
                     NoticeUtils::sendCreateByNotification($model, '审核反馈', 'need/_audit_result', $post);
-                }else {
-                    NoticeUtils::sendReceiveByNotification($model, self::getHasReceiveToDeveloper(), '需求发布', 'need/_receive_request');
                 }
+                NoticeUtils::sendReceiveByNotification($model, self::getHasReceiveToDeveloper(), '需求发布', 'need/_receive_request');
             }else{
                 throw new Exception($model->getErrors());
             }
@@ -440,9 +439,8 @@ class ActionUtils
                 if($post['result']){
                     $this->saveNeedTaskLog(['action'=> '完成', 'title'=> '任务管理', 
                         'content' => '验收已通过，任务结束', 'need_task_id' => $model->id]);
-                }else{
-                    NoticeUtils::sendReceiveByNotification($model, ['guid' => $model->receiveBy->guid], '验收反馈', 'need/_check_result', $post);
                 }
+                NoticeUtils::sendReceiveByNotification($model, ['guid' => $model->receiveBy->guid], '验收反馈', 'need/_check_result', $post);
             }else{
                 throw new Exception($model->getErrors());
             }

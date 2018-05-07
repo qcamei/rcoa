@@ -430,6 +430,6 @@ class NeedTask extends ActiveRecord
      */
     public function getStatusName()
     {
-        return self::$statusMap[$this->status];
+        return isset(self::$statusMap[$this->status]) ? self::$statusMap[$this->status] : null;
     }
 }

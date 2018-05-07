@@ -184,10 +184,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value'=> function($model){
                     /* @var $model NeedTask */
+                    $progress = isset(NeedTask::$progressMap[$model->status]) ? NeedTask::$progressMap[$model->status] : 0 ;
                     return $model->task_name . 
                         '<div class="progress table-list-progress" style="height: 12px; margin: 2px 0; border-radius:0px;">' .
-                            '<div class="progress-bar" style="width: ' . NeedTask::$progressMap[$model->status] . '%; line-height: 12px; font-size: 10px;">' .
-                                NeedTask::$progressMap[$model->status] . '%' .
+                            '<div class="progress-bar" style="width: ' . $progress . '%; line-height: 12px; font-size: 10px;">' .
+                                $progress . '%' .
                             '</div>' . 
                         '</div>';
                 },
@@ -386,7 +387,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'class' => 'btn ' . $colour . ' btn-sm',
                             'target' => '_blank',
                         ];
-                        return Html::a($model->getStatusName(), ['view', 'id' => $model->id], $options);
+                        return !empty($model->getStatusName()) ? Html::a($model->getStatusName(), ['view', 'id' => $model->id], $options) : null;
                     },
                 ],
                 'headerOptions' => [

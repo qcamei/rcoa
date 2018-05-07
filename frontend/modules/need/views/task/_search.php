@@ -89,7 +89,7 @@ use yii\widgets\ActiveForm;
             
             <div class="col-lg-4 col-md-4 col-xs-12 frame">
             <?= $form->field($model, 'status')->widget(Select2::class, [
-                'data' => [0 => '未完成', NeedTask::STATUS_FINISHED => '已完成'],
+                'data' => [NeedTask::STATUS_CREATEING => '未完成', NeedTask::STATUS_FINISHED => '已完成'],
                 'hideSearch' => true,
                 'options' => ['placeholder' => '全部'], 'pluginOptions' => ['allowClear' => true]
             ]) ?>

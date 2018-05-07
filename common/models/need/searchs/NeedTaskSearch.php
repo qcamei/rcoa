@@ -55,7 +55,7 @@ class NeedTaskSearch extends NeedTask
         $this->receive_by = ArrayHelper::getValue($params, 'NeedTaskSearch.receive_by', \Yii::$app->user->id);   //承接人
         $this->created_by = ArrayHelper::getValue($params, 'NeedTaskSearch.created_by', \Yii::$app->user->id);   //发布者
         $this->status = ArrayHelper::getValue($params, 'NeedTaskSearch.status', self::$defaultMap); //状态
-       
+        
         $query = NeedTask::find();
         //复制对象
         $queryCopy = clone $query;
@@ -97,8 +97,11 @@ class NeedTaskSearch extends NeedTask
             'updated_at' => $this->updated_at,
         ]);
         //判断传值上来的状态是否为 默认 0，如果是则条件为非【已完成】状态下的状态
-        if($this->status == self::STATUS_DEFAULT){
+        //var_dump($this->status === self::STATUS_DEFAULT);exit;
+        if($this->status === self::STATUS_CREATEING){
             $query->andFilterWhere(['status' => self::$defaultMap]);
+        }else if(empty($this->status)){
+            $query->andFilterWhere(['NOT IN', 'status', self::STATUS_DEFAULT]);
         }else{
             $query->andFilterWhere(['status' => $this->status]);
         }
