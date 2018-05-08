@@ -31,7 +31,7 @@ class RbacManager extends DbManager{
      * 默认管理角色，
      * @var type 
      */
-    public $defaultAdminRole = 'admin';
+    public $defaultAdminRole = 'r_admin';
     
     public function init() 
     {
