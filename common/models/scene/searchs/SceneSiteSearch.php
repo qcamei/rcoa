@@ -119,9 +119,10 @@ class SceneSiteSearch extends SceneSite
     /**
      * 补充搜索查询
      * @param array $params
+     * @param bool $isAdmin 是否为管理员,管理员可以查看所有场地
      * @return Query
      */
-    public function dataSearceh($params)
+    public function dataSearceh($params,$isAdmin = false)
     {
         //复制对象，为对应属性查询条件
         $query = $this->sceneSearch($params);
@@ -132,6 +133,11 @@ class SceneSiteSearch extends SceneSite
         //额外字段属性
         $query->addSelect(['SceneSite.id', 'SceneSite.name', 'SceneSite.op_type', 'SceneSite.area', 'SceneSite.address',
             'SceneSite.content_type', 'SceneSite.price', 'SceneSite.img_path', 'X(location)', 'Y(location)']);
+        //只限管理员可见
+        if(!$isAdmin){
+            $query->where(['SceneSite.manager_id' => \Yii::$app->user->id]);
+        }
+        
         //课程排序，条件判断
         if ($this->sort_order == 'sort_order') {
             $query->orderBy(['SceneSite.op_type' => SORT_ASC, "SceneSite.$this->sort_order" => SORT_ASC]);

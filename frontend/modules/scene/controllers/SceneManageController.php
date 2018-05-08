@@ -7,6 +7,7 @@ use common\models\scene\SceneSite;
 use common\models\scene\SceneSiteDisable;
 use common\models\scene\searchs\SceneSiteDisableSearch;
 use common\models\scene\searchs\SceneSiteSearch;
+use wskeee\rbac\RbacManager;
 use Yii;
 use yii\db\Query;
 use yii\filters\AccessControl;
@@ -57,7 +58,7 @@ class SceneManageController extends Controller
     {
         $params = Yii::$app->request->queryParams;
         $search = new SceneSiteSearch();
-        $sceneItem = $search->dataSearceh($params);             //场地搜索的结果
+        $sceneItem = $search->dataSearceh($params,$this->isAdmin());             //场地搜索的结果
         
         return $this->render('index',[
             'sceneItem' => $sceneItem,
@@ -89,7 +90,7 @@ class SceneManageController extends Controller
         $sceneSite = $this->getSceneSite();
         $firstSite = array_keys(reset($sceneSite));       //获取场景的第一个场地
         $results = $searchModel->searchModel($params, $firstSite);
-
+        
         return $this->render('disable',[
             'filter' => $results['filters'],
             'dataProvider' => $results['data'],
@@ -230,6 +231,12 @@ class SceneManageController extends Controller
             'id' => $site_id,
             'is_publish' => 1,
         ]);
+        //只有场地管理人才可以禁用/启用,超级管理员除外\
+        if(!$this->isAdmin()){
+            $query->andFilterWhere([
+                'manager_id' => \Yii::$app->user->id,   
+            ]);
+        }
         $results = $query->all();
         
         if($site_id == null){
@@ -267,5 +274,14 @@ class SceneManageController extends Controller
         }
         
         return $bookItems;
+    }
+    
+    /**
+     * 检查是否为管理员
+     */
+    private function isAdmin(){
+        /* @var $rbacManager RbacManager */
+        $rbacManager = \Yii::$app->authManager;
+        return $rbacManager->isAdmin('r_admin');
     }
 }
