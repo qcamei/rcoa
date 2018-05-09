@@ -237,8 +237,16 @@ class SceneBookAction
         $sceneUser = $this->getOldNewSceneUser($model->id, null, null);
         $users = [
             'guid' => ArrayHelper::getColumn($sceneUser['oldBookUser'], 'guid'),
-            'email' => ArrayHelper::getColumn($sceneUser['oldBookUser'], 'email'),
+           // 'email' => ArrayHelper::getColumn($sceneUser['oldBookUser'], 'email'),
         ];
+        /* guid为空时发送邮件 */
+        $emails = [];
+        foreach($sceneUser as $user){
+            if(empty($user['guid'])){
+                $emails[] = $user['email'];
+            }
+        }
+        $users['email'] = $emails;
         
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();

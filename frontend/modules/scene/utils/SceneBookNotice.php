@@ -3,6 +3,8 @@
 namespace frontend\modules\scene\utils;
 
 use common\models\scene\SceneBook;
+use common\models\User;
+use wskeee\notification\NotificationMailManager;
 use wskeee\notification\NotificationManager;
 use wskeee\rbac\RbacManager;
 use wskeee\rbac\RbacName;
@@ -67,19 +69,23 @@ class SceneBookNotice {
         //主题 
         $subject = self::$subjectModule.$title;
         //查找所有摄影组长
-        $users = $authManager->getItemUsers(RbacName::ROLE_SHOOT_LEADER);
+        //$users = $authManager->getItemUsers(RbacName::ROLE_SHOOT_LEADER);
+        //查找场地管理员
+        $users = User::find()->where(['id' => $model->sceneSite->manager_id])->all();
+        
         //所有摄影师组长guid
         $receivers = array_filter(ArrayHelper::getColumn($users, 'guid'));
         //所有摄影师组长邮箱地址
-        $receivers_mail = array_filter(ArrayHelper::getColumn($users, 'email'));
+        $receivers_mail = $this->separateEmailInGuid($receivers);
         
         //发送消息 
-        NotificationManager::sendByView($views, $params, $receivers, $subject, self::createAbsoluteUrl($model));
-        //发送邮件消息 
-        /*Yii::$app->mailer->compose($views, $params)
-            ->setTo($receivers_email)
-            ->setSubject($subject)
-            ->send();*/
+        if(count($receivers) > 0){
+            //有企业微信优先发
+            NotificationManager::sendByView($views, $params, $receivers, $subject, self::createAbsoluteUrl($model));
+        }else{
+            //没有即送邮件
+            NotificationMailManager::sendByView($views.'_mail', $params, $receivers_mail, $subject, self::createAbsoluteUrl($model));
+        }
     }
     
     /** 
@@ -184,15 +190,12 @@ class SceneBookNotice {
         //转让成功预约用户guid
         $receivers = array_filter(ArrayHelper::getValue($users, 'guid'));
         //转让成功预约用户邮箱地址
-        $receivers_mail = array_filter(ArrayHelper::getValue($users, 'email'));
+        $receivers_mail = $this->separateEmailInGuid($receivers);
         
-        //发送消息 
+        //企业微信优先发
         NotificationManager::sendByView($views, $params, $receivers, $subject, self::createAbsoluteUrl($model));
-        //发送邮件消息 
-        /*Yii::$app->mailer->compose($views, $params)
-            ->setTo($receivers_email)
-            ->setSubject($subject)
-            ->send();*/
+        //没有即送邮件
+        NotificationMailManager::sendByView($views.'_mail', $params, $receivers_mail, $subject, self::createAbsoluteUrl($model));
     }
     
     /**
@@ -218,29 +221,49 @@ class SceneBookNotice {
         $subject = self::$subjectModule.$title;
         
         //查找所有摄影组长
-        $users = $authManager->getItemUsers(RbacName::ROLE_SHOOT_LEADER);
+        //$users = $authManager->getItemUsers(RbacName::ROLE_SHOOT_LEADER);
+        //查找场地管理员
+        $users = User::find()->where(['id' => $model->sceneSite->manager_id])->all();
         //该任务的预约人、接洽人的guid
         $receivers = array_merge([$model->booker->guid], ArrayHelper::getColumn($contacter, 'guid'));
         //该任务的预约人、接洽人的邮箱地址
-        $receivers_mail = array_merge([$model->booker->email],ArrayHelper::getColumn($contacter, 'email'));
+        //$receivers_mail = [];//array_merge([$model->booker->email],ArrayHelper::getColumn($contacter, 'email')); //目前所有编导都是公司内部人员，都有企业微信
         if($status == SceneBook::STATUS_ASSIGN){
             //该任务的预约人、接洽人、所有摄影师组长的guid
             $receivers = array_merge($receivers, array_filter(ArrayHelper::getColumn($users, 'guid')));
             //该任务的预约人、接洽人、所有摄影师组长的邮箱地址
-            $receivers_mail = array_merge($receivers_mail, array_filter(ArrayHelper::getColumn($users, 'email')));
+            //$receivers_mail = array_merge($receivers_mail, array_filter(ArrayHelper::getColumn($users, 'email')));
         }else{
             //该任务的预约人、接洽人、摄影师的guid
             $receivers = array_merge($receivers, ArrayHelper::getColumn($shootMan, 'guid'));
             //该任务的预约人、接洽人、所有摄影师组长的邮箱地址
-            $receivers_mail = array_merge($receivers_mail, ArrayHelper::getColumn($shootMan, 'email'));
+            //$receivers_mail = array_merge($receivers_mail, ArrayHelper::getColumn($shootMan, 'email'));
         }
-
+        //获取需要发送邮件的地址
+        $receivers_mail = $this->separateEmailInGuid($receivers);
         //发送消息 
         NotificationManager::sendByView($views, $params, $receivers, $subject, self::createAbsoluteUrl($model));
         //发送邮件消息 
-        /*Yii::$app->mailer->compose($views, $params)
-            ->setTo($receivers_email)
-            ->setSubject($subject)
-            ->send();*/
+        NotificationMailManager::sendByView($views.'_mail', $params, $receivers_mail, $subject, self::createAbsoluteUrl($model));
     }
+    
+    /**
+     * 从guid数组里分离出属于邮箱地址的guid
+     * @param array $guids
+     * @remove array $email
+     */
+    private function separateEmailInGuid(&$guids) {
+        $pattern = '/^[a-zA-Z0-9!#$%&\'*+\\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&\'*+\\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/';
+        $emails = [];
+        foreach ($guids as $key => $guid) {
+            //检查是否为邮箱地址，是则加到邮箱地址数组并且从原数组移除
+            $valid = preg_match($pattern, $guid);
+            if(preg_match($pattern, $guid)){
+                unset($guids[$key]);
+                $emails[] = $guid;
+            }
+        }
+        return $emails;
+    }
+
 }
