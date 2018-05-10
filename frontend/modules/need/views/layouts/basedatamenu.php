@@ -21,38 +21,38 @@ $menuItems = [
     [
         'label' => Yii::t('app', 'Item Type ID'),
         'url' => ['business/index'],
-        'icons' => '<i class="fa fa-bars"></i>', 
+        'icons' => '', 
         'options' => ['class' => 'links']
     ],
     [
         'label' => Yii::t('app', 'Item ID'),
         'url' => ['college/index'],
-        'icons' => '<i class="fa fa-tasks"></i>', 
+        'icons' => '', 
         'options' => ['class' => 'links']
     ],
     [
         'label' => Yii::t('app', 'Item Child ID'),
         'url' => ['project/index'],
-        'icons' => '<i class="fa fa-indent"></i>', 
+        'icons' => '', 
         'options' => ['class' => 'links']
     ],
     [
         'label' => Yii::t('app', 'Courses'),
         'url' => ['course/index'],
-        'icons' => '<i class="fa fa-list"></i>', 
+        'icons' => '', 
         'options' => ['class' => 'links']
     ],
     [
         'label' => Yii::t('app', 'Expert'),
         'url' => ['expert/index'],
-        'icons' => '<i class="fa fa-users"></i>', 
+        'icons' => '', 
         'options' => ['class' => 'links']
     ],
     [
         'label' => Yii::t('app', '{Import}{Basedata}',[
                 'Import' => Yii::t('app', 'Import'),'Basedata' => Yii::t('app', 'Basedata'),]),
         'url' => ['basedata-import/upload'],
-        'icons' => '<i class="fa fa-cloud-upload"></i>', 
+        'icons' => '', 
         'options' => ['class' => 'links']
     ],
 ];
@@ -63,7 +63,7 @@ $lastIndex = key($menuItems);
 foreach ($menuItems as $index => $item) {
     $itemController = strstr($item['url'][0], '/', true);
     $menu .= ($controllerId ===  $itemController ? '<li class="active">' : 
-            ($lastIndex == $index ? '<li class="remove">' : '<li class="">')).Html::a($item['icons'].$item['label'], $item['url'], $item['options']).'</li>';
+            ($lastIndex == $index ? '<li class="remove">' : '<li class="">')).Html::a($item['label'], $item['url'], $item['options']).'</li>';
 }
 
 $html = <<<Html
@@ -72,7 +72,7 @@ $html = <<<Html
             <nav class="subnav">
                 <div class="menu">
                     <div class="title">
-                        <i class="fa fa-list"></i>
+                        <i class="glyphicon glyphicon-th-list"></i>
                         <span>导航</span>
                     </div>
                     <ul>{$menu}</ul>
