@@ -100,7 +100,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '80px',
+                        'width' => '120px',
                         'padding' => '8px 4px',
                     ],
                 ],
@@ -127,7 +127,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th'=>'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '130px',
+                        'width' => '150px',
                         'padding' => '8px 4px',
                     ],
                 ],
@@ -154,7 +154,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'th' => 'hidden-xs',
                     ],
                     'style' => [
-                        'width' => '140px',
+                        'width' => '180px',
                         'padding' => '8px 4px',
                     ],
                 ],
@@ -228,33 +228,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ],
             [
-                //'attribute' => 'finish_time',
-                'label' => Yii::t('app', 'Finish Time'),
-                'format' => 'raw',
-                'value'=> function($model){
-                    /* @var $model NeedTask */
-                    return !empty($model->finish_time) ? date('Y-m-d H:i', $model->finish_time) : null;
-                },
-                'headerOptions' => [
-                    'class'=>[
-                        'th'=>'hidden-xs',
-                    ],
-                    'style' => [
-                        'width' => '80px',
-                        'padding' => '8px 4px',
-                    ],
-                ],
-                'contentOptions' =>[
-                    'class' => [
-                        'td' => 'hidden-xs'
-                    ],
-                    'style' => [
-                        'padding' => '4px',
-                        'font-size' => '10px',
-                    ],
-                ],
-            ],
-            [
                 //'attribute' => 'created_by',
                 'label' => Yii::t('app', 'Created By'),
                 'format' => 'raw',
@@ -282,33 +255,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ],
             [
-                //'attribute' => 'receive_by',
-                'label' => Yii::t('app', 'Receive By'),
-                'format' => 'raw',
-                'value'=> function($model){
-                    /* @var $model NeedTask */
-                    return !empty($model->receive_by) ? $model->receiveBy->nickname : null;
-                },
-                'headerOptions' => [
-                    'class'=>[
-                        'th'=>'hidden-xs',
-                    ],
-                    'style' => [
-                        'width' => '50px',
-                        'padding' => '8px 4px',
-                    ],
-                ],
-                'contentOptions' =>[
-                    'class' => [
-                        'td' => 'hidden-xs'
-                    ],
-                    'style' => [
-                        'padding' => '8px 4px',
-                        'white-space' => 'nowrap',
-                    ],
-                ],
-            ],
-            [
                 //'attribute' => 'plan_content_cost',
                 'label' => Yii::t('app', 'Plan Content Cost'),
                 'format' => 'raw',
@@ -316,34 +262,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     /* @var $model NeedTask */
                     $planCost = $model->plan_content_cost + $model->plan_content_cost * $model->performance_percent;
                     return '￥' . number_format($planCost / 10000, 2, '.', '') . '万';
-                },
-                'headerOptions' => [
-                    'class'=>[
-                        'th'=>'hidden-xs',
-                    ],
-                    'style' => [
-                        'width' => '70px',
-                        'padding' => '8px 4px',
-                    ],
-                ],
-                'contentOptions' =>[
-                    'class' => [
-                        'td' => 'hidden-xs'
-                    ],
-                    'style' => [
-                        'padding' => '8px 4px',
-                        'white-space' => 'nowrap',
-                    ],
-                ],
-            ],
-            [
-                //'attribute' => 'reality_content_cost',
-                'label' => Yii::t('app', 'Reality Content Cost'),
-                'format' => 'raw',
-                'value'=> function($model){
-                    /* @var $model NeedTask */
-                    $realityCost = $model->reality_content_cost + $model->reality_content_cost * $model->performance_percent;
-                    return '￥' . number_format($realityCost / 10000, 2, '.', '') . '万';
                 },
                 'headerOptions' => [
                     'class'=>[
