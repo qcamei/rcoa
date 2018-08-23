@@ -126,13 +126,13 @@ class WorksystemSearch
             if(is_array($status))
                 $query->andFilterWhere(['<=', 'WorksystemTask.created_at', strtotime($times[1])]);
             else if($status == WorksystemTask::STATUS_COMPLETED)
-                $query->andFilterWhere(['between', 'WorksystemTask.plan_end_time', $times[0], $times[1]]);
+                $query->andFilterWhere(['between', 'WorksystemTask.finished_at', strtotime($times[0]), strtotime($times[1])]);
             else if($status == WorksystemTask::STATUS_CANCEL)
                 $query->andFilterWhere(['between', 'WorksystemTask.created_at', strtotime($times[0]), strtotime($times[1])]);
             else
                 $query->andFilterWhere(['or', 
                     ['between', 'WorksystemTask.created_at', strtotime($times[0]), strtotime($times[1])], 
-                    ['between', 'WorksystemTask.plan_end_time', $times[0], $times[1]]
+                    ['between', 'WorksystemTask.finished_at', strtotime($times[0]), strtotime($times[1])]
                 ]);
         }
         //按关键字模糊搜索
