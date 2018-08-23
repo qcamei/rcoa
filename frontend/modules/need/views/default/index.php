@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <div class="container content">
         <div class="content-title">
-            <i class="fa fa-bar-chart">&nbsp;&nbsp;<?= date('Y')?>第<?= $season; ?>季在建统计</i>
+            <i class="fa fa-bar-chart"></i>&nbsp;&nbsp;<?= date('Y')?>第<?= $season; ?>季在建统计
         </div>
         <div class="need-cost">
             <div class="need-cost-title">

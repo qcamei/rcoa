@@ -4,7 +4,6 @@
     display: inline-block;
     width: 100%;
     margin-top: 20px;
-    font-size: 0px;
 }
 
 .basedata-content > .subnav {
@@ -29,29 +28,27 @@
 }
 
 .basedata-content > .subnav .title {
-    padding: 12px 8px;
+    padding: 16px 16px;
+    color: #fff;
     background-color: rgba(102, 102, 102, 1);
 }
 
 .basedata-content > .subnav .title > i {
-    margin-right: 3px;
+    margin-right: 4px;
 }
 
-.basedata-content > .subnav .title > i,
 .basedata-content > .subnav .title > span {
     font-size: 16px;
-    color: #fff;
-    text-align: left;
 }
 
 .basedata-content > .subnav ul {
     padding: 0;
     margin: 0;
     list-style: none;
+    border: 1px solid #d2d2d2;
 }
 
 .basedata-content > .subnav ul > li {
-    padding: 14px 15px;
     border-bottom: 1px dotted #d2d2d2;
 }
 
@@ -64,11 +61,13 @@
     border-bottom: none;
 }
 
-.basedata-content > .subnav ul > li > a.links,
-.basedata-content > .subnav ul > li > a.links > i {
+.basedata-content > .subnav ul > li > a.links {
+    display: block;
+    padding: 14px 39px;
     font-size: 14px;
     color: rgb(153, 153, 153);
     text-align: left;
+    
 }
 
 .basedata-content > .subnav ul > li > a.links > i, 
@@ -126,7 +125,7 @@
 }
 
 .btn-margin-bottom{
-    margin-bottom: 8px !important;
+    margin-bottom: 18px !important;
 }
 
 /**

@@ -36,6 +36,8 @@ class DefaultController extends Controller {
      * 邮件测试
      */
     public function actionMailTest() {
+        
+        return $this->render('mail-html');
         //主题 
         $subject = "邮件测试！";
         //查找所有摄影组长
@@ -48,7 +50,7 @@ class DefaultController extends Controller {
         //发送ee消息 
         EeManager::seedEe($receivers_ee, $subject, 'ee测试，测试！');
 
-        var_dump(\Yii::$app->mailer);
+        //var_dump(\Yii::$app->mailer);
         //发送邮件消息 
         $mail = Yii::$app->mailer->compose()
                 ->setTo($receivers_mail)
