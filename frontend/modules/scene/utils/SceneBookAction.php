@@ -241,12 +241,12 @@ class SceneBookAction
         ];
         /* guid为空时发送邮件 */
         $emails = [];
-        foreach($sceneUser as $user){
+        foreach($sceneUser['oldBookUser'] as $user){
             if(empty($user['guid'])){
                 $emails[] = $user['email'];
             }
         }
-        $users['email'] = $emails;
+        $users['guid'] = array_merge($users['guid'],$emails);
         
         /** 开启事务 */
         $trans = Yii::$app->db->beginTransaction();
